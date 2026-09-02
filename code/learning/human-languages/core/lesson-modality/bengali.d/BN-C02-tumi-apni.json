@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C02-tumi-apni",
     "language": "bengali",
-    "chapter": 2,
-    "sequence": 120,
+    "chapter": 3,
+    "sequence": 220,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ecf9c947f3fe4048",
+    "sourceHash": "fnv1a64:8d0f192a1e710171",
     "detachableSegments": [
       "The letters in this word"
     ]

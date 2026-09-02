@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W04-chaa-read
 spine_node: SPINE-MEET-GREET
-sequence: 1940
+sequence: 820
 delivery: script
-chapter: 19
+chapter: 15
 type: writing
 headword: চা
 romanization: "chā"
 gloss: "tea — the shortest word in the book, and a loan that walked overland"
-prerequisites: [BN-W04-cha]
+prerequisites: [BN-W04-ja]
 sounds: []
 roots: []
 etymology_hook: "Tea reached Bengali overland from Chinese through Persian, while it reached English by sea through Hokkien and Dutch, which is why one language says cha and the other says tea for the same leaf."
@@ -20,13 +20,13 @@ requires:
 introduces:
   knowledge: [BN-SCRIPT-CHAA-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-CHA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-DUDH-READ-01, BN-SCRIPT-CHAA-READ-01]
+  knowledge: [BN-SCRIPT-CHA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-JA-01, BN-SCRIPT-CHAA-READ-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W04-cha, BN-C10-cha]
+reviews_of: [BN-W04-ja, BN-C10-cha]
 ---
 # চা — tea, read
 
@@ -49,17 +49,15 @@ The same leaf travelled by sea, through Hokkien and Dutch traders, and arrived i
 English as *tea*. One plant, two roads, two words — and which word a language uses
 tells you which road the leaf took to get there.
 
-Now that the word for milk is also readable, a whole request is on the page:
-
-> **দুধ চা** — *dudh chā*, milk tea
-
-Two words the mouth has had since the tenth chapter, side by side, in script.
+Two pieces, and both of them arrived long before this page: **চ** from the
+consonant chapter, **া** from the very first script chapter. Nothing here is
+new except the permission to put them together — which is what a reading lesson
+is for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-DUDH-READ-01, BN-SCRIPT-CHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-JA-01, BN-SCRIPT-CHA-01] -->
 
 - [YOU READ: চা]
-- [YOU READ: দুধ চা]
 - [YOU WRITE: চা]
 
 ## Wrap-up Recall

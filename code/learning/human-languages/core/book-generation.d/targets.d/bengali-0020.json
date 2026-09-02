@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 20,
+  "output": "bengali/book/chapters/ch20-five-colors.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

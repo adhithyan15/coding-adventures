@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C02-amar
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 80
-chapter: 2
+sequence: 180
+chapter: 3
 type: word
 headword: আমার
+romanization: "āmār"
 gloss: my
 concept_tag: PRONOUN-MY
 prerequisites: [BN-C02-naam]

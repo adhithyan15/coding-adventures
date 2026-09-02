@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C12-mukh",
     "language": "bengali",
-    "chapter": 12,
-    "sequence": 910,
+    "chapter": 18,
+    "sequence": 920,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:52d0908b20971d13",
+    "sourceHash": "fnv1a64:5e9511c4419a16ce",
     "detachableSegments": [
       "The letters in this word"
     ]

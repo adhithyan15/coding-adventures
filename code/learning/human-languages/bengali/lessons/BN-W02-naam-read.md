@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W02-naam-read
 spine_node: SPINE-MEET-GREET
-sequence: 1700
+sequence: 250
 delivery: script
-chapter: 17
+chapter: 4
 type: writing
 headword: নাম
 romanization: "nām"
@@ -39,7 +39,7 @@ made from memory.
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-NAAM-READ-01]; assesses=[BN-SCRIPT-NA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-MA-01] -->
 
-The word for *name* has been said aloud since the second chapter. Here it is on
+The word for *name* has been said aloud since the introductions chapter. Here it is on
 the page, and there is nothing in it you have not already written:
 
 > **ন** + **া** + **ম** → **নাম**

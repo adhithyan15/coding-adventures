@@ -2,6 +2,61 @@
 
 ## [Unreleased]
 
+### Changed — the script strand is now interleaved, not appended (HL-C194)
+
+**No lesson was added, removed, or renamed.** All 115 lessons are the same 115
+lessons; what changed is where they sit in reading order, and the book grew from
+19 chapters to 22 without gaining a page of new material.
+
+The forty-five script lessons used to sit in one block, chapters 16–19, *after*
+all fifteen content chapters. `measureScriptClosure` walks lessons in reading
+order, so a glyph taught in chapter 17 was untaught for every chapter 1–15 lesson
+that showed it, and the violation count sat at **65** no matter how many letters
+the strand taught. The previous tranche measured that directly: adding
+thirty-five script lessons moved `neverTaughtGlyphs` 39 → 22 and moved closure
+violations 65 → 65.
+
+The strand is now **seven chapters**, each landing after the speech chapter whose
+words it hands to the eye:
+
+| chapter | pieces added | words read back |
+|---|---|---|
+| 2 | ন া আ হ ম স ক ্ র | নমস্কার |
+| 4 | ি ই ত ু | নাম, তুমি |
+| 6 | ল ে এ ো | আমি, কেমন |
+| 8 | ব ভ খ প দ ধ চ জ | আবার, ভালো |
+| 15 | — | চা, জল, দুধ |
+| 17 | — | পরিবার, ভাই |
+| 21 | ী | মুখ, লাল, কালো, সাদা, নীল, তিন, এক |
+
+**Gloss-first survived the move, and constrained it.** A reading lesson may only
+read a word the learner has already met romanized, so the placement of every
+`*-read` lesson is pinned by its content chapter rather than chosen. That is why
+চা, জল and দুধ cannot move above chapter 15 and why the colours cannot move above
+chapter 21 — and why the resequence had to reorder the ladder *within* the strand
+rather than simply lift the block forward. Eight letter lessons were re-pointed
+along the chain (ত, ু, ব, প, দ, ধ, চ, জ), and two independent vowels — **ই** and
+**এ** — were moved up beside the signs they twin (**ি** in chapter 4, **ে** in
+chapter 6), which is the pattern **আ**/**া** already set in chapter 2.
+
+**Closure: 65 → 41.** The resequence alone takes it to 53. The remaining twelve
+come from the second half of the same rule: twenty-five chapter 1–9 headwords
+carried their romanization only in prose, never in the `romanization` field, so
+`measureScriptClosure` read them as load-bearing decodes rather than as the
+gloss-first exposure they have always been. Every one of them now declares it.
+`headwordsWithoutRomanization` **25 → 0**.
+
+The forty-one that remain all show one of the twenty-two shapes this track still
+never teaches. No resequencing can reach them; `BACKLOG.d` records what would.
+
+**Script atoms now get spaced returns.** Under the old shape a `SCRIPT-RECOG`
+atom appeared in two lessons — taught, called back once, abandoned. The three
+reading chapters at 15, 17 and 21 exist to return to letters bought in chapter 8
+and earlier, several chapters after the hand learned them; `BN-W04-ja` closes
+chapter 8 by writing all eight of its consonants back from their places of
+articulation, and `BN-W04-ek-read` closes the book's script strand by counting
+twenty-six pieces and nineteen words.
+
 ### Fixed — three false forward-review claims
 
 - `BN-C02-alaap` now records the earlier `BN-C02-amar-naam` lesson that its

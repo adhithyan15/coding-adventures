@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W03-kalo-read
 spine_node: SPINE-MEET-GREET
-sequence: 1820
+sequence: 1060
 delivery: script
-chapter: 18
+chapter: 21
 type: writing
 headword: কালো
 romanization: "kālo"
 gloss: "black — a word wearing two different signs on two letters"
-prerequisites: [BN-W03-o-matra]
+prerequisites: [BN-W02-lal-read]
 sounds: []
 roots: []
 etymology_hook: "Black and the word for time are the same word in Sanskrit, and the colours chapter tied both to Kali and to Yama; here the spelling is what is being taken apart rather than the root."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W03-o-matra, BN-C14-kalo]
+reviews_of: [BN-W02-lal-read, BN-C14-kalo]
 ---
 # কালো — black, read
 

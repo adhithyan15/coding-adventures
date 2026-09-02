@@ -6,6 +6,7 @@ sequence: 40
 chapter: 1
 type: word
 headword: আচ্ছা
+romanization: "āchchhā"
 gloss: okay / alright / I see (āchchhā)
 concept_tag: RESPONSE-OKAY
 prerequisites: [BN-C01-hyan-na]

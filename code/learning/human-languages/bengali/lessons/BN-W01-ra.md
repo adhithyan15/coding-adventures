@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W01-ra
 spine_node: SPINE-MEET-GREET
-sequence: 1680
+sequence: 150
 delivery: script
-chapter: 16
+chapter: 2
 type: writing
 headword: র
 romanization: "rô"

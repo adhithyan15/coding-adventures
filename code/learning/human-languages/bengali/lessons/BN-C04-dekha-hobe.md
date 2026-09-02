@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C04-dekha-hobe
 spine_node: SPINE-TAKE-LEAVE
-sequence: 220
-chapter: 4
+sequence: 440
+chapter: 7
 type: word
 headword: দেখা হবে
+romanization: "dækhā hôbe"
 gloss: (we) will meet (lit. "seeing will happen")
 concept_tag: BN-VERB-DEKHA
 prerequisites: [BN-C03-tumi-kemon-achho]

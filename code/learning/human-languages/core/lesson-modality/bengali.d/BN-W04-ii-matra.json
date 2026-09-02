@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W04-ii-matra",
     "language": "bengali",
-    "chapter": 19,
-    "sequence": 1990,
+    "chapter": 21,
+    "sequence": 1080,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:5a25b3018f502fc5",
+    "sourceHash": "fnv1a64:e2be6189a81d5ae2",
     "detachableSegments": [
       "Script"
     ],

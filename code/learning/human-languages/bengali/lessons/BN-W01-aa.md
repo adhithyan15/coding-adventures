@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W01-aa
 spine_node: SPINE-MEET-GREET
-sequence: 1620
+sequence: 90
 delivery: script
-chapter: 16
+chapter: 2
 type: writing
 headword: আ
 romanization: "a"

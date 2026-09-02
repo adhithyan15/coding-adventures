@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C05-bola",
     "language": "bengali",
-    "chapter": 5,
-    "sequence": 260,
+    "chapter": 9,
+    "sequence": 580,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b87f9dba2d8150eb",
+    "sourceHash": "fnv1a64:1c9d0775f84f0e37",
     "detachableSegments": [
       "The letters in this word"
     ]

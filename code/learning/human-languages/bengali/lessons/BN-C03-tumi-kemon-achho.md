@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C03-tumi-kemon-achho
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 170
-chapter: 3
+sequence: 330
+chapter: 5
 type: phrase
 headword: তুমি কেমন আছো?
+romanization: "tumi kēmon āchho?"
 gloss: how are you? (familiar)
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [BN-C03-kemon, BN-C02-tumi-apni]
@@ -51,7 +52,7 @@ be, to exist, to have") + the familiar-you ending **-ও** (*-o*). Note the **�
 ## Grammar Lens: now the copula returns
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-TUMIAPNI-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
 
-In Chapter 2, Bengali dropped "is": *āmār nām Arun* ("my name Arun"). That **zero
+In Chapter 3, Bengali dropped "is": *āmār nām Arun* ("my name Arun"). That **zero
 copula** works for *equations* (X is Y). But "how are you?" asks about a **state**
 — how you *exist* — and for that Bengali uses a real verb, **আছা** (*āchhā*). So:
 no verb for "my name is Arun," a real verb for "how are you." Respectful form:
