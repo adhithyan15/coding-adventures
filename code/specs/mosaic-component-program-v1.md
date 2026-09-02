@@ -213,8 +213,8 @@ a new component; it is entirely the "done" contract applied to existing work.
   landing page, not new infrastructure. Each component links to its release
   artifacts and its live web build.
 - **A3 — retrofit the existing 23 toolkit components** to the full §7 contract
-  ([#14017](https://github.com/adhithyan15/coding-adventures/issues/14017)), shipping each one's test app and showcase entry as it
-  lands.
+  ([#14017](https://github.com/adhithyan15/coding-adventures/issues/14017)), shipping each one's own generated demo app — released
+  on every supported platform — and its documentation-site entry as it lands.
 
 ### Track B — Checklist as reference app one ([#14027](https://github.com/adhithyan15/coding-adventures/issues/14027))
 
@@ -277,8 +277,35 @@ progress, regardless of how it renders.
 - [ ] Degradations recorded explicitly where a backend cannot honor a construct
 - [ ] In a package if sharable and core, and that package is published
 - [ ] README, CHANGELOG, and >80% test coverage per repo standard
-- [ ] Its own test app, released on the supported platforms, retained as a
-      durable artifact
+- [ ] **Its own demo app** — one per component, not one per package — generated
+      from the component and its stories, and **released on every platform
+      Mosaic supports**, retained as a durable artifact ([#14015](https://github.com/adhithyan15/coding-adventures/issues/14015))
+- [ ] Listed on the Mosaic documentation site, with its live web build running
+      inline and its per-platform downloads linked ([#14026](https://github.com/adhithyan15/coding-adventures/issues/14026))
+
+**Isolation is the point, and it is not negotiable.** A component proven only
+inside a larger app has not been proven; that is the failure mode this whole
+program exists to correct. One shared showcase app covering many components
+would reintroduce it in miniature — a regression in one component could hide
+behind another's working demo. The documentation site is an *index* over
+independently proven components, never a substitute for proving them.
+
+### Why per-component demos force generation
+
+The matrix is real: ~6 release artifacts per component (web, Linux ×3, macOS,
+Windows) across 23 components today is ~138 artifacts, and the catalog grows.
+That is affordable only if demo apps are **generated** from the component and
+its MosaicBook stories — which already enumerate every variant, size, state, and
+theme, i.e. exactly a demo app's content — and if the release lane rebuilds only
+*affected* components. The repository's Go build tool already does the second
+part with `--diff-base origin/main` and `affected_nodes()`; the lane reuses it
+rather than reinventing it. Per-component SemVer follows from the same
+requirement.
+
+Hand-writing demos does not scale past a handful and drifts from the component
+the moment it changes. The existing hand-written demos
+(`toolkit-multi-demo`, `toolkit-xaml-showcase`, `hello-dialog-xaml`) are
+precedent that this is wanted, not a model to copy.
 
 ---
 
