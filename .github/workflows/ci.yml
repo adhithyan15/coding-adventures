@@ -1302,6 +1302,24 @@ jobs:
       # deliberately, since a suite that silently passes when its oracle is
       # missing is not a suite. That makes installing it here a requirement
       # rather than a convenience.
+      # `font-subset` writes a font file, and a font writer checked only by
+      # our own parser proves nothing -- a wrong idea of how the table
+      # directory is padded would be shared by both halves and they would agree
+      # perfectly. `tests/fonttools_oracle.rs` hands the subset to fontTools
+      # and asks whether the retained glyphs still have the same outlines at
+      # the same ids.
+      #
+      # Unlike poppler this installs identically everywhere: fontTools is pure
+      # Python, so one pip command covers Linux, macOS and Windows rather than
+      # three package managers with three different names.
+      - name: Install fontTools for the font-subset oracle
+        if: needs.detect.outputs.needs_rust == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet fonttools
+          python3 -c "import fontTools; print('fontTools', fontTools.version)"
+
       - name: Install qpdf for the PDF oracle tests
         if: needs.detect.outputs.needs_rust == 'true'
         shell: bash
@@ -1316,6 +1334,35 @@ jobs:
             choco install qpdf -y --no-progress
           fi
           qpdf --version
+
+      # qpdf proves the file is well FORMED. It cannot prove the page is the
+      # right way up: an upside-down page is structurally perfect, and PDF's
+      # origin is bottom-left where every layout model this repository has puts
+      # it top-left. So `tests/render_gate.rs` rasterises with poppler -- a
+      # second independent implementation -- and asks where the ink actually
+      # landed.
+      #
+      # It FAILS when poppler is absent, for the same reason the qpdf gate
+      # does: an oracle that skips reports green while checking nothing.
+      #
+      # Linux and macOS only. The rendering oracle checks where ink lands on a
+      # page, and the PDF bytes it rasterises are byte-identical on every
+      # platform -- so a third rasteriser adds no coverage, while poppler has
+      # no reliable Chocolatey package (`choco install poppler` fails on
+      # windows-2025). The tests are correspondingly compiled out on Windows,
+      # so this is a stated scope rather than a silent skip: everywhere the
+      # gate runs, a missing poppler still fails the build.
+      - name: Install poppler for the PDF rendering oracle
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get install -y poppler-utils
+          else
+            brew install poppler
+          fi
+          pdftoppm -v
 
       # VLT-PM51 slice 2 (vault-webauthn-ctap2-hid): ctap-hid-fido2's
       # `hidapi` dependency uses the `linux-static-hidraw` feature on
@@ -1935,6 +1982,25 @@ jobs:
           # The gate: it builds.
           cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$engram_output/qt/build" --config Release --parallel
+
+          # Engram's own suite, which the parent workspace cannot reach: the
+          # package opts OUT of it (`[workspace]` empty in its Cargo.toml), so
+          # `cargo test` at the workspace root never sees these tests and the
+          # epic's "changing Engram triggers executing verification" stayed
+          # false even after the tests existed.
+          #
+          # `native_complete_gate.rs` is the one that matters here: it asserts
+          # Engram lowers with ZERO capability degradations on all five native
+          # backends, and pins the XAML style drops by property so a new one
+          # cannot arrive unnoticed (#14132).
+          #
+          # Note this does NOT contradict the comment above about Engram being
+          # unable to reach native-complete. That is about `--emit-project`,
+          # where the strict profile rewrites main.cpp into a binding shape
+          # Engram's [host_assets] override conflicts with. The gate analyses
+          # capability lowering with no project emission, so the two are
+          # different questions and both answers are true.
+          cargo test --manifest-path code/programs/mosaic/engram-app/Cargo.toml
 
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C67-but",
+    "language": "kannada",
+    "chapter": 67,
+    "sequence": 2220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3599f333bc969e3b"
+  },
+  "findings": []
+}

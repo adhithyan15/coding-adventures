@@ -237,6 +237,51 @@ case "$BACKEND" in
     echo ""
     echo "Built: $BIN_DIR"
     ;;
+  flutter)
+    # `flutter create` adds the platform runner directories the emitted project
+    # does not carry -- macos/, linux/, windows/ -- without touching the Dart
+    # sources or pubspec already there.
+    ( cd "$APP" && flutter create --platforms=macos,linux,windows . >/dev/null )
+    ( cd "$APP" && flutter pub get >/dev/null )
+
+    case "$(uname -s)" in
+      Darwin) FLUTTER_TARGET="macos" ;;
+      Linux)  FLUTTER_TARGET="linux" ;;
+      *)      FLUTTER_TARGET="windows" ;;
+    esac
+    ( cd "$APP" && flutter build "$FLUTTER_TARGET" --release )
+
+    # Flutter's bundle layout differs per platform -- Frameworks/ on macOS,
+    # lib/ on Linux, beside the exe on Windows -- so the engine's destination is
+    # three problems rather than one. Locate the built bundle and place it where
+    # that platform's loader looks.
+    case "$FLUTTER_TARGET" in
+      macos)
+        BUNDLE="$(find "$APP/build/macos" -maxdepth 6 -name "*.app" -print -quit)"
+        [[ -n "$BUNDLE" ]] || { echo "error: no .app in $APP/build/macos" >&2; exit 1; }
+        mkdir -p "$BUNDLE/Contents/Frameworks"
+        cp "$LIB_PATH" "$BUNDLE/Contents/Frameworks/$LIB_NAME"
+        PLACED="$BUNDLE/Contents/Frameworks/$LIB_NAME"
+        ;;
+      linux)
+        BUNDLE="$APP/build/linux/x64/release/bundle"
+        [[ -d "$BUNDLE" ]] || { echo "error: no bundle at $BUNDLE" >&2; exit 1; }
+        mkdir -p "$BUNDLE/lib"
+        cp "$LIB_PATH" "$BUNDLE/lib/$LIB_NAME"
+        PLACED="$BUNDLE/lib/$LIB_NAME"
+        ;;
+      *)
+        BUNDLE="$APP/build/windows/x64/runner/Release"
+        [[ -d "$BUNDLE" ]] || { echo "error: no bundle at $BUNDLE" >&2; exit 1; }
+        cp "$LIB_PATH" "$BUNDLE/$LIB_NAME"
+        PLACED="$BUNDLE/$LIB_NAME"
+        ;;
+    esac
+    [[ -f "$PLACED" ]] || { echo "error: engine not placed at $PLACED" >&2; exit 1; }
+    echo "  engine placed at $PLACED"
+    echo ""
+    echo "Built: $BUNDLE"
+    ;;
   swiftui)
     ( cd "$APP" && swift build -c release )
     BIN="$APP/.build/release/App"

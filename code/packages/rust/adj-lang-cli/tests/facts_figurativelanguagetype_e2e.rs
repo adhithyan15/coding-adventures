@@ -96,3 +96,28 @@ fn figurative_language_type_abstains_honestly_on_an_untabled_type() {
         "allusion is a real device the source names with its own clean sentence, but one that works by referencing an external work/person/event, a different mechanism than the three tabled here -- honest abstention, never invented: {out}"
     );
 }
+
+const FIGURATIVE_LANGUAGE_TYPE_PIN: &str = r#""bindings":{"D":"a_great_exaggeration_used_to_add_emphasis"},"citations":[{"source":"A metaphor describes an object or action in a way that isn’t literally true but helps explain an idea or make a comparison.","locator":"https://www.grammarly.com/blog/writing-tips/figurative-language/","trust":"consensus""#;
+
+#[test]
+fn figurative_language_type_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"figurative-language-type.adj\"
+? figurative_language_type(hyperbole, $D)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator.
+    assert!(
+        out.contains(FIGURATIVE_LANGUAGE_TYPE_PIN),
+        "the figurative language type citation matches its page: {out}"
+    );
+}

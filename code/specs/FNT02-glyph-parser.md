@@ -380,6 +380,19 @@ feature where the component's placement is determined by aligning
 a point in the parent's outline with a point in the component's
 outline. FNT02 v1 implements it; most fonts never exercise it.
 
+### Rounding transformed coordinates
+
+A scale turns integer coordinates into fractional ones (150 x 0.25 = 37.5), so
+the rounding rule is part of the format's meaning rather than an implementation
+detail. FNT02 rounds **half up** -- `floor(x + 0.5)` -- which is what OpenType
+consumers use (`otRound` in fontTools).
+
+This is worth stating because the obvious alternative is wrong in a way that
+only shows on some inputs: rounding half *away from zero* (Rust's `f64::round`,
+C's `round`) agrees on +37.5 and disagrees on -37.5, giving -38 where a
+conforming consumer gives -37. A composite scaled onto negative coordinates is
+the only place it surfaces.
+
 ### Recursion depth limit
 
 To protect against malformed or maliciously-deep composite chains,
@@ -387,6 +400,16 @@ FNT02 imposes a hard recursion limit: a composite may reference
 other composites up to **10 levels deep**. Beyond that, return
 `CompositeDepthExceededError`. The TrueType spec does not
 define a limit, but real fonts never exceed 2–3 levels.
+
+The depth limit is **not sufficient on its own**, and a reader that stops there
+is still trivially hangable. Depth bounds the height of the composite tree and
+says nothing about its width: a glyph nine levels deep -- inside the cap -- that
+fans out to eight components at every level asks for 8^9, over 134 million,
+component resolutions, and a font expressing that is a few hundred bytes.
+
+So FNT02 also carries a **total component budget** of 4096 per glyph, charged
+before descending. Real composites resolve a handful; the budget is far beyond
+any legitimate glyph and refuses the fan-out font in milliseconds.
 
 ---
 
@@ -398,8 +421,8 @@ fn new_glyph_parser(font: &FontFile) -> Result<GlyphParser, FontError>
 
 // Look up a glyph outline by glyph ID. Returns a flat outline
 // regardless of whether the source glyph is simple or composite.
-// Returns Ok(None) if the glyph ID is out of range.
-// Returns Ok(Some(empty outline)) if the glyph has zero contours.
+// Returns Ok(None) if the glyph has no outline (a space).
+// Returns Err(GlyphIndexOutOfRange) if the glyph ID is >= numGlyphs.
 fn glyph_outline(parser: &GlyphParser, glyph_id: u16)
     -> Result<Option<GlyphOutline>, GlyphError>
 
@@ -420,6 +443,8 @@ GlyphError {
     CompositeDepthExceeded,           // > 10 levels of composite nesting
     MissingTable(&'static str),       // e.g. "glyf" not present
     InvalidFlagRun,                   // REPEAT_FLAG past end of flags
+    BufferTooShort,                   // a read ran past the glyph's bytes
+    CompositeBudgetExceeded,          // > 4096 components in ONE glyph
 }
 ```
 
@@ -477,18 +502,29 @@ Each package:
   glyphs, each with a pre-recorded expected `GlyphOutline`
   structure (committed as JSON in the fixture repo).
 
+**Status: Rust only, deliberately.** FNT00 is ported to 17 languages, so
+whether FNT02 follows was worth deciding rather than leaving to omission. It is
+Rust-first: both consumers that need it — PDF font subsetting and maths
+rendered to outlines — are Rust, and porting a parser before its first consumer
+has exercised it means porting decisions that have not been tested yet. The
+oracle fixture (`oracle.txt`) is a plain line format precisely so a port can
+reuse it verbatim rather than re-deriving expectations, which is the part that
+would otherwise be re-litigated fourteen times.
+
 ### Rust reference signature
 
 ```rust
 pub struct GlyphParser<'a> {
-    file: &'a font_parser::FontFile,
+    glyf: &'a [u8],
+    loca: &'a [u8],
     loca_is_long: bool,
     num_glyphs: u16,
-    glyf_offset: usize,
-    glyf_length: usize,
-    loca_offset: usize,
-    loca_length: usize,
 }
+
+// The implementation holds the two table SLICES rather than offset/length
+// pairs into the file. `font-parser` resolves them once in `new`, which keeps
+// the table directory in exactly one crate and removes four chances to index
+// the wrong range at every read site.
 
 impl<'a> GlyphParser<'a> {
     pub fn new(file: &'a font_parser::FontFile)

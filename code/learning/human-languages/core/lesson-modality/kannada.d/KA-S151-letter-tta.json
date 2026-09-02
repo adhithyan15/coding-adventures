@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S151-letter-tta",
+    "language": "kannada",
+    "chapter": 73,
+    "sequence": 2510,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:11ba005aa2460a2b",
+    "detachableSegments": [
+      "Script you'll notice: ಟ",
+      "Writing: ಟ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

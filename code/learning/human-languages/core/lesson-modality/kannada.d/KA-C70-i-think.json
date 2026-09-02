@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C70-i-think",
+    "language": "kannada",
+    "chapter": 70,
+    "sequence": 2380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a37a701713bcb1b"
+  },
+  "findings": []
+}

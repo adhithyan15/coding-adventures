@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:393a363dbcd28a99",
+  "lessonIds": [
+    "KA-C72-when-clause",
+    "KA-C72-want",
+    "KA-S150-letter-ja",
+    "KA-C72-do-you-like",
+    "KA-C72-prefer"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "kannada/narration/ch72.txt",
+  "json": "kannada/narration/ch72.json",
+  "textHash": "fnv1a64:3225cb6638e01c91",
+  "jsonHash": "fnv1a64:bebe6a92f96bd23e",
+  "findings": []
+}

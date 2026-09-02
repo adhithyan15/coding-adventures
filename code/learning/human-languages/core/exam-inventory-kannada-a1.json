@@ -1,0 +1,4741 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY KANNADA EXAMINING OR LANGUAGE BODY. There is no widely-sat Kannada proficiency ladder -- core/exam-levels.json records kannada as exam 'no widely-sat ladder', basis 'editorial' -- so unlike Hindi, which at least has the Dakshina Bharat Hindi Prachar Sabha rungs to anchor against, there is nothing here to defer to. Karnataka's state school syllabi and the Kannada Sahitya Parishat examinations exist, but they are built for children schooled in Kannada or for literary attainment, not for an adult second-language learner against CEFR can-do descriptors, and neither was consulted. Read 'A1' here as the CEFR descriptor -- can greet, introduce oneself, and handle a short exchange in everyday spoken Kannada -- and as a measuring stick this project built for itself.\n\nEXAM ENVELOPE: NONE EXISTS. There is no kannada/task-shapes/ and no kannada/mocks/, and no kannada/assessment.json -- the completion plan still lists writing one as an outstanding pre-A1 item. So unlike Hindi and Marathi, whose inventories could mine a checked-in mock for the exponent a paper item actually needs, nothing here can say which task demands which word. Where those files write 'the mock asks for X', this one can only write 'an A1 learner needs X'. That is a weaker claim and is stated as one.\n\nSEARCH FOR AN EXTERNAL SOURCE: NOT SEARCHED, BY INSTRUCTION. The project settled at HL-C287/HL-C290 that the proxy derivation is the method for tracks with no sat ladder, and the search was deliberately not redone for Kannada. Saying so is what keeps 'we did not look' from reading as 'there is nothing to find'.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is the Instituto Cervantes Plan Curricular inventories. The proxy supplies the LEVEL and the shape of the columns; every Kannada exponent is this project's choice, and every point records which Spanish point or points it was derived from.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Spanish is a proxy for LEVEL, never for grammar: each point was read as 'what must an A1 learner be able to do here', and the Kannada exponent that carries the same load was then chosen. Where Kannada carries the load with machinery Spanish does not have -- case suffixes, a dative subject, a zero copula -- the point is restated around the Kannada machinery and its Spanish origin recorded in derivedFrom."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "The spine already speaks CEFR (core/spine.json declares pre-A1 through C2) and core/exam-levels.json maps kannada onto it. Used for the functional column where the proxy's exponents are too Spanish-specific to transfer."
+    },
+    {
+      "id": "KA-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/kannada/ -- 268 lessons, 66 chapters, 362 schema-v2 knowledge atoms",
+      "note": "Coverage is measured, not asserted. A point counts as covered only when every atom named in its probe is introduced by a lesson in this track. The atom set was re-derived from the merged tree after Kannada chapters 1, 2 and 4 were retired into the generator, because 37 of these atoms did not exist before that landed."
+    },
+    {
+      "id": "KA-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.kannada",
+      "note": "Records kannada as exam 'no widely-sat ladder', basis 'editorial', mapping 'cefr' -- and, unlike tracks.tamil, carries NO caveat. That absence is itself a finding: Kannada is as diglossic as Tamil, and KA-A1-REG-04 records the missing warning."
+    },
+    {
+      "id": "ED-KANNADA",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Kannada",
+      "note": "There is no Kannada examining body to defer to. Every judgement in this file is the project's own and is attributable to nobody else."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-ART-02"
+        ],
+        "why": "The definite and indefinite articles and their contractions. Kannada has no article. Restated as an absence at KA-A1-DET-01, with ondu's indefinite use recorded separately at KA-A1-DET-02."
+      },
+      {
+        "spanishPoints": [
+          "A1-PRON-07"
+        ],
+        "why": "The exclamative que with adjectives and adverbs (que bonito!). Kannada exclaims with a different device entirely -- an intonation contour plus eshtu, or a bare adjective -- and there is no single word doing the job que does, so the point has no Kannada exponent to be enumerated against. Recorded here rather than as an untaught point, because there is nothing specific a tranche could be told to teach."
+      }
+    ]
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the CEFR Companion Volume A1 descriptors",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Kannada is this project's choice every time, and a function inventory without its exponents is half a source. Kannada has no checked-in mock or task shape to pin an exponent against, so no note here can say which paper item needs a word."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence, coordination and subordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS MOST AND STILL DOES NOT CLOSE. Walking the Spanish grammar column surfaced demands no reading of the Kannada corpus alone would have raised -- an accusative for definite objects, an ablative for origin, the alla/illa split, ordinals. But four points have no Spanish origin at all and are flagged kannadaSpecific -- the human/non-human noun division, the one-suffix-per-job property of an agglutinating language, the p-to-h sound law, and the spoken/literary divide. Everything else in the case, postposition and register columns DOES answer a demand some Spanish point also makes, even where the machinery differs completely, and records which one."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "the proxy's orthography columns, plus a direct character census of the corpus",
+      "note": "The script column is the one place a count settles the question outright, and the count was taken rather than assumed: 42 characters taught by a script lesson against 69 used in headwords. Do not carry another track's shape here -- Tamil measured 52 of 52 taught, and Kannada measures 61%."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "the proxy's twenty notional-specific domains (A1-NE01 to A1-NE20) and its seven general-notion blocks",
+      "note": "The domain list is the proxy's and it transfers cleanly, because what a beginner talks about is not language-specific. Which words fill each domain is entirely this project's choice. The distribution is strikingly uneven and that is the finding: rural and natural-world domains are the best covered in the file, while shopping, money, transport, media and the arts are empty."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, and its `note` names what is missing so the file reads as a work queue rather than a score. Every atom named in a probe was checked to exist before this file was committed: a probe naming an atom that does not exist would report 'not covered' forever and would be indistinguishable from real debt.",
+  "points": [
+    {
+      "id": "KA-A1-N-01",
+      "category": "Naamapada (the noun)",
+      "label": "proper nouns: a personal name, given in an introduction and used in address",
+      "probe": [
+        "KA-LEX-C02-HESARU-01",
+        "KA-LEX-C02-NANNA-HESARU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "hesaru and the frame nanna hesaru ... are both taught in chapter 2, and the frame is what an introduction actually uses."
+    },
+    {
+      "id": "KA-A1-N-02",
+      "category": "Naamapada (the noun)",
+      "label": "place names: the town or village you are from, and the country",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-N-01",
+        "A1-NE20-02"
+      ],
+      "note": "halli ('a village') is taught in chapter 55 and uuru ('town') nowhere. Not one settlement name, no word for a country, and no name of Karnataka or India is introduced anywhere -- so a learner can say what KIND of place they come from and never WHICH. The likeliest single fix is a chapter-55 sibling teaching uuru plus one place name."
+    },
+    {
+      "id": "KA-A1-N-03",
+      "category": "Naamapada (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": [
+        "KA-ETYMON-C23-DINA-01",
+        "KA-ETYMON-C24-RATRI-01",
+        "KA-ETYMON-C18-GANTE-01",
+        "KA-LEX-C14-KAALAGALU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "dina (day), raatri (night), gante (hour) and the season words are all taught. Kannada is unusually rich here because chapters 23-31 walk the whole day."
+    },
+    {
+      "id": "KA-A1-N-04",
+      "category": "Naamapada (the noun)",
+      "label": "grammatical gender is not marked on the noun",
+      "probe": [
+        "KA-GRAMMAR-C05-KANNADA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-N-03",
+        "A1-N-04"
+      ],
+      "note": "Restated, not transferred. Spanish spends two points on -o/-a gender and on heteronyms like padre/madre. Kannada nouns carry no gender agreement at all; the fact an A1 learner must HANDLE is that nothing has to agree. KA-C05 teaches exactly that, from the other end: 'I speak' is the same for a man or a woman."
+    },
+    {
+      "id": "KA-A1-N-05",
+      "category": "Naamapada (the noun)",
+      "label": "number: the plural suffix -galu",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "UNTAUGHT AS A MORPHEME, and it is one of the cheapest fixes in this file. -galu is already sitting inside five taught headwords -- bannagalu (colours), tingalugalu (months), kaalagalu (seasons), dehada bhaagagalu (body parts) -- so the learner has read it four times without being told what it is. One lesson naming it would convert every taught noun into a plural."
+    },
+    {
+      "id": "KA-A1-N-06",
+      "category": "Naamapada (the noun)",
+      "label": "human/non-human is the division Kannada actually marks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [],
+      "note": "Untaught. Kannada's real noun classification is not gender but human vs non-human, which drives verb agreement and the plural. Nothing in the corpus names it. NO SPANISH ORIGIN: Human vs non-human is the division Kannada actually marks, and it drives agreement and the plural. No Spanish point asks about it, because Spanish sorts nouns by gender instead.",
+      "kannadaSpecific": true
+    },
+    {
+      "id": "KA-A1-ADJ-01",
+      "category": "Gunavaacaka (the adjective)",
+      "label": "qualifying adjectives before the noun",
+      "probe": [
+        "KA-LEX-C42-ADJ-01",
+        "KA-LEX-C42-ADJ-02",
+        "KA-LEX-C42-ADJ-03",
+        "KA-GRAMMAR-C42-ADJ-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-ADJ-05"
+      ],
+      "note": "dodda, cikka, olleya are taught with the pattern itself: the adjective sits BEFORE the noun and never changes. That single grammar atom does the work Spanish needs three points for."
+    },
+    {
+      "id": "KA-A1-ADJ-02",
+      "category": "Gunavaacaka (the adjective)",
+      "label": "the adjective does not agree in gender or number",
+      "probe": [
+        "KA-GRAMMAR-C42-ADJ-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "note": "Restated. Spanish needs -o/-a and plural agreement; Kannada's adjective is invariant, and KA-C42's system atom states it."
+    },
+    {
+      "id": "KA-A1-ADJ-03",
+      "category": "Gunavaacaka (the adjective)",
+      "label": "age and newness as qualities of a thing",
+      "probe": [
+        "KA-LEX-C42-ADJ-04",
+        "KA-LEX-C42-ADJ-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-NG5-04"
+      ],
+      "note": "hosa (new) and haleya (old, of a thing) are taught, with the lesson explicitly warning that haleya is not used of a person."
+    },
+    {
+      "id": "KA-A1-ADJ-04",
+      "category": "Gunavaacaka (the adjective)",
+      "label": "relational adjectives: where somebody is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "note": "Untaught. No gentilic, no way to say Kannadiga, Indian, or 'from Bangalore' as a property of a person. Blocked behind the same missing place-name vocabulary as KA-A1-N-02."
+    },
+    {
+      "id": "KA-A1-ADJ-05",
+      "category": "Gunavaacaka (the adjective)",
+      "label": "degree: intensifying an adjective",
+      "probe": [
+        "KA-LEX-C73-ABLE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01",
+        "A1-NG2-03"
+      ],
+      "note": "CLOSED by chapter 73. tumbaa is taught in front of an adjective, which is the job heccu and svalpa could not do."
+    },
+    {
+      "id": "KA-A1-DET-01",
+      "category": "Nirdeshaka (determiners)",
+      "label": "Kannada has no article; a bare noun is definite or indefinite by context",
+      "probe": [
+        "KA-GRAMMAR-C02-NANNA-HESARU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "note": "Restated as an absence. Spanish spends four points on el/la/un/una and their contractions. Kannada has none of it, and the A1 demand is that the learner NOT look for one. The zero-copula atom is the closest the corpus comes to teaching that Kannada omits what European languages require."
+    },
+    {
+      "id": "KA-A1-DET-02",
+      "category": "Nirdeshaka (determiners)",
+      "label": "ondu ('one') pressed into service as an indefinite marker",
+      "probe": [
+        "KA-GRAMMAR-C73-ABLE-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ART-03"
+      ],
+      "note": "CLOSED by chapter 73. ondu huuvu teaches the numeral in its everyday indefinite use, and says what a bare noun does without it."
+    },
+    {
+      "id": "KA-A1-DEM-01",
+      "category": "Suucaka (demonstratives and deixis)",
+      "label": "the two-way deictic contrast: this one / that one",
+      "probe": [
+        "KA-LEX-C41-DEIXIS-01",
+        "KA-LEX-C41-DEIXIS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02"
+      ],
+      "note": "idu and adu are taught together in chapter 41. Kannada's contrast is two-way where Spanish is three-way (este/ese/aquel), so this one point carries A1-DEM-01 and A1-DEM-02 between them."
+    },
+    {
+      "id": "KA-A1-DEM-02",
+      "category": "Suucaka (demonstratives and deixis)",
+      "label": "the i- / a- / e- system that generates the whole set",
+      "probe": [
+        "KA-GRAMMAR-C41-DEIXIS-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-03"
+      ],
+      "note": "The strongest single grammar atom in the track: near is i-, far is a-, and the question is e-. Six words fall out of one pattern, and the pattern itself is taught."
+    },
+    {
+      "id": "KA-A1-DEM-03",
+      "category": "Suucaka (demonstratives and deixis)",
+      "label": "place deixis: here and there",
+      "probe": [
+        "KA-LEX-C41-DEIXIS-03",
+        "KA-LEX-C41-DEIXIS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "note": "illi and alli, taught as members of the same i-/a- system rather than as two vocabulary items."
+    },
+    {
+      "id": "KA-A1-DEM-04",
+      "category": "Suucaka (demonstratives and deixis)",
+      "label": "the mid-distance term Spanish has and Kannada does not",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02"
+      ],
+      "note": "Recorded as untransferable rather than missing. Spanish aquel has no Kannada counterpart: the system is two-way. Nothing to teach; noted so the proxy point is accounted for rather than silently dropped.",
+      "untransferable": true
+    },
+    {
+      "id": "KA-A1-POS-01",
+      "category": "Sambandha (possession)",
+      "label": "first-person possessive: my",
+      "probe": [
+        "KA-LEX-C02-NANNA-01",
+        "KA-ETYMON-C02-NANNA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-03"
+      ],
+      "note": "nanna is taught in chapter 2 as the word an introduction needs before it needs 'I'."
+    },
+    {
+      "id": "KA-A1-POS-02",
+      "category": "Sambandha (possession)",
+      "label": "second-person possessive, and its respect grade",
+      "probe": [
+        "KA-LEX-C02-NIMMA-HESARU-ENU-01",
+        "KA-GRAMMAR-C02-NIINU-NIIVU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-02"
+      ],
+      "note": "nimma is taught inside the question nimma hesaru eenu?, and the respect grading that makes it nimma rather than ninna is its own atom."
+    },
+    {
+      "id": "KA-A1-POS-03",
+      "category": "Sambandha (possession)",
+      "label": "third-person possessive: his, her, their",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-02"
+      ],
+      "note": "Untaught, and blocked behind the missing third-person pronouns at KA-A1-PRON-03. avana / avala / avara cannot be taught before avanu / avalu / avaru are."
+    },
+    {
+      "id": "KA-A1-NUM-01",
+      "category": "Sankhye (numerals and quantity)",
+      "label": "cardinal numerals one to ten",
+      "probe": [
+        "KA-LEX-C07-ONDU-01",
+        "KA-LEX-C07-ERADU-01",
+        "KA-LEX-C07-MUURU-01",
+        "KA-LEX-C07-NAALKU-01",
+        "KA-LEX-C07-AIDU-01",
+        "KA-LEX-C07-NUMBERS-6-10-01",
+        "KA-LEX-C07-EELU-01",
+        "KA-LEX-C07-OMBATTU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "note": "All ten are taught, one word per lesson, across chapter 7."
+    },
+    {
+      "id": "KA-A1-NUM-02",
+      "category": "Sankhye (numerals and quantity)",
+      "label": "cardinal numerals eleven to twenty",
+      "probe": [
+        "KA-ETYMON-C20-HANNONDU-IPPATTU-01",
+        "KA-ETYMON-C20-HANNONDU-IPPATTU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "note": "The teens and twenty are taught in chapter 20 as additive 'ten-echo' compounds rather than as twenty separate words."
+    },
+    {
+      "id": "KA-A1-NUM-03",
+      "category": "Sankhye (numerals and quantity)",
+      "label": "the written digits",
+      "probe": [
+        "KA-SCRIPT-RECOG-140",
+        "KA-SCRIPT-RECOG-141",
+        "KA-SCRIPT-RECOG-142",
+        "KA-SCRIPT-RECOG-143",
+        "KA-SCRIPT-RECOG-144",
+        "KA-SCRIPT-RECOG-145",
+        "KA-SCRIPT-RECOG-146",
+        "KA-SCRIPT-RECOG-147",
+        "KA-SCRIPT-RECOG-148",
+        "KA-SCRIPT-RECOG-149"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE16-01"
+      ],
+      "note": "All ten Kannada digits have their own script lesson, spread across chapters 9-18 so each rides behind a word already learned."
+    },
+    {
+      "id": "KA-A1-NUM-04",
+      "category": "Sankhye (numerals and quantity)",
+      "label": "asking how many or how much",
+      "probe": [
+        "KA-GRAMMAR-C19-VAYASSU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-PRON-06"
+      ],
+      "note": "eshtu is taught inside the age question 'ninna vayassu eshtu?', which is the frame that carries it."
+    },
+    {
+      "id": "KA-A1-NUM-05",
+      "category": "Sankhye (numerals and quantity)",
+      "label": "relative quantity: more, less, a little",
+      "probe": [
+        "KA-LEX-C58-REPLY-01",
+        "KA-LEX-C58-REPLY-02",
+        "KA-LEX-C58-REPLY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-NG2-02",
+        "A1-ADV-03",
+        "A1-NG2-03"
+      ],
+      "note": "svalpa, heccu and kadime are taught in chapter 58 as the replies an offer of food needs."
+    },
+    {
+      "id": "KA-A1-NUM-06",
+      "category": "Sankhye (numerals and quantity)",
+      "label": "sufficiency: enough, that's all",
+      "probe": [
+        "KA-LEX-C49-REPLY-02",
+        "KA-LEX-C58-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-Q-04",
+        "A1-NG2-02"
+      ],
+      "note": "saaku ('enough') and ashtee ('that's all') are both taught, and between them they close a refusal politely."
+    },
+    {
+      "id": "KA-A1-NUM-07",
+      "category": "Sankhye (numerals and quantity)",
+      "label": "ordinal numerals to tenth",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "note": "Untaught. Kannada forms ordinals with -aneya on the cardinal (mooraneya, 'third'), so all ten follow from one suffix on numbers already taught -- another high points-per-word target."
+    },
+    {
+      "id": "KA-A1-NUM-08",
+      "category": "Sankhye (numerals and quantity)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Untaught. dodda and cikka give size as a quality, but there is no unit of distance, weight or length anywhere in the corpus."
+    },
+    {
+      "id": "KA-A1-PRON-01",
+      "category": "Sarvanaama (pronouns)",
+      "label": "first-person subject pronoun",
+      "probe": [
+        "KA-LEX-C03-NAANU-01",
+        "KA-ETYMON-C03-NAANU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "naanu is taught in chapter 3, with its Proto-Dravidian pedigree and the explicit warning that it is NOT cousin to English me."
+    },
+    {
+      "id": "KA-A1-PRON-02",
+      "category": "Sarvanaama (pronouns)",
+      "label": "second-person subject pronoun, familiar and respectful",
+      "probe": [
+        "KA-LEX-C02-NIINU-NIIVU-01",
+        "KA-GRAMMAR-C02-NIINU-NIIVU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "niinu and niivu are taught together with the rule that makes the choice: respect is the plural."
+    },
+    {
+      "id": "KA-A1-PRON-03",
+      "category": "Sarvanaama (pronouns)",
+      "label": "third-person subject pronouns: he, she, they",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "UNTAUGHT, AND THE LARGEST SINGLE HOLE IN THE GRAMMAR. avanu, avalu, adu and avaru appear nowhere in the corpus. A learner can talk about themselves and to one other person, and cannot say one word about anybody who is not in the room -- which also blocks KA-A1-POS-03, most of the family vocabulary from being used in a sentence, and every third-person verb form."
+    },
+    {
+      "id": "KA-A1-PRON-04",
+      "category": "Sarvanaama (pronouns)",
+      "label": "pro-drop: the verb ending already carries the person",
+      "probe": [
+        "KA-GRAMMAR-C03-NAANU-03",
+        "KA-GRAMMAR-C05-MATANADU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01",
+        "A1-SN-03"
+      ],
+      "note": "Taught twice and from both ends: chapter 3 says naanu is usually left out, and chapter 5 shows why -- the -eene ending IS 'I'."
+    },
+    {
+      "id": "KA-A1-PRON-05",
+      "category": "Sarvanaama (pronouns)",
+      "label": "the dative subject: the experiencer is not the subject",
+      "probe": [
+        "KA-LEX-C06-DATIVE-SUBJECT-01",
+        "KA-GRAMMAR-C06-DATIVE-SUBJECT-02",
+        "KA-GRAMMAR-C06-DATIVE-SUBJECT-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01"
+      ],
+      "note": "This is Kannada's answer to gustar, and the corpus teaches it properly: nanage kannada gottu, with the whole 'knowing happens TO you' argument and the four Dravidian sisters lined up. Spanish reaches this through an indirect-object pronoun; Kannada reaches it through case, and the point is restated around the case."
+    },
+    {
+      "id": "KA-A1-PRON-06",
+      "category": "Sarvanaama (pronouns)",
+      "label": "interrogative pronouns: who, what, where",
+      "probe": [
+        "KA-LEX-C41-DEIXIS-05",
+        "KA-LEX-C02-ENU-01",
+        "KA-LEX-C41-DEIXIS-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06",
+        "A1-ADV-07"
+      ],
+      "note": "yaaru, eenu and elli are all taught, and chapter 41 shows them as the e- arm of one system rather than three separate words."
+    },
+    {
+      "id": "KA-A1-PRON-07",
+      "category": "Sarvanaama (pronouns)",
+      "label": "object pronouns",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02",
+        "A1-PRON-08"
+      ],
+      "note": "Untaught. Kannada makes them by putting the pronoun in the accusative (nannannu, 'me'), and no accusative is taught anywhere -- see KA-A1-CASE-03."
+    },
+    {
+      "id": "KA-A1-PRON-08",
+      "category": "Sarvanaama (pronouns)",
+      "label": "the reflexive, and the self-benefactive verb ending",
+      "probe": [
+        "KA-GRAMMAR-C33-ARTHA-MAADIKO-02",
+        "KA-LEX-C34-TEGEDUKO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "Partially, and from an unexpected direction. Kannada's -ko ending means 'do it for yourself', and it is taught inside arthamaadiko ('understand') and tegeduko ('take'). A reflexive pronoun is not taught, but the self-directed verb is, which is the load Spanish se carries at A1."
+    },
+    {
+      "id": "KA-A1-ADV-01",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "place deictics",
+      "probe": [
+        "KA-LEX-C41-DEIXIS-03",
+        "KA-LEX-C41-DEIXIS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01"
+      ],
+      "note": "illi and alli, from the deixis system."
+    },
+    {
+      "id": "KA-A1-ADV-02",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "time deictics: now, later, soon, still",
+      "probe": [
+        "KA-LEX-C50-LEAVE-01",
+        "KA-LEX-C64-JOIN-01",
+        "KA-LEX-C64-JOIN-04",
+        "KA-LEX-C64-JOIN-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-03"
+      ],
+      "note": "iiga (now), aameele (afterwards), beega (soon) and innuu (still) are taught in chapters 50 and 64."
+    },
+    {
+      "id": "KA-A1-ADV-03",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "today, yesterday, tomorrow",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "note": "PARTIAL AND ODDLY SHAPED. naale ('tomorrow') is taught only inside the farewell naale sigoona, and naadiddu ('the day after tomorrow') is taught as its own word in chapter 50 -- but 'today' (indu) and 'yesterday' (ninne) are both untaught. The learner can name the day after tomorrow and not today."
+    },
+    {
+      "id": "KA-A1-ADV-04",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "manner: well",
+      "probe": [
+        "KA-LEX-C03-CENNAAGI-01",
+        "KA-ETYMON-C03-CENNAAGI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04",
+        "A1-NG6-01"
+      ],
+      "note": "cennaagi is taught, and taught as an adverb -- the -aagi suffix that makes it one is part of the etymology atom."
+    },
+    {
+      "id": "KA-A1-ADV-05",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "polarity: yes and no",
+      "probe": [
+        "KA-LEX-C01-HAUDU-01",
+        "KA-LEX-C01-ILLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "note": "haudu and illa, chapter 1, taught as a pair."
+    },
+    {
+      "id": "KA-A1-ADV-06",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "additive: also, too",
+      "probe": [
+        "KA-LEX-C64-JOIN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "kuuda ('also, too') is taught in chapter 64. It is the nearest thing in the whole corpus to a joining word, and it is an adverb, not a conjunction -- see the KA-A1-CJ column."
+    },
+    {
+      "id": "KA-A1-ADV-07",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "manner deictic: like this, that way",
+      "probe": [
+        "KA-LEX-C49-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "note": "haage ('that way, just so') is taught in chapter 49, and belongs to the same a- arm as adu and alli."
+    },
+    {
+      "id": "KA-A1-ADV-08",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "interrogative adverb: how",
+      "probe": [
+        "KA-LEX-C03-HEGE-01",
+        "KA-ETYMON-C03-HEGE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "note": "heege is taught in chapter 3 with the whole e- question family named around it."
+    },
+    {
+      "id": "KA-A1-ADV-09",
+      "category": "Kriyaavisheshana (adverbs)",
+      "label": "the negative counterpart: not also, neither",
+      "probe": [
+        "KA-GRAMMAR-C68-DENY-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06",
+        "A1-CO-02"
+      ],
+      "note": "CLOSED by chapter 68. nanaguu gottilla is the -uu suffix on the dative rather than on a noun, which is the form the track's dative sentences need."
+    },
+    {
+      "id": "KA-A1-V-01",
+      "category": "Kriyaapada (the verb)",
+      "label": "the three-piece verb: stem, tense bead, person ending",
+      "probe": [
+        "KA-GRAMMAR-C05-MATANADU-02",
+        "KA-GRAMMAR-C32-IRU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-SN-03"
+      ],
+      "note": "The single most load-bearing grammar atom in the track, and it is taught twice -- chapter 5 builds maatanaaduttene from stem + -utt- + -eene, and chapter 32 names the machine outright."
+    },
+    {
+      "id": "KA-A1-V-02",
+      "category": "Kriyaapada (the verb)",
+      "label": "present tense, first person",
+      "probe": [
+        "KA-LEX-C05-MATANADU-01",
+        "KA-LEX-C05-KANNADA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03"
+      ],
+      "note": "maatanaaduttene ('I speak') is built in full, and the sentence naanu kannada maatanaaduttene is the chapter-5 payoff."
+    },
+    {
+      "id": "KA-A1-V-03",
+      "category": "Kriyaapada (the verb)",
+      "label": "the verb of being and existing",
+      "probe": [
+        "KA-LEX-C05-IRU-01",
+        "KA-LEX-C32-IRU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-NG1-01"
+      ],
+      "note": "iru is taught twice over -- chapter 5 for 'to be / stay / live', chapter 32 as the frame the whole verb system hangs on."
+    },
+    {
+      "id": "KA-A1-V-04",
+      "category": "Kriyaapada (the verb)",
+      "label": "the zero copula: 'is' is simply absent",
+      "probe": [
+        "KA-GRAMMAR-C02-NANNA-HESARU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-OS-05",
+        "A1-NG1-03"
+      ],
+      "note": "Restated around Kannada. Spanish spends three points on ser/estar and the attribute; Kannada's equivalent demand is the opposite one -- notice that nothing is there. nanna hesaru ... is taught with the absence named."
+    },
+    {
+      "id": "KA-A1-V-05",
+      "category": "Kriyaapada (the verb)",
+      "label": "a noun plus maadu builds a new verb",
+      "probe": [
+        "KA-LEX-C05-MAADU-01",
+        "KA-GRAMMAR-C05-MAADU-02",
+        "KA-LEX-C34-SAHAYA-MAADU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "kelasa maadu ('work-do') and sahaaya maadu ('help-do') are both taught, and the pattern itself is an atom -- which is how one verb multiplies into many."
+    },
+    {
+      "id": "KA-A1-V-06",
+      "category": "Kriyaapada (the verb)",
+      "label": "everyday verbs: go, come, see, eat",
+      "probe": [
+        "KA-LEX-C32-HOOGU-01",
+        "KA-LEX-C32-BAA-01",
+        "KA-LEX-C32-NOODU-01",
+        "KA-LEX-C32-TINNU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "Chapter 32 teaches four core verbs as the beads the tense machine runs on, not as isolated vocabulary."
+    },
+    {
+      "id": "KA-A1-V-07",
+      "category": "Kriyaapada (the verb)",
+      "label": "verbs of literacy and thought: read, write, understand, think",
+      "probe": [
+        "KA-LEX-C33-OODU-01",
+        "KA-LEX-C33-BARE-01",
+        "KA-LEX-C33-ARTHA-MAADIKO-01",
+        "KA-LEX-C33-YOCISU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01",
+        "A1-NG7-02",
+        "A1-NE06-04"
+      ],
+      "note": "oodu, bare, arthamaadiko and yoocisu, all in chapter 33."
+    },
+    {
+      "id": "KA-A1-V-08",
+      "category": "Kriyaapada (the verb)",
+      "label": "verbs of exchange: ask, hear, take, help",
+      "probe": [
+        "KA-LEX-C34-KEELU-01",
+        "KA-LEX-C34-TEGEDUKO-01",
+        "KA-LEX-C34-SAHAYA-MAADU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-F4-03"
+      ],
+      "note": "keelu is taught doing two jobs at once -- ask and hear -- which is a genuine Kannada fact rather than a gloss convenience."
+    },
+    {
+      "id": "KA-A1-V-09",
+      "category": "Kriyaapada (the verb)",
+      "label": "the citation form is not the stem the endings attach to",
+      "probe": [
+        "KA-GRAMMAR-C32-BAA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "note": "Kannada's answer to the infinitive point. baa is how you name the verb; baru- is what the beads attach to, and chapter 32 teaches the difference explicitly."
+    },
+    {
+      "id": "KA-A1-V-10",
+      "category": "Kriyaapada (the verb)",
+      "label": "the affirmative imperative, second person",
+      "probe": [
+        "KA-LEX-COME",
+        "KA-LEX-GIVE",
+        "KA-LEX-SIT",
+        "KA-LEX-STAND",
+        "KA-LEX-LISTEN",
+        "KA-LEX-LOOK",
+        "KA-LEX-SPEAK",
+        "KA-LEX-WRITE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ],
+      "note": "Eight imperatives across chapters 43 and 44 -- baa, kodu, kulituko, nillu, keelu, noodu, maataadu, bare. Kannada's bare imperative is the stem, so these are free once the verbs are known."
+    },
+    {
+      "id": "KA-A1-V-11",
+      "category": "Kriyaapada (the verb)",
+      "label": "the respectful imperative",
+      "probe": [
+        "KA-ETYMON-C09-KSHAMISI-01",
+        "KA-PRAGMATICS-C08-DAYAVITTU-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-02"
+      ],
+      "note": "kshamisi is itself a respectful imperative, and dayavittu is the softener that fronts one. The corpus teaches the polite form before the plain one, which is the right order for a guest."
+    },
+    {
+      "id": "KA-A1-V-12",
+      "category": "Kriyaapada (the verb)",
+      "label": "a word that behaves like a verb but has no stem, tense or person",
+      "probe": [
+        "KA-LEX-C32-GOTTU-01",
+        "KA-GRAMMAR-C32-GOTTU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ],
+      "note": "gottu ('known') is taught as exactly that oddity, and it is the predicate the dative subject needs."
+    },
+    {
+      "id": "KA-A1-V-13",
+      "category": "Kriyaapada (the verb)",
+      "label": "the participle that chains one action to the next",
+      "probe": [
+        "KA-GRAMMAR-C04-HOOGI-BARUTTENE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-13",
+        "A1-SUB-01"
+      ],
+      "note": "Kannada's answer to the gerund. hoogi baruttene is 'having gone, I come back', and chapter 4 teaches the -i participle as the joint."
+    },
+    {
+      "id": "KA-A1-V-14",
+      "category": "Kriyaapada (the verb)",
+      "label": "the past participle as an independent form",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "note": "Untaught as a form in its own right. It is visible inside dayavittu ('having placed') and hoogi ('having gone'), but no lesson names it or builds one."
+    },
+    {
+      "id": "KA-A1-T-01",
+      "category": "Kaala (tense)",
+      "label": "present tense with the -utt- bead",
+      "probe": [
+        "KA-GRAMMAR-C05-MATANADU-02",
+        "KA-GRAMMAR-C32-TINNU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03"
+      ],
+      "note": "Taught in chapter 5 and named as a bead in chapter 32."
+    },
+    {
+      "id": "KA-A1-T-02",
+      "category": "Kaala (tense)",
+      "label": "past tense with the -d- bead",
+      "probe": [
+        "KA-GRAMMAR-C32-TINNU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08"
+      ],
+      "note": "Chapter 32 teaches tinde ('I ate'). Spanish spends three points on preterite paradigms and strong stems; Kannada needs one bead, so the three collapse into this."
+    },
+    {
+      "id": "KA-A1-T-03",
+      "category": "Kaala (tense)",
+      "label": "the present covers the future too",
+      "probe": [
+        "KA-GRAMMAR-C32-TINNU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "A genuine Kannada fact the corpus is careful about: -utt- carries the future as well, and the separate -uv- future survives mainly in writing. Taught in chapter 32."
+    },
+    {
+      "id": "KA-A1-T-04",
+      "category": "Kaala (tense)",
+      "label": "person endings across the paradigm",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "PARTIAL, AND UNEVENLY SO. The first person -eene is taught thoroughly. Third-person -aane / -aale / -aare are shown once, in passing, in chapter 5's grammar lens, and are not atoms -- and with no third-person pronoun to pair them with (KA-A1-PRON-03) they cannot be used."
+    },
+    {
+      "id": "KA-A1-T-05",
+      "category": "Kaala (tense)",
+      "label": "the perfect: an action completed and still relevant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-09"
+      ],
+      "note": "Untaught. Kannada builds it with the -iddu participle plus iru, both of whose parts are taught, so the construction is closer than it looks."
+    },
+    {
+      "id": "KA-A1-T-06",
+      "category": "Kaala (tense)",
+      "label": "the imperfect: describing a past state or habit",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05"
+      ],
+      "note": "Untaught. No past form of iru (ittu, iddenu) appears anywhere, so the learner cannot say what anything WAS."
+    },
+    {
+      "id": "KA-A1-CASE-01",
+      "category": "Vibhakti (case)",
+      "label": "the dative -ge: to, for",
+      "probe": [
+        "KA-LEX-C06-DATIVE-GE-01",
+        "KA-ETYMON-C06-DATIVE-GE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SV-05"
+      ],
+      "note": "Chapter 6 teaches -ge with both its shapes (-ige, -kke) and the sound change behind them."
+    },
+    {
+      "id": "KA-A1-CASE-02",
+      "category": "Vibhakti (case)",
+      "label": "one suffix per job: Kannada stacks where Latin fuses",
+      "probe": [
+        "KA-GRAMMAR-C06-DATIVE-STACKING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [],
+      "note": "The structural fact an A1 learner needs about a case language they can actually see the seams of. Taught as its own atom. NO SPANISH ORIGIN: One visible suffix per job. A property of an agglutinating language that a fusional one cannot pose as a question.",
+      "kannadaSpecific": true
+    },
+    {
+      "id": "KA-A1-CASE-03",
+      "category": "Vibhakti (case)",
+      "label": "the accusative -annu: marking a definite object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "note": "UNTAUGHT, AND A BLOCKER. Spanish's A1-SV-04 is about the personal a; Kannada's equivalent is -annu, which is what makes 'I saw the man' possible and what object pronouns are built from. Nothing teaches it, so every taught transitive verb can only take a bare object."
+    },
+    {
+      "id": "KA-A1-CASE-04",
+      "category": "Vibhakti (case)",
+      "label": "the genitive -a: whose",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "Untaught as a suffix, though its output is taught twice: nanna and nimma ARE genitives. Naming the suffix would let the learner build a possessive from any noun they know."
+    },
+    {
+      "id": "KA-A1-CASE-05",
+      "category": "Vibhakti (case)",
+      "label": "the locative -alli: in, at",
+      "probe": [
+        "KA-GRAMMAR-C05-IRU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-SV-06"
+      ],
+      "note": "Taught in chapter 5, and taught as the structural point rather than a word: 'in' comes AFTER the noun, glued to its end."
+    },
+    {
+      "id": "KA-A1-CASE-06",
+      "category": "Vibhakti (case)",
+      "label": "the instrumental: with, by means of",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "Untaught. -inda appears nowhere."
+    },
+    {
+      "id": "KA-A1-CASE-07",
+      "category": "Vibhakti (case)",
+      "label": "the ablative: from where",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "note": "Untaught, and it is what 'Where are you from?' needs. -inda again, in its other job. With KA-A1-N-02's missing place names, origin is unsayable twice over."
+    },
+    {
+      "id": "KA-A1-CASE-08",
+      "category": "Vibhakti (case)",
+      "label": "the vocative: calling somebody",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SN-04"
+      ],
+      "note": "Untaught. No form of address beyond a bare name is taught, and no honorific like -avare."
+    },
+    {
+      "id": "KA-A1-POST-01",
+      "category": "Anusarga (postpositions)",
+      "label": "Kannada puts its relators AFTER the noun",
+      "probe": [
+        "KA-GRAMMAR-C05-IRU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01"
+      ],
+      "note": "The single most portable structural fact between Kannada and English, and chapter 5 states it: 'Bangalore-in I am', the verb last."
+    },
+    {
+      "id": "KA-A1-POST-02",
+      "category": "Anusarga (postpositions)",
+      "label": "relative position: near, far, on, under, inside",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "note": "Untaught, entirely. Not one spatial relator -- mele, kelage, olage, hattira -- is in the corpus, so nothing can be located relative to anything else."
+    },
+    {
+      "id": "KA-A1-POST-03",
+      "category": "Anusarga (postpositions)",
+      "label": "movement towards and away",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04",
+        "A1-NG3-05"
+      ],
+      "note": "Untaught. hoogu and baa give the motion; the destination cannot be attached to them."
+    },
+    {
+      "id": "KA-A1-POST-04",
+      "category": "Anusarga (postpositions)",
+      "label": "before and after in time",
+      "probe": [
+        "KA-LEX-C64-JOIN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG3-06",
+        "A1-NG4-03"
+      ],
+      "note": "Half. aameele ('afterwards') is taught as an adverb in chapter 64; the postpositions munce and nantara, which would let one event be placed relative to another, are not."
+    },
+    {
+      "id": "KA-A1-NEG-01",
+      "category": "Nishedha (negation)",
+      "label": "illa: the everyday no",
+      "probe": [
+        "KA-LEX-C01-ILLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-OS-01"
+      ],
+      "note": "Chapter 1, paired with haudu."
+    },
+    {
+      "id": "KA-A1-NEG-02",
+      "category": "Nishedha (negation)",
+      "label": "Dravidian negates by being, not with a not-word",
+      "probe": [
+        "KA-GRAMMAR-C01-ILLA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "The structural point, and the corpus teaches it properly: pustaka ide / pustaka illa. illa is the negative verb of existence, not a particle bolted onto a positive sentence."
+    },
+    {
+      "id": "KA-A1-NEG-03",
+      "category": "Nishedha (negation)",
+      "label": "illa as a full sentence answer",
+      "probe": [
+        "KA-LEX-C01-ILLA-01",
+        "KA-ETYMON-C01-ILLA-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-05",
+        "A1-OS-01"
+      ],
+      "note": "Taught, and its family spread is taught with it -- Tamil illai and Malayalam illa share the root, Telugu does not."
+    },
+    {
+      "id": "KA-A1-NEG-04",
+      "category": "Nishedha (negation)",
+      "label": "refusing an offer politely",
+      "probe": [
+        "KA-LEX-C58-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-09",
+        "A1-NG6-06"
+      ],
+      "note": "beeda ('no thank you, I don't want it') is taught in chapter 58, which is the negation an A1 guest actually needs at a table."
+    },
+    {
+      "id": "KA-A1-NEG-05",
+      "category": "Nishedha (negation)",
+      "label": "alla: negating an equation rather than an existence",
+      "probe": [
+        "KA-LEX-C68-DENY-01",
+        "KA-GRAMMAR-C68-DENY-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-OS-01",
+        "A1-OS-05"
+      ],
+      "note": "CLOSED by chapter 68. alla is taught against the illa the track has had since chapter 1, with the test that decides between them: if you could point at the thing, it is alla."
+    },
+    {
+      "id": "KA-A1-Q-01",
+      "category": "Prashne (questions)",
+      "label": "yes-or-no questions",
+      "probe": [
+        "KA-LEX-C03-HEGIDDIIRA-01",
+        "KA-GRAMMAR-C01-HAUDU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-OS-02",
+        "A1-F1-04"
+      ],
+      "note": "Structural, and now named. The -aa particle was visible in heegiddiiraa and the echo-answer pattern was taught with haudu, but no lesson named -aa as the thing that turns any statement into a question. Chapter 69 does, on the headword gottaa, and KA-A1-F-11 and KA-A1-F-20 both close behind it."
+    },
+    {
+      "id": "KA-A1-Q-02",
+      "category": "Prashne (questions)",
+      "label": "questions with an asking word",
+      "probe": [
+        "KA-LEX-C02-ENU-01",
+        "KA-LEX-C41-DEIXIS-05",
+        "KA-LEX-C41-DEIXIS-06",
+        "KA-LEX-C03-HEGE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-OS-03",
+        "A1-PRON-06"
+      ],
+      "note": "eenu, yaaru, elli and heege are all taught, and the e- system links them."
+    },
+    {
+      "id": "KA-A1-Q-03",
+      "category": "Prashne (questions)",
+      "label": "asking somebody's name",
+      "probe": [
+        "KA-LEX-C02-NIMMA-HESARU-ENU-01",
+        "KA-GRAMMAR-C02-NIMMA-HESARU-ENU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-NE03-01"
+      ],
+      "note": "The chapter-2 payoff, taught with its familiar variant alongside."
+    },
+    {
+      "id": "KA-A1-Q-04",
+      "category": "Prashne (questions)",
+      "label": "asking how somebody is",
+      "probe": [
+        "KA-LEX-C03-HEGIDDIIRA-01",
+        "KA-GRAMMAR-C03-HEGIDDIIRA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-02"
+      ],
+      "note": "niivu heegiddiiraa?, with the respectful and familiar forms both taught and the rule that picks between them."
+    },
+    {
+      "id": "KA-A1-Q-05",
+      "category": "Prashne (questions)",
+      "label": "asking somebody's age",
+      "probe": [
+        "KA-ETYMON-C19-VAYASSU-01",
+        "KA-GRAMMAR-C19-VAYASSU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE03-01"
+      ],
+      "note": "ninna vayassu eshtu?, taught as a frame in chapter 19."
+    },
+    {
+      "id": "KA-A1-Q-06",
+      "category": "Prashne (questions)",
+      "label": "asking when",
+      "probe": [
+        "KA-LEX-C71-MORE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-OS-03",
+        "A1-NG4-01"
+      ],
+      "note": "CLOSED by chapter 71. yaavaaga is taught, and answered with iiga and naadiddu, which the track already had."
+    },
+    {
+      "id": "KA-A1-Q-07",
+      "category": "Prashne (questions)",
+      "label": "asking why",
+      "probe": [
+        "KA-LEX-C69-ASK-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "note": "CLOSED by chapter 69. yaake is taught with the written eeke named beside it, because the word for 'because' is built on the written one."
+    },
+    {
+      "id": "KA-A1-Q-08",
+      "category": "Prashne (questions)",
+      "label": "asking which one out of several",
+      "probe": [
+        "KA-LEX-C71-MORE-05",
+        "KA-GRAMMAR-C71-MORE-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "CLOSED by chapter 71. yaava is taught in front of a noun, and the yaa- question family is named as a family: yaaru, yaake, yaavaaga, yaava."
+    },
+    {
+      "id": "KA-A1-Q-09",
+      "category": "Prashne (questions)",
+      "label": "asking where somebody is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-NG3-07"
+      ],
+      "note": "Untaught, and blocked twice: no ablative case (KA-A1-CASE-07) and no place names (KA-A1-N-02). This is a standard A1 exam item in every published inventory, and Kannada cannot form it at all."
+    },
+    {
+      "id": "KA-A1-S-01",
+      "category": "Vaakya (the sentence)",
+      "label": "the verb goes last",
+      "probe": [
+        "KA-LEX-C05-KANNADA-01",
+        "KA-GRAMMAR-C05-IRU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-OS-06"
+      ],
+      "note": "Taught and re-taught: 'I Kannada speak', 'Bangalore-in I am'."
+    },
+    {
+      "id": "KA-A1-S-02",
+      "category": "Vaakya (the sentence)",
+      "label": "a sentence with no verb at all",
+      "probe": [
+        "KA-GRAMMAR-C02-NANNA-HESARU-02",
+        "KA-LEX-C34-ISHTA-01",
+        "KA-GRAMMAR-C34-ISHTA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-OS-05",
+        "A1-SV-02"
+      ],
+      "note": "Two of them, and the corpus is proud of both: nanna hesaru ... and nanage kannada ishta, 'I like Kannada', which chapter 34 points out has no verb anywhere in it."
+    },
+    {
+      "id": "KA-A1-S-03",
+      "category": "Vaakya (the sentence)",
+      "label": "declaratives, affirmative and negative",
+      "probe": [
+        "KA-LEX-C05-KANNADA-01",
+        "KA-GRAMMAR-C01-ILLA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "Both halves taught, in chapters 5 and 1."
+    },
+    {
+      "id": "KA-A1-S-04",
+      "category": "Vaakya (the sentence)",
+      "label": "existence and non-existence",
+      "probe": [
+        "KA-GRAMMAR-C01-ILLA-02",
+        "KA-LEX-C32-IRU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-OS-04",
+        "A1-NG1-02"
+      ],
+      "note": "ide / illa is the pair Spanish reaches with hay, and chapter 1 teaches it as a pair."
+    },
+    {
+      "id": "KA-A1-S-05",
+      "category": "Vaakya (the sentence)",
+      "label": "the experiencer construction as a sentence pattern",
+      "probe": [
+        "KA-LEX-C06-DATIVE-SUBJECT-01",
+        "KA-LEX-C34-ISHTA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SV-01"
+      ],
+      "note": "Taught twice with two different predicates -- gottu and ishta -- which is what makes it a pattern rather than a phrase."
+    },
+    {
+      "id": "KA-A1-S-06",
+      "category": "Vaakya (the sentence)",
+      "label": "agreement between subject and verb ending",
+      "probe": [
+        "KA-GRAMMAR-C05-MATANADU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SN-03",
+        "A1-SV-03"
+      ],
+      "note": "Taught for the first person. See KA-A1-T-04 for what is missing."
+    },
+    {
+      "id": "KA-A1-S-07",
+      "category": "Vaakya (the sentence)",
+      "label": "a noun phrase with an adjective in it",
+      "probe": [
+        "KA-GRAMMAR-C42-ADJ-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SN-01",
+        "A1-SN-02"
+      ],
+      "note": "Chapter 42 teaches the position and the invariance together."
+    },
+    {
+      "id": "KA-A1-S-08",
+      "category": "Vaakya (the sentence)",
+      "label": "a relative clause modifying a noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SN-01",
+        "A1-SUB-04",
+        "A1-SUB-05",
+        "A1-PRON-05"
+      ],
+      "note": "Untaught. Kannada relativises with a participle before the noun, and no such construction appears in the corpus. Three Spanish A1 points land here and none of them transfers."
+    },
+    {
+      "id": "KA-A1-CJ-01",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "joining two nouns: and",
+      "probe": [
+        "KA-LEX-C67-LINK-01",
+        "KA-GRAMMAR-C67-LINK-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "CLOSED by chapter 67. mattu is taught as the word that stands between two nouns, and the -uu suffix that hangs on both is taught in the same chapter, so BOTH of the ways Kannada joins two nouns are now in the corpus rather than neither. The note this replaces recorded zero occurrences of mattu in 268 lessons and zero in the generated book."
+    },
+    {
+      "id": "KA-A1-CJ-02",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "joining with but",
+      "probe": [
+        "KA-LEX-C67-LINK-03",
+        "KA-GRAMMAR-C67-LINK-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "note": "CLOSED by chapter 67. aadare is taught, and taught as what it is: the conditional of aagu, 'if it becomes'. The learner had already read it inside haagaadare without being told, which is what the lesson opens on."
+    },
+    {
+      "id": "KA-A1-CJ-03",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "joining with or",
+      "probe": [
+        "KA-LEX-C67-LINK-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-CO-03",
+        "A1-F3-02"
+      ],
+      "note": "CLOSED by chapter 67. athavaa is taught between two nouns the learner already has, which is also what unblocks KA-A1-F-23."
+    },
+    {
+      "id": "KA-A1-CJ-04",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "negative coordination: neither ... nor",
+      "probe": [
+        "KA-GRAMMAR-C68-DENY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "note": "CLOSED by chapter 68, and downstream of KA-A1-CJ-01 exactly as this note predicted: haaluu illa, niiruu illa is the -uu suffix on both nouns with illa after each."
+    },
+    {
+      "id": "KA-A1-CJ-05",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "causal clauses: because",
+      "probe": [
+        "KA-LEX-C70-TELL-04",
+        "KA-GRAMMAR-C70-TELL-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06",
+        "A1-ADV-08"
+      ],
+      "note": "CLOSED by chapter 70. eekendare is taught after the quotative it is built from -- eeke plus endare, 'if one says why' -- so the learner meets the pieces before the word. With yaake now taught at KA-A1-Q-07, a reason can be both asked for and given."
+    },
+    {
+      "id": "KA-A1-CJ-06",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "purpose clauses: in order to",
+      "probe": [
+        "KA-LEX-C73-ABLE-02",
+        "KA-GRAMMAR-C73-ABLE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "note": "CLOSED by chapter 73. The -alu infinitive is formed on oodu, a verb the track already taught, and named beside the -i and -aaga endings as the third way Kannada hangs one verb off another."
+    },
+    {
+      "id": "KA-A1-CJ-07",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "simultaneity: when",
+      "probe": [
+        "KA-LEX-C72-WANT-01",
+        "KA-GRAMMAR-C72-WANT-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "CLOSED by chapter 72. The -aaga participle is formed on baru (bandaaga) and taught as the same aaga that sits inside yaavaaga, which chapter 71 teaches first."
+    },
+    {
+      "id": "KA-A1-CJ-08",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "a clause as the object of a verb of saying or thinking",
+      "probe": [
+        "KA-LEX-C70-TELL-02",
+        "KA-GRAMMAR-C70-TELL-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SUB-02",
+        "A1-SUB-03",
+        "A1-F2-02"
+      ],
+      "note": "CLOSED by chapter 70. The colloquial quotative anta is taught, with the literary endu named beside it, and the lesson teaches the ORDER a Kannada report uses: the quoted clause, then anta, then the verb of saying. This is what unblocks yoocisu, and KA-A1-F-12 with it."
+    },
+    {
+      "id": "KA-A1-CJ-09",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "the -i participle as the joint between two actions",
+      "probe": [
+        "KA-GRAMMAR-C04-HOOGI-BARUTTENE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01"
+      ],
+      "note": "THE ONE POINT THIS COLUMN STARTED WITH. hoogi baruttene chains two verbs with the -i participle, and chapter 4 teaches the joint itself. Kannada's real clause-chaining machinery is participial rather than conjunctional, so this was not a consolation prize -- it is the door the rest of the column opened through, and chapter 73 names -i, -aaga and -alu together as three shapes of one habit."
+    },
+    {
+      "id": "KA-A1-CJ-10",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "discourse connectives: in that case, afterwards",
+      "probe": [
+        "KA-LEX-C64-JOIN-05",
+        "KA-LEX-C64-JOIN-01",
+        "KA-LEX-C64-JOIN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-04"
+      ],
+      "note": "haagaadare, aameele and kuuda are taught in chapter 64. They connect TURNS, not clauses, which is why a chapter named JOIN left this column at two of eleven. Chapters 67 to 73 add the conjunctions and the quotative in NEW chapters rather than in chapter 64, because chapter 64's five words are a coherent set that does a different job and cramming clause-joiners in beside them would have broken both the chapter's promise and the one-new-item-per-lesson rate."
+    },
+    {
+      "id": "KA-A1-F-01",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "identify oneself by name",
+      "probe": [
+        "KA-LEX-C02-NANNA-HESARU-01",
+        "KA-GRAMMAR-C02-NANNA-HESARU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-01",
+        "A1-F1-03"
+      ],
+      "note": "nanna hesaru ..., the chapter-2 payoff."
+    },
+    {
+      "id": "KA-A1-F-02",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask for somebody's name",
+      "probe": [
+        "KA-LEX-C02-NIMMA-HESARU-ENU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "note": "nimma hesaru eenu?, with the familiar variant taught beside it."
+    },
+    {
+      "id": "KA-A1-F-03",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "give your age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE03-01"
+      ],
+      "note": "The question is taught (chapter 19) and the answer is not: no lesson shows a number used as an age, and the numbers stop at twenty."
+    },
+    {
+      "id": "KA-A1-F-04",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask somebody's age",
+      "probe": [
+        "KA-ETYMON-C19-VAYASSU-01",
+        "KA-GRAMMAR-C19-VAYASSU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "note": "ninna vayassu eshtu?"
+    },
+    {
+      "id": "KA-A1-F-05",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "say where you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG3-07"
+      ],
+      "note": "Unsayable. See KA-A1-Q-09 -- no ablative, no place names."
+    },
+    {
+      "id": "KA-A1-F-06",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "say what language you speak",
+      "probe": [
+        "KA-LEX-C05-KANNADA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-03"
+      ],
+      "note": "naanu kannada maatanaaduttene, taught in full as the chapter-5 payoff."
+    },
+    {
+      "id": "KA-A1-F-07",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "KA-LEX-C01-HAUDU-01",
+        "KA-LEX-C01-ILLA-01",
+        "KA-GRAMMAR-C01-HAUDU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ],
+      "note": "haudu and illa, plus the Dravidian echo-answer habit that makes a bare yes sound curt."
+    },
+    {
+      "id": "KA-A1-F-08",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask for confirmation with a tag",
+      "probe": [
+        "KA-LEX-C69-ASK-03",
+        "KA-PRAGMATICS-C69-ASK-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "note": "CLOSED by chapter 69, and no longer blocked: alva is taught two lessons after alla, and the lesson says what the tag is FOR -- it asks for agreement rather than information."
+    },
+    {
+      "id": "KA-A1-F-09",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "say you know something",
+      "probe": [
+        "KA-LEX-C06-DATIVE-SUBJECT-01",
+        "KA-LEX-C32-GOTTU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-14"
+      ],
+      "note": "nanage kannada gottu, taught with the whole dative-subject argument behind it."
+    },
+    {
+      "id": "KA-A1-F-10",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "say you do not know something",
+      "probe": [
+        "KA-LEX-C68-DENY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-15",
+        "A1-F2-08"
+      ],
+      "note": "CLOSED by chapter 68, and it was one lesson away as this note said: gottilla is gottu and illa pushed together, with the dative frame the track already teaches."
+    },
+    {
+      "id": "KA-A1-F-11",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask whether somebody knows something",
+      "probe": [
+        "KA-LEX-C69-ASK-01",
+        "KA-GRAMMAR-C69-ASK-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-13"
+      ],
+      "note": "CLOSED by chapter 69. The -aa question particle is NAMED, which is the one atom that turns every statement in the track into a question; gottaa is the headword it is taught on."
+    },
+    {
+      "id": "KA-A1-F-12",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "give an opinion",
+      "probe": [
+        "KA-LEX-C70-TELL-06",
+        "KA-PRAGMATICS-C70-TELL-07"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "CLOSED by chapter 70, and only because the quotative landed first: adu nija anta yoocisuttene is the frame, and only its first slot changes."
+    },
+    {
+      "id": "KA-A1-F-13",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "agree",
+      "probe": [
+        "KA-LEX-C01-SARI-01",
+        "KA-GRAMMAR-C01-SARI-02",
+        "KA-LEX-C49-REPLY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-NG6-06",
+        "A1-F2-05",
+        "A1-NG6-05",
+        "A1-NG6-07"
+      ],
+      "note": "sari ('okay, correct') from chapter 1 and nija ('true') from chapter 49."
+    },
+    {
+      "id": "KA-A1-F-14",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "disagree",
+      "probe": [
+        "KA-PRAGMATICS-C68-DENY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "note": "CLOSED by chapter 68. Kannada has no everyday sentence for 'I disagree', so what the lesson teaches is the move it does have: deny the description with alla -- adu nija alla."
+    },
+    {
+      "id": "KA-A1-F-15",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "express certainty",
+      "probe": [
+        "KA-LEX-C49-REPLY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-10",
+        "A1-NG1-05"
+      ],
+      "note": "khandita ('certainly'), chapter 49."
+    },
+    {
+      "id": "KA-A1-F-16",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "express possibility or doubt",
+      "probe": [
+        "KA-LEX-C49-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-12",
+        "A1-NG1-05"
+      ],
+      "note": "bahushah ('perhaps'), chapter 49."
+    },
+    {
+      "id": "KA-A1-F-17",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "evaluate something as good or bad",
+      "probe": [
+        "KA-LEX-C42-ADJ-03",
+        "KA-LEX-C03-CENNAAGI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01",
+        "A1-NG6-04",
+        "A1-F2-03"
+      ],
+      "note": "olleya ('good') as an adjective and cennaagi ('well') as an adverb. No word for 'bad' is taught anywhere, which is why the evaluation is one-sided."
+    },
+    {
+      "id": "KA-A1-F-18",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "say you can do something",
+      "probe": [
+        "KA-LEX-C73-ABLE-04",
+        "KA-GRAMMAR-C73-ABLE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "note": "CLOSED by chapter 73, with baruttade rather than -alu saadhya: nanage kannada baruttade, 'to me Kannada comes'. It is the fourth thing the dative frame carries, after knowing, liking and wanting."
+    },
+    {
+      "id": "KA-A1-F-19",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "say what you like",
+      "probe": [
+        "KA-LEX-C34-ISHTA-01",
+        "KA-GRAMMAR-C34-ISHTA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F3-01"
+      ],
+      "note": "nanage kannada ishta -- taught as a sentence with no verb in it, which is exactly the point."
+    },
+    {
+      "id": "KA-A1-F-20",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask what somebody likes",
+      "probe": [
+        "KA-LEX-C72-WANT-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-F2-01"
+      ],
+      "note": "CLOSED by chapter 72. The frame did exist, as this note said; what was missing was the -aa particle, taught at KA-A1-F-11, and the nimage that turns the sentence around."
+    },
+    {
+      "id": "KA-A1-F-21",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "say what you want",
+      "probe": [
+        "KA-LEX-C72-WANT-03",
+        "KA-GRAMMAR-C72-WANT-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ],
+      "note": "CLOSED by chapter 72. The refusal beeda has been taught since chapter 58; its positive half now sits beside it in the dative frame."
+    },
+    {
+      "id": "KA-A1-F-22",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "refuse something offered",
+      "probe": [
+        "KA-LEX-C58-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ],
+      "note": "beeda, chapter 58."
+    },
+    {
+      "id": "KA-A1-F-23",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "express a preference between alternatives",
+      "probe": [
+        "KA-LEX-C72-WANT-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F3-02",
+        "A1-F3-03"
+      ],
+      "note": "CLOSED by chapter 72, unblocked by athavaa exactly as this note predicted. Kannada has no word for 'prefer': the lesson teaches the move it uses instead -- say what you like, then deny the alternative with alla."
+    },
+    {
+      "id": "KA-A1-F-24",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "talk about plans and intentions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "note": "Untaught. There is no distinct future form taught (KA-A1-T-03 notes -utt- covers it), and no lesson uses it for an intention."
+    },
+    {
+      "id": "KA-A1-F-25",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "give a direct instruction",
+      "probe": [
+        "KA-LEX-COME",
+        "KA-LEX-SIT",
+        "KA-LEX-LOOK",
+        "KA-LEX-LISTEN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "note": "The chapter 43-44 imperatives."
+    },
+    {
+      "id": "KA-A1-F-26",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "soften a request",
+      "probe": [
+        "KA-ETYMON-C08-DAYAVITTU-01",
+        "KA-PRAGMATICS-C08-DAYAVITTU-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "dayavittu is taught as the softener and, importantly, with its register: when a Kannada speaker actually uses it and when they do not."
+    },
+    {
+      "id": "KA-A1-F-27",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "KA-LEX-C34-SAHAYA-MAADU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "note": "sahaaya maadu is taught; the imperative sahaaya maadi follows from the chapter 43-44 pattern."
+    },
+    {
+      "id": "KA-A1-F-28",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask for an object",
+      "probe": [
+        "KA-LEX-GIVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "kodu ('give') is taught as an imperative in chapter 43. Without the accusative (KA-A1-CASE-03) the thing asked for stays bare, which is acceptable in speech."
+    },
+    {
+      "id": "KA-A1-F-29",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask for permission",
+      "probe": [
+        "KA-LEX-C65-MANNERS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "note": "anumati ('permission') is taught as a noun in chapter 65. The construction that requests it is not, so this is the word without the move."
+    },
+    {
+      "id": "KA-A1-F-30",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "respond to a request",
+      "probe": [
+        "KA-LEX-C01-SARI-01",
+        "KA-LEX-C58-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-04",
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "note": "sari accepts and beeda declines. Both are taught, which closes the pair."
+    },
+    {
+      "id": "KA-A1-F-31",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "offer or invite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "note": "Untaught as a move. Chapter 52's welcome vocabulary (door, chair, flower, garland) sets the scene for a guest without giving the sentence that invites one in."
+    },
+    {
+      "id": "KA-A1-F-32",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "greet",
+      "probe": [
+        "KA-LEX-C01-NAMASKARA-01",
+        "KA-ETYMON-C01-NAMASKARA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "namaskaara, chapter 1, taught with the gesture that is the word."
+    },
+    {
+      "id": "KA-A1-F-33",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "respond to a greeting",
+      "probe": [
+        "KA-LEX-C01-NAMASKARA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ],
+      "note": "namaskaara answers namaskaara; the lesson says so explicitly."
+    },
+    {
+      "id": "KA-A1-F-34",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "greet by time of day",
+      "probe": [
+        "KA-ETYMON-C29-SHUBHODAYA-01",
+        "KA-ETYMON-C30-SHUBHA-SANJE-01",
+        "KA-ETYMON-C31-SHUBHA-MADHYAHNA-01",
+        "KA-ETYMON-C25-SHUBHA-RATRI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-NG4-01"
+      ],
+      "note": "shubhoodaya, shubha sanje, shubha madhyaahna and shubha raatri -- all four, one per chapter across 25-31, each with a note on how much they are really used."
+    },
+    {
+      "id": "KA-A1-F-35",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "introduce yourself",
+      "probe": [
+        "KA-LEX-C02-NANNA-HESARU-01",
+        "KA-LEX-C02-SANTOSHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ],
+      "note": "The name frame plus santoosha to close it."
+    },
+    {
+      "id": "KA-A1-F-36",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "respond to an introduction",
+      "probe": [
+        "KA-LEX-C02-SANTOSHA-01",
+        "KA-ETYMON-C02-SANTOSHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "note": "santoosha, taught with the fact that Kannada borrows even this from Sanskrit where Tamil keeps a native word."
+    },
+    {
+      "id": "KA-A1-F-37",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "thank",
+      "probe": [
+        "KA-LEX-C01-DHANYAVADA-01",
+        "KA-ETYMON-C01-DHANYAVADA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "dhanyavaada, and the lesson is honest that everyday Kannada often reaches for English 'thanks' instead."
+    },
+    {
+      "id": "KA-A1-F-38",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "respond to thanks",
+      "probe": [
+        "KA-LEX-C03-PARAVAAGILLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "paravaagilla, taught in chapter 3 as the gracious reply."
+    },
+    {
+      "id": "KA-A1-F-39",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "apologise",
+      "probe": [
+        "KA-ETYMON-C09-KSHAMISI-01",
+        "KA-PRAGMATICS-C09-KSHAMISI-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "kshamisi, with its register taught alongside it."
+    },
+    {
+      "id": "KA-A1-F-40",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "take leave",
+      "probe": [
+        "KA-LEX-C04-HOOGI-BARUTTENE-01",
+        "KA-LEX-C04-NAALE-SIGONA-01",
+        "KA-LEX-C04-MATTE-SIGONA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "Three ways to part, none of them a blunt goodbye -- the whole of chapter 4."
+    },
+    {
+      "id": "KA-A1-F-41",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-03",
+        "A1-SN-04"
+      ],
+      "note": "Untaught. No vocative, no honorific -avare, and no title. See KA-A1-CASE-08."
+    },
+    {
+      "id": "KA-A1-F-42",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-10"
+      ],
+      "note": "Untaught. abhinandane is absent."
+    },
+    {
+      "id": "KA-A1-F-43",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-F-44",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "propose a toast",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-09"
+      ],
+      "note": "Untaught, and arguably not a Kannada A1 move at all; recorded rather than silently dropped."
+    },
+    {
+      "id": "KA-A1-F-45",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "wish somebody well",
+      "probe": [
+        "KA-LEX-C51-COURTESY-04",
+        "KA-LEX-C51-COURTESY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-10"
+      ],
+      "note": "aashiirvaada ('a blessing') and vandane ('a salutation') are taught in chapter 51 as the vocabulary of well-wishing, though not as a formula."
+    },
+    {
+      "id": "KA-A1-F-46",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "open a conversation",
+      "probe": [
+        "KA-LEX-C01-NAMASKARA-01",
+        "KA-LEX-C03-HEGIDDIIRA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-02"
+      ],
+      "note": "Greet, then ask how they are -- the chapter 1 and 3 pair, which is the whole opening of an A1 exchange."
+    },
+    {
+      "id": "KA-A1-F-47",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "show you are following",
+      "probe": [
+        "KA-LEX-C01-SARI-01",
+        "KA-LEX-C49-REPLY-05",
+        "KA-LEX-C64-JOIN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "sari, haage and kuuda are all available as backchannel."
+    },
+    {
+      "id": "KA-A1-F-48",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "move the conversation on",
+      "probe": [
+        "KA-LEX-C64-JOIN-05",
+        "KA-LEX-C64-JOIN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-06"
+      ],
+      "note": "haagaadare and aameele, chapter 64."
+    },
+    {
+      "id": "KA-A1-F-49",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "close the conversation",
+      "probe": [
+        "KA-LEX-C04-HOOGI-BARUTTENE-01",
+        "KA-LEX-C50-LEAVE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F6-06",
+        "A1-F5-11"
+      ],
+      "note": "The chapter-4 farewell, and biilkoduge ('a send-off') from chapter 50."
+    },
+    {
+      "id": "KA-A1-F-50",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask somebody to repeat or speak slowly",
+      "probe": [
+        "KA-LEX-C71-MORE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F6-03",
+        "A1-NE06-06"
+      ],
+      "note": "CLOSED by chapter 71. innondu sala heeli is built from innondu, sala and the polite heeli, and heelu -- absent when this note was written -- is taught in chapter 70."
+    },
+    {
+      "id": "KA-A1-LEX-01",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "parts of the body: head and hand",
+      "probe": [
+        "KA-LEX-C13-DEHADA-BHAGAGALU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "tale and kai, chapter 13."
+    },
+    {
+      "id": "KA-A1-LEX-02",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "parts of the body: face",
+      "probe": [
+        "KA-LEX-C37-KANNU-01",
+        "KA-LEX-C37-BAAYI-01",
+        "KA-LEX-C37-KIVI-01",
+        "KA-LEX-C37-MOOGU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "kannu, baayi, kivi and muugu, one per lesson in chapter 37."
+    },
+    {
+      "id": "KA-A1-LEX-03",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "parts of the body: limbs and torso",
+      "probe": [
+        "KA-LEX-C47-BODY-01",
+        "KA-LEX-C47-BODY-02",
+        "KA-LEX-C47-BODY-03",
+        "KA-LEX-C47-BODY-04",
+        "KA-LEX-C47-BODY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "kaalu, hallu, kuudalu, beralu and hotte, chapter 47."
+    },
+    {
+      "id": "KA-A1-LEX-04",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "parts of the body: back, neck, shoulder, lip, bone",
+      "probe": [
+        "KA-LEX-C57-BODY-01",
+        "KA-LEX-C57-BODY-02",
+        "KA-LEX-C57-BODY-03",
+        "KA-LEX-C57-BODY-04",
+        "KA-LEX-C57-BODY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "chapter 57. Kannada's body vocabulary is unusually deep for A1 -- four chapters and eighteen words."
+    },
+    {
+      "id": "KA-A1-LEX-05",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "the heart, as organ and as feeling",
+      "probe": [
+        "KA-LEX-C38-HRUDAYA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01",
+        "A1-NE02-01"
+      ],
+      "note": "hrudaya, chapter 38."
+    },
+    {
+      "id": "KA-A1-LEX-06",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "physical characteristics of a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02"
+      ],
+      "note": "Untaught. dodda and cikka are taught of things; no lesson applies a quality to a person, and there is no word for tall, short, young or beautiful."
+    },
+    {
+      "id": "KA-A1-LEX-07",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "actions and positions of the body",
+      "probe": [
+        "KA-LEX-SIT",
+        "KA-LEX-STAND"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ],
+      "note": "kulituko and nillu, chapter 43."
+    },
+    {
+      "id": "KA-A1-LEX-08",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "Untaught as description. Chapter 65 teaches the abstract nouns -- saujanya (courtesy), nambike (trust), sankoca (hesitancy) -- but nothing that describes a person with them."
+    },
+    {
+      "id": "KA-A1-LEX-09",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "personal data: name and age",
+      "probe": [
+        "KA-LEX-C02-HESARU-01",
+        "KA-ETYMON-C19-VAYASSU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "note": "hesaru and vayassu. Address, telephone and documents are all untaught."
+    },
+    {
+      "id": "KA-A1-LEX-10",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "documents: passport, identity card",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-LEX-11",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "personal objects",
+      "probe": [
+        "KA-LEX-C46-ASK-05",
+        "KA-LEX-C62-MADE-05",
+        "KA-LEX-C46-ASK-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03"
+      ],
+      "note": "pustaka (book), kode (umbrella) and batte (cloth)."
+    },
+    {
+      "id": "KA-A1-LEX-12",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "family: parents and siblings",
+      "probe": [
+        "KA-ETYMON-C12-KUTUMBA-01",
+        "KA-ETYMON-C12-KUTUMBA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "appa, amma and the four age-graded sibling words -- anna, tamma, akka, tangi -- taught together in chapter 12, because Kannada will not let you say 'brother' without saying which."
+    },
+    {
+      "id": "KA-A1-LEX-13",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "family: the collective word",
+      "probe": [
+        "KA-ETYMON-C35-KUTUMBA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "kutumba, chapter 35 -- the word chapter 12's people never needed until now."
+    },
+    {
+      "id": "KA-A1-LEX-14",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "family: children",
+      "probe": [
+        "KA-ETYMON-C36-MAGU-02",
+        "KA-ETYMON-C36-MAGA-02",
+        "KA-ETYMON-C36-MAGALU-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "magu, maga and magalu -- one root, three endings, chapter 36."
+    },
+    {
+      "id": "KA-A1-LEX-15",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "family: grandparents and spouse",
+      "probe": [
+        "KA-LEX-GRANDFATHER",
+        "KA-LEX-GRANDMOTHER",
+        "KA-LEX-HUSBAND",
+        "KA-LEX-WIFE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "ajja, ajji, ganda and hendati, chapter 45."
+    },
+    {
+      "id": "KA-A1-LEX-16",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "social relationships: friend, guest",
+      "probe": [
+        "KA-ETYMON-C35-SNEHITA-02",
+        "KA-LEX-C48-ROLE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "snehita and atithi."
+    },
+    {
+      "id": "KA-A1-LEX-17",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "celebrations and occasions",
+      "probe": [
+        "KA-LEX-C52-WELCOME-03",
+        "KA-LEX-C52-WELCOME-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "rangooli and huumaale are taught in chapter 52 as the furniture of a welcome, which is the nearest the corpus comes to an occasion."
+    },
+    {
+      "id": "KA-A1-LEX-18",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "meals",
+      "probe": [
+        "KA-LEX-C40-OOTA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "note": "uuta ('a meal'), chapter 40."
+    },
+    {
+      "id": "KA-A1-LEX-19",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "drink: water, milk, tea, coffee",
+      "probe": [
+        "KA-ETYMON-C15-NIIRU-AKKI-01",
+        "KA-ETYMON-C39-HAALU-02",
+        "KA-ETYMON-C39-CHAHA-02",
+        "KA-ETYMON-C39-KAAPI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "note": "niiru, haalu, cahaa and kaaphi -- chapters 15 and 39, the last two with their travel histories through Persian and Arabic."
+    },
+    {
+      "id": "KA-A1-LEX-20",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "staple foodstuffs",
+      "probe": [
+        "KA-ETYMON-C15-NIIRU-AKKI-02",
+        "KA-LEX-C61-KITCHEN-01",
+        "KA-LEX-C61-KITCHEN-02",
+        "KA-LEX-C61-KITCHEN-03",
+        "KA-LEX-C61-KITCHEN-04",
+        "KA-LEX-C61-KITCHEN-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ],
+      "note": "akki/anna plus mosaru, tuppa, enne, bella and sakkare -- chapter 61 is a South Indian kitchen shelf."
+    },
+    {
+      "id": "KA-A1-LEX-21",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "fruit and salt",
+      "probe": [
+        "KA-LEX-C46-ASK-01",
+        "KA-LEX-C46-ASK-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ],
+      "note": "hannu and uppu, chapter 46."
+    },
+    {
+      "id": "KA-A1-LEX-22",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "dishes, courses and the restaurant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE05-04",
+        "A1-NE05-05"
+      ],
+      "note": "Untaught. The ingredients are there and the meal is named; ordering one is not."
+    },
+    {
+      "id": "KA-A1-LEX-23",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "education: who is in the room",
+      "probe": [
+        "KA-LEX-C48-ROLE-01",
+        "KA-LEX-C48-ROLE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE06-02"
+      ],
+      "note": "shikshaka and vidyaarthi, chapter 48."
+    },
+    {
+      "id": "KA-A1-LEX-24",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "education: institutions, timetable, examinations",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-03",
+        "A1-NE06-05"
+      ],
+      "note": "Untaught. No word for school, class, lesson or examination."
+    },
+    {
+      "id": "KA-A1-LEX-25",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "learning and teaching as activities",
+      "probe": [
+        "KA-LEX-C33-OODU-01",
+        "KA-LEX-C33-BARE-01",
+        "KA-LEX-C33-ARTHA-MAADIKO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ],
+      "note": "oodu, bare and arthamaadiko, chapter 33."
+    },
+    {
+      "id": "KA-A1-LEX-26",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "classroom language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE06-06"
+      ],
+      "note": "Untaught. See KA-A1-F-50 -- the learner cannot ask for a repetition."
+    },
+    {
+      "id": "KA-A1-LEX-27",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "teaching materials",
+      "probe": [
+        "KA-LEX-C46-ASK-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE06-07"
+      ],
+      "note": "pustaka. Nothing else -- no pen, paper, board or desk."
+    },
+    {
+      "id": "KA-A1-LEX-28",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "professions",
+      "probe": [
+        "KA-LEX-C48-ROLE-01",
+        "KA-LEX-C48-ROLE-02",
+        "KA-LEX-C48-ROLE-03",
+        "KA-LEX-C48-ROLE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01"
+      ],
+      "note": "shikshaka, vidyaarthi, vaidya and raita, chapter 48."
+    },
+    {
+      "id": "KA-A1-LEX-29",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "working activity",
+      "probe": [
+        "KA-LEX-C05-MAADU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "note": "kelasa maadu ('to work'), taught in chapter 5 as the model noun-plus-maadu verb."
+    },
+    {
+      "id": "KA-A1-LEX-30",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "workplaces, tools, work clothing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02"
+      ],
+      "note": "Untaught as a domain, though chapter 62's made things (rope, needle, thread, broom, basket) and chapter 66's field words come close."
+    },
+    {
+      "id": "KA-A1-LEX-31",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "unemployment, rights at work",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "note": "Untaught, and arguably above A1 in any track; recorded for completeness."
+    },
+    {
+      "id": "KA-A1-LEX-32",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "free time, sport, games, shows",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "Untaught, entirely. Four Spanish points and not one Kannada word -- no play, no game, no music, no film."
+    },
+    {
+      "id": "KA-A1-LEX-33",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "communication media, telephone, internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-03",
+        "A1-NE09-05",
+        "A1-NE09-06"
+      ],
+      "note": "Untaught, entirely. The corpus has no telephone, which also removes the standard A1 task of giving a number."
+    },
+    {
+      "id": "KA-A1-LEX-34",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "written correspondence",
+      "probe": [
+        "KA-LEX-C33-BARE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE09-02",
+        "A1-NE09-04"
+      ],
+      "note": "bare ('to write') only. No letter, no address, no form."
+    },
+    {
+      "id": "KA-A1-LEX-35",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "housing: parts of a dwelling",
+      "probe": [
+        "KA-LEX-C52-WELCOME-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02"
+      ],
+      "note": "baagilu ('a door'). Chapter 56 is named HOUSE but teaches its contents rather than its rooms."
+    },
+    {
+      "id": "KA-A1-LEX-36",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "household objects and furniture",
+      "probe": [
+        "KA-LEX-C52-WELCOME-02",
+        "KA-LEX-C56-HOUSE-01",
+        "KA-LEX-C56-HOUSE-02",
+        "KA-LEX-C56-HOUSE-03",
+        "KA-LEX-C56-HOUSE-04",
+        "KA-LEX-C56-HOUSE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE10-04"
+      ],
+      "note": "kurci, caape, butti, caaku, paatre and pettige -- chapters 52 and 56."
+    },
+    {
+      "id": "KA-A1-LEX-37",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "household made things",
+      "probe": [
+        "KA-LEX-C62-MADE-01",
+        "KA-LEX-C62-MADE-02",
+        "KA-LEX-C62-MADE-03",
+        "KA-LEX-C62-MADE-04",
+        "KA-LEX-C62-MADE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE10-04"
+      ],
+      "note": "nuulu, suuji, hagga, porake and kode, chapter 62."
+    },
+    {
+      "id": "KA-A1-LEX-38",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "domestic activities, buying and renting a home",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-03"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-LEX-39",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "light in the house",
+      "probe": [
+        "KA-LEX-C46-ASK-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE10-04"
+      ],
+      "note": "diipa ('a lamp'), chapter 46 -- a word that carries more cultural weight in Kannada than 'lamp' does in English."
+    },
+    {
+      "id": "KA-A1-LEX-40",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "postal, financial, health and security services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04"
+      ],
+      "note": "Untaught, entirely."
+    },
+    {
+      "id": "KA-A1-LEX-41",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "shopping: places, people, activities",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01"
+      ],
+      "note": "Untaught. No shop, no market, no shopkeeper."
+    },
+    {
+      "id": "KA-A1-LEX-42",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "clothing",
+      "probe": [
+        "KA-LEX-C46-ASK-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "note": "batte ('cloth') only -- the material, not a garment. No shirt, sari or shoe."
+    },
+    {
+      "id": "KA-A1-LEX-43",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "payment and money",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03",
+        "A1-NE15-01"
+      ],
+      "note": "Untaught. No word for money, price or rupee -- so nothing can be bought, which removes a whole standard A1 task type."
+    },
+    {
+      "id": "KA-A1-LEX-44",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "health and illness",
+      "probe": [
+        "KA-LEX-C63-HEALTH-01",
+        "KA-LEX-C63-HEALTH-02",
+        "KA-LEX-C63-HEALTH-03",
+        "KA-LEX-C63-HEALTH-04",
+        "KA-LEX-C63-HEALTH-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ],
+      "note": "hasivu, nidde, jvara, noovu and aarogya -- chapter 63 gives hunger, sleep, fever, pain and health."
+    },
+    {
+      "id": "KA-A1-LEX-45",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "centres of health care, medicine, hygiene",
+      "probe": [
+        "KA-LEX-C48-ROLE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "note": "vaidya ('a doctor') and nothing else -- no hospital, no medicine."
+    },
+    {
+      "id": "KA-A1-LEX-46",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "travel: setting out and the journey",
+      "probe": [
+        "KA-LEX-C50-LEAVE-03",
+        "KA-LEX-C50-LEAVE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01"
+      ],
+      "note": "prayaana and horadu, chapter 50."
+    },
+    {
+      "id": "KA-A1-LEX-47",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "the transport system and accommodation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "note": "Untaught. No bus, train, road-vehicle or hotel."
+    },
+    {
+      "id": "KA-A1-LEX-48",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "commerce, industry, energy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02",
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-LEX-49",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "the notion of number",
+      "probe": [
+        "KA-LEX-C07-ONDU-01",
+        "KA-ETYMON-C20-HANNONDU-IPPATTU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE16-01"
+      ],
+      "note": "Numbers to twenty, plus the digits."
+    },
+    {
+      "id": "KA-A1-LEX-50",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "computing and new technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-LEX-51",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "government, politics, law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-LEX-52",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "artistic disciplines, music, literature, cinema",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "Untaught, entirely -- six Spanish points and no Kannada word, which is a striking gap for a language whose literature the corpus itself keeps citing."
+    },
+    {
+      "id": "KA-A1-LEX-53",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "religion",
+      "probe": [
+        "KA-LEX-C51-COURTESY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "aashiirvaada ('a blessing') is the only word in this domain."
+    },
+    {
+      "id": "KA-A1-LEX-54",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "the sky and its bodies",
+      "probe": [
+        "KA-LEX-C53-SKY-01",
+        "KA-LEX-C53-SKY-02",
+        "KA-LEX-C53-SKY-03",
+        "KA-LEX-C53-SKY-04",
+        "KA-LEX-C53-SKY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "note": "aakaasha, bisilu, candra, cukki and mooda, chapter 53."
+    },
+    {
+      "id": "KA-A1-LEX-55",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "geography: country, town, city",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "note": "Untaught apart from halli ('a village'). See KA-A1-N-02."
+    },
+    {
+      "id": "KA-A1-LEX-56",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "rural space",
+      "probe": [
+        "KA-LEX-C55-ROAD-01",
+        "KA-LEX-C55-ROAD-02",
+        "KA-LEX-C55-ROAD-03",
+        "KA-LEX-C55-ROAD-04",
+        "KA-LEX-C55-ROAD-05",
+        "KA-LEX-C66-FIELD-01",
+        "KA-LEX-C66-FIELD-02",
+        "KA-LEX-C66-FIELD-03",
+        "KA-LEX-C66-FIELD-04",
+        "KA-LEX-C66-FIELD-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "note": "Chapters 55 and 66 between them give river, tank, hill, village, path, field, grass, paddy, crop and harvest. This is the best-covered domain in the whole inventory, and it is a rural one -- the corpus teaches the Karnataka countryside far better than it teaches a city."
+    },
+    {
+      "id": "KA-A1-LEX-57",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "weather and climate",
+      "probe": [
+        "KA-ETYMON-C20-HAVAMANA-01",
+        "KA-LEX-C14-KAALAGALU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "note": "havaamaana ('weather') and the four seasons, including the monsoon."
+    },
+    {
+      "id": "KA-A1-LEX-58",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "elements: wind, fire, water, earth",
+      "probe": [
+        "KA-LEX-C59-GROUND-01",
+        "KA-LEX-C59-GROUND-02",
+        "KA-LEX-C59-GROUND-03",
+        "KA-LEX-C59-GROUND-04",
+        "KA-LEX-C59-GROUND-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "note": "gaali, manju, maralu, kesaru and benki, chapter 59."
+    },
+    {
+      "id": "KA-A1-LEX-59",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "fauna",
+      "probe": [
+        "KA-ETYMON-C21-NAAYI-BEKKU-01",
+        "KA-LEX-C60-ANIMAL-01",
+        "KA-LEX-C60-ANIMAL-02",
+        "KA-LEX-C60-ANIMAL-03",
+        "KA-LEX-C60-ANIMAL-04",
+        "KA-LEX-C60-ANIMAL-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "note": "naayi and bekku from chapter 21, then hasu, meeke, kooli, kaage and hakki from chapter 60."
+    },
+    {
+      "id": "KA-A1-LEX-60",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "flora",
+      "probe": [
+        "KA-LEX-C54-TREE-01",
+        "KA-LEX-C54-TREE-02",
+        "KA-LEX-C54-TREE-03",
+        "KA-LEX-C54-TREE-04",
+        "KA-LEX-C54-TREE-05",
+        "KA-LEX-C52-WELCOME-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "note": "mara, kombe, ele, beeru, biija and huuvu."
+    },
+    {
+      "id": "KA-A1-LEX-61",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "colour",
+      "probe": [
+        "KA-LEX-C11-BANNAGALU-01",
+        "KA-LEX-C11-BANNAGALU-02",
+        "KA-ETYMON-C22-HASIRU-HALADI-01",
+        "KA-ETYMON-C22-HASIRU-HALADI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "kappu, bili, kempu, niili from chapter 11, then hasiru and haladi from chapter 22 -- six colours."
+    },
+    {
+      "id": "KA-A1-LEX-62",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "the days of the week",
+      "probe": [
+        "KA-LEX-C10-VAARA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "All seven, chapter 10."
+    },
+    {
+      "id": "KA-A1-LEX-63",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "the months",
+      "probe": [
+        "KA-LEX-C16-TINGALUGALU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "All twelve lunisolar months, chapter 16 -- with the honest note that this is not the calendar Kannada speakers use for everyday dates."
+    },
+    {
+      "id": "KA-A1-LEX-64",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "parts of the day",
+      "probe": [
+        "KA-ETYMON-C26-BELAGGE-01",
+        "KA-ETYMON-C27-SANJE-01",
+        "KA-ETYMON-C28-APARAHNA-01",
+        "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "belagge, sanje, aparaahna, madhyaahna and madhyaraatri -- chapters 17 and 26-28."
+    },
+    {
+      "id": "KA-A1-LEX-65",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "telling the clock",
+      "probe": [
+        "KA-ETYMON-C18-GANTE-01",
+        "KA-GRAMMAR-C18-GANTE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "gante ('hour') and the frame that uses it, chapter 18."
+    },
+    {
+      "id": "KA-A1-LEX-66",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "sight and hearing",
+      "probe": [
+        "KA-LEX-C32-NOODU-01",
+        "KA-LEX-C34-KEELU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "note": "noodu and keelu -- and keelu is taught doing double duty as both 'hear' and 'ask'."
+    },
+    {
+      "id": "KA-A1-LEX-67",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "age as a quality",
+      "probe": [
+        "KA-ETYMON-C19-VAYASSU-01",
+        "KA-LEX-C42-ADJ-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04",
+        "A1-NG1-04"
+      ],
+      "note": "vayassu for a person, haleya for a thing, and chapter 42 is careful that haleya is not used of people."
+    },
+    {
+      "id": "KA-A1-LEX-68",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "open and closed, way in and way out",
+      "probe": [
+        "KA-LEX-C52-WELCOME-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "baagilu ('a door') is the only word here; neither 'open' nor 'closed' is taught."
+    },
+    {
+      "id": "KA-A1-LEX-69",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "value, price, attractiveness",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02",
+        "A1-NG6-03"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-LEX-70",
+      "category": "Padakosha (lexicon by domain)",
+      "label": "interest, ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-NG6-08",
+        "A1-NG6-10"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-L-01",
+      "category": "Lipi (script and orthography)",
+      "label": "the script is a syllabary, not an alphabet: every consonant carries an inherent a",
+      "probe": [
+        "KA-SCRIPT-RECOG-01",
+        "KA-SCRIPT-RECOG-116"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-01",
+        "A1-O1-03"
+      ],
+      "note": "The founding fact, taught inside chapter 1's first letter lesson and re-stated with every consonant since."
+    },
+    {
+      "id": "KA-A1-L-02",
+      "category": "Lipi (script and orthography)",
+      "label": "vowel signs replace the inherent vowel",
+      "probe": [
+        "KA-SCRIPT-RECOG-02",
+        "KA-SCRIPT-RECOG-04",
+        "KA-SCRIPT-RECOG-111",
+        "KA-SCRIPT-RECOG-08",
+        "KA-SCRIPT-RECOG-114",
+        "KA-SCRIPT-RECOG-119"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "Six vowel signs have their own lessons -- u, i, e, aa, o, oo -- each taught as a mark that REPLACES the a rather than adding to it."
+    },
+    {
+      "id": "KA-A1-L-03",
+      "category": "Lipi (script and orthography)",
+      "label": "independent vowel letters, for word-initial position",
+      "probe": [
+        "KA-SCRIPT-RECOG-115",
+        "KA-SCRIPT-RECOG-126",
+        "KA-SCRIPT-RECOG-127",
+        "KA-SCRIPT-RECOG-130",
+        "KA-SCRIPT-RECOG-125"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "i, u, uu, ii and oo are taught as standing letters, and the corpus is careful to pair each with the vowel sign it matches."
+    },
+    {
+      "id": "KA-A1-L-04",
+      "category": "Lipi (script and orthography)",
+      "label": "the virama, and the conjunct it makes",
+      "probe": [
+        "KA-SCRIPT-RECOG-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-03",
+        "A1-O1-07"
+      ],
+      "note": "The single most important orthographic fact in the script, and it has its own lesson in chapter 3: strip a vowel and the consonant stacks UNDER the next one. Kannada calls the result ottakshara, and chapter 1's recap names it."
+    },
+    {
+      "id": "KA-A1-L-05",
+      "category": "Lipi (script and orthography)",
+      "label": "the anusvara and the visarga",
+      "probe": [
+        "KA-SCRIPT-RECOG-123",
+        "KA-SCRIPT-RECOG-132"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Both marks that ride a letter rather than sitting beside it, taught in chapters 14 and 38."
+    },
+    {
+      "id": "KA-A1-L-06",
+      "category": "Lipi (script and orthography)",
+      "label": "consonant letters: the taught set",
+      "probe": [
+        "KA-SCRIPT-RECOG-06",
+        "KA-SCRIPT-RECOG-07",
+        "KA-SCRIPT-RECOG-110",
+        "KA-SCRIPT-RECOG-113",
+        "KA-SCRIPT-RECOG-117",
+        "KA-SCRIPT-RECOG-118",
+        "KA-SCRIPT-RECOG-120",
+        "KA-SCRIPT-RECOG-121",
+        "KA-SCRIPT-RECOG-122",
+        "KA-SCRIPT-RECOG-124",
+        "KA-SCRIPT-RECOG-129",
+        "KA-SCRIPT-RECOG-133"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Twenty-two consonants have their own one-glyph lesson across the track, arriving one at a time behind a word the learner already says."
+    },
+    {
+      "id": "KA-A1-L-07",
+      "category": "Lipi (script and orthography)",
+      "label": "the aspirated series",
+      "probe": [
+        "KA-SCRIPT-RECOG-128",
+        "KA-SCRIPT-RECOG-129"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "jha and tha are taught explicitly as the breathed partners of ja and ta -- the pattern rather than two more shapes."
+    },
+    {
+      "id": "KA-A1-L-08",
+      "category": "Lipi (script and orthography)",
+      "label": "the written digits",
+      "probe": [
+        "KA-SCRIPT-RECOG-140",
+        "KA-SCRIPT-RECOG-149"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "All ten, one per chapter across 9-18. Probed here on the endpoints; the full set is at KA-A1-NUM-03."
+    },
+    {
+      "id": "KA-A1-L-09",
+      "category": "Lipi (script and orthography)",
+      "label": "THE SCRIPT IS NOT CLOSED: 27 characters are used but never taught",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "MEASURED AGAIN, AND STILL OPEN. The corpus now teaches 50 characters against the 69 it uses in headwords -- 72% closure, up from 42 of 69 (61%). Chapters 67 to 73 add the EIGHT most-used untaught characters, in order of the headwords that need them: ma (36 headwords), la, va, the vowel sign ee, tta, ja, a and the vowel sign uu. The worst case this note used to name is fixed: a learner who completes the script ladder can now read maatanaaDu, the verb chapter 5 is built on.\n\nNINETEEN CHARACTERS REMAIN, AND THEY SPLIT IN TWO. SIX are independent vowels -- aa, e, ee, o, ai and vocalic r -- whose stroke order IS sourced: data/scripts/kannada.json carries a cited Wikimedia Commons animation for each, and chapter 68 shows the shape a lesson built on one of them takes by teaching a with its attested four-movement order and the citation printed under it. THIRTEEN have no sourced ductus anywhere in this project: the vowel signs ii, ai and au, and kha, gha, ttha, ddha, nna, dha, pha, bha, sha and ssa. Those thirteen were NOT taught, because the honest fallback for an unsourced letter is the recognition lesson this ladder already writes -- and thirteen more of those is a separate tranche, not a footnote to this one. Nothing here invents a stroke path to make a count move."
+    },
+    {
+      "id": "KA-A1-L-10",
+      "category": "Lipi (script and orthography)",
+      "label": "capital letters",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "note": "Untransferable, and recorded rather than dropped: Kannada has no letter case at all. Nothing to teach."
+    },
+    {
+      "id": "KA-A1-L-11",
+      "category": "Lipi (script and orthography)",
+      "label": "written accentuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "note": "Untransferable. Kannada writes no accent; vowel length is a different letter or a different sign, which KA-A1-L-02 and KA-A1-L-03 cover instead."
+    },
+    {
+      "id": "KA-A1-L-12",
+      "category": "Lipi (script and orthography)",
+      "label": "the full stop and the comma",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02"
+      ],
+      "note": "Untaught. Modern Kannada uses the Latin full stop and comma, and the older danda; no lesson mentions punctuation at all."
+    },
+    {
+      "id": "KA-A1-L-13",
+      "category": "Lipi (script and orthography)",
+      "label": "the question mark",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O3-04"
+      ],
+      "note": "Untaught as a convention, though it is used throughout the books. Kannada does not use the inverted opening marks Spanish does."
+    },
+    {
+      "id": "KA-A1-L-14",
+      "category": "Lipi (script and orthography)",
+      "label": "other punctuation: colon, quotation marks, parentheses, dash",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O3-03",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "note": "Untaught. Six Spanish points collapse here because Kannada borrows the Latin set wholesale and the corpus teaches none of it."
+    },
+    {
+      "id": "KA-A1-L-15",
+      "category": "Lipi (script and orthography)",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "KA-A1-L-16",
+      "category": "Lipi (script and orthography)",
+      "label": "superscript letters in abbreviations",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-06"
+      ],
+      "note": "Untransferable. A Spanish typographic convention with no Kannada counterpart."
+    },
+    {
+      "id": "KA-A1-P-01",
+      "category": "Uccharane (pronunciation)",
+      "label": "the retroflex series, and that it is contrastive",
+      "probe": [
+        "KA-SCRIPT-RECOG-118",
+        "KA-SCRIPT-RECOG-113"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Dda and lla have their own lessons. The retroflex/dental contrast is the single hardest thing about Kannada for an English speaker and the corpus does introduce the letters, though never as a minimal pair."
+    },
+    {
+      "id": "KA-A1-P-02",
+      "category": "Uccharane (pronunciation)",
+      "label": "aspiration as a contrast",
+      "probe": [
+        "KA-SCRIPT-RECOG-128",
+        "KA-SCRIPT-RECOG-129"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "jha and tha are both taught as 'the breathed partner of' an unaspirated letter, which is the contrast stated."
+    },
+    {
+      "id": "KA-A1-P-03",
+      "category": "Uccharane (pronunciation)",
+      "label": "vowel length is contrastive",
+      "probe": [
+        "KA-SCRIPT-RECOG-126",
+        "KA-SCRIPT-RECOG-127",
+        "KA-SCRIPT-RECOG-130"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "u/uu and i/ii are taught as pairs, explicitly as long partners of short vowels."
+    },
+    {
+      "id": "KA-A1-P-04",
+      "category": "Uccharane (pronunciation)",
+      "label": "the geminate: a held double consonant",
+      "probe": [
+        "KA-ETYMON-C06-DATIVE-GE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Taught obliquely but genuinely: chapter 6 explains that the doubled -kke resisted the voicing that turned -ke into -ge, which only makes sense once gemination is understood as holding the consonant."
+    },
+    {
+      "id": "KA-A1-P-05",
+      "category": "Uccharane (pronunciation)",
+      "label": "the p-to-h sound law that shapes modern Kannada",
+      "probe": [
+        "KA-ETYMON-C02-HESARU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [],
+      "note": "Chapter 2 teaches it on hesaru, and the track returns to it repeatedly. It is the fact that makes Kannada look unlike its sisters on the page. NO SPANISH ORIGIN: The p-to-h sound law. A fact about this language's history that shapes how half its everyday words look, and has no analogue in the proxy.",
+      "kannadaSpecific": true
+    },
+    {
+      "id": "KA-A1-P-06",
+      "category": "Uccharane (pronunciation)",
+      "label": "the anusvara as a nasal that assimilates",
+      "probe": [
+        "KA-SCRIPT-RECOG-123"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Chapter 14's lesson, and chapter 7's ombattu, which is taught as 'one mark, whichever nasal the next letter needs'."
+    },
+    {
+      "id": "KA-A1-P-07",
+      "category": "Uccharane (pronunciation)",
+      "label": "word stress and intonation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Untaught. Kannada stress is weakly initial and rarely contrastive, but no lesson says so, and question intonation is never described."
+    },
+    {
+      "id": "KA-A1-REG-01",
+      "category": "Bhaashaa-sthara (register)",
+      "label": "the respect grade in the second person",
+      "probe": [
+        "KA-GRAMMAR-C02-NIINU-NIIVU-02",
+        "KA-GRAMMAR-C03-HEGIDDIIRA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01",
+        "A1-F5-03"
+      ],
+      "note": "Taught twice and taught as a rule rather than a pair of words: respect is the plural, and the verb ending must match the pronoun."
+    },
+    {
+      "id": "KA-A1-REG-02",
+      "category": "Bhaashaa-sthara (register)",
+      "label": "when a politeness word is actually used, and when it is not",
+      "probe": [
+        "KA-PRAGMATICS-C08-DAYAVITTU-03",
+        "KA-PRAGMATICS-C09-KSHAMISI-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F4-02",
+        "A1-F5-06"
+      ],
+      "note": "The corpus is unusually careful here: dayavittu and kshamisi both carry a pragmatics atom saying that Kannada speakers reach for these less often than an English speaker expects. That is register taught as behaviour, not vocabulary."
+    },
+    {
+      "id": "KA-A1-REG-03",
+      "category": "Bhaashaa-sthara (register)",
+      "label": "greetings that are formal, and the everyday alternative",
+      "probe": [
+        "KA-PRAGMATICS-C26-BELAGGE-02",
+        "KA-PRAGMATICS-C29-SHUBHODAYA-02",
+        "KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "Three pragmatics atoms across chapters 26-31 say plainly that shubhoodaya and its siblings are more written than spoken, and that namaskaara covers most of the day."
+    },
+    {
+      "id": "KA-A1-REG-04",
+      "category": "Bhaashaa-sthara (register)",
+      "label": "the spoken/literary divide itself",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [],
+      "note": "PARTIALLY ANSWERED, AND DELIBERATELY LEFT OPEN. Chapter 69's alva lesson now NAMES the divide in prose -- it says that alva is spoken Kannada, that written Kannada says allavee, and that this book teaches the everyday spoken variety throughout -- so a reader meeting written Kannada is no longer given no warning at all. What is still missing is what this point actually asks for: a lesson whose OWN atom is the fact of diglossia, and the caveat in core/exam-levels.json that tracks.tamil carries and tracks.kannada does not. Half a pair buys nothing, so the point keeps probe: null.",
+      "kannadaSpecific": true
+    },
+    {
+      "id": "KA-A1-CJ-11",
+      "category": "Samuccaya (joining and subordination)",
+      "label": "distributive: one ... the other",
+      "probe": [
+        "KA-LEX-C71-MORE-01",
+        "KA-GRAMMAR-C71-MORE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "note": "CLOSED by chapter 71. innondu is taught as innuu plus ondu, and paired with plain ondu for the distributive: ondu illi, innondu alli."
+    },
+    {
+      "id": "KA-A1-F-51",
+      "category": "Vyavahaara (communicative functions)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "KA-CORPUS",
+        "ED-KANNADA"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "Untaught. Kannada would use suumne iri or the imperative of a verb of silence; neither the verb nor the construction is in the corpus."
+    }
+  ]
+}

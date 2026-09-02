@@ -107,7 +107,7 @@
 %   hippocampus → memory
 %     https://www.ncbi.nlm.nih.gov/books/NBK482171/
 %     (NIH / NLM, StatPearls "Neuroanatomy, Hippocampus")
-%     "The hippocampus is the 'flash drive' of the human brain and is often
+%     "The hippocampus is the "flash drive" of the human brain and is often
 %      associated with memory consolidation and decision-making"
 %
 % An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/

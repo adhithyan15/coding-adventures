@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-67-LINK",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "KA-C67-and",
+    "KA-C67-or",
+    "KA-C67-but",
+    "KA-C67-and-too"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-67-LINK"
+  ],
+  "after": []
+}

@@ -10,3 +10,10 @@ license = "MIT"
 # compression crate would be adding a dependency to duplicate our own code.
 [dependencies]
 zip = { path = "../zip" }
+
+# Test-only. The crate itself embeds whatever font bytes it is handed; these
+# build the subsetted fixture the round-trip oracle needs, and are not part of
+# writing a PDF.
+[dev-dependencies]
+font-parser = { path = "../font-parser" }
+font-subset = { path = "../font-subset" }

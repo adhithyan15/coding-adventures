@@ -98,10 +98,12 @@ layout CollectionActions {
     Row [ destructive-actions ] {
       HostButton [ delete-note-button ] (
         label : slot: delete-note-label ,
+        disabled : slot: delete-note-disabled ,
         onClick : emit: onDeleteNote
       )
       HostButton [ delete-note-type-button ] (
         label : slot: delete-note-type-label ,
+        disabled : slot: delete-note-type-disabled ,
         onClick : emit: onDeleteNoteType
       )
     }

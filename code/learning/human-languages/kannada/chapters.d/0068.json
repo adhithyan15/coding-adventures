@@ -1,0 +1,23 @@
+{
+  "chapter": 68,
+  "title": "Not That, and Neither",
+  "label": "ch:ka-not-that",
+  "canDo": "I can deny that something is what you called it, disagree politely, and say that I do not know either.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "KA-C68-me-neither",
+    "kind": "production",
+    "summary": "Complete KA-C68-me-neither and use both Kannada negatives correctly in one exchange.",
+    "assesses": [
+      "KA-SCRIPT-RECOG-135",
+      "KA-LEX-C68-DENY-01",
+      "KA-GRAMMAR-C68-DENY-02",
+      "KA-PRAGMATICS-C68-DENY-03",
+      "KA-GRAMMAR-C68-DENY-04",
+      "KA-LEX-C68-DENY-05",
+      "KA-GRAMMAR-C68-DENY-06"
+    ]
+  }
+}

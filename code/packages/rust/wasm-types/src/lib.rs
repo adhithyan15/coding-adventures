@@ -443,6 +443,36 @@ pub enum ValueType {
     /// round-tripped through a real binary decoder in this pipeline (see
     /// `ArrayRef`'s own doc comment on why that's safe).
     NonNullArrayAny,
+
+    /// `(ref null array)` / bare `arrayref` -- nullable reference to the
+    /// abstract TOP of the array hierarchy (W38 slice 0: `code/specs/
+    /// W38-wasm-gc-array-bulk-ops.md`, Correction 3), the exact array-
+    /// hierarchy analogue of [`ValueType::StructRefAny`] one hierarchy
+    /// over -- distinct from [`ValueType::ArrayRef`] (a nullable but always
+    /// CONCRETE reference, carrying a type index) the same way `StructRefAny`
+    /// is distinct from `StructRef(u32)`, and distinct from
+    /// [`ValueType::NonNullArrayAny`] (this variant's NON-NULL counterpart,
+    /// W33 fourth slice) purely in nullability -- mirroring the existing
+    /// `StructRef`/`NonNullStructRef`/`StructRefAny`-vs-nothing three-way
+    /// split one level up, except the array hierarchy already HAD its
+    /// non-null abstract top (`NonNullArrayAny`) before this slice added
+    /// the nullable one.
+    ///
+    /// Needed because `array_init_elem.wast:118`
+    /// (`(type $arrref_mut (array (mut arrayref)))`) and
+    /// `array_new_elem.wast:107` (`(type $arr (array (mut arrayref)))`) use
+    /// the bare `arrayref` keyword in a STORAGE-TYPE position (an array's
+    /// own element type) -- confirmed by direct corpus read, W38's own
+    /// Correction 3.
+    ///
+    /// Encoded as a single byte `0x6A` -- the real GC proposal's own
+    /// `array` abstract heap-type byte (fetched from `/text/types.html`/
+    /// `/binary/types.html`, re-confirmed unchanged since W37's own
+    /// identical fetch), mirroring `Anyref`=`0x6E`/`Eqref`=`0x6D`/
+    /// `I31ref`=`0x6C`/`StructRefAny`=`0x6B`'s single-byte shape exactly --
+    /// `0x6A` is one less than `StructRefAny`'s `0x6B`, matching the real
+    /// spec's own adjacent byte assignment for the two hierarchy tops.
+    ArrayRefAny,
 }
 
 impl ValueType {
@@ -487,6 +517,9 @@ impl ValueType {
             ValueType::ArrayRef(_) => None,
             ValueType::NonNullArrayRef(_) => None,
             ValueType::NonNullArrayAny => None,
+            // W38 slice 0: single-byte abstract hierarchy top, same shape
+            // as `StructRefAny`/`Eqref`/`I31ref` immediately above.
+            ValueType::ArrayRefAny => Some(0x6A),
         }
     }
 
@@ -568,6 +601,9 @@ impl ValueType {
                 bytes
             }
             ValueType::NonNullArrayAny => vec![0x64, 0x66],
+            // W38 slice 0: single-byte abstract hierarchy top -- see
+            // `byte_tag()`.
+            ValueType::ArrayRefAny => vec![0x6A],
         }
     }
 
@@ -614,6 +650,11 @@ impl ValueType {
                 // hierarchy" reason as every other arm in this match.
                 | (ValueType::NullRef, ValueType::Eqref)
                 | (ValueType::NullRef, ValueType::StructRefAny)
+                // W38 slice 0: `none` sits below the array hierarchy's own
+                // new nullable abstract top too, for the exact same
+                // "bottom of the WHOLE `any` hierarchy" reason as every
+                // other arm in this match.
+                | (ValueType::NullRef, ValueType::ArrayRefAny)
         )
     }
 
@@ -1457,6 +1498,50 @@ pub struct Element {
     /// segments -- only `elem.drop`/consuming `table.init` calls change a
     /// genuinely-passive segment's dropped state, never this flag.
     pub is_declarative: bool,
+    /// One raw constant-expression byte sequence per item (W38 slices 0
+    /// and 4, Correction 2: `code/specs/W38-wasm-gc-array-bulk-ops.md`) --
+    /// a real, non-empty entry for every item as of slice 4, evaluated
+    /// ONCE at instantiation time via `evaluate_const_expr_gc` (mirroring
+    /// a global's `init_expr`) into this segment's own `element_values`
+    /// runtime-side table (see `wasm-execution`/`wasm-runtime`). A plain
+    /// `ref.func $f`/`ref.null` item still round-trips through here too
+    /// (its bytes ARE `[0xD2, <funcidx>, 0x0B]`/`[0xD0, <heaptype>,
+    /// 0x0B]`) -- `function_indices` stays purely a FAST-PATH cache for
+    /// `table.init`/`table.copy`'s pre-existing consumers, not the source
+    /// of truth for a segment's real content now that this field is
+    /// populated for real. Always the same length as `function_indices`
+    /// for any segment this crate builds.
+    ///
+    /// Populated UNCONDITIONALLY for every element segment this crate
+    /// builds (`wasm-wast-parser::module::build_elem`'s own explicit
+    /// choice, per this spec's design section 2d's own noted tradeoff) --
+    /// including ordinary funcref/externref-list segments, whose items
+    /// simply encode as `ref.func`/`ref.null` bytes, so `element_values`
+    /// (once evaluated) matches `function_indices`' own reading exactly
+    /// for those segments, with zero divergence between the two parallel
+    /// representations.
+    pub item_exprs: Vec<Vec<u8>>,
+    /// This segment's own declared reference type (W38 slice 4,
+    /// Correction 2 / Design §6): the reftype tag written on the segment
+    /// itself (`funcref`/`externref`/`i31ref`/`arrayref`/`(ref $t)`/etc.),
+    /// or `ValueType::Funcref` for a plain funcidx-list segment (binary
+    /// modes 0-3, or this crate's `(table funcref (elem ...))` inline
+    /// shorthand) -- the real spec's own implicit "elemkind" default.
+    /// Lets `array.init_elem`/`array.new_elem`'s own validator arms
+    /// statically enforce the real spec's `match-reftype` rule ("the
+    /// element segment's reference type `rt'` must match the array's
+    /// declared element type `rt`") via `wasm-validator`'s existing
+    /// `is_assignable` relation -- zero new subtyping logic needed, the
+    /// same reuse this spec's own `array.copy` validation already
+    /// established for `storage_type_matches`. Real, corpus-driven:
+    /// `array_init_elem.wast`'s own `array.init_elem-invalid-2` case
+    /// declares a `(mut funcref)` array fed from an `externref`-tagged
+    /// segment and expects `assert_invalid "type mismatch"` -- a case
+    /// this repo's `assert_invalid` grading (structural-rejection-only,
+    /// no instruction-level type-checker for anything else) can only ever
+    /// pass with a real, static check like this one, per `wasm-
+    /// conformance`'s own `grade_assert_invalid` doc comment.
+    pub declared_type: ValueType,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -2712,6 +2797,11 @@ fn canonicalize_value_type(
         ValueType::NullExnref => (CanonicalValType::Ref(true, Abstract(A::NoExn)), CanonicalCost::LEAF),
         ValueType::NullRef => (CanonicalValType::Ref(true, Abstract(A::None)), CanonicalCost::LEAF),
         ValueType::NonNullArrayAny => (CanonicalValType::Ref(false, Abstract(A::Array)), CanonicalCost::LEAF),
+        // W38 slice 0: the NULLABLE counterpart of `NonNullArrayAny`
+        // immediately above -- same `Abstract(A::Array)` heap kind, `true`
+        // nullability instead of `false` (mirrors `StructRefAny`'s own
+        // `true` vs. its non-null-less struct hierarchy one line up).
+        ValueType::ArrayRefAny => (CanonicalValType::Ref(true, Abstract(A::Array)), CanonicalCost::LEAF),
         ValueType::StructRef(i) => {
             let (r, c) = resolve(i)?;
             (CanonicalValType::Ref(true, r), c)
@@ -3379,6 +3469,8 @@ mod tests {
             function_indices: vec![Some(1), Some(3), Some(5), Some(7)],
             is_passive: false,
             is_declarative: false,
+            item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         assert_eq!(elem.table_index, 0);
         assert_eq!(elem.function_indices, vec![Some(1), Some(3), Some(5), Some(7)]);
@@ -5162,5 +5254,67 @@ mod tests {
         assert_ne!(ValueType::StructRefAny, ValueType::Eqref);
         assert_ne!(ValueType::NullRef, ValueType::Eqref);
         assert_ne!(ValueType::NullRef, ValueType::StructRefAny);
+    }
+
+    // ── W38 slice 0: `ArrayRefAny` -- `code/specs/
+    // W38-wasm-gc-array-bulk-ops.md`, Correction 3 ─────────────────────────
+    //
+    // Mirrors the `eqref_structref_any_*` test shapes immediately above,
+    // one hierarchy over, per the spec's own "Recommended slice
+    // decomposition" §0 instruction.
+
+    #[test]
+    fn arrayref_any_single_byte() {
+        assert_eq!(ValueType::ArrayRefAny.encode(), vec![0x6A], "arrayref tag, one less than structref's 0x6B");
+    }
+
+    #[test]
+    fn arrayref_any_byte_tag_matches_encode() {
+        assert_eq!(ValueType::ArrayRefAny.byte_tag(), Some(0x6A));
+    }
+
+    #[test]
+    fn nullref_is_a_bottom_subtype_of_arrayref_any() {
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::ArrayRefAny));
+    }
+
+    #[test]
+    fn arrayref_any_is_never_a_bottom_subtype_of_nullref() {
+        // Same asymmetry every other bottom-type rule in this lattice
+        // enforces -- a nullable supertype is never itself a subtype of
+        // the bottom type underneath it.
+        assert!(!ValueType::ArrayRefAny.is_bottom_subtype_of(&ValueType::NullRef));
+    }
+
+    #[test]
+    fn arrayref_any_is_distinct_from_every_other_reftype() {
+        // `ArrayRefAny` (the abstract, nullable array-hierarchy TOP) must
+        // never be confused with `ArrayRef(u32)` (a nullable CONCRETE
+        // array reference that always carries a type index) or
+        // `NonNullArrayAny` (this variant's non-null counterpart) -- all
+        // three exist precisely because they are NOT interchangeable.
+        assert_ne!(ValueType::ArrayRefAny, ValueType::ArrayRef(0));
+        assert_ne!(ValueType::ArrayRefAny, ValueType::NonNullArrayAny);
+        assert_ne!(ValueType::ArrayRefAny, ValueType::Anyref);
+        assert_ne!(ValueType::ArrayRefAny, ValueType::Eqref);
+        assert_ne!(ValueType::ArrayRefAny, ValueType::StructRefAny);
+        assert_ne!(ValueType::NullRef, ValueType::ArrayRefAny);
+    }
+
+    #[test]
+    fn arrayref_any_canonicalizes_deterministically() {
+        // Mirrors `every_abstract_heap_type_canonicalizes_deterministically`
+        // above, isolated to just the new variant this slice adds (that
+        // test's own fixed list is left untouched rather than growing it,
+        // since it's shared with every other abstract-heap-type slice).
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ArrayRefAny], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        let once = canonicalize_types(&m);
+        let twice = canonicalize_types(&m);
+        assert_eq!(once, twice, "canonicalization must be deterministic for ArrayRefAny");
+        assert!(once[0].is_some(), "ArrayRefAny must canonicalize to Some");
     }
 }

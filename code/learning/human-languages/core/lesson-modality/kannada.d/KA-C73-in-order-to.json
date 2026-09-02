@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C73-in-order-to",
+    "language": "kannada",
+    "chapter": 73,
+    "sequence": 2500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5337661d4276c1f7"
+  },
+  "findings": []
+}

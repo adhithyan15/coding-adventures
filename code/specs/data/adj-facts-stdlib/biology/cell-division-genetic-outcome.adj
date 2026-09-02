@@ -11,7 +11,7 @@
 % schema extracts — a second fact sitting unused in plain sight:
 %
 %   mitosis → genetically_identical
-%     "Mitosis is generally followed by equal division of the cell's content
+%     "Mitosis is generally followed by equal division of the cell’s content
 %      into two daughter cells that HAVE IDENTICAL GENOMES."
 %
 %   meiosis → haploid
@@ -49,10 +49,10 @@
 table cell_division_genetic_outcome {
     columns process, outcome
 
-    row (mitosis, genetically_identical)   % NHGRI: "Mitosis is generally followed by equal division of the cell's content into two daughter cells that have identical genomes."
+    row (mitosis, genetically_identical)   % NHGRI: "Mitosis is generally followed by equal division of the cell’s content into two daughter cells that have identical genomes."
     row (meiosis, haploid)                 % NHGRI: "During meiosis, each diploid cell undergoes two rounds of division to yield four haploid daughter cells -- the gametes."
 
-    source "Mitosis is generally followed by equal division of the cell's content into two daughter cells that have identical genomes."
+    source "Mitosis is generally followed by equal division of the cell’s content into two daughter cells that have identical genomes."
     locator "https://www.genome.gov/genetics-glossary/Mitosis"
     trust authoritative
 

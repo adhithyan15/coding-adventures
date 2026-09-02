@@ -84,7 +84,7 @@ fn deck_stats_frontend_sources_compile() {
             "deck-label",
             "deck-name",
             "deck-list-label",
-            "deck-names",
+            "deck-rows",
             "total-label",
             "total-value",
             "new-label",
@@ -107,11 +107,26 @@ fn deck_stats_layout_binds_all_stat_slots() {
     let source = read_source("DeckStatsPanel.mll");
 
     assert!(source.contains("content : slot: deck-list-label"));
-    assert!(source.contains("Row [ deck-list-row ]"));
-    assert!(source.contains("For ( each: slot: deck-names"));
+
+    // The deck list is a TABLE, not a row of chips: a Column of entries, each
+    // carrying [ name, due, new ].  The three columns are what let you scan
+    // for the deck with work in it, so each one is pinned here -- a row that
+    // quietly lost its due column would still compile and still render.
+    assert!(source.contains("Column [ deck-list-rows ]"));
+    assert!(source.contains("For ( each: slot: deck-rows"));
+    assert!(source.contains("Row [ deck-list-entry ]"));
     assert!(source.contains("HostButton [ deck-option-button ]"));
-    assert!(source.contains("label : deck-option"));
+    assert!(source.contains("label : ( d[0] )"));
+    assert!(source.contains("Text [ deck-row-due ]"));
+    assert!(source.contains("content : ( d[1] )"));
+    assert!(source.contains("Text [ deck-row-new ]"));
+    assert!(source.contains("content : ( d[2] )"));
+
+    // The click carries the row's POSITION.  MLL cannot hand an emit a
+    // computed value like `d[0]`, so the engine resolves the index against
+    // state.decks -- the same order the rows are built in.
     assert!(source.contains("onClick : emit: onSelectDeck"));
+    assert!(read_source("DeckStatsPanel.mil").contains("emit onSelectDeck ( index : number )"));
 
     for (part, label, value) in [
         ("deck-stat-total", "total-label", "total-value"),

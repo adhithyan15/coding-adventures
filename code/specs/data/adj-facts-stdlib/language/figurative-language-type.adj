@@ -25,7 +25,7 @@
 %
 %     type              description                                                                  quote (verbatim)
 %     ----------------  -------------------------------------------------------------------------    --------------------------------------------------------------------------------
-%     metaphor           describes_something_in_a_way_thats_not_literally_true_to_make_a_comparison    "A metaphor describes an object or action in a way that isn't literally true but helps explain an idea or make a comparison."
+%     metaphor           describes_something_in_a_way_thats_not_literally_true_to_make_a_comparison    "A metaphor describes an object or action in a way that isn’t literally true but helps explain an idea or make a comparison."
 %     personification     gives_human_characteristics_to_nonhuman_or_abstract_things                   "Personification means giving human characteristics to nonhuman or abstract things."
 %     hyperbole           a_great_exaggeration_used_to_add_emphasis                                    "Hyperbole is a great exaggeration, often unrealistic, to add emphasis to a sentiment."
 %
@@ -61,7 +61,7 @@ table figurative_language_type {
     row (personification, gives_human_characteristics_to_nonhuman_or_abstract_things)
     row (hyperbole, a_great_exaggeration_used_to_add_emphasis)
 
-    source "A metaphor describes an object or action in a way that isn't literally true but helps explain an idea or make a comparison."
+    source "A metaphor describes an object or action in a way that isn’t literally true but helps explain an idea or make a comparison."
     locator "https://www.grammarly.com/blog/writing-tips/figurative-language/"
     trust consensus
 }

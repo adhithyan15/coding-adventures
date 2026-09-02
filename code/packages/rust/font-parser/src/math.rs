@@ -125,16 +125,16 @@ pub(crate) fn math_constants(buf: &[u8], math_offset: usize) -> Result<MathConst
         // Record index = the constant's position in the specification's list,
         // minus the four bare fields above. The comments carry the spec
         // position so the arithmetic is checkable without counting records.
-        math_leading: value_at(0)?,                      // spec 4
-        axis_height: value_at(1)?,                       // spec 5
-        accent_base_height: value_at(2)?,                // spec 6
-        subscript_shift_down: value_at(4)?,              // spec 8
-        superscript_shift_up: value_at(7)?,              // spec 11
-        fraction_numerator_shift_up: value_at(28)?,      // spec 32
-        fraction_denominator_shift_down: value_at(30)?,  // spec 34
-        fraction_rule_thickness: value_at(34)?,          // spec 38
-        radical_vertical_gap: value_at(45)?,             // spec 49
-        radical_rule_thickness: value_at(47)?,           // spec 51
+        math_leading: value_at(0)?,                     // spec 4
+        axis_height: value_at(1)?,                      // spec 5
+        accent_base_height: value_at(2)?,               // spec 6
+        subscript_shift_down: value_at(4)?,             // spec 8
+        superscript_shift_up: value_at(7)?,             // spec 11
+        fraction_numerator_shift_up: value_at(28)?,     // spec 32
+        fraction_denominator_shift_down: value_at(30)?, // spec 34
+        fraction_rule_thickness: value_at(34)?,         // spec 38
+        radical_vertical_gap: value_at(45)?,            // spec 49
+        radical_rule_thickness: value_at(47)?,          // spec 51
     })
 }
 
@@ -190,6 +190,174 @@ pub(crate) fn italic_correction(
 /// tables are small and because a binary search over a format-2 range list is a
 /// classic off-by-one site — and this returns an index used to offset into a
 /// value array, where being one out yields a wrong number rather than an error.
+/// Which way a glyph stretches.
+///
+/// A `MATH` table keeps two independent constructions per glyph, and asking on
+/// the wrong axis silently returns nothing -- so a brace that should grow tall
+/// simply does not, with no error to notice.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum StretchAxis {
+    /// How `(` grows to wrap a tall fraction.
+    Vertical,
+    /// How `\overbrace` grows to span its contents.
+    Horizontal,
+}
+
+/// One ready-made larger glyph.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct GlyphVariant {
+    pub glyph_id: u16,
+    /// Its size along the stretch axis, in design units -- height for a
+    /// vertical construction, width for a horizontal one.
+    pub advance: u16,
+}
+
+/// One piece of a glyph built by assembly.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct AssemblyPart {
+    pub glyph_id: u16,
+    /// How much of this part may overlap the piece BEFORE it.
+    pub start_connector: u16,
+    /// How much may overlap the piece AFTER it.
+    pub end_connector: u16,
+    /// Its full size along the axis.
+    pub full_advance: u16,
+    /// An extender may be repeated to reach the required size; the others
+    /// appear exactly once. A renderer that repeats a non-extender draws two
+    /// brace tips in the middle of a brace.
+    pub is_extender: bool,
+}
+
+/// How one glyph grows.
+///
+/// Two mechanisms, and a renderer needs both. **Variants** are complete larger
+/// glyphs the designer drew -- the four sizes of `(` that cover most cases.
+/// **Assembly** is for when none is big enough: pieces stacked with overlap,
+/// which is how a brace spanning half a page is built from a top, a bottom,
+/// and a repeated extender.
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
+pub struct GlyphConstruction {
+    /// Larger pre-drawn glyphs, in increasing size.
+    pub variants: Vec<GlyphVariant>,
+    /// Pieces to stack when no variant is large enough. Empty when the font
+    /// offers none, which means the largest variant is the limit.
+    pub assembly: Vec<AssemblyPart>,
+    /// Italic correction for the assembled glyph.
+    pub assembly_italics_correction: i16,
+}
+
+/// The minimum overlap between adjacent assembly parts, in design units.
+///
+/// Parts must overlap by at least this much or the seams show as hairline gaps
+/// at some sizes -- the defect that looks like a rendering artefact rather than
+/// a layout bug.
+pub(crate) fn min_connector_overlap(buf: &[u8], math_offset: usize) -> Result<u16, FontError> {
+    let variants_offset = read_u16(buf, math_offset + 8)? as usize;
+    if variants_offset == 0 {
+        return Ok(0);
+    }
+    read_u16(buf, math_offset + variants_offset)
+}
+
+/// The construction for one glyph on one axis.
+///
+/// `Ok(None)` means the font gives this glyph no construction on that axis,
+/// which is the common case: only delimiters and a few operators stretch.
+pub(crate) fn glyph_construction(
+    buf: &[u8],
+    math_offset: usize,
+    glyph_id: u16,
+    axis: StretchAxis,
+) -> Result<Option<GlyphConstruction>, FontError> {
+    // MATH header: majorVersion, minorVersion, then three Offset16 --
+    // MathConstants at 4, MathGlyphInfo at 6, MathVariants at 8. Reading +6
+    // here parses MathGlyphInfo as MathVariants: it does not fail, it returns
+    // plausible numbers from the wrong table. The oracle reported a minimum
+    // connector overlap of 8 -- itself an offset -- rather than 100.
+    let variants_offset = read_u16(buf, math_offset + 8)? as usize;
+    if variants_offset == 0 {
+        return Ok(None);
+    }
+    let variants = math_offset + variants_offset;
+
+    // MathVariants: minConnectorOverlap, vertCoverage, horizCoverage,
+    // vertCount, horizCount, then the two construction-offset arrays.
+    let vert_coverage = read_u16(buf, variants + 2)? as usize;
+    let horiz_coverage = read_u16(buf, variants + 4)? as usize;
+    let vert_count = read_u16(buf, variants + 6)? as usize;
+
+    let (coverage, count_offset, array_offset) = match axis {
+        StretchAxis::Vertical => (vert_coverage, variants + 6, variants + 10),
+        // The horizontal array follows the vertical one, so its start depends
+        // on how many vertical constructions there are.
+        StretchAxis::Horizontal => (horiz_coverage, variants + 8, variants + 10 + vert_count * 2),
+    };
+    if coverage == 0 {
+        return Ok(None);
+    }
+    let count = read_u16(buf, count_offset)? as usize;
+
+    let Some(index) = coverage_index(buf, variants + coverage, glyph_id)? else {
+        return Ok(None);
+    };
+    let index = index as usize;
+    if index >= count {
+        // Coverage and the construction array disagree, which means the table
+        // is malformed; reporting "no construction" is safer than reading an
+        // offset from beyond the array.
+        return Ok(None);
+    }
+
+    let construction_offset = read_u16(buf, array_offset + index * 2)? as usize;
+    if construction_offset == 0 {
+        return Ok(None);
+    }
+    let construction = variants + construction_offset;
+
+    // MathGlyphConstruction: Offset16 glyphAssembly, uint16 variantCount,
+    // then the variant records.
+    let assembly_offset = read_u16(buf, construction)? as usize;
+    let variant_count = read_u16(buf, construction + 2)? as usize;
+
+    let mut records = Vec::with_capacity(variant_count);
+    for i in 0..variant_count {
+        let record = construction + 4 + i * 4;
+        records.push(GlyphVariant {
+            glyph_id: read_u16(buf, record)?,
+            advance: read_u16(buf, record + 2)?,
+        });
+    }
+
+    let mut assembly = Vec::new();
+    let mut assembly_italics_correction = 0;
+    if assembly_offset != 0 {
+        let table = construction + assembly_offset;
+        // GlyphAssembly: a MathValueRecord (int16 + Offset16 device table),
+        // then partCount, then the part records. Reading the italics
+        // correction as a bare int16 would put every part record two bytes
+        // early -- the same trap `MathConstants` has.
+        assembly_italics_correction = read_i16(buf, table)?;
+        let part_count = read_u16(buf, table + 4)? as usize;
+        for i in 0..part_count {
+            let record = table + 6 + i * 10;
+            assembly.push(AssemblyPart {
+                glyph_id: read_u16(buf, record)?,
+                start_connector: read_u16(buf, record + 2)?,
+                end_connector: read_u16(buf, record + 4)?,
+                full_advance: read_u16(buf, record + 6)?,
+                // Bit 0 of partFlags. The other bits are reserved.
+                is_extender: read_u16(buf, record + 8)? & 0x0001 != 0,
+            });
+        }
+    }
+
+    Ok(Some(GlyphConstruction {
+        variants: records,
+        assembly,
+        assembly_italics_correction,
+    }))
+}
+
 fn coverage_index(buf: &[u8], offset: usize, glyph_id: u16) -> Result<Option<u16>, FontError> {
     match read_u16(buf, offset)? {
         1 => {
