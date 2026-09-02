@@ -109,7 +109,11 @@ describe("the plan CLI", () => {
     // it has no external steer to answer; the file measures the corpus's own
     // register fields instead and claims a borrowed-against-inherited lexical
     // split rather than importing Tamil's diglossia column.
-    expect(out).toMatch(/0 complete and 11 partial of 138/);
+    // 11 -> 12 partial: `exam-inventory-punjabi-a1.json`. Partial for the usual
+    // proxy reason plus one of its own: Punjabi is written in two scripts and
+    // this track covers only Gurmukhi, which the file records as a point rather
+    // than leaving in a spec.
+    expect(out).toMatch(/0 complete and 12 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -141,7 +145,8 @@ describe("the plan CLI", () => {
     // 8 -> 9: Kannada A1 joins it, on the same rule.
     // 9 -> 10: Malayalam A1 joins it too. French is still the only file this
     // test corrupts, so this number stays the written total minus exactly one.
-    expect(out).toMatch(/0 complete and 10 partial of 138/);
+    // 10 -> 11: Punjabi A1 joins it too.
+    expect(out).toMatch(/0 complete and 11 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
