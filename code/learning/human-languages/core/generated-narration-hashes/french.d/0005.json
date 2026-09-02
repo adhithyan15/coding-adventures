@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 5,
-  "sourceHash": "fnv1a64:44a61a56f4245df8",
+  "sourceHash": "fnv1a64:e9a42a061b919c34",
   "lessonIds": [
     "FR-C05-parler",
     "FR-C05-habiter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "french/narration/ch05.txt",
   "json": "french/narration/ch05.json",
-  "textHash": "fnv1a64:0038a3edaf66e650",
-  "jsonHash": "fnv1a64:3e394f962669b15a",
+  "textHash": "fnv1a64:1fcd4c4049ddf4f5",
+  "jsonHash": "fnv1a64:1c33e3cbcb73cddf",
   "findings": []
 }

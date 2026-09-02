@@ -1,7 +1,8 @@
 {
-  "id": "FR-PATH-013",
-  "spine_node": "SPINE-TAKE-LEAVE",
-  "lessons": [
+  "language": "french",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:67b36bfef451ae44",
+  "lessonIds": [
     "FR-C04-au-revoir",
     "FR-C04-a-plus-tard",
     "FR-C04-a-bientot",
@@ -11,11 +12,5 @@
     "FR-W02-cedille",
     "FR-W03-trema"
   ],
-  "before": [],
-  "inline": [
-    "FR-EXT-013-LANGUAGE-SPECIFIC"
-  ],
-  "after": [
-    "FR-EXT-013-ACCENT-MARKS"
-  ]
+  "tex": "french/book/chapters/ch04-farewells.tex"
 }

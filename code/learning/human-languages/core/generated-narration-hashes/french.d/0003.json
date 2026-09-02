@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 3,
-  "sourceHash": "fnv1a64:af7ee37600335d12",
+  "sourceHash": "fnv1a64:2ec359cc59c0c2e9",
   "lessonIds": [
     "FR-C03-merci",
     "FR-C03-de-rien",
@@ -15,7 +15,7 @@
   "drivablePrefix": 2,
   "text": "french/narration/ch03.txt",
   "json": "french/narration/ch03.json",
-  "textHash": "fnv1a64:487f9ca4aa5c5383",
-  "jsonHash": "fnv1a64:d3da7e0154d85000",
+  "textHash": "fnv1a64:e50ae768bbeccbab",
+  "jsonHash": "fnv1a64:f1302e653c6e3d67",
   "findings": []
 }
