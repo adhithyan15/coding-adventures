@@ -7,10 +7,23 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C06-nombres-6-10",
+    "lesson": "FR-C06-practice",
     "kind": "task",
-    "summary": "Complete FR-C06-nombres-6-10, the canonical closing checkpoint, and demonstrate the chapter promise: count from one to ten in French and use the numbers in a short exchange.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The ten most-reused words in the language, taken one at a time. Each is a Latin numeral that barely moved on its way into French, so English has already handed you half of them — and four of them left a copy of themselves in the calendar, still counting two months out of place.",
+    "assesses": [
+      "FR-LEX-UN-01",
+      "FR-GRAM-UN-UNE-02",
+      "FR-LEX-DEUX-03",
+      "FR-LEX-TROIS-04",
+      "FR-LEX-QUATRE-05",
+      "FR-LEX-CINQ-06",
+      "FR-LEX-SIX-07",
+      "FR-PHON-LIAISON-NUMBERS-08",
+      "FR-LEX-SEPT-09",
+      "FR-LEX-HUIT-10",
+      "FR-LEX-NEUF-11",
+      "FR-LEX-DIX-12"
+    ],
+    "note": "Chapter 6 is schema-v2 as of the handwritten-chapter retirement, so the payoff is atom-scored: FR-C06-practice assesses every atom the chapter introduces."
   }
 }

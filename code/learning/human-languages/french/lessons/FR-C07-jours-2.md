@@ -11,7 +11,7 @@ sounds: [nasal-an, vowel-eu]
 roots: [sabbatum-latin, dominica-latin]
 etymology_hook: "samedi ← Sabbatum (the Sabbath), dimanche ← diēs Dominica ('the Lord's day') — the two days Christianity renamed, breaking the planet pattern"
 est_minutes: 4
-reviews_of: [FR-C07-jours-1, FR-C06-nombres-6-10]
+reviews_of: [FR-C07-jours-1, FR-C06-dix]
 ---
 
 # samedi and dimanche — the week's religious edge

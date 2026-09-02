@@ -440,7 +440,10 @@
       "id": "A1-PRON-03",
       "category": "Prononciation et orthographe",
       "label": "obligatory liaison",
-      "probe": null
+      "probe": [
+        "FR-PHON-LIAISON-NUMBERS-08"
+      ],
+      "note": "Chapter 6 teaches obligatory liaison as a rule rather than an aside: six and dix sound their final -s when counting, drop it before a consonant and bring it back as a z before a vowel (six ans), and neuf softens its f to a v in neuf ans."
     },
     {
       "id": "A1-PRON-04",
