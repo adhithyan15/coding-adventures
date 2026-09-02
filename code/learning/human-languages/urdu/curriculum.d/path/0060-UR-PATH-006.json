@@ -3,8 +3,10 @@
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
     "UR-C05-khuda",
+    "UR-W05-ye",
     "UR-C05-hafiz",
     "UR-C05-khuda-hafiz",
+    "UR-W05-he",
     "UR-C05-practice"
   ],
   "before": [],
@@ -14,5 +16,7 @@
     "UR-EXT-015-FAREWELL-SPACING-REGISTER",
     "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION"
   ],
-  "after": []
+  "after": [
+    "UR-EXT-014B-SCRIPT-YE-HE"
+  ]
 }

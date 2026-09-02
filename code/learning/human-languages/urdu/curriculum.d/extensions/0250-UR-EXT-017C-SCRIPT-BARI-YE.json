@@ -1,0 +1,11 @@
+{
+  "id": "UR-EXT-017C-SCRIPT-BARI-YE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write bari ye, tell it apart from choti ye at a glance, and read the copula hai.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W06-bari-ye"
+  ]
+}
