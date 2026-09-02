@@ -1,12 +1,9 @@
 {
   "language": "bengali",
   "chapter": 10,
-  "sourceHash": "fnv1a64:60c051c2bf6b9a98",
+  "sourceHash": "fnv1a64:dbe4fc62e51f1a9f",
   "lessonIds": [
-    "BN-C10-cha",
-    "BN-C10-jol",
-    "BN-C10-dudh",
-    "BN-C10-bhat"
+    "BN-C06-numbers-1-5"
   ],
-  "tex": "bengali/book/chapters/ch10-tea-water-milk-rice.tex"
+  "tex": "bengali/book/chapters/ch10-numbers-1-5.tex"
 }

@@ -9,7 +9,7 @@ headword: کہاں
 romanization: kahāṅ
 gloss: where — the fourth member of Urdu's k- question family, and a cousin of English where by way of PIE *kʷis
 concept_tag: UR-WHERE
-prerequisites: [UR-W17-he]
+prerequisites: [UR-C17-kaam, UR-W05-he]
 sounds: [rtl, short-vowels-unwritten, nasal-vowel]
 roots: [sanskrit-kasmin, pie-kwis]
 etymology_hook: kahāṅ descends through Prakrit kahiṅ from Sanskrit kasmin, the locative of the interrogative stem ka- , itself from Proto-Indo-European *kʷis -- the same root that gives Urdu kyā, kaun, kab and kaise their shared opening k, Latin quis and quid, and the entire English wh- family: who, what, when, where; Urdu marks its questions with k where English marks them with wh, and the two marks are the same inherited consonant taking two different journeys out of PIE.
@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-W17-he, UR-C03-kya, UR-C04-kaise-kaisi]
+reviews_of: [UR-W05-he, UR-C03-kya, UR-C04-kaise-kaisi]
 ---
 
 # کہاں — "where," and the family it belongs to
@@ -47,8 +47,8 @@ opening one, the middle one, or the closing one? (**Closing**.)
 
 Four letters. Three of them are yours: **ک**, then **ہ** wearing its middle
 face, then **ا**. The fourth is new, and it carries the nasal hum you can hear
-at the end of *kahāṅ* — the same hum that ends *maiṅ*, *hūṅ* and *nahīṅ*. Say
-the word; the letter arrives before this chapter closes.
+at the end of *kahāṅ* — the same hum that ends *maiṅ*, *hūṅ* and *nahīṅ*. You
+wrote it back in chapter six: it is nūn with the dot taken off.
 
 > **یہ کہاں؟** — *yih kahāṅ?* — "this, where?" — pointing and asking at once
 

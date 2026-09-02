@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W04-poribar-read",
     "language": "bengali",
-    "chapter": 19,
-    "sequence": 1960,
+    "chapter": 17,
+    "sequence": 890,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:0e80cc031eb68760",
+    "sourceHash": "fnv1a64:e8c8dab3ca49c9b9",
     "detachableSegments": [
       "Script"
     ],

@@ -54,7 +54,7 @@ and the tall stroke that opens it, wearing the same small wave you met on
 > *āsmān nīlā hai.* — "The sky is blue."
 
 That sentence reuses a colour you already own and the copula you learned to
-write last chapter.
+write back in chapter six.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-AASMAAN-STONE]; assesses=[UR-LEX-AASMAAN, UR-ETYMON-KHUDA-PERSIAN] -->

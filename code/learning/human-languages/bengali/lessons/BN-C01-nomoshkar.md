@@ -6,6 +6,7 @@ sequence: 10
 chapter: 1
 type: word
 headword: নমস্কার
+romanization: "nômoshkar"
 gloss: hello / goodbye (nômoshkar)
 concept_tag: GREETING-HELLO
 prerequisites: []

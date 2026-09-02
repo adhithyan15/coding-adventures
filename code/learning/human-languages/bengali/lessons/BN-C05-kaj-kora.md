@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C05-kaj-kora
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 280
-chapter: 5
+sequence: 600
+chapter: 9
 type: word
 headword: কাজ করা
+romanization: "kāj kôrā"
 gloss: to work (lit. "work-do")
 concept_tag: BN-VERB-KORA
 prerequisites: [BN-C05-bola]

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C11-bon
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 830
-chapter: 11
+sequence: 880
+chapter: 16
 type: word
 headword: বোন
 romanization: bon
@@ -76,7 +76,7 @@ family or not.
 - [YOU SAY: "āmār bon" — my sister]
 - [YOU SAY: the shared root — "bhaj … bhāt, bon"]
 - [YOU SAY: all four of this chapter's people — "bôndhu, pôribār, bhāi, bon"]
-- [YOU SAY: a count of them, using Chapter 6's numbers — "āmār ek bhāi. āmār
+- [YOU SAY: a count of them, using Chapter 10's numbers — "āmār ek bhāi. āmār
   dui bon." — one brother. two sisters.]
 
 ## Wrap-up Recall

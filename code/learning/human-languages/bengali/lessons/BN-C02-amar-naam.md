@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C02-amar-naam
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 90
-chapter: 2
+sequence: 190
+chapter: 3
 type: phrase
 headword: আমার নাম …
+romanization: "āmār nām …"
 gloss: my name is… (with no "is")
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [BN-C02-amar, BN-C02-naam]
@@ -49,7 +50,7 @@ Look at what is missing: there is **no verb**. Bengali sets "my name" beside
 copula**: for present-tense equational sentences (X is Y), Bengali needs no "to
 be" at all. (It is the same habit Tamil has — and unlike Hindi's
 *merā nām … hai*, which keeps the *hai*.) Bengali only brings back a verb when it
-talks about a *state* or *place* — you'll see that in Chapter 3.
+talks about a *state* or *place* — you'll see that in Chapter 5.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-AMARNAAM-01, BN-CONCEPT-C02-NAAM-01] -->

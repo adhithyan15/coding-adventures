@@ -1,21 +1,22 @@
 {
   "chapter": 14,
-  "title": "Five Colors",
-  "label": "ch:bn-five-colors",
-  "canDo": "I can name five colors in Bengali and say which came from Persian, which from Sanskrit, and which is the one color where Bengali and Hindi genuinely parted ways.",
+  "title": "Tea, Water, Milk, and Rice",
+  "label": "ch:bn-tea-water-milk-rice",
+  "canDo": "I can offer or ask for tea, water, milk and rice politely in Bengali, reusing the respectful verb ending Chapter 7 already taught, and say which of the four words is a Chinese loan and which shares a root with a word two lessons later.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "BN-C14-shobuj",
+    "lesson": "BN-C10-bhat",
     "kind": "production",
-    "summary": "The chapter closes on সবুজ, 'green', a second Persian loan (sabz, the same root behind Hindi and Urdu's sabzī, 'vegetable') that sets beside লাল's own Persian gem-name. The reader names all five colors — lāl, nīl, kālo, shādā, shôbuj — and sorts them by origin: two Persian loans, two Sanskrit words, and one worn down by sound change, a more even split between inherited and borrowed than food or family showed.",
+    "summary": "The chapter closes on ভাত, whose Sanskrit root — √bhaj, 'to divide, to share' — will resurface two lessons later in a very different word. The reader offers all four drinks and rice politely in one breath (chā khān, jôl khān, dudh khān, bhāt khān), all built on the same respectful form of খাওয়া Chapter 7 already taught rather than a new 'please' word, which is how this chapter realizes SPINE-POLITE-REQUEST-REPAIR without one. It reaches back to rescue three thin Chapter 7 grammar atoms (হওয়া's future, আসা's genderlessness, যাওয়া's respect ladder) and সাহায্য's doubled-letter sound rule, none revisited since Chapter 7-9.",
     "assesses": [
-      "BN-LEX-C14-LAL-01",
-      "BN-LEX-C14-NIL-01",
-      "BN-LEX-C14-KALO-01",
-      "BN-LEX-C14-SHADA-01",
-      "BN-LEX-C14-SHOBUJ-01"
+      "BN-LEX-C10-CHA-01",
+      "BN-GRAMMAR-C10-KHAN-REQUEST-02",
+      "BN-LEX-C10-JOL-01",
+      "BN-LEX-C10-DUDH-01",
+      "BN-SOUND-C10-DUDH-02",
+      "BN-LEX-C10-BHAT-01"
     ]
   }
 }

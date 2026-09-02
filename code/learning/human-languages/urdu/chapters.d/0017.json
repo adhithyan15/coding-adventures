@@ -2,14 +2,14 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "label": "ch:ur-script-copula",
-  "canDo": "I can write gol he in the positions a word needs, write bari ye and nun ghunna, read hai, main, hain, nahin, maan and kahan off the page, and write mera naam ... hai from dictation.",
+  "canDo": "I can read yih, kaam, kahan, maan and the copula hai off the page rather than from the romanization, write mera naam ... hai from dictation, and put gol he, bari ye and nun ghunna back to work in words I had only heard.",
   "spineNodes": [
     "SPINE-RESPOND-BASIC"
   ],
   "payoff": {
     "lesson": "UR-C17-practice",
     "kind": "writing",
-    "summary": "Three letters land on top of the seven, and the copula hai comes off the page -- with it every sentence the reader already knew how to end, including mera naam ... hai, the first sentence the book ever gave them.",
+    "summary": "The copula hai comes off the page, and with it every sentence the reader already knew how to end, including mera naam ... hai, the first sentence the book ever gave them -- built from three letters learned eleven chapters earlier and returned to here.",
     "assesses": [
       "UR-SCRIPT-HE-01",
       "UR-SCRIPT-BARI-YE-01",

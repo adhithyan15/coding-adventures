@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "UR-W05-ye",
+    "language": "urdu",
+    "chapter": 5,
+    "sequence": 175,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ac024f39dc5b8b78",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

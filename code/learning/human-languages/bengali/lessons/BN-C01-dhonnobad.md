@@ -6,6 +6,7 @@ sequence: 20
 chapter: 1
 type: word
 headword: ধন্যবাদ
+romanization: "dhônyobad"
 gloss: thank you (dhônyobad)
 concept_tag: COURTESY-THANKS
 prerequisites: [BN-C01-nomoshkar]

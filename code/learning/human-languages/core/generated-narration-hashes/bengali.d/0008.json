@@ -1,18 +1,24 @@
 {
   "language": "bengali",
   "chapter": 8,
-  "sourceHash": "fnv1a64:57a1eb4abdd47e77",
+  "sourceHash": "fnv1a64:c59bf844267f7a89",
   "lessonIds": [
-    "BN-C08-bhaba",
-    "BN-C08-bojha",
-    "BN-C08-pora",
-    "BN-C08-lekha"
+    "BN-W03-ba",
+    "BN-W03-abar-read",
+    "BN-W03-bha",
+    "BN-W03-bhalo-read",
+    "BN-W03-kha",
+    "BN-W04-pa",
+    "BN-W03-da",
+    "BN-W03-dha",
+    "BN-W04-cha",
+    "BN-W04-ja"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch08.txt",
   "json": "bengali/narration/ch08.json",
-  "textHash": "fnv1a64:b82b6ec3905b4ac3",
-  "jsonHash": "fnv1a64:02380d21707dd1ec",
+  "textHash": "fnv1a64:836197493d8389cf",
+  "jsonHash": "fnv1a64:4bb6cf8b7c52a0e3",
   "findings": []
 }

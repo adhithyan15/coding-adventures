@@ -4,14 +4,14 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7ca1d7c547720f59",
+  "sourceHash": "fnv1a64:ab60ccde427cdd72",
   "lessons": [
     {
       "id": "BN-C01-nomoshkar",
       "sequence": 10,
       "title": "নমস্কার (nômoshkar) — \"hello\"",
       "headword": "নমস্কার",
-      "romanization": "",
+      "romanization": "nômoshkar",
       "gloss": "hello / goodbye (nômoshkar)",
       "script": "bengali",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:37ad9c0ce50424d5",
+      "sourceHash": "fnv1a64:2201f9941e9a64e6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নমস্কার is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas (\"a bow\") + kāra (\"the making of\"). But hear what Bengali does: the inherent \"a\" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin."
+              "text": "নমস্কার (nômoshkar) is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas (\"a bow\") + kāra (\"the making of\"). But hear what Bengali does: the inherent \"a\" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin."
             }
           ]
         },
@@ -136,7 +136,7 @@
       "sequence": 20,
       "title": "ধন্যবাদ (dhônyobad) — \"thank you\"",
       "headword": "ধন্যবাদ",
-      "romanization": "",
+      "romanization": "dhônyobad",
       "gloss": "thank you (dhônyobad)",
       "script": "bengali",
       "modality": "sight",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9aa186b35b85d38c",
+      "sourceHash": "fnv1a64:ff54deaf5463135f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -261,7 +261,7 @@
       "sequence": 30,
       "title": "হ্যাঁ / না (hyã / nā) — \"yes\" and \"no\"",
       "headword": "হ্যাঁ / না",
-      "romanization": "",
+      "romanization": "hyã / nā",
       "gloss": "yes / no (hyã / nā)",
       "script": "bengali",
       "modality": "sight",
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bf4a90a829fb912d",
+      "sourceHash": "fnv1a64:b16e1566e85d90a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -386,7 +386,7 @@
       "sequence": 40,
       "title": "আচ্ছা (āchchhā) — \"okay / I see\"",
       "headword": "আচ্ছা",
-      "romanization": "",
+      "romanization": "āchchhā",
       "gloss": "okay / alright / I see (āchchhā)",
       "script": "bengali",
       "modality": "sight",
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:be623bf0a09d344b",
+      "sourceHash": "fnv1a64:f4c00863f28ddfe4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -511,7 +511,7 @@
       "sequence": 50,
       "title": "আসি (āshi) — \"I'll be going\" (goodbye)",
       "headword": "আসি",
-      "romanization": "",
+      "romanization": "āshi",
       "gloss": "goodbye, lit. \"I'll come [again]\" (āshi)",
       "script": "bengali",
       "modality": "sight",
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:229c996df6c5e123",
+      "sourceHash": "fnv1a64:74c9d6e19fa45649",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -555,7 +555,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: স again — here truly \"sh\" — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি = আ + সি, ā-shi."
+              "text": "New: স again — here truly \"sh\" — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি (āshi) = আ + সি, ā-shi."
             }
           ]
         },

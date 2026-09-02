@@ -1,0 +1,19 @@
+{
+  "id": "TA-PATH-66-WHICHWAY",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TA-C66-up",
+    "TA-C66-down",
+    "TA-W22-read-mele",
+    "TA-C66-inside",
+    "TA-C66-outside",
+    "TA-C66-right",
+    "TA-C66-left",
+    "TA-C66-whichway-recall"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-66-WHICHWAY"
+  ],
+  "after": []
+}

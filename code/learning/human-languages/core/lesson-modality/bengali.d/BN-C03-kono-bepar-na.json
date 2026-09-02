@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C03-kono-bepar-na",
     "language": "bengali",
-    "chapter": 3,
-    "sequence": 190,
+    "chapter": 5,
+    "sequence": 350,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0059a2d9578330f1",
+    "sourceHash": "fnv1a64:0cfee389253d6152",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C02-naam
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 70
-chapter: 2
+sequence: 170
+chapter: 3
 type: word
 headword: নাম
+romanization: "nām"
 gloss: name
 concept_tag: WORD-NAME
 prerequisites: []

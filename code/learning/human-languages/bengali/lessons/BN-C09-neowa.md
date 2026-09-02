@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C09-neowa
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 600
-chapter: 9
+sequence: 740
+chapter: 13
 type: word
 headword: নেওয়া
 romanization: neowā

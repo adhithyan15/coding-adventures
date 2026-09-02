@@ -1,24 +1,18 @@
 {
   "language": "bengali",
   "chapter": 16,
-  "sourceHash": "fnv1a64:c53696530f0636ec",
+  "sourceHash": "fnv1a64:6df513351634a00d",
   "lessonIds": [
-    "BN-W01-na",
-    "BN-W01-aa-matra",
-    "BN-W01-aa",
-    "BN-W01-ha",
-    "BN-W01-ma",
-    "BN-W01-sa",
-    "BN-W01-ka",
-    "BN-W01-hasanta",
-    "BN-W01-ra",
-    "BN-W01-nomoshkar-read"
+    "BN-C11-bondhu",
+    "BN-C11-poribar",
+    "BN-C11-bhai",
+    "BN-C11-bon"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch16.txt",
   "json": "bengali/narration/ch16.json",
-  "textHash": "fnv1a64:017c39a1be8adaea",
-  "jsonHash": "fnv1a64:ad74d9dbcc3fbe39",
+  "textHash": "fnv1a64:bad0e88e25a8664e",
+  "jsonHash": "fnv1a64:499e33ef654a5eda",
   "findings": []
 }

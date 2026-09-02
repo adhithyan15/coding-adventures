@@ -6,6 +6,7 @@ sequence: 680
 chapter: 19
 type: grammar
 headword: உன் வயசு என்ன? / உனக்கு எத்தனை வயது ஆகிறது?
+romanization: "un vayasu enna? / unakku ettanai vayathu aakirathu?"
 gloss: casual Tamil uses a possessive age question while formal Tamil uses dative plus become
 prerequisites: [TA-C19-vayathu]
 sounds: [tamil-dative-ukku, tamil-verb-aakiradhu]

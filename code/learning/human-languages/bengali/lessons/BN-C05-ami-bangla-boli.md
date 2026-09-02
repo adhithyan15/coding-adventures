@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C05-ami-bangla-boli
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 270
-chapter: 5
+sequence: 590
+chapter: 9
 type: phrase
 headword: আমি বাংলা বলি
+romanization: "āmi bānglā bôli"
 gloss: I speak Bengali
 concept_tag: BN-WORD-BANGLA
 prerequisites: [BN-C05-bola, BN-C03-ami]

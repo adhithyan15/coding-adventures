@@ -9,7 +9,7 @@ headword: "آپ کیسے ہیں؟ — میں ... ہوں"
 romanization: "āp kaise haiṅ? — maiṅ ... hūṅ"
 gloss: "thirteen letters, and the whole first meeting readable from the page"
 concept_tag: UR-C18-PRACTICE
-prerequisites: [UR-W18-vao]
+prerequisites: [UR-C18-review-aap, UR-W08-vao]
 sounds: [rtl, short-vowels-unwritten, nasal-vowel]
 roots: []
 etymology_hook: "Nothing new is taught here. Three letters were added to ten, and the exchange this book opens with becomes something the reader can write from dictation rather than repeat from memory."
@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-W18-alif-madda, UR-W18-pe, UR-W18-vao, UR-C18-aam, UR-C18-aasmaan, UR-C18-purana, UR-C18-voh, UR-C17-practice]
+reviews_of: [UR-W07-alif-madda, UR-W07-pe, UR-W08-vao, UR-C18-aam, UR-C18-aasmaan, UR-C18-purana, UR-C18-voh, UR-C17-practice]
 ---
 
 # Practice — thirteen letters, and the meeting comes off the page
@@ -37,8 +37,8 @@ reviews_of: [UR-W18-alif-madda, UR-W18-pe, UR-W18-vao, UR-C18-aam, UR-C18-aasmaa
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-ALIF-MADDA-01, UR-SCRIPT-PE-01, UR-SCRIPT-VAO-01] -->
 
-[PAUSE 2s] Write the three letters this chapter gave you and name each:
-آ، پ، و.
+[PAUSE 2s] Write the three letters this chapter has been cashing in, and name
+each: آ، پ، و. You learned all three in chapters seven and eight.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[UR-SCRIPT-READ-MEETING-01]; assesses=[UR-LEX-AAM, UR-LEX-AASMAAN, UR-LEX-PURANA, UR-LEX-VOH, UR-LEX-MAIN, UR-LEX-HUN, UR-LEX-NAME-QUESTION, UR-SCRIPT-READ-HAI-01] -->
