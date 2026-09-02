@@ -137,7 +137,7 @@ be impossible, it must be impossible at Layer 7.
 
 The corollary is the part most easily missed: because S-I6 brokers capabilities
 by default, **the broker mediates most operations in the running system**. It
-acts with supervisor privilege on agent-supplied arguments and is therefore a
+acts on agent-supplied arguments and is therefore a
 classic confused deputy. It is reviewed as a boundary, and S-K5 governs it.
 
 ### S-B2 — sign-time analysis states its own confidence, per language
@@ -194,6 +194,13 @@ surface. Every agent filter denies, at minimum:
 - `bpf`, `perf_event_open`, `userfaultfd`, `keyctl`, `add_key`
 - `mount`, `pivot_root`, `unshare`, `setns`, `personality`
 - `socketcall` and every other syscall multiplexer
+- `socket(AF_UNIX, ...)` — denied wholesale when no declared capability needs
+  it. seccomp cannot distinguish abstract-namespace from pathname unix sockets
+  (the name lives in the `sockaddr`, not a register), so the family is denied or
+  it is not.
+- the `pidfd` family — `pidfd_open`, `pidfd_send_signal`, `pidfd_getfd` (which
+  steals descriptors from another process), and `prlimit64` against a foreign
+  pid, `process_madvise`, `sched_setaffinity`, `setpriority`, `ioprio_set`
 
 `/proc`, `/sys`, `/dev/shm`, and `/dev` (except `/dev/null` and
 `/dev/urandom`) are unreachable in every agent's filesystem domain.
@@ -213,6 +220,15 @@ for seccomp, for the environment block, and for descriptor handling.
 
 The plan type carries the base policy as a first-class term, and an enforcer
 refuses to launch when the base policy is absent.
+
+**Two further terms are recorded in the plan and in the launch audit record
+(S-P4): `principal_model` (`shared_uid` | `distinct_uid` | `appcontainer_sid`)
+and `broker_topology` (`per_agent` | `per_supervisor`).** A relaxation is
+defensible only when the weaker outcome is *visible*: without these a deployment
+cannot tell from its own records which model it actually got, and "the launch
+proceeds and the audit record says sandboxed" is the exact failure S-P3 and S-P4
+exist to prevent. `broker_topology: per_supervisor` is a launch failure under
+S-K7. Observing and refusing costs no privilege.
 
 ### S-I2 — the agent's channel reaches the broker, not the supervisor
 
@@ -422,7 +438,7 @@ instruction executes with the plan already installed.** That is achievable on
 every platform here, including the BSDs where S-I4c forbids an in-process
 initialization window.
 
-### S-I5 — the agent never holds channel keys, and principals are separated
+### S-I5 — the agent never holds channel keys
 
 Secure-channel keys live in the broker, which the supervisor launched. They are
 never present in the agent's address space.
@@ -448,18 +464,22 @@ supervisor:**
 
 | Platform | How agent-to-broker inspection is denied | Privilege |
 |---|---|---|
-| Linux | Landlock domains restrict ptracing outside the domain (ABI v1), and seccomp denies the syscalls outright | none |
-| OpenBSD | `pledge` without `proc`/`ptrace` promises | none |
-| FreeBSD | capability mode has no process-inspection interface | none |
-| Windows | each agent gets its own AppContainer SID; `CreateAppContainerProfile` needs no administrator | none |
-| macOS | Seatbelt `(deny process-info*)`; `task_for_pid` is already restricted | none |
+| Linux | Landlock restricts ptracing outside the domain (ABI v1), and seccomp denies the syscalls outright. **Each agent must call `landlock_restrict_self()` in its own process after fork** — a domain shared across agents does not separate them. At negotiated **ABI 0 the seccomp filter is the sole mechanism, and distinct UIDs become required rather than recommended.** | none |
+| OpenBSD | `pledge` lacking `ptrace`, `proc`, and `ps`; procfs has not existed since 5.7 | none |
+| FreeBSD | capability mode returns `ECAPMODE` for every global-namespace call; the only process handles are `procdesc` descriptors, and the agent holds none | none |
+| Windows | each agent gets its own AppContainer SID; `CreateAppContainerProfile` needs no administrator. **Container names derive from the attested `agent_id`; `ERROR_ALREADY_EXISTS` without a verified matching SID is a launch failure** — otherwise two agents silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
+| macOS | Seatbelt `(deny mach-priv-task-port)`, `(deny mach-lookup)`, `(deny process-info*)`. `process-info*` alone gates enumeration, **not Mach task-port acquisition, which is the actual memory-read vector.** The broker and supervisor are built with the Hardened Runtime and without `com.apple.security.get-task-allow`; absent that, a same-UID caller can take their task ports regardless of the agent's own profile. | none |
 
 Distinct UIDs on Unix remain **recommended** as defence in depth against a gap
 in the base filter — four review rounds established that filters are easy to get
 wrong — and where a delegated subuid/subgid range is provisioned at install the
-supervisor uses it. But it is not required, its absence is not a launch failure,
-and **the supervisor does not run privileged.** Broker and supervisor still set
-`PR_SET_DUMPABLE=0`. Broker and supervisor set
+supervisor uses it. Except at Landlock ABI 0 (above), it is not required, its
+absence is not a launch failure, and **the supervisor does not run privileged.**
+
+Broker and supervisor suppress core dumps on every platform, not only Linux:
+`PR_SET_DUMPABLE=0` on Linux, `PT_DENY_ATTACH` or the Hardened Runtime on macOS,
+and a restrictive process DACL on Windows. A core dump is a key-disclosure path
+and two of the five platforms had no rule. Broker and supervisor set
 `PR_SET_DUMPABLE=0`. `ptrace`, `process_vm_readv`, `process_vm_writev`, and
 `kill` are denied in every agent filter (S-I1), and `/proc` and `/sys` are
 unreachable in the agent's domain. S-I5's confidentiality claim is not restated
@@ -476,12 +496,12 @@ brokering per-read over a large data directory is the motivating case.
 target intersects the runtime image, the wrapper binary, the shim, the broker
 binary, the supervisor binary, the agent package directory, the manifest, the
 **vault backing store and its directory**, the **audit log and its directory**,
-the **sandbox plan and policy files**, or the **principal/subuid mapping**.
+the **sandbox plan and policy files**, or the **principal or subuid mapping, where one exists**.
 
 The vault and audit entries are not optional extras. VLT06's per-secret
 `allowed_agents` is enforced by the vault, not by the filesystem, so reading the
 backing store directly reads every secret regardless of policy — and under
-brokering it is the *supervisor-privileged broker* that performs the read.
+brokering it is the *authority-bearing broker* that performs the read.
 Writing the audit log destroys the record S-P4 and S-I5 depend on. **A
 policy-mediated resource is never reachable as a raw path**: the vault is
 reachable only through the vault capability. A manifest declaring one is rejected at sign time
@@ -489,7 +509,7 @@ and again at launch.
 
 This is a bar on the *capability*, not on promotion, and the distinction is the
 whole point. Barring these from promotion alone would pin them to **brokered** —
-and brokered means the supervisor-privileged broker performs the write on the
+and brokered means the authority-bearing broker performs the write on the
 agent's behalf. The agent asks the broker to rewrite the shim, the broker
 consults the signed manifest, sees the capability declared, and complies. The
 harm S-I4 exists to prevent is target-dependent and mechanism-independent, so
@@ -499,6 +519,17 @@ the bar must be too.
 (see S-K6, which governs what brokering them may mean). Promotion requires an
 OS-level target-exact grant; wildcard targets are never promotable.
 
+**Overlapping *writable* direct grants across agents are recorded and reviewed
+as an inter-agent channel.** Two agents granted the same writable directory have
+a fully sanctioned, unmediated bidirectional path, including `flock`-based
+signalling. That is a manifest-review gap rather than an OS defect, and it is
+exactly what S-I7's narrower wording is meant to keep reviewers looking for.
+
+Per-agent memory bounds are set pre-exec with `RLIMIT_AS`/`RLIMIT_DATA`, which
+needs no privilege. cgroup delegation would be stronger but sits in the
+privileged row, and the Capacity section names memory as the first thing that
+fails — without a bound an agent can drive the broker into the OOM killer.
+
 Every promotion is recorded in the manifest and visible in review. The default
 direction matters: brokered-by-default fails closed, and a direct-by-default
 system silently grants whatever the OS happened to allow.
@@ -507,18 +538,36 @@ system silently grants whatever the OS happened to allow.
 
 This rule states a property of the paradigm, not a mediation requirement.
 
-**Agents do not know other agents exist.** No agent can name another, no
-capability addresses one, and nothing in `chief-agent-stdio-v1` carries an
-agent identity. The only question an agent may ask is whether a capability
-exists. There is therefore no agent-to-agent channel to mediate, no routing to
-authorize, and no namespace in which one agent could discover another.
+**There is no *ambient* agent-to-agent surface.** An agent cannot discover,
+enumerate, or address an agent it was not explicitly wired to. The only question
+it may ask unprompted is whether a capability exists.
+
+That is narrower than "agents do not know other agents exist", and the narrowing
+is deliberate: the repo's artifacts do contain agent-addressing surfaces, and a
+rule whose premise the artifacts contradict would not survive review.
+
+| Surface | Where |
+|---|---|
+| `vault.request_direct(secret_name, consumer_agent_id)` — caller names a consumer | `D18-chief-of-staff.md:1996` |
+| `ChannelDefinition`: one `originator.agent_id`, 1..1024 `receivers[].agent_id` | `D18P` §channel definition |
+| `agent.spawn`, `agent.send`, `agent.await` — delegation tools | `D18D` §delegation |
+
+Every one of those is a **declared, supervisor-wired path**, not an ambient one:
+a channel exists because the supervisor wired it, and D18D states that a binding
+treating a caller-supplied `consumer_agent_id` as proof of authorization is
+non-conforming — the vault authorizes on the *attested* `requesting_agent_id`
+(`chief-of-staff-vault-runtime/src/lib.rs:331`), never on the asserted field.
+So the paradigm claim holds for *discovery and addressing*, which is what this
+rule needs; it does not hold as a claim that no inter-agent path exists.
 
 The OS-level discovery path is closed by S-I1 rather than by principal
-separation: `/proc` and `/sys` are unreachable in every agent's filesystem
-domain, and `ptrace`, `process_vm_readv`, `process_vm_writev`, `kcmp`, `kill`,
-`tgkill`, SysV IPC, POSIX message queues, and abstract unix sockets are all
-denied in the base filter. An agent cannot enumerate a sibling it was never
-told about, because the kernel interfaces that would enumerate it are gone.
+separation: `/proc` and `/sys` are unreachable, and the process, IPC and
+message-queue interfaces are denied. An agent cannot enumerate a sibling it was
+never told about, because the interfaces that would enumerate it are gone.
+
+**The mechanism is S-P1's strict allowlist, not S-I1's enumeration.** S-I1 lists
+denied classes so a review can check them; the allowlist is what actually holds,
+and anything not allowlisted is denied whether or not it appears in that list.
 
 Earlier drafts of this rule required distinct OS principals as *the* enforcement
 mechanism for mutual isolation. That imported a generic multi-tenant threat
@@ -664,14 +713,14 @@ it.
 
 ### S-K5 — the broker treats every field of every request as hostile
 
-The broker acts with supervisor privilege on agent-supplied arguments. It is
+The broker acts on agent-supplied arguments. It is
 the confused deputy in this design and is reviewed as one.
 
 - **Path arguments** are resolved beneath a pre-opened root descriptor, by the
   platform's own primitive. A validated path is never re-resolved from a string
   afterwards. `openat2` is Linux-only and this spec implements BSD first, so the
   rule is stated per platform rather than left to the implementer — the default
-  reach is `realpath()` + `open()`, which is a TOCTOU on a supervisor-privileged
+  reach is `realpath()` + `open()`, which is a TOCTOU on a authority-bearing
   process taking agent-supplied paths, i.e. the confused deputy S-K5 exists to
   prevent, and it fails silently.
 
@@ -715,7 +764,7 @@ inverts the boundary completely.
 **`ffi:*` and every `dlopen`-shaped capability are `Unsupported` by default and
 are never executed in the broker's address space, under any circumstances.**
 Calling an agent-chosen native function with agent-chosen arguments inside a
-supervisor-privileged process is a complete Layer 7 defeat reachable through a
+process holding authority the agent does not is a complete Layer 7 defeat reachable through a
 declared, reviewed, hardware-key-approved capability. There is no supported path for it in this spec.
 
 That is stated flatly because the obvious escape hatch is unsatisfiable by
@@ -726,9 +775,13 @@ this rule's own title. Enabling `ffi:*` requires a named amendment to this
 document, not an implementer's judgement.
 
 **Brokered `proc:exec` spawns only through the same `spawn_verified` path used
-for agents**: supervisor-owned wrapper, the agent's principal, and targets
-restricted to a manifest-declared digest-pinned set. Never `PATH`-resolved. The
-child must not inherit the broker's principal or its state.
+for agents**: supervisor-owned wrapper, and targets restricted to a
+manifest-declared digest-pinned set. Never `PATH`-resolved.
+
+The child receives **its own sandbox plan, computed as a subset of the
+requesting agent's**, and inherits none of the broker's descriptors (S-I3) and
+none of its plan. Stating this as "runs under the agent's principal, not the
+broker's" would be vacuous wherever the two share a UID, which S-I5 now permits.
 
 **The broker never execs.** A brokered exec is a *request to the supervisor*,
 which performs `spawn_verified`; the broker's own plan therefore contains no
@@ -759,12 +812,15 @@ bound gets ignored.
 
 Whether there is one broker per agent or one per supervisor is therefore a
 **blast-radius** decision before it is a capacity one: it determines whether an
-S-K5 parsing defect compromises one agent or all of them. Per-supervisor is
-admissible only if the broker is compartmented per agent by **a separate OS
-principal and a separate address space** — which is to say, multiplexing many
-agents through one broker process is inadmissible. "Separate structs, or a
-thread each" satisfies the words and is not a boundary; that is the S-B1 error
-this spec exists to prevent. In practice: one broker per agent.
+S-K5 parsing defect compromises one agent or all of them. **The broker is one process per agent.** This is normative, because S-I5 cites
+it as the pillar that demotes principal separation to defence in depth, and a
+pillar may not rest on something this spec declines to decide.
+
+A per-supervisor broker multiplexing many agents through one process is
+inadmissible: it would hold every agent's channel keys, so an S-K5 parsing
+defect becomes a cross-agent compromise. Compartmenting it "per agent" inside
+one address space — separate structs, or a thread each — satisfies the words and
+is not a boundary; that is the S-B1 error this spec exists to prevent.
 
 ---
 
@@ -825,6 +881,18 @@ brokered, or the launch fails. **No filesystem capability may be granted
 `direct` below ABI v3.**
 
 **Network denial is seccomp's job**, not Landlock's, given those floors.
+
+**A direct `net:*` grant reopens the abstract unix namespace below Landlock ABI
+v6 (6.12).** Landlock v4 network rules mediate TCP bind/connect only. Once
+`socket`/`bind`/`connect` are allowlisted for a direct grant, two agents on a
+6.7-6.11 kernel can bind and connect abstract-namespace unix sockets to each
+other with no mediation at all — exchanging bytes, `SCM_CREDENTIALS`, and
+`SCM_RIGHTS` descriptors, which is an S-I3-class escape. Abstract sockets carry
+no filesystem path and no DAC check, so **distinct UIDs would not stop this
+either**; only a network namespace or Landlock v6 does, and namespaces are
+excluded from the required path. Below ABI v6, a direct network grant therefore
+requires AF_UNIX to be separately denied by argument-filtered seccomp, or the
+capability stays brokered.
 
 **Unprivileged user namespaces are restricted by default** on Ubuntu 23.10+ via
 AppArmor and historically on Debian. Nothing in the required path depends on
@@ -952,9 +1020,8 @@ and the relaxation is recorded in the manifest and visible in review.
   class outright, and requires a measurement; it pre-approves nothing.
 - **The sign-time analyzer for languages other than Go.** S-B2 requires
   confidence be stated per language. It does not specify the analyzers.
-- **Whether the broker is one process per agent or one per supervisor.** Per
-  agent is simpler to reason about and matches S-K2; per supervisor amortizes
-  the channel. It interacts with the capacity numbers above.
+(Broker topology was listed here as undecided. It is decided: **one broker per
+agent**, normatively, in S-K7 — S-I5 rests on it.)
 (`DENO_FLAGS` was listed here as undecided. It is decided: **retained**, as the
 Deno case of S-I8. Deleting a working in-process layer once the OS layer lands
 is a net reduction, not a cleanup.)
