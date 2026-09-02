@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:b9da126704d646ac",
+  "lessonIds": [
+    "FR-C11-pain",
+    "FR-C11-eau",
+    "FR-C11-vin",
+    "FR-C11-du",
+    "FR-C11-practice"
+  ],
+  "tex": "french/book/chapters/ch13-food.tex"
+}

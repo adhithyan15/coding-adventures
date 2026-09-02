@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4e1c14a178a0f5b8",
+  "sourceHash": "fnv1a64:46c9f0c62d944130",
   "lessons": [
     {
       "id": "FR-C13-noir-blanc",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2afdc66cabd77d2",
+      "sourceHash": "fnv1a64:1704f206af53c3cc",
       "notice": null,
       "blocks": [
         {

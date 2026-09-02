@@ -6,12 +6,12 @@ type: word
 headword: onze — seize
 gloss: 11–16, the six fused numbers French inherited whole from Latin
 concept_tag: FR-NUM-11-16
-prerequisites: [FR-C06-dix, FR-C11-eau-vin]
+prerequisites: [FR-C06-dix, FR-C11-practice]
 sounds: [nasal-on, z-voiced]
 roots: [latin-decim]
 etymology_hook: "onze…seize ← Latin ūndecim, duodecim … sēdecim — 'one-ten, two-ten … six-ten'; the -ze is a worn-down decem ('ten'), the same ten hiding in dix and décembre"
 est_minutes: 4
-reviews_of: [FR-C06-dix, FR-C11-eau-vin]
+reviews_of: [FR-C06-dix, FR-C11-practice]
 ---
 
 # onze → seize — six numbers welded together

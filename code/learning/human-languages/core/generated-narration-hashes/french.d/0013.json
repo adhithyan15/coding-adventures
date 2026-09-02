@@ -1,16 +1,19 @@
 {
   "language": "french",
   "chapter": 13,
-  "sourceHash": "fnv1a64:c0ab286a3e6d23b9",
+  "sourceHash": "fnv1a64:0af71ba45a14dd7e",
   "lessonIds": [
     "FR-C11-pain",
-    "FR-C11-eau-vin"
+    "FR-C11-eau",
+    "FR-C11-vin",
+    "FR-C11-du",
+    "FR-C11-practice"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
   "text": "french/narration/ch13.txt",
   "json": "french/narration/ch13.json",
-  "textHash": "fnv1a64:d9c4331598b430b1",
-  "jsonHash": "fnv1a64:4d48484d03d9fcb9",
+  "textHash": "fnv1a64:23dacf810bdd1538",
+  "jsonHash": "fnv1a64:4abf49522e6a76e6",
   "findings": []
 }

@@ -2,15 +2,23 @@
   "chapter": 13,
   "title": "Bread, Water, Wine",
   "label": "ch:food",
-  "canDo": "I can name and request bread, water, and wine in French.",
+  "canDo": "I can name bread, water and wine in French, and ask for some of any of them.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C11-eau-vin",
+    "lesson": "FR-C11-practice",
     "kind": "task",
-    "summary": "Complete FR-C11-eau-vin, the canonical closing checkpoint, and demonstrate the chapter promise: name and request bread, water, and wine in French.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Three things on a table, and two opposite fates for one kind of word: aqua dissolved into eau, a single vowel spelled with three letters, while vīnum stayed legible in wine, vine and vinegar. pānis gave French its bread and English its companions. Then one rule that English simply leaves out — de plus the article, contracting to du — turns each noun from the thing into some of it.",
+    "assesses": [
+      "FR-LEX-PAIN-01",
+      "FR-ETYMON-PANIS-COMPAGNON-02",
+      "FR-LEX-EAU-03",
+      "FR-ETYMON-AQUA-EAU-04",
+      "FR-LEX-VIN-05",
+      "FR-ETYMON-VINUM-VIN-06",
+      "FR-GRAM-DU-PARTITIF-07"
+    ],
+    "note": "Authored when chapter 13 left the hand-written set: two schema-v1 lessons held three headwords, and the partitive du -- which the chapter's own canDo promised as 'request' -- was a sentence inside a culture block that no lesson owned. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }
