@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-013-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can run a whole German conversation from hello to goodbye, and choose the farewell that fits the relationship and the occasion.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C04-practice"
+  ]
+}

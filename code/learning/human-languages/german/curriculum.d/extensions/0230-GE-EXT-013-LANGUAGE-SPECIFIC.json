@@ -1,0 +1,17 @@
+{
+  "id": "GE-EXT-013-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can build German's farewells from their parts — auf, wieder and sehen for the formal goodbye, and bis plus a time word for the soft ones.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C04-sehen",
+    "GE-C04-wieder",
+    "GE-C04-auf",
+    "GE-C04-bis",
+    "GE-C04-bald",
+    "GE-C04-spaet",
+    "GE-C04-morgen-tomorrow"
+  ]
+}

@@ -1,7 +1,8 @@
 {
-  "id": "GE-PATH-013",
-  "spine_node": "SPINE-TAKE-LEAVE",
-  "lessons": [
+  "language": "german",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:c2c852883d0dad93",
+  "lessonIds": [
     "GE-C04-sehen",
     "GE-C04-wieder",
     "GE-C04-auf",
@@ -19,12 +20,5 @@
     "GE-W03-capitalization",
     "GE-C04-practice"
   ],
-  "before": [
-    "GE-EXT-013-LANGUAGE-SPECIFIC"
-  ],
-  "inline": [],
-  "after": [
-    "GE-EXT-013-WRITING-KIT",
-    "GE-EXT-013-CONSOLIDATION"
-  ]
+  "tex": "german/book/chapters/ch04-farewells.tex"
 }

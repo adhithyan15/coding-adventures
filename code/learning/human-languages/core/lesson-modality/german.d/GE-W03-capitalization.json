@@ -8,14 +8,18 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-type"
+      "writing-type",
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:e6b30785e5e895b4"
+    "sourceHash": "fnv1a64:d7b70840731fbc9d",
+    "detachableSegments": [
+      "Writing — applying the rule"
+    ]
   },
   "findings": []
 }

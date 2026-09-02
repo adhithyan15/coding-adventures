@@ -76,7 +76,35 @@ four new things at once; *schön*, *sehr* and *vielen Dank* were lifted out of
 
 Reviews of earlier words fold into each session per the interval schedule.
 
+## Chapter 4 — Farewells
+
+| # | Session | What it adds |
+|---|---|---|
+| 39 | sehen | to see (= English *see*); no Latin in the line at all |
+| 40 | wieder | again — the *with-* of *withdraw*, which meant "back" |
+| 41 | auf | on, upon (= English *up*); *upon* is *up* + *on* |
+| 42 | auf Wiedersehen | assembled: "on the seeing-again"; twin of *au revoir* |
+| 43 | tschüss | casual bye — secretly *adieu*, "to God"; register |
+| 44 | bis | until — the recipe every soft goodbye is built from |
+| 45 | bald | soon (= English *bold*); final devoicing |
+| 46 | bis bald | until soon; *hasta pronto* / *à bientôt* |
+| 47 | spät | late → *später*, the first comparative; initial *st* = *sht* |
+| 48 | bis später | until later; the one that promises nothing |
+| 49 | morgen | tomorrow — the second job of *Morgen*, split by the capital |
+| 50 | bis morgen | until tomorrow; the *bis…* family complete |
+| 51 | ß | the eszett: two s's in one coat, and a long-vowel cue |
+| 52 | ä ö ü | the umlaut: a flattened *e*, and the grammar it marks |
+| 53 | Großschreibung | why every noun is capitalised, and what it buys a reader |
+| 54 | practice | hello to goodbye, in one conversation |
+
+*auf*, *wieder* and *sehen* were lifted out of *auf Wiedersehen*, which had been
+welding three untaught words together; *bis*, *bald* and *spät* were lifted out
+of the phrases that used them. The three writing lessons already belonged to
+this chapter and are now measured with the rest.
+
+Reviews of earlier words fold into each session per the interval schedule.
+
 ## Next
 
-Chapter 4 — farewells: *auf Wiedersehen*, *tschüss*, *bis bald*. Chapters 4–16
+Chapter 5 — the first verbs, and the first self-built sentence. Chapters 5–16
 are still hand-written LaTeX; see `../BACKLOG.d/` for the retirement queue.

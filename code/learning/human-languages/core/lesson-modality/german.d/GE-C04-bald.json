@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C04-bis-morgen",
+    "id": "GE-C04-bald",
     "language": "german",
     "chapter": 4,
-    "sequence": 167,
+    "sequence": 157,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:46aae6f768dc3a59"
+    "sourceHash": "fnv1a64:a3d58ef36fcdf63e"
   },
   "findings": []
 }
