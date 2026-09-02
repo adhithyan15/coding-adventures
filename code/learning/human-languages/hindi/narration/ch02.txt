@@ -115,7 +115,7 @@ Assemble the three atoms you just traced — merā, nām, hai — into the sente
 
 The two words — assembled.
 Three atoms, each already rooted — merā (my, from ma-), nām (name, from nāman), hai (is, from asti):
-मेरा नाम (merā nām) … है (hai) = "my name … is" = "my name is…"
+मेरा नाम … है (merā nām … hai) = "my name … is" = "my name is…"
 Merā nām Arun hai. becomes "My name is Arun." Slot your name into the gap; hai stays at the end.
 
 Grammar Lens: subject–object–verb.
@@ -211,7 +211,7 @@ Assemble the question: your + name + what + is.
 
 The two words — assembled.
 आपका (āpkā, "your") = आप (you) + का (kā, the possessive "of," the same agreeing kā/kī/ke that matches the noun).
-आपका नाम क्या (kyā) है (hai)? = literally "your name what is?" = "what's your name?"
+आपका नाम क्या है? (āpkā nām kyā hai?) = literally "your name what is?" = "what's your name?"
 Hindi keeps the verb last again, and simply drops the question-word kyā into the object slot — no reordering, no inversion.
 
 Grammar Lens: answer, and the informal version.
@@ -228,7 +228,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does आपका नाम क्या (kyā) है? literally say, and where's the verb? ("Your name what is?"; the verb hai is last.) What's āpkā made of? (āp + kā, "you" + possessive.)
+What does आपका नाम क्या है? (āpkā nām kyā hai?) literally say, and where's the verb? ("Your name what is?"; the verb hai is last.) What's āpkā made of? (āp + kā, "you" + possessive.)
 
 
 Lesson 8 of 24.
@@ -294,7 +294,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does a mātrā do to the inherent vowel? (Replaces it — never adds to it.) What does the word mātrā mean, and what English words share its root? ("Measure" — meter, measure, month.) Where does ा attach, and where does े? (Right; above the bar.) Write नाम — what does it mean? ("Name".) Next: the one mātrā whose position tries to fool your eye.
+What does a mātrā do to the inherent vowel? (Replaces it — never adds to it.) What does the word mātrā mean, and what English words share its root? ("Measure" — meter, measure, month.) Where does ा attach, and where does े? (Right; above the bar.) Write नाम (nām) — what does it mean? ("Name".) Next: the one mātrā whose position tries to fool your eye.
 
 
 Lesson 10 of 24.
@@ -388,7 +388,7 @@ Classical Sanskrit manuscripts often ran words together without spaces, so the b
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: मेरा (merā) — four pieces, one bar]
-[once you have stopped driving — write: नाम — three pieces, one bar]
+[once you have stopped driving — write: नाम (nām) — three pieces, one bar]
 [once you have stopped driving — write: मेरा नाम (merā nām) — two words, two separate bars]
 
 Wrap-up Recall.
@@ -542,7 +542,7 @@ Every atom is built and rooted. Here's the exchange it was for.
 The exchange.
 [a table of 4 rows, read aloud]
 मेरा नाम मीरा है। (merā nām Mīrā hai) (merā nām Mira hai) means My name is Mira.
-आपका नाम क्या है? (āpkā nām kyā hai) means What's your name?
+आपका नाम क्या है? (āpkā nām kyā hai?) means What's your name?
 मेरा नाम अरुण है। (merā nām Aruṇ hai) (merā nām Arun hai) means My name is Arun.
 आपसे मिलकर ख़ुशी हुई। (āpse milkar khushī huī) means Pleased to meet you.
 Every atom traced:

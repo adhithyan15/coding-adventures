@@ -10,6 +10,7 @@ chapter: 13
 type: word
 headword: सिर
 gloss: the head — from Sanskrit śiras, worn down through a thousand years of everyday speech
+romanization: "sir"
 concept_tag: HI-BODY-HEAD
 prerequisites: [HI-C12-bhaai-bahin]
 sounds: [devanagari-short-i, retroflex-vs-dental]

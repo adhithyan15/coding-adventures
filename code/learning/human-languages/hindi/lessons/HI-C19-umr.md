@@ -10,6 +10,7 @@ chapter: 19
 type: phrase
 headword: उम्र
 gloss: age — the same word as Arabic's ʿumr, borrowed through Persian, beside formal Sanskrit āyu
+romanization: "umr"
 concept_tag: HI-AGE
 prerequisites: [HI-C18-ghanta]
 sounds: [devanagari-conjunct-mra, devanagari-independent-vowel]

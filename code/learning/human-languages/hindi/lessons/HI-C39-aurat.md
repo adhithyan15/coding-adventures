@@ -10,6 +10,7 @@ chapter: 39
 type: word
 headword: औरत / महिला / स्त्री
 gloss: woman — everyday औरत, respectful public महिला, and literary स्त्री form a three-register set
+romanization: "aurat / mahilā / strī"
 concept_tag: HI-PERSON-WOMAN
 prerequisites: [HI-C39-aadmi, HI-C12-bhaai-bahin, HI-C12-pitaa-maataa]
 sounds: [diphthong-au, spineless-ra]

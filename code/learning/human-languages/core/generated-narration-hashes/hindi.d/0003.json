@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 3,
-  "sourceHash": "fnv1a64:3d4c1e973a761f7b",
+  "sourceHash": "fnv1a64:f7508e60c99f965e",
   "lessonIds": [
     "HI-C03-kaise",
     "HI-C03-aap-kaise-hain",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch03.txt",
   "json": "hindi/narration/ch03.json",
-  "textHash": "fnv1a64:c4610cfa9f0cbd23",
-  "jsonHash": "fnv1a64:ba1dd2c5a02cb1e6",
+  "textHash": "fnv1a64:549b9a8a1dd01031",
+  "jsonHash": "fnv1a64:1f8eb1a4c90389cf",
   "findings": []
 }

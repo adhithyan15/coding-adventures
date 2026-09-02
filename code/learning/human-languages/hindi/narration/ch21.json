@@ -4,14 +4,14 @@
   "chapter": 21,
   "title": "Numbers Six to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:435a976f0e0018fd",
+  "sourceHash": "fnv1a64:4b2cdac8303f3c8e",
   "lessons": [
     {
       "id": "HI-C21-numbers-6-10",
       "sequence": 690,
       "title": "छह, सात, आठ, नौ, दस — six to ten, the same erosion twice more",
       "headword": "छह सात आठ नौ दस",
-      "romanization": "",
+      "romanization": "chhah sāt āṭh nau das",
       "gloss": "six to ten, with seven and eight repeating the same Prakrit weight trade as three",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94ccfd8aa67d1d05",
+      "sourceHash": "fnv1a64:977bb12798e51b1a",
       "notice": null,
       "blocks": [
         {
@@ -157,9 +157,9 @@
     {
       "id": "HI-C21-six-nine-ten-history",
       "sequence": 700,
-      "title": "छह, नौ, दस — three different paths",
+      "title": "छह, नौ, दस (chhah, nau, das) — three different paths",
       "headword": "छह, नौ, दस",
-      "romanization": "",
+      "romanization": "chhah, nau, das",
       "gloss": "six shifts a sibilant, nine dissolves intervocalic v, and ten only drops a vowel",
       "script": "devanagari",
       "modality": "voice",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea3a9a7856a97611",
+      "sourceHash": "fnv1a64:3f6ff0584b70122a",
       "notice": null,
       "blocks": [
         {

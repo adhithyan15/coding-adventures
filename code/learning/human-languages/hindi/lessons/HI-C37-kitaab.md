@@ -10,6 +10,7 @@ chapter: 37
 type: word
 headword: किताब / पुस्तक / पोथा
 gloss: book — ordinary किताब, formal पुस्तक, and old or homely पोथा form a three-register set
+romanization: "kitāb / pustak / pothā"
 concept_tag: HI-OBJECT-BOOK
 prerequisites: [HI-C37-khaana, HI-W03-preposed-i, HI-W02-ka-ta-mouth-order]
 sounds: [matra-i-preposed, devanagari-long-aa]

@@ -10,6 +10,7 @@ chapter: 12
 type: word
 headword: भाई बहन
 gloss: brother (a PIE cousin of English "brother") and sister (a DIFFERENT Sanskrit word entirely, not the PIE cousin of "sister")
+romanization: "bhāī bahin"
 concept_tag: HI-FAMILY-SIBLINGS
 prerequisites: [HI-C12-pitaa-maataa]
 sounds: [devanagari-long-ii, aspirated-bha]

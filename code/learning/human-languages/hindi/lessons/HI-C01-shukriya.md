@@ -10,6 +10,7 @@ chapter: 1
 type: word
 headword: शुक्रिया
 gloss: thanks (shukriyā — everyday, Persian/Arabic-derived)
+romanization: "shukriyā"
 concept_tag: COURTESY-THANKS-CASUAL
 prerequisites: [HI-C01-dhanyavad]
 sounds: [devanagari-inherent-a, matra-i, matra-aa, halant-conjunct]

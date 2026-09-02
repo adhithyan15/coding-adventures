@@ -10,6 +10,7 @@ chapter: 3
 type: phrase
 headword: आपका स्वागत है
 gloss: you're welcome (also "welcome!")
+romanization: "āpkā svāgat hai"
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [HI-C02-hai, HI-C01-dhanyavad]
 sounds: [sva-conjunct, matra-a]

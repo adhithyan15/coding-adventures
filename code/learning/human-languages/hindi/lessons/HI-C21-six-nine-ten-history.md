@@ -10,6 +10,7 @@ chapter: 21
 type: etymology
 headword: छह, नौ, दस
 gloss: six shifts a sibilant, nine dissolves intervocalic v, and ten only drops a vowel
+romanization: "chhah, nau, das"
 prerequisites: [HI-C21-numbers-6-10]
 sounds: [retroflex-sibilant-shift, intervocalic-v-loss, diphthong-au]
 roots: [sanskrit-sas, sanskrit-nava, sanskrit-dasa]

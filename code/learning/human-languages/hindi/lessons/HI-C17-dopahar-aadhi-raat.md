@@ -10,6 +10,7 @@ chapter: 17
 type: phrase
 headword: दोपहर आधी रात
 gloss: noon (literally "two pahars," a traditional ~3-hour time unit) and midnight ("half night," fully transparent)
+romanization: "dopahar ādhī rāt"
 concept_tag: HI-TIME-NOON-MIDNIGHT
 prerequisites: [HI-C16-mahine]
 sounds: [devanagari-vowel-sign-o, devanagari-long-ii]

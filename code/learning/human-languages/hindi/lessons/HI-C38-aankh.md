@@ -10,6 +10,7 @@ chapter: 38
 type: word
 headword: आँख
 gloss: eye — feminine, and a word-for-word cousin of English "eye" and Latin "oculus"
+romanization: "āṁkh"
 concept_tag: HI-BODY-EYE
 prerequisites: [HI-C37-kitaab, HI-C13-sir, HI-C07-haan]
 sounds: [chandrabindu-nasal, aspirated-kha]

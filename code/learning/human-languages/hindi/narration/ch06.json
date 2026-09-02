@@ -4,14 +4,14 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:89b92244bb421bdf",
+  "sourceHash": "fnv1a64:96301926602ffa8d",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
       "sequence": 460,
-      "title": "एक, दो, तीन, चार, पाँच (pāṁch) — the five forms",
+      "title": "एक, दो, तीन, चार (tīn, chār), पाँच (pāṁch) — the five forms",
       "headword": "एक दो तीन चार पाँच",
-      "romanization": "",
+      "romanization": "ek do tīn chār pāṁch",
       "gloss": "one to five, with familiar Devanagari pieces and the chandrabindu in पाँच",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74674ab46265d59d",
+      "sourceHash": "fnv1a64:898f4877335f6c4b",
       "notice": null,
       "blocks": [
         {
@@ -139,7 +139,7 @@
       "sequence": 470,
       "title": "तीन and चार — weight moves from consonants to vowels",
       "headword": "तीन, चार",
-      "romanization": "",
+      "romanization": "tīn, chār",
       "gloss": "three and four descend from Sanskrit neuter forms through Prakrit weight trades",
       "script": "devanagari",
       "modality": "voice",
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57dad7f508adb903",
+      "sourceHash": "fnv1a64:63f514335633dcc1",
       "notice": null,
       "blocks": [
         {

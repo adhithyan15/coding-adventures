@@ -10,6 +10,7 @@ chapter: 35
 type: word
 headword: पूछना
 gloss: to ask — the same inherited verb as English "pray", which once meant nothing more than asking
+romanization: "pūchnā"
 concept_tag: VERB-ASK
 prerequisites: [HI-C35-lena, HI-C19-umr, HI-C19-age-grammar]
 sounds: [matra-uu, aspirated-cha]

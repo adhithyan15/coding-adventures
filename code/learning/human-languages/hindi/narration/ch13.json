@@ -4,14 +4,14 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9bc5d6af7e7bd4f8",
+  "sourceHash": "fnv1a64:39d4a15371d772bc",
   "lessons": [
     {
       "id": "HI-C13-sir",
       "sequence": 590,
       "title": "सिर (sir) — the head",
       "headword": "सिर",
-      "romanization": "",
+      "romanization": "sir",
       "gloss": "the head — from Sanskrit śiras, worn down through a thousand years of everyday speech",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:348927bd5b560cde",
+      "sourceHash": "fnv1a64:7233ddf764b43161",
       "notice": null,
       "blocks": [
         {
@@ -107,7 +107,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does सिर mean, and what Sanskrit word is it worn down from? (\"Head\" — from शिरस् śiras.) Where else does this root show up, in a more formal register? (Yoga/anatomical terms built on the related śīrṣa root.)"
+              "text": "What does सिर (sir) mean, and what Sanskrit word is it worn down from? (\"Head\" — from शिरस् śiras.) Where else does this root show up, in a more formal register? (Yoga/anatomical terms built on the related śīrṣa root.)"
             }
           ]
         }
@@ -118,7 +118,7 @@
       "sequence": 600,
       "title": "हाथ (hāth) — the hand",
       "headword": "हाथ",
-      "romanization": "",
+      "romanization": "hāth",
       "gloss": "the hand — from Sanskrit hasta, with a real (if non-obvious) sound-change story",
       "script": "devanagari",
       "modality": "voice",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b648eefc762a3d4",
+      "sourceHash": "fnv1a64:6a9b47f78b7ac018",
       "notice": null,
       "blocks": [
         {
@@ -221,7 +221,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does हाथ mean, and what Sanskrit word is it from? (\"Hand\" — from हस्त hasta.) What's the general shape of the sound change between them? (Sanskrit's ‑st‑ cluster simplified through Prakrit into a geminate aspirated consonant (hattha), which later simplified to a single consonant — and the vowel before it lengthened to compensate.)"
+              "text": "What does हाथ (hāth) mean, and what Sanskrit word is it from? (\"Hand\" — from हस्त hasta.) What's the general shape of the sound change between them? (Sanskrit's ‑st‑ cluster simplified through Prakrit into a geminate aspirated consonant (hattha), which later simplified to a single consonant — and the vowel before it lengthened to compensate.)"
             }
           ]
         }

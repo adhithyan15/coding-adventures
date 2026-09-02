@@ -10,6 +10,7 @@ chapter: 38
 type: word
 headword: पेट
 gloss: stomach, belly — masculine, and the one word in this chapter with no clean ancestry at all
+romanization: "peṭ"
 concept_tag: HI-BODY-BELLY
 prerequisites: [HI-C38-pair, HI-W03-matras-naam]
 sounds: [matra-e, retroflex-tta]
