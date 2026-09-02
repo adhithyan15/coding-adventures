@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-praesens-practice",
     "language": "german",
-    "chapter": 16,
-    "sequence": 360,
+    "chapter": 18,
+    "sequence": 490,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:40de6e17ecaf7de9"
+    "sourceHash": "fnv1a64:9140e6ab6f4ab4dd"
   },
   "findings": []
 }

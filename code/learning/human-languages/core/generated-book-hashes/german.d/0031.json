@@ -1,11 +1,12 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:f4477f44bed36642",
+  "sourceHash": "fnv1a64:6d00c569fa4eb317",
   "lessonIds": [
-    "GE-C29-freund",
-    "GE-C29-freundin",
-    "GE-C29-familie"
+    "GE-C27-gehen",
+    "GE-C27-laufen",
+    "GE-C27-oeffnen",
+    "GE-C27-schliessen"
   ],
-  "tex": "german/book/chapters/ch31-friend-and-family.tex"
+  "tex": "german/book/chapters/ch31-moving-verbs.tex"
 }

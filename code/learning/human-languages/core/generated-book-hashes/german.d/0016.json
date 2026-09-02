@@ -1,17 +1,17 @@
 {
   "language": "german",
   "chapter": 16,
-  "sourceHash": "fnv1a64:ae3b2fc4270b9c05",
+  "sourceHash": "fnv1a64:3eac3be60a3ae276",
   "lessonIds": [
-    "GE-C16-sein",
-    "GE-C16-ich-bin",
-    "GE-C16-du-bist",
-    "GE-C16-er-ist",
-    "GE-C16-wir-sind",
-    "GE-C16-ihr-seid",
-    "GE-C16-sie-sind",
-    "GE-C16-muede",
-    "GE-C16-praesens-practice"
+    "GE-C15-perfekt",
+    "GE-C15-ich-habe-gesagt",
+    "GE-C15-du-hast-gesagt",
+    "GE-C15-er-hat-gemacht",
+    "GE-C15-wir-haben-gesagt",
+    "GE-C15-partizip-am-ende",
+    "GE-C15-gestern",
+    "GE-C15-perfekt-als-vergangenheit",
+    "GE-C15-perfekt-practice"
   ],
-  "tex": "german/book/chapters/ch16-sein.tex"
+  "tex": "german/book/chapters/ch16-perfekt.tex"
 }

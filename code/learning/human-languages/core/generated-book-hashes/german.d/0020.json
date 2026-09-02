@@ -1,10 +1,17 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:9c5feb748c016424",
+  "sourceHash": "fnv1a64:0530f8fb6a577af7",
   "lessonIds": [
-    "GE-C18-ja",
-    "GE-C18-nein"
+    "GE-C16-perfekt-sein",
+    "GE-C16-kommen",
+    "GE-C16-fahren",
+    "GE-C16-werden",
+    "GE-C16-bleiben",
+    "GE-C16-perfekt-sein-ausnahmen",
+    "GE-C16-perfekt-sein-agreement",
+    "GE-C16-partizip-attributiv",
+    "GE-C16-haben-oder-sein"
   ],
-  "tex": "german/book/chapters/ch20-yes-and-no.tex"
+  "tex": "german/book/chapters/ch20-perfekt-sein.tex"
 }

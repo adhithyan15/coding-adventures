@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C15-du-hast-gesagt",
+    "language": "german",
+    "chapter": 16,
+    "sequence": 355,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0eb456632e7ee2c9"
+  },
+  "findings": []
+}

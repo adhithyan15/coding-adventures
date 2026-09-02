@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C30-ohr",
     "language": "german",
-    "chapter": 32,
+    "chapter": 34,
     "sequence": 940,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:933790957131d207"
+    "sourceHash": "fnv1a64:c5af4db44849c589"
   },
   "findings": []
 }

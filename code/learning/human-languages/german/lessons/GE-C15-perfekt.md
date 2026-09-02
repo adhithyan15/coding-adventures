@@ -1,90 +1,75 @@
 ---
+schema_version: 2
 id: GE-C15-perfekt
-sequence: 305
-chapter: 15
-type: word
-headword: ich habe gesagt
-gloss: the Perfekt — haben plus a participle wrapped in ge-…-t, and sent to the end of the clause
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 345
+chapter: 16
+type: grammar
+headword: haben plus Partizip
+gloss: the Perfekt recipe — a conjugated haben and a participle, which is how German says what happened
 concept_tag: GE-PAST-COMPOUND
-prerequisites: [GE-C14-haben, GE-C05-machen]
+prerequisites: [GE-C15-partizip-practice, GE-C14-haben]
 sounds: [ge-prefix, final-t]
-roots: [germanic-ga-perfective]
-etymology_hook: "the ge- of gesagt ← Germanic *ga-, a prefix meaning 'completely, together' that marked an action as FINISHED — English dropped it, but it survives fossilised inside enough (Old English genōg) and archaic yclept; German still wraps its participle in it"
-est_minutes: 4
-reviews_of: [GE-C14-haben, GE-C05-machen, GE-C05-lernen]
+roots: []
+etymology_hook: "German and English built the same machine independently: a verb meaning 'have' plus a finished-action participle, which is why I have said and ich habe gesagt line up word for word"
+duration:
+  max_seconds: 165
+requires:
+  knowledge: [GE-GRAMMAR-PARTIZIP-GE-T-01, GE-LEX-GESAGT-01, GE-LEX-GEMACHT-01, GE-GRAMMAR-VERB-ENDINGS-01]
+introduces:
+  knowledge: [GE-GRAMMAR-PERFEKT-HABEN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-GRAMMAR-PERFEKT-HABEN-01, GE-GRAMMAR-PARTIZIP-GE-T-01, GE-LEX-GESAGT-01, GE-LEX-GEMACHT-01, GE-GRAMMAR-VERB-ENDINGS-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [language-focus, meaning-input]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C15-partizip-practice, GE-C14-haben, GE-C15-gesagt]
 ---
 
-# ich habe gesagt — the past built from "have"
+# haben plus a participle — the everyday past
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PARTIZIP-GE-T-01, GE-LEX-GESAGT-01] -->
 
-[PAUSE 2s] German's everyday past tense, and it works exactly like the English
-perfect — except for two things German does that English doesn't.
+[PAUSE 2s] A participle on its own says nothing about who or when. It needs a
+partner, and German picks the same partner English does.
 
-## The recipe
+## Grammar Lens: the recipe
+<!-- hl-knowledge: introduces=[GE-GRAMMAR-PERFEKT-HABEN-01]; assesses=[GE-GRAMMAR-VERB-ENDINGS-01] -->
 
-> **haben** (conjugated) + **past participle**, and the participle goes **last**
+> **haben**, conjugated for whoever did it, plus the **participle**.
 
-| infinitive | participle |
-|---|---|
-| sag**en** | **ge**sag**t** |
-| mach**en** | **ge**mach**t** |
-| lern**en** | **ge**lern**t** |
-| wohn**en** | **ge**wohn**t** |
+That two-part past has a name in German: the ***Perfekt***. *Haben* carries
+everything that changes — the person, and the fact that this is a finished
+action — while the participle sits there in one shape for everybody. Only one of
+the two words has to agree with anything, which is why the *Perfekt* costs far
+less to learn than its size suggests.
 
-Regular (weak) verbs take **ge-** in front and **-t** behind. The participle is
-**wrapped**, not just suffixed — a *circumfix*.
-
-| | |
-|---|---|
-| ich **habe** gesagt | I said |
-| du **hast** gesagt | you said |
-| wir **haben** gesagt | we said |
-
-## Two things German does that English doesn't
-
-**1. The participle goes to the end.** Not next to the verb — the **end of the
-clause**:
-
-> **Ich habe gestern Deutsch *gelernt*.**
-> *(I have yesterday German **learned**.)*
-
-Everything else piles up in the middle, and the participle waits at the back.
-English cannot do this: "I have yesterday German learned" is not a sentence.
-
-**2. It means the plain past.** *Ich habe gesagt* translates as "**I said**,"
-not only "I have said." Where English keeps *I said* and *I have said* apart,
-spoken German mostly uses the *Perfekt* for both.
-
-## The ge- that English lost
-
-**ge-** ← Germanic *\*ga-*, a prefix meaning "**together, completely**." It marked
-an action as **finished** — perfective — which is exactly what a past participle
-is for.
-
-English had it too, as *y-*, and then dropped it. Two fossils survive:
-
-| word | hiding inside |
-|---|---|
-| **enough** | Old English *ge*nōg |
-| *yclept* (archaic, "named") | *ge*cleopod |
-
-So English once wrapped its participles the same way, and German simply never
-stopped.
+English assembled the identical machine out of the identical parts: a verb
+meaning "have," plus a finished-action participle. *I have said* and *ich habe
+gesagt* line up word for word. The next few lessons take *haben*'s forms one at
+a time and hang a participle off each.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-HABEN-01, GE-LEX-GEMACHT-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ich habe gesagt, du hast gesagt, wir haben gesagt"]
-- [YOU SAY: the wrap — "**ge**-sag-**t**"]
-- [YOU SAY: "Ich habe Deutsch gelernt" — participle at the **end**]
-- [YOU SAY: the fossil — "en-**ough** ← *ge*nōg"]
+- [YOU SAY: the recipe — "haben, conjugated, plus the participle"]
+- [YOU SAY: the name — "das Perfekt"]
+- [YOU SAY: which half moves — "haben changes, the participle does not"]
+
+[REPEAT x2] "haben plus participle."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-HABEN-01, GE-GRAMMAR-PARTIZIP-GE-T-01] -->
 
-[PAUSE 3s] What two pieces make the *Perfekt*? (**Haben** + the **past
-participle**.) How is a weak participle built? (**ge-** in front, **-t** behind —
-a wrap.) Where does it go in the sentence? (**The end of the clause**.) What did
-*ge-* originally mean? ("**Completely**" — it marked an action finished.) Which
-English word still hides it? (**Enough** ← *genōg*.) Next: the tense the Perfekt
-pushed aside.
+[PAUSE 3s] Which two pieces make the *Perfekt*? (**Haben** plus the
+**participle**.) Which of the two changes for the person? (***Haben***.) Which
+English tense is built the same way? (**I have said** — *have* plus a
+participle.) Next: the first person, and the first whole sentence about the
+past.
