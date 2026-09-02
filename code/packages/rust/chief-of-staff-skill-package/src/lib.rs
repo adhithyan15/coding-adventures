@@ -98,14 +98,21 @@ impl Display for SkillPackageError {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         match self {
             Self::TargetExists(path) => {
-                write!(formatter, "skill package target already exists: {}", path.display())
+                write!(
+                    formatter,
+                    "skill package target already exists: {}",
+                    path.display()
+                )
             }
             Self::Io(error) => write!(formatter, "skill package I/O failed: {error}"),
             Self::Parse(error) => write!(formatter, "invalid packaged skill: {error}"),
             Self::Manifest(error) => write!(formatter, "manifest serialization failed: {error}"),
             Self::Package(error) => write!(formatter, "package signing failed: {error}"),
             Self::WrongRuntime(runtime) => {
-                write!(formatter, "expected Skill package runtime, found {runtime:?}")
+                write!(
+                    formatter,
+                    "expected Skill package runtime, found {runtime:?}"
+                )
             }
             Self::NonUtf8Skill => formatter.write_str("authenticated SKILL.md is not UTF-8"),
             Self::ManifestMismatch => formatter.write_str(
@@ -127,7 +134,7 @@ mod tests {
     use coding_adventures_ed25519::generate_keypair;
     use std::time::{SystemTime, UNIX_EPOCH};
 
-    const SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nReport a brief forecast for the requested city.\n\n## Capabilities needed\n- none\n";
+    const SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nReport a brief forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
 
     fn package_dir(label: &str) -> PathBuf {
         std::env::temp_dir().join(format!(
@@ -185,7 +192,10 @@ mod tests {
             build_signed_skill_package(&path, SKILL, "dev-weather", &secret_key),
             Err(SkillPackageError::TargetExists(found)) if found == path
         ));
-        assert_eq!(fs::read_to_string(path.join("keep.txt")).unwrap(), "preserve");
+        assert_eq!(
+            fs::read_to_string(path.join("keep.txt")).unwrap(),
+            "preserve"
+        );
         fs::remove_dir_all(path).unwrap();
     }
 
@@ -196,7 +206,11 @@ mod tests {
         fs::create_dir(path.join("code")).unwrap();
         fs::write(path.join("manifest.json"), "{}").unwrap();
         DenoLaunchPlan::write_launch_script(&path).unwrap();
-        fs::write(path.join("code/agent_runtime.ts"), "console.log('ready');\n").unwrap();
+        fs::write(
+            path.join("code/agent_runtime.ts"),
+            "console.log('ready');\n",
+        )
+        .unwrap();
         let (public_key, secret_key) = generate_keypair(&[55; 32]);
         sign_agent_package(&path, "dev-deno", &secret_key).unwrap();
         let mut keyring = PackageKeyring::new();
