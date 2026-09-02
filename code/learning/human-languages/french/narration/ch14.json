@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2e36b2cbb1986f0d",
+  "sourceHash": "fnv1a64:0f7f1a87d8f54617",
   "lessons": [
     {
       "id": "FR-C12-nombres-11-16",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:407497ec7c56e5a5",
+      "sourceHash": "fnv1a64:b5ee4db2e63d6b9b",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -64,9 +64,16 @@ it("pins French modality", () => expectLanguageModality("french"));
 // owned), and one for the oe ligature, which is a LETTER and pays forward to
 // l'oeuf and l'oeil. Net +7 measured rather than +5, because the two retired
 // lessons were schema-v1 and never counted toward this budget.
+// 135 -> 140 lessons: retiring handwritten chapter 13, Bread, Water, Wine. Two
+// schema-v1 lessons held THREE headwords -- `le pain` in one and `l'eau, le vin`
+// in the other -- and the chapter's own canDo promised the reader could REQUEST
+// them, which nothing taught: `du pain` appeared in a Guided Practice line and
+// in a `culture` block, and no lesson owned the partitive. Five lessons now do:
+// one per noun, one for `de` + article, and the payoff. Net +5 measured rather
+// than +3, because the two retired lessons were schema-v1 and never counted.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 135,
+    lessons: 140,
     idioms: 3,
     senses: 7,
     cultureClaims: 19,
