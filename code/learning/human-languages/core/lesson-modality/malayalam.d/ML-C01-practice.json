@@ -9,6 +9,7 @@
     "drivable": false,
     "reasons": [
       "writing-block",
+      "script-block",
       "sight-cue",
       "wide-table"
     ],
@@ -17,9 +18,10 @@
       "wide-table"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:32cc5f4165be8d72",
+    "sourceHash": "fnv1a64:a059bb7bfe4b3790",
     "detachableSegments": [
-      "Writing checkpoint"
+      "Writing checkpoint",
+      "Script check — the letters of this chapter"
     ]
   },
   "findings": []

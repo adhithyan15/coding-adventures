@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F03-last-three-delayed
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 829
+sequence: 1029
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "आवडते पेय · आवडती कृती · मित्राचे नाव"
 gloss: delayed writing of the last three form labels, with agreement and possessive repaired separately

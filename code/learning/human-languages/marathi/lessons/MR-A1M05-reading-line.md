@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M05-reading-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 844
+sequence: 1044
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "मी मराठी वाचतो."
 gloss: retrieve the known masculine reading sentence as one separate message line

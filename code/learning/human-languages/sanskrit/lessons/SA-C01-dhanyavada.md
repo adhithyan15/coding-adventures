@@ -5,6 +5,7 @@ chapter: 1
 type: word
 headword: धन्यवादः
 gloss: thank you (dhanyavādaḥ)
+romanization: "dhanyavādaḥ"
 concept_tag: COURTESY-THANKS
 prerequisites: [SA-C01-namaskara]
 sounds: [inherent-a, ny-conjunct, visarga]

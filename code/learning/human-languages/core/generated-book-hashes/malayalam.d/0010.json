@@ -1,11 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 10,
-  "sourceHash": "fnv1a64:d8b109e02bc88f46",
+  "sourceHash": "fnv1a64:d3e6fdc2e0ac7d7b",
   "lessonIds": [
     "ML-C10-azhcha",
-    "ML-S05-letter-na",
-    "ML-S113-letter-nna"
+    "ML-S05-letter-na"
   ],
   "tex": "malayalam/book/chapters/ch10-days.tex"
 }

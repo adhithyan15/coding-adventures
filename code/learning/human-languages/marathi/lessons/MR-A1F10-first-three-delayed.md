@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F10-first-three-delayed
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 866
+sequence: 1066
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "नाव: अरुण · शहर: पुणे · भाषा: मराठी"
 gloss: fill the first three rows after a short delay, without an answer model

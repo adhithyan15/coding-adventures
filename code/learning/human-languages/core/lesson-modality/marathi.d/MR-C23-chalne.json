@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C23-chalne",
     "language": "marathi",
-    "chapter": 23,
-    "sequence": 950,
+    "chapter": 27,
+    "sequence": 1150,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0b8a9e43ce6124fa",
+    "sourceHash": "fnv1a64:1e0b33f79b459c9b",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R09-runway-tail-r2",
+    "language": "marathi",
+    "chapter": 9,
+    "sequence": 301,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:aa55b24f58d32383"
+  },
+  "findings": []
+}

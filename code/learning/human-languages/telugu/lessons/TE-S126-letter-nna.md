@@ -9,31 +9,31 @@ type: writing
 headword: "ణ"
 gloss: the single character ణ — recognised inside words you already say
 romanization: "ṇa"
-prerequisites: [TE-S125-letter-ha]
+prerequisites: [TE-S124-letter-e]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-125]
+  knowledge: [TE-SCRIPT-RECOG-124]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-126]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-125, TE-SCRIPT-RECOG-126]
+  knowledge: [TE-SCRIPT-RECOG-126, TE-SCRIPT-RECOG-124, TE-SCRIPT-RECOG-138, TE-SCRIPT-RECOG-114]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S125-letter-ha]
+reviews_of: [TE-S124-letter-e, TE-S138-letter-gha, TE-S114-letter-la]
 ---
 
 # ణ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-125] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-124, TE-SCRIPT-RECOG-138] -->
 
-[PAUSE 1s] Before the new one: హ — what does it do?
+[PAUSE 1s] Before the new one: ఎ — what does it do? And one from further back: ఘ?
 
 [PAUSE 2s] One character this time — and you have been saying it for pages
 without knowing which mark on the page it was.
@@ -82,9 +82,11 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find ణ once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-126] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-126, TE-SCRIPT-RECOG-114] -->
 
 [PAUSE 3s] Which character is this — ణ? What sound does it carry, and where is
 the tongue for it? (***ṇa***, with the tongue curled back to the roof of the
 mouth — not న, which touches the teeth.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ల — what does it do?

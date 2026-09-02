@@ -1,26 +1,24 @@
 {
   "chapter": 15,
-  "title": "Eye, Ear, Mouth, and Nose",
-  "label": "ch:mr-face-parts",
-  "canDo": "I can name the eye, ear, mouth, and nose in Marathi, say the retroflex ळ formally for the first time, and tell which of the four carries the most secure English cognate and which replaced its own inherited word entirely.",
+  "title": "The Mind and the Page",
+  "label": "ch:mr-mind-and-page",
+  "canDo": "I can say that I think, understand, read and write in Marathi, put the understander in the dative where Marathi puts it, and name what each of the four roots meant before it meant a mental act — turning, waking, speaking and scratching.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "MR-C12-naak",
+    "lesson": "MR-C08-lihine",
     "kind": "production",
-    "summary": "The chapter closes on नाक, completing the face: the reader produces डोळा, कान, तोंड and नाक with their genders, and sorts the four by kind of history — डोळा replaced the old Indo-Aryan eye-word with one that once meant \"swing\"; कान's root is honestly disputed; तोंड keeps a formal doublet, मुख, standing beside it; नाक alone reaches English नोज़ / nose without qualification.",
+    "summary": "Say मी माझं नाव लिहितो, run the chapter's four verbs back with the four things their roots meant — vichār karṇe from a root meaning to turn, samajṇe from one meaning to wake, vāchṇe from one meaning to speak, lihiṇe from one meaning to scratch — and pick out the one of the four that refuses मी and takes मला instead.",
     "assesses": [
-      "MR-LEX-DOLA",
-      "MR-SCRIPT-RETROFLEX-LA",
-      "MR-ETYMON-DOLA-SWING",
-      "MR-LEX-KAAN",
-      "MR-ETYMON-KAAN-DISPUTED",
-      "MR-SOUND-KARNA-GEMINATION",
-      "MR-LEX-TOND",
-      "MR-GRAMMAR-TOND-MUKH-DOUBLET",
-      "MR-LEX-NAAK",
-      "MR-ETYMON-NAAK-NOSE"
+      "MR-LEX-VICHAR-KARNE",
+      "MR-ETYMON-VICHAR-TURN",
+      "MR-LEX-SAMAJNE",
+      "MR-ETYMON-BUDH-AWAKE",
+      "MR-LEX-VACHNE",
+      "MR-ETYMON-VACH-VOICE",
+      "MR-LEX-LIHINE",
+      "MR-ETYMON-LIKH-SCRATCH"
     ]
   }
 }

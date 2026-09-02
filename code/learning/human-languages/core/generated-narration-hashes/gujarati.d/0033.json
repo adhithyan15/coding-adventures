@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:39965ab17570e72d",
+  "lessonIds": [
+    "GU-C29-hear-sooraj",
+    "GU-C29-hear-chandra",
+    "GU-C29-hear-aakaash",
+    "GU-C29-hear-varsaad",
+    "GU-C29-hear-nadi",
+    "GU-C29-sky-five",
+    "GU-C29-nadi",
+    "GU-R29-sky-five-r1"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch33.txt",
+  "json": "gujarati/narration/ch33.json",
+  "textHash": "fnv1a64:86179dc78be37ef6",
+  "jsonHash": "fnv1a64:30a52b6033c4a7d5",
+  "findings": []
+}

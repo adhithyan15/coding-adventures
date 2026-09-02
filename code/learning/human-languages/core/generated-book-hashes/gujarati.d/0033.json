@@ -1,0 +1,16 @@
+{
+  "language": "gujarati",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:5b7ca291a4ee4c19",
+  "lessonIds": [
+    "GU-C29-hear-sooraj",
+    "GU-C29-hear-chandra",
+    "GU-C29-hear-aakaash",
+    "GU-C29-hear-varsaad",
+    "GU-C29-hear-nadi",
+    "GU-C29-sky-five",
+    "GU-C29-nadi",
+    "GU-R29-sky-five-r1"
+  ],
+  "tex": "gujarati/book/chapters/ch33-sun-sky-river.tex"
+}

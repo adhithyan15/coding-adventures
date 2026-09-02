@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 28,
   "title": "Taking Your Leave",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ed0779d1342c5607",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:e3d72775d62e3fcb",
   "lessons": [
     {
       "id": "SA-C28-now",
@@ -245,6 +245,191 @@
             {
               "kind": "speech",
               "text": "What does परश्वः (paraśvaḥ) mean? (\"the day after tomorrow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S224-letter-i",
+      "sequence": 1341,
+      "title": "इ — one character, met inside words you already say",
+      "headword": "इ",
+      "romanization": "i",
+      "gloss": "the single character इ — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:aeb01a88c214c19d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: इ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: इ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: ओ, फ, ◌ै. Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: इ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इ — i."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel: the full-size letter a vowel wears when it opens a word and has no consonant to lean on. Inside a word the same vowel is written as a small sign instead."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a descending upright joined to an upper bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "a lower bowl and diagonal tail in the same run."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has इ somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "इदानीम् idānīm — now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: इ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. descend the upright from the headline, turn left around the upper bowl, sweep right through the waist and around the lower bowl, then finish down-right through the tail without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up 1 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified modern printed teaching form; everyday handwriting may simplify the curves."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari इ stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find इ in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find इ in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "इदानीम् (idānīm)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "इ three times, saying i as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: इ three times, saying *i* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find इ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find इ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — इ? What sound does it carry? (i.) Name one word you already say that contains it."
             }
           ]
         }

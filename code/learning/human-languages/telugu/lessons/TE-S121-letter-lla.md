@@ -9,34 +9,34 @@ type: writing
 headword: "ళ"
 gloss: the single character ళ — recognised inside words you already say
 romanization: "ḷa"
-prerequisites: [TE-S120-vowel-sign-ee]
+prerequisites: [TE-S138-letter-gha]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-120]
+  knowledge: [TE-SCRIPT-RECOG-138]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-121]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-120, TE-SCRIPT-RECOG-121]
+  knowledge: [TE-SCRIPT-RECOG-121, TE-SCRIPT-RECOG-138, TE-SCRIPT-RECOG-119, TE-SCRIPT-RECOG-134]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S120-vowel-sign-ee]
+reviews_of: [TE-S138-letter-gha, TE-S119-vowel-sign-ii, TE-S134-vowel-sign-uu]
 ---
 
 # ళ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-120] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-138, TE-SCRIPT-RECOG-119] -->
 
-[PAUSE 1s] Before the new one: ◌ే — what does it do?
+[PAUSE 1s] Before the new one: ఘ — what does it do? And one from further back: ◌ీ?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ళ
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-121]; assesses=[] -->
@@ -76,7 +76,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find ళ once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-121] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-121, TE-SCRIPT-RECOG-134] -->
 
 [PAUSE 3s] Which character is this — ళ? What sound does it carry? (***ḷa***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ◌ూ — what does it do?

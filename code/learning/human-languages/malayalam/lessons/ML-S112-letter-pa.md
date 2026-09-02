@@ -2,41 +2,41 @@
 schema_version: 2
 id: ML-S112-letter-pa
 spine_node: SPINE-MEET-GREET
-sequence: 376
+sequence: 72
 delivery: script
-chapter: 9
+chapter: 2
 type: writing
 headword: "പ"
 gloss: the single character പ — recognised inside words you already say
 romanization: "pa"
-prerequisites: [ML-S111-letter-ca]
+prerequisites: [ML-S133-letter-a]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-111]
+  knowledge: [ML-SCRIPT-RECOG-133]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-112]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-111, ML-SCRIPT-RECOG-112]
+  knowledge: [ML-SCRIPT-RECOG-133, ML-SCRIPT-RECOG-112]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S111-letter-ca]
+reviews_of: [ML-S133-letter-a]
 ---
 
 # പ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-111] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-133] -->
 
-[PAUSE 1s] Before the new one: ച — what does it do?
+[PAUSE 1s] Before the new one: അ — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has been sitting in front of you on pages you have already read.
 
 ## Script you'll notice: പ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-112]; assesses=[] -->
@@ -45,12 +45,12 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *p*, it is **pa**.
 
-You already say these, and every one of them has പ somewhere inside it:
+You have already said a word that begins with it.
 
 - **പേര്** *pēr* — name
-- **എന്റെ പേര് … ആണ്** — my name is…
-- **നിന്റെ പേര് എന്താണ്?** — what's your name?
-- **പോയി വരാം** *pōyi varāṁ* — goodbye (lit. "I'll go and come back")
+
+It is the first shape of the first word of this chapter, so it is the easiest
+one in the book to go back and find.
 
 ## Writing: പ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-112] -->
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find പ in the ones that have it]
 
-> പേര്  ·  നമസ്കാരം
+> പേര്  ·  അതെ  ·  നമസ്കാരം
 
 - [YOU TRACE: പ three times, saying *pa* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find പ once more]

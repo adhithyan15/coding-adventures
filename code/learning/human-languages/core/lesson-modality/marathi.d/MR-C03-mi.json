@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C03-mi",
     "language": "marathi",
-    "chapter": 6,
-    "sequence": 115,
+    "chapter": 10,
+    "sequence": 315,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:33b70801bfebebf7",
+    "sourceHash": "fnv1a64:c98589e3f88c7e5c",
     "detachableSegments": [
       "The letters in this word"
     ]

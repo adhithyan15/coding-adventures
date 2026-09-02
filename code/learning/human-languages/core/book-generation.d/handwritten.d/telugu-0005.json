@@ -1,5 +1,12 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "output": "telugu/book/chapters/ch05-first-verbs.tex"
+  "output": "telugu/book/chapters/ch05-first-verbs.tex",
+  "embeddedLessonIds": [
+    "TE-S01-letter-ta",
+    "TE-S147-digit-8",
+    "TE-S111-letter-sa",
+    "TE-S125-letter-ha",
+    "TE-S148-digit-9"
+  ]
 }

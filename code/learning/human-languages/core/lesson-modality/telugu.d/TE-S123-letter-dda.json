@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S123-letter-dda",
     "language": "telugu",
-    "chapter": 20,
-    "sequence": 481,
+    "chapter": 4,
+    "sequence": 205,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:58f10c0506a5c39e",
+    "sourceHash": "fnv1a64:35f2404a58e64c14",
     "detachableSegments": [
       "Script you'll notice: డ",
       "Writing: డ — copy what you see"

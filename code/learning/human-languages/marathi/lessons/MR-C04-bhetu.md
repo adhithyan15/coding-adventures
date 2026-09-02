@@ -1,7 +1,7 @@
 ---
 id: MR-C04-bhetu
-sequence: 140
-chapter: 7
+sequence: 340
+chapter: 11
 type: word
 headword: भेटू
 romanization: "bheṭū"

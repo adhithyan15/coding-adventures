@@ -1,19 +1,19 @@
 {
   "language": "sanskrit",
   "chapter": 10,
-  "sourceHash": "fnv1a64:20314ca1bf016963",
+  "sourceHash": "fnv1a64:24ba37e51757f491",
   "lessonIds": [
     "SA-C10-paniyam",
+    "SA-S108-letter-sa",
     "SA-C10-kshiram",
     "SA-C10-annam",
-    "SA-S03-letter-a",
-    "SA-S109-vowel-sign-i"
+    "SA-S210-vowel-sign-ii"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch10.txt",
   "json": "sanskrit/narration/ch10.json",
-  "textHash": "fnv1a64:1ac5450baf429503",
-  "jsonHash": "fnv1a64:3ee70562d2a60f58",
+  "textHash": "fnv1a64:f4d6d60c18a505b5",
+  "jsonHash": "fnv1a64:91e3ed025f5dca67",
   "findings": []
 }

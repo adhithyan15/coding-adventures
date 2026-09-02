@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "TE-S146-digit-7",
+    "language": "telugu",
+    "chapter": 4,
+    "sequence": 245,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3ff5b147c2221c01",
+    "detachableSegments": [
+      "Script you'll notice: ౭",
+      "Writing: ౭ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

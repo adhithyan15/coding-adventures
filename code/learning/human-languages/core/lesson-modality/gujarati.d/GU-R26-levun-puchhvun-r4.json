@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R26-levun-puchhvun-r4",
+    "language": "gujarati",
+    "chapter": 30,
+    "sequence": 1440,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae5edf2112b5bfad",
+    "detachableSegments": [
+      "Writing — from sound, every model covered"
+    ]
+  },
+  "findings": []
+}

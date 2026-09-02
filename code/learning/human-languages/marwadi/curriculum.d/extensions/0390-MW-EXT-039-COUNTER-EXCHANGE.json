@@ -1,0 +1,18 @@
+{
+  "id": "MW-EXT-039-COUNTER-EXCHANGE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can hold one five-turn counter exchange at a shop, a food stall, or a rickshaw, changing only the noun, in four separately scored skills.",
+  "prerequisites": [
+    "MW-EXT-038-BRING-REQUEST"
+  ],
+  "lessons": [
+    "MW-R26-shopping-counter",
+    "MW-R26-transport-counter",
+    "MW-R26-food-counter",
+    "MW-R26-letters-close",
+    "MW-C26-counter-exchange",
+    "MW-R26-script-close"
+  ]
+}

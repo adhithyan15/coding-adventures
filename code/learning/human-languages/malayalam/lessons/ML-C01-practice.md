@@ -8,7 +8,7 @@ type: practice
 headword: (recap)
 gloss: Chapter 1 recap + the Malayalam farewell
 concept_tag: REVIEW
-prerequisites: [ML-W01-namaskaram-dictation, ML-C01-nandi, ML-C01-athe, ML-C01-illa, ML-C01-sari]
+prerequisites: [ML-W01-namaskaram-dictation, ML-C01-nandi, ML-C01-athe, ML-C01-illa, ML-C01-sari, ML-S133-letter-a]
 sounds: []
 roots: []
 duration:
@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01, ML-SCRIPT-NA-01, ML-SCRIPT-MA-01, ML-SCRIPT-SA-01, ML-SCRIPT-CHANDRAKKALA-01, ML-SCRIPT-KA-01, ML-SCRIPT-AA-MATRA-01, ML-SCRIPT-RA-01, ML-SCRIPT-ANUSVARAM-01, ML-SCRIPT-NAMASKARAM-READ-01]
+  knowledge: [ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01, ML-SCRIPT-NA-01, ML-SCRIPT-MA-01, ML-SCRIPT-SA-01, ML-SCRIPT-CHANDRAKKALA-01, ML-SCRIPT-KA-01, ML-SCRIPT-AA-MATRA-01, ML-SCRIPT-RA-01, ML-SCRIPT-ANUSVARAM-01, ML-SCRIPT-NAMASKARAM-READ-01, ML-SCRIPT-RECOG-133]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -80,6 +80,16 @@ now, repeating the greeting is enough when you part.
 Hide the model. Hear *namaskāram* once, write **നമസ്കാരം**, then uncover the
 word in the table and check one group at a time: **നമ · സ്ക · ാരം**. A mismatch
 is a signal to repeat the earlier two-minute shape lesson, not to push faster.
+
+## Script check — the letters of this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-133] -->
+
+[PAUSE 2s] Cover the romanizations. Find each letter once in the Malayalam
+above, then say the word it sits in.
+
+- **അതെ** — **അ** *a*
+
+- [YOU LOOK: at each letter, then find it in the word beside it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01, ML-SCRIPT-NAMASKARAM-READ-01] -->

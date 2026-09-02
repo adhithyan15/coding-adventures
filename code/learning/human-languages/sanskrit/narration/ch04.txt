@@ -1,8 +1,8 @@
 Sanskrit, chapter 4: Farewells.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 7.
 गच्छामि (gacchāmi) — "I go" (taking leave).
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -31,7 +31,7 @@ Wrap-up Recall.
 How does Sanskrit take leave, and what root is gacchāmi from? (By saying "I go," gacchāmi; the root gam, PIE gʷem-, cousin of English come.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 7.
 पुनः (punaḥ) — "again," the seed of "till we meet again".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -58,7 +58,50 @@ Wrap-up Recall.
 What does punaḥ mean, and what is its combining form? ("Again"; punar-, as in punarjanma, "rebirth.")
 
 
-Lesson 3 of 5.
+Lesson 3 of 7.
+र — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: र and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: ◌ा, म, ◌ु. Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: र.
+र — ra.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not r, it is ra.
+What it is made of:
+a top-to-bottom stem curling clockwise around the lower loop.
+a diagonal tail.
+the top shirorekhā.
+You already say this word, and र is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:
+namaskāraḥ — hello (lit. "the making of a bow").
+
+Writing: र.
+1. start at the headline junction, descend the stem, and curl left and clockwise around the lower loop to the tail junction.
+2. lift at that junction and draw the diagonal tail down-right.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-र (ra)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find र (ra) in it]
+[pause 8 seconds for the answer]
+र (ra).
+[once you have stopped driving — trace: र three times, saying ra as you finish each one]
+[your turn — look: back at any page of this chapter and find र (ra) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — र? What sound does it carry? (ra.) Name one word you already say that contains it.
+
+
+Lesson 4 of 7.
 पुनर्दर्शनाय (punardarśanāya) (punar-darśanāya) — "until we meet again".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -90,7 +133,7 @@ Wrap-up Recall.
 What does punar-darśanāya literally mean, and what case gives the "for"? ("For seeing again"; the dative -āya.)
 
 
-Lesson 4 of 5.
+Lesson 5 of 7.
 श्वः (śvaḥ) — "tomorrow".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -122,7 +165,50 @@ Wrap-up Recall.
 What does śvaḥ mean, and how does Sanskrit differ from Hindi here? ("Tomorrow"; Sanskrit keeps śvaḥ "tomorrow" and hyaḥ "yesterday" separate, where Hindi merges them into kal.)
 
 
-Lesson 5 of 5.
+Lesson 6 of 7.
+प (pa) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: प and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: म, ◌ु, र (ra). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: प.
+प — pa.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not p, it is pa.
+What it is made of:
+a left stem curving around the lower bowl to its upper-right junction.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say these, and every one of them has प (pa) somewhere inside it:
+पुनः punaḥ — again.
+
+Writing: प.
+1. descend the left stem, then curve right around the lower bowl and rise to its upper-right junction without lifting.
+2. lift and draw the right stem top-to-bottom.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+verified three-stroke teaching form; everyday handwriting may join or simplify the bowl differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-प (pa)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find प (pa) in it]
+[pause 8 seconds for the answer]
+पुनः (punaḥ).
+[once you have stopped driving — trace: प three times, saying pa as you finish each one]
+[your turn — look: back at any page of this chapter and find प once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — प? What sound does it carry? (pa.) Name one word you already say that contains it.
+
+
+Lesson 7 of 7.
 Chapter 4 — The farewells.
 
 Warm-up.

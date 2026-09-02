@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S113-letter-pa",
     "language": "telugu",
-    "chapter": 10,
-    "sequence": 376,
+    "chapter": 4,
+    "sequence": 235,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:fce2e925f39e8d57",
+    "sourceHash": "fnv1a64:f650196d6ea8f2d3",
     "detachableSegments": [
       "Script you'll notice: ప",
       "Writing: ప — copy what you see"

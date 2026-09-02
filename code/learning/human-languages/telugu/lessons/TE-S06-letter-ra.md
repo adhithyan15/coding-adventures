@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S06-letter-ra
 spine_node: SPINE-MEET-GREET
-sequence: 385
+sequence: 185
 delivery: script
-chapter: 11
+chapter: 3
 type: writing
 headword: "ర"
 gloss: the single character ర — recognised inside words you already say
 romanization: "ra"
-prerequisites: [TE-S05-sign-virama]
+prerequisites: [TE-S143-digit-4]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-05]
+  knowledge: [TE-SCRIPT-RECOG-143]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-06]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-05, TE-SCRIPT-RECOG-06]
+  knowledge: [TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-143, TE-SCRIPT-RECOG-04, TE-SCRIPT-RECOG-07]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S05-sign-virama]
+reviews_of: [TE-S143-digit-4, TE-S04-sign-anusvara, TE-S07-vowel-sign-aa]
 ---
 
 # ర — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-143, TE-SCRIPT-RECOG-04] -->
 
-[PAUSE 1s] Before the new one: ◌్ — what does it do?
+[PAUSE 1s] Before the new one: ౪ — what amount does it stand for? And one from further back: ◌ం?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ర
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-06]; assesses=[] -->
@@ -76,7 +76,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find ర once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-07] -->
 
 [PAUSE 3s] Which character is this — ర? What sound does it carry? (***ra***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ◌ా — what does it do?

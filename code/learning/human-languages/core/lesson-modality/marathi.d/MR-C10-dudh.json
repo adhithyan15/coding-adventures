@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C10-dudh",
     "language": "marathi",
-    "chapter": 13,
-    "sequence": 540,
+    "chapter": 17,
+    "sequence": 740,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:fa77b97bc458dac3",
+    "sourceHash": "fnv1a64:23a8c3c7b25533b9",
     "detachableSegments": [
       "The letters in this word"
     ]

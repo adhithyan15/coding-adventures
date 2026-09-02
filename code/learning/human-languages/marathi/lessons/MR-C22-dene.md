@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C22-dene
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 870
-chapter: 22
+sequence: 1070
+chapter: 26
 type: word
 headword: देणे
 romanization: deṇe

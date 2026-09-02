@@ -1,0 +1,17 @@
+{
+  "language": "gujarati",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:fa64d9ab69daee75",
+  "lessonIds": [
+    "GU-R26-numbers-r4",
+    "GU-R26-hovun-javun-r4",
+    "GU-R26-aavvun-khaavun-r4",
+    "GU-R26-jovun-jaanvun-r4",
+    "GU-R26-vicharvun-samajvun-r4",
+    "GU-R26-vanchvun-lakhvun-r4",
+    "GU-R26-levun-puchhvun-r4",
+    "GU-R26-time-written-r2",
+    "GU-R26-madad-gamvun-paani-r4"
+  ],
+  "tex": "gujarati/book/chapters/ch30-core-verb-fifth-return.tex"
+}

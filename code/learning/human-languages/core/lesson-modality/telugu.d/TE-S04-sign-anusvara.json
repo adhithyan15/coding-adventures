@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S04-sign-anusvara",
     "language": "telugu",
-    "chapter": 9,
-    "sequence": 365,
+    "chapter": 2,
+    "sequence": 135,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:59654230abc83d43",
+    "sourceHash": "fnv1a64:383c7b62fb47eded",
     "detachableSegments": [
       "Script you'll notice: ◌ం",
       "Writing: ◌ం — copy what you see"

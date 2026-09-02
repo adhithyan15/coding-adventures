@@ -2,8 +2,8 @@
   "lesson": {
     "id": "ML-S07-vowel-sign-u",
     "language": "malayalam",
-    "chapter": 12,
-    "sequence": 405,
+    "chapter": 2,
+    "sequence": 142,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:7ec56467aa49eef5",
+    "sourceHash": "fnv1a64:aa5d5d72a5151a6d",
     "detachableSegments": [
       "Script you'll notice: ◌ു",
       "Writing: ◌ു — copy what you see"

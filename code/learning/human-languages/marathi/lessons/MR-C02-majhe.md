@@ -1,7 +1,7 @@
 ---
 id: MR-C02-majhe
-sequence: 65
-chapter: 5
+sequence: 265
+chapter: 9
 type: word
 headword: माझं
 romanization: "mājhaṁ"

@@ -1,8 +1,8 @@
 Sanskrit, chapter 15: Describing Things.
-8 lessons. You can do the first 6 of them in the car; after that you will want to have stopped.
+10 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 8.
+Lesson 1 of 10.
 महत् (mahat) — big.
 
 Warm-up.
@@ -26,7 +26,7 @@ Wrap-up Recall.
 What is mahat? (big.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 2 of 8.
+Lesson 2 of 10.
 अल्प (alpa) — small.
 
 Warm-up.
@@ -51,7 +51,52 @@ Wrap-up Recall.
 What is alpa? (small.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 3 of 8.
+Lesson 3 of 10.
+ब (ba) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ब and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: ल, ◌ो, थ. Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ब.
+ब — ba.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not b, it is ba.
+What it is made of:
+a counterclockwise oval body.
+a top-to-bottom right stem.
+a down-right inner diagonal.
+the top shirorekhā.
+You already say these, and every one of them has ब (ba) somewhere inside it:
+कुटुम्बम् kuṭumbam — family, household — a word Sanskrit itself borrowed, before other languages borrowed it back.
+
+Writing: ब.
+1. start at the body's upper-right junction and circle counterclockwise around the oval to its lower-right junction.
+2. lift and draw the right stem top-to-bottom.
+3. lift at the body's upper-left interior and draw the inner diagonal down-right.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+verified four-stroke teaching form; everyday handwriting may join or simplify the oval differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari b ब (ba).gif’, strokes 1–4, Wikimedia Commons, 29 March 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find ब (ba) in it]
+[pause 8 seconds for the answer]
+कुटुम्बम्.
+[once you have stopped driving — trace: ब three times, saying ba as you finish each one]
+[your turn — look: back at any page of this chapter and find ब once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ब? What sound does it carry? (ba.) Name one word you already say that contains it.
+
+
+Lesson 4 of 10.
 उत्तम (uttama) — good.
 
 Warm-up.
@@ -76,7 +121,7 @@ Wrap-up Recall.
 What is uttama? (good.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 4 of 8.
+Lesson 5 of 10.
 नव (nava) — new.
 
 Warm-up.
@@ -101,7 +146,48 @@ Wrap-up Recall.
 What is nava? (new.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 5 of 8.
+Lesson 6 of 10.
+उ — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: उ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: ◌ो, थ, ब (ba). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: उ.
+उ — u.
+It is an independent vowel: the full-size letter a vowel wears when it opens a word and has no consonant to lean on. Inside a word the same vowel is written as a small sign instead.
+What it is made of:
+a joined upper bowl and lower loop.
+the top shirorekhā.
+You already say these, and every one of them has उ somewhere inside it:
+उत्तम uttama — good.
+
+Writing: उ.
+1. start at the headline junction, curve down and left around the upper bowl, then sweep back through the waist and around the lower loop without lifting.
+2. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up 1 times and no more.
+verified modern printed teaching form; everyday handwriting may simplify the curves.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find उ (u) in it]
+[pause 8 seconds for the answer]
+उत्तम (uttama).
+[once you have stopped driving — trace: उ three times, saying u as you finish each one]
+[your turn — look: back at any page of this chapter and find उ (u) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — उ? What sound does it carry? (u.) Name one word you already say that contains it.
+
+
+Lesson 7 of 10.
 पुरातन (purātana) — old — of a thing, not of a person.
 
 Warm-up.
@@ -126,7 +212,7 @@ Wrap-up Recall.
 What is purātana? (old — of a thing, not of a person.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 6 of 8.
+Lesson 8 of 10.
 before the noun, and it AGREES — five words, one rule.
 
 Warm-up.
@@ -156,72 +242,69 @@ Wrap-up Recall.
 Where does an adjective go in this language? (In front of the noun.) Does it change shape to match the noun? (and it AGREES.)
 
 
-Lesson 7 of 8.
-ह — one character, met inside words you already say.
+Lesson 9 of 10.
+ष (ṣa) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ह and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ष and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 1 second]
-Before the new one: प — what does it do?
+Before the new one, the ones you have already met: थ, ब (ba), उ. Say what each of them does.
 [pause 2 seconds]
-One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
 
-Script you'll notice: ह.
-ह — ha.
-It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not h, it is ha.
+Script you'll notice: ष.
+ष — ṣa.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ṣ, it is ṣa.
 What it is made of:
-a descending right stem joined to the leftward shoulder and clockwise hooked body.
-a separate down-right outer curve and tail.
+a U-shaped body drawn from the left side around the lower bowl and up the right side.
+a retraced top-to-bottom right stem.
+a down-right inner diagonal.
 the top shirorekhā.
-You already say these, and every one of them has ह somewhere inside it:
-अहम् aham — I.
-अहं संस्कृतं वदामि ahaṁ saṁskṛtaṁ vadāmi — I speak Sanskrit.
-गृह्णाति gṛhṇāti — he, she, or it takes, seizes.
-साहाय्यं करोति sāhāyyaṁ karoti — he, she, or it helps.
+You already say these, and every one of them has ष (ṣa) somewhere inside it:
+क्षीरम् kṣīram — milk — an origin scholars still argue over, and the dessert word it left behind.
+अक्षि akṣi — eye — unbroken from Sanskrit to English, and the reason eyes get their own grammatical number.
 
-Writing: ह.
-1. start at the right stem's headline junction, descend, sweep left through the shoulder, then curve clockwise around the hooked body to its lower-right tip without lifting.
-2. lift at the body's left junction and sweep down-left around the outer curve, then continue diagonally down-right through the tail.
-3. lift and draw the top shirorekhā left-to-right.
-Pen lifts: 2. The pen comes up 2 times and no more.
-Verified three-stroke teaching form; the corroborating deskbook stages the joined first body in more component steps.
-This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ह-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009.
+Writing: ष.
+1. descend the left side, curve counterclockwise around the lower bowl, and rise along the right side to the headline without lifting.
+2. lift and draw the right stem top-to-bottom, retracing its upper body-side segment before continuing below the bowl.
+3. lift at the upper-left interior and draw the inner diagonal down-right to the bowl junction.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+verified four-stroke teaching form fitted to the bundled printed outline.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ष (ṣa)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.
 
 Guided Practice.
 [pause 1 second]
-[your turn — look: at these words, and find ह in the ones that have it]
+[your turn — look: at this, and find ष (ṣa) in it]
 [pause 8 seconds for the answer]
-अहम्, नमस्ते.
-[once you have stopped driving — trace: ह three times, saying ha as you finish each one]
-[your turn — look: back at any page of this chapter and find ह once more]
+क्षीरम्, अक्षि.
+[once you have stopped driving — trace: ष three times, saying ṣa as you finish each one]
+[your turn — look: back at any page of this chapter and find ष (ṣa) once more]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which character is this — ह? What sound does it carry? (ha.) Name one word you already say that contains it.
+Which character is this — ष? What sound does it carry? (ṣa.) Name one word you already say that contains it.
 
 
-Lesson 8 of 8.
+Lesson 10 of 10.
 ◌ौ (au) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ौ and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 1 second]
-Before the new one: ह — what does it do?
+Before the new one, the ones you have already met: ब (ba), उ, ष (ṣa). Say what each of them does.
 [pause 2 seconds]
 One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
 
 Script you'll notice: ◌ौ.
 ◌ौ — au.
-It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with au. Replaces, not adds — the a is gone.
+It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it. Replaces, not adds — the a is gone.
 Where it sits: the ā bar plus a double stroke above.
-Worked through: क + ◌ौ = कौ — kau.
-You already say these, and every one of them has ◌ौ (au) somewhere inside it:
-द्वौ dvau — two (of two masculine things).
-कर्णौ karṇau — two ears.
-Both of those are dual forms — two of something, not one and not many. The -au ending is how the commonest family of masculine nouns says exactly two, so ◌ौ is a mark you have been reading every time the book counted to two.
+Worked through: न + ◌ौ = नौ — nau.
+No word in this book has put ◌ौ in front of you yet, and that is worth saying plainly rather than hiding: this one is here because it is built from two shapes you already know, and because the running text of later chapters uses it.
 
 Writing: ◌ौ — copy what you see.
 Put your pen on ◌ौ (au) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
@@ -229,9 +312,9 @@ This book does not yet tell you where to start the character or which way to tra
 
 Guided Practice.
 [pause 1 second]
-[your turn — look: at these words, and find ◌ौ (au) in the ones that have it]
+[your turn — look: at this, and find ◌ौ (au) in it]
 [pause 8 seconds for the answer]
-कर्णौ, नमस्ते.
+◌ौ (au).
 [once you have stopped driving — trace: ◌ौ three times, saying au as you finish each one]
 [your turn — look: back at any page of this chapter and find ◌ौ (au) once more]
 [pause 8 seconds for the answer]

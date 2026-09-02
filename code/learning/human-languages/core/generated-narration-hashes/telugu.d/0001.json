@@ -1,20 +1,23 @@
 {
   "language": "telugu",
   "chapter": 1,
-  "sourceHash": "fnv1a64:3c5406c0ec971779",
+  "sourceHash": "fnv1a64:fc4c01b5222e4536",
   "lessonIds": [
     "TE-C01-namaskaram",
     "TE-C01-dhanyavadamulu",
+    "TE-S03-letter-ka",
     "TE-C01-avunu",
+    "TE-S07-vowel-sign-aa",
     "TE-C01-ledu",
     "TE-C01-sare",
+    "TE-S120-vowel-sign-ee",
     "TE-C01-practice"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "telugu/narration/ch01.txt",
   "json": "telugu/narration/ch01.json",
-  "textHash": "fnv1a64:46192469682cb9eb",
-  "jsonHash": "fnv1a64:6c2f6daa81983d39",
+  "textHash": "fnv1a64:cccd7568d39a36dc",
+  "jsonHash": "fnv1a64:debaca1a56ca393a",
   "findings": []
 }

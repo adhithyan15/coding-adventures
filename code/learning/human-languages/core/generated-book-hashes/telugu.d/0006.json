@@ -1,12 +1,12 @@
 {
   "language": "telugu",
   "chapter": 6,
-  "sourceHash": "fnv1a64:c7f3ae952173dcba",
+  "sourceHash": "fnv1a64:64f1cb28c424020d",
   "lessonIds": [
+    "TE-S149-digit-0",
     "TE-C06-dative-ku",
-    "TE-C06-dative-subject",
-    "TE-S01-letter-ta",
-    "TE-S109-letter-na"
+    "TE-S110-letter-ya",
+    "TE-C06-dative-subject"
   ],
   "tex": "telugu/book/chapters/ch06-dative-case.tex"
 }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C24-sangne
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 970
-chapter: 24
+sequence: 1170
+chapter: 28
 type: word
 headword: सांगणे
 romanization: sāṅgṇe

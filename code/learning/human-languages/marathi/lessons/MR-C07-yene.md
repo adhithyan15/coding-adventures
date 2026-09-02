@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C07-yene
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 400
-chapter: 10
+sequence: 600
+chapter: 14
 type: word
 headword: येणे
 romanization: yeṇe

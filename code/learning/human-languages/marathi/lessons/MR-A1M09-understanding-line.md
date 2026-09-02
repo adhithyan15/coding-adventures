@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M09-understanding-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 848
+sequence: 1048
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "मला मराठी समजते."
 gloss: retrieve the known dative understanding sentence as the last skill line

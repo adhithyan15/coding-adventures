@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C22-hear-total-question",
+    "language": "marwadi",
+    "chapter": 27,
+    "sequence": 2130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcffae227d5202c1"
+  },
+  "findings": []
+}

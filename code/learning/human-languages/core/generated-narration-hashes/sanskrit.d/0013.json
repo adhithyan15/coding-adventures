@@ -1,18 +1,17 @@
 {
   "language": "sanskrit",
   "chapter": 13,
-  "sourceHash": "fnv1a64:4b244db073f36444",
+  "sourceHash": "fnv1a64:81fc1e9404252ceb",
   "lessonIds": [
     "SA-C13-nasika",
-    "SA-C13-hridayam",
-    "SA-S06-vowel-sign-aa",
-    "SA-S112-vowel-sign-e"
+    "SA-S212-letter-dha",
+    "SA-C13-hridayam"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch13.txt",
   "json": "sanskrit/narration/ch13.json",
-  "textHash": "fnv1a64:9889b96cf74971cb",
-  "jsonHash": "fnv1a64:9ccd685fb72acf6a",
+  "textHash": "fnv1a64:e3d25f51e57e08c3",
+  "jsonHash": "fnv1a64:7c94f2a266b8e077",
   "findings": []
 }

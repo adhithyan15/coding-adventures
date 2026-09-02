@@ -1,16 +1,17 @@
 {
   "language": "malayalam",
   "chapter": 31,
-  "sourceHash": "fnv1a64:ba6db78dc861ae0f",
+  "sourceHash": "fnv1a64:2ffa363d52b068a9",
   "lessonIds": [
     "ML-C31-shubha-madhyaahnam",
+    "ML-S125-letter-uu",
     "ML-C31-afternoon-convergence"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "malayalam/narration/ch31.txt",
   "json": "malayalam/narration/ch31.json",
-  "textHash": "fnv1a64:00c53f4ec570400e",
-  "jsonHash": "fnv1a64:e39aacbb49c7f175",
+  "textHash": "fnv1a64:5bc1068f1b1a7563",
+  "jsonHash": "fnv1a64:14f3dfe739e015bd",
   "findings": []
 }

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S144-digit-5",
+    "language": "telugu",
+    "chapter": 3,
+    "sequence": 195,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:72f4d7bbb0748568",
+    "detachableSegments": [
+      "Script you'll notice: ౫",
+      "Writing: ౫ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

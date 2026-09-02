@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R24-passing-verbs",
     "language": "marathi",
-    "chapter": 24,
-    "sequence": 1010,
+    "chapter": 28,
+    "sequence": 1210,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4bad451cb540ea83"
+    "sourceHash": "fnv1a64:f95d8a10fd2a4339"
   },
   "findings": []
 }

@@ -1,0 +1,12 @@
+[package]
+name = "pdf"
+version = "0.1.0"
+edition = "2021"
+description = "A zero-dependency PDF writer built from scratch: the object model and file structure (header, indirect objects, cross-reference table, trailer)."
+license = "MIT"
+
+# `zip` is here for `raw_deflate` only. PDF's FlateDecode filter is ordinary
+# raw deflate, which this repo already implements from scratch, so pulling in a
+# compression crate would be adding a dependency to duplicate our own code.
+[dependencies]
+zip = { path = "../zip" }

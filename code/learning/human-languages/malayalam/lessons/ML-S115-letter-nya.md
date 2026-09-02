@@ -2,41 +2,41 @@
 schema_version: 2
 id: ML-S115-letter-nya
 spine_node: SPINE-MEET-GREET
-sequence: 406
+sequence: 272
 delivery: script
-chapter: 12
+chapter: 5
 type: writing
 headword: "ഞ"
 gloss: the single character ഞ — recognised inside words you already say
 romanization: "ña"
-prerequisites: [ML-S114-letter-ma]
+prerequisites: [ML-S141-vowel-sign-uu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-114]
+  knowledge: [ML-SCRIPT-RECOG-141]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-115]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-114, ML-SCRIPT-RECOG-115]
+  knowledge: [ML-SCRIPT-RECOG-141, ML-SCRIPT-RECOG-115]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S114-letter-ma]
+reviews_of: [ML-S141-vowel-sign-uu]
 ---
 
 # ഞ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-114] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-141] -->
 
-[PAUSE 1s] Before the new one: മ — what does it do?
+[PAUSE 1s] Before the new one: ◌ൂ — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has been sitting in front of you on pages you have already read.
 
 ## Script you'll notice: ഞ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-115]; assesses=[] -->
@@ -45,12 +45,12 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *ñ*, it is **ña**.
 
-You already say these, and every one of them has ഞ somewhere inside it:
+You have said the word for "I" since the how-are-you chapter, and it starts
+with this letter.
 
-- **ഞാൻ** — I
-- **ഞാൻ മലയാളം സംസാരിക്കുന്നു** — I speak Malayalam
-- **ഒന്ന് രണ്ട് മൂന്ന് നാല് അഞ്ച്** — one to five
-- **തിങ്കൾ ചൊവ്വ ബുധൻ വ്യാഴം വെള്ളി ശനി ഞായർ** — the seven weekdays
+- **ഞാൻ** *ñān* — I
+
+It is one sound, not two: the *ny* of "canyon," made in one movement.
 
 ## Writing: ഞ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-115] -->
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ഞ in the ones that have it]
 
-> ഞാൻ  ·  നമസ്കാരം
+> ഞാൻ  ·  ഞ  ·  നന്ദി
 
 - [YOU TRACE: ഞ three times, saying *ña* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ഞ once more]

@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 6,
+  "output": "marathi/book/chapters/ch06-two-rows-runway.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

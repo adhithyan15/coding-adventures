@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S108-letter-sa
 spine_node: SPINE-MEET-GREET
-sequence: 476
+sequence: 481
 delivery: script
-chapter: 9
+chapter: 10
 type: writing
 headword: "स"
 gloss: the single character स — recognised inside words you already say
 romanization: "sa"
-prerequisites: [SA-S107-letter-ta]
+prerequisites: [SA-S209-sign-anusvara]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-107]
+  knowledge: [SA-SCRIPT-RECOG-209]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-108]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-107, SA-SCRIPT-RECOG-108]
+  knowledge: [SA-SCRIPT-RECOG-208, SA-SCRIPT-RECOG-107, SA-SCRIPT-RECOG-209, SA-SCRIPT-RECOG-108]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S107-letter-ta]
+reviews_of: [SA-S208-letter-va, SA-S107-letter-ta, SA-S209-sign-anusvara]
 ---
 
 # स — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-107] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-208, SA-SCRIPT-RECOG-107, SA-SCRIPT-RECOG-209] -->
 
-[PAUSE 1s] Before the new one: त — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: व · त · ◌ं. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: स
@@ -57,10 +57,10 @@ What it is made of:
 
 You already say these, and every one of them has स somewhere inside it:
 
-- **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
-- **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **स्वागतम्** *svāgatam* — welcome (lit. "well come") (svāgatam)
+- **नमस्ते** *namaste* — hello (lit. "a bow to you")
+- **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow")
 - **अस्ति** *asti* — is
+- **मम नाम … अस्ति** *mama nāma … asti* — my name is…
 
 ## Writing: स
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-108] -->
@@ -72,18 +72,18 @@ You already say these, and every one of them has स somewhere inside it:
 
 **Pen lifts: 3.** The pen comes up 3 times and no more.
 
-> Verified four-stroke teaching form; the corroborating deskbook stages the left curve and diagonal tail separately.
+> verified four-stroke teaching form; the corroborating deskbook stages the left curve and diagonal tail separately
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari s स.gif’, strokes 1–4, Wikimedia Commons, 29 March 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-108] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-209, SA-SCRIPT-RECOG-108] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find स in the ones that have it]
+- [YOU LOOK: at this, and find स in it]
 
-> नमस्ते  ·  नमस्कारः
+> नमस्ते  ·  नमस्कारः  ·  अस्ति
 
 - [YOU TRACE: स three times, saying *sa* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find स once more]

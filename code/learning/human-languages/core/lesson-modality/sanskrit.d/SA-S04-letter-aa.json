@@ -2,8 +2,8 @@
   "lesson": {
     "id": "SA-S04-letter-aa",
     "language": "sanskrit",
-    "chapter": 11,
-    "sequence": 545,
+    "chapter": 2,
+    "sequence": 101,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:8f0d1b8cda979bef",
+    "sourceHash": "fnv1a64:d88a67b41410204d",
     "detachableSegments": [
       "Script you'll notice: आ",
       "Writing: आ"

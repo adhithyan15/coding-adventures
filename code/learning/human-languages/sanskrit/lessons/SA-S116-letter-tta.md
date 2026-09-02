@@ -5,38 +5,38 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S116-letter-tta
 spine_node: SPINE-MEET-GREET
-sequence: 781
+sequence: 601
 delivery: script
-chapter: 16
+chapter: 14
 type: writing
 headword: "ट"
 gloss: the single character ट — recognised inside words you already say
 romanization: "ṭa"
-prerequisites: [SA-S115-vowel-sign-au]
+prerequisites: [SA-S212-letter-dha]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-115]
+  knowledge: [SA-SCRIPT-RECOG-212]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-116]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-115, SA-SCRIPT-RECOG-116]
+  knowledge: [SA-SCRIPT-RECOG-211, SA-SCRIPT-RECOG-117, SA-SCRIPT-RECOG-212, SA-SCRIPT-RECOG-116]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S115-vowel-sign-au]
+reviews_of: [SA-S211-letter-e, SA-S117-letter-ttha, SA-S212-letter-dha]
 ---
 
 # ट — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-115] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-211, SA-SCRIPT-RECOG-117, SA-SCRIPT-RECOG-212] -->
 
-[PAUSE 1s] Before the new one: ◌ौ — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: ए · ठ · ध. Say what each of them does.
 
 [PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
@@ -53,14 +53,9 @@ What it is made of:
 - a descending central stem joined to a counterclockwise open round body
 - the top shirorekhā
 
-You already say this word, and it has ट inside it:
+You already say this word, and ट is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:
 
-- **कुटुम्बम्** *kuṭumbam* — family, household
-
-The tongue curls back to the roof of the mouth for this one. It is a different
-letter from त *ta*, whose tongue touches the teeth, and Sanskrit keeps the two
-apart in spelling because it keeps them apart in sound. The same ट survives into
-Hindi कुटुंब, which is the one word above with a syllable rubbed off it.
+- *kuṭumbam* — family, household — a word Sanskrit itself borrowed, before other languages borrowed it back
 
 ## Writing: ट
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-116] -->
@@ -70,18 +65,18 @@ Hindi कुटुंब, which is the one word above with a syllable rubbed off
 
 **Pen lifts: 1.** The pen comes up 1 times and no more.
 
-> Verified two-stroke teaching form fitted to the bundled printed outline.
+> verified two-stroke teaching form fitted to the bundled printed outline
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ट-order.gif’, strokes 1–2, Wikimedia Commons, 10 May 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-116] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-212, SA-SCRIPT-RECOG-116] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ट in the ones that have it]
+- [YOU LOOK: at this, and find ट in it]
 
-> कुटुम्बम्  ·  नमस्ते
+> ट
 
 - [YOU TRACE: ट three times, saying *ṭa* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ट once more]

@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C11-kutumb
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 570
-chapter: 14
+sequence: 770
+chapter: 18
 type: word
 headword: कुटुंब
 romanization: kuṭumb
@@ -80,7 +80,7 @@ whichever language receives it.
 - [YOU SAY: **kuṭumb** — family]
 - [YOU STATE: its gender in Marathi against Hindi — neuter here, masculine there]
 - [YOU SAY: **mitra**, then **kuṭumb** — two tatsamas in a row]
-- [YOU RECALL: Chapter 13's own gender lineup — **कुटुंब**'s neuter joins
+- [YOU RECALL: Chapter 17's own gender lineup — **कुटुंब**'s neuter joins
   **पाणी** and **दूध**, after **bhākarī**'s feminine closed out all three
   genders in one chapter]
 
