@@ -107,8 +107,14 @@ general fix is a `src/book.ts` change and wants its own commit.
   missed; every one of them is revisited at least once, so `atomsNeverRevisited`
   holds at **37**.
 - Cross-chapter prose references: **0 -> 0**.
-- Completion-plan uncovered points: **851 -> 848**, re-measured by running the
-  CLI rather than by subtracting three.
+- Completion-plan uncovered points: **851 -> 848** when this branch was cut,
+  re-measured by running the CLI rather than by subtracting three. HL-C310
+  landed on `main` in the meantime and removed that absolute pin from
+  `plan-cli.test.ts` altogether, for exactly the reason this entry keeps
+  re-measuring rather than composing: the figure moved nine times in one day and
+  two branches that both lower it merge quietly because they agree. The test now
+  asserts the invariant it actually owns — that duplicating an inventory changes
+  neither figure — and the corpus total after this merge is **785**.
 - The book compiles under XeLaTeX with `missing_character = 0` and every warning
   class at its baseline, and the rendered pages were read.
 
