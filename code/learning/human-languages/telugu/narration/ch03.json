@@ -4,8 +4,157 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:845cc27abc245772",
+  "sourceHash": "fnv1a64:759bb38e8d2f77b9",
   "lessons": [
+    {
+      "id": "TE-S142-digit-3",
+      "sequence": 145,
+      "title": "౩ — the Telugu numeral for 3",
+      "headword": "౩",
+      "romanization": "3",
+      "gloss": "the Telugu numeral ౩ — the digit 3, read as a quantity",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2319bfd7397a5881",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ౩",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౩ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ◌ం — what does it do? And one from further back: ◌్?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One numeral this time, and it is read the way every numeral is read: as an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ౩",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "౩ (3) is three."
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the ten. Read the row below left to right and say the values out loud in your own language — one, two, three. Saying the value rather than a Telugu word is not a shortcut around the language; it is what a numeral is for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ౩ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ౩ (3) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this row and say the value of each numeral in it, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
+            },
+            {
+              "kind": "speech",
+              "text": "౧, ౨, ౩ (3)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "౩ three times, saying \"3\" as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ౩ three times, saying \"3\" as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "for ౩ (3) on any page of a Telugu book, calendar or doorplate you can find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: for ౩ on any page of a Telugu book, calendar or doorplate you can find]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which numeral is this — ౩? What amount does it stand for? (౩ is 3.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TE-C03-elaa",
       "sequence": 150,
@@ -266,6 +415,163 @@
       ]
     },
     {
+      "id": "TE-S122-letter-u",
+      "sequence": 165,
+      "title": "ఉ — one character, met inside words you already say",
+      "headword": "ఉ",
+      "romanization": "u",
+      "gloss": "the single character ఉ — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:38b7da40f3dcb9f6",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ఉ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఉ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ౩ (3) — what amount does it stand for? And one from further back: ౨?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ఉ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉ — u."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape the vowel u takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "You met it on the page before this one, standing at the front of a word:"
+            },
+            {
+              "kind": "speech",
+              "text": "మీరు ఎలా ఉన్నారు? (mīru elā unnāru?) — how are you? (respectful)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ఉ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ఉ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ఉ (u) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ఉ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "మీరు ఎలా ఉన్నారు? (mīru elā unnāru?), నమస్కారం."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ఉ three times, saying u as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ఉ three times, saying *u* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ఉ (u) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ఉ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ఉ? What sound does it carry? (u.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C03-nenu",
       "sequence": 170,
       "title": "నేను (nēnu) — \"I,\" the Dravidian first person",
@@ -405,6 +711,159 @@
             {
               "kind": "speech",
               "text": "What is nēnu's possessive, and is Telugu's \"I\" cousin to English me? (Nā, \"my\"; no — it is native Dravidian, unlike the borrowed Sanskrit nouns around it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S143-digit-4",
+      "sequence": 175,
+      "title": "౪ — the Telugu numeral for 4",
+      "headword": "౪",
+      "romanization": "4",
+      "gloss": "the Telugu numeral ౪ — the digit 4, read as a quantity",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9205c70e30ec57dd",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ౪",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౪ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ఉ — what does it do? And one from further back: ◌ి?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One numeral this time, and it is read the way every numeral is read: as an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ౪",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "౪ (4) is four."
+            },
+            {
+              "kind": "speech",
+              "text": "From here the row is deliberately shuffled. A digit you can only read in counting order is a digit you cannot read; the test is whether you know it when it turns up out of sequence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ౪ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ౪ (4) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this row and say the value of each numeral in it, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
+            },
+            {
+              "kind": "speech",
+              "text": "౪ (4), ౨, ౩ (3), ౧."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "౪ three times, saying \"4\" as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ౪ three times, saying \"4\" as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "for ౪ (4) on any page of a Telugu book, calendar or doorplate you can find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: for ౪ on any page of a Telugu book, calendar or doorplate you can find]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which numeral is this — ౪? What amount does it stand for? (౪ is 4.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: క — what does it do?"
             }
           ]
         }
@@ -557,6 +1016,179 @@
       ]
     },
     {
+      "id": "TE-S06-letter-ra",
+      "sequence": 185,
+      "title": "ర — one character, met inside words you already say",
+      "headword": "ర",
+      "romanization": "ra",
+      "gloss": "the single character ర — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e22fa0b7b91417a1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ర",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ర and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ౪ (4) — what amount does it stand for? And one from further back: ◌ం?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ర — ra."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not r, it is ra."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ర (ra) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "నమస్కారం namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+            },
+            {
+              "kind": "speech",
+              "text": "సరే sarē — okay / alright (sarē)."
+            },
+            {
+              "kind": "speech",
+              "text": "పేరు pēru — name."
+            },
+            {
+              "kind": "speech",
+              "text": "నువ్వు / మీరు nuvvu / mīru — you (familiar / respectful)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ర — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ర (ra) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ర (ra) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ర in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "నమస్కారం, సరే, ధన్యవాదములు."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ర three times, saying ra as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ర three times, saying *ra* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ర (ra) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ర once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ర? What sound does it carry? (ra.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌ా — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C03-paravaaledu",
       "sequence": 190,
       "title": "పరవాలేదు (paravālēdu) — \"no problem\"",
@@ -685,6 +1317,159 @@
             {
               "kind": "speech",
               "text": "What does paravālēdu literally say, and how does its \"not\" differ from Tamil's? (\"There is no harm\"; Telugu uses lēdu where Tamil/Kannada/Malayalam use illa(i).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S144-digit-5",
+      "sequence": 195,
+      "title": "౫ — the Telugu numeral for 5",
+      "headword": "౫",
+      "romanization": "5",
+      "gloss": "the Telugu numeral ౫ — the digit 5, read as a quantity",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:72f4d7bbb0748568",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ౫",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౫ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ర (ra) — what does it do? And one from further back: ౩ (3)?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One numeral this time, and it is read the way every numeral is read: as an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ౫",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "౫ (5) is five."
+            },
+            {
+              "kind": "speech",
+              "text": "Half the set. Everything the book has shown you so far is on the row below, in no order at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ౫ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ౫ (5) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this row and say the value of each numeral in it, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
+            },
+            {
+              "kind": "speech",
+              "text": "౫ (5), ౩ (3), ౧, ౪ (4), ౨."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "౫ three times, saying \"5\" as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ౫ three times, saying \"5\" as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "for ౫ (5) on any page of a Telugu book, calendar or doorplate you can find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: for ౫ on any page of a Telugu book, calendar or doorplate you can find]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which numeral is this — ౫? What amount does it stand for? (౫ is 5.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌ే — what does it do?"
             }
           ]
         }

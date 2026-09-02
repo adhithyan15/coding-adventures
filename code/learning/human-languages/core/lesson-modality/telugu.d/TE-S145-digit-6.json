@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S145-digit-6",
+    "language": "telugu",
+    "chapter": 4,
+    "sequence": 215,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a3d5169c12c80430",
+    "detachableSegments": [
+      "Script you'll notice: ౬",
+      "Writing: ౬ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

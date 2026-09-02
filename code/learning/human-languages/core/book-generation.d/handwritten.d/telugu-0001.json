@@ -1,5 +1,10 @@
 {
   "language": "telugu",
   "chapter": 1,
-  "output": "telugu/book/chapters/ch01-greetings.tex"
+  "output": "telugu/book/chapters/ch01-greetings.tex",
+  "embeddedLessonIds": [
+    "TE-S03-letter-ka",
+    "TE-S07-vowel-sign-aa",
+    "TE-S120-vowel-sign-ee"
+  ]
 }

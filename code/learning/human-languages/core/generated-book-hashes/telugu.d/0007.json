@@ -1,12 +1,11 @@
 {
   "language": "telugu",
   "chapter": 7,
-  "sourceHash": "fnv1a64:f4e18b2f0ebe4c78",
+  "sourceHash": "fnv1a64:b3632c4492f3290b",
   "lessonIds": [
     "TE-C07-numbers-1-5",
-    "TE-C07-numbers-6-10",
-    "TE-S02-vowel-sign-u",
-    "TE-S110-letter-ya"
+    "TE-S134-vowel-sign-uu",
+    "TE-C07-numbers-6-10"
   ],
   "tex": "telugu/book/chapters/ch07-numbers-1-10.tex"
 }

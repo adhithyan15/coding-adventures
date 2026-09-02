@@ -1,11 +1,10 @@
 {
   "language": "telugu",
   "chapter": 9,
-  "sourceHash": "fnv1a64:49676da2fa3307ca",
+  "sourceHash": "fnv1a64:0bb39a8af66e142b",
   "lessonIds": [
     "TE-C09-kshaminchandi",
-    "TE-S04-sign-anusvara",
-    "TE-S112-letter-ca"
+    "TE-S135-letter-i"
   ],
   "tex": "telugu/book/chapters/ch09-sorry.tex"
 }

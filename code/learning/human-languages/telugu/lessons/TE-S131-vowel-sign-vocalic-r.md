@@ -19,21 +19,21 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-131]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-130, TE-SCRIPT-RECOG-131]
+  knowledge: [TE-SCRIPT-RECOG-131, TE-SCRIPT-RECOG-130, TE-SCRIPT-RECOG-127, TE-SCRIPT-RECOG-119]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S129-letter-vocalic-r, TE-S130-letter-tha]
+reviews_of: [TE-S130-letter-tha, TE-S127-letter-ja, TE-S119-vowel-sign-ii]
 ---
 
 # ◌ృ — one character, met inside a word you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-130] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-130, TE-SCRIPT-RECOG-127] -->
 
-[PAUSE 1s] Before the new one: థ — what does it do?
+[PAUSE 1s] Before the new one: థ — what does it do? And one from further back: జ?
 
 [PAUSE 2s] One character this time — and you have been saying it for pages
 without knowing which mark on the page it was.
@@ -84,8 +84,10 @@ and larger than it is printed.
 - [YOU LOOK: at హృ, and name its two pieces]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-131] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-131, TE-SCRIPT-RECOG-119] -->
 
 [PAUSE 3s] Which character is this — ◌ృ? What vowel does it put on the consonant
 it attaches to, and what does it take off? (**Puts *ṛ* on; takes the built-in
 *a* off.**) Which standing letter is its partner? (**ఋ**.)
+
+One more, from much earlier: ◌ీ — what does it do?
