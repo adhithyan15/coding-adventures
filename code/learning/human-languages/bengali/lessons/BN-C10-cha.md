@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C10-cha
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 780
-chapter: 14
+sequence: 870
+chapter: 16
 type: word
 headword: চা
 romanization: chā
@@ -63,7 +63,7 @@ two ends of the same word, arriving by two different roads.
 ## Grammar Lens: an offer, built on a form you already have
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C10-KHAN-REQUEST-02]; assesses=[BN-LEX-C07-KHAOWA-01, BN-GRAMMAR-C07-KHAOWA-02] -->
 
-Chapter 11 taught you **আপনি খান** (*āpni khān*), the respectful form of
+Chapter 13 taught you **আপনি খান** (*āpni khān*), the respectful form of
 খাওয়া. Put a noun in front of it and the very same words become a polite
 offer or request:
 
@@ -72,7 +72,7 @@ offer or request:
 | আপনি খান | you eat / you drink (respectful) |
 | **চা খান** | (please) have some tea |
 
-No new ending to learn — চা খান reuses exactly what Chapter 11 already gave you.
+No new ending to learn — চা খান reuses exactly what Chapter 13 already gave you.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C09-BHALOLAGA-01] -->
@@ -88,5 +88,5 @@ No new ending to learn — চা খান reuses exactly what Chapter 11 alrea
 
 [PAUSE 3s] Offer someone tea, politely. (**চা খান.**) Is চা inherited from
 Sanskrit? (**No** — it is a Chinese word that reached Bengali by way of
-Persian.) What form does চা খান reuse? (**আপনি খান**, Chapter 11's respectful
+Persian.) What form does চা খান reuse? (**আপনি খান**, Chapter 13's respectful
 "you eat/drink," with no new ending.)

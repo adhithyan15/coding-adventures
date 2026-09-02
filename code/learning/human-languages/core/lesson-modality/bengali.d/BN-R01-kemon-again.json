@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-R01-kemon-again",
+    "language": "bengali",
+    "chapter": 26,
+    "sequence": 1370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db3342e4350d7f48",
+    "detachableSegments": [
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

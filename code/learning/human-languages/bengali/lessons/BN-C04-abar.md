@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C04-abar
 spine_node: SPINE-TAKE-LEAVE
-sequence: 430
+sequence: 460
 chapter: 7
 type: word
 headword: আবার

@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W04-nil-read
 spine_node: SPINE-MEET-GREET
-sequence: 1090
+sequence: 1240
 delivery: script
-chapter: 21
+chapter: 24
 type: writing
 headword: নীল
 romanization: "nīl"

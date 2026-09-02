@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 13,
-  "output": "bengali/book/chapters/ch13-conjunct-verbs.tex",
+  "output": "bengali/book/chapters/ch13-core-verbs.tex",
   "unicodeScript": "Bengali",
   "scriptCommand": "bn"
 }

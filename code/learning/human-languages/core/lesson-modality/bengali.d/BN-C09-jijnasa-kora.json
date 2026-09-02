@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C09-jijnasa-kora",
     "language": "bengali",
-    "chapter": 13,
-    "sequence": 750,
+    "chapter": 15,
+    "sequence": 840,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c3780d8263d8ae9e",
+    "sourceHash": "fnv1a64:e343932a6725b7c6",
     "detachableSegments": [
       "The letters in this word"
     ]

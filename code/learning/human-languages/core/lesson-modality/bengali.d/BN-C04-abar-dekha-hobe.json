@@ -3,7 +3,7 @@
     "id": "BN-C04-abar-dekha-hobe",
     "language": "bengali",
     "chapter": 7,
-    "sequence": 450,
+    "sequence": 480,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f0398e4a091c148a"
+    "sourceHash": "fnv1a64:e5d7d5b835c3ebcd"
   },
   "findings": []
 }
