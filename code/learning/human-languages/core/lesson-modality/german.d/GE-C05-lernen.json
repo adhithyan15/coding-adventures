@@ -3,7 +3,7 @@
     "id": "GE-C05-lernen",
     "language": "german",
     "chapter": 5,
-    "sequence": 200,
+    "sequence": 202,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2eb04de13b8748c5"
+    "sourceHash": "fnv1a64:f6d7ccd998737c65"
   },
   "findings": []
 }

@@ -45,6 +45,17 @@ it("pins French modality", () => expectLanguageModality("french"));
 // 16 -> 17 culture claims: English `noon` is Latin nona hora, "the ninth hour",
 // which drifted from mid-afternoon to midday; it lived only in a hand-written
 // culture block and is now owned by FR-C08-midi.
+// 108 -> 119 lessons: retiring handwritten chapter 1, the first thing a reader ever
+// meets. Its eleven schema-v1 lessons already mirrored the .tex section for section --
+// the block gap was ZERO in both directions -- so nothing had to be written; all eleven
+// were typed instead. The chapter lands at exactly twelve atoms, the ceiling: ten words
+// and phrases (salut, bien, bon, jour, bonjour, soir, bonsoir, nuit, bonne nuit), the two
+// grammar rules the greetings run on (adjective agreement, and the gender the article
+// carries), and the writing runway's FR-ORTHO-SALUT-01. Net +11 (0 new, 0 retired).
+// 17 -> 20 culture claims: the three `culture` blocks the hand-written chapter printed --
+// salut is strictly informal, bonjour is near-obligatory on entering anywhere, and bonne
+// nuit is a bedtime farewell rather than an evening greeting -- were prose in the lessons
+// and typed by nobody. Each is now owned and assessed.
 // 108 -> 128 lessons: retiring handwritten chapter 9, which is the first FRENCH
 // CHAPTER SPLIT. Its two schema-v1 lessons owned `les mois` and `les saisons` --
 // two headwords for TWELVE months and FOUR seasons. Sixteen words plus the
@@ -81,12 +92,18 @@ it("pins French modality", () => expectLanguageModality("french"));
 // new chapter 15 takes the built ones (dix-sept..vingt, 6 atoms). Every later
 // French chapter renumbered by +1 (old 15-35 -> 16-36). Sixteen lessons replace
 // two; net +16 measured, since the retired pair were schema-v1.
+// Chapter 1 and chapters 9/12/13/14 were authored on separate branches from the
+// same base of 108 and met here. Every total below is RE-MEASURED against the
+// merged tree by running the suite, not obtained by adding the two branches'
+// deltas: composing this line by arithmetic has been wrong before. Measured:
+// 167 lessons, and 22 culture claims -- chapter 9's Februa and its two emperors,
+// plus chapter 1's three register claims, on a base of 17.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 156,
+    lessons: 167,
     idioms: 3,
     senses: 7,
-    cultureClaims: 19,
+    cultureClaims: 22,
     unitPrefix: "FR",
   }));
 

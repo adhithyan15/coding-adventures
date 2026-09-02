@@ -3,7 +3,7 @@
     "id": "GE-C05-ich-lerne-deutsch",
     "language": "german",
     "chapter": 5,
-    "sequence": 205,
+    "sequence": 206,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d408a3835435c956"
+    "sourceHash": "fnv1a64:74b013dd48e7d337"
   },
   "findings": []
 }

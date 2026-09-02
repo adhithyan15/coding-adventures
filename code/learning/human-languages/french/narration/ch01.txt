@@ -85,10 +85,10 @@ Warm-up.
 Look at salut for five seconds. Touch the final silent t. Do not copy it yet.
 
 Writing — delayed copy.
-cover salut.
-wait five seconds.
-write the word once from memory.
-uncover the model and compare s-a-l-u-t.
+cover the model;
+wait five seconds;
+write the word once from memory;
+uncover salut, compare, and repair only the place that differs.
 If one letter differs, circle that place and repair only that letter. A repair is part of the exercise, not a failure.
 
 Wrap-up recall.

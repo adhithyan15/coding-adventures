@@ -2,9 +2,12 @@
   "id": "FR-PATH-005",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "FR-C01-bonne-nuit"
+    "FR-C01-bonne-nuit",
+    "FR-C01-practice"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "FR-EXT-005-LANGUAGE-SPECIFIC"
+  ],
   "after": []
 }
