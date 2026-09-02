@@ -1,11 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 8,
-  "sourceHash": "fnv1a64:fa75b340d42103b2",
+  "sourceHash": "fnv1a64:e3936eb22c9b6a2a",
   "lessonIds": [
     "ML-C08-dayavayi",
-    "ML-S03-vowel-sign-i",
-    "ML-S111-letter-ca"
+    "ML-S03-vowel-sign-i"
   ],
   "tex": "malayalam/book/chapters/ch08-please.tex"
 }

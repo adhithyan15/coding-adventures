@@ -9,31 +9,31 @@ type: writing
 headword: "ത"
 gloss: the single character ത — recognised inside words you already say
 romanization: "ta"
-prerequisites: [ML-S07-vowel-sign-u]
+prerequisites: [ML-S114-letter-ma]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-07]
+  knowledge: [ML-SCRIPT-RECOG-114]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-08]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-07, ML-SCRIPT-RECOG-08]
+  knowledge: [ML-SCRIPT-RECOG-114, ML-SCRIPT-RECOG-08]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S07-vowel-sign-u]
+reviews_of: [ML-S114-letter-ma]
 ---
 
 # ത — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-114] -->
 
-[PAUSE 1s] Before the new one: ◌ു — what does it do?
+[PAUSE 1s] Before the new one: മ — what does it do?
 
 [PAUSE 2s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.

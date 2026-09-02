@@ -2,57 +2,56 @@
 schema_version: 2
 id: ML-S131-chillu-nn
 spine_node: SPINE-MEET-GREET
-sequence: 895
+sequence: 144
 delivery: script
-chapter: 38
+chapter: 2
 type: writing
 headword: "ൺ"
 gloss: the single character ൺ — recognised inside words you already say
 romanization: "ṇ"
-prerequisites: [ML-S130-letter-tha]
+prerequisites: [ML-S07-vowel-sign-u]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-130]
+  knowledge: [ML-SCRIPT-RECOG-07]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-131]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-130, ML-SCRIPT-RECOG-131]
+  knowledge: [ML-SCRIPT-RECOG-07, ML-SCRIPT-RECOG-131]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S130-letter-tha]
+reviews_of: [ML-S07-vowel-sign-u]
 ---
 
 # ൺ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-130] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-07] -->
 
-[PAUSE 1s] Before the new one: ഥ — what does it do?
+[PAUSE 1s] Before the new one: ◌ു — what does it do?
 
-[PAUSE 2s] One character this time. One only — and it has been sitting in
-front of you on pages you have already read.
+[PAUSE 2s] One character this time. One only.
+It has not been on a page yet: it arrives with the word on the next one.
 
 ## Script you'll notice: ൺ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-131]; assesses=[] -->
 
 **ൺ** — *ṇ*.
 
-It is a **chillu** — a consonant with its vowel stripped away, given a shape of its own so it can end a word without a dangling mark.
+It is a **chillu** — a consonant with its vowel stripped away and given a shape of its own, so that it can end a word without a dangling mark.
 
-You already read one of these: **ൾ** at the end of **നിങ്ങൾ** *niṅṅaḷ*. This
-is the same idea done to **ണ**, the *ṇa* you have read since the greetings.
+The same name ends with one, and it is the second chillu you have met.
 
-- **അരുൺ** *aruṇ* — the name in your very first name-exchange
-- **നിങ്ങൾ** *niṅṅaḷ* — you, respectful — the chillu you met first
+- **അരുൺ** *aruṇ* — the name you are about to read
+- **നിങ്ങൾ** *niṅṅaḷ* — you, respectful, ending in **ൾ**
 
-Compare **ണ** and **ൺ**: same consonant, one carrying its *a*, one having
-handed it back.
+**ൺ** is **ണ** — the *ṇa* you read two pages ago — with its *a* handed back
+and an end-of-word shape of its own. Hold **ണ** and **ൺ** side by side.
 
 ## Writing: ൺ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-131] -->
@@ -81,4 +80,4 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-131] -->
 
 [PAUSE 3s] Which character is this — ൺ? What sound does it carry? (***ṇ***.)
-What has been taken away from ണ to make ൺ?
+Name one word you already say that contains it.
