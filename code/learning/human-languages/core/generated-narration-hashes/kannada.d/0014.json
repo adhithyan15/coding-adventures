@@ -1,16 +1,17 @@
 {
   "language": "kannada",
   "chapter": 14,
-  "sourceHash": "fnv1a64:c28ea535774a9c81",
+  "sourceHash": "fnv1a64:c21cc4881db5cefe",
   "lessonIds": [
     "KA-C14-kaalagalu",
-    "KA-S118-letter-dda"
+    "KA-S123-sign-anusvara",
+    "KA-S145-digit-six"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "kannada/narration/ch14.txt",
   "json": "kannada/narration/ch14.json",
-  "textHash": "fnv1a64:287c5fe1ce5a759c",
-  "jsonHash": "fnv1a64:cb76b28c6824e534",
+  "textHash": "fnv1a64:bd2f197dd4e09edd",
+  "jsonHash": "fnv1a64:b5791501acd39685",
   "findings": []
 }

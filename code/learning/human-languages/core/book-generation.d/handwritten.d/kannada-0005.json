@@ -1,5 +1,8 @@
 {
   "language": "kannada",
   "chapter": 5,
-  "output": "kannada/book/chapters/ch05-first-verbs.tex"
+  "output": "kannada/book/chapters/ch05-first-verbs.tex",
+  "embeddedLessonIds": [
+    "KA-S05-letter-ta"
+  ]
 }

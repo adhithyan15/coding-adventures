@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S149-digit-zero",
+    "language": "kannada",
+    "chapter": 18,
+    "sequence": 467,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a0dc7b8f4d0956bc",
+    "detachableSegments": [
+      "Script you'll notice: ೦",
+      "Writing: ೦ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

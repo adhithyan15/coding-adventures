@@ -7,6 +7,7 @@ chapter: 11
 type: word
 headword: ಕಪ್ಪು ಬಿಳಿ ಕೆಂಪು ನೀಲಿ
 gloss: black, white, red, blue — Kannada's own basic colors, and the same shared Sanskrit blue
+romanization: "kappu biḷi kempu nīli"
 concept_tag: KA-COLOUR-BASIC
 prerequisites: [KA-C10-vaara]
 sounds: [kannada-anusvara, kannada-virama-geminate]

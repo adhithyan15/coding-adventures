@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S06-letter-da",
     "language": "kannada",
-    "chapter": 11,
-    "sequence": 395,
+    "chapter": 6,
+    "sequence": 315,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:b0a01da9a34fe17f",
+    "sourceHash": "fnv1a64:c16e5f9d3632f91d",
     "detachableSegments": [
       "Script you'll notice: ದ",
       "Writing: ದ — copy what you see"

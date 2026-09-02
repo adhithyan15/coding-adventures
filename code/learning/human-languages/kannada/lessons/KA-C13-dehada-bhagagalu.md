@@ -7,6 +7,7 @@ chapter: 13
 type: word
 headword: ತಲೆ ಕೈ
 gloss: head and hand — native Dravidian, matching Tamil/Malayalam closely
+romanization: "tale kai"
 concept_tag: KA-BODY-BASIC
 prerequisites: [KA-C12-kutumba]
 sounds: [kannada-vowel-sign-ai]

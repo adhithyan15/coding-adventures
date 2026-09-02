@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S133-letter-nya
 spine_node: SPINE-MEET-GREET
-sequence: 1231
+sequence: 1015
 delivery: script
-chapter: 47
+chapter: 42
 type: writing
 headword: "ಞ"
 gloss: the single character ಞ — a nasal you will nearly always meet stacked, never standing

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S111-vowel-sign-e",
     "language": "kannada",
-    "chapter": 7,
-    "sequence": 356,
+    "chapter": 2,
+    "sequence": 125,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:c729ff5aca6afbf3",
+    "sourceHash": "fnv1a64:e11046c65c82b900",
     "detachableSegments": [
       "Script you'll notice: ◌ೆ",
       "Writing: ◌ೆ — copy what you see"

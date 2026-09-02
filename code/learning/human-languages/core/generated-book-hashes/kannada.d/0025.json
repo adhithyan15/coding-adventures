@@ -1,10 +1,9 @@
 {
   "language": "kannada",
   "chapter": 25,
-  "sourceHash": "fnv1a64:d0d47f98d68b1eed",
+  "sourceHash": "fnv1a64:72a11fdbad023cb2",
   "lessonIds": [
-    "KA-C25-shubha-ratri",
-    "KA-S128-letter-jha"
+    "KA-C25-shubha-ratri"
   ],
   "tex": "kannada/book/chapters/ch25-good-night.tex"
 }

@@ -1,10 +1,9 @@
 {
   "language": "kannada",
   "chapter": 19,
-  "sourceHash": "fnv1a64:9c0fa5fef1ff119c",
+  "sourceHash": "fnv1a64:76a548b317ceb299",
   "lessonIds": [
-    "KA-C19-vayassu",
-    "KA-S123-sign-anusvara"
+    "KA-C19-vayassu"
   ],
   "tex": "kannada/book/chapters/ch19-age.tex"
 }
