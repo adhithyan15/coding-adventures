@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-058-C5-VERB-CHECKPOINT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can say what I speak, where I live and what I do in Punjabi, building each sentence from a stem, a gender ending and the copula.",
+  "prerequisites": [
+    "PA-EXT-057-C4-FAREWELL-CHECKPOINT"
+  ],
+  "lessons": [
+    "PA-C05-practice"
+  ]
+}

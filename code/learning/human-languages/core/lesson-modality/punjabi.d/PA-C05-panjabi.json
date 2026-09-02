@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "PA-C05-rahna",
+    "id": "PA-C05-panjabi",
     "language": "punjabi",
     "chapter": 5,
-    "sequence": 290,
+    "sequence": 275,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8f756da0d48d6867",
+    "sourceHash": "fnv1a64:5bc7f239988adf7e",
     "detachableSegments": [
       "The letters in this word"
     ]

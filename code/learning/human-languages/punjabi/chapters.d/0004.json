@@ -9,12 +9,21 @@
   "payoff": {
     "lesson": "PA-C04-practice",
     "kind": "task",
-    "summary": "Complete PA-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Punjabi conversation politely and choose a farewell that fits the situation.",
+    "summary": "Complete separate oral listening and speaking checks: hear a parting and say what it promises, then part three ways yourself — the formal sat srī akāl, the everyday phir milāṁge, and the blessing rabb rākhā. Independent Gurmukhi reading and writing remain blocked until #13068 teaches the forms.",
     "assesses": [
+      "PA-LEX-SAT-SRI-AKAL-01",
+      "PA-LEX-PHIR-04",
+      "PA-LEX-MILAANGE-04",
+      "PA-ETYMON-MIL-JOIN-04",
+      "PA-GRAMMAR-FUTURE-AANGE-04",
+      "PA-PHRASE-SEE-YOU-AGAIN-04",
+      "PA-PHRASE-RABB-RAKHA-04",
+      "PA-ETYMON-RABB-ARABIC-04",
+      "PA-ETYMON-RAKH-GUARD-04",
       "PA-SCRIPT-RECOG-PHA-01",
       "PA-SCRIPT-RECOG-GA-01",
       "PA-SCRIPT-RECOG-SIHARI-01"
     ],
-    "note": "This legacy schema-v1 chapter's oral content still carries no typed atoms; the three it does declare come from #13068's recognition session, and the payoff assesses all three. The v1 migration of the farewell lessons remains outstanding."
+    "note": "The farewell lessons are migrated to schema v2, so this chapter is generated from them rather than hand-written. The payoff measures real oral capability without claiming untaught Gurmukhi production; romanization is evidence for spoken recall only."
   }
 }

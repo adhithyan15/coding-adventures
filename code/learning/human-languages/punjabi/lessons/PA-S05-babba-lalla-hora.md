@@ -60,7 +60,7 @@ memory:
 Now put them where you have already heard them:
 
 > **ਬ** + **ੋ** → **ਬੋ** (*bo*);  **ਬੋ** + **ਲ** → **ਬੋਲ** (*bol*)
->
+
 > **ਬੋਲ** — *bol* — **speak — the bare stem of this chapter's first verb**
 
 You are not being asked to write any of this. You are being asked to

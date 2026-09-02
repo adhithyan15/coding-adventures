@@ -30,16 +30,23 @@ it("keeps the Punjabi changelog free of literal patch markup", () => {
 // recognition sessions, each teaching at most three Gurmukhi pieces BEFORE a lesson
 // asks the reader to decode them. They are what took Punjabi's script-closure debt
 // from 40 violating lessons to 0 and its never-taught glyph count from 8 to 0.
+// 214 -> 216 when Chapters 4 and 5 stopped being hand-written .tex and became
+// generated from their lessons: the migration to schema v2 split the two Chapter 5
+// sessions that had packed several headwords each, so panjābī and karnā now get a
+// lesson apiece. The same migration is why idioms and culture claims move: the
+// farewell lessons finally DECLARE the units they were always teaching
+// (phir milāṁge and rabb rākhā as idioms, rabb rākhā's Arabic-plus-Sanskrit blend
+// as a culture claim), which a schema-v1 lesson had no field to say.
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 214,
-    idioms: 4,
+    lessons: 226,
+    idioms: 6,
     senses: 3,
-    cultureClaims: 7,
+    cultureClaims: 8,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 224-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 226-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -54,8 +61,8 @@ it("keeps Punjabi's 224-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(224);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 224 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(226);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 226 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -564,7 +571,7 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   const checkpoints = checkpointIds.map((id) =>
     ordered.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(checkpoints.map((lesson) => ordered.indexOf(lesson))).toEqual([27, 36, 56, 125]);
+  expect(checkpoints.map((lesson) => ordered.indexOf(lesson))).toEqual([27, 36, 58, 127]);
   expect(checkpoints.map((lesson) => lesson.frontmatter["introduces.knowledge"])).toEqual([
     [],
     [],
@@ -576,13 +583,21 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   expect(checkpoints.every((lesson) => !lesson.frontmatter.skills?.includes("reading"))).toBe(true);
   expect(checkpoints.every((lesson) => !lesson.frontmatter.skills?.includes("writing"))).toBe(true);
   expect(checkpoints.flatMap((lesson) => compileLessonActivities(lesson.blocks))).toHaveLength(11);
-  const handwrittenChapter4 = readFileSync(
+  // Chapter 4 used to be hand-written .tex with the R2 checkpoint spliced in behind a
+  // `canonical-insertion` comment -- a chapter no lesson-level gate could see. It is now
+  // GENERATED from its lessons, so the checkpoint is a canonical lesson of the chapter
+  // rather than a comment promising one. That is the stronger claim, and it is what this
+  // assertion now makes: the header must name the lesson, and its prose must be present.
+  const generatedChapter4 = readFileSync(
     join(defaultCurriculumRoot(), "punjabi", "book", "chapters", "ch04-farewells.tex"),
     "utf8",
   );
-  expect(handwrittenChapter4).toContain("canonical-insertion: PA-R04-wellbeing-r2");
-  expect(handwrittenChapter4).toContain("label{lesson:PA-R04-wellbeing-r2}");
-  expect(handwrittenChapter4).toContain("Romanization records speech only");
+  expect(generatedChapter4.startsWith("% GENERATED FILE.")).toBe(true);
+  expect(generatedChapter4).not.toContain("canonical-insertion:");
+  expect(generatedChapter4).toContain("% canonical-lessons: ");
+  expect(generatedChapter4).toContain("PA-R04-wellbeing-r2");
+  expect(generatedChapter4).toContain("label{lesson:PA-R04-wellbeing-r2}");
+  expect(generatedChapter4).toContain("Romanization records speech only");
 
   const chapter3Atoms = new Set([
     "PA-GRAMMAR-TUSI-HO-03",
@@ -612,7 +627,15 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // result. R4 rises: 40 recognition atoms entered the corpus and 18 of them
   // still have no lesson 80-250 sessions later that puts their glyph back on the
   // page. That residue is named in BACKLOG.d as the next tranche's work.
-  expect(report.summary.missedByWindow).toEqual({ R1: 45, R2: 103, R3: 158, R4: 72 });
+  // Chapters 4 and 5 stopped being hand-written .tex and became generated from their
+  // lessons. Migrating those ten lessons to schema v2 (and splitting two of them)
+  // declared 25 knowledge atoms the corpus had been teaching in prose and counting
+  // nowhere. Every window they do not close is now VISIBLE, which is why these totals
+  // rise rather than fall: the numbers moved because the measurement reaches further,
+  // not because reinforcement got worse. The serviced-debt assertions above still hold
+  // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
+  // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
+  expect(report.summary.missedByWindow).toEqual({ R1: 48, R2: 113, R3: 175, R4: 92 });
 });
 
 it("services Punjabi's three-field R4 debt without moving the boundary forward", () => {
@@ -648,7 +671,7 @@ it("services Punjabi's three-field R4 debt without moving the boundary forward",
   const bridge = bridgeIds.map((id) =>
     orderedAtR4.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => orderedAtR4.indexOf(lesson))).toEqual([156, 157, 158, 159, 160, 161, 162, 163]);
+  expect(bridge.map((lesson) => orderedAtR4.indexOf(lesson))).toEqual([158, 159, 160, 161, 162, 163, 164, 165]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 220)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
@@ -725,7 +748,15 @@ it("services Punjabi's three-field R4 debt without moving the boundary forward",
     ),
   ).toEqual([]);
   // R4 residue from the #13068 recognition runway; see the note above.
-  expect(report.summary.missedByWindow.R4).toBe(75);
+  // Chapters 4 and 5 stopped being hand-written .tex and became generated from their
+  // lessons. Migrating those ten lessons to schema v2 (and splitting two of them)
+  // declared 25 knowledge atoms the corpus had been teaching in prose and counting
+  // nowhere. Every window they do not close is now VISIBLE, which is why these totals
+  // rise rather than fall: the numbers moved because the measurement reaches further,
+  // not because reinforcement got worse. The serviced-debt assertions above still hold
+  // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
+  // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
+  expect(report.summary.missedByWindow.R4).toBe(95);
 });
 
 it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
@@ -753,7 +784,7 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
   const bridge = bridgeIds.map((id) =>
     orderedBeforeBodyR4.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => orderedBeforeBodyR4.indexOf(lesson))).toEqual([156, 165, 166, 167]);
+  expect(bridge.map((lesson) => orderedBeforeBodyR4.indexOf(lesson))).toEqual([158, 167, 168, 169]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 220)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("reading"))).toBe(true);
@@ -788,7 +819,15 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
       .map((window) => `${window}|${defect.atom}`),
   );
   expect(stillMissing).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 34, R2: 78, R3: 131, R4: 82 });
+  // Chapters 4 and 5 stopped being hand-written .tex and became generated from their
+  // lessons. Migrating those ten lessons to schema v2 (and splitting two of them)
+  // declared 25 knowledge atoms the corpus had been teaching in prose and counting
+  // nowhere. Every window they do not close is now VISIBLE, which is why these totals
+  // rise rather than fall: the numbers moved because the measurement reaches further,
+  // not because reinforcement got worse. The serviced-debt assertions above still hold
+  // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
+  // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
+  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 88, R3: 148, R4: 102 });
 
   const bodyBoundaryAtoms = new Set([
     "PA-LEX-KANN",
@@ -828,7 +867,7 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
   const bridge = bridgeIds.map((id) =>
     ordered.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([168, 169]);
+  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([170, 171]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 210)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
@@ -860,7 +899,15 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
       (defect) => servicedAtoms.has(defect.atom) && defect.missed.includes("R4"),
     ),
   ).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 34, R2: 78, R3: 133, R4: 77 });
+  // Chapters 4 and 5 stopped being hand-written .tex and became generated from their
+  // lessons. Migrating those ten lessons to schema v2 (and splitting two of them)
+  // declared 25 knowledge atoms the corpus had been teaching in prose and counting
+  // nowhere. Every window they do not close is now VISIBLE, which is why these totals
+  // rise rather than fall: the numbers moved because the measurement reaches further,
+  // not because reinforcement got worse. The serviced-debt assertions above still hold
+  // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
+  // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
+  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 88, R3: 150, R4: 97 });
 
   const before = measureContinuity(
     ordered.filter((lesson) => !bridgeIds.includes(lesson.realization.lessonId)),
@@ -899,7 +946,7 @@ it("services the exact Punjabi form and head-word debt exposed by the body R4 br
   const bridge = bridgeIds.map((id) =>
     ordered.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([170, 171]);
+  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([172, 173]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 210)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
 
@@ -944,7 +991,15 @@ it("services the exact Punjabi form and head-word debt exposed by the body R4 br
       .map((window) => `${window}|${defect.atom}`),
   );
   expect(stillMissing).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 34, R2: 78, R3: 133, R4: 71 });
+  // Chapters 4 and 5 stopped being hand-written .tex and became generated from their
+  // lessons. Migrating those ten lessons to schema v2 (and splitting two of them)
+  // declared 25 knowledge atoms the corpus had been teaching in prose and counting
+  // nowhere. Every window they do not close is now VISIBLE, which is why these totals
+  // rise rather than fall: the numbers moved because the measurement reaches further,
+  // not because reinforcement got worse. The serviced-debt assertions above still hold
+  // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
+  // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
+  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 88, R3: 150, R4: 91 });
 
   const before = measureContinuity(
     ordered.filter((lesson) => !bridgeIds.includes(lesson.realization.lessonId)),

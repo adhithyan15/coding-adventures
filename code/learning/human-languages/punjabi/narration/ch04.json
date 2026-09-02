@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:77e331acde2fb2c9",
+  "sourceHash": "fnv1a64:87bde09ba595d1dd",
   "lessons": [
     {
       "id": "PA-C04-phir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c568461663980de7",
+      "sourceHash": "fnv1a64:1647f55754f3b884",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -56,6 +56,10 @@
             {
               "kind": "speech",
               "text": "ਫ (pha, an aspirated p) + ਿ (the sihārī, i-sign) + ਰ (ra) becomes ਫਿਰ (phir)."
+            },
+            {
+              "kind": "speech",
+              "text": "Only ਰ is yours to read so far. The other two pieces are shapes to notice, not to decode: a later session in this chapter teaches them."
             }
           ]
         },
@@ -115,6 +119,26 @@
             {
               "kind": "speech",
               "text": "What does phir mean, and what does it do to a farewell? (\"Again / then\"; it makes the parting a promise of return.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C04-phir-meaning",
+              "prompt": "You hear phir at the end of a goodbye. Type what it means.",
+              "assesses": [
+                "PA-LEX-PHIR-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "again",
+                "again, then",
+                "then",
+                "again / then"
+              ],
+              "feedback": {
+                "correct": "Right: phir means again or then, and it turns a parting into a promise.",
+                "incorrect": "Phir means again or then — it is the word that promises a next time."
+              }
             }
           ]
         }
@@ -133,7 +157,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8152a471597c3a2b",
+      "sourceHash": "fnv1a64:4b659952da6cdbc3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -170,6 +194,10 @@
             {
               "kind": "speech",
               "text": "ਮਿ (mi) + ਲਾਂ (lāṁ, la + long ā + nasal) + ਗੇ (ge) becomes ਮਿਲਾਂਗੇ (milāṁge)."
+            },
+            {
+              "kind": "speech",
+              "text": "You already read ਮ and ਲ. The rest are shapes to notice for now."
             }
           ]
         },
@@ -180,7 +208,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਮਿਲਾਂਗੇ (milāṁge, \"we will meet\") is the future of milṇā (\"to meet, to be found\"), from Sanskrit mil- (\"to join, unite\") — the root of milāp (\"a union, meeting\"). The ending -ਾਂਗੇ (-āṁge) is the plural future: milāṁge = \"(we) will meet.\""
+              "text": "ਮਿਲਾਂਗੇ (milāṁge, \"we will meet\") is the future of milṇā (\"to meet, to be found\"), from Sanskrit mil- (\"to join, unite\") — the root of milāp (\"a union, meeting\")."
             }
           ]
         },
@@ -240,6 +268,26 @@
             {
               "kind": "speech",
               "text": "What verb is milāṁge from, and how does Punjabi mark \"will\"? (Milṇā \"to meet,\" from Sanskrit mil-; with the ending -āṁge, not a separate word.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C04-milaange-future",
+              "prompt": "Say (we) will meet aloud, then type the romanized word and the ending that carries will.",
+              "assesses": [
+                "PA-LEX-MILAANGE-04",
+                "PA-GRAMMAR-FUTURE-AANGE-04"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "milāṁge; -āṁge",
+                "milaange; -aange",
+                "milaange; aange"
+              ],
+              "feedback": {
+                "correct": "Right: the future rides on -āṁge, with no separate word for will.",
+                "incorrect": "Say milāṁge — the future is the ending -āṁge on the stem mil-."
+              }
             }
           ]
         }
@@ -258,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2aeac8fe7b2b174",
+      "sourceHash": "fnv1a64:2d0fe51dc9f943b6",
       "notice": null,
       "blocks": [
         {
@@ -343,6 +391,25 @@
             {
               "kind": "speech",
               "text": "What does phir milāṁge literally say, and when would you use it over sat srī akāl? (\"We'll meet again\"; for everyday partings, where sat srī akāl is the formal Sikh greeting-goodbye.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C04-phir-milaange-register",
+              "prompt": "Say the everyday goodbye aloud, then type it romanized and name the formal one it replaces.",
+              "assesses": [
+                "PA-PHRASE-SEE-YOU-AGAIN-04",
+                "PA-LEX-SAT-SRI-AKAL-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "phir milāṁge; sat srī akāl",
+                "phir milaange; sat sri akal"
+              ],
+              "feedback": {
+                "correct": "Right: phir milāṁge for everyday partings, sat srī akāl for the formal one.",
+                "incorrect": "Say phir milāṁge — the everyday goodbye where sat srī akāl is the formal one."
+              }
             }
           ]
         }
@@ -513,14 +580,14 @@
       "title": "ਰੱਬ ਰਾਖਾ (rabb rākhā) — \"God keep you\"",
       "headword": "ਰੱਬ ਰਾਖਾ",
       "romanization": "rabb rākhā",
-      "gloss": "goodbye (lit. \"God [be your] keeper\")",
+      "gloss": "goodbye (lit. God [be your] keeper)",
       "script": "gurmukhi",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3b66d7859ed45b62",
+      "sourceHash": "fnv1a64:1278b482a419e909",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -556,7 +623,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਰੱਬ (rabb, \"God\" — note the addak doubling on ੱਬ) + ਰਾਖਾ (rākhā, \"keeper, protector\"). Read rabb rākhā."
+              "text": "ਰੱਬ (rabb, \"God\" — note the addak doubling on ੱਬ) + ਰਾਖਾ (rākhā, \"keeper, protector\"). Both words open with the ਰ you already read."
             }
           ]
         },
@@ -625,6 +692,27 @@
             {
               "kind": "speech",
               "text": "What does rabb rākhā mean, and what two vocabularies meet in it? (\"God [be your] keeper\"; Arabic rabb \"God\" + Sanskrit rakṣ- \"to protect.\")"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C04-rab-raakha-heritage",
+              "prompt": "Say the blessing aloud, then type it romanized and name the two vocabularies inside it.",
+              "assesses": [
+                "PA-PHRASE-RABB-RAKHA-04",
+                "PA-ETYMON-RABB-ARABIC-04",
+                "PA-ETYMON-RAKH-GUARD-04"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "rabb rākhā; arabic rabb, sanskrit rakṣ-",
+                "rabb rakha; arabic rabb, sanskrit raksh",
+                "rabb rakha; arabic, sanskrit"
+              ],
+              "feedback": {
+                "correct": "Right: an Arabic name for God carried by a Sanskrit verb of keeping.",
+                "incorrect": "Say rabb rākhā — Arabic rabb God plus Sanskrit rakṣ- to guard."
+              }
             }
           ]
         }
@@ -645,7 +733,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1d823347764bf19d",
+      "sourceHash": "fnv1a64:ca9fd1cd64663e77",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -723,7 +811,11 @@
             },
             {
               "kind": "speech",
-              "text": "ਫ + ਿ + ਰ becomes ਫਿਰ (phir) ਫਿਰ — phir — again, then."
+              "text": "ਫ + ਿ + ਰ becomes ਫਿਰ (phir)."
+            },
+            {
+              "kind": "speech",
+              "text": "ਫਿਰ — phir — again, then."
             },
             {
               "kind": "speech",
@@ -815,14 +907,14 @@
       "title": "Chapter 4 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
-      "gloss": "Chapter 4 recap — the farewells",
+      "gloss": "Chapter 4 oral checkpoint — the three farewells",
       "script": "gurmukhi",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dd9516e6d142ae2",
+      "sourceHash": "fnv1a64:a6970691ac5becfd",
       "notice": null,
       "blocks": [
         {
@@ -844,8 +936,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
+          "type": "input",
+          "title": "The exchange — three ways to part",
           "segments": [
             {
               "kind": "pause",
@@ -888,13 +980,53 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the two together — *rabb rākhā, phir milāṁge*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C04-practice-listening",
+              "prompt": "You hear phir milāṁge as someone leaves. Type what they have promised.",
+              "assesses": [
+                "PA-PHRASE-SEE-YOU-AGAIN-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "we will meet again",
+                "we'll meet again",
+                "that we will meet again",
+                "to meet again"
+              ],
+              "feedback": {
+                "correct": "Listening score: the parting carries a promise of return.",
+                "incorrect": "Phir milāṁge says we'll meet again — a parting that promises a next time."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C04-practice-speaking",
+              "prompt": "Say the formal goodbye, the everyday one, and the blessing aloud; then type the three romanized turns.",
+              "assesses": [
+                "PA-LEX-SAT-SRI-AKAL-01",
+                "PA-PHRASE-SEE-YOU-AGAIN-04",
+                "PA-PHRASE-RABB-RAKHA-04"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "sat srī akāl; phir milāṁge; rabb rākhā",
+                "sat sri akal; phir milaange; rabb rakha"
+              ],
+              "feedback": {
+                "correct": "Speaking score: formal, everyday and blessing are all present.",
+                "incorrect": "Use three turns: sat srī akāl; phir milāṁge; rabb rākhā."
+              }
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "guided-production",
+          "title": "Guided Practice — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -914,18 +1046,27 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two vocabularies inside rabb rākhā (Arabic rabb, Sanskrit rakṣ-)",
+              "instruction": "the ending that carries \"we will\" (-āṁge)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two vocabularies inside *rabb rākhā* (Arabic *rabb*, Sanskrit *rakṣ-*)]"
+              "source": "[YOU SAY: the ending that carries \"we will\" (*-āṁge*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਫਿਰ (phir) and name the three pieces this chapter taught you — phapphā, gaggā, sihārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਫਿਰ** and name the three pieces this chapter taught you — *phapphā*, *gaggā*, *sihārī*]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The word, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -961,6 +1102,16 @@
             {
               "kind": "speech",
               "text": "You're leaving a friend and expect to see them soon. Give the warm goodbye, then bless them on the way. (Phir milāṁge — and rabb rākhā.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Independent Gurmukhi reading and writing are not scored here. Romanization is evidence for spoken recall only; a typed romanization never counts as Gurmukhi writing."
             }
           ]
         }

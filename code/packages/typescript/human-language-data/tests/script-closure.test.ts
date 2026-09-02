@@ -10,7 +10,8 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
 import { measureScriptClosure } from "../src/script-closure.js";
-import { loadEverything } from "../src/loader.js";
+import { loadEverything, loadChapterPolicy } from "../src/loader.js";
+import { measureScriptRamp } from "../src/ramp.js";
 
 // TAMIL LETTER KA, MA, NA; TAMIL SIGN VIRAMA.
 const KA = "க";
@@ -201,7 +202,21 @@ describe("the real corpus", () => {
     // The point of the whole module. HL08's glyph budget flags tens of lessons
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
-    expect(report.summary.violations).toBeGreaterThan(500);
+    // Was `toBeGreaterThan(500)`, a FLOOR under the debt -- and it failed the moment
+    // the debt fell, when Punjabi's pre-A1 recognition runway took that track from 40
+    // violating lessons to 0 and the corpus from 510 to 470. A floor under debt fails
+    // for the one reason nobody should have to argue with: somebody fixed some. The
+    // note directly below already worked this out once for `tracksTeachingNothing`, so
+    // the same treatment lands here rather than the number being nudged downwards
+    // forever. This is a CEILING: it may fall, never grow, and whoever raises it writes
+    // down why.
+    expect(report.summary.violations).toBeLessThanOrEqual(470);
+    // The test's stated point -- that closure finds far more debt than the pace budget
+    // ever could -- is carried by the comparison, not by a floor: the glyph budget flags
+    // 38 lessons across the corpus, closure flags hundreds.
+    expect(report.summary.violations).toBeGreaterThan(
+      measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations,
+    );
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed

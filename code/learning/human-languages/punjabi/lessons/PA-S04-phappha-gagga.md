@@ -60,7 +60,7 @@ memory:
 Now put them where you have already heard them:
 
 > **ਫ** + **ਿ** + **ਰ** → **ਫਿਰ** (*phir*)
->
+
 > **ਫਿਰ** — *phir* — **again, then**
 
 You are not being asked to write any of this. You are being asked to

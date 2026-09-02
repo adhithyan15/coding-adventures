@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dd74d18cb2112fc0",
+  "sourceHash": "fnv1a64:b7da7fb1c7fff8af",
   "lessons": [
     {
       "id": "PA-C05-bolna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8d95ce6e2c31ace4",
+      "sourceHash": "fnv1a64:845ab4fc996b84c7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -56,6 +56,10 @@
             {
               "kind": "speech",
               "text": "ਬ (ba) + ੋ (the horā, o-sign) becomes ਬੋ (bo); ਲ (la); ਣਾ (ṇā, retroflex ṇ + long ā). Read ਬੋ, ਲ, ਣਾ becomes bolṇā."
+            },
+            {
+              "kind": "speech",
+              "text": "None of these pieces is yours to read yet. A later session in this chapter teaches ਬ, ਲ and ੋ; until then the word travels by ear."
             }
           ]
         },
@@ -66,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਬੋਲਣਾ (bolṇā, \"to speak\") is a native Indo-Aryan verb (the same word as Hindi bolnā). Its ending -ਣਾ (-ṇā) is the point: every Punjabi verb, named in the dictionary, ends in -ṇā (or -nā) — the infinitive marker, Punjabi's \"to ___\": bol-ṇā \"to speak,\" mil-ṇā \"to meet\" (from milāṁge), rakh-ṇā \"to keep\" (from rabb rākhā). Strip the -ṇā and you have the stem (bol-) that takes all the other endings."
+              "text": "ਬੋਲਣਾ (bolṇā, \"to speak\") is a native Indo-Aryan verb (the same word as Hindi bolnā). Its ending -ਣਾ (-ṇā) is the point: every Punjabi verb, named in the dictionary, ends in -ṇā (or -nā) — Punjabi's \"to ___\": bol-ṇā \"to speak,\" mil-ṇā \"to meet\" (from milāṁge), rakh-ṇā \"to keep\" (from rabb rākhā)."
             }
           ]
         },
@@ -77,7 +81,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The stem bol- holds the action; endings pin down who and when: bol-dā (speaking, m.), bol-dī (speaking, f.), bol (speak!, familiar command). Every tense is built by adding to a stem like this."
+              "text": "Strip the -ṇā and you have the stem: bol-. The stem holds the action; endings pin down who and when: bol-dā (speaking, m.), bol-dī (speaking, f.), bol (speak!, familiar command). Every tense in this book is built by adding to a stem like this."
             }
           ]
         },
@@ -104,20 +108,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the infinitive ending every Punjabi verb takes (-ṇā/-nā)",
+              "instruction": "the stem left when you strip -ṇā (bol-)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the infinitive ending every Punjabi verb takes (*-ṇā*/*-nā*)]"
+              "source": "[YOU SAY: the stem left when you strip *-ṇā* (*bol-*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "three such verbs you now know (bolṇā, milṇā, rakhṇā)",
+              "instruction": "three verbs whose stems you can now hear (bol-, mil-, rakh-)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: three such verbs you now know (*bolṇā, milṇā, rakhṇā*)]"
+              "source": "[YOU SAY: three verbs whose stems you can now hear (*bol-, mil-, rakh-*)]"
             }
           ]
         },
@@ -134,26 +138,46 @@
             },
             {
               "kind": "speech",
-              "text": "What ending does a Punjabi infinitive carry, and what is bolṇā's stem? (-ṇā/-nā; the stem is bol-.)"
+              "text": "What is bolṇā's stem, and what do you take off to find it? (bol-; the infinitive ending -ṇā.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C05-bolna-stem",
+              "prompt": "Say to speak aloud, then type it romanized and the stem it leaves behind.",
+              "assesses": [
+                "PA-LEX-BOLNA-05",
+                "PA-GRAMMAR-VERB-STEM-05"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "bolṇā; bol-",
+                "bolna; bol",
+                "bolnaa; bol"
+              ],
+              "feedback": {
+                "correct": "Right: bolṇā strips to the stem bol-, which every other ending attaches to.",
+                "incorrect": "Say bolṇā — take off -ṇā and the stem bol- is what remains."
+              }
             }
           ]
         }
       ]
     },
     {
-      "id": "PA-C05-main-punjabi-bolda-han",
-      "sequence": 280,
-      "title": "ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) — \"I speak Punjabi\"",
-      "headword": "ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ",
-      "romanization": "maiṁ panjābī boldā hāṁ",
-      "gloss": "I speak Punjabi (gendered)",
+      "id": "PA-C05-panjabi",
+      "sequence": 275,
+      "title": "ਪੰਜਾਬੀ (panjābī) — the language names itself after five rivers",
+      "headword": "ਪੰਜਾਬੀ",
+      "romanization": "panjābī",
+      "gloss": "Punjabi — the language, and the name of five rivers",
       "script": "gurmukhi",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2afd5d42cef5a17f",
+      "sourceHash": "fnv1a64:5bc7f239988adf7e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -178,7 +202,7 @@
             },
             {
               "kind": "speech",
-              "text": "Your first complete, moving sentence — and the language names itself after five rivers."
+              "text": "You have a verb for speaking. Before you can say what you speak, you need the name of the language itself."
             }
           ]
         },
@@ -189,50 +213,31 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਪੰਜਾਬੀ (panjābī): ਪੰ (paṁ, with the ṭippī nasal) + ਜਾ (jā) + ਬੀ (bī). And ਬੋਲਦਾ (boldā) = the stem bol- + -ਦਾ (-dā), the present-habitual, masculine."
+              "text": "ਪੰ (paṁ, with the ṭippī nasal) + ਜਾ (jā) + ਬੀ (bī) becomes ਪੰਜਾਬੀ (panjābī)."
+            },
+            {
+              "kind": "speech",
+              "text": "Shapes to notice only. Say the word; the reading comes later."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The sentence, taken apart",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) = ਮੈਂ (maiṁ, \"I\") + ਪੰਜਾਬੀ (panjābī, the object) + ਬੋਲਦਾ (boldā, \"speak,\" m.) + ਹਾਂ (hāṁ, \"am\") — literally \"I Punjabi speaking am,\" verb-frame last."
+              "text": "ਪੰਜਾਬੀ (panjābī) is the name of the language — and it is Persian: panj (\"five\") + āb (\"water, river\") = \"[the language] of the five rivers,\" for the five great rivers that cross the Punjab. The very name of the language is a small Persian geography lesson."
             },
             {
               "kind": "speech",
-              "text": "The name ਪੰਜਾਬੀ (panjābī) is Persian: panj (\"five\" — cousin of English five, Latin quinque, Greek pente!) + āb (\"water, river\") = \"[the language] of the five rivers,\" for the five great rivers of the Punjab. So the very name of the language is a little Persian geography lesson — and panj \"five\" is a distant cousin of English five, from the same Indo-European root."
+              "text": "And panj itself is an old relative: it is a distant cousin of English five, Latin quinque and Greek pente, all from one Indo-European word for the number. A later chapter comes back to panj as an ordinary number you can count with."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the present habitual, gendered",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "To say \"I do X,\" Punjabi uses stem + -dā/-dī + the copula, and the participle agrees with the speaker's gender:"
-            },
-            {
-              "kind": "speech",
-              "text": "a man: ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) (boldā hāṁ)."
-            },
-            {
-              "kind": "speech",
-              "text": "a woman: ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦੀ ਹਾਂ (boldī hāṁ)."
-            },
-            {
-              "kind": "speech",
-              "text": "The -dā/-dī marks the speaker — a feature English has no trace of."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -243,17 +248,22 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ panjābī boldā hāṁ, (f.): maiṁ panjābī boldī hāṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"panjābī\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"panjābī\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what panjābī means (panj \"five\" + āb \"water\" = \"five rivers\")",
+              "instruction": "its two Persian halves (panj \"five\" + āb \"water, river\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what *panjābī* means (*panj* \"five\" + *āb* \"water\" = \"five rivers\")]"
+              "source": "[YOU SAY: its two Persian halves (*panj* \"five\" + *āb* \"water, river\")]"
             },
             {
               "kind": "prompt",
@@ -267,7 +277,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -279,7 +289,169 @@
             },
             {
               "kind": "speech",
-              "text": "Build \"I speak Punjabi\" as a woman, and unpack the name panjābī. (Maiṁ panjābī boldī hāṁ; panj \"five\" + āb \"river\" — \"the five-rivers language.\")"
+              "text": "Unpack the name panjābī, and name the English cousin of its first half. (Panj \"five\" + āb \"river\"; panj is cousin to English five.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C05-panjabi-name",
+              "prompt": "Say the name of the language aloud, then type it romanized and its two Persian halves.",
+              "assesses": [
+                "PA-LEX-PANJABI-05",
+                "PA-ETYMON-PANJ-AAB-05"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "panjābī; panj + āb",
+                "panjabi; panj + aab",
+                "panjabi; panj and ab",
+                "panjabi; panj + ab"
+              ],
+              "feedback": {
+                "correct": "Right: panj five plus āb river — the five-rivers language.",
+                "incorrect": "Say panjābī — panj five plus āb water or river."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C05-main-punjabi-bolda-han",
+      "sequence": 280,
+      "title": "ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) — \"I speak Punjabi\"",
+      "headword": "ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ",
+      "romanization": "maiṁ panjābī boldā hāṁ",
+      "gloss": "I speak Punjabi (the participle agrees with the speaker's gender)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdf303bd8d8d62e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words you already own — \"I,\" the language, the verb. Here they become your first complete, moving sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) = ਮੈਂ (maiṁ, \"I\") + ਪੰਜਾਬੀ (panjābī, the object) + ਬੋਲਦਾ (boldā, \"speak,\" m.) + ਹਾਂ (hāṁ, \"am\") — literally \"I Punjabi speaking am,\" with the verb-frame last, exactly as hai first showed you."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੋਲਦਾ (boldā) is the stem bol- plus -ਦਾ (-dā). Nothing new has been added to the verb but an ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the present habitual, gendered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To say \"I do X,\" Punjabi uses stem + -dā/-dī + the copula, and the participle agrees with the speaker's gender:"
+            },
+            {
+              "kind": "speech",
+              "text": "a man: ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) (boldā hāṁ)."
+            },
+            {
+              "kind": "speech",
+              "text": "a woman: ਮੈਂ ਪੰਜਾਬੀ (panjābī) ਬੋਲਦੀ ਹਾਂ (boldī hāṁ)."
+            },
+            {
+              "kind": "speech",
+              "text": "The -dā/-dī marks the speaker — a feature English has no trace of."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ panjābī boldā hāṁ (a man), maiṁ panjābī boldī hāṁ (a woman)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ panjābī boldā hāṁ* (a man)  ·  *maiṁ panjābī boldī hāṁ* (a woman)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which ending would be yours (-dā or -dī)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which ending would be yours (*-dā* or *-dī*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I speak Punjabi\" as a woman, and say which word changed. (Maiṁ panjābī boldī hāṁ — the participle, boldā becoming boldī.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C05-main-punjabi-bolda-han-gender",
+              "prompt": "Build I speak Punjabi as a woman aloud, then type it romanized and name the ending that made it feminine.",
+              "assesses": [
+                "PA-PHRASE-I-SPEAK-PUNJABI-05",
+                "PA-GRAMMAR-PRESENT-HABITUAL-GENDER-05"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "maiṁ panjābī boldī hāṁ; -dī",
+                "main panjabi boldi haan; -di",
+                "mai panjabi boldi haan; di"
+              ],
+              "feedback": {
+                "correct": "Right: the participle, not the pronoun, carries the speaker's gender.",
+                "incorrect": "Say maiṁ panjābī boldī hāṁ — the feminine ending is -dī."
+              }
             }
           ]
         }
@@ -296,20 +468,18 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block",
-        "sight-cue"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:cdadcc7d16821044",
+      "sourceHash": "fnv1a64:8f756da0d48d6867",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -325,7 +495,7 @@
             },
             {
               "kind": "speech",
-              "text": "A second verb, so you can say where you live — and see the stem + ending machine work again."
+              "text": "A second verb, so you can say where you live — and watch the stem + ending machine work a second time."
             }
           ]
         },
@@ -336,7 +506,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਰ (ra) + ਹਿ (hi) + ਣਾ (ṇā, the retroflex infinitive) becomes ਰਹਿਣਾ (rahiṇā)."
+              "text": "ਰ (ra) + ਹਿ (hi) + ਣਾ (ṇā, the retroflex infinitive) becomes ਰਹਿਣਾ (rahiṇā). The opening ਰ is one you read already."
             }
           ]
         },
@@ -374,17 +544,22 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ Amritsar rahindā hāṁ, (f.): … rahindī hāṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ Amritsar rahindā hāṁ (a man), maiṁ Amritsar rahindī hāṁ (a woman)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ Amritsar rahindā hāṁ* (a man)  ·  *maiṁ Amritsar rahindī hāṁ* (a woman)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the root (rah- \"to remain,\" shared with Hindi rahnā)",
+              "instruction": "where Punjabi puts \"in,\" if it says it at all (after the noun)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the root (*rah-* \"to remain,\" shared with Hindi *rahnā*)]"
+              "source": "[YOU SAY: where Punjabi puts \"in,\" if it says it at all (after the noun)]"
             }
           ]
         },
@@ -402,25 +577,45 @@
             {
               "kind": "speech",
               "text": "Say \"I live in Amritsar,\" and name the root of rahiṇā. (Maiṁ Amritsar rahindā/rahindī hāṁ; Sanskrit rah-, \"to remain.\")"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C05-rahna-place",
+              "prompt": "Say I live in Amritsar aloud as a man, then type it romanized and say where a Punjabi in-word would sit.",
+              "assesses": [
+                "PA-LEX-RAHNA-05",
+                "PA-GRAMMAR-POSTPOSITION-05"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "maiṁ amritsar rahindā hāṁ; after the noun",
+                "main amritsar rahinda haan; after the noun",
+                "main amritsar rahinda haan; after"
+              ],
+              "feedback": {
+                "correct": "Right: Punjabi puts its in after the noun, and often leaves it out with a place-name.",
+                "incorrect": "Say maiṁ Amritsar rahindā hāṁ — a Punjabi postposition follows its noun."
+              }
             }
           ]
         }
       ]
     },
     {
-      "id": "PA-C05-kamm-karna",
-      "sequence": 300,
-      "title": "ਕੰਮ ਕਰਨਾ (kamm karnā) — \"to work\"",
-      "headword": "ਕੰਮ ਕਰਨਾ",
-      "romanization": "kamm karnā",
-      "gloss": "to work (lit. \"work-do\")",
+      "id": "PA-C05-karna",
+      "sequence": 295,
+      "title": "ਕਰਨਾ (karnā) — \"to do,\" the verb whose root you met in your first greeting",
+      "headword": "ਕਰਨਾ",
+      "romanization": "karnā",
+      "gloss": "to do, to make",
       "script": "gurmukhi",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:57d482c346148076",
+      "sourceHash": "fnv1a64:2b8a8539d7507d95",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -445,7 +640,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last verb of the chapter — and its root already sits inside a Chapter-1 word."
+              "text": "The third verb of the chapter — and the one whose root has been sitting inside a word you have said since your very first greeting."
             }
           ]
         },
@@ -456,7 +651,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕੰਮ (kamm, \"work\"): ਕੰ (kaṁ, with the ṭippī nasal) + ਮ (ma). ਕਰਨਾ (karnā, \"to do\"): ਕ (ka) + ਰ (ra) + ਨਾ (nā)."
+              "text": "ਕ (ka) + ਰ (ra) + ਨਾ (nā) becomes ਕਰਨਾ (karnā). Two of the three pieces are already yours to read."
             }
           ]
         },
@@ -467,15 +662,160 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕਰਨਾ (karnā, \"to do, to make\") is from the Sanskrit root √kṛ (\"to do\"), from PIE kʷer- — one of Sanskrit's most productive roots. You met its family in Chapter 1's ਨਮਸਤੇ/ਨਮਸਕਾਰ (namaskār = namas + kār, \"the making of a bow\") and in karma (\"a thing done\"). Like Hindi, Punjabi builds countless verbs as noun + ਕਰਨਾ:"
+              "text": "ਕਰਨਾ (karnā, \"to do, to make\") is from the Sanskrit root √kṛ (\"to do\"), from PIE kʷer- — one of Sanskrit's most productive roots. You met its family in Chapter 1's ਨਮਸਤੇ/ਨਮਸਕਾਰ (namaskār = namas + kār, \"the making of a bow\") and in karma (\"a thing done\"). Strip -nā and the stem is kar-, exactly as bol- and rahi- came out of their infinitives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"karnā\" and its stem (kar-)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"karnā\" and its stem (*kar-*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Chapter-1 word that shares its root (namaskār — the \"making\" of a bow)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Chapter-1 word that shares its root (*namaskār* — the \"making\" of a bow)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "ਕੰਮ ਕਰਨਾ (kamm karnā) = \"work-do\" = \"to work\" (kamm, \"work\")."
+              "text": "What Sanskrit root is karnā from, and name a Chapter-1 word built on it. (√kṛ, \"to do\"; namaskār — \"the making of a bow.\")"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C05-karna-root",
+              "prompt": "Say to do aloud, then type it romanized and name the Chapter-1 word built on the same root.",
+              "assesses": [
+                "PA-LEX-KARNA-05",
+                "PA-ETYMON-KR-DO-05"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "karnā; namaskār",
+                "karna; namaskar",
+                "karnaa; namaskaar"
+              ],
+              "feedback": {
+                "correct": "Right: karnā and namaskār share the Sanskrit root kṛ, to do or make.",
+                "incorrect": "Say karnā — its root kṛ is the kār inside namaskār."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C05-kamm-karna",
+      "sequence": 300,
+      "title": "ਕੰਮ ਕਰਨਾ (kamm karnā) — \"to work\"",
+      "headword": "ਕੰਮ ਕਰਨਾ",
+      "romanization": "kamm karnā",
+      "gloss": "to work (lit. work-do)",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3a4c2e62755fd66a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "gall karnā = \"to have a chat\" (gall, the \"matter/talk\" from Chapter 3's koī gall nahīṁ)."
+              "text": "You have \"to do.\" Put a noun in front of it and Punjabi builds a whole family of verbs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੰਮ (kamm, \"work\"): ਕੰ (kaṁ, with the ṭippī nasal) + ਮ (ma). Both ਕ and ਮ are already yours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੰਮ (kamm) is the noun \"work\" — the thing done, from the same √kṛ family as karnā. Said on its own it means a job, a task, a piece of business: bahut kamm hai (\"there is a lot of work\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: noun + ਕਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Like Hindi, Punjabi builds countless verbs as noun + ਕਰਨਾ (karnā):"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੰਮ ਕਰਨਾ (kamm karnā) = \"work-do\" = \"to work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "gall karnā = \"to have a chat\" (gall, the \"matter/talk\" you already know from koī gall nahīṁ)."
             },
             {
               "kind": "speech",
@@ -484,7 +824,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -515,16 +855,16 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Chapter-1 word that shares its root (namaskār — the \"making\" of a bow)",
+              "instruction": "one more noun-plus-karnā verb (gall karnā, \"to have a chat\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Chapter-1 word that shares its root (*namaskār* — the \"making\" of a bow)]"
+              "source": "[YOU SAY: one more noun-plus-*karnā* verb (*gall karnā*, \"to have a chat\")]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -536,7 +876,27 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit root is karnā from, and name a Chapter-1 word built on it. (√kṛ, \"to do\"; namaskār — \"the making of a bow.\")"
+              "text": "How does Punjabi say \"to work,\" and what is the pattern? (Kamm karnā, \"work-do\"; a noun in front of karnā.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C05-kamm-karna-compound",
+              "prompt": "Say to work aloud, then type it romanized and the pattern it is built on.",
+              "assesses": [
+                "PA-LEX-KAMM-05",
+                "PA-GRAMMAR-NOUN-PLUS-KARNA-05"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "kamm karnā; noun + karnā",
+                "kamm karna; noun + karna",
+                "kam karna; noun plus karna"
+              ],
+              "feedback": {
+                "correct": "Right: kamm work plus karnā do, the pattern behind a whole family of verbs.",
+                "incorrect": "Say kamm karnā — a noun in front of karnā is how Punjabi makes such verbs."
+              }
             }
           ]
         }
@@ -557,7 +917,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3c31684e4ccf4bb4",
+      "sourceHash": "fnv1a64:01787545475d3af2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -635,7 +995,11 @@
             },
             {
               "kind": "speech",
-              "text": "ਬ + ੋ becomes ਬੋ (bo); ਬੋ + ਲ becomes ਬੋਲ (bol) ਬੋਲ — bol — speak — the bare stem of this chapter's first verb."
+              "text": "ਬ + ੋ becomes ਬੋ (bo); ਬੋ + ਲ becomes ਬੋਲ (bol)."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੋਲ — bol — speak — the bare stem of this chapter's first verb."
             },
             {
               "kind": "speech",
@@ -727,14 +1091,14 @@
       "title": "Chapter 5 — The first verbs",
       "headword": "(dialogue)",
       "romanization": "",
-      "gloss": "Chapter 5 recap — the first verbs",
+      "gloss": "Chapter 5 oral checkpoint — three sentences about yourself",
       "script": "gurmukhi",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:795000bcb5396917",
+      "sourceHash": "fnv1a64:0ae1897d79d35ec8",
       "notice": null,
       "blocks": [
         {
@@ -756,8 +1120,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
+          "type": "input",
+          "title": "The exchange — three sentences about yourself",
           "segments": [
             {
               "kind": "pause",
@@ -791,13 +1155,55 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"I work\" — *maiṁ kamm kardā/kardī hāṁ*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C05-practice-listening",
+              "prompt": "You hear maiṁ panjābī boldī hāṁ. Type what the speaker says and what the ending tells you about her.",
+              "assesses": [
+                "PA-PHRASE-I-SPEAK-PUNJABI-05",
+                "PA-GRAMMAR-PRESENT-HABITUAL-GENDER-05"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "i speak punjabi; the speaker is a woman",
+                "i speak punjabi; a woman",
+                "i speak punjabi; she is a woman",
+                "i speak punjabi; female speaker"
+              ],
+              "feedback": {
+                "correct": "Listening score: the participle -dī names a woman speaking.",
+                "incorrect": "The sentence is I speak Punjabi, and -dī says the speaker is a woman."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C05-practice-speaking",
+              "prompt": "Say your language, your city and your work aloud as a man; then type the three romanized sentences.",
+              "assesses": [
+                "PA-PHRASE-I-SPEAK-PUNJABI-05",
+                "PA-LEX-RAHNA-05",
+                "PA-LEX-KAMM-05",
+                "PA-GRAMMAR-NOUN-PLUS-KARNA-05"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "maiṁ panjābī boldā hāṁ; maiṁ amritsar rahindā hāṁ; maiṁ kamm kardā hāṁ",
+                "main panjabi bolda haan; main amritsar rahinda haan; main kamm karda haan"
+              ],
+              "feedback": {
+                "correct": "Speaking score: three sentences, one engine — stem, gender ending, copula.",
+                "incorrect": "Use three sentences: maiṁ panjābī boldā hāṁ; maiṁ Amritsar rahindā hāṁ; maiṁ kamm kardā hāṁ."
+              }
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine",
+          "type": "guided-production",
+          "title": "Guided Practice — the engine",
           "segments": [
             {
               "kind": "pause",
@@ -808,11 +1214,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the ending every infinitive carries (-ṇā/-nā)",
+              "instruction": "what you strip off an infinitive to reach the stem (-ṇā/-nā)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the ending every infinitive carries (*-ṇā*/*-nā*)]"
+              "source": "[YOU SAY: what you strip off an infinitive to reach the stem (*-ṇā*/*-nā*)]"
             },
             {
               "kind": "prompt",
@@ -826,18 +1232,27 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "where the verb sits (last)",
+              "instruction": "where the verb sits, and which side of a noun \"in\" would sit (last; after the noun)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: where the verb sits (last)]"
+              "source": "[YOU SAY: where the verb sits, and which side of a noun \"in\" would sit (last; after the noun)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਬੋਲ and name this chapter's three pieces — babbā, lallā, horā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਬੋਲ** and name this chapter's three pieces — *babbā*, *lallā*, *horā*]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The word, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -877,6 +1292,16 @@
             {
               "kind": "speech",
               "text": "In one breath, tell me your language, your city, and your work in Punjabi (as a woman). (Maiṁ panjābī boldī hāṁ. Maiṁ … rahindī hāṁ. Maiṁ kamm kardī hāṁ.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Independent Gurmukhi reading and writing are not scored here. Romanization is evidence for spoken recall only; a typed romanization never counts as Gurmukhi writing."
             }
           ]
         }

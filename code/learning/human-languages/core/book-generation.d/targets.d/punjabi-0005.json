@@ -2,7 +2,6 @@
   "language": "punjabi",
   "chapter": 5,
   "output": "punjabi/book/chapters/ch05-first-verbs.tex",
-  "embeddedLessonIds": [
-    "PA-S05-babba-lalla-hora"
-  ]
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
 }

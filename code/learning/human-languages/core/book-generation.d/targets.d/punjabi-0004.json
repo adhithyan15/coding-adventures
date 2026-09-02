@@ -2,8 +2,6 @@
   "language": "punjabi",
   "chapter": 4,
   "output": "punjabi/book/chapters/ch04-farewells.tex",
-  "embeddedLessonIds": [
-    "PA-R04-wellbeing-r2",
-    "PA-S04-phappha-gagga"
-  ]
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
 }

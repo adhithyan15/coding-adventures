@@ -2,19 +2,31 @@
   "chapter": 5,
   "title": "The First Verbs",
   "label": "ch:first-verbs",
-  "canDo": "I can build short present-tense Punjabi sentences with the chapter's first verbs.",
+  "canDo": "I can say what language I speak, where I live and what I do, building each sentence from a verb stem, a gender ending and the copula.",
   "spineNodes": [
     "SPINE-COUNT-ONE-TO-FIVE"
   ],
   "payoff": {
     "lesson": "PA-C05-practice",
     "kind": "task",
-    "summary": "Complete PA-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Punjabi sentences with the chapter's first verbs.",
+    "summary": "Complete separate oral listening and speaking checks: hear a present-habitual sentence and say what its ending reveals about the speaker, then build three sentences about yourself — your language, your city and your work. Independent Gurmukhi reading and writing remain blocked until #13068 teaches the forms.",
     "assesses": [
+      "PA-LEX-BOLNA-05",
+      "PA-GRAMMAR-VERB-STEM-05",
+      "PA-LEX-PANJABI-05",
+      "PA-ETYMON-PANJ-AAB-05",
+      "PA-PHRASE-I-SPEAK-PUNJABI-05",
+      "PA-GRAMMAR-PRESENT-HABITUAL-GENDER-05",
+      "PA-LEX-RAHNA-05",
+      "PA-GRAMMAR-POSTPOSITION-05",
+      "PA-LEX-KARNA-05",
+      "PA-ETYMON-KR-DO-05",
+      "PA-LEX-KAMM-05",
+      "PA-GRAMMAR-NOUN-PLUS-KARNA-05",
       "PA-SCRIPT-RECOG-BA-01",
       "PA-SCRIPT-RECOG-LA-01",
       "PA-SCRIPT-RECOG-HORA-01"
     ],
-    "note": "This legacy schema-v1 chapter's oral content still carries no typed atoms; the three it does declare come from #13068's recognition session, and the payoff assesses all three. The v1 migration of the verb lessons remains outstanding."
+    "note": "The verb lessons are migrated to schema v2, and the two that packed several headwords into one session are split: panjābī and karnā now each get their own lesson. The payoff measures real oral capability without claiming untaught Gurmukhi production."
   }
 }

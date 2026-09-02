@@ -3,8 +3,13 @@
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
     "PA-C05-bolna",
+    "PA-C05-panjabi",
     "PA-C05-main-punjabi-bolda-han",
+    "PA-C05-rahna",
+    "PA-C05-karna",
+    "PA-C05-kamm-karna",
     "PA-S05-babba-lalla-hora",
+    "PA-C05-practice",
     "PA-S06-kakka-aira-aara",
     "PA-C06-numbers-1-5",
     "PA-C06-panj-convergence"
@@ -13,7 +18,8 @@
   "inline": [
     "PA-EXT-010-LANGUAGE-SPECIFIC",
     "PA-EXT-010-ETYMOLOGY",
-    "PA-EXT-048-PREA1-SCRIPT-RUNWAY-C5C6"
+    "PA-EXT-048-PREA1-SCRIPT-RUNWAY-C5C6",
+    "PA-EXT-058-C5-VERB-CHECKPOINT"
   ],
   "after": []
 }
