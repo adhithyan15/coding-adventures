@@ -11,8 +11,11 @@
 % property for two of the five quadrilaterals that never made it into a row:
 %
 %   rectangle → opposite_sides_equal_length
-%     "A closed planar quadrilateral with opposite sides of equal lengths a
-%      and b, and with four right angles."
+%     "A rectangle is a closed planar quadrilateral with opposite sides of
+%      equal lengths a and b, and with four right angles."
+%     (the previous form DROPPED ITS SUBJECT -- inherited from
+%      quadrilateral-types' header, whose correction did not reach this
+%      derived copy until #14070)
 %   parallelogram → opposite_angles_equal
 %     "A parallelogram is a quadrilateral with opposite sides parallel (and
 %      therefore opposite angles equal)."
@@ -59,7 +62,7 @@ table quadrilateral_secondary_property {
     row (rectangle, opposite_sides_equal_length)
     row (parallelogram, opposite_angles_equal)
 
-    source "A closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles."
+    source "A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles."
     locator "https://mathworld.wolfram.com/Rectangle.html"
     trust authoritative
 }

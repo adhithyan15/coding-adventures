@@ -13,8 +13,12 @@
 % single-`description`-atom schema had no room to decode as two separate,
 % independently queryable names:
 %
-%   "When meteoroids enter Earth's atmosphere ... at high speed and burn
-%    up, the fireballs or "shooting stars" are called meteors."
+%   "When meteoroids enter Earth’s atmosphere (or that of another planet,
+%    like Mars) at high speed and burn up, the fireballs or “shooting
+%    stars” are called meteors."
+%   (the previous form ELIDED "(or that of another planet, like Mars)" and
+%    flattened the page's curly quotes and apostrophe to ASCII, so the
+%    citation did not appear on its own page)
 %
 % Recall is a binding query:
 %
@@ -53,7 +57,7 @@ table space_rock_alt_name {
     row (meteor, fireball)
     row (meteor, shooting_star)
 
-    source "When meteoroids enter Earth's atmosphere ... at high speed and burn up, the fireballs or \"shooting stars\" are called meteors."
+    source "When meteoroids enter Earth’s atmosphere (or that of another planet, like Mars) at high speed and burn up, the fireballs or “shooting stars” are called meteors."
     locator "https://science.nasa.gov/solar-system/meteors-meteorites/"
     trust authoritative
 }
