@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: MR-C02-majhe-naav-aahe
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 275
 chapter: 9
 type: phrase
@@ -10,18 +12,35 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [MR-C02-majhe, MR-C02-naav, MR-C02-aahe]
 sounds: []
 roots: [ma, naaman, asti]
-est_minutes: 3
 reviews_of: [MR-C02-majhe, MR-C02-naav, MR-C02-aahe]
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [MR-LEX-NAAV, MR-LEX-MAJHE, MR-LEX-AAHE-COPULA, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS, MR-GRAMMAR-VERB-FINAL]
+introduces:
+  knowledge: [MR-PHRASE-MAJHE-NAAV-AAHE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [MR-PHRASE-MAJHE-NAAV-AAHE, MR-LEX-NAAV, MR-LEX-MAJHE, MR-LEX-AAHE-COPULA, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS, MR-GRAMMAR-VERB-FINAL]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
 ---
 
 # माझं नाव … आहे (mājhaṁ nāv … āhe) — "my name is…"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Now assemble the three atoms you just met into your first full
 sentence about yourself.
 
-## The phrase, assembled
+## You'll want to know — the phrase, assembled
+<!-- hl-knowledge: introduces=[MR-PHRASE-MAJHE-NAAV-AAHE]; assesses=[MR-LEX-MAJHE, MR-LEX-NAAV, MR-LEX-AAHE-COPULA, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS, MR-GRAMMAR-VERB-FINAL] -->
 
 **माझं** (*mājhaṁ*, my) + **नाव** (*nāv*, name) + **[your name]** + **आहे**
 (*āhe*, is) → **माझं नाव मीरा आहे** (*mājhaṁ nāv Mīrā āhe*) — "my name is Mira."
@@ -34,17 +53,20 @@ A man or a woman says it the same way here; the gender lived in *mājhaṁ*
 (matching *nāv*), which is settled.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Marathi drops nothing and reorders everything to English eyes: possessor, thing,
 value, then *is*. Learn this frame and you can swap in any name — or, later, any
 fact about yourself.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-MAJHE-NAAV-AAHE] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mājhaṁ nāv Mīrā āhe" — my name is Mira]
 - [YOU SAY: it with your own name in the blank]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-MAJHE-NAAV-AAHE] -->
 
 [PAUSE 3s] Put "my name is Arun" into Marathi. (*mājhaṁ nāv Arun āhe.*)

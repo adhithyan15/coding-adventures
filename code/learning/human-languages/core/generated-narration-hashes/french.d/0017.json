@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 17,
-  "sourceHash": "fnv1a64:a17d3639e3b5c5b7",
+  "sourceHash": "fnv1a64:c6ff20dadd4a9448",
   "lessonIds": [
     "FR-C17-tete",
     "FR-C17-main"
@@ -10,7 +10,7 @@
   "drivablePrefix": 0,
   "text": "french/narration/ch17.txt",
   "json": "french/narration/ch17.json",
-  "textHash": "fnv1a64:258ca14509c17685",
-  "jsonHash": "fnv1a64:090e2def729e2683",
+  "textHash": "fnv1a64:2f55c106300264e6",
+  "jsonHash": "fnv1a64:7e2b235b864d7c8d",
   "findings": []
 }

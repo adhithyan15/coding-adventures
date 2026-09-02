@@ -35,9 +35,9 @@ already **fused** in Latin, and they came through almost unrecognisable.
 
 Look at the ending they all share: **-ze**. That is Latin **decem** ("ten"),
 worn down to almost nothing — the **same ten** you already know in **dix** (10)
-and **décembre** (the old 10th month, from Chapter 9). One root, three disguises.
+and **décembre** (the old 10th month). One root, three disguises.
 
-And the front of each word is the digit you learned in Chapter 6: *un→on-*,
+And the front of each word is the digit you already count with: *un→on-*,
 *deux→dou-*, *trois→trei-*, *quatre→quator-*, *cinq→quin-*, *six→sei-*. Say them
 slowly and the small number surfaces.
 

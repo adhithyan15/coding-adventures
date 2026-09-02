@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b5ea1ad61fdc9340",
+  "sourceHash": "fnv1a64:e4f53e791a6f334a",
   "lessons": [
     {
       "id": "FR-C04-au-revoir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d10f55dae9dd965",
+      "sourceHash": "fnv1a64:c397ecc66c9068b7",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "vowel-oi — -voir = vwahr (the oi = wa, as in soir from Chapter 1)."
+              "text": "vowel-oi — -voir = vwahr (the oi = wa, as in soir, the evening)."
             }
           ]
         },
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ac5cb4bc70b0ae5",
+      "sourceHash": "fnv1a64:0a1391697504b159",
       "notice": null,
       "blocks": [
         {
@@ -237,7 +237,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish inherited that identical Latin tarde — the word you met in Chapter 2 — but the two languages grew it in different directions. French kept it meaning late (tard); Spanish grew it into afternoon (tarde). One Latin word, two everyday meanings. And where French leans on à for its soft goodbyes, Spanish leans on hasta (\"until\"): hasta luego is the twin of à plus tard."
+              "text": "Spanish inherited that identical Latin tarde — the word you met giving your name — but the two languages grew it in different directions. French kept it meaning late (tard); Spanish grew it into afternoon (tarde). One Latin word, two everyday meanings. And where French leans on à for its soft goodbyes, Spanish leans on hasta (\"until\"): hasta luego is the twin of à plus tard."
             }
           ]
         },
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e78f48f8f63192a6",
+      "sourceHash": "fnv1a64:e13874e71f5c6638",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
             },
             {
               "kind": "speech",
-              "text": "For when you'll genuinely meet again shortly: à bientôt, \"see you soon\" — the French twin of Spanish hasta pronto. It hides a word you already know from Chapter 1: bien."
+              "text": "For when you'll genuinely meet again shortly: à bientôt, \"see you soon\" — the French twin of Spanish hasta pronto. It hides a word you already know from your first greetings: bien."
             }
           ]
         },
@@ -366,7 +366,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nasal-in — bien = byan, nasal (your Chapter 1 sound)."
+              "text": "nasal-in — bien = byan, nasal (the sound you met in your first greetings)."
             },
             {
               "kind": "speech",
@@ -393,7 +393,7 @@
             },
             {
               "kind": "speech",
-              "text": "bien = \"well\" (Chapter 1 — from Latin bene, the bene of benefit)."
+              "text": "bien = \"well\" (from Latin bene, the bene of benefit)."
             },
             {
               "kind": "speech",
