@@ -166,6 +166,63 @@ default. Nothing is required to author every variant.
 
 ---
 
+## 5.4 Prior art, and the container this spec is missing
+
+The vocabulary above is not invented. It is close to what the platforms already
+converged on, and the divergences are worth naming because they are where the
+mapping costs land.
+
+| Platform | Size model | Mechanism |
+| --- | --- | --- |
+| Apple UIKit / SwiftUI | Semantic buckets — `.compact` / `.regular` | `UITraitCollection`, `registerForTraitChanges`, `@Environment(\.horizontalSizeClass)` |
+| Android / Compose | Semantic buckets — Compact / Medium / Expanded | `WindowSizeClass` |
+| Windows WinUI | **Numeric thresholds** | `VisualStateManager` + `AdaptiveTrigger MinWindowWidth` |
+| Web / CSS | Numeric, plus separate `pointer:` / `hover:` | Media queries, container queries |
+| Flutter | Numeric | `MediaQuery`, `LayoutBuilder` |
+| Qt | Numeric | `resizeEvent`, `QStyleHints` |
+
+Two consequences:
+
+- **`size-class` as buckets follows Apple and Android and taxes the other
+  four.** Windows, Web, Flutter, and Qt all reason in numbers, so they map down
+  into buckets and lose the ability to express "at exactly 900, do X". That is
+  the cost of §8's open question 1, stated plainly rather than hidden.
+- **Separating `hover` from `pointer` follows CSS Media Queries Level 4**,
+  which splits them for precisely the stylus-and-TV reason given in §4.
+
+**What this spec is missing.** Neither Apple nor Windows answers resize
+*primarily* with a query. Both ship an adaptive **container control** that
+already encapsulates the behavior:
+
+| Platform | Control | Behavior |
+| --- | --- | --- |
+| Apple | `UISplitViewController` / `NavigationSplitView` | Side-by-side at regular, collapses to a navigation stack at compact |
+| Windows | `NavigationView` (`PaneDisplayMode="Auto"`) | Expanded pane → compact icon rail → overlay, at roughly 640 and 1008 |
+| Android | `NavigationSuiteScaffold` | Drawer / rail / bottom bar by size class |
+
+Mosaic has no container primitive to lower these onto. The kernel inventory is
+`HostButton`, `HostCheckbox`, `HostDialog`, `HostDraggable`, `HostDropTarget`,
+`HostInput`, `HostLink`, `HostNumberInput`, `HostProgressRing`, `HostRadio`,
+`HostScroll`, `HostSlider`, `HostSurface`, `HostSwitch`, `HostTable` (+ its
+parts), and `HostTooltip` — leaves and one table.
+
+So this spec, on its own, would have every backend hand-roll the adaptive shell:
+a real `NavigationView` on Windows replaced by two containers and a visibility
+branch. That is exactly what
+[#12017](https://github.com/adhithyan15/coding-adventures/issues/12017) —
+"make Mosaic emit real native components" — exists to prevent, and TaskApp's
+rail is precisely the split-view/navigation-pane pattern these controls own.
+
+**The environment is necessary but not sufficient.** A companion primitive —
+provisionally `HostNavigationSplit` — should lower to `UISplitViewController`,
+`NavigationView`, and `NavigationSuiteScaffold`, consuming this environment
+rather than reimplementing it. It is deliberately not specified here: it is a
+kernel primitive under UI29's rules and needs its own spec and its own
+per-backend degradation story. Variant selection (§5.3) remains the general
+mechanism for everything that is *not* a standard navigation shell.
+
+---
+
 ## 6. What this deliberately does not do
 
 - **It does not add `If ( when: env: … )`.** §3 is the reasoning. If a genuine
@@ -214,6 +271,10 @@ Sliced so each lands independently and provably.
    simpler; per scene would let one artifact rasterize a responsive matrix for
    visual regression, which the Paint gate proposed in
    `task-app-platform-completion-v1.md` would want.
-3. **Does variant selection compose with `--variant` at build time?** A build
+3. **Should `HostNavigationSplit` (§5.4) come first?** If the adaptive
+   container lands before variant selection, TaskApp's rail may need no variant
+   at all — the control would own the collapse. That would make #13692 a
+   consumer of the primitive rather than of ENV3, and would reorder §7.
+4. **Does variant selection compose with `--variant` at build time?** A build
    that ships one variant deliberately (UI30 §6 pattern 1) should still be able
    to opt out of carrying all of them. Likely a compile flag; not yet designed.
