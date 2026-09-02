@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:170972311dc4e8a1",
+  "sourceHash": "fnv1a64:83e5f2b0fec6192b",
   "lessons": [
     {
       "id": "PT-C01-ola",
@@ -750,22 +750,13 @@
       "romanization": "noite / boa noite",
       "gloss": "night / good night",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab269dd9a6985f4a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The word, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:f379be66cac94944",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -794,18 +785,16 @@
               "text": "a noite (fem.) from Latin noctem (noct-) becomes English nocturnal, equinox. Portuguese turned Latin -ct- into -it- (noite) — the same change French made (nuit), while Spanish went -ch- (noche) and Italian -tt- (notte):"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 5,
-              "rowCount": 2,
-              "headers": [
-                "Latin",
-                "Portuguese",
-                "Spanish",
-                "French",
-                "Italian"
-              ],
-              "text": "There is a table here I cannot read to you — 5 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Latin, Portuguese, Spanish, French, Italian. Come back and look at it when you have stopped."
+              "kind": "speech",
+              "text": "The same change, twice over:"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin noctem becomes Portuguese noite, French nuit; Spanish noche, Italian notte."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin factum becomes Portuguese feito, French fait; Spanish hecho, Italian fatto."
             },
             {
               "kind": "speech",

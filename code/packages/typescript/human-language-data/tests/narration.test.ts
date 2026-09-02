@@ -685,6 +685,10 @@ describe("the whole corpus", () => {
     // speakable person rows. Chapter 18 removes its remaining refused wide table.
     // #12352 removes Italian Chapter 1's five-language sound-change table: the
     // pre-A1 lesson now asks the learner to hear one noctem -> notte change.
-    expect(refusals).toBe(58); // #12529: -2 -- both Tamil five-number wide reveal tables became voice-first two-column quantity/sound tables // #12509: -2 -- both Malayalam five-number wide reveal tables became voice-first two-column quantity/sound tables, so narration can speak them instead of refusing them // HL-C113: unchanged -- ch204 has no table for the narrator to refuse // HL-C157: ayer + hablare close A2 // -2 -- Kannada chapter 7's two five-number wide reveal tables are gone: the chapter is now ten one-word-per-lesson steps with no table for the narrator to refuse
+    // HL-C134: -1 -- Portuguese chapter 1's five-language noctem/factum table
+    // became two spoken lines. It was refused by the narrator AND overflowed the
+    // cousinweb box by 2.78pt, which the LaTeX warning baseline caught; the same
+    // ten forms now read as a list, so there is no table left to refuse.
+    expect(refusals).toBe(57); // #12529: -2 -- both Tamil five-number wide reveal tables became voice-first two-column quantity/sound tables // #12509: -2 -- both Malayalam five-number wide reveal tables became voice-first two-column quantity/sound tables, so narration can speak them instead of refusing them // HL-C113: unchanged -- ch204 has no table for the narrator to refuse // HL-C157: ayer + hablare close A2 // -2 -- Kannada chapter 7's two five-number wide reveal tables are gone: the chapter is now ten one-word-per-lesson steps with no table for the narrator to refuse
   });
 });

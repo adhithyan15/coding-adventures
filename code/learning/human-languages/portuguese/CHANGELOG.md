@@ -39,12 +39,23 @@ exposition with no retrieval anywhere in it. The generated chapter is ten
 lessons, each closing with its own *Your turn* and *Before you move on* box,
 opening with a stated can-do.
 
-**One cosmetic difference.** The `noite` correspondence table was a full-width
-`tabular` in a `center` block; generated, it is a `tabularx` inside the
-`cousinweb` box, and the bold header *Portuguese* overflows that box by 2.8pt
-(under a millimetre). That is the renderer's uniform table treatment across all
-23 books, not something to special-case here, and it is the only visual
-regression in the chapter.
+**The `noite` table is now two spoken lines, and that was not optional.** As a
+full-width `tabular` in a `center` block it fit; generated into the narrower
+`cousinweb` box as a five-column `tabularx`, the header *Portuguese* overflowed
+by 2.78pt. This was first written off here as a sub-millimetre cosmetic
+difference — wrongly. `core/latex-warning-baseline.json` pins Portuguese at
+**zero** overfull boxes and the CI books gate failed on it, which is the gate
+doing its job: the same table was also being **refused by the narrator** for
+being too wide, so one structure was failing two different consumers.
+
+All ten forms survive as a list, with the two *-it-* languages now adjacent so
+the shared change reads at a glance:
+
+- Latin *noctem* → Portuguese **noite**, French *nuit*; Spanish *noche*, Italian *notte*
+- Latin *factum* → Portuguese **feito**, French *fait*; Spanish *hecho*, Italian *fatto*
+
+Overfull boxes: 0. Narration refusals: 58 → 57, because there is no longer a
+table to refuse.
 
 ## Writing begins with the first greeting (#12297)
 

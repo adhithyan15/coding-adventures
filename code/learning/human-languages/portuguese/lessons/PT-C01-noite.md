@@ -46,10 +46,10 @@ equi**nox**. Portuguese turned Latin *-ct-* into **-it-** (*noite*) — the same
 change French made (*nuit*), while Spanish went *-ch-* (*noche*) and Italian
 *-tt-* (*notte*):
 
-| Latin | Portuguese | Spanish | French | Italian |
-|---|---|---|---|---|
-| *noctem* | no**it**e | no**ch**e | nu**it** | no**tt**e |
-| *factum* | fe**it**o | he**ch**o | fa**it** | fa**tt**o |
+The same change, twice over:
+
+- Latin *noctem* → Portuguese **noite**, French *nuit*; Spanish *noche*, Italian *notte*
+- Latin *factum* → Portuguese **feito**, French *fait*; Spanish *hecho*, Italian *fatto*
 
 **boa noite** = "good night" — used both as an evening greeting and the farewell
 for bed.
