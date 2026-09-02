@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "VERB-WANT"
+  "segments": [
+    "HI-PATH-70-WANT"
   ],
+  "omits": [],
   "relocates": {}
 }

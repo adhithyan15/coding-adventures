@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-073-CHAINED-ACTIONS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can chain two actions inside one clause with -kar, conjugating only the last verb.",
+  "prerequisites": [
+    "HI-EXT-072-WHEN"
+  ],
+  "lessons": [
+    "HI-C73-kar",
+    "HI-R73-chain"
+  ]
+}

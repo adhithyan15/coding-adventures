@@ -1,0 +1,13 @@
+{
+  "id": "HI-PATH-73-KAR",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C73-kar",
+    "HI-R73-chain"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-073-CHAINED-ACTIONS"
+  ],
+  "after": []
+}

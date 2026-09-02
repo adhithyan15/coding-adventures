@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "HI-C68-aur",
+    "language": "hindi",
+    "chapter": 68,
+    "sequence": 2610,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:576ea64b808a984a",
+    "detachableSegments": [
+      "The letters in this word — one is still owed to you"
+    ]
+  },
+  "findings": []
+}

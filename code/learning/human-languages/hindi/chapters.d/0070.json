@@ -1,0 +1,22 @@
+{
+  "chapter": 70,
+  "title": "Able, and Willing",
+  "label": "ch:hi-can-and-want",
+  "canDo": "I can say what I am able to do, what I want to do, and tell the bare-stem construction apart from the one that keeps the whole -naa form.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+    "SPINE-SAY-WHAT-I-WANT",
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-R70-can-want",
+    "kind": "production",
+    "summary": "Complete HI-R70-can-want and produce all three unaided: I can come, I want to come, and I cannot come tomorrow.",
+    "assesses": [
+      "HI-LEX-SAKNA-01",
+      "HI-LEX-CHAHNA-01",
+      "HI-GRAMMAR-INFINITIVE-OBJECT-01",
+      "HI-GRAMMAR-SAKNA-STEM-01"
+    ]
+  }
+}

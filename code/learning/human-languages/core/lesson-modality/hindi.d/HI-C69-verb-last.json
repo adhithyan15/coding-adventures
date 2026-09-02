@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C69-verb-last",
+    "language": "hindi",
+    "chapter": 69,
+    "sequence": 2650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:687f3f4091ab36c5"
+  },
+  "findings": []
+}

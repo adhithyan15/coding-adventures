@@ -12,7 +12,13 @@ it("pins Hindi continuity", () => expectLanguageContinuity("hindi"));
 it("pins Hindi modality", () => expectLanguageModality("hindi"));
 it("pins Hindi lesson-content budgets", () =>
   expectLanguageLessonBudgets("hindi", {
-    lessons: 287,
+    // 287 -> 310: the joining tranche (chapters 68-74) adds twenty-three
+    // lessons -- fifteen items, one of them a sound rather than a word, and
+    // seven reviews. Re-measured against the tree. Idioms, senses and culture
+    // claims are unchanged at 21 / 22 / 27: a conjunction is not an idiom, and
+    // the etymologies these lessons carry live in `etymology_hook` rather than
+    // in a culture claim.
+    lessons: 310,
     idioms: 21,
     senses: 22,
     cultureClaims: 27,

@@ -1,0 +1,18 @@
+{
+  "chapter": 71,
+  "title": "Why, and Because",
+  "label": "ch:hi-why-because",
+  "canDo": "I can ask why in Hindi and answer it with a whole reason clause after kyonki, including the one an exam message needs: why I cannot come.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "HI-R71-reasons",
+    "kind": "production",
+    "summary": "Complete HI-R71-reasons and take both turns unaided: ask kyon, then answer with the claim first and kyonki before the reason.",
+    "assesses": [
+      "HI-JOIN-KYON-01",
+      "HI-JOIN-KYONKI-01"
+    ]
+  }
+}
