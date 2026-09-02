@@ -7,6 +7,7 @@ chapter: 16
 type: word
 headword: ചിങ്ങം കന്നി തുലാം വൃശ്ചികം ധനു മകരം കുംഭം മീനം മേടം ഇടവം മിഥുനം കർക്കടകം
 gloss: the twelve months of the Malayalam (Kollam Era) solar calendar — also solar, like Tamil's, but named for ZODIAC SIGNS rather than nakshatras
+romanization: "ciṅṅaṁ kanni tulāṁ vṛścikaṁ dhanu makaraṁ kuṁbhaṁ mīnaṁ mēṭaṁ iṭavaṁ mithunaṁ karkkaṭakaṁ"
 concept_tag: ML-MONTHS
 prerequisites: [ML-C15-vellam-ari]
 sounds: [malayalam-anusvara, malayalam-chillu-rr]

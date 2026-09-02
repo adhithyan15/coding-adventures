@@ -7,6 +7,7 @@ chapter: 20
 type: word
 headword: പതിനൊന്ന് — ഇരുപത്
 gloss: 11-20 — additive "ten-echo" compounds for the teens, then irupathu (20), transparently "two-tens" — iru ("two") + pathu ("ten"), matching Tamil closely
+romanization: "pathinonnŭ — irupathŭ"
 concept_tag: ML-NUM-11-20
 prerequisites: [ML-C19-vayassu]
 sounds: [malayalam-virama-final, malayalam-vowel-sign-i]

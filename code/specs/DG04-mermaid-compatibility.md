@@ -360,6 +360,27 @@ cell geometry before the shared backend-neutral PaintScene lowering path. A
 native Metal-to-PNG fixture gates this slice; nested blocks, spans, classes, and
 style directives remain explicitly unsupported at the partial level.
 
+### Packet Native Slice
+
+The initial Mermaid 11.16.1 packet slice parses `packet` and `packet-beta`
+through dedicated portable grammars into typed packet IR. It preserves
+contiguous absolute inclusive bit ranges, quoted labels, titles, and
+accessibility metadata. `diagram-layout-packet` resolves deterministic 32-bit
+row geometry, and dedicated PaintScene lowering emits backend-neutral field
+rectangles and shaped text. A native Metal-to-PNG fixture gates this slice;
+relative ranges, fields spanning row boundaries, packet configuration, and
+style controls remain explicitly unsupported at the partial level.
+
+### Kanban Native Slice
+
+The initial Mermaid 11.16.1 Kanban slice uses dedicated portable grammars and
+preserves indentation-defined columns and cards, with plain labels and explicit
+`id[label]` forms, in typed board semantic IR. `diagram-layout-board` resolves
+deterministic column/card geometry and dedicated PaintScene lowering emits
+backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
+this slice; icons, classes, shape-data metadata, styles, links, assignments,
+priorities, and configurable fields remain unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:734daa3a2d95ebc2",
+  "lessonIds": [
+    "TA-C65-drink",
+    "TA-C65-walk",
+    "TA-W21-read-kudi",
+    "TA-C65-stop",
+    "TA-C65-open",
+    "TA-C65-close",
+    "TA-C65-doing-recall"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch65.txt",
+  "json": "tamil/narration/ch65.json",
+  "textHash": "fnv1a64:277284b0ae0b7710",
+  "jsonHash": "fnv1a64:2476ea0fb0c80e3f",
+  "findings": []
+}

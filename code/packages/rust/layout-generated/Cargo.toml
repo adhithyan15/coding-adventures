@@ -1,0 +1,8 @@
+[package]
+name = "layout-generated"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable generated-content, CSS counter, and list-marker primitives for Layout IR."
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

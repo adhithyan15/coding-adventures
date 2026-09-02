@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 18,
-  "sourceHash": "fnv1a64:561691b70f9472e3",
+  "sourceHash": "fnv1a64:1ce99ce7fec5887c",
   "lessonIds": [
     "ML-C18-mani",
     "ML-S121-letter-ssa"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch18.txt",
   "json": "malayalam/narration/ch18.json",
-  "textHash": "fnv1a64:ae5f35f772e28c11",
-  "jsonHash": "fnv1a64:69b7abe0fc220413",
+  "textHash": "fnv1a64:59d3f62e9f111a72",
+  "jsonHash": "fnv1a64:71598dd97aaedae3",
   "findings": []
 }

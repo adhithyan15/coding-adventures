@@ -1,0 +1,23 @@
+{
+  "id": "BN-EXT-019-SCRIPT-PIECES-INTO-WORDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read six Bengali words I already say by adding five pieces to the nine I already write, and say why a vowel sign written in front of a consonant is still spoken after it.",
+  "prerequisites": [
+    "BN-EXT-018-SCRIPT-FIRST-PIECES"
+  ],
+  "lessons": [
+    "BN-W02-naam-read",
+    "BN-W02-i-matra",
+    "BN-W02-ami-read",
+    "BN-W02-la",
+    "BN-W02-lal-read",
+    "BN-W02-ta",
+    "BN-W02-tin-read",
+    "BN-W02-u-matra",
+    "BN-W02-tumi-read",
+    "BN-W02-e-matra",
+    "BN-W02-kemon-read"
+  ]
+}

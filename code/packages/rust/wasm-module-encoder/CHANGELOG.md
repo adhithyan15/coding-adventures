@@ -1,5 +1,18 @@
 # Changelog
 
+- 0.2.9 (W33 fourth slice — struct/array text-format support upstream):
+  `wasm-types` 0.1.17 renamed `FieldType.val_type: ValueType` to
+  `FieldType.storage: StorageType` (packed `i8`/`i16` field storage).
+  `encode_field_type` updated to encode `StorageType::I8`/`I16` as two
+  new internal-only tag bytes (`0x78`/`0x77`) alongside the existing
+  `StorageType::Val(_)` path (`ValueType::encode()`, unchanged) — never
+  exercised by this crate's own vendored tests, since this repo's WASM
+  conformance pipeline runs entirely through the TEXT-format path
+  (`wasm-wast-parser` → `WasmModule` → `wasm-execution`), not a binary
+  round-trip, for a plain `(module ...)` script directive. Four
+  `FieldType { val_type, mutable }` test literals updated to
+  `FieldType::plain(...)`. All 24 tests in this crate pass.
+
 - 0.2.8 (W32 second slice — non-null concrete reference types): no code
   change needed in this crate itself, same reason as 0.2.7 below --
   `ValueType::encode()` already handles `NonNullStructRef`/

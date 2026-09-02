@@ -5,6 +5,7 @@ chapter: 4
 type: word
 headword: പോകുക
 gloss: to go (and വരിക, to come)
+romanization: "pōkuka"
 concept_tag: ML-VERB-POKUKA
 prerequisites: [ML-C03-njaan]
 sounds: [long-o, ka-infinitive]

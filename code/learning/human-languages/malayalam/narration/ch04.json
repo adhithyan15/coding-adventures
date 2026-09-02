@@ -4,14 +4,14 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a47a2367c35ccfc2",
+  "sourceHash": "fnv1a64:ab0a74b9863ecb75",
   "lessons": [
     {
       "id": "ML-C04-pokuka",
       "sequence": 220,
       "title": "പോകുക (pōkuka) — \"to go,\" and വരിക (to come)",
       "headword": "പോകുക",
-      "romanization": "",
+      "romanization": "pōkuka",
       "gloss": "to go (and വരിക, to come)",
       "script": "malayalam",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d8375e5f38fd9d85",
+      "sourceHash": "fnv1a64:61715a319990f984",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -77,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പോ (pō) + കുക (kuka, the -uka infinitive) becomes പോകുക. Its partner വരിക (varika, “to come”)."
+              "text": "പോ (pō) + കുക (kuka, the -uka infinitive) becomes പോകുക (pōkuka). Its partner വരിക (varika, “to come”)."
             }
           ]
         },
@@ -404,7 +404,7 @@
       "sequence": 250,
       "title": "വീണ്ടും കാണാം (vīṇḍuṁ kāṇāṁ) — \"we'll meet again\"",
       "headword": "വീണ്ടും കാണാം",
-      "romanization": "",
+      "romanization": "vīṇḍuṁ kāṇāṁ",
       "gloss": "we'll meet again",
       "script": "malayalam",
       "modality": "sight",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3a1fb92a59043286",
+      "sourceHash": "fnv1a64:dfcd736366e3d862",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വീണ്ടും കാണാം = വീണ്ടും (vīṇḍuṁ, \"again\") + കാണാം (kāṇāṁ, \"let's see\") — \"we'll see [each other] again.\" Both words are native Dravidian: vīṇḍuṁ (\"again,\" from vīṇṭu, \"to return\") and kāṇ (\"to see\"). Where Tamil's \"we'll meet again\" reaches for the Sanskrit loan sandi to say \"meet,\" Malayalam — like Kannada — keeps its own native verb, here \"to see.\""
+              "text": "വീണ്ടും കാണാം (vīṇḍuṁ kāṇāṁ) = വീണ്ടും (vīṇḍuṁ, \"again\") + കാണാം (kāṇāṁ, \"let's see\") — \"we'll see [each other] again.\" Both words are native Dravidian: vīṇḍuṁ (\"again,\" from vīṇṭu, \"to return\") and kāṇ (\"to see\"). Where Tamil's \"we'll meet again\" reaches for the Sanskrit loan sandi to say \"meet,\" Malayalam — like Kannada — keeps its own native verb, here \"to see.\""
             }
           ]
         },

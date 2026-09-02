@@ -75,14 +75,15 @@ links existing Mosaic work instead of duplicating it.
    preserve dynamic `HostButton.a11y-label` values in Qt, Flutter, SwiftUI,
    and XAML. Discovered while validating #13691; React and Compose are covered
    by that product fix, while the other native emitters need focused repairs.
-   **In progress.**
+   **Done in #13782.**
 22. **P1 — [#13725](https://github.com/adhithyan15/coding-adventures/issues/13725):**
    make Flutter preserve the correct flex context through nested Mosaic
    `If`/`Else` branches. Discovered by the #13689 native widget lifecycle; the
    TaskApp layout now avoids the invalid lowering, while the emitter needs a
-   focused regression so another app cannot recreate it.
+   focused regression so another app cannot recreate it. **Done in #13803.**
 23. **P1 — [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690):**
    expose durable-storage fallback, recovery, and backup information in the UI.
+   **Done in #13837.**
 24. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
    replace blank startup with loading and failure states.
 25. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**

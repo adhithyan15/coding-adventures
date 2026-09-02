@@ -7,6 +7,7 @@ chapter: 19
 type: phrase
 headword: നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?
 gloss: how old are you? — literally "to you how much age exists?"; the SAME Sanskrit vayas word, but Malayalam adds a dative-subject + existential verb, a genuinely different shape than Kannada/Telugu's plain possessive
+romanization: "niṅṅaḷkkŭ ethra vayassuṇṭŭ?"
 concept_tag: ML-AGE
 prerequisites: [ML-C18-mani]
 sounds: [malayalam-chillu-l, malayalam-existential-undu]

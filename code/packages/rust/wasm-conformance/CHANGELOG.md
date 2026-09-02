@@ -1,5 +1,328 @@
 # Changelog — wasm-conformance
 
+## 0.1.114 — 2026-09-01 — mechanical fallout from `wasm-execution`'s `GlobalStorage` (W35 third slice)
+
+Slice 3 of 4 for `code/specs/W35-wasm-cross-instance-function-identity.md`
+(see `wasm-execution`/`wasm-runtime`'s own CHANGELOGs for the actual new
+machinery — this crate's own changes are PURELY the mechanical fallout
+compiling against it requires, per this slice's own explicit scope
+boundary: "ModuleRegistry wiring changes beyond whatever MECHANICAL
+fallout compiling ... requires" — real cross-module `CrossModuleFunction::
+identity()` propagation and the actual registry wiring slice 4 needs are
+explicitly NOT touched here).
+
+- **`RegistryHost::resolve_global`**: return type follows `wasm-execution`'s
+  `HostInterface::resolve_global` signature change
+  (`Rc<RefCell<GlobalStorage>>`, was `Rc<RefCell<WasmValue>>`) — the
+  function body itself (`instance.globals.get(index)?.clone()`) needed no
+  logic change at all, since `instance.globals`'s own element type already
+  follows `wasm-runtime`'s `WasmInstance::globals` change.
+- **`Executor::run_action`'s `Action::Get` handler** (the `(get "name")`
+  script action, used by `assert_return`/`assert_trap` against a global
+  export): reads `GlobalStorage::value`, not the whole `GlobalStorage` —
+  a real funcref-typed global's `value` here is the reserved
+  `WasmValue::Ref(Some(0))` sentinel (see `GlobalStorage`'s own doc
+  comment in `wasm-execution`); its real identity lives in `func_ref`,
+  unused by this action. This is intentionally the SAME "mechanical
+  fallout only" scope as `RegistryHost`'s own fix above — real funcref-
+  equality/cross-module-propagation semantics for this action are not
+  addressed here.
+
+### Verification
+
+- `cargo build -p wasm-conformance`: clean.
+- `cargo test -p wasm-conformance`: 60 lib tests + `testsuite_conformance`
+  integration test (the full 257-file corpus), all passing, unchanged.
+- `cargo run --release --bin wasm_conformance_report -- --write-baseline`:
+  regenerated baseline byte-for-byte identical to the pre-slice-3
+  committed one.
+
+## 0.1.113 — 2026-09-01 — baseline update: `binary-leb128.wast`/`binary.wast` LEB128 + data-count-section fixes
+
+Baseline regen (`--write-baseline`) after the LEB128 under-strictness and
+missing-data-count-section-gate fixes in `wasm-module-parser`/`wasm-
+validator`/`wasm-types` (this repo's fresh corpus-wide prioritization
+pass, `code/specs/W07-wasm-post-mvp-epics.md`'s "Addendum (2026-09-01)"
+item 2 — see `wasm-validator`'s own CHANGELOG for the full root-cause
+writeup, since that's where both fixes actually live). Direct-probed
+(`run_wast_source` against each of the two suspect files individually,
+one throwaway test per file, before touching any source) to identify
+exactly which `assert_malformed` directives were failing and confirm
+they all shared the harness's generic `"binary module parsed but should
+have been rejected as malformed"` message — 7 in `binary-leb128.wast`
+(of 58 total `assert_malformed` directives) and 2 in `binary.wast` (of
+107), turning out to be two unrelated root causes once actually
+root-caused rather than three assumed-identical LEB128 cases each.
+
+### Corpus impact (programmatic before/after diff of `tests/fixtures/
+testsuite-status.json`'s `files` map, all 257 vendored files)
+
+Exactly 2 files changed:
+
+- `binary-leb128.wast`: `assert_malformed` 51/58 (7 failing) -> 58/58 (0
+  failing).
+- `binary.wast`: `assert_malformed` 105/107 (2 failing) -> 107/107 (0
+  failing).
+
+Zero regressions anywhere else in the 257-file corpus. Notably including
+`binary_leb128_64.wast`, which DID regress during an intermediate,
+too-broad version of the fix (unconditionally bounding a memory
+instruction's `offset` memarg field to 32 bits, rather than only when the
+addressed memory isn't `is64`) — this diff is exactly what caught that
+regression before it shipped; see `wasm-validator`'s own CHANGELOG for
+the full story of why `offset`'s width is genuinely memory-dependent, not
+a fixed 32 or 64 bits.
+
+Aggregate `assert_malformed` tally: 1304 pass / 9 fail / 627 `not_yet_
+supported` -> 1313 pass / 0 fail / 627 `not_yet_supported` (unchanged;
+all pre-existing, unrelated gaps).
+
+## 0.1.112 — 2026-09-01 — W-next: RegistryHost's resolve_global now shares, doesn't copy
+
+`RegistryHost::resolve_global` (this crate's own `HostInterface` impl,
+resolving a `register`ed sibling module's export for real cross-module
+linking, WASM05/W10) used to return `*instance.globals.get(index)?` — a
+genuine VALUE COPY of whatever the exporting instance's global held AT
+THAT EXACT MOMENT. Fixed to `instance.globals.get(index)?.clone()`,
+cloning the `Rc<RefCell<WasmValue>>` POINTER instead (see `wasm-
+execution`'s own CHANGELOG for the field-level fix this depends on) —
+the exact same shape `resolve_memory`/`resolve_table`'s own `.cloned()`
+already has (W28), just applied to the one remaining piece of instance
+state that hadn't gotten it yet. `Action::Get`'s own global-read path
+(`(get $M "name")` directives) now dereferences the shared cell
+(`*g.borrow()`) rather than expecting an owned `WasmValue` back.
+
+Root-caused via a fresh prioritization pass over the module-linking
+corner of the conformance corpus (`instance.wast`/`linking.wast`'s own
+`mut_glob`/"Import is not generative" tests) — see `wasm-runtime`'s own
+CHANGELOG for the full bug-hunt writeup, including a second, unrelated
+bug (active element segments applied after data segments instead of
+before) found and fixed in the same pass, and a third, pre-existing gap
+(table entries have no real cross-instance function identity) confirmed
+as the sole remaining cause of everything else in this cluster.
+
+### Corpus impact
+
+See `wasm-runtime`'s own CHANGELOG for the full, programmatically-diffed
+baseline accounting across all 257 files (this crate's own baseline file,
+`tests/fixtures/testsuite-status.json`, is the artifact that diff reads).
+
+
+## 0.1.111 — 2026-09-01 — fix: `br_table.wast` total-failure regression (found during corpus prioritization pass)
+
+A fresh prioritization pass over the vendored testsuite (pinned at SHA
+`28864811cf03bdbf880733786148feaba339582d`) turned up a real, previously
+un-investigated regression baked into the checked-in `testsuite-status.
+json` baseline: `br_table.wast` — a foundational MVP-level control-flow
+file, no GC-proposal syntax involved — was TOTALLY failing (`module
+0/1`, `assert_return 0/161`), all cascading from the one module failing
+structural validation. This had shipped silently because the baseline
+mechanism only detects CHANGES from a prior baseline, not absolute
+correctness — a regression that lands and then never changes again is
+invisible to it indefinitely.
+
+Root cause: two independent bugs, both in how a table declared with a
+CONCRETE function-reference type (`(table $t (ref null $t) (elem $tf))`
+— function-references proposal, but an entirely ordinary MVP-adjacent
+construct) interacted with `table.get` and `br_table`'s multi-target
+type check. Full technical writeup in `wasm-validator`'s own CHANGELOG
+(the fix landed there and in `wasm-wast-parser`/`wasm-types`); this
+entry covers the corpus-wide verification.
+
+### Corpus impact
+
+Baseline regenerated (`cargo run --release --bin wasm_conformance_report
+-- --write-baseline`) and diffed PROGRAMMATICALLY against the pre-fix
+`testsuite-status.json` (comparing the `files` dict, keyed by filename,
+across all 257 parsed files) — not spot-checked. Exactly **one** file's
+tally changed:
+
+| file | directive | before | after |
+|---|---|---|---|
+| `br_table.wast` | `module` | 0/1 pass (1 fail) | 1/1 pass |
+| `br_table.wast` | `assert_return` | 0/161 pass (161 fail) | 161/161 pass |
+| `br_table.wast` | everything else (`assert_invalid`, etc.) | unchanged | unchanged |
+
+Every other file in the corpus that ALSO declares a table with a
+concrete/GC-flavored reftype (`table.wast`, `elem.wast`, `type-
+subtyping.wast`, `table-sub.wast`, `ref.wast`, `linking.wast`, `ref_eq.
+wast`, `i31.wast`, `ref_is_null.wast`, `ref_cast.wast`, `ref_test.wast`)
+was checked individually against its own before/after entry, not just
+inferred from the unchanged aggregate: every one of them already hit an
+EARLIER `NotYetSupported` gate (a whole-module feature-detection heuristic
+that fires on OTHER unsupported constructs elsewhere in the same module)
+before validation ever reached the code this fix touches, so neither bug
+was reachable in any of them — confirming this fix is precisely scoped
+to the one file it was meant to repair, with zero regressions and zero
+missed collateral fixes elsewhere in the corpus.
+
+Aggregate `module`/`assert_return` percentages both round to the same
+displayed figure before and after (br_table.wast's own 1 module + 161
+assert_return directives are a small fraction of the corpus's 1983/51779
+totals), so the per-file diff above — not the aggregate line — is the
+real evidence this fix worked and didn't regress anything.
+
+## 0.1.110 — 2026-09-01 — W34 fourth slice: cross-module canonical type-group equivalence (epic closed)
+
+`CrossModuleFunction` (this crate's own `HostFunction` impl standing in
+for "another WASM module's export" in its cross-module linking path) now
+implements both of `HostFunction`'s new W34 fourth-slice methods, the
+concrete piece this epic's whole "wire canonical equivalence into
+CROSS-MODULE linking" design depended on (`code/specs/
+W34-wasm-gc-canonical-type-equivalence.md`):
+
+- **`canonical_type()`**: returns the EXPORTING instance's own already-
+  computed `canonical_types[idx]` entry for this function's flat type-
+  section index (`instance.canonical_types`, cloned once — cheap,
+  `Rc`-backed — at `resolve_function` time, alongside the pre-existing
+  `group_shape`/`is_final` computation).
+- **`canonically_matches(target)`**: climbs the exporting instance's own
+  `type_subtyping` chain (via the new `wasm_types::canonical_chain_
+  reaches`), starting at this function's own type index (kept in a new
+  `type_idx: Option<u32>` field, re-borrowing `instance` lazily rather
+  than precomputing the whole chain eagerly) — the real cross-module
+  subtyping rule `type-subtyping.wast`'s `M6`/`M7` "Linking" cases need
+  (see `wasm-runtime`'s own CHANGELOG for how this was found: an earlier
+  version of this slice used plain equivalence and regressed those two
+  cases).
+- 2 new end-to-end tests (`run_wast_source`, this crate's own top-level
+  entry point, exactly how the real conformance harness exercises this
+  path): `cross_module_isomorphic_rec_groups_with_no_shared_numbering_
+  link_successfully` (the MVP.md/`type-equivalence.wast` "Isomorphic
+  recursive types" headline shape — two mutually-referencing types, no
+  shared numbering, importer's group padded to a different absolute
+  index) and `cross_module_copy_paste_shaped_type_mismatch_is_correctly_
+  rejected` (the `M5`-shaped negative case: superficially similar type
+  names reused across modules, but one internal reference wired to a
+  DIFFERENT earlier group than its counterpart — must NOT be accepted).
+
+### Corpus impact
+
+Baseline regenerated and diffed programmatically against the pre-slice
+baseline across all 257 files — see `wasm-runtime`'s own CHANGELOG for
+the full per-file, per-directive accounting (2 files changed, 5
+directive-level improvements, zero regressions). This crate's own
+`tests/fixtures/testsuite-status.json` is updated to match.
+
+## 0.1.109 — 2026-09-01 — W33 fourth slice: struct/array TEXT-format grammar + runtime semantics
+
+Regenerated the baseline after `wasm-types` 0.1.17, `wasm-wast-parser`
+0.1.91, `wasm-validator` 0.2.79, `wasm-execution` 0.9.82, and
+`wasm-runtime` 0.6.19 (struct/array TEXT-format parsing, static
+checking, and runtime semantics). Exactly 4 files changed in the full
+257-file corpus; every other file byte-for-byte identical.
+
+**`struct.wast`**: `module` 0/6 (not yet supported) → 6/6 (100%);
+`assert_return` 0/17 (nys) → 17/17 (100%); `assert_trap` 0/2 (nys) →
+2/2 (100%); `assert_malformed` unchanged 1/1 (100%, the "duplicate
+field" case). `assert_invalid` 4/4 (100%) → 3/3 (100%) + 1 not yet
+supported — an honest reclassification: this file's own field-name
+`(struct.get 0 $x ...)` "type mismatch" case needs an instruction-level
+check (the func's declared result type vs. the field's REAL type) this
+crate has never had for ANY opcode, not something struct/array
+introduced — previously this case was invisible ("Pass" only because
+the whole module failed to PARSE, which trivially satisfies
+`assert_invalid`); now it parses for real and honestly reports what it
+can't check.
+
+**`array.wast`**: `module` 0/7 (nys) → 4/4 (100%) + 3 nys;
+`assert_return` 0/24 (nys) → 10/10 (100%) + 14 nys; `assert_trap` 0/17
+(nys) → 6/6 (100%) + 11 nys; `assert_invalid` unchanged 6/6 (100%). The
+remaining not-yet-supported directives are `array.new_data`/
+`array.new_elem`'s own sections — deliberately not implemented this
+slice (need real data-/elem-segment integration), confirmed via direct
+inspection, not assumed.
+
+**`type-rec.wast`** and **`type-subtyping.wast`**: struct/array grammar
+unlocks parsing further into BOTH files (they interleave func/struct
+types inside the same `rec` groups extensively), surfacing a small
+number of new, individually-traced fails — every one attributable to
+either of two PRE-EXISTING, already-documented gaps, now newly
+REACHABLE rather than newly broken:
+- **(3b), cross-module/same-module canonical type-group equivalence**
+  (`code/specs/W33-wasm-gc-recursive-type-subtyping.md`'s own
+  first-slice addendum already named this the real remaining boundary):
+  `type-rec.wast`'s own "Static matching of recursive types"/"Dynamic
+  matching of recursive types" sections and `type-subtyping.wast`'s own
+  "Linking" section BOTH depend on recognizing two independently-
+  declared, structurally-identical `rec` groups as the SAME type — this
+  crate's nominal-only `sub`-chain check (correct within its own scope)
+  cannot do that by construction, exactly as documented three addenda
+  ago.
+- **No instruction-level type checker for struct/array's own precise
+  result types**: `struct.get`/etc. push `StackType::Unknown` for the
+  read value (matching this crate's pre-existing, long-standing
+  convention for every not-fully-modeled opcode, e.g. `ref.cast`), so a
+  case that needs the checker to notice a DECLARED type disagreeing
+  with the field's real type reports `NotYetSupported`, not a false
+  pass — this is the SAME class of limitation already tracked
+  throughout this crate (`code/specs/W02-wasm-validator.md`), not new.
+
+Per-file tallies, `type-rec.wast`: `module` 2/2(100%)+9nys → 9/11(81.8%)
+[+7 real passes, +2 new fails (3b)]; `register` 0/1(nys)→1/1(100%)
+[+1]; `assert_return` 0/1(nys)→0/1(0%) [1 new fail (3b — canonical
+equivalence needed for `call_indirect`/`ref.func` against
+structurally-but-not-nominally-equal rec groups)]; `assert_trap`
+0/2(nys)→2/2(100%) [+2]; `assert_invalid` 9/9(100%)+1nys→7/7(100%)+3nys
+[2 more honest reclassifications, same instruction-level-checker gap as
+`struct.wast`'s own case above].
+
+`type-subtyping.wast`: `module` 12/12(100%)+34nys→21/22(95.5%)+24nys
+[+9 real passes, +1 new fail (3b)]; `register` 4/4(100%)+7nys→7/7(100%)+4nys
+[+3]; `assert_return` 10/10(100%)+7nys→12/13(92.3%)+4nys [+2 real
+passes, +1 new fail (3b — the "Subsumption" 3-cycle section)];
+`assert_unlinkable` 6/8(75%)→5/8(62.5%) [1 new fail — a THIRD "Linking"
+section case needing (3b), alongside the 2 (M10/M11) already documented
+in the first-slice addendum].
+
+Zero other files in the 257-file corpus changed. Verified via a
+programmatic full-baseline diff, not spot-checked.
+
+## 0.1.108 — 2026-08-31 — W33 second slice: real `ref.cast`/`ref.test`/`call_indirect` dynamic dispatch (item 4)
+
+Regenerated the baseline after `wasm-wast-parser` 0.1.90 (`ref.test`/
+`ref.cast` TEXT-format parsing), `wasm-execution` 0.9.81 (real dynamic
+dispatch for both plus a fixed `call_indirect` subtype check), `wasm-
+validator` 0.2.78 (a `ref.cast` byte-layout fix), and `wasm-runtime` 0.6.18
+(threading the new subtyping info through) — see each crate's own
+changelog for its half of the implementation, and `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s second addendum for the design.
+
+Diffed programmatically against the pre-change baseline for every one of
+the 257 vendored files, not just `type-subtyping.wast` — **exactly ONE
+file changed, zero unexplained regressions, zero new `fail`/`trap`
+anywhere in the other 256 files.**
+
+- **`type-subtyping.wast`** (the only change):
+  - `module`: 8/46 → **12/46** (+4 real passes; 34 still `not_yet_
+    supported` — confirmed via a direct parse-error probe, ALL 34 are
+    blocked purely on this crate's still-fully-open struct/array
+    TEXT-format type-declaration gap (W33's own "Recommended scope" step
+    2, unrelated to this slice), NOT on anything this slice attempted:
+    every one of the "Runtime types" section's `rec`-group modules past
+    line 401 (M3-M11) interleaves a `func` type and an anonymous `struct`
+    type in the SAME `rec` group, and `(type (struct ...))` still isn't a
+    parseable type body.
+  - `assert_return`: 7/17 → **10/17** (+3; the "Runtime types" section's
+    `call_indirect`/`ref.cast` module — lines 283-343 — now fully
+    reachable and correct).
+  - `assert_trap`: 2 fail + 10 `not_yet_supported` (0/12 real passes) →
+    **12/12, zero fail, zero not_yet_supported** — every single-module
+    `call_indirect`/`ref.cast` trap case in the "Runtime types" section
+    (lines 337-400) now passes, including the 2 pre-existing fails the
+    W33 first-slice addendum traced to the (until now) equality-only
+    `call_indirect` check.
+  - `assert_unlinkable`: unchanged, 6/8 (the 2 remaining fails are the
+    genuine M10/M11 `rec`-group topology mismatch, confirmed still
+    requiring item 3b — cross-module canonical equivalence, still
+    explicitly out of scope; see the spec's own accounting, unchanged by
+    this slice).
+  - `assert_invalid`: unchanged, 36/36 (already fully passing).
+
+No other file's tally moved by even one directive — verified via a
+programmatic before/after diff over the full `testsuite-status.json`, not
+spot-checked.
+
 ## 0.1.107 — 2026-08-31 — const-expr type-checker (`wasm-validator`'s "third gap")
 
 Regenerated the baseline after `wasm-validator` 0.2.77 added a real

@@ -7,6 +7,7 @@ chapter: 31
 type: etymology
 headword: ശുഭ മധ്യാഹ്നം — three-way convergence
 gloss: Malayalam, Kannada, and Telugu converge on one formal greeting after building everyday afternoon words three different ways
+romanization: "śubha madhyāhnaṁ — three-way convergence"
 concept_tag: ML-GREETING-AFTERNOON-CONVERGENCE
 prerequisites: [ML-C31-shubha-madhyaahnam]
 sounds: []

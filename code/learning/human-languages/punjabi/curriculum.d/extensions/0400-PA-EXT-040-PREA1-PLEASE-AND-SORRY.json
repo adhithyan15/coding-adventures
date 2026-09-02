@@ -1,0 +1,15 @@
+{
+  "id": "PA-EXT-040-PREA1-PLEASE-AND-SORRY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask politely and apologise, and say which tradition each phrase's noun came from.",
+  "prerequisites": [
+    "PA-EXT-039-PREA1-GOOD-AND-SOSO"
+  ],
+  "lessons": [
+    "PA-C33-miharbani-karke",
+    "PA-W09-thattha",
+    "PA-C33-maaf-karo"
+  ]
+}

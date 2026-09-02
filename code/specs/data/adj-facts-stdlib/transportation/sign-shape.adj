@@ -1,0 +1,125 @@
+% ============================================================================
+% sign-shape — the shape the federal standard specifies for a traffic sign
+% (adj-facts-stdlib, TRANSPORTATION).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? sign_shape(stop_sign, $S)
+%       % octagon
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `sign_shape(sign, shape)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query. The BACKWARD query is
+% the one a child actually asks — "which sign is the eight-sided one?" —
+% and `? sign_shape($Sign, octagon)` answers it.
+%
+% THIRD transportation library, joining `traffic-lights.adj` and
+% `green-signal-permitted-movement.adj`, which cite the same publisher: the
+% FHWA's Manual on Uniform Traffic Control Devices (MUTCD), the federal
+% standard for what American road signs must look like.
+%
+% *** THIS TABLE CONTAINS A DEFAULT AND ITS OWN EXCEPTIONS, AND THAT IS
+% WHY THE HEDGES ARE LOAD-BEARING RATHER THAN DECORATIVE. ***
+%
+% The MUTCD states two shape DEFAULTS, each explicitly defeasible:
+%
+%     "Regulatory signs shall be rectangular unless specifically
+%      designated otherwise."
+%     "Except as provided in Paragraph 2 or unless specifically designated
+%      otherwise, all warning signs shall be diamond-shaped ..."
+%
+% and then designates otherwise, repeatedly. STOP and YIELD are BOTH
+% regulatory signs, and neither is rectangular — one is an octagon, the
+% other a downward-pointing equilateral triangle. NO PASSING ZONE is a
+% warning sign that is not a diamond.
+%
+% So the rows would CONTRADICT EACH OTHER if the defaults were recorded
+% flatly. They do not contradict, because each default carries its
+% defeasibility inside its own atom —
+% `rectangular_unless_specifically_designated_otherwise` — following the
+% placement rule `veto-override.adj` and `karst-process-zone.adj` apply. A
+% query for a bare unqualified `rectangular` therefore ABSTAINS, which is
+% correct: the MUTCD never says regulatory signs ARE rectangular, and its
+% own next sections are the proof.
+%
+% This is the clearest case yet for that rule. In earlier libraries the
+% hedge preserved a shade of confidence; here, dropping it would make the
+% library state a falsehood that the same document refutes two sections
+% later.
+%
+% Provenance: five sentences from two CHAPTERS of the 2009 MUTCD — Chapter
+% 2B, "Regulatory Signs, Barricades, and Gates", and Chapter 2C, "Warning
+% Signs And Object Markers", both within Part 2, "Signs". The `source`
+% envelope carries the regulatory default from Chapter 2B; the
+% corroborations carry STOP (Section 2B.05) and YIELD (Section 2B.08) from
+% the same chapter, and the warning default (2C.03) and the pennant
+% exception (2C.45) from Chapter 2C, which has its OWN locator.
+%
+% Those section numbers matter to the argument rather than being decoration:
+% STOP and YIELD sit inside the REGULATORY chapter, which is what makes them
+% counterexamples to the regulatory default rather than unrelated signs, and
+% NO PASSING ZONE sits inside the WARNING chapter for the same reason.
+%
+% THE WARNING-SIGN CITATION BEGINS WITH ITS EXCEPTION CLAUSE, DELIBERATELY.
+% The sentence in the manual opens "Except as provided in Paragraph 2 or
+% unless specifically designated otherwise, ..." and only then reaches
+% "all warning signs shall be diamond-shaped". Quoting from "all warning
+% signs" would have been a shorter, tidier citation that DROPPED the hedge
+% from the evidence itself — leaving an atom that says "unless designated
+% otherwise" backed by a quotation that appears to say no such thing. The
+% citation has to carry the qualifier it is being used to justify.
+%
+% `trust authoritative` — the FHWA is the first-party federal publisher of
+% the MUTCD, and this is the standard itself rather than a description of
+% it. Both pages were CONTENT-verified by RAW TEXT EXTRACTION (HTTP 200,
+% 589 and 406 substantive sentences, zero soft-404 markers), and every
+% quoted sentence was confirmed to appear verbatim in that extraction.
+%
+% Provenance is TABLE-level, so all five rows carry all five sentences and
+% `--explain` shows only the primary one — meaning the STOP row displays
+% under the regulatory-default sentence, which does not ground it. That is
+% a property of every multi-sentence table in this stdlib, tracked as issue
+% #13898; the JSON output is the authoritative view.
+%
+% Honest abstention:
+%
+%   - BARE `rectangular` and bare `diamond_shaped` are NOT values. Asking
+%     which sign is simply rectangular is asking for a claim the manual
+%     declines to make, and this table declines with it.
+%   - SPEED LIMIT, ONE WAY, DO NOT ENTER and the rest of the regulatory
+%     family get no rows. They are governed by the rectangular default,
+%     but the default is defeasible and this library records only shapes
+%     the manual states for a NAMED sign. Inferring "rectangular" for a
+%     specific sign from the general rule is exactly the reasoning-as-
+%     recall this stdlib exists to prevent, and the STOP and YIELD rows
+%     are standing proof that the inference is unsound.
+%   - The RAILROAD CROSSBUCK, school-zone pentagon, and the interstate
+%     shield are real shaped signs specified elsewhere in the manual. They
+%     are not in the five sentences quoted here, so they are not rows; a
+%     later slice can add them from their own sections.
+%   - COLOR is not a value of this relation, though the quoted sentences
+%     state it. Sign colour is a different axis and deserves its own
+%     table rather than being smuggled into a shape column.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table sign_shape {
+    columns sign, shape
+
+    row (regulatory_sign, rectangular_unless_specifically_designated_otherwise)
+    row (stop_sign, octagon)
+    row (yield_sign, downward_pointing_equilateral_triangle)
+
+    row (warning_sign, diamond_shaped_unless_specifically_designated_otherwise)
+    row (no_passing_zone_sign, pennant_shaped_isosceles_triangle)
+
+    source "Regulatory signs shall be rectangular unless specifically designated otherwise."
+    locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    trust authoritative
+    cites "The STOP sign shall be an octagon with a white legend and border on a red background." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    cites "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    cites "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
+    cites "The NO PASSING ZONE (W14-3) sign (see Figure 2C-8) shall be a pennant-shaped isosceles triangle with its longer axis horizontal and pointing to the right." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
+}

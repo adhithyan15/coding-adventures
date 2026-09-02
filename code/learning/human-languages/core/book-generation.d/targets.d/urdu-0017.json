@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 17,
+  "output": "urdu/book/chapters/ch17-script-copula.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

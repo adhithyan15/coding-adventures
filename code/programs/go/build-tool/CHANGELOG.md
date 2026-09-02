@@ -4,6 +4,41 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **The planner now decides which GitHub Actions jobs a change needs.** A new
+  `-ci-gates` flag reads a declarative registry
+  (`code/specs/data/ci-gates.json`, default) that names each gated CI job and
+  declares the packages it exercises and the non-package paths it reads. During
+  plan emission the tool intersects those declarations with the affected closure
+  and the raw changed-file list, writes the verdicts into the build plan as an
+  optional `ci_jobs` object, and emits one `run_<gate>=true|false` line per gate
+  to stdout and `$GITHUB_OUTPUT`. `ci.yml` consumes them as job-level `if:`
+  conditions, so a human-languages pull request no longer runs the Ruby
+  compiled-grammar regeneration, the four six-language chief-of-staff crypto
+  conformance jobs, or the five Unicode 17 runtime checks.
+
+  Measured across 35 successful pull-request runs beforehand: ~91 min mean
+  wall-clock against ~48 min of total execution, with `detect` waiting a median
+  43 min for a runner. About 70% of a run was queueing, because every run
+  claimed 16 concurrent slots from a saturated ceiling and the eleven always-on
+  jobs declared no `needs:` — so they were scheduled ahead of the very job that
+  decides what needs to run.
+
+  Gate evaluation fails open: force mode, an unavailable git diff, or a change
+  to `ci.yml` or the registry itself runs every gate, and main-branch pushes
+  already pass `-force`, so a gate that is wrong on a pull request is still
+  caught on merge. A malformed or unfireable registry entry is a hard error
+  rather than a silent all-false, because a gate that never fires is
+  indistinguishable from a gate that always passes. See
+  `code/specs/ci-gate-registry.md` and `internal/cigates`.
+
+  Note that a gate needs BOTH clauses to work: `sharedPrefixes` is empty, so
+  changes under `code/specs`, `code/fixtures`, `code/grammars`, and
+  `code/scripts` map to zero packages and never reach `affected_packages`. A
+  package-only gate would skip the D18F job on a pull request that changed only
+  the D18F manifest — exactly the drift that job exists to catch.
+
 ### Fixed
 
 - **Source collection and package digests now match portable hashing v1.**

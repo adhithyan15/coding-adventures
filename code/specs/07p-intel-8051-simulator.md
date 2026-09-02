@@ -49,8 +49,9 @@ allowing the CPU to fetch the next instruction and read data simultaneously.
 This differs from the von Neumann (Princeton) architecture used by most
 desktop processors, where code and data share one address space.
 
-This spec defines Layer **07p** — a Python behavioral simulator for the 8051
-following the SIM00 `Simulator[I8051State]` protocol.
+This spec defines Layer **07p** — the complete Rust behavioral simulator for
+the 8051. The mature Python implementation remains the independent behavioral
+oracle and generates the committed exhaustive full-state fixture.
 
 ---
 
@@ -560,37 +561,12 @@ same way PDP-11 programs terminate with `0x0000`.
 
 ---
 
-## SIM00 protocol implementation
+## Rust lifecycle contract
 
-The simulator implements `Simulator[I8051State]` from `simulator_protocol`.
-
-### `I8051State` (frozen dataclass)
-
-```python
-@dataclass(frozen=True)
-class I8051State:
-    pc:     int               # 16-bit program counter
-    acc:    int               # accumulator (8-bit)
-    b:      int               # B register (8-bit)
-    sp:     int               # stack pointer (8-bit)
-    dptr:   int               # 16-bit data pointer
-    psw:    int               # program status word (8-bit)
-    iram:   tuple[int, ...]   # 256 bytes of internal RAM (includes SFRs at 0x80+)
-    xdata:  tuple[int, ...]   # 65536 bytes of external data memory
-    code:   tuple[int, ...]   # 65536 bytes of code memory
-    halted: bool
-
-    @property
-    def cy(self) -> bool: return bool((self.psw >> 7) & 1)
-    @property
-    def ac(self) -> bool: return bool((self.psw >> 6) & 1)
-    @property
-    def ov(self) -> bool: return bool((self.psw >> 2) & 1)
-    @property
-    def parity(self) -> bool: return bool(self.psw & 1)
-    @property
-    def bank(self) -> int: return (self.psw >> 3) & 0x3
-```
+`Intel8051State` owns PC, all 256 IRAM/SFR bytes, both 64 KiB code and XDATA
+spaces, the halt bit, and the checked loaded-program boundary. `StepTrace` owns
+complete before/after states, raw instruction bytes, PCs, and the mnemonic.
+`ExecutionResult` owns the final state and every checked trace.
 
 ### Reset state
 
@@ -606,52 +582,40 @@ class I8051State:
 | All IRAM | 0x00    | Zeroed (simulator convention)           |
 | All XDATA| 0x00    | Zeroed                                  |
 
-### `load(program: bytes) → None`
+The normative checked methods are:
 
-1. Call `reset()`.
-2. Copy `program` bytes into `_code[0:len(program)]`. Raises `ValueError` if
-   `len(program) > 65536`.
-3. PC remains 0x0000.
+- `get_state()` and atomic `restore()`;
+- `load_checked()` and `load_at_checked()`, which validate first, reset, clear
+  code/XDATA deterministically, and install one contiguous program;
+- `step_checked()`, which rejects halted or truncated entry and restores the
+  complete entry state on an execution fault;
+- `run_loaded_checked()` and `run_checked()`, which are transactional across the
+  whole bounded run.
 
-### `step() → StepTrace`
-
-1. If `_halted`: return a `StepTrace` with `mnemonic="HALT"`, `pc_before=pc`,
-   `pc_after=pc` (no-op).
-2. Fetch opcode byte at `_code[pc]`, increment PC.
-3. Decode, fetch additional operand bytes (incrementing PC).
-4. Execute: update `_iram`, `_xdata`, `_code`, PSW, SP, DPTR, ACC, B, PC.
-5. Recompute parity: `PSW.P = popcount(ACC) & 1`.
-6. Return `StepTrace(pc_before, pc_after, mnemonic, state_after=get_state())`.
-
-### `execute(program, max_steps=100_000) → ExecutionResult`
-
-1. Call `load(program)`.
-2. Loop: call `step()` up to `max_steps` times.
-3. If `_halted`: return `ExecutionResult(ok=True, halted=True, steps=n, ...)`.
-4. If `max_steps` exceeded: return `ExecutionResult(ok=False, error="max_steps exceeded")`.
-5. On exception: return `ExecutionResult(ok=False, error=str(e))`.
+`Intel8051Error` distinguishes halted, program-range, invalid-state, truncated-
+instruction, and execution failures. Legacy `load_program`, `step`, `run`, and
+`run_loaded_with_limit` remain for existing backend and encoder consumers.
 
 ---
 
-## Package layout
+## Rust package layout
 
 ```
-code/packages/python/intel8051-simulator/
-├── pyproject.toml
+code/packages/rust/intel8051-simulator/
+├── Cargo.toml
 ├── README.md
 ├── CHANGELOG.md
-└── src/
-    └── intel8051_simulator/
-        ├── __init__.py        # exports: I8051Simulator, I8051State
-        ├── py.typed
-        ├── state.py           # I8051State frozen dataclass + constants
-        ├── flags.py           # arithmetic helpers: add8_flags, sub8_flags, da_flags
-        └── simulator.py       # I8051Simulator implementation
-tests/
-    ├── test_protocol.py       # SIM00 compliance
-    ├── test_instructions.py   # per-instruction + per-mode coverage
-    ├── test_programs.py       # end-to-end programs
-    └── test_coverage.py       # edge cases, flags, DA, MUL/DIV
+├── src/
+│   ├── opcodes.rs
+│   ├── encoding.rs
+│   ├── decode.rs
+│   ├── execute.rs
+│   └── simulator.rs
+└── tests/
+    ├── lifecycle.rs
+    ├── python_differential.rs
+    ├── generate_python_oracle.py
+    └── python_oracle_hashes.txt
 ```
 
 ---
@@ -672,94 +636,49 @@ plain readable/writable bytes with no side effects.
 ### Harvard architecture in the simulator
 
 In the real 8051, code memory and data memory are physically separate buses.
-In the simulator they are two separate Python bytearrays:
-- `_code`: 64 KB code memory (loaded by `load()`)
-- `_iram`: 256 bytes internal RAM (+ SFR mirror at 0x80–0xFF)
-- `_xdata`: 64 KB external data memory
+In the Rust simulator they are three separate owned stores:
+- `code`: 64 KiB code memory;
+- `iram`: 256 bytes internal RAM plus SFRs;
+- `xdata`: 64 KiB external data memory.
 
-MOVC accesses `_code`; MOVX accesses `_xdata`; all other data operations
-access `_iram`. This clean separation matches the real hardware model.
+MOVC accesses `code`; MOVX accesses `xdata`; all other data operations access
+`iram`. This clean separation matches the real hardware model.
 
 ### SFR aliasing
 
 Internal RAM addresses 0x00–0x7F and SFR addresses 0x80–0xFF are both stored
-in `_iram[0:256]`. Direct addressing (dir byte in instruction) accesses
-`_iram[dir]` for any address. Indirect addressing via @R0/@R1 with R0/R1 ≥
+in `iram[0..256]`. Direct addressing (dir byte in instruction) accesses
+`iram[dir]` for any address. Indirect addressing via @R0/@R1 with R0/R1 ≥
 0x80 would access the upper 128-byte RAM of the 8052; in the 8051 base model
-this behavior is undefined — the simulator raises `ValueError` for indirect
-addresses ≥ 0x80.
+this behavior is undefined. Checked execution reports a typed atomic execution
+failure for indirect addresses at or above `0x80`.
 
 After any instruction that modifies ACC, the simulator recomputes PSW.P
 (even parity). This matches hardware behavior where P is always live.
 
 ### Register bank abstraction
 
-`_r(n)` returns the IRAM address of register Rn in the current bank:
+`rn_addr(n)` returns the IRAM address of register Rn in the current bank:
 
-```python
-def _r(self, n: int) -> int:
-    """IRAM address of Rn in the current register bank."""
-    bank = (self._iram[0xD0] >> 3) & 0x3  # PSW RS1:RS0
-    return bank * 8 + n
+```rust
+fn rn_addr(&self, n: u8) -> usize {
+    let bank = (self.iram[0xD0] >> 3) & 0x3;
+    (bank * 8 + (n & 7)) as usize
+}
 ```
 
-This means reading R3 in bank 2 reads `_iram[2*8 + 3] = _iram[19]`.
+This means reading R3 in bank 2 reads `iram[2*8 + 3] = iram[19]`.
 
 ---
 
-## Test plan
+## Conformance
 
-### test_protocol.py — SIM00 compliance
-- `isinstance(sim, Simulator)`
-- All 5 protocol methods callable
-- `execute` returns `ExecutionResult`
-- `step` returns `StepTrace`
-- `get_state` returns `I8051State`
-- `reset`: PC=0, SP=7, PSW=0, IRAM zeroed, ports=0xFF
-- `load`: bytes at code[0], PC=0, raises on overflow
-- `get_state` is frozen, memory is tuple, registers field present
+Completion requires:
 
-### test_instructions.py — per-instruction
-- **Data transfer**: MOV A/Rn/dir/@Ri/#imm in all combinations
-- **MOV dir,dir2**: byte order (src=byte2, dst=byte3)
-- **PUSH/POP**: SP increments, stack round-trip
-- **XCH/XCHD**: swap semantics
-- **Arithmetic**: ADD/ADDC carry chain, overflow detection, DA A BCD cases
-- **SUBB**: borrow propagation, CY/AC/OV
-- **MUL AB**: B:A product, OV set if B≠0
-- **DIV AB**: quotient in A, remainder in B, OV on div-by-zero
-- **INC/DEC**: no flag modification confirmed
-- **Logic**: ANL/ORL/XRL all operand forms
-- **RL/RRC/RLC/RR**: bit rotation including carry thread
-- **Bit ops**: CLR/SETB/CPL C and bit, ANL/ORL C,bit and C,/bit
-- **Branches**: JZ/JNZ/JC/JNC forward and backward
-- **JB/JNB/JBC**: bit test with clear
-- **CJNE**: not-equal branch + CY unsigned comparison
-- **DJNZ**: count-down loop
-- **LJMP/SJMP/JMP @A+DPTR**: all jump forms
-- **LCALL/RET**: call/return stack integrity
-
-### test_programs.py — end-to-end
-- Sum 1–10 using DJNZ loop
-- Multiply using repeated addition
-- String copy: MOVX loop copying bytes from xdata src→dst
-- Bubble sort 8 bytes in IRAM
-- Fibonacci (first 8 terms)
-- Factorial (5! using MUL AB)
-- BCD addition (DA A usage)
-- Nested subroutine calls, stack balance
-
-### test_coverage.py — edge cases
-- BCD arithmetic: DA A after ADD of two BCD bytes
-- MUL AB overflow (product > 0xFF)
-- DIV by zero (OV flag)
-- CJNE CY flag: A < imm vs A ≥ imm
-- DJNZ exact boundary (counts from 1 → 0 vs 0 → 255)
-- Register bank switching (PSW.RS1:RS0)
-- Bit address resolution for both RAM area and SFR area
-- MOVC @A+DPTR lookup table
-- MOVC @A+PC lookup table
-- XCHD nibble swap
-- Parity recomputation on every ACC change
-- SP wrap-around (push 128 items)
-- SJMP backward branch (negative offset)
+1. all component and program tests;
+2. typed atomic load, restore, step, and run lifecycle tests;
+3. one deterministic Python-oracle full-state transition for every opcode byte;
+4. byte-for-byte regeneration of the committed 256-hash fixture;
+5. green Intel 8051 encoder and backend consumers;
+6. at least 80% core Rust line coverage;
+7. clean formatting, Clippy with `-D warnings`, and rustdoc with `-D warnings`.

@@ -1,10 +1,11 @@
 {
   "language": "telugu",
   "chapter": 39,
-  "sourceHash": "fnv1a64:6ea0add02531a0cc",
+  "sourceHash": "fnv1a64:d53f6714f2d6a49b",
   "lessonIds": [
     "TE-C39-tii",
-    "TE-C39-paalu"
+    "TE-C39-paalu",
+    "TE-S131-vowel-sign-vocalic-r"
   ],
   "tex": "telugu/book/chapters/ch39-tea-and-milk.tex"
 }

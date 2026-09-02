@@ -2,6 +2,379 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.84] - 2026-09-01 (fix: memarg/prefixed-sub-opcode LEB128 under-strictness + missing data-count-section gate)
+
+A fresh corpus-wide prioritization pass after the W32/W33/W34 campaign
+closed (`code/specs/W07-wasm-post-mvp-epics.md`'s "Addendum (2026-09-01)"
+item 2) found `binary-leb128.wast` (7 failures of 58 `assert_malformed`)
+and `binary.wast` (2 failures of 107) failing with the identical harness
+message `"binary module parsed but should have been rejected as
+malformed"`. All 9 looked like one bug from the outside; direct-probing
+each specific failing directive (`wasm_conformance::run_wast_source`,
+one throwaway test per file) showed they're actually **two unrelated
+root causes**, both in this crate:
+
+### Fixed — memarg align/offset and `0xFC`/`0xFD` sub-opcode LEB128 strictness (7 of the 9)
+
+`wasm-module-parser` never walks function-body instructions (bodies are
+stored as raw bytes — see that crate's own `parse_code_section` doc
+comment), so every LEB128 immediate INSIDE a function body — a memory
+instruction's `align`/`offset` memarg fields, and the `0xFC`
+(saturating-conversion/bulk-memory)/`0xFD` (SIMD) prefix's own
+sub-opcode — is decoded here, in `type_check.rs`, while walking
+instructions for real type-checking. All of them went through the
+native-64-bit-budget `decode_unsigned` instead of a width-bounded
+`decode_unsigned_bounded`, so a 6+-byte (over the real `u32` budget) or
+high-bit-set (out-of-range for 32 bits) encoding of a small, otherwise
+legal value parsed successfully instead of being rejected — the exact
+same "as u32 truncates silently"/"no byte-count cap" bug class
+`wasm-module-parser`'s own `read_u32leb` closed for section-level fields
+in the prior `wasm-leb128` 0.2.0 hardening pass, just never propagated to
+this crate's instruction-level decode sites.
+
+Fixed at every memarg site in this file: plain memory ops (`0x28..=
+0x3E`), atomics (`0xFE`), and all five `v128`-prefixed memarg
+instructions (`0xFD`'s `Load`/`Store`/`*Lane` families) — not just the
+two opcodes the failing tests happen to exercise, since it's the exact
+same decode call copy-pasted across all of them. Also fixed the `0xFC`
+and `0xFD` prefix's own sub-opcode reads (`binary-leb128.wast`'s
+"i64_trunc_sat_f64_u with 6 bytes" case) the same way.
+
+`align` is unconditionally `u32` per spec, so it's now always
+`decode_unsigned_bounded(.., 32)`. `offset` is genuinely
+context-dependent and got this wrong in BOTH directions before landing
+on the fix below:
+
+- **First attempt bounded `offset` to 32 bits unconditionally**, on the
+  theory that the previous W25 comment's claim ("offset is `u64`
+  unconditionally in the real spec's binary grammar, verified live
+  against the spec page") was checking the spec's CURRENT
+  (post-memory64-merge) text rather than the pinned testsuite commit
+  this repo's `wasm-conformance` corpus is actually graded against
+  (`28864811cf03bdbf880733786148feaba339582d`) — and `binary-leb128.wast`
+  itself supports that: it asserts a 6-byte offset encoding of the value
+  `2`, on a plain 32-bit memory, IS malformed ("integer representation
+  too long"), which only holds under a 5-byte/32-bit budget.
+- **That first attempt regressed `binary_leb128_64.wast`** (caught by
+  the mandatory full-corpus baseline diff, not inspection): its own
+  non-`assert_malformed` `module` directive uses a 10-byte offset
+  encoding of `2^64 - 1` on an `is64` (memory64) memory and expects it to
+  parse fine, while `2^64` itself (one bit further) is its own
+  `assert_malformed` case. So `offset` really is `u64`-wide, but ONLY
+  when the addressed memory is actually `is64` — not unconditionally
+  either way.
+- **Final fix**: `align` decoded first (always 32-bit-bounded), which
+  also yields the multi-memory flag bit (`has_memidx`) before `offset` is
+  decoded. When `!has_memidx`, the target memory is implicitly memory 0,
+  known immediately — decode `offset` at 64 bits if memory 0 is `is64`,
+  else 32. When `has_memidx` IS set, the real target memory index isn't
+  decoded until AFTER `offset` in this binary format, so which memory
+  `offset` even addresses is still unknown at decode time — falls back
+  to the full native 64-bit budget rather than guess, which is exactly
+  this crate's previous (correct, un-regressed) behavior for that
+  combination. No corpus file exercises a multi-memory memarg with an
+  offset value a 32-bit budget would have rejected, so that fallback is
+  a pure no-op today, not a knowingly-loose carve-out.
+
+### Fixed — `memory.init`/`data.drop` without a data count section (2 of the 9)
+
+`binary.wast`'s other two failures ("memory.init requires a data count
+section", "data.drop requires a data count section") are a completely
+unrelated bug: the spec requires a data count section (§12) whenever
+`memory.init`/`data.drop` (`0xFC 0x08`/`0xFC 0x09`) appears anywhere in
+the code section, independent of whether the referenced data segment
+actually exists — and nothing enforced that at all. `wasm-module-parser`
+already parses §12 but previously discarded whether it was PRESENT once
+the (separate, pre-existing) count-vs-`module.data.len()` cross-check was
+done; it now threads that fact forward as `WasmModule::
+missing_data_count_section` (new field, see `wasm-types`'s changelog),
+deliberately phrased as a default-`false` "missing" flag so every
+existing `WasmModule` construction site (including every TEXT-form
+module — no binary "data count section" concept even exists there) keeps
+its current behavior for free. This crate's `0x08`/`0x09` opcode arms
+now check that flag FIRST, before their existing out-of-bounds
+data-segment-index checks, so it fires even for an otherwise-valid
+`data_idx`.
+
+### Added
+
+- `wasm-module-parser`, `binary-leb128.wast`/`binary_leb128_64.wast`-
+  inspired regression tests (`src/lib.rs`): `missing_data_count_section`
+  set/unset correctly.
+- This crate's own regression tests (`src/lib.rs`): memarg align overlong
+  + out-of-range rejected (with a minimal-encoding positive control),
+  memarg offset overlong on a 32-bit memory rejected, memarg offset
+  widening to 64 bits on an `is64` memory (both the `2^64 - 1`-parses and
+  `2^64`-rejected directions, directly from `binary_leb128_64.wast`),
+  `0xFC` sub-opcode overlong rejected (with a minimal-encoding positive
+  control), and `memory.init`/`data.drop` with/without
+  `missing_data_count_section` set.
+
+### Verification
+
+Full `wasm-conformance` baseline diff (all 257 vendored files, via
+`--write-baseline` + a programmatic before/after diff of `tests/fixtures/
+testsuite-status.json`'s `files` map): exactly 2 files changed —
+`binary-leb128.wast` (`assert_malformed` 51/58 with 7 failing -> 58/58)
+and `binary.wast` (`assert_malformed` 105/107 with 2 failing -> 107/107).
+Zero regressions anywhere else, including `binary_leb128_64.wast` (which
+DID regress — `module` 1/1 -> 0/1 — during the first, unconditionally-
+32-bit `offset` attempt described above, caught by this same diff before
+it shipped, and is back to 1/1 pass / 0 fail with the final context-aware
+fix). `cargo test`/`cargo clippy -- -D warnings` clean across
+`wasm-module-parser`, `wasm-wast-parser`, `wasm-execution`,
+`wasm-runtime`, `wasm-validator`, `wasm-conformance`, `wasm-types`,
+`wasm-leb128`.
+
+## [0.2.83] - 2026-09-01 (fix: `br_table.wast` total-failure regression — two independent bugs)
+
+While prioritizing the vendored testsuite corpus for a fresh pass, found
+that `br_table.wast` — a foundational MVP-level control-flow file, no
+GC-proposal syntax involved — was TOTALLY failing: `module 0/1`,
+`assert_return 0/161 fail`, all cascading from the one module failing to
+validate. The baseline-diff mechanism only detects CHANGES from a prior
+baseline, not absolute correctness, so this had been silently broken and
+un-investigated for a while. A probe (`run_wast_source` against the raw
+file) reported: `ValidationError: TypeMismatch: expected
+ConcreteFuncRef(1), found Funcref` on `(table $t (ref null $t) (elem
+$tf))` (line ~1019) — about as ordinary a construct as the corpus has,
+no struct/array GC syntax anywhere near it. The initial hypothesis (an
+`is_assignable` direction swap) turned out to be wrong; root-causing it
+properly surfaced TWO independent, real bugs that both had to be fixed
+before the file passed:
+
+- **Bug 1 — `table.get`/`table.set` couldn't see a table's CONCRETE
+  element type.** `table_element_types` used to be a `Vec<u8>` (just the
+  raw `0x70`/`0x6F` tag), with every opcode arm doing `0x6F => Externref,
+  _ => Funcref` — so a table declared `(ref null $t)` looked identical to
+  a plain generic-`funcref` table to `table.get`/`table.set`/
+  `table.grow`/`table.fill`. `table.get $t` pushed generic `Funcref`
+  unconditionally, discarding the real declared type. Fixed by changing
+  `table_element_types` to `Vec<ValueType>` (see `wasm-types`'s CHANGELOG
+  for the new `WasmModule::table_concrete_element_types` field this reads
+  from, falling back to the byte tag when the module doesn't populate
+  it) — all four opcode arms (`table.get`/`table.set`/`table.grow`/
+  `table.fill`) collapse to a single `ctx.table_element_types[idx]` read,
+  no more inline byte match.
+- **Bug 2 — `br_table`'s multi-target type check was ORDER-DEPENDENT,
+  which the real WASM typing rule is not.** `br_table` requires that the
+  SAME operand value(s) be simultaneously assignable to every listed
+  target AND the default target — a "meet" over all of them. The old
+  algorithm instead checked each target in LISTED order and re-pushed
+  that target's OWN declared type before checking the next one (a
+  left-to-right chain, not an independent check) — so checking a WIDER
+  target (e.g. `(ref null func)`) before a NARROWER one (e.g. `(ref null
+  $t)`) irreversibly widened the value away, and the narrower target's
+  check then failed even though the actual value is genuinely assignable
+  to both. `meet-funcref-1`'s label list `$l1 $l1 $l2` (wide targets
+  before the narrow default) hits this exactly; `meet-funcref-2`'s `$l2
+  $l2 $l1` (narrow first) happened to pass even on the old code, which is
+  why this needed its own dedicated order-sensitive test rather than
+  trusting one passing permutation. Fixed by popping the default target's
+  own arity worth of values from the real stack exactly ONCE into a small
+  `operands` vec, then checking every target (labels AND default) against
+  that SAME fixed snapshot via a new `check_stacktype_assignable` helper
+  (factored out of `pop_expect`) — no target's check can influence any
+  other's, and the real `stack` is only ever touched by that one pop.
+  **Security-hardened during review**: an earlier draft of this fix
+  instead cloned the WHOLE operand stack once per target — correct, but
+  `O(target_count * stack_depth)`, and `br_table`'s target count and the
+  operand stack's depth are BOTH independently attacker-controlled within
+  a single instruction, making that a real quadratic-blowup DoS vector.
+  The `operands`-snapshot approach is `O(target_count * arity)` instead —
+  the exact same asymptotic cost the original (order-dependent, but not
+  DoS-prone) implementation already had, so this fix adds no new
+  complexity-attack surface.
+- Bug 2 alone would NOT have fixed `br_table.wast` (bug 1 had to land
+  first so `table.get` had a concrete type to hand `br_table` in the
+  first place) — confirmed by reverting each fix independently and
+  re-running the new regression tests below; both fail with the original
+  `TypeMismatch` when either fix alone is reverted.
+- **2 new regression tests** in `tests/type_check.rs` (this crate's
+  established `assert_valid`/`assert_invalid`-over-real-`.wat`-text
+  convention): `valid_br_table_targets_type_check_regardless_of_listed_
+  order` (bug 2, using `br_table.wast`'s own `meet-multi-ref` shape) and
+  `valid_table_get_on_a_concrete_funcref_table_keeps_its_concrete_type`
+  (bug 1). Also added
+  `valid_generic_funcref_table_with_an_elem_segment_naming_a_concrete_
+  function` — the literal "table declared generic `funcref`, elem segment
+  names a concrete function" shape this session's regression report
+  first hypothesized as the bug; it turns out this exact shape already
+  validated correctly even before this fix (`lib.rs`'s own
+  `valid_element_segment` unit test already covered it at the
+  `WasmModule`-struct level), so this is a same-shape end-to-end
+  confirmation from real text, not a new fix.
+- **Full corpus impact**: baseline regenerated and diffed programmatically
+  against the pre-fix `testsuite-status.json` across all 257 files — see
+  `wasm-conformance`'s own CHANGELOG for the diff. Exactly one file's
+  tally changed (`br_table.wast`, `module`/`assert_return` both going
+  from total failure to 100%); every other file that also uses a
+  `(table ... (ref ...) ...)`-shaped declaration (`table.wast`, `elem.wast`,
+  `type-subtyping.wast`, `ref.wast`, etc.) already hit an EARLIER
+  `NotYetSupported` gate for unrelated reasons and so was untouched by
+  either fix — confirmed by inspecting each one's before/after entry, not
+  assumed from the aggregate.
+
+## [0.2.82] - 2026-09-01 (W34 third slice — wire canonical equivalence into within-module checks)
+
+Canonicalization (built by the first two slices, consumed by nothing)
+is now wired into real validation decisions.
+
+- **`is_assignable` (`type_check.rs`)** gains six new arms —
+  `StructRef`/`NonNullStructRef`/`ArrayRef`/`NonNullArrayRef`, in the
+  same three-shape pattern (`(i,i)`, `(NonNull i, NonNull j)`, `(NonNull
+  i, j)`) the three existing `ConcreteFuncRef` arms already used. This
+  function had ZERO struct/array arms before this slice at all — a real,
+  previously-open gap this spec's own research flagged. All nine arms
+  (three func, six new) now terminate via a new `TypeContext::
+  nominal_or_canonical_subtype` helper — nominal `sub`-chain OR canonical
+  equivalence, whichever holds.
+- **New `TypeContext<'a>` wrapper** — a `Copy`, `Deref<Target = WasmModule>`
+  bundle of `&'a WasmModule` plus this module's own canonicalized
+  type-group table, threaded through this file's ~150 existing internal
+  call sites (`is_assignable`, `pop_expect`, `pop_expect_many`,
+  `push_ctrl`, `pop_ctrl`, `results_assignable`, `func_is_structural_
+  subtype`, `check_const_operand`, `check_const_expr_result`,
+  `decode_blocktype`, `struct_field_count`, `array_element_field`,
+  `struct_field`, `type_check_numeric`) with ZERO call-site syntax
+  changes — `Deref` keeps every existing `module.<field/method>` access
+  compiling unchanged, and `Copy` keeps every existing `ctx.module`
+  argument-passing site compiling unchanged, since only the FIELD's type
+  (`ModuleContext.module`) changed. `array_element_field`/`struct_field`
+  reach through the wrapper's own `.module` field explicitly rather than
+  via `Deref`, to avoid a real lifetime trap: a `Deref`-based auto-ref
+  through a by-value wrapper parameter ties the returned reference's
+  lifetime to the wrapper's own ephemeral borrow, not the wrapper's
+  underlying `'a` — see that function's own doc comment.
+- **`check_type_subtyping`'s structural checker is no longer func-only**
+  — dispatches on each side's real `TypeKind` (`Func`/`Struct`/`Array`)
+  instead of always reading `module.types[i]` (an unused dummy `FuncType`
+  for a struct/array-kind index). New `field_is_structural_subtype`/
+  `struct_is_structural_subtype`/`array_is_structural_subtype` implement
+  the real GC-proposal rule: struct width subtyping (child may have MORE
+  fields), per-field covariance-if-immutable/invariance-if-mutable, and a
+  declared `sub` relationship between two DIFFERENT composite-type kinds
+  is always rejected. Verified directly against `type-subtyping.wast`'s
+  own "Definitions"/"Invalid subtyping definitions" sections (re-fetched
+  fresh, not paraphrased) — every corpus case there now passes for the
+  right reason. **Correction found mid-slice, not assumed**: this
+  function's struct/array field-covariance checks turned out to need REAL
+  canonical data too (not the empty table this slice first tried), since
+  `type-subtyping.wast`'s own "Static matching of recursive types" module
+  requires canonical equivalence between two separate, unrelated
+  multi-member `rec` groups to satisfy a declared struct `sub`'s own field
+  covariance — `check_type_subtyping_is_acyclic` was hoisted out of
+  `check_type_subtyping` and into `type_check_module` so canonicalization
+  can run BEFORE (not after) `check_type_subtyping`'s own checks.
+- **`ValidatedModule::canonical_types()`** — a new public accessor
+  exposing the whole per-flat-index canonical-type table as a slice (not
+  just the existing single-index `canonical_type_at`), so `wasm-runtime`
+  can clone it once for threading into `wasm-execution`'s runtime
+  dispatch. `canonically_equivalent` now delegates to `wasm_types::
+  canonical_types_equivalent` (the same helper `nominal_subtype_chain`
+  uses) instead of its own inline match, so the two can never drift apart.
+- **Two pre-existing tests' own premise deliberately overturned, rewritten
+  not deleted**: `call_argument_rejects_an_unrelated_concrete_func_ref`
+  and `invalid_global_ref_t_initialized_with_ref_func_of_an_unrelated_
+  type_is_rejected` both used two byte-identical, `sub`-less types as
+  their "unrelated" negative case — exactly the case canonical equivalence
+  now correctly ACCEPTS. Both reshaped to use genuinely different types
+  instead, with a new sibling test each proving the overturned case is now
+  correctly accepted.
+- **New tests**: struct/array positive+negative canonical-equivalence
+  cases at a real `call` site (mirroring the func-type ones above);
+  struct/array `sub`-declaration structural tests (width subtyping,
+  covariant immutable fields, mutable-field invariance, cross-kind
+  rejection) grounded directly in `type-subtyping.wast`'s own corpus text.
+
+## [0.2.81] - 2026-09-01 (W34 second slice — real multi-member `rec`-group canonicalization)
+
+No code changes to this crate's own logic — `ValidatedModule::canonical_
+type_at`/`canonically_equivalent` and the `validate()` call site are
+byte-for-byte unchanged, since `wasm_types::canonicalize_types`'s public
+signature didn't change either. Bumped alongside `wasm-types` 0.1.19
+because its own dependency now correctly canonicalizes real multi-member
+`rec` groups (previously always `None`) — every existing caller through
+this crate's `ValidatedModule` picks that up automatically. Two new tests
+added exercising a real 2-member mutual `rec` group and a metadata-
+inconsistent one through the real `validate()` entry point (see
+`wasm-types`'s own CHANGELOG for the underlying algorithm change, and
+`code/specs/W34-wasm-gc-canonical-type-equivalence.md`'s addendum for the
+full accounting).
+
+## [0.2.80] - 2026-09-01 (W34 first slice — canonical type-group equivalence caching)
+
+`ValidatedModule` gains a private `canonical_types` field, computed by
+`validate()` right after `check_type_subtyping_is_acyclic` (part of Check
+11) confirms the module's `sub`/`rec` reference ordering is well-founded —
+the ordering guarantee `wasm_types::canonicalize_types`'s own termination
+argument depends on. Exposed via two new `ValidatedModule` methods:
+
+- `canonical_type_at(idx) -> Option<(Rc<CanonicalGroup>, u32)>`
+- `canonically_equivalent(i, j) -> bool` (conservatively `false` whenever
+  either side isn't canonicalized yet — this slice only canonicalizes
+  `rec_group_size == 1` groups, see `wasm-types`'s own CHANGELOG)
+
+`ValidatedModule::module`'s existing privacy (the W33-era security fix: the
+only way to construct a `ValidatedModule` at all is a successful
+`validate()` call) extends for free to this new field too — there is no
+code path that can produce a `canonical_types` value without going through
+real validation first. Nothing in this slice wires canonical equivalence
+into any validation DECISION yet (`is_assignable`, `check_type_subtyping`,
+etc. are all unchanged) — that's a later slice's job, per `code/specs/
+W34-wasm-gc-canonical-type-equivalence.md`'s own "Recommended slice
+decomposition." Full workspace-adjacent conformance baseline (all 257
+files) is byte-for-byte unchanged by this release.
+
+## [0.2.79] - 2026-09-01 (W33 fourth slice — static struct/array instruction checks)
+
+Adds real static type-checking for `struct.new_default`/`struct.get_s`/
+`struct.get_u` and the whole `array.*` instruction family, previously
+falling into the `0xFB` catch-all (immediates not consumed, byte-
+desyncing every later instruction the moment `wasm-wast-parser` could
+emit them).
+
+- `struct_field_count`/`array_element_field`/`struct_field` resolve via
+  `WasmModule::struct_type_at`/`array_type_at` (`type_kinds`-aware)
+  rather than the legacy `types.len() + k` offset, needed now that a
+  TEXT-format module can interleave struct/func/array declarations.
+- `struct.set`/`array.set` now reject an immutable field/element
+  (`struct.wast`'s/`array.wast`'s own "immutable field"/"immutable
+  array" `assert_invalid` cases).
+- `array.new_fixed`'s literal element-count immediate is capped at
+  `MAX_ARRAY_NEW_FIXED_COUNT` (1,000,000) before the pop loop runs — an
+  unbounded loop over an attacker-controlled count is a real
+  algorithmic DoS even though no single iteration allocates memory.
+- `const_expr_type` (the global-initializer/segment-offset checker) now
+  accepts `struct.new`/`struct.new_default`/`array.new`/
+  `array.new_default`/`array.new_fixed` as real constant instructions,
+  matching the real GC proposal's own extension to constant
+  expressions — `struct.wast`'s/`array.wast`'s own module-level globals
+  use exactly this shape. `array.new_data`/`array.new_elem` are
+  deliberately not accepted.
+
+11 new integration tests in `tests/type_check.rs`. All 465 tests in
+this crate pass.
+
+## [0.2.78] - 2026-08-31 (W33 second slice — `ref.cast` byte-layout fix, item 4)
+
+### Fixed
+
+- **The static function-body type-checker never consumed `ref.cast`/
+  `ref.cast null`'s (`0xFB 0x16`/`0x17`) LEB128 heap-type immediate** —
+  they fell into the existing `_ => {}` "no immediates" catch-all for
+  unrecognized `0xFB` sub-opcodes, which would silently desync this
+  checker's `offset` from every REAL instruction after it in the same
+  function body the moment `wasm-wast-parser` could emit the bytes (which
+  it now can, see that crate's own changelog). Added an explicit `0x16 |
+  0x17` arm mirroring `0x14`/`0x15`'s (`ref.test`/`ref.test null`)
+  existing shape: consume the heap-type LEB, pop one ref, push
+  `StackType::Unknown` back (real dynamic-type checking is a `wasm-
+  execution` runtime concern — see that crate's own changelog — this pass
+  only needs to keep the abstract stack's byte layout and height
+  accurate, exactly like every other GC op this checker already handles
+  this way).
+
 ## [0.2.77] - 2026-08-31 (const-expr type-checker — the W33 addendum's "third gap")
 
 Fills a real, pre-existing, general gap this crate had for its entire

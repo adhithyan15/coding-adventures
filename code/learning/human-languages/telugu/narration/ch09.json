@@ -4,14 +4,14 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:817da5ef2bdf6772",
+  "sourceHash": "fnv1a64:9b2260a93af2b58c",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
       "sequence": 360,
-      "title": "క్షమించండి — sorry",
+      "title": "క్షమించండి (kṣamin̄caṇḍi) — sorry",
       "headword": "క్షమించండి",
-      "romanization": "",
+      "romanization": "kṣamin̄caṇḍi",
       "gloss": "please forgive / sorry (kṣamin̄caṇḍi — from kṣamin̄cu \"to forgive,\" Sanskrit kṣamā + respectful -aṇḍi)",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bcd75b57925d88b",
+      "sourceHash": "fnv1a64:9008a82791879c69",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "So క్షమించండి is \"please forgive\" — the same polite mold you already know, filled with a new verb."
+              "text": "So క్షమించండి (kṣamin̄caṇḍi) is \"please forgive\" — the same polite mold you already know, filled with a new verb."
             }
           ]
         },
@@ -92,7 +92,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "క్షమించండి is a real, everyday \"sorry / please forgive me\" — not stiffly formal — though in quick, casual exchanges Telugu speakers just as often reach for the borrowed English \"sorry.\""
+              "text": "క్షమించండి (kṣamin̄caṇḍi) is a real, everyday \"sorry / please forgive me\" — not stiffly formal — though in quick, casual exchanges Telugu speakers just as often reach for the borrowed English \"sorry.\""
             }
           ]
         },
@@ -149,7 +149,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is క్షమించండి built from? (Sanskrit kṣamā + the verb-making suffix ‑in̄cu + the respectful ending ‑aṇḍi, which you already met on kūrcōṇḍi.) Which cousins also verb-ify kṣamā, and which doesn't? (Kannada and Malayalam do too; Tamil uses its own root maṉṉi.) What's the casual alternative? (Borrowed English \"sorry.\")"
+              "text": "What is క్షమించండి (kṣamin̄caṇḍi) built from? (Sanskrit kṣamā + the verb-making suffix ‑in̄cu + the respectful ending ‑aṇḍi, which you already met on kūrcōṇḍi.) Which cousins also verb-ify kṣamā, and which doesn't? (Kannada and Malayalam do too; Tamil uses its own root maṉṉi.) What's the casual alternative? (Borrowed English \"sorry.\")"
             }
           ]
         }
@@ -411,7 +411,7 @@
             },
             {
               "kind": "speech",
-              "text": "క్షమించండి — please forgive / sorry."
+              "text": "క్షమించండి (kṣamin̄caṇḍi) — please forgive / sorry."
             }
           ]
         },

@@ -1,0 +1,93 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-S122-letter-pha
+spine_node: SPINE-MEET-GREET
+sequence: 1171
+delivery: script
+chapter: 24
+type: writing
+headword: "फ"
+gloss: the single character फ — recognised inside words you already say
+romanization: "pha"
+prerequisites: [SA-S121-letter-u]
+sounds: []
+roots: []
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [SA-SCRIPT-RECOG-121]
+introduces:
+  knowledge: [SA-SCRIPT-RECOG-122]
+practises:
+  knowledge: [SA-SCRIPT-RECOG-121, SA-SCRIPT-RECOG-122]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-S121-letter-u]
+---
+
+# फ — one character, met inside words you already say
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-121] -->
+
+[PAUSE 1s] Before the new one: उ — what does it do?
+
+[PAUSE 2s] One character this time. One only — and you have been saying it
+for pages without knowing which mark on the page it was.
+
+## Script you'll notice: फ
+<!-- hl-knowledge: introduces=[SA-SCRIPT-RECOG-122]; assesses=[] -->
+
+**फ** — *pha*.
+
+It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *ph*, it is **pha**.
+
+What it is made of:
+
+- a left stem joined through the lower bowl to a rising and retraced central stem
+- a separate clockwise right arch
+- the top shirorekhā
+
+You already say this word, and it has फ inside it:
+
+- **फलम्** *phalam* — fruit
+
+फ is प with a puff of breath after it — the same relation ठ has to ट. Say
+*p* and *ph* with a hand in front of your mouth and the difference is the air.
+
+## Writing: फ
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-122] -->
+
+- **1.** descend the left stem, curve right around the lower bowl, rise along the central side to the headline, then retrace down the central stem without lifting
+- **2.** lift at the central junction and sweep clockwise over and down through the open right arch
+- **3.** lift and draw the top shirorekhā left-to-right
+
+**Pen lifts: 2.** The pen comes up 2 times and no more.
+
+> Verified three-stroke teaching form; another learner source stages the components differently.
+
+> This is one attested teaching order and not a national standard — handwriting
+> here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari pʰ फ.gif’, strokes 1–3, Wikimedia Commons, 29 March 2009.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-122] -->
+
+[PAUSE 1s]
+- [YOU LOOK: at these words, and find फ in the ones that have it]
+
+> फलम्  ·  जलम्
+
+- [YOU TRACE: फ three times, saying *pha* as you finish each one]
+- [YOU LOOK: back at any page of this chapter and find फ once more]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-122] -->
+
+[PAUSE 3s] Which character is this — फ? What sound does it carry? (***pha***.)
+Name one word you already say that contains it.

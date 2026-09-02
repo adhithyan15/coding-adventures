@@ -5,6 +5,7 @@ chapter: 4
 type: phrase
 headword: വീണ്ടും കാണാം
 gloss: we'll meet again
+romanization: "vīṇḍuṁ kāṇāṁ"
 concept_tag: FAREWELL-LATER
 prerequisites: [ML-C04-naale-kaanaam]
 sounds: [retroflex-nd]

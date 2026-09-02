@@ -298,6 +298,9 @@ public static class MosaicRuntimeHost
                     property => Normalize(property.Name),
                     property => property.Value,
                     StringComparer.OrdinalIgnoreCase);
+                var storageWarning = Normalize("storage-warning");
+                if (persistenceWarning is not null && values.ContainsKey(storageWarning))
+                    values[storageWarning] = JsonSerializer.SerializeToElement(persistenceWarning);
                 var componentProperties = component.GetType().GetProperties(
                     BindingFlags.Instance | BindingFlags.Public)
                     .Where(property => property.CanWrite)

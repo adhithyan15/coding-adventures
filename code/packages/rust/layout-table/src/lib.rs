@@ -9,6 +9,7 @@ use std::collections::HashMap;
 use layout_ir::{
     Constraints, Content, ExtValue, LayoutNode, PositionedNode, SizeValue, TextMeasurer,
 };
+use layout_replaced::intrinsic_inline_size;
 
 pub const VERSION: &str = "0.1.0";
 
@@ -693,7 +694,7 @@ fn preferred_width<M: TextMeasurer>(node: &LayoutNode, measurer: &M) -> f64 {
     let padding = node.padding.unwrap_or_default();
     let content = match &node.content {
         Some(Content::Text(text)) => measurer.measure(&text.value, &text.font, None).width,
-        Some(Content::Image(_)) => 0.0,
+        Some(Content::Image(_)) => intrinsic_inline_size(node),
         None => node
             .children
             .iter()
@@ -715,7 +716,7 @@ fn min_content_width<M: TextMeasurer>(node: &LayoutNode, measurer: &M) -> f64 {
             .split_whitespace()
             .map(|word| measurer.measure(word, &text.font, None).width)
             .fold(0.0, f64::max),
-        Some(Content::Image(_)) => fixed_width(node, 0.0).unwrap_or(0.0),
+        Some(Content::Image(_)) => intrinsic_inline_size(node),
         None => node
             .children
             .iter()
@@ -834,7 +835,7 @@ fn positive_integer(values: &HashMap<String, ExtValue>, key: &str) -> Option<usi
 #[cfg(test)]
 mod tests {
     use super::*;
-    use layout_ir::{font_spec, MeasureResult, TextAlign, TextContent};
+    use layout_ir::{font_spec, ImageContent, ImageFit, MeasureResult, TextAlign, TextContent};
 
     struct Mono;
 
@@ -994,6 +995,38 @@ mod tests {
             layout_child,
         );
         assert_eq!(positioned.width, 31.0);
+    }
+
+    #[test]
+    fn inline_table_uses_replaced_intrinsic_column_width() {
+        let image = LayoutNode::leaf_image(ImageContent {
+            src: "fixture.gif".into(),
+            fit: ImageFit::Contain,
+        })
+        .with_ext(
+            "replaced",
+            layout_replaced::replaced_ext(Some(80.0), Some(40.0), None),
+        );
+        let table = node(
+            "inline-table",
+            vec![node("table-row", vec![node("table-cell", vec![image])])],
+        )
+        .with_width(SizeValue::Wrap);
+        let positioned = layout_table_with(
+            &table,
+            Constraints {
+                min_width: 0.0,
+                max_width: 300.0,
+                min_height: 0.0,
+                max_height: f64::MAX,
+            },
+            &Mono,
+            layout_child,
+        );
+        assert_eq!(
+            (positioned.width, positioned.children[0].children[0].width),
+            (84.0, 80.0)
+        );
     }
 
     #[test]

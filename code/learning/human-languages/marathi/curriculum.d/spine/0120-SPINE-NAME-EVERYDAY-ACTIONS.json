@@ -6,17 +6,18 @@
     "MR-PATH-022"
   ],
   "omits": [
-    "VERB-DRINK",
-    "VERB-GIVE",
-    "VERB-PUT",
     "VERB-DO-MAKE",
     "VERB-BUY",
     "VERB-OPEN",
     "VERB-CLOSE",
     "VERB-STAND",
-    "VERB-WAIT",
-    "VERB-BRING",
-    "VERB-WALK"
+    "VERB-WAIT"
   ],
-  "relocates": {}
+  "relocates": {
+    "VERB-BRING": "SPINE-POLITE-REQUEST-REPAIR",
+    "VERB-GIVE": "SPINE-POLITE-REQUEST-REPAIR",
+    "VERB-DRINK": "SPINE-POLITE-REQUEST-REPAIR",
+    "VERB-PUT": "SPINE-POLITE-REQUEST-REPAIR",
+    "VERB-WALK": "SPINE-CHECK-WELLBEING"
+  }
 }

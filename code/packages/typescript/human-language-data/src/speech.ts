@@ -236,6 +236,27 @@ export function speakableInline(markdown: string, depth = 0): string {
   // descending and keep the remaining text verbatim: slightly noisier speech is a much
   // better outcome than a build that dies on a crafted string.
   if (depth > 32) return collapseSpaces(markdown);
+
+  // An HTML comment is a note to the next AUTHOR, never a line to say.
+  //
+  // `parse.ts` recognises three directives -- hl-knowledge, hl-activity,
+  // hl-writing-stage -- and consumes them at fixed positions. Anything else a
+  // lesson leaves in a comment survives into the block text and, before this,
+  // straight into `speech.text`. Three lessons already carried one, and two of
+  // them are safety notes: ES-C403's says which vulgar form of `pollo` must
+  // never be generated, and ES-C404's names the disputed Wi-Fi expansion HL24
+  // forbids. Both were being read aloud -- so a note written to keep a word out
+  // of the learner's mouth was putting it in their ear, by the one route the
+  // lesson was careful to close.
+  //
+  // Stripped here rather than in the parser because this function is the single
+  // funnel every spoken string passes through, and because the page still wants
+  // the comment invisible-but-present. Unterminated comments are dropped to end
+  // of input: an author who opens `<!--` and forgets to close it gets silence,
+  // not the rest of the lesson narrated as a note.
+  const withoutComments = markdown.replace(/<!--[\s\S]*?(?:-->|$)/g, "");
+  if (withoutComments !== markdown) return speakableInline(withoutComments, depth);
+
   let out = "";
   let index = 0;
   while (index < markdown.length) {

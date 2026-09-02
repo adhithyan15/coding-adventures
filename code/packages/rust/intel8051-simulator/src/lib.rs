@@ -76,4 +76,6 @@ pub mod execute;
 pub mod opcodes;
 pub mod simulator;
 
-pub use simulator::{ExecutionResult, Intel8051Simulator};
+pub use simulator::{
+    ExecutionResult, Intel8051Error, Intel8051Simulator, Intel8051State, StepTrace,
+};

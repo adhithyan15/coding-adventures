@@ -33,15 +33,17 @@ use std::sync::Arc;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 use wasm_execution::{
-    evaluate_const_expr, HostFunction, HostInterface, LinearMemory, Table, TrapError,
-    WasmEngineConfig, WasmExecutionEngine, WasmValue,
+    evaluate_const_expr, evaluate_const_expr_gc, FuncRefTarget, GcObject, GlobalStorage, HostFunction, HostInterface,
+    LinearMemory, SelfFunctionResolver, Table, TableElement, TrapError, WasmEngineConfig, WasmExecutionEngine,
+    WasmValue,
 };
 use wasm_module_parser::WasmModuleParser;
 use wasm_types::{
-    ExternalKind, FuncType, FunctionBody, GlobalType, Import, ImportTypeInfo, Limits, ValueType,
+    CanonicalGroup, ExternalKind, FuncType, FunctionBody, GlobalType, Import, ImportTypeInfo, Limits, ValueType,
     WasmModule,
 };
 use wasm_validator::{validate, ValidatedModule, ValidationError};
+use virtual_machine::VMError;
 
 const WASI_ESUCCESS: i32 = 0;
 const WASI_EBADF: i32 = 8;
@@ -287,7 +289,7 @@ impl HostInterface for WasiStub {
         }
     }
 
-    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
         None
     }
 
@@ -532,7 +534,7 @@ impl HostInterface for WasiEnv {
         }
     }
 
-    fn resolve_global(&self, _: &str, _: &str) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, _: &str, _: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
         None
     }
 
@@ -1113,16 +1115,60 @@ pub struct WasmInstance {
     pub memories: Vec<LinearMemory>,
     /// Allocated tables.
     pub tables: Vec<Table>,
-    /// Global variable values.
-    pub globals: Vec<WasmValue>,
+    /// Global variable values. `Rc<RefCell<GlobalStorage>>` (W35 third
+    /// slice; was `Rc<RefCell<WasmValue>>`) -- see [`GlobalStorage`]'s own
+    /// doc comment in `wasm-execution` (design §7) for why a global cell
+    /// needs a real payload alongside its `WasmValue`. Still shared, not a
+    /// plain owned value (real corpus vendoring pass, `instance.wast`'s
+    /// own "Import is not generative" tests / `linking.wast`'s `mut_glob`
+    /// tests) -- see `HostInterface::resolve_global`'s own doc comment in
+    /// `wasm-execution` for the full cross-instance-sharing rationale,
+    /// which mirrors `memories`/`tables` above exactly (W28).
+    pub globals: Vec<Rc<RefCell<GlobalStorage>>>,
     /// Global type descriptors.
     pub global_types: Vec<GlobalType>,
     /// All function type signatures.
     pub func_types: Vec<FuncType>,
+    /// Each function's own declared type-SECTION index (W33 second slice,
+    /// item 4), parallel to `func_types` above (which holds the resolved
+    /// `FuncType` SHAPE instead of the index that declared it) -- same
+    /// "imports first, then module-defined" combined index space. Needed
+    /// to recover a `funcref` value's real nominal type identity: `wasm-
+    /// execution`'s `WasmValue::Ref(Some(i))` funcref payload IS the
+    /// function index directly, so `func_type_indices[i]` is the only way
+    /// to learn which type-section entry that function was declared
+    /// with -- see `wasm-execution::WasmExecutionEngine::
+    /// set_func_type_indices`'s own doc comment for the runtime consumer
+    /// (`call_indirect`'s real subtype check, `ref.cast`/`ref.test`'s
+    /// dynamic type check).
+    pub func_type_indices: Vec<u32>,
+    /// This module's own canonicalized type-group forms (W34 third slice,
+    /// `code/specs/W34-wasm-gc-canonical-type-equivalence.md`) -- cloned
+    /// once, at `instantiate()` time, from `ValidatedModule::
+    /// canonical_types()` (already computed by `wasm-validator::validate`,
+    /// which `instantiate()` requires having already succeeded -- see this
+    /// struct's own `module` field, and `validate`'s own doc comment).
+    /// Same index space as `func_type_indices`/`module.types` (one entry
+    /// per flat type-section index). Threaded into `wasm-execution` by
+    /// `build_engine` via `WasmExecutionEngine::set_canonical_types`,
+    /// mirroring `type_subtyping`/`set_type_subtyping`'s own exact
+    /// "parallel slice, not a whole `WasmModule`" pattern -- so `call_
+    /// indirect`/`ref.cast`/`ref.test`'s runtime dispatch can use real
+    /// canonical equivalence, not just the nominal `sub`-chain, without
+    /// `wasm-execution::WasmExecutionContext` ever needing to hold a full
+    /// `WasmModule` (see that struct's own doc comments on `types`/
+    /// `func_types` for why it deliberately doesn't).
+    pub canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
     /// Function bodies (None for imports).
     pub func_bodies: Vec<Option<FunctionBody>>,
-    /// Resolved imported host functions.
-    pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    /// Resolved imported host functions. `Rc`, not `Box` (W35 first slice:
+    /// `code/specs/W35-wasm-cross-instance-function-identity.md`) — mirrors
+    /// `wasm-execution`'s own `host_functions` field, so a `FuncRefTarget`
+    /// can eventually clone an existing import's callable cheaply instead
+    /// of rebuilding it. `HostInterface::resolve_function` itself still
+    /// returns `Box<dyn HostFunction>` (unchanged); `Rc::from(..)` converts
+    /// at the one call site that resolves an import (below).
+    pub host_functions: Vec<Option<Rc<dyn HostFunction>>>,
     /// Combined imported + module-defined tag index space (W-next), each
     /// entry a TYPE index into `func_types`... no -- into THIS instance's
     /// own `module.types` (the tag's declared param/result signature).
@@ -1168,6 +1214,14 @@ pub struct WasmInstance {
     /// convention. `build_engine`/`call_engine`/`call_engine_with_v128`
     /// clone/restore it exactly like `globals`.
     pub v128_heap: Vec<[u8; 16]>,
+    /// Persistent GC object (struct/array) heap for this instance's whole
+    /// lifetime (W33 fourth slice) -- same "must survive past the call
+    /// that created it" reasoning as `v128_heap` above, for a GLOBAL
+    /// initializer that itself allocates a struct/array (`struct.wast`'s
+    /// own `(global (ref $s) (struct.new $s ...))`, later read back via
+    /// `global.get` from a SEPARATE, later `call()`). `build_engine`/
+    /// `call_engine` clone/restore it exactly like `v128_heap`.
+    pub gc_heap: Vec<Option<GcObject>>,
     /// Per-data-segment "already dropped" flags for this instance's whole
     /// lifetime (task #95) -- same index space as `module.data`, same
     /// persistent-across-calls shape as `v128_heap` above (`data.drop`'s
@@ -1186,6 +1240,45 @@ pub struct WasmInstance {
     /// threads it into/out of `wasm_execution::WasmExecutionEngine` exactly
     /// like `dropped_data_segments` is.
     pub dropped_elements: Vec<bool>,
+    /// Canonical, cross-instance-safe function identity per combined
+    /// func-index-space entry (W35 third slice: `code/specs/
+    /// W35-wasm-cross-instance-function-identity.md`, design §2) --
+    /// mirrors [`tag_identities`](Self::tag_identities)'s own construction
+    /// loop in `instantiate()` EXACTLY, sharing the SAME process-wide
+    /// [`NEXT_TAG_IDENTITY`] counter (tags and functions are never
+    /// compared against each other, so sharing one counter is harmless
+    /// and avoids a second `AtomicU64` -- the spec's own explicit
+    /// reasoning). A module-DEFINED function mints a fresh identity; an
+    /// IMPORTED function adopts `host_func.identity()` verbatim (via
+    /// [`HostInterface::resolve_function`], per `wasm_execution::
+    /// HostFunction::identity`'s own doc comment). Threaded into
+    /// `wasm-execution` via [`wasm_execution::WasmExecutionEngine::
+    /// set_func_identities`], mirroring `set_tag_identities`'s exact
+    /// shape.
+    pub func_identities: Vec<u64>,
+    /// This `WasmInstance`'s own process-wide-unique identity (W35 third
+    /// slice, a further deviation from the spec's own literal design --
+    /// not named anywhere in its text). Minted ONCE, at `instantiate()`
+    /// time, from the dedicated [`NEXT_INSTANCE_IDENTITY`] counter (kept
+    /// separate from `NEXT_TAG_IDENTITY`/its own function-identity reuse:
+    /// this identifies a whole INSTANCE, a materially different kind of
+    /// thing from a tag or a function, so sharing either counter would be
+    /// a coincidence, not a deliberate design choice the way
+    /// `func_identities` sharing `tag_identities`'s counter is).
+    ///
+    /// Exists to let `wasm-execution`'s `dispatch_resolved_func_ref`
+    /// (via `effective_local_index`) tell "is `FuncRefTarget::local_index`
+    /// meaningful for the ctx dispatching it right now" without
+    /// `wasm-execution` ever naming `WasmInstance` -- see
+    /// `wasm_execution::FuncRefTarget::owner_instance_identity`'s own doc
+    /// comment for the full rationale (a measured `even`/`odd`
+    /// recursion-depth regression this exists to avoid, while still
+    /// fixing the real cross-instance dispatch bug). Threaded into
+    /// `wasm-execution` via `wasm_execution::WasmExecutionEngine::
+    /// set_instance_identity`, called unconditionally by `build_engine`
+    /// (a plain `u64` copy -- unlike `SelfFunctionResolver` itself, this
+    /// needs no live `Rc<RefCell<WasmInstance>>` at all).
+    pub instance_identity: u64,
 }
 
 /// Process-wide counter minting a fresh, never-repeating canonical tag
@@ -1198,7 +1291,27 @@ pub struct WasmInstance {
 /// every call on the same instance), not once per call. `Relaxed`
 /// ordering suffices: uniqueness, not cross-thread visibility of any
 /// OTHER state, is the only property tag-identity comparison relies on.
+///
+/// **W35 third slice**: also mints [`WasmInstance::func_identities`]'
+/// module-DEFINED entries -- the spec's own design §2 explicitly calls
+/// for sharing this one counter between tags and functions ("tags and
+/// functions are never compared against each other, so sharing one
+/// counter is harmless").
 static NEXT_TAG_IDENTITY: AtomicU64 = AtomicU64::new(1);
+
+/// Process-wide counter minting a fresh, never-repeating
+/// [`WasmInstance::instance_identity`] each time `instantiate()` builds a
+/// new instance (W35 third slice, further deviation from the spec's own
+/// literal text -- see that field's own doc comment for the full
+/// rationale). Starts at `1` so `0` stays reserved as "no real identity
+/// assigned," mirroring `NEXT_TAG_IDENTITY`'s own convention. Kept
+/// deliberately SEPARATE from `NEXT_TAG_IDENTITY` (unlike
+/// `func_identities`, which deliberately DOES share it) -- an instance
+/// identity and a tag/function identity are never compared against each
+/// other either, but there is no analogous "spec explicitly calls for
+/// sharing" reasoning for this one, so a dedicated counter keeps its own
+/// numbering independent and easier to reason about in isolation.
+static NEXT_INSTANCE_IDENTITY: AtomicU64 = AtomicU64::new(1);
 
 /// Build a link-error `TrapError` for a failed import (WASM05/W10) --
 /// self-authored, capability-gap-shaped text (this crate's existing
@@ -1220,6 +1333,256 @@ fn limits_compatible(actual: &Limits, declared: &Limits) -> bool {
     match declared.max {
         None => true,
         Some(declared_max) => matches!(actual.max, Some(actual_max) if actual_max <= declared_max),
+    }
+}
+
+/// Build the three flat-type-index-keyed tables `wasm-execution` needs for
+/// real struct/array runtime semantics (W33 fourth slice): field counts,
+/// per-field storage types, and per-array-type element storage. Shared by
+/// `instantiate()` (for `evaluate_const_expr_gc`, evaluating a GLOBAL
+/// initializer that itself allocates) and `build_engine` (for the engine's
+/// own `struct.new`/`array.new` handlers) so the two never drift apart.
+///
+/// Built on `WasmModule::struct_type_at`/`array_type_at` (`type_kinds`-aware,
+/// see those methods' own doc comments) rather than the OLD "pad
+/// `func_type_count` zeros, then append every struct's field count in
+/// `struct_types` order" scheme this function replaces — that old scheme's
+/// own assumption, "struct types follow ALL function types," is exactly
+/// what a TEXT-format module (via `wasm-wast-parser`'s real struct/array
+/// declarations) is free to violate: `struct.wast`'s/`array.wast`'s own
+/// "Binding structure" modules declare a struct/array type, THEN a function
+/// whose inline-only signature gets dedup'd into `types` AFTER it — see
+/// `wasm_types::TypeKind`'s own doc comment for the full mechanism.
+/// Iterating every flat index directly is correct regardless of declaration
+/// order — the LANG77/Twig binary-only modules the old scheme targeted
+/// (which never populate `type_kinds` at all) still resolve identically via
+/// `struct_type_at`'s legacy-offset fallback, so this is a strict
+/// generalization, not a behavior change for any pre-existing caller.
+///
+/// Returns three EMPTY vectors when the module declares no struct/array
+/// type at all — callers should treat that as "leave `wasm-execution`'s own
+/// tables unset," not "call the setters with empty vectors," since an empty
+/// table changes what an out-of-range `struct.new`/`array.new` does (see
+/// `build_engine`'s own call site for why that distinction matters).
+fn struct_array_runtime_tables(
+    module: &WasmModule,
+) -> (Vec<u32>, Vec<Vec<wasm_types::StorageType>>, Vec<Option<wasm_types::StorageType>>) {
+    if module.struct_types.is_empty() && module.array_types.is_empty() {
+        return (Vec::new(), Vec::new(), Vec::new());
+    }
+    let total_type_count = module
+        .type_kinds
+        .len()
+        .max(module.types.len() + module.struct_types.len() + module.array_types.len());
+    let mut struct_field_counts = Vec::with_capacity(total_type_count);
+    let mut struct_field_storage = Vec::with_capacity(total_type_count);
+    let mut array_element_storage = Vec::with_capacity(total_type_count);
+    for idx in 0..total_type_count as u32 {
+        match module.struct_type_at(idx) {
+            Some(st) => {
+                struct_field_counts.push(st.fields.len() as u32);
+                struct_field_storage.push(st.fields.iter().map(|f| f.storage).collect());
+            }
+            None => {
+                struct_field_counts.push(0);
+                struct_field_storage.push(Vec::new());
+            }
+        }
+        array_element_storage.push(module.array_type_at(idx).map(|at| at.element.storage));
+    }
+    (struct_field_counts, struct_field_storage, array_element_storage)
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// LocalFunctionRef (W35 third slice)
+// ══════════════════════════════════════════════════════════════════════════════
+
+/// Wraps ONE of `instance`'s own functions (exported or not) as a
+/// [`HostFunction`], callable by raw combined INDEX rather than by export
+/// name (W35 third slice, design §3) -- the "wrap MY OWN local function"
+/// counterpart to `wasm-conformance`'s `CrossModuleFunction` (which wraps
+/// ANOTHER instance's EXPORTED function, called by name). Needed because
+/// an active `elem` segment, or a `ref.func`-initialized global, can name
+/// a function that is never exported at all (`linking.wast`'s own
+/// `$Mt`/`$g` -- see `code/specs/
+/// W35-wasm-cross-instance-function-identity.md`'s own root-cause trace)
+/// yet still needs a real, self-contained, cross-instance-safe identity
+/// the moment it's written into a table/global another instance can
+/// later read.
+///
+/// Fields mirror `wasm-conformance::CrossModuleFunction`'s own snapshot-
+/// at-construction pattern (see [`resolve_func_ref_for_instance`]'s own
+/// doc comment for exactly how each is derived).
+struct LocalFunctionRef {
+    instance: Rc<RefCell<WasmInstance>>,
+    func_index: u32,
+    func_type: FuncType,
+    identity: u64,
+    /// W33 first slice pattern, mirroring `CrossModuleFunction`'s own
+    /// `group_shape` field -- see `HostFunction::type_group_shape`'s own
+    /// doc comment.
+    group_shape: (u32, u32),
+    /// Mirrors `CrossModuleFunction`'s own `is_final` field -- see
+    /// `HostFunction::is_final`'s own doc comment.
+    is_final: bool,
+    /// W34 fourth slice pattern, mirroring `CrossModuleFunction`'s own
+    /// `canonical_type` field -- see `HostFunction::canonical_type`'s own
+    /// doc comment.
+    canonical_type: Option<(Rc<CanonicalGroup>, u32)>,
+}
+
+impl HostFunction for LocalFunctionRef {
+    fn func_type(&self) -> &FuncType {
+        &self.func_type
+    }
+
+    fn identity(&self) -> u64 {
+        self.identity
+    }
+
+    fn type_group_shape(&self) -> (u32, u32) {
+        self.group_shape
+    }
+
+    fn is_final(&self) -> bool {
+        self.is_final
+    }
+
+    fn canonical_type(&self) -> Option<(Rc<CanonicalGroup>, u32)> {
+        self.canonical_type.clone()
+    }
+
+    /// Mirrors `CrossModuleFunction::canonically_matches` exactly, just
+    /// climbing THIS (the LOCAL, not a foreign) instance's own
+    /// `type_subtyping` chain -- a declared `sub` relationship is only
+    /// ever meaningful within the module that declared it.
+    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32), budget: &mut wasm_types::CrossModuleComparisonBudget) -> bool {
+        let instance = self.instance.borrow();
+        match instance.func_type_indices.get(self.func_index as usize) {
+            Some(&type_idx) => wasm_types::canonical_chain_reaches(&instance.module.type_subtyping, &instance.canonical_types, type_idx, Some(target), budget),
+            None => false,
+        }
+    }
+
+    /// Calls the new by-index primitive from design §3
+    /// ([`WasmRuntime::call_by_index`]), not `call_typed`
+    /// (`CrossModuleFunction`'s own shape) -- `func_index` here need not
+    /// even be exported (`linking.wast`'s own `$g` example).
+    fn call(&self, args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+        let mut instance = self.instance.borrow_mut();
+        WasmRuntime::new().call_by_index(&mut instance, self.func_index as usize, args)
+    }
+}
+
+/// Resolve a combined-index-space function index into a real,
+/// self-contained [`FuncRefTarget`] for `instance` (W35 third slice) --
+/// mirrors `wasm_execution::WasmExecutionContext::resolve_function_ref`'s
+/// own import/local split exactly, but usable BEFORE any
+/// `WasmExecutionContext` exists at all.
+///
+/// **Not currently called by `instantiate()` itself** -- see that
+/// function's own doc comment for why: a `LocalFunctionRef` this produces
+/// for a LOCAL function holds `instance: instance_rc.clone()`, which is
+/// only sound to construct when `instance_rc` is a genuinely long-lived,
+/// permanent `Rc` (e.g. `wasm-conformance`'s `ModuleRegistry`, held for a
+/// whole script's lifetime) -- `instantiate()` itself has no such
+/// permanent home to offer, so calling this from inside it creates an
+/// unavoidable self-referential `Rc` cycle the moment a module's own
+/// elem/global entry references its own local function (the common
+/// case), breaking `instantiate()`'s own "return a bare, owned
+/// `WasmInstance`" contract. This function remains real, tested,
+/// additive infrastructure (see this crate's own new unit tests) --
+/// ready for slice 4 to call from `wasm-conformance`'s `ModuleRegistry`,
+/// which CAN safely sustain the resulting cycle (per the spec's own
+/// "Security and lifetime consideration" section). This is also the ONE
+/// place `InstanceSelfResolver::resolve_local_function` (below)
+/// delegates to, so both call sites share identical resolution logic.
+///
+/// An IMPORTED function (`instance.host_functions[func_index]` is `Some`)
+/// is already cross-instance-safe -- clone its `Rc` and reuse its own
+/// `identity()` verbatim, same as `resolve_function_ref`'s own import
+/// branch. A LOCAL (module-defined) function is wrapped as a
+/// [`LocalFunctionRef`], its `group_shape`/`is_final`/`canonical_type`
+/// snapshotted from `instance.func_type_indices[func_index]`'s own
+/// type-section entry -- the SAME "same snapshot-at-construction pattern
+/// `CrossModuleFunction` already uses" the spec's own design §3 calls
+/// for.
+///
+/// `local_index: Some(func_index)` in BOTH branches (a further, documented
+/// deviation from the spec's own literal §4 text -- see
+/// `wasm_execution::FuncRefTarget::owner_instance_identity`'s own doc
+/// comment for the full rationale); `owner_instance_identity` is what
+/// actually distinguishes the two cases' dispatch safety now.
+pub fn resolve_func_ref_for_instance(instance_rc: &Rc<RefCell<WasmInstance>>, func_index: u32) -> Result<FuncRefTarget, TrapError> {
+    let instance = instance_rc.borrow();
+    if let Some(Some(hf)) = instance.host_functions.get(func_index as usize) {
+        return Ok(FuncRefTarget {
+            identity: hf.identity(),
+            callable: hf.clone(),
+            local_index: Some(func_index),
+            owner_instance_identity: None,
+        });
+    }
+    let func_type = instance
+        .func_types
+        .get(func_index as usize)
+        .cloned()
+        .ok_or_else(|| TrapError::new(format!("undefined function {func_index} referenced by a funcref")))?;
+    let identity = instance.func_identities.get(func_index as usize).copied().unwrap_or(0);
+    let (group_shape, is_final, canonical_type) = match instance.func_type_indices.get(func_index as usize) {
+        Some(&type_idx) => (
+            instance.module.type_group_shape(type_idx),
+            instance.module.type_subtyping_at(type_idx).is_final,
+            instance.canonical_types.get(type_idx as usize).cloned().flatten(),
+        ),
+        None => ((1, 0), true, None),
+    };
+    let owner = instance.instance_identity;
+    drop(instance);
+    let local_ref = LocalFunctionRef {
+        instance: instance_rc.clone(),
+        func_index,
+        func_type,
+        identity,
+        group_shape,
+        is_final,
+        canonical_type,
+    };
+    Ok(FuncRefTarget {
+        identity,
+        callable: Rc::new(local_ref),
+        local_index: Some(func_index),
+        owner_instance_identity: Some(owner),
+    })
+}
+
+/// Real [`SelfFunctionResolver`] implementation (W35 third slice, design
+/// §4), closing over the `Rc<RefCell<WasmInstance>>` under construction --
+/// delegates entirely to [`resolve_func_ref_for_instance`], so its own
+/// resolution logic is exercised identically whether reached through this
+/// trait impl or called directly.
+///
+/// **Not installed anywhere by this slice's own production code** --
+/// neither by `instantiate()` (see that function's own doc comment: doing
+/// so would create an unavoidable self-referential `Rc` cycle for the
+/// common "elem/global entry references its own local function" case,
+/// breaking `instantiate()`'s "return a bare, owned `WasmInstance`"
+/// contract) nor by `build_engine` for ordinary per-call execution (see
+/// that method's own doc comment: it only ever has a plain `&mut
+/// WasmInstance`, never a live `Rc<RefCell<WasmInstance>>`, to construct
+/// one from). Exercised directly by this slice's own unit tests
+/// (constructing one by hand over a LONG-LIVED, test-owned `Rc<RefCell<
+/// WasmInstance>>` and installing it via `set_self_resolver` on a
+/// hand-built `WasmExecutionEngine`), proving the trait/setter machinery
+/// works end-to-end and is ready for slice 4 to connect to a real,
+/// permanently-alive `Rc` (`wasm-conformance`'s own `ModuleRegistry`).
+pub struct InstanceSelfResolver {
+    pub instance: Rc<RefCell<WasmInstance>>,
+}
+
+impl SelfFunctionResolver for InstanceSelfResolver {
+    fn resolve_local_function(&self, func_index: u32) -> Result<FuncRefTarget, VMError> {
+        resolve_func_ref_for_instance(&self.instance, func_index).map_err(|e| VMError::GenericError(e.to_string()))
     }
 }
 
@@ -1294,11 +1657,39 @@ impl WasmRuntime {
     /// pattern `wasm-conformance`'s harness already used.
     pub fn instantiate(&self, validated: &ValidatedModule) -> Result<WasmInstance, TrapError> {
         let module = validated.module();
+        // W34 third slice: cloned once, here, from `validated` (already
+        // computed by `wasm-validator::validate` -- see `WasmInstance::
+        // canonical_types`'s own doc comment for why this is the ONLY
+        // place this crate ever needs to reach for it).
+        let canonical_types = validated.canonical_types().to_vec();
+        // W34 fourth slice, security-review finding: ONE budget for this
+        // WHOLE `instantiate()` call's import-resolution loop below, not
+        // one per import -- see `wasm_types::CrossModuleComparisonBudget`'s
+        // own doc comment. Without this, a module could declare an
+        // arbitrary, byte-cheap number of function imports all targeting
+        // one expensive-but-individually-capped canonical comparison,
+        // multiplying a bounded per-comparison cost by an attacker-chosen
+        // import count with no aggregate limit.
+        let mut canonical_comparison_budget = wasm_types::CrossModuleComparisonBudget::new();
         let mut func_types: Vec<FuncType> = Vec::new();
+        // Combined imported + module-defined func_index -> TYPE-SECTION-index
+        // space (W33 second slice), index-aligned with `func_types` above --
+        // see `WasmInstance::func_type_indices`'s own doc comment.
+        let mut func_type_indices: Vec<u32> = Vec::new();
         let mut func_bodies: Vec<Option<FunctionBody>> = Vec::new();
-        let mut host_functions: Vec<Option<Box<dyn HostFunction>>> = Vec::new();
+        let mut host_functions: Vec<Option<Rc<dyn HostFunction>>> = Vec::new();
         let mut global_types: Vec<GlobalType> = Vec::new();
-        let mut globals: Vec<WasmValue> = Vec::new();
+        let mut globals: Vec<Rc<RefCell<GlobalStorage>>> = Vec::new();
+        // Combined imported + module-defined function IDENTITY space (W35
+        // third slice, design §2), index-aligned with `func_types`/
+        // `host_functions` above -- see `WasmInstance::func_identities`'s
+        // own doc comment. Mirrors `tag_identities`'s own construction
+        // EXACTLY: an import adopts `host_func.identity()` verbatim
+        // (pushed alongside `host_functions.push(Some(Rc::from(host_func)))`
+        // below); a module-defined function mints a fresh identity from
+        // the SAME `NEXT_TAG_IDENTITY` counter `tag_identities` uses
+        // (pushed alongside `host_functions.push(None)` below).
+        let mut func_identities: Vec<u64> = Vec::new();
         let mut memories: Vec<LinearMemory> = Vec::new();
         let mut tables: Vec<Table> = Vec::new();
         // Combined imported + module-defined tag index space (W-next),
@@ -1326,44 +1717,109 @@ impl WasmRuntime {
                         .as_ref()
                         .and_then(|h| h.resolve_function(&imp.module_name, &imp.name))
                         .ok_or_else(|| link_error("unknown import", imp))?;
-                    if host_func.func_type() != &ft {
-                        return Err(link_error("incompatible import type", imp));
-                    }
-                    // W33 first slice: a plain `FuncType` shape match
-                    // alone isn't enough once `rec` groups exist -- two
-                    // structurally-identical members of a `rec` group at
-                    // DIFFERENT positions are DISTINCT types under the
-                    // real GC canonicalization algorithm (`code/specs/
-                    // W33-wasm-gc-recursive-type-subtyping.md`'s own
-                    // item (3b), which this crate does not implement).
-                    // This conservative guard ANDs a `(rec_group_size,
-                    // rec_group_position)` match onto the pre-existing
-                    // structural check -- see `tag.wast`'s own
-                    // `assert_unlinkable` case, which needs exactly this.
-                    // Safe for every PRE-EXISTING import (both sides
-                    // report the singleton-group default, always
-                    // trivially matching): can only ADD a rejection on
-                    // top of the check above, never remove one.
-                    if host_func.type_group_shape() != module.type_group_shape(*type_idx) {
-                        return Err(link_error("incompatible import type", imp));
-                    }
-                    // W33 first slice: finality is as much a part of a
-                    // type's real canonical identity as its shape or
-                    // `rec`-group position -- `(sub (func))` (open) and
-                    // `(sub final (func))` (final) are DISTINCT types
-                    // even though `FuncType` equality can't see it (see
-                    // `HostFunction::is_final`'s own doc comment).
-                    // `type-subtyping.wast` lines 594-617 needs exactly
-                    // this. Same "strictly additive, safe for every
-                    // pre-existing import" reasoning as the group-shape
-                    // guard above.
-                    if host_func.is_final() != module.type_subtyping_at(*type_idx).is_final {
-                        return Err(link_error("incompatible import type", imp));
+
+                    // W34 fourth slice (`code/specs/
+                    // W34-wasm-gc-canonical-type-equivalence.md`): when
+                    // BOTH the importing module's own declared type and
+                    // the exporting host function report a real canonical
+                    // identity, compare THOSE directly instead of the
+                    // pre-existing three-part conservative guard below --
+                    // real cross-module canonical equivalence needs no
+                    // shared numbering between the two modules at all (see
+                    // `wasm_types::canonical_type_entries_equivalent`'s own
+                    // doc comment), and SUBSUMES every one of the three
+                    // checks below (shape/finality are already folded into
+                    // `CanonicalSubtype`'s own fields; structural shape is
+                    // the whole point of the comparison) -- this is what
+                    // finally accepts an isomorphic-but-differently-
+                    // numbered `rec` group import (`type-equivalence.wast`'s
+                    // own "Semantic types (link time)" section) while
+                    // STILL rejecting a genuine topology mismatch the old
+                    // guard couldn't see (`type-subtyping.wast`'s `M5`/
+                    // `M10`/`M11` cases -- see that file's own "Linking"
+                    // section).
+                    //
+                    // Falls back to the three-part guard, UNCHANGED, when
+                    // EITHER side reports `None` (no real canonical
+                    // identity available -- e.g. a WASI-shim host import,
+                    // or a type this slice's canonicalizer couldn't
+                    // resolve) -- this is strictly additive over the old
+                    // guard's own already-proven-sound behavior for every
+                    // such import: the guard is never removed, only
+                    // bypassed in favor of a MORE PRECISE check when one is
+                    // actually available.
+                    let module_canonical_type = canonical_types.get(*type_idx as usize).cloned().flatten();
+                    match (host_func.canonical_type(), &module_canonical_type) {
+                        (Some(_), Some(module_ct)) => {
+                            // `canonically_matches` (not a plain equality
+                            // check) -- a func import is satisfiable by an
+                            // export whose actual type is a nominal
+                            // SUBTYPE of the declared import type, not
+                            // only an exact canonical match (see that
+                            // method's own doc comment; `type-subtyping.
+                            // wast`'s `M6`/`M7` "Linking" cases need
+                            // exactly this).
+                            if !host_func.canonically_matches(module_ct, &mut canonical_comparison_budget) {
+                                return Err(link_error("incompatible import type", imp));
+                            }
+                        }
+                        _ => {
+                            if host_func.func_type() != &ft {
+                                return Err(link_error("incompatible import type", imp));
+                            }
+                            // W33 first slice: a plain `FuncType` shape match
+                            // alone isn't enough once `rec` groups exist -- two
+                            // structurally-identical members of a `rec` group at
+                            // DIFFERENT positions are DISTINCT types under the
+                            // real GC canonicalization algorithm (`code/specs/
+                            // W33-wasm-gc-recursive-type-subtyping.md`'s own
+                            // item (3b)). This conservative guard ANDs a
+                            // `(rec_group_size, rec_group_position)` match onto
+                            // the pre-existing structural check -- see
+                            // `tag.wast`'s own `assert_unlinkable` case, which
+                            // needs exactly this. Safe for every PRE-EXISTING
+                            // import (both sides report the singleton-group
+                            // default, always trivially matching): can only ADD
+                            // a rejection on top of the check above, never
+                            // remove one.
+                            if host_func.type_group_shape() != module.type_group_shape(*type_idx) {
+                                return Err(link_error("incompatible import type", imp));
+                            }
+                            // W33 first slice: finality is as much a part of a
+                            // type's real canonical identity as its shape or
+                            // `rec`-group position -- `(sub (func))` (open) and
+                            // `(sub final (func))` (final) are DISTINCT types
+                            // even though `FuncType` equality can't see it (see
+                            // `HostFunction::is_final`'s own doc comment).
+                            // `type-subtyping.wast` lines 594-617 needs exactly
+                            // this. Same "strictly additive, safe for every
+                            // pre-existing import" reasoning as the group-shape
+                            // guard above.
+                            if host_func.is_final() != module.type_subtyping_at(*type_idx).is_final {
+                                return Err(link_error("incompatible import type", imp));
+                            }
+                        }
                     }
 
                     func_types.push(ft);
+                    func_type_indices.push(*type_idx);
                     func_bodies.push(None);
-                    host_functions.push(Some(host_func));
+                    // W35 third slice, design §2: an IMPORTED function
+                    // adopts the exporter's own already-minted identity
+                    // verbatim (`HostFunction::identity()`), mirroring
+                    // `tag_identities`'s own import arm exactly. Read
+                    // BEFORE `host_func` moves into `Rc::from` below
+                    // (`Box<dyn HostFunction>` derefs to call `&self`
+                    // methods fine either way, but the move happens on the
+                    // very next line).
+                    func_identities.push(host_func.identity());
+                    // `resolve_function` returns `Box<dyn HostFunction>`
+                    // (unchanged, per W35 first slice's scope -- only
+                    // `host_functions`' own storage moved to `Rc`);
+                    // `Rc::from` converts the owned `Box` into an `Rc`
+                    // with no behavior change (`HostFunction`'s methods
+                    // are all `&self`).
+                    host_functions.push(Some(Rc::from(host_func)));
                 }
                 ImportTypeInfo::Memory(mem_type) => {
                     let imported_mem = self
@@ -1424,6 +1880,18 @@ impl WasmRuntime {
                     tables.push(imported_table);
                 }
                 ImportTypeInfo::Global(gt) => {
+                    // `gval` is the exporting instance's own SHARED
+                    // `Rc<RefCell<GlobalStorage>>` cell (W35 third slice;
+                    // see `HostInterface::resolve_global`'s own doc
+                    // comment) -- pushed here as-is, not dereferenced/
+                    // copied, so a `global.set` through EITHER this
+                    // importing instance or the exporting one is visible
+                    // through the other -- and, for a funcref-typed
+                    // global, already fully resolved by the EXPORTING
+                    // instance's own `instantiate()` fixup pass (see that
+                    // function's own doc comment), so this importing
+                    // instance never needs to (and never does) re-resolve
+                    // it itself.
                     let (gtype, gval) = self
                         .host
                         .as_ref()
@@ -1489,11 +1957,18 @@ impl WasmRuntime {
             }
         }
 
-        // Add module-defined functions.
+        // Add module-defined functions. W35 third slice, design §2: each
+        // mints a fresh, never-repeating identity from the SAME process-
+        // wide `NEXT_TAG_IDENTITY` counter `tag_identities` (just below)
+        // already uses -- the spec's own explicit reasoning: "tags and
+        // functions are never compared against each other, so sharing one
+        // counter is harmless."
         for (i, &type_idx) in module.functions.iter().enumerate() {
             func_types.push(module.types[type_idx as usize].clone());
+            func_type_indices.push(type_idx);
             func_bodies.push(module.code.get(i).cloned());
             host_functions.push(None);
+            func_identities.push(NEXT_TAG_IDENTITY.fetch_add(1, Ordering::Relaxed));
         }
 
         // Add module-defined tags, completing the combined index space
@@ -1608,59 +2083,98 @@ impl WasmRuntime {
         // `wasm_execution::WasmExecutionContext::v128_heap`'s convention.
         let mut v128_heap: Vec<[u8; 16]> = vec![[0u8; 16]];
 
-        // Initialize globals.
+        // The instance's persistent GC object heap (W33 fourth slice) --
+        // see `WasmInstance::gc_heap`'s own doc comment. Only a GLOBAL
+        // initializer can allocate into it (data/elem segment offset
+        // expressions are always plain integers in the real corpus, never
+        // `struct.new`/`array.new`), so only the globals loop below uses
+        // the GC-capable evaluator; data/elem offsets keep using the plain
+        // `evaluate_const_expr`, unaffected.
+        let mut gc_heap: Vec<Option<GcObject>> = Vec::new();
+        let (struct_field_counts, struct_field_storage, array_element_storage) = struct_array_runtime_tables(module);
+
+        // Initialize globals. `evaluate_const_expr_gc` itself is
+        // unchanged -- it still takes a plain `&[WasmValue]` snapshot --
+        // but `globals` is now `Vec<Rc<RefCell<GlobalStorage>>>` (W35
+        // third slice; real cross-instance sharing was already true via
+        // W28's own `Rc<RefCell<..>>` wrapping -- see `WasmInstance::
+        // globals`'s own doc comment), so each iteration derives a fresh
+        // snapshot of whatever globals' `value`s are already defined
+        // (imports, plus every earlier module-defined global processed so
+        // far in this same loop -- a later global's own init expr can
+        // `global.get` an earlier one) before wrapping the newly computed
+        // value in its own shared cell.
+        //
+        // A funcref-typed global's `ref.func`-produced `value` here is
+        // DELIBERATELY LEFT UNRESOLVED (`func_ref: None`, a raw index in
+        // `value`, exactly as `evaluate_const_expr_gc`'s own `0xD2` arm
+        // produces it -- see that function's own doc comment: it has no
+        // access to `host_functions`/a resolver at all) -- this is the
+        // exact construction-order problem this function's own doc
+        // comment names: no `Rc<RefCell<WasmInstance>>` exists yet at this
+        // point for a `LocalFunctionRef` to hold. A SEPARATE fixup pass,
+        // below, resolves every module-defined funcref-typed global's
+        // initial value for real, once `instance_rc` exists.
         for global in &module.globals {
             global_types.push(global.global_type.clone());
-            let value = evaluate_const_expr(&global.init_expr, &globals, &mut v128_heap)?;
-            globals.push(value);
+            let globals_so_far: Vec<WasmValue> = globals.iter().map(|g| g.borrow().value).collect();
+            let value = evaluate_const_expr_gc(
+                &global.init_expr,
+                &globals_so_far,
+                &mut v128_heap,
+                &mut gc_heap,
+                &struct_field_counts,
+                &struct_field_storage,
+                &array_element_storage,
+            )?;
+            globals.push(Rc::new(RefCell::new(GlobalStorage { value, func_ref: None })));
         }
 
-        // Apply data segments. Widened (real corpus vendoring pass, see
-        // `wasm-conformance`'s CHANGELOG) to target each active segment's
-        // OWN `seg.memory_index`, not unconditionally memory 0 -- the prior
-        // "memory 0 only" restriction was `wasm-validator`'s own Check 8
-        // rejecting any other index at validation time, not a real
-        // multi-memory limitation; a module past validation here is
-        // guaranteed `seg.memory_index` is in bounds (Check 8 bounds-checks
-        // it against the real memory count), so `memories.get_mut` below
-        // always succeeds for a well-formed caller -- the `continue`
-        // fallback is defensive only, never reachable through the normal
-        // validate-then-instantiate path this crate's own callers use.
+        // A fixed, post-initialization snapshot of every global's value,
+        // for the element/data segment offset expressions below --
+        // active segment offsets are evaluated ONCE, after every global
+        // is already in its final initial value, and never observe a
+        // LATER `global.set` (there isn't one yet at this point in
+        // instantiation), so one shared snapshot is exact for both loops
+        // -- no need to re-snapshot per segment.
+        let global_values: Vec<WasmValue> = globals.iter().map(|g| g.borrow().value).collect();
+
+        // Apply element segments BEFORE data segments -- the order the
+        // official spec's own instantiation algorithm mandates (step 27,
+        // "Execute the sequence instr*_e" for active element segments,
+        // strictly before step 28, "Execute the sequence instr*_d" for
+        // active data segments -- see `code/specs/
+        // W10-wasm-real-linking-and-unlinkable.md`'s addendum for this
+        // fix). This is a fixed TWO-PHASE order (all elem, then all
+        // data), not a per-segment interleaving by declaration order --
+        // it holds regardless of which kind of segment a module's own
+        // text happens to declare first.
         //
-        // A PASSIVE segment (`is_passive`, task #95) is deliberately
-        // skipped here -- applying it automatically would defeat the
-        // entire point of `memory.init`/`data.drop`: a passive segment's
-        // bytes stay resident, untouched, until an explicit `memory.init`
-        // copies from it (any number of times, on demand), which is a
-        // completely separate code path from this one-time instantiation-
-        // time copy.
-        for seg in &module.data {
-            if seg.is_passive {
-                continue;
-            }
-            let Some(mem) = memories.get_mut(seg.memory_index as usize) else {
-                continue;
-            };
-            // W25 (memory64): the TARGET memory's own `is64`-ness
-            // determines whether this active data segment's offset
-            // expression is an `i32.const` or `i64.const` -- now resolved
-            // per-segment (each segment can target a different memory),
-            // not fixed to memory 0's.
-            let is64 = mem.is64();
-            let offset = evaluate_const_expr(&seg.offset_expr, &globals, &mut v128_heap)?;
-            let offset_num = if is64 {
-                offset.as_i64().map_err(|e| TrapError::new(e.message))? as usize
-            } else {
-                offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize
-            };
-            mem.write_bytes(offset_num, &seg.data)?;
-        }
-
-        // Apply element segments. A passive segment (task #97) is never
-        // applied automatically -- same "applying one automatically would
-        // defeat the entire point" reasoning task #95 established for
-        // `memory.init`'s passive data segments -- it stays resident for
-        // an explicit `table.init` to copy from later.
+        // This block and the data-segment block below it USED to run in
+        // the opposite order (data first, then elem) -- a real,
+        // spec-violating bug found vendoring `linking0.wast`: when a
+        // module declares an in-bounds ACTIVE ELEMENT segment together
+        // with a data segment that traps (e.g. an out-of-bounds write),
+        // the elem segment's own effect must already be applied and must
+        // PERSIST past that later data-segment trap -- the same "earlier
+        // segments persist past a later trap" rule this crate's own
+        // per-segment-atomicity fix below already established WITHIN one
+        // kind, applied ACROSS kinds. With data applied first, a
+        // data-segment trap returned via `?` before this elem loop ever
+        // ran, so the elem write was silently lost entirely --
+        // `linking0.wast`'s own `(assert_return (invoke $Mt "call"
+        // (i32.const 7)) (i32.const 0))` (after an earlier, separately
+        // instantiated module writes an in-bounds `(elem (i32.const 7)
+        // $f)` into `$Mt`'s already-exported, shared table, then traps on
+        // an out-of-bounds data write) caught this directly: instead of
+        // returning the already-applied elem write's value, it trapped
+        // with "uninitialized table element", proving the elem write
+        // never happened. Confirmed via this crate's own baseline diff
+        // (see `wasm-conformance`'s CHANGELOG) that swapping these two
+        // blocks fixes exactly that case with zero regressions elsewhere
+        // in the 257-file corpus -- each block's OWN internal
+        // per-segment-atomicity/bounds-checking logic is unchanged, only
+        // their RELATIVE order moved.
         for elem in &module.elements {
             if elem.is_passive {
                 continue;
@@ -1670,7 +2184,7 @@ impl WasmRuntime {
                 // expression must match its TARGET table's own address
                 // width -- `i64.const` for an `is64` table, `i32.const`
                 // otherwise -- mirroring the active data segment's
-                // identical `is64`-aware branch just above (W25). Kept in
+                // identical `is64`-aware branch below (W25). Kept in
                 // `u64` throughout (not narrowed to `u32` until AFTER the
                 // upfront bounds check below): an is64 table's real spec
                 // ceiling is `u64::MAX` (see `code/specs/
@@ -1681,7 +2195,7 @@ impl WasmRuntime {
                 // before" discipline `pop_table_operand`'s own doc comment
                 // establishes in `wasm-execution`).
                 let is64 = table.is64();
-                let offset = evaluate_const_expr(&elem.offset_expr, &globals, &mut v128_heap)?;
+                let offset = evaluate_const_expr(&elem.offset_expr, &global_values, &mut v128_heap)?;
                 let offset_num: u64 = if is64 {
                     offset.as_i64().map_err(|e| TrapError::new(e.message))? as u64
                 } else {
@@ -1727,10 +2241,65 @@ impl WasmRuntime {
                 // MAX_TABLE_ELEMENTS` (far below `u32::MAX`) -- so this
                 // cast never loses information for any value that reaches
                 // this loop body.
+                // W35 slice 2 mechanical fallout: `Table::set` now takes a
+                // real `TableElement`, not a bare `u32` -- see
+                // `code/specs/W35-wasm-cross-instance-function-identity.md`
+                // §6. `TableElement::Raw` wraps this active elem segment's
+                // entry verbatim, UNRESOLVED, exactly as it always was:
+                // real resolution (via `WasmExecutionContext::resolve_
+                // function_ref_for_dispatch`) happens lazily, at
+                // `call_indirect`'s own read site, once this instance's
+                // `WasmExecutionContext` actually exists (it doesn't yet,
+                // here in `instantiate()`). This is a purely mechanical
+                // type-following change, not new cross-instance logic --
+                // resolving eagerly here, using the DECLARING instance's
+                // own context, is W35's third slice (`LocalFunctionRef`),
+                // deliberately out of this slice's scope.
                 for (j, &func_idx) in elem.function_indices.iter().enumerate() {
-                    table.set((offset_num + j as u64) as u32, func_idx)?;
+                    table.set((offset_num + j as u64) as u32, func_idx.map(TableElement::Raw))?;
                 }
             }
+        }
+
+        // Apply data segments. Widened (real corpus vendoring pass, see
+        // `wasm-conformance`'s CHANGELOG) to target each active segment's
+        // OWN `seg.memory_index`, not unconditionally memory 0 -- the prior
+        // "memory 0 only" restriction was `wasm-validator`'s own Check 8
+        // rejecting any other index at validation time, not a real
+        // multi-memory limitation; a module past validation here is
+        // guaranteed `seg.memory_index` is in bounds (Check 8 bounds-checks
+        // it against the real memory count), so `memories.get_mut` below
+        // always succeeds for a well-formed caller -- the `continue`
+        // fallback is defensive only, never reachable through the normal
+        // validate-then-instantiate path this crate's own callers use.
+        //
+        // A PASSIVE segment (`is_passive`, task #95) is deliberately
+        // skipped here -- applying it automatically would defeat the
+        // entire point of `memory.init`/`data.drop`: a passive segment's
+        // bytes stay resident, untouched, until an explicit `memory.init`
+        // copies from it (any number of times, on demand), which is a
+        // completely separate code path from this one-time instantiation-
+        // time copy.
+        for seg in &module.data {
+            if seg.is_passive {
+                continue;
+            }
+            let Some(mem) = memories.get_mut(seg.memory_index as usize) else {
+                continue;
+            };
+            // W25 (memory64): the TARGET memory's own `is64`-ness
+            // determines whether this active data segment's offset
+            // expression is an `i32.const` or `i64.const` -- now resolved
+            // per-segment (each segment can target a different memory),
+            // not fixed to memory 0's.
+            let is64 = mem.is64();
+            let offset = evaluate_const_expr(&seg.offset_expr, &global_values, &mut v128_heap)?;
+            let offset_num = if is64 {
+                offset.as_i64().map_err(|e| TrapError::new(e.message))? as usize
+            } else {
+                offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize
+            };
+            mem.write_bytes(offset_num, &seg.data)?;
         }
 
         // Build export list.
@@ -1757,15 +2326,114 @@ impl WasmRuntime {
             globals,
             global_types,
             func_types,
+            func_type_indices,
+            canonical_types,
             func_bodies,
             host_functions,
             tags,
             tag_identities,
             exports,
             v128_heap,
+            gc_heap,
             dropped_data_segments,
             dropped_elements,
+            func_identities,
+            // W35 third slice: minted ONCE per real `instantiate()` call,
+            // from the dedicated `NEXT_INSTANCE_IDENTITY` counter -- see
+            // `WasmInstance::instance_identity`'s own doc comment.
+            instance_identity: NEXT_INSTANCE_IDENTITY.fetch_add(1, Ordering::Relaxed),
         };
+
+        // **Major, evidence-backed deviation from the spec's own literal
+        // §6/"construction-order problem" design** (not a smaller
+        // implementation detail -- flagged prominently because it changes
+        // this slice's own delivered scope): the spec's own recommended
+        // resolution -- build `instance`, `Rc::new(RefCell::new(..))` it,
+        // run an elem/global "fixup" pass that resolves each entry into a
+        // real `FuncRefTarget` via a `LocalFunctionRef` closing over that
+        // SAME `Rc`, then `Rc::try_unwrap` back to the plain `WasmInstance`
+        // this function promises, claiming that unwrap "MUST be
+        // infallible... nothing else holds a reference yet" -- is
+        // STRUCTURALLY UNSOUND, not merely bug-prone, for the
+        // OVERWHELMINGLY COMMON case this exact machinery was built to
+        // handle: a module's OWN active elem segment (or funcref-typed
+        // global initializer) referencing one of ITS OWN local functions
+        // (`linking.wast`'s own `$Mt`/`$g` example -- the spec's own
+        // motivating case -- is exactly this shape).
+        //
+        // A `LocalFunctionRef` resolved for such an entry necessarily
+        // holds `instance: instance_rc.clone()` (see
+        // `resolve_func_ref_for_instance`'s own doc comment) -- and that
+        // clone gets written into `instance`'s OWN `tables`/`globals`,
+        // which are THEMSELVES part of the SAME `instance` `instance_rc`
+        // wraps. This is a genuine, unavoidable SELF-referential `Rc`
+        // cycle (not merely a two-instance cycle the spec's own "Security
+        // and lifetime consideration" section already anticipated and
+        // accepted for a REGISTRY's bounded lifetime) -- `instance_rc`'s
+        // strong count becomes `1 + (however many local functions got
+        // referenced by this module's own elem/global entries)`, NEVER
+        // `1` again, so `Rc::try_unwrap` FAILS UNCONDITIONALLY the moment
+        // even one such entry exists. Reproduced directly, not
+        // theorized: implementing the spec's own literal design made
+        // `table_init_copy_elem_drop.rs`'s pre-existing
+        // `active_element_segment_on_an_is64_table_applies_at_
+        // instantiation_time` test (`(elem (table $t0) (i64.const 1) func
+        // $one $two)` -- two of the module's OWN local functions, written
+        // by the module's OWN active elem segment) panic on exactly this
+        // `Rc::try_unwrap` call, on every run.
+        //
+        // The root problem: `instantiate()`'s own signature promises to
+        // return a bare, OWNED `WasmInstance` -- it does not, and
+        // structurally CANNOT, own that instance's long-term lifetime.
+        // A `LocalFunctionRef`'s `Rc<RefCell<WasmInstance>>` is only ever
+        // SOUND when SOMETHING holds a genuinely long-lived, permanent
+        // `Rc` for the instance's whole real lifetime -- exactly what
+        // `wasm-conformance`'s `ModuleRegistry` already does (`Rc<RefCell<
+        // HashMap<..., Rc<RefCell<WasmInstance>>>>>`, held for an entire
+        // script's lifetime, cycle-tolerant BY DESIGN per the spec's own
+        // "Security and lifetime consideration" section: "a cycle within
+        // one registry is harmless there, since the WHOLE registry, cycle
+        // and all, is freed together"). `instantiate()` itself has no
+        // such permanent home to offer -- ANY `Rc` it builds internally is
+        // torn down (via `try_unwrap`, or dropped on failure) before this
+        // function ever returns, so a `LocalFunctionRef` minted from it
+        // could never survive the trip even in a `Weak`-based redesign:
+        // `Rc::try_unwrap`'s own `into_inner()` frees the allocation a
+        // `Weak` would need to `upgrade()` from, forever, the moment this
+        // function returns -- there would be nothing left to upgrade to,
+        // ever again, even after a caller re-wraps the RETURNED
+        // `WasmInstance` in its OWN, unrelated, brand-new `Rc`.
+        //
+        // Resolution: `instantiate()` itself does NOT attempt real
+        // cross-instance funcref resolution for its own elem-segment/
+        // global-initializer entries -- they stay exactly as slice 2 left
+        // them (`TableElement::Raw`/an unresolved raw index in
+        // `GlobalStorage::value`), resolved LAZILY, on read, against
+        // whichever ctx actually dispatches them (`resolve_function_ref_
+        // for_dispatch`) -- which is EXACTLY CORRECT for the single-
+        // instance case (the only case this slice's own corpus baseline
+        // is expected to move for -- see this slice's own verification
+        // notes) and a KNOWN, PRE-EXISTING, still-open gap for the
+        // genuinely cross-instance case (unchanged by this slice, exactly
+        // as it was before it). `LocalFunctionRef`/
+        // `resolve_func_ref_for_instance`/`InstanceSelfResolver`/
+        // `WasmRuntime::call_by_index` remain fully implemented, real,
+        // and directly unit-tested (see this crate's own new tests) --
+        // this is genuinely additive, tested infrastructure, ready for
+        // slice 4 to invoke SAFELY from `wasm-conformance`'s own
+        // `ModuleRegistry`, which (per the spec's own reasoning) is the
+        // one place in this campaign's own architecture that can
+        // actually sustain the permanent `Rc` a real cross-instance
+        // `LocalFunctionRef` needs.
+        //
+        // `func_identities`/`instance_identity` (both plain `u64`s, no
+        // `Rc` involved, no cycle possible) ARE populated for real above,
+        // unaffected by this deviation -- `wasm-execution`'s own
+        // `effective_local_index`/`FuncRefTarget::owner_instance_identity`
+        // machinery (see that field's own doc comment) is real,
+        // functioning infrastructure TODAY, for the one case this slice
+        // DOES safely wire end-to-end: `build_engine`'s unconditional
+        // `set_instance_identity`/`set_func_identities` calls.
 
         // Real corpus vendoring pass (`start.wast`/`start0.wast`, see
         // `wasm-conformance`'s CHANGELOG): the spec requires invoking a
@@ -1850,12 +2518,20 @@ impl WasmRuntime {
                 // `return_call_ref.wast`, exercise non-null concrete refs
                 // only as PARAMS/LOCALS/GLOBALS inside a function body,
                 // never as a top-level `call()` boundary argument).
+                // W33 fourth slice: `ArrayRef`/`NonNullArrayRef` join this
+                // same lossy-legacy-path placeholder group -- no vendored
+                // corpus directive passes one as a top-level `invoke`
+                // argument (arrays only ever appear as params/locals/globals
+                // inside a function body in `array.wast`).
                 ValueType::Anyref
                 | ValueType::I31ref
                 | ValueType::StructRef(_)
                 | ValueType::ConcreteFuncRef(_)
                 | ValueType::NonNullStructRef(_)
                 | ValueType::NonNullConcreteFuncRef(_)
+                | ValueType::ArrayRef(_)
+                | ValueType::NonNullArrayRef(_)
+                | ValueType::NonNullArrayAny
                 | ValueType::Funcref
                 | ValueType::Externref
                 | ValueType::Exnref
@@ -1967,6 +2643,19 @@ impl WasmRuntime {
         self.call_engine_with_v128(instance, func_index, args)
     }
 
+    /// Call a function by its raw combined index, whether or not it is
+    /// exported (W35 third slice, design §3) -- the primitive
+    /// `call`/`call_typed` (both export-name lookups) don't provide, and
+    /// [`LocalFunctionRef`]/a future embedder needing real funcref
+    /// identity does (an active `elem` segment, or a `ref.func`-
+    /// initialized global, can name a function that is never exported at
+    /// all -- `linking.wast`'s own `$Mt`/`$g` example). Purely additive:
+    /// `call`/`call_typed` are unchanged, both still resolve a name first
+    /// and then delegate to the SAME `call_engine` internally.
+    pub fn call_by_index(&self, instance: &mut WasmInstance, func_index: usize, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        self.call_engine(instance, func_index, args)
+    }
+
     /// Shared by `call()` and `call_typed()`: build a `WasmExecutionEngine`
     /// from `instance`'s state, run `func_index`, and write the engine's
     /// post-call state back into `instance`. Neither caller-facing method
@@ -2000,6 +2689,29 @@ impl WasmRuntime {
         // `call_indirect $type` checks the callee against what the call
         // site actually declared instead of skipping the check.
         engine.set_type_section(instance.module.types.clone());
+
+        // Thread the module's GC-proposal nominal-subtyping metadata (W33
+        // second slice, item 4) and the combined func_index -> declared
+        // type-index space, so `call_indirect`'s real subtype check and
+        // `ref.cast`/`ref.test`'s dynamic type check have what they need —
+        // same optional-setter pattern as `set_type_section` immediately
+        // above. Left unset, both fall back to their pre-W33 behavior (see
+        // `wasm-execution`'s own `call_indirect_type_matches`/`ref_matches_
+        // concrete_type` doc comments for why that fallback is exactly
+        // right for a module that never declares `sub`).
+        engine.set_type_subtyping(instance.module.type_subtyping.clone());
+        engine.set_func_type_indices(instance.func_type_indices.clone());
+
+        // Thread this module's own canonicalized type-group forms (W34
+        // third slice: `code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
+        // same optional-setter pattern as `set_type_subtyping` immediately
+        // above -- `instance.canonical_types` (NOT `instance.module`,
+        // which never carries this data at all -- see `WasmInstance::
+        // canonical_types`'s own doc comment for why) was cloned once from
+        // `ValidatedModule` at `instantiate()` time. Left unset, `call_
+        // indirect_type_matches`/`ref_matches_concrete_type` fall back to
+        // nominal-only dispatch, unchanged from before this slice.
+        engine.set_canonical_types(instance.canonical_types.clone());
 
         // Thread the module's tag section (W-next: real catch-clause
         // matching) so `throw`/`catch` know each tag's declared param
@@ -2056,43 +2768,74 @@ impl WasmRuntime {
         // registered". Previously the embedder had to call this by hand; now it
         // flows automatically from the parsed module's `struct_types`.
         //
-        // `set_struct_field_counts` is indexed by the **wasm type index**, and
-        // function and struct types share one index space. The encoder emits all
-        // function types first, then the struct types, so a struct's wasm index
-        // is `func_type_count + its position in struct_types`. We therefore pad
-        // the front with filler slots for the function types (which are never
-        // the target of a `struct.new`) and append the struct field counts.
-        //
-        // `func_type_count` MUST be the number of entries in the **type section**
-        // (`module.types` — the encoder's *deduplicated* function types), NOT
-        // `instance.func_types.len()`, which is populated one-per-function and so
-        // over-counts whenever two functions share a signature. A Twig `record`
-        // emits a constructor + N same-shape accessors + a predicate, so several
-        // functions collapse to one function type: using the per-function count
-        // then padded the struct's field-count entry to the wrong (too-high) index,
-        // leaving the real `struct.new`/`struct.set` type index registered as a
-        // zero-field filler — the "struct.set: field 0 out of range" trap. Modules
-        // whose functions all have distinct types (e.g. a single-function cons
-        // program, or the list-op helpers) were unaffected because the two counts
-        // coincided there.
-        //
-        // (This assumes struct types follow *all* function types — true for the
-        // cons modules we emit today, which declare no host imports. A module
-        // that interleaved imported-function types after the struct types would
-        // need order-preserving type parsing; not yet emitted or consumed.)
-        if !instance.module.struct_types.is_empty() {
-            let func_type_count = instance.module.types.len();
-            let mut struct_field_counts = vec![0u32; func_type_count];
-            struct_field_counts.extend(
-                instance
-                    .module
-                    .struct_types
-                    .iter()
-                    .map(|st| st.fields.len() as u32),
-            );
+        // W33 fourth slice: rebuilt on top of `WasmModule::struct_type_at`/
+        // `array_type_at` (`type_kinds`-aware, see those methods' own doc
+        // comments) instead of the OLD "pad `func_type_count` zeros, then
+        // append every struct's field count in `struct_types` order" scheme
+        // this comment used to describe. That old scheme's own documented
+        // assumption — "struct types follow ALL function types" — is exactly
+        // what a TEXT-format module (via `wasm-wast-parser`'s now-real struct/
+        // array declarations) is free to violate: `struct.wast`'s/
+        // `array.wast`'s own "Binding structure" modules declare a struct/array
+        // type, THEN a function whose inline-only signature gets dedup'd into
+        // `types` AFTER it — see `wasm_types::TypeKind`'s own doc comment for
+        // the full mechanism. Iterating every flat index up to the total type
+        // count and asking each one directly "are you a struct/array, and if
+        // so what's your shape" is correct regardless of declaration order —
+        // the LANG77/Twig binary-only modules this comment used to describe
+        // (which never populate `type_kinds` at all) still resolve identically
+        // via `struct_type_at`'s legacy-offset fallback, so this is a strict
+        // generalization, not a behavior change for any pre-existing caller.
+        let (struct_field_counts, struct_field_storage, array_element_storage) = struct_array_runtime_tables(&instance.module);
+        if !struct_field_counts.is_empty() {
             engine.set_struct_field_counts(struct_field_counts);
+            engine.set_struct_field_storage(struct_field_storage);
+            engine.set_array_element_storage(array_element_storage);
         }
 
+        // Seed the engine's persistent GC object heap from the instance's
+        // own (W33 fourth slice) -- see `WasmInstance::gc_heap`'s own doc
+        // comment for why a global initializer's struct/array must survive
+        // into this call, not just the instantiation call that created it.
+        engine.set_gc_heap(instance.gc_heap.clone());
+
+        // Thread the module's canonical, cross-instance-safe FUNCTION
+        // identities (W35 third slice), same combined index space and
+        // same optional-setter pattern as `set_tag_identities` above --
+        // see `WasmInstance::func_identities`'s own doc comment. A plain
+        // `Vec<u64>` clone, no `Rc` needed, so this is safe to set
+        // unconditionally on every call.
+        engine.set_func_identities(instance.func_identities.clone());
+
+        // Register which `WasmInstance` this engine's context belongs to
+        // (W35 third slice) -- see `WasmInstance::instance_identity`'s own
+        // doc comment. Also just a plain `u64` copy, safe unconditionally.
+        engine.set_instance_identity(instance.instance_identity);
+
+        // **Deliberately NOT calling `engine.set_self_resolver(..)` here**
+        // (a further, documented deviation from the spec's own literal §4
+        // text, which describes `build_engine` installing a resolver for
+        // ordinary per-call execution too) -- see `wasm_execution::
+        // WasmExecutionContext::self_resolver`'s own doc comment for the
+        // full rationale: this method only ever has a plain `&mut
+        // WasmInstance` to work with, never an `Rc<RefCell<WasmInstance>>`,
+        // and constructing an `InstanceSelfResolver` needs to hold and
+        // clone that `Rc`. Making that `Rc` available here would require
+        // either (a) breaking `call`/`call_typed`'s own public signature
+        // (explicitly out of this slice's stated scope -- "Purely
+        // additive: `call`/`call_typed` are unchanged"), or (b) new
+        // cross-module wiring in `wasm-conformance`'s `Executor`/
+        // `ModuleRegistry` to re-establish a self-reference on every
+        // `Rc`-wrap it performs (explicitly slice 4's job, not this
+        // slice's). `instantiate()` itself ALSO never constructs an
+        // `InstanceSelfResolver` (see that function's own doc comment: a
+        // real, reproduced `Rc::try_unwrap` failure -- an unavoidable
+        // self-referential cycle whenever a module's own elem/global entry
+        // references its own local function -- forced that back out).
+        // `InstanceSelfResolver`/`LocalFunctionRef` are exercised directly
+        // by this slice's own unit tests instead (a long-lived, test-owned
+        // `Rc<RefCell<WasmInstance>>`, never unwrapped), proving the
+        // machinery works and is ready for slice 4 to wire up safely.
         engine
     }
 
@@ -2128,6 +2871,7 @@ impl WasmRuntime {
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
         instance.v128_heap = state.v128_heap;
+        instance.gc_heap = state.gc_heap;
         instance.dropped_data_segments = state.dropped_data_segments;
         instance.dropped_elements = state.dropped_elements;
 
@@ -2154,6 +2898,7 @@ impl WasmRuntime {
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
         instance.v128_heap = state.v128_heap;
+        instance.gc_heap = state.gc_heap;
         instance.dropped_data_segments = state.dropped_data_segments;
         instance.dropped_elements = state.dropped_elements;
 
@@ -2232,7 +2977,7 @@ mod tests {
             &self,
             _module_name: &str,
             _name: &str,
-        ) -> Option<(GlobalType, WasmValue)> {
+        ) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
             None
         }
 
@@ -2285,7 +3030,7 @@ mod tests {
                 None
             }
         }
-        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
             None
         }
         fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
@@ -2366,6 +3111,145 @@ mod tests {
         // default `(1, 0)` on both sides).
         let runtime = WasmRuntime::with_host(Box::new(GroupShapeHost { group_shape: (2, 0), is_final: true }));
         let module = module_importing_function_in_a_rec_group((2, 0));
+        let validated = runtime.validate(&module).unwrap();
+        assert!(runtime.instantiate(&validated).is_ok());
+    }
+
+    // ── W34 fourth slice: cross-module canonical type-group equivalence
+    // (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`) ──────────────
+
+    /// A host function that reports a real `CanonicalGroup` identity
+    /// instead of the trait's own `None` default -- lets these tests
+    /// exercise `wasm-runtime`'s new canonical-comparison path directly,
+    /// without needing a real cross-module `CrossModuleFunction` (that
+    /// full end-to-end path is covered separately by `wasm-conformance`'s
+    /// own tests). Deliberately reports a `func_type()` with a raw
+    /// `ConcreteFuncRef` index that does NOT match the importing module's
+    /// own raw index -- proving these tests exercise REAL canonical
+    /// equivalence, not a coincidental raw-structural match the old
+    /// three-part guard could already have accepted.
+    struct CanonicalHostFunction {
+        func_type: FuncType,
+        canonical_type: Option<(Rc<CanonicalGroup>, u32)>,
+    }
+
+    impl HostFunction for CanonicalHostFunction {
+        fn func_type(&self) -> &FuncType {
+            &self.func_type
+        }
+        fn call(&self, _args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+            Ok(vec![])
+        }
+        fn canonical_type(&self) -> Option<(Rc<CanonicalGroup>, u32)> {
+            self.canonical_type.clone()
+        }
+    }
+
+    struct CanonicalHost {
+        func_type: FuncType,
+        canonical_type: Option<(Rc<CanonicalGroup>, u32)>,
+    }
+
+    impl HostInterface for CanonicalHost {
+        fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
+            if module_name == "env" && name == "f" {
+                Some(Box::new(CanonicalHostFunction { func_type: self.func_type.clone(), canonical_type: self.canonical_type.clone() }))
+            } else {
+                None
+            }
+        }
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
+            None
+        }
+        fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
+            None
+        }
+        fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
+            None
+        }
+    }
+
+    /// A module declaring a single self-referencing singleton `rec` type
+    /// at flat index 0 (`type-rec.wast`'s own simplest self-reference
+    /// shape) and importing "env"."f" at it.
+    fn module_importing_a_self_referencing_function() -> WasmModule {
+        WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] }],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "f".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            ..Default::default()
+        }
+    }
+
+    /// A throwaway `WasmModule` used only to derive a real, self-contained
+    /// `CanonicalGroup` for a host function to report -- the SAME
+    /// self-referencing shape `module_importing_a_self_referencing_function`
+    /// declares, but at flat index `offset` in a completely unrelated
+    /// table (no shared numbering with the importing module at all).
+    fn host_side_self_referencing_canonical_type(offset: u32) -> (Rc<CanonicalGroup>, u32) {
+        let padding = FuncType { params: vec![], results: vec![] };
+        let mut types = vec![padding; offset as usize];
+        types.push(FuncType { params: vec![ValueType::ConcreteFuncRef(offset)], results: vec![] });
+        let module = WasmModule { types, ..Default::default() };
+        wasm_types::canonicalize_types(&module)[offset as usize].clone().expect("self-referencing singleton must canonicalize")
+    }
+
+    #[test]
+    fn accepts_a_cross_module_import_via_canonical_equivalence_when_raw_indices_differ() {
+        // Host's OWN raw `func_type` self-references index 7 -- deliberately
+        // NOT index 0 (the importing module's own raw index) -- so plain
+        // `FuncType` equality (the pre-W34-fourth-slice-only fallback path)
+        // would reject this. Real canonical equivalence must accept it
+        // anyway, since both sides tie to the identical `Rec(0)` shape.
+        let host_func_type = FuncType { params: vec![ValueType::ConcreteFuncRef(7)], results: vec![] };
+        let host_canonical = host_side_self_referencing_canonical_type(3);
+        let runtime = WasmRuntime::with_host(Box::new(CanonicalHost { func_type: host_func_type, canonical_type: Some(host_canonical) }));
+        let module = module_importing_a_self_referencing_function();
+        let validated = runtime.validate(&module).unwrap();
+        assert!(runtime.instantiate(&validated).is_ok(), "canonically-equivalent self-referencing types at different raw indices must link");
+    }
+
+    #[test]
+    fn rejects_a_cross_module_import_whose_canonical_type_genuinely_differs() {
+        // The host reports a canonical type for a NON-self-referencing
+        // empty `(func)` -- genuinely different from the importing
+        // module's self-referencing `(func (param (ref 0)))` -- even
+        // though the host's raw `func_type()` HAPPENS to structurally
+        // equal neither (irrelevant here, since a real canonical type on
+        // both sides bypasses the raw-`FuncType`-equality fallback
+        // entirely; only the canonical comparison decides).
+        let unrelated_module = WasmModule { types: vec![FuncType { params: vec![], results: vec![] }], ..Default::default() };
+        let unrelated_canonical = wasm_types::canonicalize_types(&unrelated_module)[0].clone().unwrap();
+        let host_func_type = FuncType { params: vec![], results: vec![] };
+        let runtime = WasmRuntime::with_host(Box::new(CanonicalHost { func_type: host_func_type, canonical_type: Some(unrelated_canonical) }));
+        let module = module_importing_a_self_referencing_function();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn falls_back_to_the_conservative_guard_when_the_host_reports_no_canonical_type() {
+        // The trait default (`canonical_type() -> None`) must still hit the
+        // pre-existing three-part guard, byte-for-byte -- a plain,
+        // non-self-referencing `(func)` on both sides links fine via the
+        // fallback path alone, exactly as it did before this slice.
+        let host_func_type = FuncType { params: vec![], results: vec![] };
+        let runtime = WasmRuntime::with_host(Box::new(CanonicalHost { func_type: host_func_type, canonical_type: None }));
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "f".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            ..Default::default()
+        };
         let validated = runtime.validate(&module).unwrap();
         assert!(runtime.instantiate(&validated).is_ok());
     }
@@ -2961,7 +3845,7 @@ mod tests {
         fn resolve_function(&self, _module_name: &str, _name: &str) -> Option<Box<dyn HostFunction>> {
             None
         }
-        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
             None
         }
         fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
@@ -3052,6 +3936,277 @@ mod tests {
         );
     }
 
+    // ══════════════════════════════════════════════════════════════════════
+    // W35 third slice: func_identities / LocalFunctionRef / InstanceSelfResolver
+    // ══════════════════════════════════════════════════════════════════════
+
+    /// A `HostFunction` double reporting a fixed, non-zero `identity()` --
+    /// mirrors `TagTestHost`'s own "hand-supply a fixed identity a real
+    /// embedder would read from the exporter" shape, for functions instead
+    /// of tags.
+    struct FuncIdentityTestHostFunction {
+        func_type: FuncType,
+        identity: u64,
+    }
+
+    impl HostFunction for FuncIdentityTestHostFunction {
+        fn func_type(&self) -> &FuncType {
+            &self.func_type
+        }
+        fn identity(&self) -> u64 {
+            self.identity
+        }
+        fn call(&self, _args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+            Ok(vec![])
+        }
+    }
+
+    struct FuncIdentityTestHost {
+        func_type: FuncType,
+        identity: u64,
+    }
+
+    impl HostInterface for FuncIdentityTestHost {
+        fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
+            if module_name == "env" && name == "imported" {
+                Some(Box::new(FuncIdentityTestHostFunction { func_type: self.func_type.clone(), identity: self.identity }))
+            } else {
+                None
+            }
+        }
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
+            None
+        }
+        fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
+            None
+        }
+        fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
+            None
+        }
+    }
+
+    #[test]
+    fn instantiate_builds_func_identities_mirroring_tag_identities_imported_adopts_verbatim_module_defined_mints_fresh() {
+        // Same shape and same assertions as `instantiate_builds_the_
+        // combined_tag_index_space_imports_first_then_declared` (W23) --
+        // W35's own design §2 explicitly calls for `func_identities` to
+        // mirror `tag_identities`'s construction loop exactly.
+        let empty_type = FuncType { params: vec![], results: vec![] };
+        let runtime = WasmRuntime::with_host(Box::new(FuncIdentityTestHost { func_type: empty_type.clone(), identity: 777 }));
+        let module = WasmModule {
+            types: vec![empty_type.clone()],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "imported".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            // Two module-DEFINED functions, completing the combined
+            // func-index space [imported, local0, local1].
+            functions: vec![0, 0],
+            code: vec![
+                FunctionBody { locals: vec![], code: vec![0x0B] },
+                FunctionBody { locals: vec![], code: vec![0x0B] },
+            ],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        assert_eq!(instance.func_identities.len(), 3);
+        assert_eq!(instance.func_identities[0], 777, "an imported function must adopt the exporter's own identity verbatim");
+        assert_ne!(instance.func_identities[1], 0, "a module-defined function must get a real, non-zero identity");
+        assert_ne!(instance.func_identities[2], 0, "a module-defined function must get a real, non-zero identity");
+        assert_ne!(
+            instance.func_identities[1], instance.func_identities[2],
+            "two DIFFERENT module-defined functions must never share an identity"
+        );
+    }
+
+    #[test]
+    fn instantiate_mints_a_fresh_instance_identity_per_call_never_reused() {
+        // Mirrors `instantiate_mints_a_fresh_identity_per_instantiate_call_
+        // never_reused` (W23, for tags) -- W35's own `instance_identity`
+        // (a further deviation from the spec's literal text, see that
+        // field's own doc comment) needs the identical "never reused
+        // across separate instantiations" property, since it's what
+        // `effective_local_index` uses to decide dispatch safety.
+        let runtime = WasmRuntime::new();
+        let module = WasmModule::default();
+        let validated = runtime.validate(&module).unwrap();
+        let instance_a = runtime.instantiate(&validated).unwrap();
+        let instance_b = runtime.instantiate(&validated).unwrap();
+        assert_ne!(instance_a.instance_identity, 0);
+        assert_ne!(instance_b.instance_identity, 0);
+        assert_ne!(
+            instance_a.instance_identity, instance_b.instance_identity,
+            "two separate instantiations of the same module must never share an instance identity"
+        );
+    }
+
+    #[test]
+    fn local_function_ref_dispatches_to_the_right_function_body_via_a_raw_index_unrelated_to_any_export() {
+        // W35 third slice, verification plan item (b): `LocalFunctionRef`
+        // must work for a NON-exported function, called by raw combined
+        // index -- not just an exported one `call_typed` could already
+        // reach. Two module-defined functions: index 0 is EXPORTED
+        // ("double", x*2); index 1 is NOT exported at all ("helper", x*10).
+        // Resolving/calling index 1 directly (never going through any
+        // export lookup) must run `helper`'s own body, not `double`'s --
+        // a real, direct proof of dispatch, not merely "some function
+        // ran."
+        let runtime = WasmRuntime::new();
+        let double_type = FuncType { params: vec![ValueType::I32], results: vec![ValueType::I32] };
+        let module = wasm_wast_parser::parse_module(
+            r#"(module
+                 (func (export "double") (param i32) (result i32) (i32.mul (local.get 0) (i32.const 2)))
+                 (func $helper (param i32) (result i32) (i32.mul (local.get 0) (i32.const 10))))"#,
+        )
+        .expect("module should parse");
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        assert_eq!(instance.func_types[1].params, double_type.params, "sanity: index 1 is $helper, same param shape as double");
+        assert!(
+            instance.exports.iter().all(|(name, _, idx)| !(name == "helper" || *idx == 1)),
+            "sanity: index 1 must genuinely be unexported"
+        );
+
+        let instance_rc = Rc::new(RefCell::new(instance));
+        let target = resolve_func_ref_for_instance(&instance_rc, 1).expect("resolving a local, unexported function must succeed");
+        // `identity`/`owner_instance_identity` sanity: a LOCAL function's
+        // target carries this instance's own real identity/ownership, not
+        // the reserved `0`/`None` an import would.
+        assert_ne!(target.identity, 0);
+        assert_eq!(target.owner_instance_identity, Some(instance_rc.borrow().instance_identity));
+        let results = target.callable.call(&[WasmValue::I32(7)], None).expect("dispatch through LocalFunctionRef should succeed");
+        assert_eq!(results, vec![WasmValue::I32(70)], "must run $helper's OWN body (x*10), not double's (x*2)");
+    }
+
+    #[test]
+    fn resolve_func_ref_for_instance_of_an_imported_function_reuses_its_existing_identity_and_is_owner_agnostic() {
+        // The import-branch counterpart to the local-function test above --
+        // mirrors `wasm_execution::WasmExecutionContext::resolve_function_
+        // ref`'s own import branch exactly (see that method's own already-
+        // shipped unit test, `ref_func_of_an_imported_function_reuses_its_
+        // existing_identity_and_callable`, for the `wasm-execution`-layer
+        // half of this same contract).
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let runtime = WasmRuntime::with_host(Box::new(FuncIdentityTestHost { func_type: func_type.clone(), identity: 555 }));
+        let module = WasmModule {
+            types: vec![func_type],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "imported".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        let instance_rc = Rc::new(RefCell::new(instance));
+        let target = resolve_func_ref_for_instance(&instance_rc, 0).expect("resolving an import must succeed");
+        assert_eq!(target.identity, 555, "an imported function's target must adopt the exporter's identity verbatim");
+        assert_eq!(
+            target.owner_instance_identity, None,
+            "an import is dispatchable via local_index in ANY ctx that holds it -- no owning-instance check needed"
+        );
+    }
+
+    #[test]
+    fn instance_self_resolver_installed_on_a_hand_built_engine_dispatches_a_local_function_via_ref_func_and_call_ref() {
+        // W35 third slice, design §4: proves `InstanceSelfResolver`/
+        // `wasm_execution::WasmExecutionEngine::set_self_resolver` work
+        // end-to-end -- NOT exercised by `build_engine` in this slice (see
+        // that method's own doc comment for why), but real, tested
+        // infrastructure ready for slice 4. A LONG-LIVED, test-owned
+        // `Rc<RefCell<WasmInstance>>` (never unwrapped -- this test never
+        // calls `instantiate()`'s own `try_unwrap`-based construction, so
+        // the self-referential-cycle problem that blocks wiring this into
+        // `instantiate()` itself simply doesn't apply here) backs the
+        // resolver for the engine's whole lifetime, exactly the shape a
+        // real long-lived embedder (`wasm-conformance`'s `ModuleRegistry`)
+        // would provide.
+        let runtime = WasmRuntime::new();
+        let module = wasm_wast_parser::parse_module(
+            r#"(module
+                 (type $ii (func (param i32) (result i32)))
+                 (func $helper (param i32) (result i32) (i32.mul (local.get 0) (i32.const 10)))
+                 (func (export "run") (param i32) (result i32)
+                   (call_ref $ii (local.get 0) (ref.func $helper))))"#,
+        )
+        .expect("module should parse");
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        let instance_rc = Rc::new(RefCell::new(instance));
+
+        // Build the engine by hand (mirroring `build_engine`'s own
+        // plumbing) so `set_self_resolver` can be called -- `build_engine`
+        // itself deliberately never does this in this slice.
+        let (memories, tables, globals, global_types, func_types, func_bodies, host_functions, func_identities, instance_identity) = {
+            let instance_ref = instance_rc.borrow();
+            (
+                instance_ref.memories.clone(),
+                instance_ref.tables.clone(),
+                instance_ref.globals.clone(),
+                instance_ref.global_types.clone(),
+                instance_ref.func_types.clone(),
+                instance_ref.func_bodies.clone(),
+                instance_ref.host_functions.clone(),
+                instance_ref.func_identities.clone(),
+                instance_ref.instance_identity,
+            )
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig { memories, tables, globals, global_types, func_types, func_bodies, host_functions });
+        engine.set_func_identities(func_identities);
+        engine.set_instance_identity(instance_identity);
+        engine.set_self_resolver(Box::new(InstanceSelfResolver { instance: instance_rc.clone() }));
+
+        let run_index = instance_rc
+            .borrow()
+            .exports
+            .iter()
+            .find(|(name, _, _)| name == "run")
+            .map(|(_, _, idx)| *idx as usize)
+            .unwrap();
+        let results = engine.call_function(run_index, &[WasmValue::I32(4)]).expect("call should succeed");
+        assert_eq!(results, vec![WasmValue::I32(40)], "ref.func $helper + call_ref must dispatch through the real self-resolver, running $helper's own body");
+    }
+
+    #[test]
+    fn instantiate_never_panics_on_a_module_whose_own_active_elem_segment_references_its_own_local_functions() {
+        // Regression test (W35 third slice): this is EXACTLY the shape
+        // that broke this slice's own first attempt at the spec's literal
+        // "Rc::new(RefCell::new(..)) + resolve + Rc::try_unwrap" two-phase
+        // construction -- an active elem segment referencing the SAME
+        // module's OWN local functions (the common, expected case, and
+        // the literal shape of `linking.wast`'s own `$Mt`/`$g` motivating
+        // example) forces an unavoidable self-referential `Rc` cycle if
+        // `instantiate()` tries to eagerly resolve it into a real
+        // `LocalFunctionRef` internally -- `Rc::try_unwrap` then fails
+        // UNCONDITIONALLY, not intermittently. `instantiate()`'s own doc
+        // comment explains why this slice's own design deliberately does
+        // NOT attempt that eager resolution; this test is the concrete,
+        // reproducible proof that a real module exercising exactly that
+        // shape instantiates cleanly, with no panic, under this slice's
+        // actual (corrected) design.
+        let runtime = WasmRuntime::new();
+        let module = wasm_wast_parser::parse_module(
+            r#"(module
+                 (table $t 4 funcref)
+                 (func $one (result i32) (i32.const 111))
+                 (func $two (result i32) (i32.const 222))
+                 (elem (i32.const 0) $one $two)
+                 (func (export "call0") (result i32)
+                   (call_indirect (type $i) (i32.const 0)))
+                 (type $i (func (result i32))))"#,
+        )
+        .expect("module should parse");
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime.instantiate(&validated).expect("instantiate() must succeed, not panic, for a self-referencing active elem segment");
+        let results = runtime.call_typed(&mut instance, "call0", &[]).expect("call_indirect through the elem-populated table must succeed");
+        assert_eq!(results, vec![WasmValue::I32(111)], "must dispatch to $one, the function the elem segment actually wrote at slot 0");
+    }
+
     #[test]
     fn instantiate_rejects_a_tag_import_with_an_incompatible_type() {
         let wrong_type = FuncType { params: vec![ValueType::I32], results: vec![] };
@@ -3089,9 +4244,12 @@ mod tests {
             None
         }
 
-        fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
+        fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
             if module_name == "env" && name == "g" {
-                Some((GlobalType { value_type: ValueType::I32, mutable: false }, WasmValue::I32(42)))
+                Some((
+                    GlobalType { value_type: ValueType::I32, mutable: false },
+                    Rc::new(RefCell::new(GlobalStorage { value: WasmValue::I32(42), func_ref: None })),
+                ))
             } else {
                 None
             }
@@ -3508,7 +4666,7 @@ mod tests {
         };
         let validated = runtime.validate(&module).unwrap();
         let instance = runtime.instantiate(&validated).unwrap();
-        assert_eq!(instance.globals, vec![WasmValue::I32(42)]);
+        assert_eq!(instance.globals[0].borrow().value, WasmValue::I32(42));
     }
 
     #[test]

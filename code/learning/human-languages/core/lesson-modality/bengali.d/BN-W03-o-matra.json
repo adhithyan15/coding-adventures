@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "BN-W03-o-matra",
+    "language": "bengali",
+    "chapter": 18,
+    "sequence": 1810,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8f8e3ce01e664ae3",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

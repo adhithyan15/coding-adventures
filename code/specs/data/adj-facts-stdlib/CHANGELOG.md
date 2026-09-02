@@ -5,6 +5,1342 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **56 libraries: the `source` citation is now pinned by its own e2e test.** A batch bite out of
+  issue #13918. Rows were checked everywhere; EVIDENCE was checked almost nowhere, which is exactly
+  how the truncation in #13916 survived indefinitely.
+
+  Two groups. THIRTY-THREE were entirely unpinned and carry a hedge, quantifier or conditional in the
+  citation — "except", "usually", "almost", "some", "most", "about", "only", "unless", "if" — where a
+  truncation would LOSE MEANING rather than merely shorten a sentence. TWENTY-THREE MORE already had
+  a FRAGMENT pin and were upgraded to the anchored form, for the reason below.
+
+  *** THE SELECTION PREDICATE WAS WRONG THE FIRST TIME, AND REVIEW CAUGHT IT. *** #13918's census
+  counted a library as covered if ANY span of its citation appeared anywhere in the suite. That
+  counts fragment needles — and a fragment has neither the `"source":"` key nor a closing quote, so
+  the citation can be truncated AT THAT POINT and the test stays green. The worst instance was
+  `transportation/red-signal-permitted-movement.adj`, shipped two changes earlier: truncating its
+  citation to end at its own fragment needle DELETES THE ENTIRE OPERATIVE PERMISSION CLAUSE — "…
+  permitted to enter the intersection to turn right, or to turn left from a one-way street into a
+  one-way street, after stopping" — and all four of its tests passed. The #13916 defect shape,
+  surviving in the sibling of the library #13916 fixed. Verified before and after: the truncation
+  passed, and now fails.
+
+  The right predicate is FULL ANCHORED PIN, not any-span. #13918's numbers were measured with the
+  wrong one and are corrected there.
+
+  Each assertion pins the WHOLE citation, anchored on the `"source":"` JSON key and closed by the
+  terminating quote, per the rule established in #13920: pinning a fragment narrows the hole rather
+  than closing it, because `contains` on a fragment cannot see what precedes or follows it. Verified
+  by mutation on a sample — dropping "almost" from `volcano-type`, "about" from `temperature-scales`,
+  or "usually" from `flower-parts` each fails its library's suite.
+
+  THE BATCH CAUGHT A BUG IN ITS OWN TOOLING, AND THE SUITE CAUGHT IT IMMEDIATELY. The first run
+  inserted a WRONG citation into `facts_statesofmatter_e2e.rs`: `chemistry/states-of-matter.adj` and
+  `physics/states-of-matter.adj` share a basename, both mapped to that one test file, and the script
+  silently used whichever sorted first.
+
+  The first fix added two guards that refused to guess (skip basename collisions; skip files with
+  more than one `source` envelope), which is why the initial batch is 33 rather than 34 — only the
+  collision guard actually fired. But review showed name-based mapping is unsound in general: nothing
+  checked that the mapped test LOADS the mapped library, and `mathematics/constants.adj` passes both
+  guards while mapping by name to a test that loads `physics/physical-constants.adj` instead.
+
+  The second pass replaced the heuristic entirely: PARSE EACH TEST FOR THE `.adj` FILES IT ACTUALLY
+  COPIES and require the target library to be among them. That subsumes the collision guard, catches
+  the `constants` mismapping (its pin correctly landed in `facts_mathconstants_e2e.rs`), refuses any
+  library whose owning test is ambiguous or absent, and additionally requires — when a test loads
+  several libraries — that the pinned text be UNIQUE among them, since about forty citations are
+  byte-identical across sibling libraries and a pin could otherwise be satisfied by a neighbour's.
+
+  A mechanical edit across dozens of files is exactly where a plausible-looking heuristic does the
+  most damage, and the only reason this surfaced in seconds rather than in review is that the full
+  suite was run rather than a spot check.
+
+  No library content changed — this is test-side only. 533 test binaries / 1592 tests green, clippy
+  -D warnings clean. Falsifiability verified by mutation on a sample spanning both groups: dropping
+  "almost" from `volcano-type`, "about" from `temperature-scales`, or "usually" from `flower-parts`
+  each fails its suite, as does truncating `red-signal-permitted-movement` at its old fragment point.
+  (When repeating this, mutate the `source "` LINE specifically — most `.adj` files also quote their
+  citation in the literate `%` header, so a naive first-occurrence replacement edits a comment and
+  the test correctly still passes. That produced a false "the pin does not work" reading before the
+  mutation was corrected.)
+
+- `transportation/green-signal-permitted-movement.adj` (fixed) — THE CITATION WAS TRUNCATED, and is
+  now the full sentence. Closes issue #13916.
+
+  The `source` envelope stopped at "…or make a U-turn movement", omitting the clause the MUTCD
+  sentence actually ends with: "except as such movement is modified by lane-use signs, turn
+  prohibition signs, lane markings, roadway design, separate turn signal indications, or other
+  traffic control devices." Every row was therefore presented as an UNCONDITIONAL permission, backed
+  by evidence with its qualifier cut off — the exact defect `sign-shape.adj` and
+  `red-signal-permitted-movement.adj` both warn against in their own headers: A CITATION HAS TO CARRY
+  THE QUALIFIER IT IS BEING USED TO JUSTIFY. The rows are unchanged and were never wrong; green does
+  permit those four movements. What was wrong was the evidence attached to them.
+
+  THE ROOT CAUSE WAS INHERITED PROVENANCE, NOT CARELESS READING. The header used to say the span
+  "reproduces, byte-for-byte, the SAME … span already quoted inside `traffic-lights.adj`'s own header
+  — NO NEW WebFetch". The quote was COPIED FROM A SIBLING LIBRARY'S PROSE to save a fetch, so a
+  truncation in that header propagated silently into a `source` envelope, where it read as verified.
+  A CITATION INHERITED FROM ANOTHER LIBRARY'S HEADER IS NOT VERIFIED PROVENANCE — re-extract from the
+  page every time; one fetch costs far less than a citation that says less than the standard does.
+  The replacement sentence was re-extracted and verified CHARACTER-EXACTLY against the page's RAW
+  HTML (326 characters, pure ASCII, no escaping required).
+
+  THE EXCEPTION STAYS IN THE CITATION RATHER THAN THE ATOMS, and review corrected the reason. A first
+  draft called it a "whole-permission qualifier … not any one movement", which the grammar does not
+  support: the clause reads "except as SUCH MOVEMENT is modified", a singular distributive anaphor,
+  and every device it names is movement-specific. If anything it is MORE per-movement than the red
+  sibling's exception, which is FRONTED and conditions the whole grant before stating it — so the
+  draft applied the scope rule in the direction the text least supports, justifying a placement it
+  had not earned.
+
+  The right reason is about what a qualifier DOES to a value rather than where it sits. Red's "after
+  stopping" is CONSTITUTIVE: it changes what the permitted act IS, so a bare `turn_right` row would
+  assert something red's sentence never says. Green's exception is DEFEASIBILITY: it can override any
+  of the four movements without changing what any of them IS, and applies uniformly to all four, so
+  it carries NO row-discriminating information — pushed into the atoms it would decorate every row
+  identically while making none more accurate. CONSTITUTIVE QUALIFIERS GO IN THE ATOM; DEFEASIBILITY
+  GOES IN THE CITATION. That is a sharper statement of the rule `sign-shape.adj` and
+  `karst-process-zone.adj` were already following.
+
+  The header's note on the red sibling was also narrowed. Both permissions are device-modifiable, and
+  FOR THE MOVEMENTS BOTH SIGNALS PERMIT the difference is the stopping requirement — but red permits
+  STRICTLY FEWER movements, allowing neither `straight_through` nor `u_turn` and confining its left
+  turn to one-way-into-one-way. The draft's "the stopping requirement and nothing else" is refuted by
+  the red table's own rows, which matters because this header invites the reader to consult it.
+
+  TWO GUARDS ADDED, being the two whose absence let this survive. The test now (i) asserts the WHOLE
+  citation, anchored on the `"source":"` key and closed by its terminating quote, and (ii) asserts
+  ANSWER CARDINALITY of exactly four, applying the standing rule from #13917, since pinning rows
+  proves nothing is missing but cannot prove nothing was invented.
+
+  The first guard was itself strengthened after review. It originally pinned only the TRAILING clause,
+  which narrowed the hole rather than closing it: appending fabricated text after the clause, or
+  corrupting the sentence HEAD — swapping CIRCULAR GREEN for FLASHING RED and rewriting the
+  enumeration — both still passed, because `contains` on a tail cannot see what precedes or follows
+  it. Anchoring the whole sentence pins head, tail, punctuation, internal spacing and length at once.
+  Verified by mutation: re-truncation, a dropped final period, an injected double space, an appended
+  fabricated sentence, and a corrupted head all fail it; adding a `reverse` row fails the cardinality
+  assertion.
+
+  THE PROPAGATION SOURCE IS FIXED IN THE SAME CHANGE. `traffic-lights.adj`'s header still carried the
+  truncated green quote — the artifact this library copied from. Its own `source` envelope is the RED
+  sentence, so nothing it emitted was ever wrong, but a header quote is read as a citation even though
+  it is not one, and leaving the loaded artifact in place while fixing the copy would repeat the very
+  mistake this entry documents. Its quote is now complete, with a note recording that it propagated.
+
+  Related: issue #13918 measures how far this generalises — 86 of 362 libraries (24%) carry an
+  inherited-citation claim, and only 37 of 361 (10%) have any test asserting any span of their own
+  citation.
+
+- `transportation/red-signal-permitted-movement.adj` (new) — a one-column `table` recording which
+  movements a steady CIRCULAR RED signal permits: `red_signal_permitted_movement(movement)`, two rows
+  from one sentence of MUTCD Section 4D.04. `turn_right_after_stopping` and
+  `turn_left_from_one_way_street_into_one_way_street_after_stopping`. Fifth transportation library,
+  and the exact structural sibling of `green-signal-permitted-movement.adj` — same relation shape,
+  same source, same locator.
+
+  READ IT NEXT TO THE GREEN SIBLING; THAT CONTRAST IS THE POINT. Green permits `turn_right`
+  OUTRIGHT. Red permits it only AFTER STOPPING. Because the qualifier is part of the value, the two
+  relations share NO movement atom at all, and a bare `turn_right` is absent from the red set
+  entirely. A driver who reads the two tables as saying the same thing about right turns has made
+  exactly the mistake this pair exists to prevent.
+
+  BE PRECISE ABOUT WHAT THE CONTRAST IS: the difference is the STOPPING requirement and nothing else.
+  An earlier draft also claimed red applies "only where no device prohibits it", as though
+  device-prohibition were a red-specific narrowing. It is not — the manual's green sentence carries a
+  parallel exception in the same paragraph, continuing "except as such movement is modified by
+  lane-use signs, turn prohibition signs, lane markings, roadway design, separate turn signal
+  indications, or other traffic control devices." Both permissions are device-modifiable. Noted
+  separately: that clause is absent from the shipped `green-signal-permitted-movement.adj` citation,
+  which is a verbatim PREFIX stopping just before its own exception — a truncation of exactly the kind
+  this entry condemns two paragraphs down. FILED AS ISSUE #13916 rather than fixed here, since
+  editing a sibling library's provenance belongs in its own change.
+
+  THE QUALIFIER SPLIT NEEDS BOTH HALVES OF THE SETTLED PLACEMENT RULE AT ONCE. "After stopping"
+  modifies EACH MOVEMENT individually, so it rides INSIDE the atom, the same rule `veto-override.adj`
+  and `karst-process-zone.adj` apply — right-on-red is never permitted WITHOUT stopping, so an
+  unqualified `turn_right` is a claim this source does not make. "Except when a traffic control device
+  is in place prohibiting a turn on red or a steady RED ARROW signal indication is displayed" modifies
+  the WHOLE PERMISSION rather than any one movement, so it stays in the CITATION, which is quoted in
+  full including that clause — the same treatment `sign-shape.adj` gave the warning-sign default, and
+  for the same reason: a citation has to carry the qualifier it is being used to justify. Quoting from
+  "vehicular traffic facing a steady CIRCULAR RED" would have been shorter and would have silently
+  dropped the exception from the evidence.
+
+  Honest abstention on `straight_through` and `u_turn`, which are not permitted on red at all, and on
+  an unqualified `turn_left` — the permission is narrower than "turning left", being only from a
+  one-way street INTO a one-way street, and flattening the atom would assert a permission a driver at
+  an ordinary two-way intersection does not have. What a driver MUST DO at a red signal (stop at the
+  stop line, or before the crosswalk, or before the intersection) is a different relation stated in a
+  different paragraph and belongs in its own table. The RED ARROW indication has its own provisions
+  and gets no rows in a CIRCULAR RED table.
+
+  A LANGUAGE-SURFACE FACT WORTH RECORDING, since it shapes how one-column tables must be queried and
+  tested: A FULLY-GROUND QUERY IS NOT A RECALL QUERY. `? red_signal_permitted_movement(turn_right)`
+  with no variable is routed to the hypothesis/ranking path and produces NO `recall` entry at all, so
+  it can neither answer nor abstain. On a one-column table, membership can only be asked by binding a
+  variable and reading the returned set — which is what the shipped green sibling's companion already
+  does, and what this library's companion and tests do throughout.
+
+  New `red-signal-permitted-movement.query.adj` (which imports BOTH tables so the contrast is visible
+  in one run) and `facts_redsignalpermittedmovement_e2e.rs` (4 tests: both rows pinned with the
+  citation's exception clause, the four unqualified movements all absent, the two signals sharing no
+  movement atom with green's bare `turn_right` as the positive control, and the two relations staying
+  separate when both are imported). EVERY ROW is mutation-tested and not merely every assertion —
+  deleting the right-turn row fails the suite, baring either atom fires the corresponding negative,
+  and adding `straight_through` fires the leak check.
+
+  A CARDINALITY ASSERTION WAS ADDED AFTER REVIEW, and it closes the mirror image of the row-coverage
+  lesson. Pinning every row proves nothing is MISSING; it cannot prove nothing was INVENTED. Review
+  showed that adding a third row — `turn_right_on_red_arrow`, `reverse`, or even a duplicate of an
+  existing row — survived the ENTIRE suite, because no assertion counted the answers. That is
+  precisely the failure mode a fabricating generator produces, which makes it the one a
+  provenance-first stdlib can least afford to leave unguarded. The test now asserts the answer count
+  is exactly two. New manifest objective `adj.socialstudies.k2.red_signal_permitted_movement`.
+
+- `transportation/sign-element-color.adj` (new) — a THREE-column `table` recording the colour the
+  federal standard specifies for each PART of a traffic sign: `sign_element_color(sign, element,
+  color)`, nine rows from three sentences of the FHWA's Manual on Uniform Traffic Control Devices.
+  `stop_sign`: background red, legend white, border white. `yield_sign`: background WHITE, legend
+  red, border red. `warning_sign`: background yellow, legend black, border black. Fourth
+  transportation library.
+
+  WHICH PART OF THE SIGN IS PART OF THE FACT, AND THAT IS THE WHOLE DESIGN. "A YIELD sign is red" is
+  FALSE as stated: its BACKGROUND is white, and red is its border and its legend. A two-column
+  `sign_color(sign, colour)` would flatten three different claims into one and would get the most
+  recognisable sign in the country wrong — while carrying a federal citation. With the element as a
+  column, `sign_element_color(yield_sign, background, $C)` returns `white`, and
+  `sign_element_color(yield_sign, $E, red)` returns BOTH the legend and the border.
+
+  This is the same structural lesson `water-share.adj` needed for its denominators, arriving
+  independently in a different domain: WHEN A SOURCE STATES A VALUE RELATIVE TO SOMETHING, THAT
+  SOMETHING IS A COLUMN. A share without its base is not a fact, and a colour without its element is
+  not one either.
+
+  SIBLING TO `sign-shape.adj`, WHICH DELIBERATELY LEFT THIS AXIS ALONE. That library's header records
+  that colour "is a different axis and deserves its own table rather than being smuggled into a shape
+  column", and this is the follow-through. The two tables quote THE SAME THREE SENTENCES for
+  different facts, which is honest rather than duplicative: a sentence stating both a shape and a
+  colour grounds a row in each relation. It is also NOT the same relation as `traffic-lights.adj`,
+  which holds `traffic_light_meaning(color, meaning)` — the colour of a SIGNAL and what a driver must
+  do. They share the atoms `red` and `yellow` and disagree about nothing, because they answer
+  different questions about them.
+
+  Provenance: STOP from Section 2B.05 and YIELD from 2B.08, both in Chapter 2B ("Regulatory Signs,
+  Barricades, and Gates"); the warning default from Section 2C.03 in Chapter 2C ("Warning Signs And
+  Object Markers"), which carries its own locator. Every quoted sentence was confirmed verbatim
+  against the RAW HTML rather than merely against the extraction — the sibling library shipped a
+  draft with "(see Figure 2B-1 )" before review caught that tag-stripping had inserted a space the
+  manual does not contain, so the raw-HTML check is now the standard for any sentence containing a
+  linked term or parenthetical.
+
+  Honest abstention. `no_passing_zone_sign` gets no colour rows: its sentence specifies a pennant
+  shape and says nothing about colour, and inferring "warning signs are yellow, so this one is
+  yellow" would be unsound as well as ungrounded, because that warning sentence is itself defeasible.
+  `regulatory_sign` as a class gets none either — the rectangular default says nothing about colour,
+  and STOP and YIELD prove regulatory signs share no single scheme. The "WIDE" in YIELD's "wide red
+  border" is a WIDTH rather than a colour and is not recorded; the border's colour is red, and how
+  wide it is belongs to a dimensions relation this library does not hold. Retroreflectivity,
+  fluorescent alternatives and the reserved colours coral and light blue are discussed in Chapter 2A,
+  largely inside HTML TABLES that tag-stripping cannot quote byte-faithfully — a figure this library
+  cannot cite byte-faithfully is one it does not state.
+
+  New `sign-element-color.query.adj` and `facts_signelementcolor_e2e.rs` (6 tests: the direct lookup
+  with its verbatim sentence, the YIELD-background-is-white test that pins the misconception the
+  third column exists to prevent, both red parts of a YIELD sign with a negative that the background
+  is not among them, the reverse lookup on a red background naming STOP alone, sentence-to-locator
+  PAIRS for both chapters, and the two no-colour abstentions with a positive control). ALL THREE
+  DEFECT CLASSES THIS SERIES HAS BEEN CAUGHT ON WERE APPLIED PREEMPTIVELY: the joint binding form
+  throughout, positive controls on the abstention test, and locator PAIRS rather than a bare locator
+  scan. All four negative assertions were mutation-tested and each fires under exactly its own
+  mutation.
+
+  TWO COVERAGE GAPS WERE CLOSED AFTER REVIEW, and the second is the reason mutation testing has to
+  cover ROWS and not just assertions. Neither was a false-passing assertion — they were rows and
+  properties that simply nothing guarded.
+
+  (i) FOUR OF THE NINE ROWS were unpinned: mutating STOP's legend from white to black passed the
+  entire suite. Those four are exactly the ones stated by the COMPRESSED constructions ("a white
+  legend and border", "a black legend and border"), where one colour distributes over two nouns —
+  the easiest rows in the table to misread. A new test pins both halves of each compressed phrase.
+
+  (ii) THE YIELD SENTENCE WAS NEVER ASSERTED AT ALL, neither its text nor its locator, so two
+  regressions passed the whole suite: retargeting its locator to Chapter 2C, and — worse —
+  reinserting the spurious tag-stripping space in its figure reference, WHICH IS THE EXACT DEFECT THE
+  SIBLING `sign-shape.adj` SHIPPED IN A DRAFT ONE SLICE EARLIER. A third sentence-to-locator pair
+  closes both at once, because the needle is byte-exact including the parenthesis.
+
+  All three regressions were verified to fail after the fix. New manifest objective
+  `adj.socialstudies.k2.sign_element_color`.
+
+- `transportation/sign-shape.adj` (new) — a `table` recording the shape the federal standard
+  specifies for a traffic sign: `sign_shape(sign, shape)`, five rows from the FHWA's Manual on
+  Uniform Traffic Control Devices. `stop_sign` → `octagon`; `yield_sign` →
+  `downward_pointing_equilateral_triangle`; `no_passing_zone_sign` →
+  `pennant_shaped_isosceles_triangle`; plus the two shape DEFAULTS, each carrying its own
+  defeasibility. THIRD transportation library, joining `traffic-lights.adj` and
+  `green-signal-permitted-movement.adj`, which cite the same publisher. A deliberate move for breadth
+  after six consecutive earth-science water libraries; `ADJ-STDLIB-COVERAGE.md` 5.1 names safety as a
+  K-2 gap.
+
+  The BACKWARD query is the one a child actually asks: `sign_shape($Sign, octagon)` answers "which
+  one is the eight-sided sign?".
+
+  THIS TABLE HOLDS A DEFEASIBLE DEFAULT ALONGSIDE ITS OWN COUNTEREXAMPLES, AND THAT IS WHAT MAKES THE
+  HEDGES LOAD-BEARING RATHER THAN DECORATIVE. The manual states two defaults, each explicitly
+  defeasible — "Regulatory signs shall be rectangular unless specifically designated otherwise."
+  and "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning
+  signs shall be diamond-shaped..." — and then designates otherwise, repeatedly. STOP and YIELD
+  are BOTH regulatory signs and NEITHER is rectangular; NO PASSING ZONE is a warning sign that is not
+  a diamond. Recorded flatly, those rows would CONTRADICT EACH OTHER. They do not, because each
+  default carries its defeasibility inside its own atom, following the placement rule
+  `veto-override.adj` and `karst-process-zone.adj` already apply. A query for a bare unqualified
+  `rectangular` therefore ABSTAINS, which is correct: the MUTCD never says regulatory signs ARE
+  rectangular, and its own next sections are the proof. This is the clearest case yet for that rule
+  — in earlier libraries a dropped hedge would have cost a shade of confidence, whereas here it
+  would make the library assert a falsehood the same document refutes two sections later.
+
+  `speed_limit_sign` abstains for the adjacent reason: it IS a regulatory sign governed by the
+  rectangular default, but the default is defeasible and STOP and YIELD are standing proof that
+  inferring a named sign's shape from it is unsound. Deriving "rectangular" for it would be reasoning
+  presented as recall.
+
+  THE WARNING-SIGN CITATION BEGINS WITH ITS EXCEPTION CLAUSE, DELIBERATELY. The manual's sentence
+  opens "Except as provided in Paragraph 2 or unless specifically designated otherwise, ..." and only
+  then reaches "all warning signs shall be diamond-shaped". Quoting from "all warning signs" would
+  have been a shorter, tidier citation that DROPPED THE HEDGE FROM THE EVIDENCE ITSELF — leaving
+  an atom that says "unless designated otherwise" backed by a quotation appearing to say no such
+  thing. A citation has to carry the qualifier it is being used to justify.
+
+  Provenance: five sentences spanning MUTCD CHAPTERS 2B ("Regulatory Signs, Barricades, and Gates")
+  and 2C ("Warning Signs And Object Markers"), both within Part 2 ("Signs"), each `cites` carrying its
+  own locator. The chapter placement is load-bearing rather than decorative: STOP (2B.05) and YIELD
+  (2B.08) sit inside the REGULATORY chapter, which is what makes them counterexamples to the
+  regulatory default rather than unrelated signs, and NO PASSING ZONE (2C.45) sits inside the WARNING
+  chapter for the same reason. An earlier draft called these "Parts 2B and 2C"; the manual's own
+  headings say Chapter, and "Part 2B" appears zero times on either page.
+  Both pages were content-verified by raw text extraction (HTTP 200, 589 and 406 substantive
+  sentences, zero soft-404 markers) and every quoted string confirmed to appear verbatim in that
+  extraction. TWO OF THE FIVE QUOTES WERE WRONG IN AN EARLIER DRAFT and were corrected before merge:
+  they read "(see Figure 2B-1 )" and "(see Figure 2C-8 )" with a space before the parenthesis, which
+  the manual does not contain. The space was a TAG-STRIPPING ARTIFACT — the pages wrap figure
+  references in `<a>` tags, and the extractor's punctuation normaliser covered `,.;:!?` but not `)`.
+  The draft's claim that every sentence "was confirmed to appear verbatim in that extraction" was
+  therefore true of the extraction and false of the manual, which is the one thing a
+  byte-faithful-quotation library cannot afford. The normaliser now covers brackets on both sides,
+  and all five quotes were re-verified against a corrected extraction. `trust authoritative` — the
+  FHWA is the first-party federal publisher and this is the standard itself rather than a description
+  of it. Honest abstention also on the railroad
+  crossbuck, the school-zone pentagon and the interstate shield, which are specified in sections this
+  slice does not quote, and on COLOR, which the quoted sentences state but which is a different axis
+  deserving its own table rather than being smuggled into a shape column.
+
+  New `sign-shape.query.adj` and `facts_signshape_e2e.rs` (5 tests: the direct lookup with its
+  verbatim sentence and citation, the reverse lookup with an exclusivity negative, both defaults
+  keeping their defeasibility plus an assertion that the quoted evidence includes the exception
+  clause it justifies, the two unqualified-shape abstentions with a positive control, and the
+  inferred-from-default abstention with a positive control). Every assertion uses the JOINT binding
+  form rather than independent substring scans, and all four negative assertions were mutation-tested
+  — dropping either hedge makes the bare-shape queries bind, adding an inferred
+  `speed_limit_sign` row breaks that abstention, and a second octagon row breaks the exclusivity
+  negative.
+
+  TWO TEST GAPS WERE CLOSED AFTER REVIEW. The exclusivity negative hand-listed only two of the four
+  other signs, so adding `row (warning_sign, octagon)` passed every test while the assertion message
+  claimed "no other sign may be returned as an octagon" — the message asserting more than the check;
+  it now loops over all four. And the two-distinct-locator property, which is this library's
+  structural novelty, was never actually asserted: the only locator check was a bare scan for
+  `part2b.htm`, which survives swapping every locator and never examines `part2c.htm` at all. A sixth
+  test now pins sentence-to-locator PAIRS for both chapters. Both gaps are the same failure mode this
+  series has hit repeatedly — asserting on the stdout blob rather than the structural property — and
+  both were found by mutation rather than by reading. New manifest objective
+  `adj.socialstudies.k2.sign_shape`.
+
+- `earth-science/well-aquifer-type.adj` (new) — a `table` recording which kind of aquifer each kind
+  of well is drilled into: `well_aquifer_type(well, aquifer_type)`, three rows grounded by a single
+  sentence from the U.S. Geological Survey's Water Science School aquifers page. `artesian_well` and
+  `flowing_artesian_well` → `confined_aquifer`; `water_table_well` → `unconfined_aquifer`. Third
+  USGS-sourced library.
+
+  The REVERSE query is the one worth having: "which wells reach a confined aquifer?" returns BOTH
+  artesian kinds. The sentence names "an artesian well AND a flowing artesian well" as distinct
+  things, so both are rows; collapsing them into one atom would assert that the source treats them as
+  the same well.
+
+  TWO HONESTY CALLS ARE STATED IN THE HEADER RATHER THAN LEFT IMPLICIT. First, the grounding sentence
+  is a FIGURE CAPTION, not body prose — it is preceded on the page by "Media Sources/Usage: Public
+  Domain. View Media Details", so the header says to look under the illustration — a citation that
+  sends a reader hunting in the wrong part of a page is a worse citation. The header also records
+  that the caption block closes with "Credit: Environment and Climate Change Canada", so the
+  illustration is REPUBLISHED by the USGS rather than drawn by it. The quoted text appears verbatim
+  on a USGS page and that is what `locator` points at, but the header deliberately does NOT claim the
+  USGS authored the sentence, because the page does not support that. `trust authoritative` rests on
+  the USGS being the first-party PUBLISHER of what it serves, which is the claim the page does
+  support. An earlier draft of this header asserted USGS authorship, which was a claim beyond the
+  evidence. Second, a tempting corroboration was DECLINED: the article also says "Groundwater in
+  aquifers between layers of poorly permeable rock, such as clay or shale, may be confined under
+  pressure", which explains what CONFINED means and is genuinely useful — but it grounds no row,
+  because it never says which wells reach which aquifer. Attaching it as a `cites` would dress up
+  background as corroboration. A corroboration should support the rows, or it should not be in the
+  envelope; it is recorded in the header as context instead.
+
+  Honest abstention on dug, drilled and driven wells — standard types a reader may well ask for, but
+  not among the three this sentence names — and on `spring`, which is a groundwater feature the page
+  discusses but is not a well. The relation says which aquifer a well is DRILLED INTO and nothing
+  else: not depth, not yield, and not whether the well flows without pumping, which the page does
+  discuss for artesian wells but which is a different relation.
+
+  Recorded without being made a row: this page says "The upper surface of this zone of saturation is
+  called the water table", which is consistent with `zone-water-table-position.adj` — built from a
+  National Park Service page — placing `zone_of_saturation` below the water table. Two independent
+  .gov publishers using the same vocabulary the same way is worth knowing, but it is a definition
+  rather than a new axis.
+
+  The page was content-verified by raw text extraction (HTTP 200, 285 substantive sentences, zero
+  soft-404 markers) and the quoted sentence confirmed to appear verbatim in that extraction. New
+  `well-aquifer-type.query.adj` and `facts_wellaquifertype_e2e.rs` (5 tests: the direct lookup with
+  its verbatim caption and citation, both artesian kinds returned for the confined aquifer with a
+  negative that the unconfined well does not leak in, the water table well as the only unconfined one
+  with the converse negative, abstention on unnamed well types, and abstention on a spring — the last
+  two each with a positive control). EVERY assertion uses the JOINT binding form
+  (`"bindings":{"W":"..."}`) rather than independent substring scans, applying this series' hardest-
+  won lesson from the start rather than after review. All four negative assertions were
+  mutation-tested and each fires under exactly its own mutation. New manifest objective
+  `adj.science.3to5.well_aquifer_type`.
+
+- `earth-science/water-share.adj` (new) — a THREE-column `table` recording what share of a stated
+  body of water sits in each place, and what that share is a share of: `water_share(place, share,
+  base)`, seven rows from the U.S. Geological Survey's "Where is Earth's Water?". Second
+  USGS-sourced library; the first table in this stdlib on a percent/share axis.
+
+  THE DENOMINATOR IS PART OF THE FACT, AND THAT IS THE WHOLE DESIGN. The page states seven shares
+  against THREE different bases: `all_earths_water` (saline water over 96%, freshwater 2.5%),
+  `all_freshwater` (ice and glaciers over 68%, ground 30%, surface water a little more than 1.2%),
+  and `surface_freshwater` (lakes 20.9%, rivers 0.49%). A two-column `water_share(place, share)`
+  would put "over 96 percent" and "over 68 percent" in one column as though they were comparable
+  quantities. THEY ARE NOT: 96% is of all water on Earth, 68% is of the 2.5% of it that is fresh.
+  Reading them as commensurable is the commonest error made with these statistics, and a table that
+  invited it would be WORSE THAN NO TABLE, because it would carry a citation while doing it.
+
+  With the base as a column, no query can retrieve a share without also retrieving what it is a share
+  of, and the error becomes unrepresentable rather than merely warned about. `water_share(ground, $S,
+  all_earths_water)` ABSTAINS: ground water is stated as 30% OF FRESHWATER, and converting bases is
+  arithmetic this source never performs — a recall library that performed it would be presenting
+  reasoning as citation. A bare unhedged figure also abstains, since the source says "over 96
+  percent" and the hedge rides inside the atom per the `veto-override.adj` placement rule.
+
+  NORMALISE REFERENTS, NEVER NORMALISE HEDGES — a distinction this library establishes explicitly.
+  The source words one quantity several ways ("the world's total water supply" and "Earth's water";
+  "the total freshwater", "all freshwater" and bare "freshwater"). Those are REFERENTS, different
+  phrasings pointing at one physical quantity, so collapsing them to `all_earths_water` and
+  `all_freshwater` loses nothing and keeps the reverse-by-base query from fragmenting across
+  synonyms. That is deliberately different from `speleothem-substrate.adj`, which keeps frostwork's
+  "less occasionally" distinct from helictite's "less often" even though they plainly mean the same
+  thing — those words are the SOURCE'S OWN EPISTEMIC QUALIFICATION, and normalising them would edit a
+  claim. A referent names the same thing twice; a hedge states how confident the source is.
+
+  THE LAKES FIGURE REQUIRED A THREE-SENTENCE CITATION, because its base is a PRONOUN. It appears as
+  "Most of this water is locked up in ice, and another 20.9% is found in lakes." — and "this water"
+  means surface freshwater only because the preceding sentence says "The right bar shows the
+  breakdown of surface freshwater." Cited alone, that 20.9% would have NO denominator at all, which
+  is precisely the failure this library exists to prevent. The sentences are adjacent in the article,
+  so quoting the run is still verbatim and makes the base recoverable from the citation itself.
+
+  A LANGUAGE CONSTRAINT WORTH RECORDING: digit-initial atoms are a parse error, so the share atoms
+  carry a uniform `share_` prefix (`share_over_96_percent`, `share_a_little_more_than_1_2_percent`)
+  rather than a bare number. Honest abstention also covers atmospheric water, soil moisture and
+  swamps, which appear in the page's HTML TABLES rather than its prose. Table cells do not survive
+  tag-stripping reliably, and a figure that cannot be cited byte-faithfully is a figure this library
+  does not state. The page was content-verified by raw text extraction (HTTP 200, 300 substantive
+  sentences, zero soft-404 markers), and every quoted string was checked to appear verbatim in that
+  extraction before shipping.
+
+  New `water-share.query.adj` and `facts_watershare_e2e.rs` (6 tests: a share always arriving with
+  its denominator, the reverse lookup scoped by base with a negative that other bases' places do not
+  leak in, the cross-base abstention with a positive control, the unhedged-figure abstention with a
+  positive control, the pronoun base travelling with its antecedent as a SINGLE spanning needle, and
+  abstention on table-only figures with a positive control). Every negative assertion was
+  mutation-tested and each fails under exactly the mutation it claims to guard: adding a cross-base
+  row, baring the hedged figure, leaking a base, and splitting the pronoun citation.
+
+  THREE ASSERTIONS WERE TIGHTENED AFTER REVIEW, and the reason generalises to every multi-column
+  table in this stdlib. `out.contains("\"S\":\"x\"") && out.contains("\"B\":\"y\"")` proves only that
+  each string appeared SOMEWHERE in stdout — it does NOT prove they arrived in the same answer.
+  Mutation-verified: splitting the ice row into `(ice, over_68, surface_freshwater)` and
+  `(ice, 2_5, all_freshwater)` satisfies both separate needles while the data is wrong, and a test
+  whose message read "the share and its base are returned together" never noticed. The assertions now
+  match the emitted binding object whole — `"bindings":{"S":"share_over_68_percent","B":
+  "all_freshwater"}` — which the emitter writes contiguously in first-appearance variable order. The
+  same fix pins place-to-share in the reverse lookup, where swapping the lakes and rivers figures had
+  previously left the test green. A fourth abstention test gained the positive control it was
+  missing, having stayed green when the relation was renamed so the library asserted nothing at all.
+  This is the fourth instance in this series of a test passing while proving nothing; all four had the
+  same root cause, which is asserting on the stdout blob rather than on the structural property. New manifest objective
+  `adj.science.3to5.water_share`.
+
+- `earth-science/water-movement-route.adj` (new) — a `table` recording which way through the Earth
+  system a named water cycle process moves water: `water_movement_route(process, route)`, eight rows
+  from three parallel sentences. `evaporation`, `evapotranspiration` and `precipitation` →
+  `between_atmosphere_and_surface`; `snowmelt`, `runoff` and `streamflow` → `across_the_surface`;
+  `infiltration` and `groundwater_recharge` → `into_the_ground`. The first library sourced from the
+  U.S. Geological Survey's Water Science School.
+
+  The BACKWARD query is the one worth having: "which processes move water into the ground?" is an
+  ordinary elementary question, and nothing in this stdlib could answer it before.
+
+  NOT A DUPLICATE OF `water-cycle.adj`, and the difference is worth stating because the names are
+  close. `water_cycle_stage(stage, step_number)` ORDERS five processes — evaporation 1,
+  condensation 2, precipitation 3, runoff 4, groundwater 5 — and answers "what comes next?". This
+  relation answers "WHICH WAY does water move?", covers eight processes, and is not an ordering at
+  all. They overlap on THREE atoms (`evaporation`, `precipitation`, `runoff`) and disagree about
+  nothing, because they answer different questions about them: runoff is stage 4 there AND moves
+  water across the surface here, and neither claim implies the other. Five of this table's processes
+  have no stage number, and `condensation`, which has one, has no route here. (`groundwater`, stage
+  5, and `groundwater_recharge`, a route value here, are different atoms naming a reservoir and a
+  process respectively, and are deliberately not unified.)
+
+  An earlier draft of this entry described the sibling as a three-stage table overlapping on two
+  atoms. That was wrong — it was read off a grep whose pattern happened to exclude `runoff` — and is
+  recorded because the error class matters more than the fact: a filtered view was generalised into a
+  claim about the whole table.
+
+  THE ABSTENTION WORTH UNDERSTANDING IS `condensation`. It is unmistakably a water cycle process, it
+  is stage 2 in the sibling table, and this very page discusses it — so a system answering from
+  general knowledge would assign it a route without hesitating. None of the three route sentences
+  lists it, so this relation has no value for it. BEING A FAMOUS PROCESS IS NOT EVIDENCE ABOUT THIS
+  RELATION. `sublimation` abstains for the adjacent reason (named once on the page, never placed in a
+  route sentence — mentioned-on-the-page is not the same as stated-by-the-sentences this relation
+  draws from), and `transpiration` abstains because the sentence lists the compound
+  `evapotranspiration`; splitting it would assert a decomposition the source does not make, which is
+  a real temptation since the compound visibly contains both words. The three routes are not claimed
+  exhaustive or exclusive: a process absent here means these sentences did not list it.
+
+  The route atoms compress the sentences' own phrasing ("between the atmosphere and the surface",
+  "across the surface", "into the ground") into single atoms. That is a naming choice rather than a
+  claim — the full phrasing is recoverable verbatim from the citation attached to every row.
+
+  AN EXTRACTION HAZARD IS RECORDED AND PINNED BY A TEST, because it nearly put a wrong string in the
+  `source` envelope. Each process name on the page is wrapped in a link — `<a>evaporation</a>,
+  `<a>evapotranspiration</a>` — so naive tag-stripping yields "evaporation , evapotranspiration",
+  with spaces the page does not contain. The sentences were checked against the RAW HTML instead, and
+  the e2e test asserts both that the real punctuation survived and that the artifact form is absent.
+  A citation is only worth having if it is byte-faithful. The page was content-verified by raw text
+  extraction (HTTP 200, 84 substantive sentences, zero soft-404 markers), never from a fetch summary.
+
+  New `water-movement-route.query.adj` and `facts_watermovementroute_e2e.rs` (6 tests: the direct
+  route with its verbatim sentence and citation, both reverse lookups plus a negative that other
+  routes' processes are not returned, the byte-faithful punctuation guard, the condensation
+  abstention, the compound not being split alongside a positive check that the compound itself is a
+  value, and the sublimation abstention). Every negative assertion was mutation-tested: adding
+  condensation and transpiration rows makes both abstentions bind, and injecting the
+  space-before-comma artifact makes the artifact needle appear while the real-punctuation needle
+  disappears.
+
+  BOTH ABSTENTION TESTS CARRY A POSITIVE CONTROL, added after review showed they stayed green against
+  a table whose atoms had all been renamed — an abstention assertion alone cannot distinguish "this
+  process has no route" from "this library answers nothing". A dead needle was also REMOVED rather
+  than kept: asserting that no route atom appears is strictly implied by the abstention, and would
+  have gone silently vacuous if the query variable were ever renamed — the same silent-degradation
+  shape as the two vacuous tests already caught in this series. New manifest objective
+  `adj.science.3to5.water_movement_route`.
+
+- `earth-science/speleothem-substrate.adj` (new) — a `table` recording what a speleothem grows ON:
+  `speleothem_substrate(speleothem, substrate)`, eleven rows over two speleothems and three
+  sentences. `helictite` → `cave_ceiling`, `cave_wall`, `cave_floor_less_often`,
+  `carbonate_coating`, `crust`, `soda_straw_sometimes`; `frostwork` → `stalactite`, `cave_wall`,
+  `cave_ceiling`, `ledge`, `cave_floor_less_occasionally`. EIGHTH cave/karst library.
+
+  IT EXISTS BECAUSE `speleothem-growth-surface.adj` ABSTAINED ON `helictite`, and the abstention
+  still stands. That library's header records the reason: the source places helictites on three
+  surfaces with a frequency hedge on the third, and "one surface would drop the others while
+  three-as-equals would flatten the source's own frequency hedge." That reasoning was right about
+  THAT relation — `speleothem_growth_surface` is single-valued and means "the surface a dripstone
+  grows FROM", one surface each. It was never an argument that the fact is untableable. This
+  relation is multi-valued, means "grows ON" (the source's own verb for these speleothems), and
+  carries the hedge the ordinary way: INSIDE THE ATOM of the value it modifies, the placement rule
+  `veto-override.adj` and `karst-process-zone.adj` already apply. So bare `cave_floor` is NOT a
+  value and a query for it abstains for both speleothems. Same move `speleothem-component.adj` made
+  for the `column` abstention: when a table declines, the fix is a new relation shaped to the
+  question, never a loosened row in the old one.
+
+  TWO SPELEOTHEMS, NOT ONE. This was nearly built as a helictite-only table, which would have been
+  thin enough to question. Re-reading the page showed the same shape stated twice — a list of
+  substrates ending in a hedged floor — so `frostwork` is a second member and the reverse query on
+  `cave_wall` returns BOTH, from two different sentences. "What grows on cave walls?" is a question
+  nothing in this stdlib could answer before.
+
+  Provenance: the `source` envelope quotes TWO CONTIGUOUS SENTENCES as one string, deliberately. The
+  substrate sentence begins "They typically grow on other speleothems…", and cited alone its subject
+  is a bare pronoun — a reader could not tell who "They" refers to. The sentences are adjacent in the
+  article, so quoting the pair is still verbatim and makes the citation self-contained; a citation
+  that cannot be read without the page open is not doing its job. The `cites` corroboration carries
+  the frostwork sentence. U.S. National Park Service "Speleothems", `trust authoritative`, taken from
+  a RAW TEXT EXTRACTION rather than a fetch summary.
+
+  THREE QUALIFIERS, EACH PLACED BY THE SETTLED RULE. "less often" modifies cave floors only and
+  "sometimes" modifies soda straws only, so both ride in their atoms. "typically" modifies the whole
+  clause "grow on other speleothems", so it stays in the CITATION and the atoms `carbonate_coating`
+  and `crust` remain bare. Frostwork's "less occasionally" rides in its atom too — and is
+  deliberately NOT normalised to helictite's "less often", even though the phrase is awkward and
+  plainly means the same thing. They are different sentences and each atom carries the word its own
+  sentence used; smoothing them into one spelling would be editing a citation to make a table
+  tidier. The e2e test asserts frostwork never borrows helictite's wording.
+
+  Two things the table does not claim, stated in its header so nobody reads them in: the substrate
+  column MIXES KINDS on purpose (cave parts like `cave_ceiling` and `ledge` alongside other
+  speleothems like `stalactite` and `crust`), because the relation means "the thing it grows on" and
+  the source itself mixes them in one list; and THE LISTS ARE NOT CLOSED, since the helictite
+  substrate sentence says "SUCH AS carbonate coatings, crusts" — exemplary, not exhaustive, so
+  absence of a substrate means the source did not name it rather than that the speleothem does not
+  grow there. Honest abstention also on `stalagmite`, `column`, `drapery` and the rest, which this
+  page never places on a substrate, and on `slanted_surface` (cave bacon "forms on slanted
+  surfaces", but that describes the shape of a surface rather than an identifiable thing in a cave).
+
+  New `speleothem-substrate.query.adj` and `facts_speleothemsubstrate_e2e.rs` (6 tests: all six
+  helictite substrates with the citation, the pronoun antecedent travelling with the citation, the
+  reverse lookup finding both speleothems, each speleothem keeping its own hedge wording with a
+  negative assertion that frostwork never borrows helictite's, the unhedged-floor abstention with a
+  negative assertion that neither speleothem is asserted unqualified, and abstention where the source
+  names no substrate). Every assertion was mutation-tested: normalising frostwork's wording and
+  baring helictite's hedge each make the forbidden needle appear.
+
+  ONE TEST WAS FOUND VACUOUS AND FIXED BEFORE SHIPPING, which is worth recording because it is the
+  second instance of the same mistake in this series. The pronoun-antecedent test originally asserted
+  the two sentences SEPARATELY, which passes just as happily when they are split into two citations —
+  `source` holding the first and a `cites` holding the second — the exact arrangement the test exists
+  to rule out. Mutation-verified: under the split, both original needles remain present and the test
+  still passes, while the property it names is false. The assertion is now a SINGLE needle straddling
+  the sentence boundary, which disappears under that mutation. The general error both times was
+  asserting on the whole output blob rather than on the structural property; a needle that any
+  successful run would satisfy is decoration, not a test. New manifest objective
+  `adj.science.3to5.speleothem_substrate`.
+
+- `earth-science/speleothem-alt-name.adj` (new) — a `table` recording the other names a cave
+  formation goes by: `speleothem_alt_name(speleothem, alt_name)`, eight rows across four grounding
+  sentences. `column` → `pillar`; `coralloid` → `corallite`; `frozen_waterfall` →
+  `petrified_waterfall`, `cascades`, `rivers`, `glaciers`, `organ_pipes` (five names licensed by one
+  sentence); and `drapery` → `cave_bacon_when_characteristic_layers_present`. SEVENTH cave/karst
+  library and the first on the naming axis, same shape as `astronomy/space-rock-alt-name.adj`, which
+  reads its pairs from the same kind of apposition. The BACKWARD direction is the one that matters:
+  a reader who meets "organ pipes" on a cave tour needs to resolve it back to the frozen waterfall.
+
+  THE HEADLINE ABSTENTION IS `cave_popcorn`, AND THE REASON IS THAT THE SOURCE CONTRADICTS ITSELF.
+  The page offers it as a synonym — "Coralloid (or corallite or cave popcorn) is a catchall term
+  describing knobby, nodular, botryoidal, or corallike speleothems." — and then makes it a MEMBER of
+  the category instead: "Coralloids include cave popcorn, grapes, knobstone, coral, cauliflower,
+  globularites, and grapefruit." A thing cannot be both another name for coralloids and one of
+  several kinds of coralloid. `corallite` ships because it appears only in the parenthetical and
+  carries no such conflict. Picking whichever reading suited the table would be choosing an answer
+  and then finding a citation for it, which is the exact failure this stdlib exists to prevent.
+  `grapes` abstains for the adjacent reason: it appears only in the list of things coralloids
+  INCLUDE, and membership is a different relation this table does not pretend to hold.
+
+  Bare `cave_bacon` also abstains. The source makes that name CONDITIONAL — bacon "instead of
+  drapery, when the characteristic layers are present" — so the condition rides inside the atom,
+  following the placement rule `veto-override.adj` and `karst-process-zone.adj` already apply, and a
+  query for the unconditional name finds nothing because asking for it is asking what a drapery is
+  ALWAYS called. The source's own plurals are kept as atoms (`cascades`, `rivers`, `glaciers`);
+  singularising them would be a silent edit of the citation.
+
+  A LIMITATION OF THIS TABLE IN PARTICULAR, STATED IN ITS HEADER: provenance here is TABLE-level, so
+  the `source` envelope and every `cites` corroboration cover every row. Most libraries in this
+  stdlib are grounded in one or two sentences, where that is harmless; this one is grounded in four,
+  covering four unrelated speleothems, so an answer about `column` also carries the coralloid,
+  flowstone and bacon sentences. Nothing cited is false and the grounding sentence is always among
+  them, but the reader must match sentence to row. IN `--explain` OUTPUT IT IS SHARPER: explain
+  renders only the PRIMARY `source` and drops corroborations entirely, so the `corallite` row is
+  displayed under the column/pillar sentence, which does not ground it. That is a property of every
+  multi-sentence table in this stdlib rather than of this one — `heredity-term.adj` (6
+  corroborations, 7 rows), `bill-stage-successor.adj` (6, 7) and `checks-and-balances.adj` (4, 5)
+  all behave the same way — so it is filed rather than worked around here, since fixing it changes
+  how explain renders provenance for a dozen shipped libraries at once. Until then the JSON output
+  is the authoritative view. A single table cannot avoid this by splitting its envelope: two `table`
+  blocks sharing a relation name are rejected as `DuplicateTable`, so one relation means one primary
+  source. The alternative was four single-purpose tables,
+  which would fragment one lookup into four and make the backward query impossible to ask in a
+  single goal; one table with a stated limitation is the better trade. Row-level provenance is
+  tracked as issue #13893.
+
+  METHOD NOTE, worth recording because it changed the contents of this table: every sentence above
+  was taken from a RAW TEXT EXTRACTION of the page rather than from a fetch summary. Summarised
+  readings of this same page disagreed with each other about how many times "bacon" occurs and
+  whether a given sentence existed at all, and none of them surfaced the `cave_popcorn`
+  contradiction — on a summary's account, popcorn would have shipped as a row the page contradicts.
+
+  New `speleothem-alt-name.query.adj` and `facts_speleothemaltname_e2e.rs` (6 tests: the five-name
+  group with its verbatim sentence and citation, the reverse lookup in both directions, the bacon
+  condition kept inside the atom with a negative assertion that the bare name is never stated, the
+  unconditional-name abstention, the self-contradiction abstention with a negative assertion that
+  popcorn never resolves to coralloid, and abstention on a singly-named formation and on a category
+  member). Every negative assertion was mutation-tested: adding the refused rows makes all five
+  abstentions bind. Abstention assertions require `"reason":"no_grounded_support"` rather than bare
+  `"abstained":true`, and the abstain queries are written in VARIABLE form because a fully-bound
+  query that matches nothing produces no recall entry at all. New manifest objective
+  `adj.science.3to5.speleothem_alt_name`.
+
+- `earth-science/speleothem-component.adj` and
+  `earth-science/compound-speleothem-surface.adj` (new, shipped together) — the FIFTH and SIXTH
+  cave/karst libraries, which exist to CLOSE A RECORDED ABSTENTION and to show why recording it was
+  right.
+
+  `speleothem-growth-surface.adj` refused to give `column` a growth surface, and said why in the
+  source's own words: "Columns are not stalactites nor are they stalagmites; they are both,
+  together." A column is produced by two speleothems JOINING rather than by growing from one
+  surface, so it has no single growth surface to bind; that header states plainly that recording
+  `cave_ceiling` or `cave_floor` "would be false, and recording both would misrepresent the relation
+  this table holds."
+
+  That abstention was correct, and was never meant to be permanent. "What is a column made of?" has
+  a perfectly good grounded answer — it simply is not a question about growth surfaces, and it
+  needed a DIFFERENT RELATION. The table supplies it: `speleothem_component(compound_speleothem,
+  component)`, with `column` → `stalactite` and `column` → `stalagmite`, neither outranking the
+  other. This is the same move `civics/congress-chamber.adj` made for
+  `government-branch-member.adj`'s abstention on the two chambers: when a table declines, the fix is
+  a new relation shaped to the question, never a loosened row in the old one.
+
+  The rule then recovers what the growth-surface table declined:
+  `compound_speleothem_surface(compound_speleothem, surface)` chains the component relation with the
+  growth-surface relation, deriving `column` → `cave_ceiling` AND `column` → `cave_floor`. TWO
+  ANSWERS ARE CORRECT HERE WHERE TWO ROWS WOULD HAVE BEEN A MISREPRESENTATION THERE, because the
+  relations are not the same relation: one means "the surface this speleothem grows from", the other
+  "the surfaces reached by this speleothem's components". That distinction is the whole argument for
+  abstaining rather than fudging. A table that had quietly bound both surfaces would have been
+  approximately useful and precisely wrong, and nothing downstream could have recovered the
+  difference. Because it declined, the honest answer remained available — as a composition, in its
+  own name, with its provenance intact.
+
+  Provenance: the table's `source` envelope carries the formation sentence ("When a stalagmite grows
+  together with its counterpart feeder stalactite, a new speleothem is formed: a column or pillar.")
+  and its `cites` corroboration the identity sentence ("Columns are not stalactites nor are they
+  stalagmites; they are both, together."). The second is doing real work rather than decorating: on
+  its own the first could be read as a column being a stalagmite that reached the ceiling — ONE
+  component — and "they are both, together" is what makes two rows correct. The rule's envelope
+  cites the identity sentence, and each derived answer additionally carries its two premises'
+  citations, so nothing it relied on goes uncited. All from the U.S. National Park Service's
+  "Speleothems" article, `trust authoritative`, CONTENT-verified.
+
+  A LIMITATION, RECORDED RATHER THAN LEFT TO BE DISCOVERED: provenance in this stdlib is attached at
+  TABLE level — a table's `source` envelope and `cites` corroborations cover EVERY row, not the row
+  that matched — so the two derived answers are provenanced IDENTICALLY. The `cave_floor` answer
+  carries the same citation list as the `cave_ceiling` one, with the stalactite sentence as its
+  primary citation, though that row played no part in deriving it. This is worth recording because
+  the tempting claim is the opposite: an earlier draft of this library's test asserted per-answer
+  attribution (ceiling→stalactite, floor→stalagmite) and the assertions PASSED, because both
+  sentences appear in the output of any successful use of the growth-surface table — the test proved
+  nothing while reading as though it proved attribution. A library about provenance honesty does not
+  get to overclaim its own provenance. What holds is that both premises are cited; what does not
+  hold is that each answer is cited with the sentence that produced it. The shipped test pins the
+  real behaviour with a floor-only query, which under row-level provenance would carry only the
+  stalagmite sentence and today carries the stalactite one too, so it will fail loudly if row-level
+  provenance ever lands.
+
+  Honest abstention. `pillar` is NOT a row: the source offers it as an alternative NAME for the same
+  speleothem ("a column or pillar"), not as a different thing with components of its own, so tabling
+  it would double-count one speleothem as two; a synonym belongs in an alt-name relation, the shape
+  `astronomy/space-rock-alt-name.adj` already uses. `soda_straw` is NOT a row: the source says every
+  stalactite begins its growth as a hollow soda straw, which is a developmental stage of ONE
+  speleothem rather than two joining — and, checked directly against the page, it is a stage whose
+  SUCCESSOR the source never describes, since it never states how a soda straw becomes a thicker
+  stalactite. A `stage → next_stage` table would have to invent that step, so none was built. The
+  rule additionally abstains on `helictite`, absent from BOTH premises (the growth-surface table
+  declined it because the source gives three surfaces with a frequency hedge no two-column row can
+  carry) — a derived relation cannot repair a premise it inherits, and composition propagates
+  abstention exactly as it propagates provenance.
+
+  New `speleothem-component.query.adj` and `compound-speleothem-surface.query.adj`; new
+  `facts_speleothemcomponent_e2e.rs` (5 tests: both components with the formation sentence and
+  citation, the identity sentence reaching the reader as a corroboration, backward recall, the
+  synonym/non-compound abstentions, and the developmental-stage abstention) and
+  `facts_compoundspeleothemsurface_e2e.rs` (5 tests: both derived surfaces, both premises' citations
+  surviving composition WITH the table-level-provenance limitation pinned, the proof trace naming both premise goals, backward recall, and
+  abstention propagating from the premises). New manifest objectives
+  `adj.science.3to5.speleothem_component` (recall) and
+  `adj.science.3to5.compound_speleothem_surface` (infer, with both premises as prerequisites).
+
+- `earth-science/zone-water-table-position.adj` and
+  `earth-science/karst-process-water-table-position.adj` (new, shipped together) — the THIRD and
+  FOURTH cave/karst libraries, and the first pair in this series designed to COMPOSE.
+
+  The table records where each groundwater zone sits relative to the water table:
+  `zone_water_table_position(zone, position)`, `zone_of_saturation` → `below_the_water_table`,
+  `zone_of_aeration` → `above_the_water_table`. `karst-process-zone.adj` deliberately declined to
+  carry this as a third column, its header recording that a zone's position is a fact about the ZONE
+  rather than the process and would repeat once per process row rather than adding an axis; this
+  holds it once. A full-tree grep for `water_table_position`, `below_the_water_table` and
+  `above_the_water_table` found only that sibling's own header prose, so the axis was uncovered.
+
+  The rule DERIVES what neither table states: `karst_process_water_table_position(process,
+  position)`, whose body chains `karst_process_zone(Process, Zone)` with
+  `zone_water_table_position(Zone, Position)`. It has to be a rule rather than a two-goal query —
+  a query in this language is a single term, and `? a(...), b(...)` is a parse error at the comma —
+  so this follows the shape `civics/chamber-branch.adj` established. A derived answer carries the
+  citations of BOTH premises and a proof trace (a `rule` step for the head, one `fact` step per body
+  goal), which is what makes a composed answer auditable rather than indistinguishable from an
+  asserted one. Both premises happen to be grounded in the same NPS sentence, so that sentence is
+  honestly cited twice in one answer; the header says so, since it otherwise reads as duplication.
+
+  *** THE RULE DERIVES ONLY ONE OF THE TWO PROCESSES, AND THAT IS THE POINT. *** The cave-formation
+  row of `karst_process_zone` binds the HEDGED atom `zone_of_saturation_typically` — the source says
+  caves TYPICALLY form below the water table, while saying speleothem deposition IS NOT POSSIBLE
+  UNTIL they are above it — and that atom does not unify with the bare `zone_of_saturation` the
+  position table keys on. So the identical chain that resolves for speleothem deposition ABSTAINS
+  for cave formation. Had the hedge been dropped when that atom was authored, this rule would
+  conclude "cave formation happens below the water table" as a flat, unqualified fact: exactly the
+  claim the source declines to make. A qualifier that survives direct recall but evaporates the
+  moment something reasons across two tables is not a qualifier, it is a comment. The two
+  consequences are asserted as a MATCHED PAIR, and the negative assertion was FALSIFIED before being
+  trusted — baring the atom in a scratch copy makes the rule immediately derive
+  `"P":"below_the_water_table"`, so the guard genuinely can fail. The fix, if the cave-formation
+  answer is ever wanted, is a source that states the unhedged claim, never a looser atom.
+
+  Provenance: both rows and the rule's envelope cite the single sentence `karst-process-zone.adj`
+  already cites, on the U.S. National Park Service's "Speleothems" article: "Although the formation
+  of caves typically takes place below the water table in the zone of saturation, the deposition of
+  speleothems is not possible until caves are above the water table in the zone of aeration."
+  `trust authoritative`. HOW THE TABLE'S PAIRING IS READ is stated in its header so it can be
+  audited: each column value appears verbatim ("below the water table", "the zone of saturation"),
+  and the pairing is apposition — the sentence gives one location under two descriptions — rather
+  than a standalone definitional sentence. Nothing is reworded and no value is supplied that the
+  source does not state. Honest abstention on `vadose_zone` and `phreatic_zone`, the standard
+  synonyms a reader may well ask by and which this source never uses, and on `capillary_fringe` and
+  other hydrology subdivisions this sentence does not name; the rule additionally abstains on any
+  process no premise places (`dissolution`, `speleogenesis`), since a derived relation cannot be
+  better grounded than its premises.
+
+  New `zone-water-table-position.query.adj` and `karst-process-water-table-position.query.adj`;
+  new `facts_zonewatertableposition_e2e.rs` (3 tests: direct recall with its verbatim sentence and
+  citation, backward recall, and the three-way synonym/subdivision abstention) and
+  `facts_karstprocesswatertableposition_e2e.rs` (5 tests: the derivation, the proof trace naming
+  both premise goals, backward recall through the rule, abstention on an unplaced process, and the
+  hedge blocking the cave-formation join). New manifest objectives
+  `adj.science.3to5.zone_water_table_position` (recall) and
+  `adj.science.3to5.karst_process_water_table_position` (infer, with both premises as
+  prerequisites).
+
+- `earth-science/karst-process-zone.adj` (new) — a `table` recording which groundwater zone a
+  named karst process happens in: `karst_process_zone(process, zone)`, `cave_formation` →
+  `zone_of_saturation_typically`, `speleothem_deposition` → `zone_of_aeration`. The SECOND cave/karst
+  library, sibling to `speleothem-growth-surface.adj` on a genuinely different axis: that one
+  answers WHERE ON THE CAVE a speleothem grows, this one answers WHERE RELATIVE TO THE WATER TABLE
+  the process can happen at all. A full-tree grep for `water_table`, `aeration`, `saturation`,
+  `karst`, `vadose` and `phreatic` found no table on this axis — the shipped `pond_zone` and
+  `ocean_zone` families are depth zones within a body of water, a different sense of the word.
+
+  Both rows come from a SINGLE sentence of the U.S. National Park Service's "Speleothems" article:
+  "Although the formation of caves typically takes place below the water table in the zone of
+  saturation, the deposition of speleothems is not possible until caves are above the water table in
+  the zone of aeration." `trust authoritative`, the same source `speleothem-growth-surface.adj` and
+  `weathering-cause-type.adj` already cite. The page was CONTENT-verified rather than merely
+  status-checked (200, no soft-404 markers, 118 substantive sentences, zero hub markers).
+
+  THE HEDGE IS ASYMMETRIC, AND THAT ASYMMETRY IS FAITHFUL. The source hedges one clause and not the
+  other: caves "TYPICALLY" form below the water table, whereas speleothem deposition "IS NOT POSSIBLE
+  UNTIL" caves are above it — a typical tendency versus a stated precondition. Following the
+  placement rule this stdlib already applies (a qualifier modifying ONE VALUE lives inside that
+  value's atom, as in `veto-override.adj`'s `congress_can_override_in_most_cases`; a qualifier
+  modifying the WHOLE FACT lives in the citation, as with `electoral-college-count.adj`'s
+  "currently"), the tendency is carried in the atom itself: `zone_of_saturation_typically`. The
+  deposition row carries no suffix because its own clause carries no hedge. The consequence is
+  testable and is tested: a reverse query for the bare `zone_of_saturation` ABSTAINS, because asking
+  for the unhedged zone is asking which process ALWAYS happens below the water table — a question
+  this source does not answer. If that query ever starts binding, a tendency has been silently
+  promoted to a rule.
+
+  The sentence also states each zone's position relative to the water table (saturation below,
+  aeration above), but that is a fact about the ZONE rather than the process, so it is deliberately
+  NOT a third column — it would repeat once per process row rather than adding an axis. It remains
+  available from the same sentence for a future `zone → water_table_position` sibling. Honest
+  abstention also on `cave_decoration` as a process distinct from deposition (the page names
+  decoration as a PHASE beginning when the chamber fills with air, without assigning it a zone of its
+  own, so tabling it would double-count the deposition row) and on `dissolution`, `speleogenesis` and
+  other real karst processes this source never places relative to the water table — inferring their
+  zone from general karst knowledge is exactly what a grounded recall library must not do. New
+  `karst-process-zone.query.adj` and `facts_karstprocesszone_e2e.rs` (5 tests: deposition placed with
+  its verbatim sentence, the typicality hedge kept inside the atom with a negative assertion that no
+  bare zone is stated, backward recall from the zone, the unhedged-zone abstention with a negative
+  assertion that cave formation is never asserted as unconditional, and abstention on two unplaced
+  karst processes). New manifest objective `adj.science.3to5.karst_process_zone`.
+
+- `earth-science/speleothem-growth-surface.adj` (new) — a `table` recording which cave
+  surface a named dripstone speleothem grows from:
+  `speleothem_growth_surface(speleothem, surface)`, `stalactite` → `cave_ceiling`, `stalagmite` →
+  `cave_floor`. The FIRST cave/karst library in this stdlib — a full-tree grep for `speleothem`,
+  `stalactite`, `stalagmite`, `dripstone` and `flowstone` returned nothing beforehand. Sourced from
+  the U.S. National Park Service's "Speleothems" article in its Caves and Karst subject series,
+  curl-fetched and read byte-for-byte; `trust authoritative`, the same publisher
+  `earth-science/weathering-cause-type.adj` already cites for a different Earth process.
+
+  "Which one hangs from the ceiling — the stalactite or the stalagmite?" is the most-confused pair
+  in elementary Earth science, and exactly the kind of question that should be answered from a
+  citation rather than from a mnemonic. The relation runs BACKWARD too, which is the direction the
+  confusion actually runs in: `? speleothem_growth_surface($P, cave_floor)` binds `stalagmite`.
+
+  THE ABSTENTIONS CARRY AS MUCH OF THIS FILE'S CONTENT AS THE TWO ROWS DO, and two of the five e2e
+  tests are about what the table declines to say. `column` is not a row, and the source says why in
+  its own words: "Columns are not stalactites nor are they stalagmites; they are both, together." A
+  column forms when a stalagmite grows together with its counterpart feeder stalactite — produced by
+  two speleothems JOINING rather than growing from one surface — so it has no single growth surface
+  to bind; recording either surface would be false, and recording both would misrepresent the
+  relation. A test asserts neither surface is ever bound for it. `helictite` is not a row either,
+  although the source DOES place it: "Helictites grow on cave ceilings, walls, and less often on cave
+  floors." Three surfaces, with the source's own frequency hedge on the third — tabling one would
+  silently drop the others, and tabling all three as equals would flatten the "less often" the
+  source deliberately states, so it abstains until a shape exists that can carry the hedge.
+  `flowstone` and `draperies` are described by APPEARANCE and mode of deposition ("melted cake
+  icing", "frozen waterfalls", build-up in layers or bands) rather than by a growth surface, so
+  neither has a value for this relation. `soda_straw` is the hollow tube every stalactite BEGINS as
+  ("All stalactites, whatever their composition, begin their growth as hollow soda straws") — a
+  developmental stage rather than a separately-placed speleothem, and a candidate for its own future
+  table on a different axis.
+
+  SOURCE SELECTION NOTE: this page was CONTENT-verified, not merely status-checked — 200, no
+  soft-404 markers, 118 substantive sentences, zero hub/navigation markers. That check matters
+  because an earlier candidate this session returned HTTP 200 while serving a 404 body, and three
+  others returned clean 200s for pages that were hubs or link directories. Four probes in the same
+  round as this one failed the check (two 404s, two CloudFront "Request blocked" 403s). New
+  `speleothem-growth-surface.query.adj` and `facts_speleothemgrowthsurface_e2e.rs` (5 tests: the
+  classic pair settled with its citation, both grounding sentences carried, backward recall from the
+  surface, and the two abstentions with negative assertions that no wrong surface is ever bound). New
+  manifest objective `adj.science.3to5.speleothem_growth_surface`.
+
+- `civics/elector-allocation-method.adj` (new) — a `table` recording how a jurisdiction assigns
+  its presidential electors: `elector_allocation_method(jurisdiction, method)`,
+  `forty_eight_states_and_dc` → `winner_take_all`, `maine` → `proportional`, `nebraska` →
+  `proportional`. The TENTH library in the `civics/` domain, from the same USA.gov "Electoral
+  College" page, curl-fetched and read byte-for-byte. `trust authoritative`.
+
+  THIS FILE CLOSES A DOCUMENTED ABSTENTION. `electoral-college-count.adj` holds
+  `winner_take_all_states -> 48` and deliberately declined the Maine/Nebraska fact, its header
+  recording that a proportional system is "a METHOD, not a count … Different axis, its own future
+  table". This is that table. The two compose rather than overlap — the count table says HOW MANY
+  jurisdictions are winner-take-all, this one says WHICH METHOD a named jurisdiction uses — and an
+  e2e test imports both to demonstrate it. Both columns are source-stated, across two consecutive
+  sentences.
+
+  WHY THE GROUP ROW IS KEPT. It would have been simpler to table only the two exception states, but
+  shipping an exception without the rule it is an exception TO would leave a learner able to recall
+  that Maine is proportional without being able to recall that almost nowhere else is. The group
+  atom is `forty_eight_states_and_dc` because that is exactly how the source delimits the group ("In
+  48 states and Washington, D.C."); a vaguer `most_states` would be a paraphrase the page never
+  uses, and a bare `other_states` would hide that the source states a specific count. That count
+  also travels, with its own citation, in `electoral-college-count.adj`'s `winner_take_all_states`
+  row, so if a future apportionment changes the number both rows are re-derived from the same
+  re-fetched sentence rather than one silently disagreeing with the other.
+
+  Honest abstention on `california` — and on every other individual state. The source describes the
+  other 48 only as a GROUP, so binding a specific state name would require deciding it is one of
+  them, an inference the page does not license for ANY particular state. This is the abstention
+  worth reading: a model asked "how does California award its electors?" answers confidently, and
+  this table declines, which is the entire point of a grounded recall library. Also abstains on the
+  proportional MECHANISM — the page names the system without explaining HOW it apportions (by
+  congressional district, statewide, or otherwise), so the well-known detail must not be filled in
+  from outside the source. And the faithless-elector penalties the same page lists (fined,
+  disqualified, replaced by a substitute elector, prosecuted by their state) are consequences for an
+  individual elector's vote rather than a jurisdiction's allocation method, and the list states no
+  second axis uniformly — only one of the four names who imposes it — so it is not tabled here or
+  anywhere. New `elector-allocation-method.query.adj` and `facts_electorallocationmethod_e2e.rs`
+  (5 tests: Maine's method with its citation, reverse recall returning BOTH exception states, the
+  group row preserving the rule the exception is an exception to, cross-library composition with
+  `electoral_college_count`, and honest abstention on an unplaced state and on the unexplained
+  mechanism). New manifest objective `adj.civics.3to5.elector_allocation_method` with no
+  prerequisite — elections are their own strand.
+
+- `civics/electoral-college-count.adj` (new) — a `table` holding the numbers USA.gov states
+  about the U.S. Electoral College: `electoral_college_count(quantity, count)`, `total_electors` →
+  538, `district_of_columbia_electors` → 3, `electors_needed_to_win` → 270,
+  `winner_take_all_states` → 48. The NINTH library in the `civics/` domain and the first about
+  elections themselves, sourced from USA.gov's "Electoral College" page — curl-fetched and read
+  byte-for-byte, with the URL reachability-checked before any scoping work. `trust authoritative`.
+
+  "How many electoral votes do you need to win?" has an exact, checkable answer, and exact numbers
+  are precisely the sort of fact that should come from a citation rather than a model's
+  recollection — so every answer carries the sentence stating it, and a dedicated test checks the
+  threshold sentence rides along rather than only that the binding is 270.
+
+  THE FIRST COLUMN NAMES WHAT IS COUNTED, because the units differ: three rows count ELECTORS and
+  one counts STATES, so a bare `count` column would be ambiguous on its own. The quantity atom
+  carries the unit (`total_electors`, `winner_take_all_states`) rather than leaving a reader to
+  infer it from context.
+
+  WHERE THE HEDGE LIVES. The source says "there are CURRENTLY 538 electors in all", and that
+  qualifier is real — the total tracks congressional apportionment, so it is stable but not
+  constitutionally fixed. Unlike `veto-override.adj`, where the source's "in most cases" attaches to
+  a distinguishable VALUE and therefore lives inside the recalled atom, here the hedge qualifies the
+  whole count, so the faithful placement is the citation: the verbatim sentence carrying "currently"
+  travels with every answer, and a test asserts it, so a reader does not inherit a bare number
+  presented as timeless.
+
+  ENCODING NOTE, recorded because it cost a detour. The "270 electors" sentence contains U+2014 EM
+  DASHes, and a verification that piped CLI stdout through a Python reader appeared to show them
+  mangled. That was the READER decoding UTF-8 with the Windows default codepage, not a CLI defect —
+  the CLI emits correct UTF-8 (`\xe2\x80\x94`) and the sentence is byte-identical to the source
+  when decoded properly. On Windows, verify verbatim citations by reading the bytes and decoding
+  UTF-8 explicitly, or assert from Rust where `String::from_utf8` handles it. A test now pins the
+  em-dash round trip, and asserts the dash has not degraded to a hyphen, so nobody re-investigates
+  the phantom.
+
+  Honest abstention on Maine and Nebraska's proportional METHOD of assigning electors (not a count,
+  and the reason those two states are excluded from the 48); on the three components the page lists
+  for the process — selection of electors, meeting of electors, counting of the votes by Congress —
+  which are a list of what the process INCLUDES and are not numbered, so tabling them as an ordered
+  sequence would assign positions the source never states (see `bill-stage-successor.adj`'s header
+  for the case that established this rule); on "this has happened twice" and the 2016/2000
+  popular-vote outcomes, which count HISTORICAL OCCURRENCES rather than the size of the College; and
+  on the penalties a faithless elector may face (fined, disqualified, replaced, prosecuted), which
+  are consequences rather than counts. New `electoral-college-count.query.adj` and
+  `facts_electoralcollegecount_e2e.rs` (5 tests: the winning threshold with its sentence, the
+  em-dash round trip, every stated number covered, the "currently" hedge carried, and honest
+  abstention on a method and a historical count). New manifest objective
+  `adj.civics.3to5.electoral_college_count` with no prerequisite — elections are their own strand,
+  and inventing an edge to the branches/Congress chain would misrepresent the dependency graph.
+
+- `civics/voting-requirement-exception.adj` (new) — a `table` holding the carve-out USA.gov
+  states for each U.S. voting requirement: `voting_requirement_exception(requirement, exception)`,
+  `us_citizenship` → `non_citizens_may_vote_in_some_local_elections_only`, `state_residency` →
+  `experiencing_homelessness_still_meets_it`, `age_eighteen_by_election_day` →
+  `some_states_allow_seventeen_year_olds_in_primaries`, `voter_registration_by_state_deadline` →
+  `north_dakota_does_not_require_registration`. The EIGHTH library in the `civics/` domain and the
+  FIRST from the voting pages, sourced from USA.gov's "Who can and cannot vote" page — curl-fetched
+  and read byte-for-byte, with the URL reachability-checked from this machine before any scoping
+  work. `trust authoritative`.
+
+  WHY THE EXCEPTIONS AND NOT THE REQUIREMENTS. The four requirements are a flat bulleted list with
+  no second column the source states, so a `requirement → description` table would have had to
+  paraphrase each bullet into a description the page never separately gives — the same trap the
+  how-laws-are-made idea-origin list sets, and a violation of the rule
+  `bill-stage-successor.adj` established one slice earlier (match the shape of the SOURCE, not a
+  familiar table shape). The EXCEPTIONS are different: the page attaches exactly one stated
+  carve-out to each of the four bullets, so `requirement → exception` is a relation the source
+  genuinely supplies on both sides, uniformly, with nothing invented.
+
+  It is also the more useful half. An LLM asked "do you have to register to vote?" will confidently
+  say yes; that North Dakota requires no voter registration at all is precisely the sort of detail
+  that disappears into a confident summary. Recalling the carve-out WITH its citation is the
+  behaviour this stdlib exists to make possible, so a dedicated e2e test asserts that specific row
+  and its verbatim sentence rather than only checking the table loads.
+
+  Honest abstention on the page's separate "Who cannot vote?" section — non-citizens including
+  permanent legal residents, some people convicted of a felony, some people with a mental
+  disability, and U.S. citizens residing in U.S. territories (who cannot vote for president in the
+  general election). Those state DISQUALIFICATIONS, not exceptions to a requirement: "you do not
+  qualify because of X" is the opposite claim from "you still qualify despite X", and folding them
+  into one table would look like broader coverage while reversing the meaning of half the rows. They
+  belong in their own table. Also abstains on the registration bullet's "In almost every state, you
+  can register to vote before you turn 18…", which is about WHEN you may register rather than an
+  exception to whether registration is required. New `voting-requirement-exception.query.adj` and
+  `facts_votingrequirementexception_e2e.rs` (5 tests: the North Dakota carve-out with its verbatim
+  sentence and citation, all four requirements carrying their stated exception, all four grounding
+  sentences carried as one `source` plus three `cites`, backward recall from exception to
+  requirement, and honest abstention on two disqualifications). New manifest objective
+  `adj.civics.3to5.voting_requirement_exception`, with NO prerequisite — voting is a separate strand
+  from the branches/Congress chain, and inventing an edge to it would misrepresent the dependency
+  graph.
+
+- `civics/bill-stage-successor.adj` (new) — a `table` recording which stage a bill moves to
+  next on its way through Congress: `bill_stage_successor(stage, next_stage)`, seven rows chaining
+  `introduced` → `committee_review` → `first_chamber_vote` → `second_chamber_process` →
+  `reconcile_differences` → `vote_on_same_version` → `presented_to_president` →
+  `president_considers`. The SEVENTH library in the `civics/` domain, from the same USA.gov "How
+  laws are made" page, curl-fetched and read byte-for-byte. `trust authoritative`.
+
+  THE FIRST ORDERED SEQUENCE IN THIS STDLIB EXPRESSED AS A SUCCESSOR RELATION RATHER THAN AN
+  ORDINAL POSITION — and the reason is the point of the slice. The obvious move was a fifth ordinal
+  table, `bill_stage_step(stage, step_number)` 1 through 7, matching `astronomy/moon-phases.adj`'s
+  `moon_phase_order`, `astronomy/planets.adj`'s `planet_order`,
+  `biology/mitosis-phase-order.adj`, and `earth-science/sedimentary-rock-formation-step.adj`. That
+  would have been wrong, and the failure would have been invisible.
+
+  Those four all decode sources that state POSITIONS: a numbered or explicitly-counted sequence.
+  This source does not. It states TRANSITIONS, in continuous narrative prose, each marked by its own
+  connective — "Once a bill is introduced, it is assigned to a committee…", "The bill is THEN put
+  before that chamber…", "IF the bill passes one body of Congress, IT GOES TO the other body…".
+  Every sentence says what comes AFTER what. None says what number anything is. Assigning absolute
+  ordinals would have required inventing an answer to a question the page never addresses: where
+  does the count start — is `introduced` step 1, or is the idea-origin list before it? Pick
+  differently and EVERY number changes, yet no test would fail and no citation would look wrong; the
+  table would simply assert positions its own source never states. A successor relation records
+  exactly the adjacency the prose does state, nothing more, and is incidentally stable: a future
+  added stage changes two rows here, where an ordinal table would renumber wholesale. GENERAL RULE
+  worth carrying forward: match the shape of the SOURCE, not the shape of the sibling tables. An
+  established shape is a convenience, never a reason to assert something the source does not say.
+
+  THE CHAIN STOPS WHERE THE SOURCE STOPS BEING LINEAR. `president_considers` has no successor row,
+  deliberately: from there the prose BRANCHES — the president "can approve the bill and sign it into
+  law", or can "refuse to approve a bill" (a veto), or may let it go unsigned into a pocket veto. A
+  successor relation cannot honestly represent a branch; it would have to pick one outcome
+  arbitrarily or return three "next stages" as if all happened. There is an e2e test asserting no
+  branch outcome is ever named as THE successor. What happens on each branch is already held by
+  `checks-and-balances.adj` (the veto as an act) and `veto-override.adj` (whether that act can be
+  undone).
+
+  Honest abstention also on the idea-origin list the same page states ("The idea for a bill can come
+  from a: Sitting member of the U.S. Senate or House of Representatives / Proposal during a
+  congressional candidate's election campaign / Petition by people or citizen groups…"), which
+  answers WHERE a bill starts rather than what stage follows what — a different axis and its own
+  future table. All seven transition sentences are carried as one `source` plus six `cites`, so each
+  row stays auditable back to the sentence whose connective states that particular hop. New
+  `bill-stage-successor.query.adj` and `facts_billstagesuccessor_e2e.rs` (4 tests: walking the whole
+  linear chain hop by hop with no index arithmetic, all seven transition sentences carried, backward
+  recall to the prerequisite stage, and the branch-point abstention including negative assertions
+  that no outcome is named as the successor). New manifest objective
+  `adj.civics.3to5.bill_stage_successor` with `congress_chamber` as prerequisite.
+
+- `civics/veto-override.adj` (new) — a `table` recording whether Congress can override each
+  kind of presidential veto: `veto_override(veto_type, override_status)`, `veto` →
+  `congress_can_override_in_most_cases`, `pocket_veto` → `cannot_be_overridden_by_congress`. The
+  SIXTH library in the `civics/` domain, from the same USA.gov "How laws are made" page
+  `chamber-exclusive-power.adj` already cites, "How a bill becomes a law" section, curl-fetched and
+  read byte-for-byte before writing. `trust authoritative`.
+
+  THE HEDGE IS PART OF THE FACT. The source does NOT say Congress can always override an ordinary
+  veto — it says "in most cases Congress can vote to override that veto". Collapsing that to a bare
+  `yes` would state something the source deliberately does not, so the atom keeps the qualifier:
+  `congress_can_override_in_most_cases`. There is an e2e test that asserts `"S":"yes"` NEVER appears
+  in the output, so a future edit cannot quietly upgrade a hedge into a certainty. The pocket-veto
+  row carries no such qualifier because its own sentence carries none ("it cannot be overridden by
+  Congress"), and the resulting asymmetry between the two atoms is therefore a faithful reflection
+  of the source rather than sloppy parallelism.
+
+  A genuinely NEW axis, not a restatement. `checks-and-balances.adj` already ships
+  `checks_and_balances(president, veto, legislation_created_by_congress)` — that row says the veto
+  EXISTS as an act one branch takes against another. This table says something that row cannot:
+  whether the act can be UNDONE, and by whom. The two compose rather than overlap — the check and
+  its own counter-check — and there is a test importing both libraries to demonstrate it. Note
+  `veto` appears as an atom in both files, but in different argument positions of DIFFERENT
+  predicates: an ACTION there, a KIND of veto here. Distinct predicates, so there is no collision to
+  disambiguate and a recall against one can never be confused with a recall against the other.
+
+  Honest abstention on the CONDITIONS that produce a pocket veto ("if the president does not sign
+  off on a bill and it remains unsigned when Congress is no longer in session, the bill will be
+  vetoed by default") — stated by the same paragraph, but answering WHEN a pocket veto happens
+  rather than whether it can be overridden, so it is a different axis and belongs in its own table;
+  on `line_item_veto`, a real term in U.S. civics vocabulary that this source never names; and on
+  the president's other two options the same paragraph states (approving and signing a bill into
+  law), which are not vetoes at all and have no override status to record. New
+  `veto-override.query.adj` and `facts_vetooverride_e2e.rs` (5 tests: the hedge survives and a bare
+  `yes` is absent, the pocket-veto row with its sentence carried verbatim, backward recall from
+  status to veto kind, composition with the `checks_and_balances` act, and honest abstention on both
+  the unnamed kind and the different-axis condition). New manifest objective
+  `adj.civics.3to5.veto_override` with `checks_and_balances` as prerequisite.
+
+- `civics/chamber-exclusive-power.adj` (new) — a `table` naming the lawmaking power each
+  chamber of Congress holds EXCLUSIVELY: `chamber_exclusive_power(chamber, power)`,
+  `house_of_representatives` → `initiate_tax_and_revenue_legislation`, `senate` →
+  `draft_legislation_on_presidential_nominations_and_treaties`. The FIFTH library in the `civics/`
+  domain and the FIRST from a source page other than "Branches of the U.S. government" — that page
+  is now fully decoded by `government-branch-member.adj`, `congress-chamber.adj`,
+  `checks-and-balances.adj`, and the derived `chamber-branch.adj`, so this slice opens a new page
+  and a new axis rather than restating a mined one.
+
+  Sourced from USA.gov's "How laws are made" page, "How the House and Senate's lawmaking procedures
+  are different" section, curl-fetched and read byte-for-byte before writing. Both rows are verbatim
+  "Only the …" sentences — that phrasing is exactly what makes them EXCLUSIVE powers rather than
+  powers a chamber merely happens to have — carried as one `source` plus one `cites`.
+  `trust authoritative`, the same tier the four sibling civics libraries cite. (The candidate URL was
+  fetch-verified from this machine BEFORE scoping, along with four other usa.gov civics pages, all
+  200; whitehouse.gov, bensguide.gpo.gov, senate.gov and loc.gov all 403/404 here, so source
+  reachability is checked first rather than assumed.)
+
+  ATOM REUSE IS LOAD-BEARING, NOT COSMETIC. This table deliberately binds the same
+  `house_of_representatives`/`senate` atoms `congress-chamber.adj` already established, so it
+  composes with the shipped civics graph instead of forking a parallel vocabulary. Chained through
+  the derived `chamber_branch` rule, a learner can now get from an exclusive power all the way to a
+  branch — `chamber_exclusive_power(house_of_representatives, initiate_tax_and_revenue_legislation)`
+  then `chamber_branch(house_of_representatives, legislative)` — and there is an e2e test that walks
+  that chain end to end. A forked chamber vocabulary would have broken this silently. Note the source
+  writes "the House" in both sentences while naming it "The U.S. House of Representatives" elsewhere;
+  the longer atom is used because it is the one the sibling established.
+
+  Honest abstention on `supreme_court` (not a chamber of Congress at all) and on the
+  majority-vote/deliberation contrast — a real House/Senate difference the SAME section states, but
+  it describes a PROCEDURE each chamber uses, not a kind of legislation only that chamber may
+  originate, so it is a different axis and belongs in its own table rather than flattened in beside
+  two "Only the …" powers. Also distinguished from `checks-and-balances.adj`: that library holds what
+  one part of government can do TO another, so
+  `checks_and_balances(congress, confirm_or_reject, presidential_nominees)` is a distinct fact from
+  this table's senate row — confirming a nominee is a check on the executive, whereas drafting
+  legislation RELATED TO nominations and treaties is a lawmaking power the Senate holds alone.
+
+  NAMING NOTE recorded in the header to save a future reader a grep: `money/us-bills.adj` and
+  `money/bill-back-vignette.adj` use the atom `bill` for CURRENCY. That is a homonym, not legislative
+  coverage — a naive grep for "bill" will mislead. New `chamber-exclusive-power.query.adj` and
+  `facts_chamberexclusivepower_e2e.rs` (4 tests: both powers with citation and both grounding
+  sentences carried, backward recall from power to chamber, the cross-library composition chain
+  through to a branch, and honest abstention on the non-chamber and the procedural contrast). New
+  manifest objective `adj.civics.3to5.chamber_exclusive_power` with `congress_chamber` as
+  prerequisite.
+
+- `civics/chamber-branch.adj` (new) — **DERIVED, not looked up**: the FIRST `rule` in the
+  `civics/` domain, grounding which BRANCH of the U.S. federal government a named CHAMBER of
+  Congress belongs to — `chamber_branch(chamber, branch)`, `senate` → `legislative`,
+  `house_of_representatives` → `legislative`.
+
+  The point of this library is that **the cited source never states the conclusion**. USA.gov's
+  "Branches of the U.S. government" page does not write "the Senate is part of the legislative
+  branch". It writes two separate facts one level apart: "The legislative branch is made up of
+  Congress:" (the branch's member is Congress) and, nested beneath that stem, "The U.S. Senate"
+  (the Senate is a chamber OF Congress). This rule derives the answer by composing the two
+  already-shipped, already-grounded tables through the `congress` atom they both independently
+  bind — `congress_chamber($Chamber, $Body), government_branch_member($Branch, $Body)` — rather
+  than asserting a third row nobody could trace back to a sentence. Every answer therefore carries
+  BOTH premises' citations in a three-step proof trail (rule + both facts): the provenance of the
+  conclusion is the composition of the provenance of its premises, which is exactly the property
+  that makes a derived answer auditable rather than merely plausible. Same shape
+  `biology/abo-genotype-antigen.adj` established for heredity, applied to the civics graph.
+
+  WHY THIS IS THE RIGHT WAY TO ANSWER IT — and why two earlier decisions that looked like extra
+  work were not. `government-branch-member.adj` deliberately ABSTAINS on
+  `senate`/`house_of_representatives`, because the source nests them under Congress rather than
+  naming them as direct members of the branch; `congress-chamber.adj` was then split out as its own
+  predicate specifically so that nesting would not be flattened away. Both of those decisions were
+  made so this rule could exist. Deriving the fact here — instead of quietly adding
+  `government_branch_member(legislative, senate)` back as a row — keeps the source's own two-level
+  structure intact AND still answers the learner's question. The abstention was never a gap to be
+  papered over; it was the seam the derivation joins on.
+
+  Runs BACKWARD too (`? chamber_branch($C, legislative)` enumerates both chambers). ABSTENTION IS
+  INHERITED, NOT RESTATED: the rule adds no facts of its own, so it abstains exactly where its
+  premises do — `supreme_court` and `president` are named institutions of the other two branches,
+  `congress_chamber` abstains on both, so the derivation finds no premise to join and abstains too
+  rather than inventing a chamber-of relationship. New `chamber-branch.query.adj` and
+  `facts_chamberbranch_e2e.rs` (4 tests: the derivation itself with a `rule` step in the trail,
+  BOTH premise citations carried in the proof trail, reverse enumeration of a branch's chambers,
+  and inherited abstention). New manifest objective `adj.civics.3to5.chamber_branch` — the first
+  civics objective with competency `infer` rather than `recall`, and the first with TWO
+  prerequisites (`congress_chamber` and `government_branch_member`), mirroring the two-hop
+  derivation it performs.
+
+- `civics/checks-and-balances.adj` (new) — a THREE-column `table` naming which act each part
+  of the U.S. federal government can take against the others:
+  `checks_and_balances(actor, action, object)`, with five rows —
+  `president`/`veto`/`legislation_created_by_congress`,
+  `president`/`nominate`/`federal_agency_heads_and_high_court_appointees`,
+  `congress`/`confirm_or_reject`/`presidential_nominees`,
+  `congress`/`remove_from_office`/`president`, and
+  `supreme_court`/`overturn`/`unconstitutional_laws`. The THIRD library in the `civics/` domain
+  and the first here that is genuinely RELATIONAL rather than a lookup: rows are not "X is a kind
+  of Y" but "actor A can do action B to object C", so EVERY column can be the bound one and a
+  single table answers three different question shapes — "what can the president do to the other
+  branches?" (bind the actor), "who can veto?" (bind the action), and "who acts on the president?"
+  (bind the object, a question neither sibling civics library can answer). Three columns is the
+  same arity `physics/energy-conversion-example.adj` already ships.
+
+  Each row is a subject-verb-object decomposition of exactly one `<li>` in the page's "How each
+  branch of government provides checks and balances" list — nothing merged across bullets, nothing
+  the source states as one act split apart — and because the five rows come from five different
+  sentences, each row's own grounding sentence is carried verbatim in the `source`/`cites` tail so
+  every row stays auditable back to one sentence. Raw markup curl-fetched and read byte-for-byte
+  before writing: an `<h2>`, a lead-in `<p>`, a second `<p>` reading "Each branch of government can
+  change acts of the other branches:", and a `<ul>` of exactly three `<li>` items stating the five
+  acts. `trust authoritative`, the same tier and the SAME page the two sibling civics libraries
+  already cite.
+
+  DESIGN NOTE — the third column is the OBJECT ACTED UPON, not the BRANCH acted upon. The obvious
+  design for a checks-and-balances table is branch → action → branch, and it is wrong for this
+  source. Three of the five sentences do name another part of government as their object, but the
+  Supreme Court's does not: it names LAWS. A branch-typed target would force either abstaining on
+  the Supreme Court row — leaving the JUDICIAL branch unrepresented in a table whose whole subject
+  is the balance BETWEEN the three branches — or inferring "unconstitutional laws" → "Congress",
+  which the sentence never states (it does not say whose laws, and courts also review state law and
+  executive action). Object-typing keeps all three branches represented with every row
+  verbatim-grounded and nothing inferred; the branch-to-branch graph remains available by composing
+  with `government-branch-member.adj`, the same composition-over-assertion principle
+  `congress-chamber.adj` was split out for.
+
+  Honest abstention on "These justices are nominated by the president and confirmed by the Senate"
+  (a real sentence in the same `<li>`, but a PASSIVE restatement of two checks this table already
+  holds in the active voice — tabling it again would double-count them under swapped subjects), on
+  the section's lead-in "The ability of each branch to respond to the actions of the other branches
+  is the system of checks and balances" (a definition of the system, not an act by a branch, with
+  no actor/action/object to decompose), and on every power in the page's separate per-branch "key
+  roles" lists — drafting proposed laws, surveying the budget, declaring war — which describe what
+  a branch does in its OWN right rather than what it does to ANOTHER branch. New
+  `checks-and-balances.query.adj` and `facts_checksandbalances_e2e.rs` (5 tests: both presidential
+  checks with citation, all five grounding sentences carried as source + corroborations, backward
+  recall on BOTH the action and the object columns, all-three-branches-represented — which is
+  precisely what the object-typed third column buys — and honest abstention on both the passive
+  restatement and an own-key-role power). New manifest objective
+  `adj.civics.3to5.checks_and_balances` with `adj.civics.3to5.government_branch_member` as a
+  prerequisite.
+
+- `civics/congress-chamber.adj` (new) — a `table` naming the two chambers the U.S.
+  Congress is divided into: `congress_chamber(chamber, parent)`, `senate` → `congress`,
+  `house_of_representatives` → `congress`. The SECOND library in the `civics/` domain, and it
+  ships expressly to CLOSE an abstention its own sibling deliberately opened:
+  `government-branch-member.adj` abstains on `senate`/`house_of_representatives` because USA.gov's
+  "Branches of the U.S. government" page nests them UNDER Congress in a colon-introduced sub-list
+  rather than naming them as direct members of the branch, and that file's header names THIS table
+  as their intended home. Sourced from the same page, whose raw markup was curl-fetched and read
+  byte-for-byte before writing: the stem is a single `<p>` reading "The legislative branch is made
+  up of Congress:" (the linked anchor text inlined) and the two chambers are its
+  immediately-following `<ul>`'s only two `<li>` items, with no third — so the two-chamber domain
+  is covered with no gaps. `trust authoritative`, the same tier and the same page
+  `government-branch-member.adj` already cites.
+
+  Kept as a SEPARATE predicate rather than two more rows on `government_branch_member`, because the
+  sub-list states a DIFFERENT relation: that table answers "who makes up this BRANCH", this one
+  answers "what are the chambers of this BODY". Flattening the chambers into branch members would
+  have silently discarded one level of the nesting the source itself states. Keeping them apart
+  means the two COMPOSE instead — `congress_chamber(senate, congress)` and
+  `government_branch_member(legislative, congress)` are the two premises that ground "the Senate is
+  part of the legislative branch" as an auditable two-hop derivation whose provenance is the
+  composition of its premises, rather than a third asserted row nobody can trace back to a
+  sentence. (The derived `rule` itself is a natural next slice and is deliberately NOT part of this
+  one.) The relation is MULTI-VALUED on `parent`, which is the direction actually asked: "what are
+  the two chambers of Congress?" is one query returning two solutions.
+
+  Honest abstention on `supreme_court` and `president` — genuinely named institutions the SAME
+  source names, but of the judicial and executive branches, not chambers of Congress; both are
+  already correctly tabled in `government-branch-member.adj` against their own branches — and on
+  `special agencies and offices that provide support services to Congress`, the open-ended category
+  phrase the same paragraph attaches to the legislative branch, which names no specific body and is
+  not part of the chamber sub-list at all. New `congress-chamber.query.adj` and
+  `facts_congresschamber_e2e.rs` (4 tests: forward recall + citation check, multi-valued
+  two-chamber enumeration, a COMPOSITION test importing both civics libraries together and
+  asserting they meet at the same `congress` atom, and honest abstention on both other-branch
+  institutions). New manifest objective `adj.civics.3to5.congress_chamber`, declaring
+  `adj.civics.3to5.government_branch_member` as a prerequisite — the first civics objective with a
+  prerequisite edge.
+
+- `civics/government-branch-member.adj` (new) — a `table` naming which officer or institution
+  makes up each branch of the U.S. federal government:
+  `government_branch_member(branch, member)`, `legislative` → `congress`, `judicial` →
+  `supreme_court`, `executive` → `president` / `vice_president` / `president_cabinet`. This
+  opens a BRAND-NEW `civics/` domain — the first entry against the "Social knowledge → Civics"
+  Major Gap that ADJ-STDLIB-COVERAGE.md §5.1 has carried unaddressed since the coverage baseline
+  was measured, and the first non-`money`/`transportation` entry in the social-knowledge area at
+  all. A full-tree grep for `legislative`, `judicial`, `executive_branch`, `branch_of_government`,
+  `congress`, and `supreme_court` across every shipped `.adj` returned nothing beforehand, so
+  there is no existing table for this to duplicate. Sourced from USA.gov's "Branches of the U.S.
+  government" page (curl-fetched and read byte-for-byte before writing, not an AI-summarized
+  WebFetch); `trust authoritative` — USA.gov is the General Services Administration's official
+  guide to government information, a first-party .gov publisher of exactly the fact recalled, the
+  same tier this stdlib reserves for NASA/NOAA/USGS/NPS/NIST. The relation is deliberately
+  MULTI-VALUED on `branch` (one cited sentence names all three executive members at once, so the
+  executive query yields three solutions), and runs BACKWARD as a genuine reverse recall —
+  "which branch is the Supreme Court part of?" being the direction an elementary civics learner
+  is actually quizzed in. ROW-INCLUSION RULE, applied uniformly to all three branches: a row
+  ships only for a NAMED officer or NAMED institution the page states a branch is made up of or
+  includes. Honest abstention on `senate` and `house_of_representatives` — genuinely named
+  institutions the SAME page names, but nested UNDER Congress in a colon-introduced sub-list,
+  making them CHAMBERS OF CONGRESS rather than direct members of the branch; flattening them into
+  rows here would silently discard the nesting the source states, so they are left to a future
+  `congress_chamber` table — and on every open-ended category phrase (`other federal courts`,
+  `special agencies and offices that provide support services to Congress`, `Executive
+  departments`, `Independent agencies`, `Other boards, commissions, and committees`), which name
+  no specific body to bind a stable atom to. New `government-branch-member.query.adj` and
+  `facts_governmentbranchmember_e2e.rs` (4 tests: forward recall + citation check, reverse
+  recall, multi-valued executive enumeration, honest abstention on both a chamber and a category
+  phrase). New manifest coverage root `c3.socialstudies` (the C3 Framework for Social Studies
+  State Standards — no social-studies root existed, so civics objectives had nothing to map to;
+  declared at the same `status: "declared"`, `cas_hash: null` tier as `ngss`, with the official
+  NCSS-hosted PDF as locator, whose identity was verified by fetching it and reading its title
+  page, since socialstudies.org's HTML pages are Cloudflare-blocked from this box) and new
+  objective `adj.civics.3to5.government_branch_member`, both added via a surgical text edit
+  (JSON validated before write, parsed back out to confirm, `git diff --stat` showing +24 lines
+  and no reformatting).
+
 - `earth-science/sedimentary-rock-formation-step.adj` (new) — a `table` naming the three
   ordered stages of sedimentary rock formation and each stage's numbered position:
   `sedimentary_rock_formation_step(stage, step_number)`, `weathering` → 1, `erosion` → 2,

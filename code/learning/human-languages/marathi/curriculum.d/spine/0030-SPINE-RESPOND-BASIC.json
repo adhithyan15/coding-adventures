@@ -1,7 +1,8 @@
 {
   "segments": [
     "MR-PATH-003",
-    "MR-PATH-C1P"
+    "MR-PATH-C1P",
+    "MR-PATH-027"
   ],
   "omits": [
     "RESPONSE-YESNO"

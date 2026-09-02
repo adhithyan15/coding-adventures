@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:af211b9a67a63a6f",
+  "sourceHash": "fnv1a64:d7977acf76cbb666",
   "lessons": [
     {
       "id": "ML-C05-samsaarikkuka",
       "sequence": 270,
       "title": "സംസാരിക്കുക (saṁsārikkuka) — \"to speak,\" your first full verb",
       "headword": "സംസാരിക്കുക",
-      "romanization": "",
+      "romanization": "saṁsārikkuka",
       "gloss": "to speak, to converse",
       "script": "malayalam",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a7e1387959fa097",
+      "sourceHash": "fnv1a64:5359ac6b117871d9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -112,7 +112,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സം (saṃ) + സാ (sā) + രി (ri) + ക്കുക (kkuka) becomes സംസാരിക്കുക."
+              "text": "സം (saṃ) + സാ (sā) + രി (ri) + ക്കുക (kkuka) becomes സംസാരിക്കുക (saṁsārikkuka)."
             }
           ]
         },
@@ -180,7 +180,7 @@
       "sequence": 280,
       "title": "ഞാൻ മലയാളം സംസാരിക്കുന്നു (ñān malayāḷaṁ saṁsārikkunnu) — \"I speak Malayalam\"",
       "headword": "ഞാൻ മലയാളം സംസാരിക്കുന്നു",
-      "romanization": "",
+      "romanization": "ñān malayāḷaṁ saṁsārikkunnu",
       "gloss": "I speak Malayalam",
       "script": "malayalam",
       "modality": "sight",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:47b983e2f90a685e",
+      "sourceHash": "fnv1a64:cd7672c1e94a6d15",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -235,7 +235,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഞാൻ മലയാളം സംസാരിക്കുന്നു = ഞാൻ (ñān, \"I\") + മലയാളം (malayāḷaṁ, the object) + സംസാരിക്കുന്നു (saṁsārikkunnu, \"speak\") — \"I Malayalam speak,\" the verb last. The name മലയാളം (malayāḷaṁ) is native Dravidian: മല (mala, \"mountain\") + ആളം (āḷaṁ, \"place, region\") — \"the mountain land,\" named for the Western Ghats along the coast where it is spoken. Its signature retroflex ള (ḷ) sits right in the middle of the word."
+              "text": "ഞാൻ മലയാളം സംസാരിക്കുന്നു (ñān malayāḷaṁ saṁsārikkunnu) = ഞാൻ (ñān, \"I\") + മലയാളം (malayāḷaṁ, the object) + സംസാരിക്കുന്നു (saṁsārikkunnu, \"speak\") — \"I Malayalam speak,\" the verb last. The name മലയാളം (malayāḷaṁ) is native Dravidian: മല (mala, \"mountain\") + ആളം (āḷaṁ, \"place, region\") — \"the mountain land,\" named for the Western Ghats along the coast where it is spoken. Its signature retroflex ള (ḷ) sits right in the middle of the word."
             }
           ]
         },

@@ -21,14 +21,15 @@
 //! visible too (comfortably beyond what unbounded Rust recursion could
 //! survive on a default thread stack).
 
-use wasm_execution::{HostFunction, Table, WasmEngineConfig, WasmExecutionEngine, WasmValue};
+use std::rc::Rc;
+use wasm_execution::{HostFunction, Table, TableElement, WasmEngineConfig, WasmExecutionEngine, WasmValue};
 use wasm_types::{FuncType, FunctionBody, WasmModule};
 
 fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     let module = wasm_wast_parser::parse_module(wat).expect("module should parse");
     let func_types: Vec<FuncType> = module.functions.iter().map(|&t| module.types[t as usize].clone()).collect();
     let func_bodies: Vec<Option<FunctionBody>> = module.code.iter().cloned().map(Some).collect();
-    let host_functions: Vec<Option<Box<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
+    let host_functions: Vec<Option<Rc<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
 
     // Build tables (only needed by the return_call_indirect test below)
     // and apply this module's element segments -- see wasm07_regression.rs's
@@ -41,7 +42,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     for elem in &module.elements {
         if let Some(table) = tables.get_mut(elem.table_index as usize) {
             for (j, &func_idx) in elem.function_indices.iter().enumerate() {
-                table.set(j as u32, func_idx).expect("elem segment should fit the table");
+                table.set(j as u32, func_idx.map(TableElement::Raw)).expect("elem segment should fit the table");
             }
         }
     }

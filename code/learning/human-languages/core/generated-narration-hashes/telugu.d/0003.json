@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 3,
-  "sourceHash": "fnv1a64:f9bcb1dd350456aa",
+  "sourceHash": "fnv1a64:845cc27abc245772",
   "lessonIds": [
     "TE-C03-elaa",
     "TE-C03-miiru-elaa-unnaaru",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch03.txt",
   "json": "telugu/narration/ch03.json",
-  "textHash": "fnv1a64:a5a5b4998fe3b9d1",
-  "jsonHash": "fnv1a64:7e2a538e46bf4d87",
+  "textHash": "fnv1a64:339c464df1002828",
+  "jsonHash": "fnv1a64:94a0dca07937b516",
   "findings": []
 }

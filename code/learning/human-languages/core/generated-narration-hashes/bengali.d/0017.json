@@ -1,0 +1,25 @@
+{
+  "language": "bengali",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:b3f39eb8aa3bd543",
+  "lessonIds": [
+    "BN-W02-naam-read",
+    "BN-W02-i-matra",
+    "BN-W02-ami-read",
+    "BN-W02-la",
+    "BN-W02-lal-read",
+    "BN-W02-ta",
+    "BN-W02-tin-read",
+    "BN-W02-u-matra",
+    "BN-W02-tumi-read",
+    "BN-W02-e-matra",
+    "BN-W02-kemon-read"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch17.txt",
+  "json": "bengali/narration/ch17.json",
+  "textHash": "fnv1a64:524be59f59507c9f",
+  "jsonHash": "fnv1a64:6863d4f4d6cab9fc",
+  "findings": []
+}

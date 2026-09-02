@@ -1,5 +1,13 @@
 # Changelog — diagram-ir
 
+## 0.98.0
+
+- Add typed Kanban board/card semantic IR and resolved board geometry.
+
+## 0.97.0
+
+- Add typed packet field semantic IR and backend-neutral layout geometry.
+
 ## 0.92.0
 
 - Represent Gantt signed variable-width years as a typed date-format part.

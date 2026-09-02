@@ -1,0 +1,20 @@
+% ============================================================================
+% veto-override.query.adj — worked recall over the veto-override library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "can Congress override
+% a pocket veto?" (direct), "which kind of veto can't be overridden?"
+% (reverse), or "can Congress override a line-item veto?" (abstain) — it
+% states no fact of its own — it only `import`s the grounded table and asks
+% binding queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli veto-override.query.adj
+% ============================================================================
+
+import "veto-override.adj"
+
+? veto_override(veto, $S)                                % expect congress_can_override_in_most_cases -- note the hedge is part of the fact, not a bare yes
+? veto_override(pocket_veto, $S)                          % expect cannot_be_overridden_by_congress (direct)
+? veto_override($T, cannot_be_overridden_by_congress)     % expect pocket_veto (reverse)
+? veto_override(line_item_veto, $S)                       % expect abstain -- a real civics term, but this source never names it
+? veto_override($T, congress_out_of_session)              % expect abstain -- that is the CONDITION producing a pocket veto, a different axis from overridability

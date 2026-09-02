@@ -32,22 +32,33 @@ and book-only human pass evidence remain backlog.
 
 ## Current authored boundary
 
-Canonical data currently contains **27 chapters and 165 lessons**. All 165
+Canonical data currently contains **28 chapters and 179 lessons**. All 179
 lessons are mapped and generated, and every lesson stays within the five-minute
 cap. The pre-A1 writing-stage contract is complete, all 41 Gujarati forms shown
 by the current book are explicitly taught, and the exact script inventory has
 no never-taught glyphs.
 
+The script side is now closed on both of its measures. Every native-script
+headword in the track carries a romanization, so no headword is load-bearing
+before the reader can say it, and **no lesson asks the reader to decode a glyph
+nobody taught** — the two remaining closure findings are gone, and the last of
+them went by moving three gender endings out of Gujarati script and into
+romanization in a chapter that had not yet taught the two signs concerned.
+
 That is a solid pre-A1 foundation, not a finished course. The exact pre-A1
-headword inventory now contains 44 words. Two zero-new-atom checkpoints now
-close the newest route performance's R1 window and the school/road meaning and
-script R2 windows; the school lesson also returns city writing at R1. Current
-measured continuity debt is pinned at 299 windows by the corpus tests rather
-than treated as mastery. It still includes six atoms never revisited, two lesson
-atom spikes, one chapter atom spike, two script-closure findings, and one
-measurement-blind lesson. Vocabulary breadth, grammar, listening volume,
-connected reading, free writing, speaking, every later level, and examination
-materials still require substantial expansion.
+headword inventory now contains 52 words against a 300-word floor, and the
+newest chapter is deliberately ear-first: fourteen lessons, eight new words, and
+only two of them ever shown on the page. 56% of the track is now drivable by
+ear, up from 52%. Current measured continuity debt is pinned at 339 windows by
+the corpus tests rather than treated as mastery. That figure rose while the
+track improved, and the reason is worth stating plainly: R4 opens 80 lessons
+after an atom appears, so a longer track can measure atoms a shorter one could
+not, and the core-verb chapters (13-16) became measurable at the same moment
+they were found wanting. Five atoms are still never revisited, two lesson atom
+spikes and one chapter atom spike remain, and one lesson remains
+measurement-blind. Vocabulary breadth, grammar, listening volume, connected
+reading, free writing, speaking, every later level, and examination materials
+still require substantial expansion.
 
 | Chapters | Authored capability |
 | --- | --- |
@@ -57,6 +68,7 @@ materials still require substantial expansion.
 | 11-18 | Use first verbs and numbers, then build small domains around thought, reading, food, family, and the body. |
 | 19-23 | Retrieve early script and conversation atoms at genuine third and fourth spacing windows. |
 | 24-27 | Hear, say, read, and write ten concrete map words through separate four-skill checks, then retrieve the newest route atoms at measured R1/R2 intervals. |
+| 28 | Acquire eight everyday time words by ear before any of them is shown, write the two whose signs were taught long before, and close on four separately scored skills plus two measured returns. |
 
 The exact chapter titles, lesson ranges, and ordered lesson IDs are in the
 [session map](session-map.md). The [roadmap](roadmap.md) separates this authored

@@ -1,0 +1,97 @@
+% ============================================================================
+% speleothem-growth-surface — which cave surface a named dripstone
+% speleothem grows from (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% "Which one hangs from the ceiling — the stalactite or the stalagmite?" is
+% the single most-confused pair in elementary Earth science, and it is
+% exactly the kind of question that should be answered from a citation
+% rather than from a mnemonic. Recall is a binding query:
+%
+%     ? speleothem_growth_surface(stalactite, $S)
+%       % cave_ceiling
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `speleothem_growth_surface(speleothem, surface)` carrying the
+% source citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the surface WITH its source, on the CPU, with zero
+% model calls, and abstains on any speleothem the source does not place on
+% a single growth surface. The query also runs BACKWARD, which is the
+% direction the confusion actually runs in:
+%
+%     ? speleothem_growth_surface($P, cave_floor)
+%       % stalagmite
+%
+% FIRST cave/karst library in this stdlib — a full-tree grep for
+% `speleothem`, `stalactite`, `stalagmite`, `dripstone` and `flowstone`
+% across every shipped `.adj` returned nothing beforehand, so there is
+% nothing here to duplicate. It joins the existing earth-science/ and
+% geology/ families (rock types, weathering causes, soil horizons, the
+% sedimentary formation sequence) on an axis none of them covers.
+%
+% Provenance: quoted verbatim from the U.S. National Park Service's
+% "Speleothems" article in its Caves and Karst subject series:
+%
+%     speleothem (this table's atom)   surface (this table's atom)   quote (verbatim)
+%     ------------------------------   --------------------------    ---------------------------------------------------
+%     stalactite                       cave_ceiling                  "Stalactites are the most common and most familiar
+%                                                                       of all speleothems; they resemble icicles or
+%                                                                       carrots hanging from cave ceilings."
+%     stalagmite                       cave_floor                    "Stalagmites are convex floor deposits built up by
+%                                                                       water dripping from an overhead stalactite or
+%                                                                       from the cave ceiling."
+%
+% curl-fetched the raw page and read it byte-for-byte before writing this
+% file (not just an AI-summarized WebFetch); both sentences were confirmed
+% present character-for-character, and the page was CONTENT-verified — not
+% merely status-checked — as a substantive article (118 sentences, no
+% soft-404 markers, no hub/navigation shape) rather than a landing page.
+% `trust authoritative` — the National Park Service is a first-party .gov
+% publisher of exactly the fact being recalled, and the same source
+% `earth-science/weathering-cause-type.adj` already cites for a different
+% Earth process.
+%
+% Honest abstention — and the abstentions carry as much of this file's
+% content as the two rows do:
+%
+%   - `column` is NOT a row, and the source says why in its own words:
+%     "Columns are not stalactites nor are they stalagmites; they are
+%     both, together." A column forms when "a stalagmite grows together
+%     with its counterpart feeder stalactite" — it is produced by two
+%     speleothems JOINING, not by growing from one surface, so it has no
+%     single growth surface to bind. Recording it as `cave_ceiling` or
+%     `cave_floor` would be false, and recording both would misrepresent
+%     the relation this table holds.
+%   - `helictite` is NOT a row either, though the source does place it:
+%     "Helictites grow on cave ceilings, walls, and less often on cave
+%     floors." Three surfaces, with the source's own frequency hedge on
+%     the third. Tabling one surface would silently drop the others;
+%     tabling all three as equals would flatten the "less often" the
+%     source deliberately states. It needs a different shape than this
+%     table's one-surface-per-speleothem relation, so it abstains here
+%     rather than being distorted into it.
+%   - `flowstone` and `draperies` are described by their APPEARANCE and
+%     mode of deposition ("melted cake icing", "frozen waterfalls",
+%     build-up "in layers or bands", a line down a sloped ceiling) rather
+%     than by a growth surface, so neither has a value for this relation.
+%   - `soda_straw` is the hollow tube every stalactite BEGINS as ("All
+%     stalactites, whatever their composition, begin their growth as
+%     hollow soda straws") — a developmental stage of a stalactite rather
+%     than a separately-placed speleothem, and a candidate for its own
+%     future table on a different axis.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table speleothem_growth_surface {
+    columns speleothem, surface
+
+    row (stalactite, cave_ceiling)
+    row (stalagmite, cave_floor)
+
+    source "Stalactites are the most common and most familiar of all speleothems; they resemble icicles or carrots hanging from cave ceilings."
+    locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+    trust authoritative
+
+    cites "Stalagmites are convex floor deposits built up by water dripping from an overhead stalactite or from the cave ceiling." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+}

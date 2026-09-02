@@ -74,6 +74,16 @@ type BuildPlan struct {
 	// Shards describes optional prerequisite-closed package slices that
 	// can be executed independently by parallel CI runners.
 	Shards []ShardEntry `json:"shards,omitempty"`
+
+	// CIJobs maps each gate id in the CI gate registry to whether this change
+	// requires that job. Absent when no registry was consulted. See
+	// code/specs/ci-gate-registry.md and internal/cigates.
+	//
+	// This is an additive optional field: build-plan-v1.schema.json sets
+	// additionalProperties true, and build-plan-v1.md lists adding an optional
+	// top-level field as NOT requiring a schema version bump — the same
+	// treatment platform_overrides and shards received.
+	CIJobs map[string]bool `json:"ci_jobs,omitempty"`
 }
 
 // PlatformState is the platform-specific portion of a build plan. Package

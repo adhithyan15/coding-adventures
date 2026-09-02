@@ -1,0 +1,700 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 24,
+  "title": "Bread and Rolls: One New Consonant",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:a4fe922724533127",
+  "lessons": [
+    {
+      "id": "MW-C19-hear-roti",
+      "sequence": 1820,
+      "title": "Hear roṭī — flatbread",
+      "headword": "roṭī",
+      "romanization": "roṭī",
+      "gloss": "flatbread",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b819235ce15a521",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-word food payoff, then say hand and lentils."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "roṭī — flatbread."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle consonant is made with the tongue tip curled back, further back than the d of dāl. Hear it twice and say it once. The spelling waits for the next lesson, because one sign in it has not been taught yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C19-hear-roti-meaning",
+              "prompt": "What food does roṭī name?",
+              "assesses": [
+                "MW-LEX-ROTI-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "flatbread",
+                "flat bread",
+                "a flatbread"
+              ],
+              "feedback": {
+                "correct": "Right: roṭī names flatbread.",
+                "incorrect": "Keep the curled middle sound with the bread: ro-ṭī — flatbread."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W19-tta",
+      "sequence": 1830,
+      "title": "ट (ṭa) — the curled t in flatbread",
+      "headword": "ट",
+      "romanization": "ṭa",
+      "gloss": "the Devanagari retroflex ta consonant",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f31496d8a2869f03",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say flatbread, recall the three-word transport payoff, then write hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ट — ṭa."
+            },
+            {
+              "kind": "speech",
+              "text": "A single closed loop hanging under the headline. Set it beside the ठ of ठेला: ठ carries a second inner ring and a puff of breath, ट (ṭa) has neither."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ट (ṭa) once. Copy it once. Write ठ beside it and say which one has the extra ring. Cover both, wait five seconds, and write ट (ṭa) from the curled sound cue."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W19-tta-write",
+              "prompt": "Write the unaspirated curled Devanagari ta.",
+              "assesses": [
+                "MW-SCRIPT-TTA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ट",
+                "ट ta",
+                "ट ṭa"
+              ],
+              "feedback": {
+                "correct": "Right: ट is the curled t with no inner ring.",
+                "incorrect": "Draw one loop under the headline and leave the inner ring out."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C19-roti",
+      "sequence": 1840,
+      "title": "रोटी (roṭī) — flatbread on the page",
+      "headword": "रोटी",
+      "romanization": "roṭī",
+      "gloss": "flatbread, written after the curled ta is isolated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:347184a631c9d806",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say flatbread and money, then write ट (ṭa)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रो + टी becomes रोटी — roṭī — flatbread."
+            },
+            {
+              "kind": "speech",
+              "text": "The ो on र and the ी on ट (ṭa) are both long vowels met earlier."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write रोटी (roṭī). Check that the second consonant has no inner ring."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C19-roti-dictation",
+              "prompt": "From roṭī, write flatbread.",
+              "assesses": [
+                "MW-LEX-ROTI-01",
+                "MW-SCRIPT-ROTI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रोटी",
+                "रोटी flatbread"
+              ],
+              "feedback": {
+                "correct": "Right: रोटी means flatbread.",
+                "incorrect": "Build रो, then टी."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C19-hear-baati",
+      "sequence": 1850,
+      "title": "Hear bāṭī — hard wheat rolls",
+      "headword": "bāṭī",
+      "romanization": "bāṭī",
+      "gloss": "hard wheat rolls",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:864c03ce7ebd062c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write flatbread and money, then say rickshaw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bāṭī — hard wheat rolls."
+            },
+            {
+              "kind": "speech",
+              "text": "Two beats, both long, with the same curled middle consonant heard in roṭī. These are baked hard rather than soft, which is why they take a different name from ordinary flatbread. Hear it twice and say it once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C19-hear-baati-meaning",
+              "prompt": "What food does bāṭī name?",
+              "assesses": [
+                "MW-LEX-BAATI-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hard wheat rolls",
+                "hard wheat roll",
+                "wheat rolls"
+              ],
+              "feedback": {
+                "correct": "Right: bāṭī names hard wheat rolls.",
+                "incorrect": "Keep both long beats with the baked roll: bā-ṭī — hard wheat rolls."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C19-baati",
+      "sequence": 1860,
+      "title": "बाटी (bāṭī) — hard wheat rolls on the page",
+      "headword": "बाटी",
+      "romanization": "bāṭī",
+      "gloss": "hard wheat rolls, written with the new curled ta and three known units",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:829b7c4450925077",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say hard wheat rolls, then write flatbread and श."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बा + टी becomes बाटी — bāṭī — hard wheat rolls."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare रोटी (roṭī) and बाटी (bāṭī) on one line: the last two units are identical and only the opening syllable differs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write बाटी (bāṭī). Then write रोटी (roṭī) beneath it and check that only the first syllable changed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C19-baati-dictation",
+              "prompt": "From bāṭī, write hard wheat rolls.",
+              "assesses": [
+                "MW-LEX-BAATI-01",
+                "MW-SCRIPT-BAATI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बाटी",
+                "बाटी hard wheat rolls"
+              ],
+              "feedback": {
+                "correct": "Right: बाटी means hard wheat rolls.",
+                "incorrect": "Build बा, then टी."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R19-food-new-two",
+      "sequence": 1870,
+      "title": "Retrieve flatbread and hard wheat rolls",
+      "headword": "रोटी — बाटी",
+      "romanization": "roṭī — bāṭī",
+      "gloss": "flatbread and hard wheat rolls",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f41e3eb7f2ab3ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-word travel payoff, then write ट (ṭa) and rickshaw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear both words in both orders, give each meaning, read two cards, then write both from sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R19-food-new-two-recall",
+              "prompt": "Write flatbread and hard wheat rolls in order.",
+              "assesses": [
+                "MW-LEX-ROTI-01",
+                "MW-LEX-BAATI-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "रोटी — बाटी",
+                "रोटी बाटी",
+                "रोटी, बाटी"
+              ],
+              "feedback": {
+                "correct": "Both bread meanings remain distinct.",
+                "incorrect": "Repair only the missed word, then repeat the pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C19-food-five",
+      "sequence": 1880,
+      "title": "Payoff — five food words in four skills",
+      "headword": "दाल — घी — सबजी — रोटी — बाटी",
+      "romanization": "dāl — ghī — sabjī — roṭī — bāṭī",
+      "gloss": "five source-attested food words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:678469b13feaa2fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the earlier three-word food payoff, then say horse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Identify five heard words."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce five words from meaning cues."
+            },
+            {
+              "kind": "speech",
+              "text": "Match five printed cards to meanings."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all five heard words without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. This vocabulary foundation does not yet claim an order in a kitchen, a request at a table, or a description of a meal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C19-food-five-payoff",
+              "prompt": "Complete all four scored checks, then write the two newest words.",
+              "assesses": [
+                "MW-PERFORMANCE-FOOD-FIVE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 42,
+              "acceptedResponses": [
+                "रोटी — बाटी",
+                "रोटी बाटी"
+              ],
+              "feedback": {
+                "correct": "The five-word food map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R19-script-close",
+      "sequence": 1890,
+      "title": "Close the writing loop for ट (ṭa)",
+      "headword": "ट",
+      "romanization": "ṭa",
+      "gloss": "delayed closure for the chapter's only new script unit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e10301b5f8c92f2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-word food payoff, say wind, then write horse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Without a model, write ट (ṭa) and ठ from sound cues. Then write रोटी (roṭī), बाटी (bāṭī), and ठेला from dictation. Repair only the missed unit and repeat that word once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 6; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R19-script-close-recall",
+              "prompt": "Write the plain curled ta, then its breathy neighbour.",
+              "assesses": [
+                "MW-SCRIPT-TTA-01",
+                "MW-SCRIPT-TTHA-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "ट — ठ",
+                "ट ठ",
+                "ट, ठ"
+              ],
+              "feedback": {
+                "correct": "The new sign closes independently against its neighbour.",
+                "incorrect": "Repair the missed unit, then rewrite its word."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

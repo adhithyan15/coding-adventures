@@ -2,6 +2,6 @@
 name = "arm1-simulator"
 version = "0.1.0"
 edition = "2021"
-description = "ARM1 (ARMv1) behavioral instruction set simulator"
+description = "Complete ARM1 (ARMv1) functional simulator with 64 MiB architecture, banked state, typed atomic lifecycle, interrupts, and Python full-state conformance"
 
 [dependencies]

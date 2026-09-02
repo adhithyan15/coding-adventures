@@ -1,5 +1,31 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## 0.6.0 — 2026-09-01
+
+### Added — exact affected scheduling
+
+- The scheduler now compares each observed input with the prior successful
+  revision ledger, propagates changes through the transitive downstream
+  closure, and restores untouched capability-free instances as one validated
+  materialized checkpoint.
+- Restored instances report `outcome: "skipped"`, retain their input/output
+  revisions and sink outputs, and count the checkpoint as a cache hit.
+- Affected stream stages still use the per-item cache, so an edited source can
+  reuse unchanged items while the complete downstream stage remains scheduled.
+- Observed sources may be restored after their external-state hook proves the
+  input unchanged. Capability-bearing and legacy sources continue to execute
+  conservatively until side-effect replay is available.
+- Missing, malformed, unavailable, or revision-mismatched checkpoints fail
+  open to normal execution. Checkpoints are topology-scoped and only the prior
+  successful ledger can authorize a whole-instance skip.
+
+### Tests
+
+- Fresh-orchestrator coverage proves all-unchanged skipping, exact isolation
+  between independent branches, revision-mismatch recovery, and the
+  capability boundary between conservative execution and pure downstream
+  restoration.
+
 ## 0.5.0 — 2026-09-01
 
 ### Added — external revisions and persistent ledger

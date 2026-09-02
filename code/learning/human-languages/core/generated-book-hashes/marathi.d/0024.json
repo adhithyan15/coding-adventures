@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:7eb10b6cf5870ac3",
+  "lessonIds": [
+    "MR-C24-sangne",
+    "MR-C24-mhanne",
+    "MR-C24-shikne",
+    "MR-C24-milne",
+    "MR-R24-passing-verbs"
+  ],
+  "tex": "marathi/book/chapters/ch24-passing-verbs.tex"
+}

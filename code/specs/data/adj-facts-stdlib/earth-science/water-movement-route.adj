@@ -1,0 +1,134 @@
+% ============================================================================
+% water-movement-route — which way through the Earth system a named water
+% cycle process moves water (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? water_movement_route(runoff, $R)
+%       % across_the_surface
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `water_movement_route(process, route)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the route WITH its source, on the CPU, with zero model
+% calls.
+%
+% THE BACKWARD QUERY IS THE ONE WORTH HAVING:
+%
+%     ? water_movement_route($P, into_the_ground)
+%       % infiltration
+%       % groundwater_recharge
+%
+% "Which processes move water into the ground?" is a real elementary
+% question, and nothing in this stdlib could answer it before.
+%
+% *** NOT A DUPLICATE OF `water-cycle.adj`, AND THE DIFFERENCE MATTERS. ***
+% `water_cycle_stage(process, step_number)` ORDERS five processes —
+% evaporation 1, condensation 2, precipitation 3, runoff 4, groundwater 5 —
+% and answers "what comes next?". This relation answers "WHICH WAY does
+% water move?", covers EIGHT processes, and is not an ordering at all.
+%
+% The two tables overlap on THREE atoms — `evaporation`, `precipitation`
+% and `runoff` — and disagree about nothing, because they are answering
+% different questions about them. `runoff` is stage 4 there AND moves water
+% across the surface here; both are true and neither implies the other.
+% Five of this table's processes (evapotranspiration, snowmelt,
+% streamflow, infiltration, groundwater_recharge) have no stage number,
+% and `condensation`, which has one, has no route here (see the abstention
+% below).
+%
+% Note `groundwater` (stage 5) and `groundwater_recharge` (a route value
+% here) are DIFFERENT ATOMS naming different things — a reservoir versus a
+% process — and are deliberately not unified. Neither source licenses
+% treating them as the same thing.
+%
+% Provenance: THREE PARALLEL SENTENCES from the U.S. Geological Survey's
+% Water Science School. The page states the whole relation in one
+% structure, one sentence per route:
+%
+%     route                            processes
+%     ------------------------------   -------------------------------
+%     between_atmosphere_and_surface   evaporation, evapotranspiration,
+%                                      precipitation
+%     across_the_surface               snowmelt, runoff, streamflow
+%     into_the_ground                  infiltration,
+%                                      groundwater_recharge
+%
+% Each row's second column is the route its own sentence names, and every
+% first-column atom is a term that sentence lists. Nothing is reworded and
+% no process is assigned a route from general hydrology knowledge.
+%
+% The route atoms are compressed from the sentences' own phrasing —
+% "between the atmosphere and the surface", "across the surface", "into
+% the ground" — into single atoms. That is a naming choice, not a claim:
+% the full phrasing is recoverable verbatim from the citation attached to
+% every row, which is the point of carrying the citation.
+%
+% `trust authoritative` — the USGS is a first-party .gov publisher and the
+% Water Science School is its educational reference. The page was
+% CONTENT-verified by RAW TEXT EXTRACTION (HTTP 200, 84 substantive
+% sentences, zero soft-404 markers), never from a fetch summary.
+%
+% PROVENANCE IS TABLE-LEVEL, and with three sentences that is worth
+% stating. The `source` envelope and both `cites` corroborations cover
+% EVERY row, so an answer about `runoff` also carries the atmosphere and
+% ground sentences, only one of which grounds it. Nothing cited is false
+% and the grounding sentence is always among them, but the reader has to
+% match sentence to row. In `--explain`, which renders only the primary
+% source and drops corroborations, the `runoff` row displays under the
+% ATMOSPHERE sentence — which does not ground it. That is a property of
+% every multi-sentence table in this stdlib, tracked as issue #13898; THE
+% JSON OUTPUT IS THE AUTHORITATIVE VIEW.
+%
+% ONE EXTRACTION HAZARD WORTH RECORDING, because it nearly put a wrong
+% string in the `source` envelope. The three sentences wrap each process
+% name in a link — `<a>evaporation</a>, <a>evapotranspiration</a>` — so
+% naive tag-stripping yields "evaporation , evapotranspiration" with
+% spaces the page does not contain. The sentences below were checked
+% against the RAW HTML and carry the real punctuation. A citation is only
+% worth having if it is byte-faithful.
+%
+% Honest abstention:
+%
+%   - CONDENSATION is NOT a row, which is the abstention most worth
+%     understanding. It is unmistakably a water cycle process — it is
+%     stage 2 in `water-cycle.adj` — and the page discusses it. But NONE
+%     of the three route sentences lists it, and this relation's values
+%     come from those sentences alone. Assigning it a route would mean
+%     reasoning about where condensation happens rather than reporting
+%     what the source says, and the fact that a process is famous is not
+%     evidence about this relation.
+%   - SUBLIMATION is not a row, for the same reason: the page names it
+%     once and never places it in a route sentence.
+%   - TRANSPIRATION alone is not a row. The sentence lists
+%     `evapotranspiration`, and that compound is the atom. Splitting it
+%     into transpiration and evaporation would assert a decomposition this
+%     sentence does not make.
+%   - The three routes are not claimed to be exhaustive or exclusive. The
+%     source states three; a process absent here means these sentences did
+%     not list it, NOT that water never moves that way.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table water_movement_route {
+    columns process, route
+
+    row (evaporation, between_atmosphere_and_surface)
+    row (evapotranspiration, between_atmosphere_and_surface)
+    row (precipitation, between_atmosphere_and_surface)
+
+    row (snowmelt, across_the_surface)
+    row (runoff, across_the_surface)
+    row (streamflow, across_the_surface)
+
+    row (infiltration, into_the_ground)
+    row (groundwater_recharge, into_the_ground)
+
+    source "Water moves between the atmosphere and the surface through evaporation, evapotranspiration, and precipitation."
+    locator "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle"
+    trust authoritative
+    cites "Water moves across the surface through snowmelt, runoff, and streamflow." locator "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle"
+    cites "Water moves into the ground through infiltration and groundwater recharge." locator "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle"
+}

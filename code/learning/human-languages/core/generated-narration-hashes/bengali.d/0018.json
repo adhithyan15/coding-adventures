@@ -1,0 +1,26 @@
+{
+  "language": "bengali",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:7947346fa9d8a163",
+  "lessonIds": [
+    "BN-W03-o-matra",
+    "BN-W03-kalo-read",
+    "BN-W03-ba",
+    "BN-W03-abar-read",
+    "BN-W03-bha",
+    "BN-W03-bhalo-read",
+    "BN-W03-kha",
+    "BN-W03-mukh-read",
+    "BN-W03-da",
+    "BN-W03-shada-read",
+    "BN-W03-dha",
+    "BN-W03-dudh-read"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch18.txt",
+  "json": "bengali/narration/ch18.json",
+  "textHash": "fnv1a64:d860ff071b344c31",
+  "jsonHash": "fnv1a64:c970c5e366b5bc9f",
+  "findings": []
+}

@@ -45,9 +45,13 @@
 //! implement and is the reading that makes that example type-check. See
 //! `pop_val` below.
 
+use std::rc::Rc;
+
 use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
-use wasm_types::{FuncType, FunctionBody, GlobalType, ValueType, WasmModule};
+use wasm_types::{
+    ArrayType, CanonicalGroup, FieldType, FuncType, FunctionBody, GlobalType, StorageType, StructType, TypeKind, ValueType, WasmModule, nominal_subtype_chain,
+};
 
 use crate::ValidationError;
 
@@ -184,14 +188,79 @@ fn is_numeric_or_vector(vt: ValueType) -> bool {
     matches!(vt, ValueType::I32 | ValueType::I64 | ValueType::F32 | ValueType::F64 | ValueType::V128)
 }
 
+/// A `&WasmModule` bundled with its own canonicalized type-group forms
+/// (W34 third slice, `code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
+/// computed exactly ONCE per [`type_check_module`] call -- right after
+/// [`check_type_subtyping`] confirms the module's `sub`/`rec` reference
+/// ordering is well-founded, the same precondition `wasm_types::
+/// canonicalize_types`'s own termination argument depends on -- and
+/// threaded everywhere `module: &WasmModule` used to be threaded through
+/// this file's instruction-level type-checking machinery.
+///
+/// `Copy` (both fields are plain references/slices) so every existing call
+/// site that used to forward a bare `module`/`ctx.module` value keeps
+/// compiling completely unchanged once this type replaces `&WasmModule` in
+/// each of those functions' signatures -- no call site needed to grow a
+/// new argument. `Deref<Target = WasmModule>` for the identical reason:
+/// every existing `module.<field or method>` access (the overwhelming
+/// majority of this file's own usages, e.g. `module.type_subtyping_at(..)`,
+/// `module.types.len()`) also keeps compiling unchanged -- only the
+/// handful of call sites that need real canonical-equivalence data reach
+/// for `.canonically_equivalent(..)` directly.
+///
+/// This is intentionally a lightweight, per-call-cheap value: it carries a
+/// borrowed slice, never a fresh computation, so passing it through 150+
+/// existing call sites costs nothing beyond what passing `&WasmModule`
+/// already cost (two words instead of one). See this crate's own security
+/// review for this slice for why per-call-site cost, not just correctness,
+/// was checked here.
+#[derive(Clone, Copy)]
+struct TypeContext<'a> {
+    module: &'a WasmModule,
+    canonical_types: &'a [Option<(Rc<CanonicalGroup>, u32)>],
+}
+
+impl<'a> std::ops::Deref for TypeContext<'a> {
+    type Target = WasmModule;
+    fn deref(&self) -> &WasmModule {
+        self.module
+    }
+}
+
+impl<'a> TypeContext<'a> {
+    /// Whether flat type-section indices `sub_idx`/`super_idx` are related
+    /// by the real GC-proposal rule (W34): nominal (nested `sub` chain) OR
+    /// canonically equivalent at any hop, per [`nominal_subtype_chain`]'s
+    /// own doc comment ("nominal modulo canonicalization"). This is the
+    /// SAME shared, security-reviewed walk `wasm-execution`'s runtime
+    /// dispatch uses (via its own `canonical_types` field), so the two can
+    /// never drift apart.
+    fn nominal_or_canonical_subtype(&self, sub_idx: u32, super_idx: u32) -> bool {
+        nominal_subtype_chain(&self.module.type_subtyping, self.canonical_types, sub_idx, super_idx)
+    }
+}
+
 /// `actual` flows where `expected` is required. `module` supplies the W33
 /// first-slice nominal `sub`-chain (`code/specs/
-/// W33-wasm-gc-recursive-type-subtyping.md`) needed for the two new
-/// `ConcreteFuncRef`/`NonNullConcreteFuncRef` arms below -- every OTHER
-/// arm here predates W33 and never looks at `module` at all, so a
-/// `WasmModule` that never populated `type_subtyping` (see that field's
-/// own doc comment) behaves exactly as before.
-fn is_assignable(actual: ValueType, expected: ValueType, module: &WasmModule) -> bool {
+/// W33-wasm-gc-recursive-type-subtyping.md`) AND, since W34's third slice
+/// (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`), real canonical
+/// type-group equivalence, needed for every `ConcreteFuncRef`/
+/// `NonNullConcreteFuncRef`/`StructRef`/`NonNullStructRef`/`ArrayRef`/
+/// `NonNullArrayRef` arm below -- every OTHER arm here predates W33 and
+/// never looks at `module` at all, so a `WasmModule` that never populated
+/// `type_subtyping` (see that field's own doc comment) behaves exactly as
+/// before.
+///
+/// **W34 third slice**: the `StructRef`/`NonNullStructRef`/`ArrayRef`/
+/// `NonNullArrayRef` arms are NEW -- this function had ZERO arms for any
+/// of the four struct/array reference variants before this slice (a real,
+/// previously-open gap the W34 spec's own research flagged: those variants
+/// are already index-parametrized exactly like `ConcreteFuncRef`, and
+/// `TypeSubtyping`/`nominal_subtype_chain` were already kind-agnostic --
+/// only this function's own arm list was incomplete). Added here using the
+/// exact same `nominal_or_canonical_subtype` termination the func arms now
+/// also use, generalized rather than duplicated.
+fn is_assignable(actual: ValueType, expected: ValueType, module: TypeContext) -> bool {
     actual == expected
         || matches!((actual, expected), (ValueType::ConcreteFuncRef(_), ValueType::Funcref))
         || actual.is_bottom_subtype_of(&expected)
@@ -200,30 +269,41 @@ fn is_assignable(actual: ValueType, expected: ValueType, module: &WasmModule) ->
         // see `ValueType::is_non_null_subtype_of`'s own doc comment for why
         // both hops of each chain are direct rules, not composed ones.
         || actual.is_non_null_subtype_of(&expected)
-        // W33 first slice: a reference to a DECLARED NOMINAL SUBTYPE of a
-        // concrete function type flows wherever a reference to that
-        // supertype is expected -- `(ref $t2)`/`(ref null $t2)` is
-        // assignable to a `(ref $t1)`/`(ref null $t1)` slot whenever `$t2
-        // <: $t1` per the module's own `sub` chain (`type-subtyping.wast`'s
-        // "Subsumption" section: `$f2`'s param `(ref $t2)` flowing into
-        // `$f1`'s `(ref $t1)` param at a `call` site is EXACTLY this,
-        // combined with `ValueType`'s own pre-existing ref-covariance).
-        // Deliberately does NOT attempt canonical/structural equivalence
-        // between two independently-declared, unrelated-by-`sub` types
-        // even if byte-identical in shape -- that's W33's own explicitly
-        // out-of-scope item (3b), see `WasmModule::
-        // func_type_is_nominal_subtype`'s own doc comment.
-        || matches!((actual, expected), (ValueType::ConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
-        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::NonNullConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
-        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
+        // W33 first slice / W34 third slice: a reference to a DECLARED
+        // NOMINAL SUBTYPE, or a CANONICALLY EQUIVALENT type, flows wherever
+        // a reference to the expected type is required -- `(ref $t2)`/`(ref
+        // null $t2)` is assignable to a `(ref $t1)`/`(ref null $t1)` slot
+        // whenever `$t2 <: $t1` per the module's own `sub` chain OR `$t2`/
+        // `$t1` are canonically the same type despite having no declared
+        // relationship at all (`type-subtyping.wast`'s "Subsumption"
+        // section combined with `type-rec.wast`'s "Static/Dynamic matching"
+        // sections -- see `code/specs/
+        // W34-wasm-gc-canonical-type-equivalence.md`'s own worked example).
+        || matches!((actual, expected), (ValueType::ConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::NonNullConcreteFuncRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        // W34 third slice: the struct/array analogues of the three func
+        // arms above -- see this function's own doc comment for why these
+        // didn't exist at all before this slice.
+        || matches!((actual, expected), (ValueType::StructRef(i), ValueType::StructRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullStructRef(i), ValueType::NonNullStructRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullStructRef(i), ValueType::StructRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::ArrayRef(i), ValueType::ArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullArrayRef(i), ValueType::NonNullArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullArrayRef(i), ValueType::ArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
 }
 
-/// Pop one value and require it to be assignable to `expected` (an
-/// `Unknown` actual or expected always matches -- see [`pop_val`]; a
+/// Require an already-popped [`StackType`] to be assignable to `expected`
+/// (an `Unknown` actual or expected always matches -- see [`pop_val`]; a
 /// `Known` actual must satisfy [`is_assignable`], not bare equality, so a
 /// concrete function-type ref can flow wherever `funcref` is expected).
-fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType, module: &WasmModule) -> Result<(), ValidationError> {
-    match pop_val(stack, frame)? {
+/// Factored out of [`pop_expect`] so a caller that already HAS a
+/// `StackType` in hand (`br_table`'s multi-target check below: the SAME
+/// small, already-popped operand values must be checked against several
+/// DIFFERENT targets) can reuse this exact assignability logic without
+/// re-popping from -- or cloning -- the real stack for every target.
+fn check_stacktype_assignable(actual: StackType, expected: ValueType, module: TypeContext<'_>) -> Result<(), ValidationError> {
+    match actual {
         StackType::Unknown => Ok(()),
         StackType::Known(actual) if is_assignable(actual, expected, module) => Ok(()),
         StackType::Known(actual) => Err(ValidationError::Other(format!(
@@ -232,9 +312,15 @@ fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueT
     }
 }
 
+/// Pop one value and require it to be assignable to `expected`.
+fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType, module: TypeContext<'_>) -> Result<(), ValidationError> {
+    let actual = pop_val(stack, frame)?;
+    check_stacktype_assignable(actual, expected, module)
+}
+
 /// Pop and verify a whole type list, in reverse (the last-listed type is
 /// on top of the stack -- e.g. `store`'s `[I32, T]` pops `T` first).
-fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &[ValueType], module: &WasmModule) -> Result<(), ValidationError> {
+fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &[ValueType], module: TypeContext<'_>) -> Result<(), ValidationError> {
     for &t in expected.iter().rev() {
         pop_expect(stack, frame, t, module)?;
     }
@@ -248,7 +334,7 @@ fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &
 /// see [`is_assignable`]). Arity must match exactly (WASM has no
 /// result-count subtyping); each pairwise result must be assignable in
 /// the same direction `pop_expect` already checks.
-fn results_assignable(callee_results: &[ValueType], function_results: &[ValueType], module: &WasmModule) -> bool {
+fn results_assignable(callee_results: &[ValueType], function_results: &[ValueType], module: TypeContext<'_>) -> bool {
     callee_results.len() == function_results.len()
         && callee_results.iter().zip(function_results.iter()).all(|(&a, &b)| is_assignable(a, b, module))
 }
@@ -336,7 +422,7 @@ fn push_ctrl(
     kind: FrameKind,
     start_types: Vec<ValueType>,
     end_types: Vec<ValueType>,
-    module: &WasmModule,
+    module: TypeContext<'_>,
 ) -> Result<(), ValidationError> {
     let outer = control_stack.last().cloned();
     // The enclosing frame is the "current" one for the purposes of popping
@@ -376,7 +462,7 @@ fn push_ctrl(
 /// the stack (dead-code-tolerant), require nothing extra is left over
 /// (skipped while unreachable -- dead code may leave any shape, so it's
 /// simply flushed down to the frame's own floor instead), then pop it.
-fn pop_ctrl(stack: &mut Vec<StackType>, control_stack: &mut Vec<ControlFrame>, module: &WasmModule) -> Result<ControlFrame, ValidationError> {
+fn pop_ctrl(stack: &mut Vec<StackType>, control_stack: &mut Vec<ControlFrame>, module: TypeContext<'_>) -> Result<ControlFrame, ValidationError> {
     let frame = control_stack
         .last()
         .cloned()
@@ -404,7 +490,7 @@ fn pop_ctrl(stack: &mut Vec<StackType>, control_stack: &mut Vec<ControlFrame>, m
 /// index -- see that function's own doc comment for the `ctx.types`-not-
 /// `ctx.func_types` history this crate has no analogous bug to repeat, since
 /// it's never given anything BUT the real type section).
-fn decode_blocktype(module: &WasmModule, code: &[u8], offset: usize) -> Result<(Vec<ValueType>, Vec<ValueType>, usize), ValidationError> {
+fn decode_blocktype(module: TypeContext<'_>, code: &[u8], offset: usize) -> Result<(Vec<ValueType>, Vec<ValueType>, usize), ValidationError> {
     let byte = *code
         .get(offset)
         .ok_or_else(|| ValidationError::Other("truncated blocktype immediate".to_string()))?;
@@ -529,20 +615,69 @@ fn max_align_for(access_bytes: u32) -> u32 {
     access_bytes.trailing_zeros()
 }
 
+/// Ceiling on `array.new_fixed`'s literal element-count immediate this
+/// validator will actually iterate over (W33 fourth slice) -- see that
+/// opcode's own match arm for why an unbounded loop over an
+/// attacker-controlled count is a real algorithmic DoS, not a hypothetical
+/// one, even though no single iteration allocates memory.
+const MAX_ARRAY_NEW_FIXED_COUNT: u32 = 1_000_000;
+
 /// The declared field count of the WasmGC struct type at type-section index
-/// `type_idx` -- how many values `struct.new` pops. Struct types live after
-/// the function types in the combined type index space: struct type `k` is
-/// at type-section index `module.types.len() + k` (see `WasmModule::struct_types`'s
-/// own doc comment).
-fn struct_field_count(module: &WasmModule, type_idx: u32) -> Result<usize, ValidationError> {
-    let struct_idx = (type_idx as usize)
-        .checked_sub(module.types.len())
-        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new type index {type_idx} is a function type, not a struct type")))?;
+/// `type_idx` -- how many values `struct.new` pops. Resolved via
+/// `WasmModule::struct_type_at` (W33 fourth slice: `type_kinds`-aware first,
+/// falling back to the legacy `types.len() + k` offset convention -- see
+/// that method's own doc comment) rather than re-deriving the offset
+/// directly here, since a TEXT-format module can now interleave struct
+/// declarations among func ones in a way the legacy formula alone cannot
+/// represent.
+fn struct_field_count(module: TypeContext<'_>, type_idx: u32) -> Result<usize, ValidationError> {
     let st = module
-        .struct_types
-        .get(struct_idx)
-        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new references struct type index {type_idx}, but only {} struct types exist", module.struct_types.len())))?;
+        .struct_type_at(type_idx)
+        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new references struct type index {type_idx}, but no such struct type exists")))?;
     Ok(st.fields.len())
+}
+
+/// The array-type analogue of [`struct_field_count`]: the element
+/// [`StorageType`]/mutability of the WasmGC array type at flat type-section
+/// index `type_idx` (W33 fourth slice) -- resolved the same
+/// `type_kinds`-aware-first way via [`WasmModule::array_type_at`].
+///
+/// Reaches through `module.module` (the wrapped `&'a WasmModule` field)
+/// rather than `module.array_type_at(..)` directly (which WOULD also
+/// compile, via [`TypeContext`]'s `Deref`, but would tie the returned
+/// `&FieldType`'s lifetime to this function's own ephemeral internal
+/// auto-ref of the by-value `module: TypeContext<'_>` parameter -- one
+/// step shorter than the real `'a` this reference actually lives for, a
+/// real, easy-to-miss lifetime trap for any `Deref`-based wrapper handing
+/// back a borrowed reference, not merely a style preference). Every OTHER
+/// function in this file that reaches through `module.<method>` only ever
+/// consumes the result immediately (an owned/`Copy` value, or a reference
+/// used and dropped within the SAME function body), so this trap doesn't
+/// apply to them -- see [`struct_field`] just below for the identical fix.
+fn array_element_field(module: TypeContext<'_>, type_idx: u32) -> Result<&FieldType, ValidationError> {
+    module
+        .module
+        .array_type_at(type_idx)
+        .map(|at| &at.element)
+        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("references array type index {type_idx}, but no such array type exists")))
+}
+
+/// One field of the WasmGC struct type at flat type-section index
+/// `type_idx` (W33 fourth slice) -- `struct.set`'s own bounds AND
+/// mutability check both need the real [`FieldType`], not just the field
+/// count [`struct_field_count`] returns. See [`array_element_field`]'s own
+/// doc comment for why this reaches through `module.module` explicitly.
+fn struct_field(module: TypeContext<'_>, type_idx: u32, field_idx: u32) -> Result<&FieldType, ValidationError> {
+    let st = module
+        .module
+        .struct_type_at(type_idx)
+        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("references struct type index {type_idx}, but no such struct type exists")))?;
+    st.fields.get(field_idx as usize).ok_or_else(|| {
+        ValidationError::TypeIndexOutOfBounds(format!(
+            "struct.set references field index {field_idx} of type {type_idx}, but only {} fields exist",
+            st.fields.len()
+        ))
+    })
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -569,7 +704,7 @@ fn is_boolean_result_numeric(suffix: &str) -> bool {
 /// `*.const`, 1 for unary/`eqz`, 2 for binary/comparison) already come from
 /// `wasm-opcodes`' metadata, so this one rule covers the whole family
 /// instead of ~130 individually hand-listed opcodes.
-fn type_check_numeric(stack: &mut Vec<StackType>, frame: &ControlFrame, name: &str, stack_pop: u8, module: &WasmModule) -> Result<(), ValidationError> {
+fn type_check_numeric(stack: &mut Vec<StackType>, frame: &ControlFrame, name: &str, stack_pop: u8, module: TypeContext<'_>) -> Result<(), ValidationError> {
     let (prefix, suffix) = name.split_once('.').ok_or_else(|| ValidationError::Other(format!("malformed numeric opcode name {name:?}")))?;
     let operand_type = match prefix {
         "i32" => ValueType::I32,
@@ -632,7 +767,14 @@ fn conversion_types(name: &str) -> Option<(ValueType, ValueType)> {
 /// Everything needed to resolve an instruction's type rule, computed once
 /// per module (not per function) and threaded through.
 struct ModuleContext<'a> {
-    module: &'a WasmModule,
+    /// W34 third slice: `module` is now a [`TypeContext`], bundling the raw
+    /// `&'a WasmModule` together with this module's own canonicalized
+    /// type-group forms (computed once in [`type_check_module`], right
+    /// after [`check_type_subtyping`] confirms the `sub`/`rec` ordering is
+    /// well-founded) -- see that type's own doc comment for why every
+    /// existing `ctx.module.<field/method>` access below still compiles
+    /// unchanged.
+    module: TypeContext<'a>,
     /// Combined imported + module-defined function types, indexed by the
     /// combined function index space (imports first, matching every other
     /// index space in the binary format).
@@ -683,14 +825,25 @@ struct ModuleContext<'a> {
     /// bounds-checked against the actual table count, not just "is there
     /// at least one".
     table_count: u32,
-    /// Each table's raw element-type byte (`0x70` funcref / `0x6F`
-    /// externref), same index-space/ordering convention as `table_count`
+    /// Each table's fully-resolved element type -- `Funcref`/`Externref`
+    /// for an ordinary table, or the table's own concrete
+    /// `ConcreteFuncRef`/`NonNullConcreteFuncRef` when the source declared
+    /// one via `(table $t (ref null $t) ...)` (function-references
+    /// proposal; see `WasmModule::table_concrete_element_types`'s own doc
+    /// comment) -- same index-space/ordering convention as `table_count`
     /// (task #96): `table.get $t3 ...`/`table.set $t3 ...` must type-check
     /// against table `$t3`'s OWN declared element type, not unconditionally
     /// assume funcref -- WASM 1.0's single implicit table is always
     /// funcref, but a module with more than one table (multi-table) can
-    /// mix funcref and externref tables freely.
-    table_element_types: Vec<u8>,
+    /// mix funcref and externref tables freely, and a function-references
+    /// table narrows funcref further still. This used to be just the raw
+    /// `u8` tag (`0x70`/`0x6F`) with a `0x6F => Externref, _ => Funcref`
+    /// match at every use site, which silently discarded any concrete
+    /// type and is exactly what let `br_table.wast`'s own `meet-funcref-*`/
+    /// `meet-multi-ref` tests regress (`table.get` on a `(ref null $t)`
+    /// table pushed generic `Funcref`, then a `br_table` label requiring
+    /// the narrower `$t` failed with a spurious `TypeMismatch`).
+    table_element_types: Vec<ValueType>,
     /// Each table's `is64`-ness (table64 proposal, W26), same combined
     /// imports-first-then-declared index-space/ordering convention as
     /// `table_element_types`/`memory_is64` -- `table.get`/`table.set`/
@@ -712,7 +865,7 @@ struct ModuleContext<'a> {
     tag_types: Vec<FuncType>,
 }
 
-fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, ValidationError> {
+fn build_module_context<'a>(module: &'a WasmModule, canonical_types: &'a [Option<(Rc<CanonicalGroup>, u32)>]) -> Result<ModuleContext<'a>, ValidationError> {
     use wasm_types::ImportTypeInfo;
 
     let mut func_types = Vec::new();
@@ -771,15 +924,34 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
         })
         .collect();
     memory_is64.extend(module.memories.iter().map(|m| m.is64));
-    let mut table_element_types: Vec<u8> = module
+    // Import tables can only ever be generic funcref/externref in this
+    // crate's text format (no concrete-typed table IMPORT syntax exists --
+    // see `WasmModule::table_concrete_element_types`'s own doc comment),
+    // so each one resolves from its raw byte tag alone.
+    let byte_to_generic_reftype = |b: u8| if b == wasm_types::EXTERNREF { ValueType::Externref } else { ValueType::Funcref };
+    let mut table_element_types: Vec<ValueType> = module
         .imports
         .iter()
         .filter_map(|i| match &i.type_info {
-            ImportTypeInfo::Table(tt) => Some(tt.element_type),
+            ImportTypeInfo::Table(tt) => Some(byte_to_generic_reftype(tt.element_type)),
             _ => None,
         })
         .collect();
-    table_element_types.extend(module.tables.iter().map(|t| t.element_type));
+    // Module-defined tables: prefer the real concrete type
+    // (`table_concrete_element_types[i]`) when the source declared one,
+    // falling back to the generic byte tag otherwise -- exactly the
+    // `Some`/`None` split `table_concrete_element_types`'s own doc comment
+    // describes. `.get(i)` (not indexing) because that vec is allowed to
+    // be shorter than `module.tables`, same convention `type_kinds`/
+    // `type_subtyping` already established elsewhere in this module.
+    table_element_types.extend(module.tables.iter().enumerate().map(|(i, t)| {
+        module
+            .table_concrete_element_types
+            .get(i)
+            .copied()
+            .flatten()
+            .unwrap_or_else(|| byte_to_generic_reftype(t.element_type))
+    }));
     let table_count = table_element_types.len() as u32;
     let mut table_is64: Vec<bool> = module
         .imports
@@ -792,7 +964,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
     table_is64.extend(module.tables.iter().map(|t| t.is64));
 
     Ok(ModuleContext {
-        module,
+        module: TypeContext { module, canonical_types },
         func_types,
         func_type_indices,
         global_types,
@@ -829,47 +1001,86 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
 ///   body, which stays unparseable and therefore unreachable here, see
 ///   `wasm-wast-parser`'s own struct/array doc comments).
 ///
-/// Struct/array composite-type-kind invariance and field-list
-/// width/depth/variance rules (the SAME section's remaining cases) are not
-/// checked here at all -- this slice only ever produces `FuncType`
-/// entries in `module.types` (struct/array TEXT-format bodies are still
-/// unparseable), so there is nothing of that shape to validate yet.
-fn check_type_subtyping(module: &WasmModule) -> Result<(), ValidationError> {
-    // Security review finding (W33 first slice): a cyclic `sub` chain
-    // (`(rec (type $t1 (sub $t2 (func))) (type $t2 (sub $t1 (func))))`)
-    // used to slip past the per-type loop below entirely -- each type's
-    // OWN immediate parent link structurally checks out fine in
-    // isolation, so nothing ever rejected the cycle as a whole. The real
-    // GC proposal requires the `sub` relation to be well-founded
-    // (acyclic); without this check, two independently-declared,
-    // differently-indexed types become mutually interchangeable via
-    // `WasmModule::func_type_is_nominal_subtype` (confirmed directly: a
-    // 2-cycle makes `func_type_is_nominal_subtype(0, 1)` AND `(1, 0)`
-    // both return `true`) -- exactly the "canonical equivalence between
-    // unrelated types" this slice's own `is_assignable` doc comment says
-    // must stay unimplemented, since a wrong ACCEPT here is a real
-    // soundness risk, not just a missed capability. Must run BEFORE the
-    // structural per-link check below: a cyclic declaration is invalid
-    // regardless of whether its individual links happen to check out
-    // pairwise.
-    check_type_subtyping_is_acyclic(module)?;
-
-    for (i, child) in module.types.iter().enumerate() {
-        let Some(parent_idx) = module.type_subtyping_at(i as u32).supertype else {
+/// **W34 third slice** (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+/// struct/array composite-type-kind invariance and field-list
+/// width/depth/variance rules ARE now checked here too, dispatching on each
+/// side's real [`TypeKind`] (`Func`/`Struct`/`Array`) instead of always
+/// reading `module.types[i]` as the real body. Before this slice, a
+/// struct/array-kind flat index's `module.types[i]` slot is an unused,
+/// never-populated dummy `FuncType { params: vec![], results: vec![] }`
+/// (see [`TypeKind`]'s own doc comment) -- so a declared `(sub $parent
+/// (struct ...))`/`(sub $parent (array ...))` relationship used to be
+/// checked against TWO EMPTY func signatures (trivially "compatible": zero
+/// arity, vacuously contravariant/covariant) instead of the real
+/// field/element lists, a real, previously-open correctness gap the W34
+/// spec's own research flagged (pre-dating W34 entirely -- a W33-first-
+/// slice-era gap struct/array TEXT-format parsing, shipped in W33's fourth
+/// slice, made newly REACHABLE without fixing). See
+/// [`struct_is_structural_subtype`]/[`array_is_structural_subtype`] for the
+/// real width/depth/variance rules now applied. A declared `sub`
+/// relationship between two DIFFERENT composite-type kinds (e.g. a struct
+/// declaring a func parent) is always rejected -- the GC proposal has no
+/// such cross-kind subtyping relation at all.
+fn check_type_subtyping(module: &WasmModule, canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Result<(), ValidationError> {
+    // W34 third slice -- CORRECTION found by re-verifying against the real
+    // corpus, not by assumption (this campaign's own discipline): an
+    // EARLIER version of this function's own doc comment claimed composite-
+    // type structural-subtype variance (this function's own job) is
+    // "orthogonal to canonical equivalence," and ran this whole check
+    // BEFORE `canonical_types` existed, passing an EMPTY table into every
+    // `is_assignable` call reachable from here. That claim is WRONG:
+    // `type-subtyping.wast`'s own "Static matching of recursive types"
+    // module (a plain `module` directive, no `assert_invalid` -- MUST
+    // validate) declares `$f1`/`$f2` as two SEPARATE, differently-indexed,
+    // multi-member `rec` groups with NO shared `sub` relationship at all,
+    // yet structurally IDENTICAL shapes -- canonically the SAME type. A
+    // later struct's declared `sub $s2 (struct (field (ref $f1) ...))`
+    // relationship requires `(ref $f1) <: (ref $s2)`'s own first field
+    // `(ref $f2)` to hold via CANONICAL equivalence (`$f1 == $f2`, no
+    // nominal chain exists between them) -- exactly the case an empty
+    // canonical table cannot satisfy. `canonical_types` is threaded in as
+    // a real parameter now (computed by the caller right after `check_
+    // type_subtyping_is_acyclic` -- hoisted OUT of this function, since its
+    // own ordering guarantee is what canonicalization's termination
+    // argument depends on -- succeeds), so this function's own struct/array
+    // field-covariance checks (via `func_is_structural_subtype`/
+    // `field_is_structural_subtype`) get the SAME real canonical data
+    // `is_assignable`'s other callers do.
+    let tc = TypeContext { module, canonical_types };
+    for i in 0..module.types.len() as u32 {
+        let Some(parent_idx) = module.type_subtyping_at(i).supertype else {
             continue;
         };
-        let Some(parent) = module.types.get(parent_idx as usize) else {
+        if parent_idx as usize >= module.types.len() {
             return Err(ValidationError::TypeIndexOutOfBounds(format!(
                 "type #{i} declares supertype index {parent_idx}, but only {} types exist",
                 module.types.len()
             )));
-        };
+        }
         if module.type_subtyping_at(parent_idx).is_final {
             return Err(ValidationError::Other(format!("sub type: type #{i} declares #{parent_idx} as its supertype, but #{parent_idx} is final")));
         }
-        if !func_is_structural_subtype(child, parent, module) {
+        let child_kind = module.type_kinds.get(i as usize).copied().unwrap_or(TypeKind::Func);
+        let parent_kind = module.type_kinds.get(parent_idx as usize).copied().unwrap_or(TypeKind::Func);
+        let ok = match (child_kind, parent_kind) {
+            (TypeKind::Func, TypeKind::Func) => func_is_structural_subtype(&module.types[i as usize], &module.types[parent_idx as usize], tc),
+            (TypeKind::Struct(ck), TypeKind::Struct(pk)) => match (module.struct_types.get(ck as usize), module.struct_types.get(pk as usize)) {
+                (Some(c), Some(p)) => struct_is_structural_subtype(c, p, tc),
+                _ => false,
+            },
+            (TypeKind::Array(ck), TypeKind::Array(pk)) => match (module.array_types.get(ck as usize), module.array_types.get(pk as usize)) {
+                (Some(c), Some(p)) => array_is_structural_subtype(c, p, tc),
+                _ => false,
+            },
+            // A struct declaring a func/array parent (or any other
+            // cross-kind mix) has no legal subtyping relation at all --
+            // the real GC proposal never relates different composite-type
+            // kinds this way.
+            _ => false,
+        };
+        if !ok {
             return Err(ValidationError::Other(format!(
-                "sub type: type #{i} is not a valid structural subtype of its declared supertype #{parent_idx} (arity must match, params contravariant, results covariant)"
+                "sub type: type #{i} is not a valid structural subtype of its declared supertype #{parent_idx} (arity/field-count must match kind-appropriate rules: func -- contravariant params, covariant results; struct -- width+per-field covariant/invariant; array -- element covariant/invariant)"
             )));
         }
     }
@@ -946,7 +1157,7 @@ fn check_type_subtyping_is_acyclic(module: &WasmModule) -> Result<(), Validation
 /// ($s' is $s's own sub), yet accepting the WIDER `(ref $s)` param in the
 /// subtype is correct because params are contravariant; the result
 /// position (`(ref any) <: anyref`) is covariant.
-fn func_is_structural_subtype(child: &FuncType, parent: &FuncType, module: &WasmModule) -> bool {
+fn func_is_structural_subtype(child: &FuncType, parent: &FuncType, module: TypeContext<'_>) -> bool {
     child.params.len() == parent.params.len()
         && child.results.len() == parent.results.len()
         // Contravariant: the PARENT's param must be assignable to the
@@ -955,6 +1166,67 @@ fn func_is_structural_subtype(child: &FuncType, parent: &FuncType, module: &Wasm
         // Covariant: the CHILD's result must be assignable to the
         // PARENT's result slot (the child may return something NARROWER).
         && child.results.iter().zip(parent.results.iter()).all(|(&c, &p)| is_assignable(c, p, module))
+}
+
+/// **W34 third slice**: one struct/array FIELD's own structural subtyping
+/// rule, per the real GC proposal's `##### Composite Types` text --
+/// mutability must match exactly (a field can't gain OR lose mutability
+/// through a `sub` relationship), and:
+/// - **mutable fields are INVARIANT**: the storage type must match
+///   EXACTLY (a mutable field can be both read and written, so neither a
+///   wider-on-read nor a wider-on-write relaxation is sound).
+/// - **immutable fields are COVARIANT**: the child's storage type need
+///   only be [`is_assignable`] to the parent's (an immutable field is
+///   read-only, so a NARROWER child value type is a sound stand-in
+///   wherever the parent's wider type is expected).
+///
+/// Packed storage (`i8`/`i16`) has no further covariance of its own within
+/// this crate's `StorageType` (there's no narrower-than-`i8` packed width
+/// to be covariant WITH) -- two packed fields are compatible only when
+/// their packed width matches exactly, mutable or not, which falls out of
+/// this same rule for the mutable case and (since `StorageType::I8 ==
+/// StorageType::I8` is the only way two packed variants satisfy
+/// `is_assignable`, which never relates `I8`/`I16` to anything else) for
+/// the immutable case too.
+fn field_is_structural_subtype(child: &FieldType, parent: &FieldType, module: TypeContext<'_>) -> bool {
+    if child.mutable != parent.mutable {
+        return false;
+    }
+    if child.mutable {
+        child.storage == parent.storage
+    } else {
+        match (child.storage, parent.storage) {
+            (StorageType::Val(c), StorageType::Val(p)) => is_assignable(c, p, module),
+            (StorageType::I8, StorageType::I8) | (StorageType::I16, StorageType::I16) => true,
+            _ => false,
+        }
+    }
+}
+
+/// **W34 third slice**: the GC proposal's real struct structural subtyping
+/// rule -- **width subtyping** (the child may declare MORE fields than the
+/// parent; every extra trailing field is simply not visible through the
+/// parent's own type) plus, for every field position the parent DOES
+/// declare, [`field_is_structural_subtype`]'s per-field variance rule, in
+/// declaration order (struct fields are positional, not named, at the
+/// binary/structural level -- `type-subtyping.wast`'s own struct/array
+/// "Invalid subtyping definitions" cases this closes are exactly these
+/// two rules: a child with FEWER fields than its declared parent, and a
+/// mutable field whose storage type merely widens instead of matching
+/// exactly).
+fn struct_is_structural_subtype(child: &StructType, parent: &StructType, module: TypeContext<'_>) -> bool {
+    child.fields.len() >= parent.fields.len() && parent.fields.iter().zip(child.fields.iter()).all(|(p, c)| field_is_structural_subtype(c, p, module))
+}
+
+/// **W34 third slice**: the GC proposal's real array structural subtyping
+/// rule -- an array type is, structurally, a single [`FieldType`] (see
+/// [`ArrayType`]'s own doc comment for why this crate reuses `FieldType`
+/// directly rather than a bespoke element-type shape), so array subtyping
+/// is exactly [`field_is_structural_subtype`] applied once to the two
+/// arrays' own `element` fields -- no width dimension exists for an array
+/// (it has exactly one field position, always).
+fn array_is_structural_subtype(child: &ArrayType, parent: &ArrayType, module: TypeContext<'_>) -> bool {
+    field_is_structural_subtype(&child.element, &parent.element, module)
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1112,21 +1384,100 @@ fn const_expr_type(expr: &[u8], ctx: &ModuleContext, global_limit: Option<u32>) 
                 stack.push(StackType::Known(ValueType::V128));
             }
             // WasmGC prefix (0xFB): `ref.i31` (sub-opcode 0x1C) is the one
-            // GC instruction the real spec allows in a constant expression.
-            // Pops the i32 payload, pushes `(ref i31)` (always non-null).
+            // GC instruction the real spec allows in a constant expression
+            // for THIS repo's pre-W33-fourth-slice scope. W33 fourth slice
+            // adds the real GC proposal's OTHER constant-legal instructions:
+            // `struct.new`/`struct.new_default`/`array.new`/`array.new_
+            // default`/`array.new_fixed` -- confirmed directly against the
+            // real vendored corpus, not assumed: `struct.wast`'s own
+            // `(global (ref $vec) (struct.new $vec ...))`/`(global (ref
+            // $vec) (struct.new_default $vec))` and `array.wast`'s
+            // `(global (ref $vec) (array.new $vec ...))`/`(global (ref
+            // $vec) (array.new_fixed $vec 2 ...))` are all real, VALID
+            // (non-`assert_invalid`) module-level globals. `array.new_data`/
+            // `array.new_elem` are deliberately excluded (`array.wast`'s own
+            // `assert_invalid "constant expression required"` cases probe
+            // exactly this) -- moot for now anyway since `wasm-wast-parser`
+            // doesn't parse either instruction at all yet (see that crate's
+            // own `encode_gc_struct_array_instr` doc comment), so a global
+            // using one fails to PARSE long before reaching this checker.
             0xFB => {
                 let sub = *expr
                     .get(offset)
                     .ok_or_else(|| ValidationError::Other("truncated WasmGC opcode in constant expression".to_string()))?;
                 offset += 1;
-                if sub != 0x1C {
-                    return Err(ValidationError::Other(format!(
-                        "illegal WasmGC sub-opcode 0x{sub:02X} in constant expression"
-                    )));
+                match sub {
+                    0x1C => {
+                        let v = pop_const(&mut stack)?;
+                        check_const_operand(v, ValueType::I32, ctx.module)?;
+                        stack.push(StackType::Known(ValueType::I31ref));
+                    }
+                    0x00 | 0x01 => {
+                        // struct.new / struct.new_default <type_idx>.
+                        let (type_idx, size) = decode_unsigned_bounded(expr, offset, 32)
+                            .map_err(|e| ValidationError::Other(format!("struct.new: {e}")))?;
+                        offset += size;
+                        let type_idx = type_idx as u32;
+                        let st = ctx
+                            .module
+                            .struct_type_at(type_idx)
+                            .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new references struct type index {type_idx}, but no such struct type exists")))?;
+                        if sub == 0x00 {
+                            // struct.new: pop one const operand per declared
+                            // field, in REVERSE (last field on top).
+                            for field in st.fields.iter().rev() {
+                                let v = pop_const(&mut stack)?;
+                                check_const_operand(v, field.storage.widened_type(), ctx.module)?;
+                            }
+                        }
+                        stack.push(StackType::Known(ValueType::NonNullStructRef(type_idx)));
+                    }
+                    0x06 | 0x07 => {
+                        // array.new / array.new_default <type_idx>: pop
+                        // [elem_value?, i32 length].
+                        let (type_idx, size) = decode_unsigned_bounded(expr, offset, 32)
+                            .map_err(|e| ValidationError::Other(format!("array.new: {e}")))?;
+                        offset += size;
+                        let type_idx = type_idx as u32;
+                        let elem_ty = array_element_field(ctx.module, type_idx)?.storage.widened_type();
+                        let len = pop_const(&mut stack)?;
+                        check_const_operand(len, ValueType::I32, ctx.module)?;
+                        if sub == 0x06 {
+                            let v = pop_const(&mut stack)?;
+                            check_const_operand(v, elem_ty, ctx.module)?;
+                        }
+                        stack.push(StackType::Known(ValueType::NonNullArrayRef(type_idx)));
+                    }
+                    0x08 => {
+                        // array.new_fixed <type_idx> <count>: pop `count`
+                        // const operands. Same `MAX_ARRAY_NEW_FIXED_COUNT`
+                        // DoS guard as the function-body checker's own
+                        // identical arm -- see that arm's doc comment.
+                        let (type_idx, sz1) = decode_unsigned_bounded(expr, offset, 32)
+                            .map_err(|e| ValidationError::Other(format!("array.new_fixed: {e}")))?;
+                        offset += sz1;
+                        let type_idx = type_idx as u32;
+                        let (count, sz2) = decode_unsigned_bounded(expr, offset, 32)
+                            .map_err(|e| ValidationError::Other(format!("array.new_fixed count: {e}")))?;
+                        offset += sz2;
+                        let elem_ty = array_element_field(ctx.module, type_idx)?.storage.widened_type();
+                        if count > MAX_ARRAY_NEW_FIXED_COUNT as u64 {
+                            return Err(ValidationError::Other(format!(
+                                "array.new_fixed count {count} exceeds the maximum of {MAX_ARRAY_NEW_FIXED_COUNT}"
+                            )));
+                        }
+                        for _ in 0..count {
+                            let v = pop_const(&mut stack)?;
+                            check_const_operand(v, elem_ty, ctx.module)?;
+                        }
+                        stack.push(StackType::Known(ValueType::NonNullArrayRef(type_idx)));
+                    }
+                    _ => {
+                        return Err(ValidationError::Other(format!(
+                            "illegal WasmGC sub-opcode 0x{sub:02X} in constant expression"
+                        )));
+                    }
                 }
-                let v = pop_const(&mut stack)?;
-                check_const_operand(v, ValueType::I32, ctx.module)?;
-                stack.push(StackType::Known(ValueType::I31ref));
             }
             // `ref.null <heap_type>` -- same heap-type byte -> `ValueType`
             // mapping the function-body checker's own `0xD0` handler uses
@@ -1230,7 +1581,7 @@ fn pop_const(stack: &mut Vec<StackType>) -> Result<StackType, ValidationError> {
 /// Require a constant-expression operand to be assignable to `expected`
 /// (an `Unknown` actual always matches, mirroring `pop_expect`'s identical
 /// dead-code-polymorphism rule for ordinary instructions).
-fn check_const_operand(actual: StackType, expected: ValueType, module: &WasmModule) -> Result<(), ValidationError> {
+fn check_const_operand(actual: StackType, expected: ValueType, module: TypeContext<'_>) -> Result<(), ValidationError> {
     match actual {
         StackType::Unknown => Ok(()),
         StackType::Known(t) if is_assignable(t, expected, module) => Ok(()),
@@ -1247,7 +1598,7 @@ fn check_const_operand(actual: StackType, expected: ValueType, module: &WasmModu
 /// per this section's own design goal: a const-expr type-checker that
 /// respects real subtyping (`(global (ref $t) (ref.func $f))` needs the
 /// real subtype check, not bare equality), not a narrower one-off rule.
-fn check_const_expr_result(actual: StackType, expected: ValueType, module: &WasmModule, what: &str) -> Result<(), ValidationError> {
+fn check_const_expr_result(actual: StackType, expected: ValueType, module: TypeContext<'_>, what: &str) -> Result<(), ValidationError> {
     match actual {
         StackType::Unknown => Ok(()),
         StackType::Known(t) if is_assignable(t, expected, module) => Ok(()),
@@ -1306,9 +1657,50 @@ fn check_const_exprs(ctx: &ModuleContext) -> Result<(), ValidationError> {
     Ok(())
 }
 
-pub(crate) fn type_check_module(module: &WasmModule) -> Result<(), ValidationError> {
-    check_type_subtyping(module)?;
-    let ctx = build_module_context(module)?;
+/// Type-checks every function body in `module`, returning this module's own
+/// canonicalized type-group forms (W34 third slice: `code/specs/
+/// W34-wasm-gc-canonical-type-equivalence.md`) as a side product on success,
+/// so `crate::validate` (the sole caller) can cache them on `ValidatedModule`
+/// WITHOUT computing them a second time -- see the inline comment below for
+/// why right here, immediately after `check_type_subtyping`, is the correct
+/// place to compute them (and the only place this crate computes them at
+/// all: every instruction-level check below reaches them via `ModuleContext`/
+/// `TypeContext`, never by calling `canonicalize_types` again).
+#[allow(clippy::type_complexity)] // Vec<Option<(Rc<CanonicalGroup>, u32)>> mirrors wasm_types::canonicalize_types's own return shape verbatim; a type alias would only hide the connection.
+pub(crate) fn type_check_module(module: &WasmModule) -> Result<Vec<Option<(Rc<CanonicalGroup>, u32)>>, ValidationError> {
+    // Security review finding (W33 first slice): a cyclic `sub` chain must
+    // be rejected before ANYTHING downstream leans on the `sub` graph
+    // being well-founded -- see `check_type_subtyping_is_acyclic`'s own
+    // doc comment. Hoisted out of `check_type_subtyping` itself (W34 third
+    // slice) precisely BECAUSE `canonicalize_types` right below also
+    // depends on this exact guarantee, and needs to run BEFORE `check_
+    // type_subtyping`'s own struct/array field-covariance checks now (see
+    // that function's own doc comment for why: those checks turned out to
+    // need real canonical data too, not just the nominal `sub` chain).
+    check_type_subtyping_is_acyclic(module)?;
+    // W34 third slice: computed exactly ONCE per module, right here, now
+    // that acyclicity is confirmed -- `wasm_types::canonicalize_types`'s
+    // own doc comment explains why that ordering guarantee matters even
+    // though canonicalization itself never recurses. Threaded into EVERY
+    // downstream check that needs it: `check_type_subtyping`'s own struct/
+    // array field-covariance checks just below, AND every instruction-level
+    // check further down via `ModuleContext`/`TypeContext` (see those
+    // types' own doc comments) -- computed once here, never recomputed at
+    // a per-instruction call site, so `is_assignable` and friends only ever
+    // pay `canonical_types_equivalent`'s own comparison cost, never
+    // canonicalization's. Security review (W34 third slice): that
+    // comparison cost is NOT unconditionally O(1) -- `wasm_types::
+    // canonicalize_types`'s own interning makes it O(1) for the common,
+    // actually-reachable case (two groups this SAME call produced), via an
+    // `Rc::ptr_eq` fast path, but still falls back to a real structural
+    // walk (bounded by `CanonicalCost`'s own caps, per group) whenever it
+    // doesn't -- see that function's own doc comment and CHANGELOG entry
+    // for the real DoS this closes and how. Returned to `crate::validate`
+    // so IT doesn't need to compute this a second time for `ValidatedModule`'s
+    // own cache.
+    let canonical_types = wasm_types::canonicalize_types(module);
+    check_type_subtyping(module, &canonical_types)?;
+    let ctx = build_module_context(module, &canonical_types)?;
     check_const_exprs(&ctx)?;
     let imported_function_count = ctx.func_types.len() - module.functions.len();
 
@@ -1321,7 +1713,7 @@ pub(crate) fn type_check_module(module: &WasmModule) -> Result<(), ValidationErr
             .ok_or_else(|| ValidationError::Other(format!("function #{func_idx} (type {type_idx}) has no matching code entry")))?;
         type_check_function(&ctx, func_idx, func_type, body)?;
     }
-    Ok(())
+    Ok(canonical_types)
 }
 
 fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncType, body: &FunctionBody) -> Result<(), ValidationError> {
@@ -1381,7 +1773,18 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
         match byte {
             // ── `0xFC`-prefixed saturating conversions and bulk memory ──
             0xFC => {
-                let (sub, size) = decode_unsigned(code, offset)
+                // Real corpus bug (`binary-leb128.wast`'s "i64_trunc_sat_
+                // f64_u with 6 bytes" `assert_malformed` case, W-addendum
+                // 2026-09-01 pass): the sub-opcode is a `u32` LEB128 per
+                // spec, same as every other index-shaped immediate --
+                // `decode_unsigned` (bounded only to the native 64-bit/
+                // 10-byte budget) let a 6-byte encoding of the small value
+                // `7` through uncaught. `decode_unsigned_bounded(.., 32)`
+                // enforces the real `ceil(32/7) = 5`-byte cap (overlong)
+                // and the "unused top bits must be zero" out-of-range rule
+                // -- exactly `read_u32leb`'s own precedent in
+                // `wasm-module-parser`.
+                let (sub, size) = decode_unsigned_bounded(code, offset, 32)
                     .map_err(|e| ValidationError::Other(format!("bad 0xFC sub-opcode: {e}")))?;
                 offset += size;
                 match sub {
@@ -1411,6 +1814,19 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // runtime trap, matching every other indexed
                         // immediate this type-checker validates (func/
                         // table/global/local indices).
+                        //
+                        // Real corpus bug (`binary.wast`'s "memory.init
+                        // requires a data count section", W-addendum
+                        // 2026-09-01 pass): the spec requires a data count
+                        // section (§12) whenever `memory.init` appears
+                        // ANYWHERE in the code section, independent of
+                        // whether the data segment it names actually
+                        // exists -- checked FIRST, before the out-of-
+                        // bounds checks below, so it fires even for a
+                        // `data_idx` that happens to be in-bounds.
+                        if ctx.module.missing_data_count_section {
+                            err!("memory.init requires a data count section");
+                        }
                         if !ctx.has_memory {
                             err!("memory.init requires a declared memory");
                         }
@@ -1451,6 +1867,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // data segment it never gets to `memory.init`
                         // from) -- just the same out-of-bounds data-
                         // segment-index check as `memory.init` above.
+                        //
+                        // Same "data count section required" gate as
+                        // `memory.init` above (`binary.wast`'s "data.drop
+                        // requires a data count section" case), checked
+                        // first for the same reason.
+                        if ctx.module.missing_data_count_section {
+                            err!("data.drop requires a data count section");
+                        }
                         let (data_idx, data_size) = decode_idx(code, offset)?;
                         offset += data_size;
                         if data_idx as usize >= ctx.module.data.len() {
@@ -1538,10 +1962,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if table_idx >= ctx.table_count {
                             err!("table.grow references table index {table_idx}, but only {} tables exist", ctx.table_count);
                         }
-                        let elem_type = match ctx.table_element_types[table_idx as usize] {
-                            0x6F => ValueType::Externref,
-                            _ => ValueType::Funcref,
-                        };
+                        let elem_type = ctx.table_element_types[table_idx as usize];
                         let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                         pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // delta
                         pop_expect(&mut stack, frame!(), elem_type, ctx.module)?; // init value
@@ -1572,10 +1993,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if table_idx >= ctx.table_count {
                             err!("table.fill references table index {table_idx}, but only {} tables exist", ctx.table_count);
                         }
-                        let elem_type = match ctx.table_element_types[table_idx as usize] {
-                            0x6F => ValueType::Externref,
-                            _ => ValueType::Funcref,
-                        };
+                        let elem_type = ctx.table_element_types[table_idx as usize];
                         let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                         pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // length
                         pop_expect(&mut stack, frame!(), elem_type, ctx.module)?; // value
@@ -1697,23 +2115,133 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         }
                         stack.push(StackType::Unknown);
                     }
-                    0x02 => {
-                        // struct.get <type_idx> <field_idx>: pops structref,
-                        // pushes the field's value.
-                        let (_, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.get type index: {e}")))?;
-                        let (_, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad struct.get field index: {e}")))?;
+                    0x01 => {
+                        // struct.new_default <type_idx> (W33 fourth slice):
+                        // pops NOTHING (every field gets its type's zero
+                        // value), pushes one structref -- the only
+                        // difference from struct.new's stack effect.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.new_default type index: {e}")))?;
+                        offset += size;
+                        // Still a real bounds check on `type_idx` (matching
+                        // struct.new's own behavior) even though the field
+                        // count itself isn't used for a pop loop here.
+                        struct_field_count(ctx.module, type_idx as u32)?;
+                        stack.push(StackType::Unknown);
+                    }
+                    0x02 | 0x03 | 0x05 => {
+                        // struct.get / struct.get_s / struct.get_u
+                        // <type_idx> <field_idx> (W33 fourth slice adds the
+                        // two packed-field variants, sharing struct.get's
+                        // existing stack-effect shape: pop structref, push
+                        // the field's -- possibly sign/zero-extended --
+                        // value). See `encode_gc_struct_array_instr`'s own
+                        // doc comment (wasm-wast-parser) for why 0x05 is
+                        // struct.get_u in THIS repo's numbering, not the
+                        // real GC spec's.
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.get type index: {e}")))?;
+                        let (field_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad struct.get field index: {e}")))?;
                         offset += sz1 + sz2;
+                        struct_field(ctx.module, type_idx as u32, field_idx as u32)?; // real bounds check
                         pop_val(&mut stack, frame!())?;
                         stack.push(StackType::Unknown);
                     }
                     0x04 => {
                         // struct.set <type_idx> <field_idx>: pops the new
-                        // value and the structref.
-                        let (_, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.set type index: {e}")))?;
-                        let (_, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad struct.set field index: {e}")))?;
+                        // value and the structref. W33 fourth slice: also a
+                        // real mutability check -- `struct.wast`'s own
+                        // "struct.set-immutable" `assert_invalid` case
+                        // requires this to be a validation error, not
+                        // silently accepted (the field itself is still
+                        // real, storage-backed data at runtime; immutability
+                        // is purely a static, validator-enforced property,
+                        // same division of responsibility as every other
+                        // WASM "invalid" rule this crate checks statically).
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.set type index: {e}")))?;
+                        let (field_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad struct.set field index: {e}")))?;
                         offset += sz1 + sz2;
+                        if !struct_field(ctx.module, type_idx as u32, field_idx as u32)?.mutable {
+                            return Err(ValidationError::Other(format!("struct.set: immutable field {field_idx} of type {type_idx}")));
+                        }
                         pop_val(&mut stack, frame!())?;
                         pop_val(&mut stack, frame!())?;
+                    }
+                    0x06 | 0x07 => {
+                        // array.new / array.new_default <type_idx> (W33
+                        // fourth slice): array.new pops [elem_value, i32
+                        // length]; array.new_default pops only [i32
+                        // length] (the element gets its type's zero value).
+                        // Both push one arrayref.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.new type index: {e}")))?;
+                        offset += size;
+                        array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // length
+                        if sub == 0x06 {
+                            pop_val(&mut stack, frame!())?; // elem value
+                        }
+                        stack.push(StackType::Unknown);
+                    }
+                    0x08 => {
+                        // array.new_fixed <type_idx> <count> (W33 fourth
+                        // slice): pops exactly `count` element values
+                        // (declared as a literal immediate, not derived
+                        // from the operand stack), pushes one arrayref.
+                        // `count` is bounded by `MAX_ARRAY_NEW_FIXED_COUNT`
+                        // before the pop loop runs -- a malformed module
+                        // could otherwise claim a `u32::MAX` count and
+                        // force this validator into a multi-billion-
+                        // iteration loop (a real algorithmic DoS even
+                        // though each iteration is O(1) and allocates
+                        // nothing -- the same class of guard `wasm-module-
+                        // parser`'s `MAX_PREALLOC` exists for, just for
+                        // iteration count here instead of allocation size).
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.new_fixed type index: {e}")))?;
+                        let (count, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad array.new_fixed count: {e}")))?;
+                        offset += sz1 + sz2;
+                        array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        if count > MAX_ARRAY_NEW_FIXED_COUNT as u64 {
+                            return Err(ValidationError::Other(format!(
+                                "array.new_fixed count {count} exceeds the maximum of {MAX_ARRAY_NEW_FIXED_COUNT}"
+                            )));
+                        }
+                        for _ in 0..count {
+                            pop_val(&mut stack, frame!())?;
+                        }
+                        stack.push(StackType::Unknown);
+                    }
+                    0x0B..=0x0D => {
+                        // array.get / array.get_s / array.get_u <type_idx>
+                        // (W33 fourth slice): pops [arrayref, i32 index],
+                        // pushes the element's -- possibly sign/zero-
+                        // extended -- value.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.get type index: {e}")))?;
+                        offset += size;
+                        array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // index
+                        pop_val(&mut stack, frame!())?; // arrayref
+                        stack.push(StackType::Unknown);
+                    }
+                    0x0E => {
+                        // array.set <type_idx>: pops [arrayref, i32 index,
+                        // value], pushes nothing. W33 fourth slice: also a
+                        // real mutability check -- `array.wast`'s own
+                        // "array.set-immutable" `assert_invalid` case, the
+                        // array-hierarchy mirror of struct.set's own check
+                        // just above.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.set type index: {e}")))?;
+                        offset += size;
+                        if !array_element_field(ctx.module, type_idx as u32)?.mutable {
+                            return Err(ValidationError::Other(format!("array.set: immutable array element (type {type_idx})")));
+                        }
+                        pop_val(&mut stack, frame!())?; // value
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // index
+                        pop_val(&mut stack, frame!())?; // arrayref
+                    }
+                    0x0F => {
+                        // array.len (W33 fourth slice): NO type immediate
+                        // (see `encode_array_len`'s own doc comment in
+                        // wasm-wast-parser) -- pops one arrayref, pushes I32.
+                        pop_val(&mut stack, frame!())?;
+                        push_val(&mut stack, ValueType::I32);
                     }
                     0x14 | 0x15 => {
                         // ref.test / ref.test null <heap_type>: pops a ref,
@@ -1722,6 +2250,26 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         offset += size;
                         pop_val(&mut stack, frame!())?;
                         push_val(&mut stack, ValueType::I32);
+                    }
+                    0x16 | 0x17 => {
+                        // ref.cast / ref.cast null <heap_type> (W33 second
+                        // slice, item 4): pops a ref, pushes a ref back --
+                        // real dynamic-type checking happens at runtime
+                        // (`wasm-execution`'s handler traps "cast failure"
+                        // on a genuine mismatch), so this static pass only
+                        // needs to keep the abstract stack's byte layout
+                        // and height accurate, same as every other GC op
+                        // here. MUST consume the heap-type immediate's LEB
+                        // bytes (previously fell into the `_ => {}` no-
+                        // immediate default below, which would silently
+                        // desync `offset` from every REAL instruction
+                        // after it in the same function body -- confirmed
+                        // via this slice's own `type-subtyping.wast`
+                        // diagnostic trace, not assumed).
+                        let (_, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad ref.cast heap type: {e}")))?;
+                        offset += size;
+                        pop_val(&mut stack, frame!())?;
+                        stack.push(StackType::Unknown);
                     }
                     0x1C => {
                         // ref.i31 (W20; this crate previously called it
@@ -2085,6 +2633,47 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 let default_target = resolve_label_target(control_stack.len(), default_label)
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_table default target {default_label} out of range")))?;
                 let default_types = label_types(&control_stack[default_target]).to_vec();
+                // Every target (each of `labels`, plus the default) must
+                // independently accept the SAME original operand value(s)
+                // -- WASM's br_table typing rule is a "meet" over all
+                // targets, not a left-to-right chain, so source ORDER must
+                // not affect validity. This used to check target `i`
+                // against whatever `push_vals` had just put back from
+                // target `i-1` (narrowing the value's apparent type on
+                // each pass), which broke as soon as an EARLIER-checked
+                // target needed a WIDER type than a LATER one -- e.g. a
+                // concrete `(ref $t)`-typed value is genuinely assignable
+                // to both a `(ref null $t)` target AND a generic `(ref
+                // null func)` target, but the old chain rejected it
+                // whenever the generic target was checked (and thus
+                // widened away) before the concrete one. Real corpus
+                // regression this closes: `br_table.wast`'s own
+                // `meet-funcref-1`/`meet-multi-ref` etc., which deliberately
+                // list their targets in every possible order specifically
+                // to catch an order-dependent implementation like this.
+                //
+                // The default target's OWN arity worth of values is
+                // popped from the real stack exactly ONCE, into a small
+                // `operands` vec (size = arity, not stack depth) -- every
+                // OTHER target is then checked against this SAME fixed
+                // snapshot via `check_stacktype_assignable` alone, never
+                // touching (or cloning) the real stack again. This
+                // matters for more than tidiness: a `br_table` can list
+                // an attacker-controlled number of targets, and the
+                // operand stack can independently be attacker-driven
+                // deep -- cloning the WHOLE stack once per target (an
+                // earlier version of this fix did exactly that) is
+                // O(target_count * stack_depth), quadratic in a single
+                // instruction's own two independently-controllable
+                // dimensions. Checking a fixed arity-sized snapshot
+                // instead keeps this O(target_count * arity), the same
+                // asymptotic cost the old (order-DEPENDENT, but not
+                // DoS-prone) implementation already had.
+                let mut operands = Vec::with_capacity(default_types.len());
+                for _ in 0..default_types.len() {
+                    operands.push(pop_val(&mut stack, frame!())?);
+                }
+                operands.reverse(); // popped top-to-bottom; restore left-to-right to match `default_types`' own order
                 for &label in &labels {
                     let target = resolve_label_target(control_stack.len(), label)
                         .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_table target {label} out of range")))?;
@@ -2092,12 +2681,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     if types.len() != default_types.len() {
                         err!("br_table targets have mismatched arities ({} vs default's {})", types.len(), default_types.len());
                     }
-                    // Verify without permanently consuming (every target
-                    // must type-check against the SAME current stack).
-                    pop_expect_many(&mut stack, frame!(), &types, ctx.module)?;
-                    push_vals(&mut stack, &types);
+                    for (&actual, &expected) in operands.iter().zip(types.iter()) {
+                        check_stacktype_assignable(actual, expected, ctx.module)?;
+                    }
                 }
-                pop_expect_many(&mut stack, frame!(), &default_types, ctx.module)?;
+                for (&actual, &expected) in operands.iter().zip(default_types.iter()) {
+                    check_stacktype_assignable(actual, expected, ctx.module)?;
+                }
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x0F => {
@@ -2358,10 +2948,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if table_idx >= ctx.table_count {
                     err!("table.get references table index {table_idx}, but only {} tables exist", ctx.table_count);
                 }
-                let elem_type = match ctx.table_element_types[table_idx as usize] {
-                    0x6F => ValueType::Externref,
-                    _ => ValueType::Funcref,
-                };
+                let elem_type = ctx.table_element_types[table_idx as usize];
                 // W26 (table64): the index operand is i64 for an `is64`
                 // table, i32 otherwise.
                 let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
@@ -2378,10 +2965,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if table_idx >= ctx.table_count {
                     err!("table.set references table index {table_idx}, but only {} tables exist", ctx.table_count);
                 }
-                let elem_type = match ctx.table_element_types[table_idx as usize] {
-                    0x6F => ValueType::Externref,
-                    _ => ValueType::Funcref,
-                };
+                let elem_type = ctx.table_element_types[table_idx as usize];
                 let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                 pop_expect(&mut stack, frame!(), elem_type, ctx.module)?;
                 pop_expect(&mut stack, frame!(), idx_type, ctx.module)?;
@@ -2398,21 +2982,56 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // LEB128 trails the offset. Mirrors `wasm-execution`'s
                 // own decode exactly (`MULTI_MEMORY_FLAG`).
                 const MULTI_MEMORY_FLAG: u32 = 0x40;
-                let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad memarg align: {e}")))?;
-                // W25 (memory64): the memarg `offset` immediate is `u64`
-                // unconditionally in the real spec's binary grammar
-                // (verified live against `https://webassembly.github.io/
-                // spec/core/binary/instructions.html` -- see `code/specs/
-                // W25-wasm-memory64-first-slice.md`), not just for a
-                // 64-bit memory; widened from the previous `u32`-typed
-                // read purely for decode correctness -- this arm never
-                // actually uses the decoded VALUE, only its byte length,
-                // so this change is a no-op for every already-passing
-                // file.
-                let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad memarg offset: {e}")))?;
+                // Real corpus bug (`binary-leb128.wast`'s memarg align/
+                // offset overlong and out-of-range `assert_malformed`
+                // cases, W-addendum 2026-09-01 pass): `align` is a `u32`
+                // per spec, unconditionally -- `decode_unsigned` (bounded
+                // only to the native 64-bit/10-byte budget) let a 6+-byte
+                // or high-bit-set encoding of a small value through
+                // uncaught.
+                let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad memarg align: {e}")))?;
                 let raw_align = raw_align as u32;
                 let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
                 let align = raw_align & !MULTI_MEMORY_FLAG;
+                // `offset`'s own width is genuinely context-dependent --
+                // NOT unconditionally `u32` the way `align` is. This
+                // SUPERSEDES the previous W25 comment here, which claimed
+                // (citing a LIVE fetch of the current spec page) that
+                // `offset` is `u64` "unconditionally": that's the spec's
+                // CURRENT (post-memory64-merge) text, but the pinned
+                // testsuite commit this repo's `wasm-conformance` corpus
+                // is actually graded against
+                // (`28864811cf03bdbf880733786148feaba339582d`) disagrees
+                // in BOTH directions, confirmed by two real corpus files:
+                // - `binary-leb128.wast` asserts a 6-byte offset encoding
+                //   of the value `2`, on a plain 32-bit memory, IS
+                //   malformed ("integer representation too long") -- only
+                //   holds under a 5-byte/32-bit budget.
+                // - `binary_leb128_64.wast` asserts a 10-byte offset
+                //   encoding of `2^64 - 1`, on a memory64 (`is64`) memory,
+                //   is perfectly valid (a plain, non-`assert_malformed`
+                //   `module`), and that `2^64` (one bit further) IS
+                //   malformed ("integer too large") -- only holds under a
+                //   FULL 64-bit budget.
+                // So: narrow to 32 bits only when we can already prove
+                // (without having decoded `offset` yet) that a 32-bit
+                // budget is correct -- i.e. no explicit multi-memory
+                // `memidx` follows (so the target is implicitly memory 0)
+                // AND memory 0 isn't `is64`. The multi-memory case can't
+                // be resolved this way at all: `memidx` isn't decoded
+                // until AFTER `offset` in this format (see below), so
+                // which memory `offset` even addresses is still unknown
+                // here -- fall back to the full native 64-bit budget
+                // (`decode_unsigned_bounded(.., 64)` is byte-for-byte
+                // `decode_unsigned`) rather than guess, exactly preserving
+                // this crate's previous, un-regressed behavior for that
+                // combination (no corpus file currently exercises a
+                // multi-memory memarg with an offset value that a 32-bit
+                // budget would have rejected anyway, so this is a pure
+                // no-op there, not a knowingly-loose carve-out).
+                let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad memarg offset: {e}")))?;
                 offset += sz1 + sz2;
                 let memidx = if has_memidx {
                     let (memidx, sz3) = decode_idx(code, offset)?;
@@ -2497,8 +3116,15 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     // though no real module would hit that), no stack
                     // effect at all.
                 } else {
-                    let (align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad atomic memarg align: {e}")))?;
-                    let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad atomic memarg offset: {e}")))?;
+                    // Same align/offset width fix as the plain-memory
+                    // `0x28..=0x3E` memarg read above -- `align` is always
+                    // `u32`-bounded; `offset` widens to 64 bits only for
+                    // an `is64` memory 0 (atomics have no multi-memory
+                    // `memidx` immediate at all, so memory 0 is always the
+                    // target -- no ambiguous case to fall back from here).
+                    let (align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad atomic memarg align: {e}")))?;
+                    let offset_bits: u32 = if ctx.memory_is64.first().copied().unwrap_or(false) { 64 } else { 32 };
+                    let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad atomic memarg offset: {e}")))?;
                     offset += sz1 + sz2;
 
                     if !ctx.has_memory {
@@ -2586,7 +3212,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             // correctly -- its actual byte VALUES don't affect the type
             // stack, only its presence (pushing one `V128`) does.
             0xFD => {
-                let (sub, size) = decode_unsigned(code, offset)
+                // Same u32-bounded fix as the `0xFC` sub-opcode read above
+                // -- identical shape (a LEB128 `u32` sub-opcode), same
+                // overlong/out-of-range gap when left on the unbounded
+                // native decoder.
+                let (sub, size) = decode_unsigned_bounded(code, offset, 32)
                     .map_err(|e| ValidationError::Other(format!("bad 0xFD sub-opcode: {e}")))?;
                 offset += size;
                 let simd_op = wasm_opcodes::get_simd_op(sub as u32)
@@ -3349,10 +3979,28 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load/v128.store used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        // Same u32-bounded fix (W-addendum 2026-09-01
+                        // pass) as the plain-memory `0x28..=0x3E` memarg
+                        // read above, applied here and at every other
+                        // `v128`-prefixed memarg site below -- identical
+                        // field shapes, same overlong/out-of-range gap on
+                        // the unbounded native decoder.
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
@@ -3414,10 +4062,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load8_lane/v128.store8_lane used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
@@ -3482,10 +4142,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load16_lane/v128.store16_lane used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
@@ -3551,10 +4223,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load32_lane/v128.store32_lane used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
@@ -3620,10 +4304,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load64_lane/v128.store64_lane used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;

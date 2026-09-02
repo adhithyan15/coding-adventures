@@ -4,14 +4,14 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e7a9be891043fdae",
+  "sourceHash": "fnv1a64:617b1388d6d8f566",
   "lessons": [
     {
       "id": "ML-C13-shareera-bhaagangal",
       "sequence": 410,
       "title": "തല, കൈ — head and hand, matching Tamil closely",
       "headword": "തല കൈ",
-      "romanization": "",
+      "romanization": "thala kai",
       "gloss": "head and hand — matching Tamil's native pair almost exactly",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:188461a9e7b4408b",
+      "sourceHash": "fnv1a64:0f48c09019d0bd0b",
       "notice": null,
       "blocks": [
         {

@@ -137,6 +137,11 @@ cross-platform proving application. Items are ordered by risk and dependency.
   host-neutral diagnostics, computed CSS and HTML attribute mapping, recursive
   shared layout/paint dispatch, and a deterministic fixture used by every
   available Venture host pipeline.
+- [x] **P2 CSS convergence — generated content and marker boxes.** Add reusable
+  scoped counters, `::before`/`::after` content, HTML/CSS list ordinals,
+  inside/outside marker geometry, typed diagnostics, and ordinary Layout IR
+  text boxes that flow through shared paint, hit testing, and every available
+  host without toolkit-specific behavior.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

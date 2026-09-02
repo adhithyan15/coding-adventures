@@ -29,6 +29,15 @@ MosaicHost::~MosaicHost() {
   }
 }
 
+void MosaicHost::registerTypes() {}
+
+void MosaicHost::attach(QObject *root)
+{
+  // No QML types to register and no root handle needed: this host talks to the
+  // engine over engram-capi, and the generated host leaves both empty too.
+  Q_UNUSED(root);
+}
+
 QVariantMap MosaicHost::props() {
   if (!ensureLoaded()) {
     return {};

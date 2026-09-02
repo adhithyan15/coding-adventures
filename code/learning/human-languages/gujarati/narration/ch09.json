@@ -4,14 +4,14 @@
   "chapter": 9,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ce5d6decdf91c66f",
+  "sourceHash": "fnv1a64:47f68170d0a95a35",
   "lessons": [
     {
       "id": "GU-C03-hun",
       "sequence": 180,
       "title": "હું (hũ) — \"I\"",
       "headword": "હું",
-      "romanization": "",
+      "romanization": "hũ",
       "gloss": "I",
       "script": "gujarati",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ef56611e6fc96ffa",
+      "sourceHash": "fnv1a64:b3dbe95d11a1f24f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -174,7 +174,7 @@
       "sequence": 190,
       "title": "કેમ (kem) — \"how,\" a proper k- question",
       "headword": "કેમ",
-      "romanization": "",
+      "romanization": "kem",
       "gloss": "how (also \"why\")",
       "script": "gujarati",
       "modality": "sight",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:22502225dcfd415d",
+      "sourceHash": "fnv1a64:368c6f4cc087f0f7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -317,7 +317,7 @@
       "sequence": 200,
       "title": "તમે કેમ છો? (tame kem chho?) — \"how are you?\"",
       "headword": "તમે કેમ છો?",
-      "romanization": "",
+      "romanization": "tame kem chho?",
       "gloss": "how are you? (respectful)",
       "script": "gujarati",
       "modality": "sight",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2dd85efb50b2c11e",
+      "sourceHash": "fnv1a64:bc7d903aa7d17d98",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -361,7 +361,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "તમે કેમ છો? = તમે (tame, respectful \"you\") + કેમ (kem, \"how\") + છો (chho, \"are\") — literally \"you how are?\", the verb last. Chho is the respectful/plural form of the copula chhe you met in the name exchange (hũ chhũ I am / tame chho you are). To a friend (tũ): તું કેમ છે? (tũ kem chhe?)."
+              "text": "તમે કેમ છો? (tame kem chho?) = તમે (tame, respectful \"you\") + કેમ (kem, \"how\") + છો (chho, \"are\") — literally \"you how are?\", the verb last. Chho is the respectful/plural form of the copula chhe you met in the name exchange (hũ chhũ I am / tame chho you are). To a friend (tũ): તું કેમ છે? (tũ kem chhe?)."
             }
           ]
         },
@@ -372,11 +372,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Respectful: તમે કેમ છો? (tame … chho)."
+              "text": "Respectful: તમે કેમ છો? (tame kem chho?) (tame … chho)."
             },
             {
               "kind": "speech",
-              "text": "Familiar: તું કેમ છે? (tũ … chhe)."
+              "text": "Familiar: તું કેમ (kem) છે? (tũ … chhe)."
             },
             {
               "kind": "speech",
@@ -476,7 +476,7 @@
       "sequence": 210,
       "title": "મજા (majā) — \"enjoyment,\" and how to answer",
       "headword": "મજા",
-      "romanization": "",
+      "romanization": "majā",
       "gloss": "enjoyment, fun — and the reply \"હું મજામાં છું\"",
       "script": "gujarati",
       "modality": "sight",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:850ba277d5237e96",
+      "sourceHash": "fnv1a64:a8f1b5a7a965ad6e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -639,7 +639,7 @@
       "sequence": 220,
       "title": "વાંધો નહીં (vāndho nahĩ) — \"no problem\"",
       "headword": "વાંધો નહીં",
-      "romanization": "",
+      "romanization": "vāndho nahĩ",
       "gloss": "no problem / it's okay / you're welcome",
       "script": "gujarati",
       "modality": "sight",
@@ -647,7 +647,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9f81219959749e33",
+      "sourceHash": "fnv1a64:9c1855cd68b6dd6e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -694,7 +694,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "વાંધો નહીં literally means \"[there is] no objection\" — vāndho (\"objection, difficulty, harm\") + નહીં (nahĩ, \"not / no\"). It serves as \"it's okay / no worries / no problem / you're welcome.\" The negative નહીં (nahĩ) is the fuller form of the ના (nā) from the earlier yes/no lesson — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ."
+              "text": "વાંધો નહીં (vāndho nahĩ) literally means \"[there is] no objection\" — vāndho (\"objection, difficulty, harm\") + નહીં (nahĩ, \"not / no\"). It serves as \"it's okay / no worries / no problem / you're welcome.\" The negative નહીં (nahĩ) is the fuller form of the ના (nā) from the earlier yes/no lesson — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ."
             }
           ]
         },

@@ -6,7 +6,8 @@
     "TA-PATH-031",
     "TA-PATH-50-WELCOME",
     "TA-PATH-51-SKY",
-    "TA-PATH-58-ANIMAL"
+    "TA-PATH-58-ANIMAL",
+    "TA-PATH-65-DOING"
   ],
   "omits": [
     "GREETING-FORMAL",

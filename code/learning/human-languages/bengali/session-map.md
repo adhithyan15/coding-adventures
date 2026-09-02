@@ -1,12 +1,19 @@
-# Session Map — Bengali Chapters 1–12
+# Session Map — Bengali Chapters 1–12 and 17–19
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
 authoritative order.
 
-**There is no reading course.** The Bengali script is learned *through* the
-words: each lesson's *"The letters in this word"* section introduces exactly the
-letters that word needs.
+**The script is not a gated course.** Chapters 1–15 learn it *through* the
+words: each lesson's *"The letters in this word"* section shows exactly the
+letters that word needs, with the word romanized so it can be said before it can
+be read. Chapters 16–19 then teach those shapes one at a time and hand the words
+back to the eye, in the order the words themselves ask for.
+
+**Sessions 58–80 — chapters 13 through 16 — are not mapped here yet.** That gap
+predates the script tranche below and is recorded rather than filled, so the
+numbering stays true to the authored order: chapters 1–12 end at session 57,
+chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 
 ## Chapter 1 — Greetings
 
@@ -125,6 +132,63 @@ letters that word needs.
 | 56 | nak | নাক | "nose" ← PIE *néh₂s-* → English **nose**, Latin *nāsus* |
 | 57 | hridoy | হৃদয় | "heart" ← PIE *ḱérd-* → English **heart**, Greek *kardía*, Latin *cor* |
 
+## Chapter 17 — Five More Pieces, Six More Words
+
+Every word here was spoken in an earlier chapter and is now handed to the eye.
+A new piece arrives, the next lesson spends it on a word, and the piece after
+that waits until something has come between.
+
+| Session | Lesson | Piece / word | Hook |
+|---|---|---|---|
+| 81 | naam-read | নাম | a whole word out of the nine pieces already held; নাক rides along |
+| 82 | i-matra | ি | written to the **left** of its consonant, heard to the right |
+| 83 | ami-read | আমি | the swap made visible; কি and আসি come free |
+| 84 | la | ল | one l-letter where Tamil and Malayalam keep three |
+| 85 | lal-read | লাল | the same letter twice around one mātrā; কাল by swapping one shape |
+| 86 | ta | ত | **dental** t — on the teeth, not the ridge; a different letter from English's |
+| 87 | tin-read | তিন | *three*, and the leading-sign trap a second time |
+| 88 | u-matra | ু | the first mark that hangs **below** the line |
+| 89 | tumi-read | তুমি | one word, two signs, two directions; reading is a band, not a line |
+| 90 | e-matra | ে | the second leading sign — so leading marks become a rule, not two facts |
+| 91 | kemon-read | কেমন | the payoff: six words read, and why a sign is worth more than a letter |
+
+## Chapter 18 — The Breath That Is a Letter
+
+| Session | Lesson | Piece / word | Hook |
+|---|---|---|---|
+| 92 | o-matra | ো | not a new shape: **ে** in front and **া** behind, at once |
+| 93 | kalo-read | কালো | two different signs on two consecutive letters |
+| 94 | ba | ব | the letter that swallowed Sanskrit's *v* — the track's whole fingerprint |
+| 95 | abar-read | আবার | *again*; why a word-initial vowel takes its full letter |
+| 96 | bha | ভ | the breathy twin of ব — the puff is a **letter**, not a manner |
+| 97 | bhalo-read | ভালো | the most-used word in the book, and কালো's near-twin on the page |
+| 98 | kha | খ | the breathy k; a third pair makes the plain/breathy square a pattern |
+| 99 | mukh-read | মুখ | *mouth*, ending on a breath English closes off |
+| 100 | da | দ | the dental again, voice on |
+| 101 | shada-read | সাদা | *white*; the s-letter said *sh*, and three colours readable |
+| 102 | dha | ধ | the fourth cell; the square is the unit the whole order is built from |
+| 103 | dudh-read | দুধ | the payoff: plain and breathy in one short word, twelve words held |
+
+## Chapter 19 — Both Bodies of a Vowel
+
+| Session | Lesson | Piece / word | Hook |
+|---|---|---|---|
+| 104 | cha | চ | a fourth place of articulation — the roof of the mouth |
+| 105 | chaa-read | চা | *tea*: the overland loan beside English's sea-borne one; দুধ চা |
+| 106 | pa | প | the lips, and the last place — the map of the mouth is complete |
+| 107 | poribar-read | পরিবার | six pieces; the bare consonant carrying the inherent **ô** mid-word |
+| 108 | ja | জ | the voiced roof cell; the letter Sanskrit *jñā* opens on |
+| 109 | jol-read | জল | *water*: two letters, **no signs** — the cleanest picture of an abugida |
+| 110 | ii-matra | ী | a second i-sign for a length Bengali no longer says |
+| 111 | nil-read | নীল | *blue*; a spelling that records Sanskrit rather than Bengali |
+| 112 | i-indep | ই | the vowel's own letter, for when there is nothing to lean on |
+| 113 | bhai-read | ভাই | "nothing to lean on" is not "start of word" |
+| 114 | e-indep | এ | the third pair — the arrangement becomes predictable |
+| 115 | ek-read | এক | the payoff: *one*, twenty-six pieces, eighteen words off a page |
+
 ## Next
 
-Chapter 13 — postpositions (*-e, -te, -r, -ke*) and numbers 6–10.
+Chapters 13–16 still need session-map entries. On the script side, the next
+tranche starts at **য**, **়**, **ও**, **গ** and **ছ** — the five untaught
+glyphs the corpus shows most often — each with a word already glossed and
+waiting: হ্যাঁ, কাপড়, হওয়া, লাগা, আছি.

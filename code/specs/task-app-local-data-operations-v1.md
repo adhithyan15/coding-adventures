@@ -29,6 +29,34 @@ are defined by the [Linux bundle](task-app-linux-release-bundles-v1.md),
 [macOS application](task-app-macos-application-v1.md), and
 [Windows application](task-app-windows-application-v1.md) contracts.
 
+## In-app persistence status
+
+The shared TaskApp shell keeps two lines of host-owned persistence truth visible
+without opening a modal or moving keyboard focus:
+
+- whether changes are saved locally or exist only for the current session; and
+- where that host keeps data, or where its exact platform/backend instructions
+  can be found.
+
+Every desktop host says the data is local-only. Windows and macOS show the exact
+path from the table above. Linux points to the `LOCAL-DATA.txt` beside the release
+because Qt intentionally has a different live directory from Flutter and Compose;
+the shared Rust adapter cannot truthfully choose one backend-specific path.
+
+The web host identifies its browser-profile IndexedDB database (`task-app`) and
+workspace record (`web`). If IndexedDB cannot open, it explicitly says the session
+is temporary and that closing or reloading loses changes. A rejected engine
+snapshot is copied to the fixed `workspace/web-corrupt` record before the app
+starts fresh, and the warning names that recovery record. A newer rejection
+replaces the older recovery record, matching the desktop `.corrupt` sibling rule.
+Background write failures also become persistent warnings rather than unhandled
+promises or console-only evidence.
+
+Native bindings continue to quarantine invalid bytes at the exact `.corrupt` path
+described below. When the app declares the shared `storage-warning` slot, the host
+also injects that existing warning into the app's prop envelope so Qt, Flutter,
+Compose, SwiftUI, and WinUI all render it in the same focus-safe panel.
+
 ## Install, launch, and upgrade
 
 These are portable, unsigned development bundles rather than package-manager

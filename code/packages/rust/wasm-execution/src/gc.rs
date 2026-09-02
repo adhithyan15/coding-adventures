@@ -30,7 +30,7 @@
 //! `GcStruct` field is a tagged `WasmValue` — exactly `Ref(Some(_))`,
 //! `Ref(None)`, or a numeric variant, self-describing with no schema needed.
 
-use crate::{GcStruct, WasmExecutionContext, WasmValue, REF_NULL_SENTINEL, REF_TAG};
+use crate::{GcObject, WasmExecutionContext, WasmValue, REF_NULL_SENTINEL, REF_TAG};
 use gc_core::profile::GcCycleStats;
 use gc_core::GcProfile;
 use virtual_machine::{GenericVM, VMError, Value};
@@ -133,7 +133,19 @@ fn mark(vm: &GenericVM, ctx: &WasmExecutionContext) -> Vec<bool> {
     let mut marked = vec![false; heap_len];
     let mut work: Vec<u32> = Vec::new();
 
-    push_roots_from_values(&ctx.globals, &mut work);
+    // Real cross-instance global sharing (see `WasmExecutionContext::
+    // globals`'s own doc comment): each entry is a shared `Rc<RefCell<
+    // GlobalStorage>>` handle now, not an owned value, so GC root-scanning
+    // dereferences a snapshot of the CURRENT values rather than reading
+    // `WasmValue`s directly out of the Vec. Only `GlobalStorage::value`
+    // participates in `gc_heap` root-scanning (W35 third slice) -- a
+    // funcref value's real identity lives in `GlobalStorage::func_ref`
+    // (a `FuncRefTarget`, never a `gc_heap` reference) once resolved, and
+    // even the un-resolved sentinel `WasmValue::Ref(Some(0))` `value` a
+    // real `func_ref` global carries is never a genuine `gc_heap` handle
+    // either.
+    let global_values: Vec<WasmValue> = ctx.globals.iter().map(|g| g.borrow().value).collect();
+    push_roots_from_values(&global_values, &mut work);
     push_roots_from_values(&ctx.typed_locals, &mut work);
     for frame in &ctx.saved_frames {
         push_roots_from_values(&frame.locals, &mut work);
@@ -147,7 +159,11 @@ fn mark(vm: &GenericVM, ctx: &WasmExecutionContext) -> Vec<bool> {
         }
         marked[idx] = true;
         if let Some(obj) = &ctx.gc_heap[idx] {
-            push_roots_from_values(&obj.fields, &mut work);
+            // W33 fourth slice: `GcObject::children()` is a struct's fields
+            // OR an array's elements, uniformly -- see that method's own
+            // doc comment for why one heap/one walk correctly traces
+            // cross-references in EITHER direction.
+            push_roots_from_values(obj.children(), &mut work);
         }
     }
 
@@ -227,9 +243,9 @@ pub(crate) fn maybe_collect(vm: &GenericVM, ctx: &mut WasmExecutionContext) {
     adapt_threshold(&mut ctx.gc_state, live_before);
 }
 
-/// Allocate a `GcStruct`, reusing a tombstoned slot from `gc_state.free_list`
-/// before growing `gc_heap` — the free-list half of the slot-arena design.
-/// Returns the new object's handle.
+/// Allocate a [`GcObject`] (struct OR array — W33 fourth slice), reusing a
+/// tombstoned slot from `gc_state.free_list` before growing `gc_heap` — the
+/// free-list half of the slot-arena design. Returns the new object's handle.
 ///
 /// A handle is a `u32` (the WASM-spec-mandated representation), so growing
 /// `gc_heap` past `u32::MAX` entries would silently wrap the new handle onto
@@ -238,7 +254,7 @@ pub(crate) fn maybe_collect(vm: &GenericVM, ctx: &mut WasmExecutionContext) {
 /// security review flagged. Guarded here with a checked conversion so that
 /// (practically unreachable — it implies 100+GB of simultaneously live,
 /// uncollected heap) case is a clean trap instead of silent corruption.
-pub(crate) fn alloc(ctx: &mut WasmExecutionContext, obj: GcStruct) -> Result<u32, VMError> {
+pub(crate) fn alloc(ctx: &mut WasmExecutionContext, obj: GcObject) -> Result<u32, VMError> {
     let WasmExecutionContext { gc_heap, gc_state, .. } = ctx;
     gc_state.live_count += 1;
     if let Some(idx) = gc_state.free_list.pop() {
@@ -256,11 +272,13 @@ pub(crate) fn alloc(ctx: &mut WasmExecutionContext, obj: GcStruct) -> Result<u32
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{SavedFrame, WasmExecutionContext};
+    use crate::{GcStruct, GlobalStorage, SavedFrame, WasmExecutionContext};
+    use std::cell::RefCell;
     use std::collections::HashMap;
+    use std::rc::Rc;
 
-    fn obj(fields: Vec<WasmValue>) -> GcStruct {
-        GcStruct { type_idx: 0, fields }
+    fn obj(fields: Vec<WasmValue>) -> GcObject {
+        GcObject::Struct(GcStruct { type_idx: 0, fields })
     }
 
     /// A bare `WasmExecutionContext` with every non-heap field trivially
@@ -274,6 +292,9 @@ mod tests {
             global_types: Vec::new(),
             func_types: Vec::new(),
             types: Vec::new(),
+            type_subtyping: Vec::new(),
+            canonical_types: Vec::new(),
+            func_type_indices: Vec::new(),
             func_bodies: Vec::new(),
             host_functions: Vec::new(),
             typed_locals: Vec::new(),
@@ -287,6 +308,8 @@ mod tests {
             v128_heap: vec![[0u8; 16]],
             simd_consts: Vec::new(),
             struct_field_counts: Vec::new(),
+            struct_field_storage: Vec::new(),
+            array_element_storage: Vec::new(),
             gc_state: GcState::default(),
             call_depth: 0,
             pending_tail_call: None,
@@ -299,6 +322,10 @@ mod tests {
             try_table_infos: Vec::new(),
             instance_id: 0,
             exception_heap: Vec::new(),
+            func_ref_heap: Vec::new(),
+            self_resolver: None,
+            func_identities: Vec::new(),
+            instance_identity: 0,
         }
     }
 
@@ -344,7 +371,7 @@ mod tests {
     /// `alloc` returning `Result` only guards a practically-unreachable
     /// `u32` overflow (needs 100+GB of live heap); tests below don't
     /// exercise that path, so unwrap it away for readability.
-    fn alloc_ok(ctx: &mut WasmExecutionContext, obj: GcStruct) -> u32 {
+    fn alloc_ok(ctx: &mut WasmExecutionContext, obj: GcObject) -> u32 {
         alloc(ctx, obj).unwrap()
     }
 
@@ -361,11 +388,8 @@ mod tests {
         let c = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(3)]));
         assert_eq!(c, a, "reused the freed slot instead of growing");
         assert_eq!(ctx.gc_heap.len(), 2, "arena did not grow");
-        assert_eq!(
-            ctx.gc_heap[b as usize].as_ref().unwrap().fields[0],
-            WasmValue::I32(2),
-            "b's slot untouched by a's reuse"
-        );
+        let GcObject::Struct(b_struct) = ctx.gc_heap[b as usize].as_ref().unwrap() else { panic!("b is a struct") };
+        assert_eq!(b_struct.fields[0], WasmValue::I32(2), "b's slot untouched by a's reuse");
     }
 
     #[test]
@@ -377,7 +401,7 @@ mod tests {
         let c = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(42)]));
         let b = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(c))]));
         let a = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(b))]));
-        ctx.globals.push(WasmValue::Ref(Some(a)));
+        ctx.globals.push(Rc::new(RefCell::new(GlobalStorage { value: WasmValue::Ref(Some(a)), func_ref: None })));
 
         let marked = mark(&vm, &ctx);
         assert!(marked[a as usize] && marked[b as usize] && marked[c as usize]);
@@ -392,7 +416,7 @@ mod tests {
         let c = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(42)]));
         let b = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(c))]));
         let a = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(b))]));
-        ctx.globals.push(WasmValue::Ref(Some(a)));
+        ctx.globals.push(Rc::new(RefCell::new(GlobalStorage { value: WasmValue::Ref(Some(a)), func_ref: None })));
         // Pure garbage: unreachable from anything.
         let garbage = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(999)]));
 
@@ -426,7 +450,8 @@ mod tests {
         // via struct.set-equivalent direct field mutation.
         let x = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(0)]));
         let y = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(x))]));
-        ctx.gc_heap[x as usize].as_mut().unwrap().fields[0] = WasmValue::Ref(Some(y));
+        let GcObject::Struct(x_struct) = ctx.gc_heap[x as usize].as_mut().unwrap() else { panic!("x is a struct") };
+        x_struct.fields[0] = WasmValue::Ref(Some(y));
         // No root anywhere points at x or y.
 
         maybe_collect(&vm, &mut ctx);
@@ -509,7 +534,7 @@ mod tests {
         let garbage_before = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(1)]));
         let kept = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(2)]));
         let garbage_after = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(3)]));
-        ctx.globals.push(WasmValue::Ref(Some(kept)));
+        ctx.globals.push(Rc::new(RefCell::new(GlobalStorage { value: WasmValue::Ref(Some(kept)), func_ref: None })));
 
         maybe_collect(&vm, &mut ctx);
 

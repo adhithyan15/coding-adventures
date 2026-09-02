@@ -135,7 +135,7 @@ The letters in this word.
 The key word is આનંદ (ānand): આ + ન + ં (the nasal) + દ (da).
 
 The word, taken apart.
-તમને મળીને આનંદ થયો = તમને (tamne, "to you") + મળીને (maḷīne, "having met") + આનંદ થયો (ānand thayo, "joy happened") — literally "having met you, joy happened." The key word આનંદ (ānand, "joy, bliss") is Sanskrit — ā- ("fully") + nand ("to rejoice") — the ānanda of sat-cit-ānanda ("being-consciousness-bliss"), and a common Gujarati name. So a simple greeting reaches, as Sanskrit did, for the word for the deepest happiness.
+તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) = તમને (tamne, "to you") + મળીને (maḷīne, "having met") + આનંદ થયો (ānand thayo, "joy happened") — literally "having met you, joy happened." The key word આનંદ (ānand, "joy, bliss") is Sanskrit — ā- ("fully") + nand ("to rejoice") — the ānanda of sat-cit-ānanda ("being-consciousness-bliss"), and a common Gujarati name. So a simple greeting reaches, as Sanskrit did, for the word for the deepest happiness.
 
 Guided Practice.
 [pause 1 second]
@@ -229,7 +229,7 @@ Warm-up.
 Turn the introduction around — ask, instead of tell.
 
 The two words — assembled.
-તમારું (tamārũ, "your," the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (is) becomes literally "your name what is?" Gujarati keeps the verb last and drops the question-word shũ into the object slot.
+તમારું (tamārũ, "your," the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (chhe) (is) becomes literally "your name what is?" Gujarati keeps the verb last and drops the question-word shũ into the object slot.
 
 Grammar Lens: answering, and the familiar form.
 Answer with the sentence you built: Mārũ nām Arun chhe. The familiar version swaps tamārũ for તારું (tārũ, "your," from tũ): tārũ nām shũ chhe? Note mārũ / tārũ / tamārũ — "my / your / your (resp.)" — all take the neuter -ũ before nām.

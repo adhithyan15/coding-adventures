@@ -4,14 +4,14 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1b80e5f092f94c5e",
+  "sourceHash": "fnv1a64:02e4e75e4b4208b9",
   "lessons": [
     {
       "id": "ML-C11-nirangal",
       "sequence": 390,
       "title": "കറുപ്പ്, വെള്ള, ചുവപ്പ്, നീല — the same split as Tamil",
       "headword": "കറുപ്പ് വെള്ള ചുവപ്പ് നീല",
-      "romanization": "",
+      "romanization": "karuppŭ veḷḷa cuvappŭ nīla",
       "gloss": "black, white, red, blue — Malayalam shares Tamil's native colors, and its Sanskrit blue too",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7ad92108dba1c4e",
+      "sourceHash": "fnv1a64:89c72d3ab82e0957",
       "notice": null,
       "blocks": [
         {

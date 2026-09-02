@@ -1,0 +1,768 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 23,
+  "title": "Sit, and How You Feel",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e1e0b878e2af576d",
+  "lessons": [
+    {
+      "id": "MR-C23-basne",
+      "sequence": 920,
+      "title": "बसणे (basṇe) — to sit",
+      "headword": "बसणे",
+      "romanization": "basṇe",
+      "gloss": "to sit — the first word a Marathi host says to you, and a root that named villages",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7b97e19dd54164c5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last run of words was about things. This one is about how a person is doing — and it opens with what a Marathi household says to a visitor before anything else."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बसणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बसणे — basṇe — to sit."
+            },
+            {
+              "kind": "speech",
+              "text": "बसा. — basā. — Please sit."
+            },
+            {
+              "kind": "speech",
+              "text": "One word, and it is hospitality: said at the door, it means you are welcome, stay a while."
+            },
+            {
+              "kind": "speech",
+              "text": "मी बसतो / बसते. — mī basto / baste. — I sit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ब the quiet ba, स the sa of namaskār, and णे as ever. ब-स-णे. Nothing here is new to your hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — a root that named villages",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बसणे (basṇe) comes through Prakrit vaisai from Sanskrit उपविशति upaviśati, \"sits down\" — उप upa-, \"down, near,\" on विश् viś-, \"to enter, to settle in.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That settling root is Indo-European weyḱ-, which named the dwelling and then the group of people in it. Latin took it as vīcus, a village or a quarter of a town, and English carries it, worn thin, at the end of place names: Norwich, Warwick, Ipswich. To sit down and to settle a village turn out to be the same idea at two sizes."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basṇe — to sit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **basṇe** — to sit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basā. — please sit, the way a host says it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **basā.** — please sit, the way a host says it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī basto or mī baste, whichever declares you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **mī basto** or **mī baste**, whichever declares you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "what Latin vīcus meant — a village",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: what Latin *vīcus* meant — **a village**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Invite someone to sit. (Basā.) What did the root under बसणे (basṇe) mean before it meant sitting? (To settle, to enter a dwelling.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: बसणे (basṇe); Wiktionary: विश्."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C23-vatne",
+      "sequence": 930,
+      "title": "वाटणे (vāṭṇe) — to feel, to seem",
+      "headword": "वाटणे",
+      "romanization": "vāṭṇe",
+      "gloss": "to feel, to seem — the answer to how are you, built the way liking and knowing were",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d6d411aa7c0a742c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs you own put you in the dative rather than the nominative: मला मराठी आवडते and मला माहीत आहे. A third one joins them now, and it is the one you answer how are you with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाटणे — vāṭṇe — to feel, to seem."
+            },
+            {
+              "kind": "speech",
+              "text": "मला बरं वाटतं. — malā baraṁ vāṭtaṁ. — I feel fine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the third verb that puts you in the dative",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Word for word, मला बरं वाटतं is to-me fine seems. You are not the one doing the feeling; the feeling arrives at you, and मला malā is where it lands. Three sentences now stand on that one frame:"
+            },
+            {
+              "kind": "speech",
+              "text": "मला माहीत आहे — to me it is known."
+            },
+            {
+              "kind": "speech",
+              "text": "मला मराठी आवडते — to me Marathi is pleasing."
+            },
+            {
+              "kind": "speech",
+              "text": "मला बरं वाटतं — to me fine seems."
+            },
+            {
+              "kind": "speech",
+              "text": "Marathi keeps saying that what happens inside a person happens to them. Once that click lands, a whole family of verbs opens at once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व, ा, ट — the retroflex ṭa, tongue curled back — then णे. वा-ट-णे. In वाटतं the final तं carries the neuter ending that बरं also wears."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṭṇe — to feel, to seem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **vāṭṇe** — to feel, to seem]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malā baraṁ vāṭtaṁ. — I feel fine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **malā baraṁ vāṭtaṁ.** — I feel fine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "the three dative sentences in order — malā māhīt āhe, malā marāṭhī āvaḍte, malā baraṁ vāṭtaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: the three dative sentences in order — **malā māhīt āhe**, **malā marāṭhī āvaḍte**, **malā baraṁ vāṭtaṁ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what malā does in all three — it is where the feeling arrives",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **malā** does in all three — it is where the feeling arrives]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "बरं on its own, the agreeing word you have had since the first courtesy run, and hear it doing new work inside this sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **बरं** on its own, the agreeing word you have had since the first courtesy run, and hear it doing new work inside this sentence]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say that you feel fine. (Malā baraṁ vāṭtaṁ.) Translated word for word, what does that sentence say? (To me fine seems.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: वाटणे (vāṭṇe)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C23-jhopne",
+      "sequence": 940,
+      "title": "झोपणे (jhopṇe) — to sleep",
+      "headword": "झोपणे",
+      "romanization": "jhopṇe",
+      "gloss": "to sleep — another inherited word Marathi let go of, where Hindi kept it",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a8ae7cf3a2a42202",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "डोळा turned out not to be the old inherited eye-word at all — Marathi had swapped it for something else entirely. That happened more than once, and here is the second case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झोपणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झोपणे — jhopṇe — to sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun sits inside it: झोप jhop, \"sleep.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मला झोप येते. — malā jhop yete. — I am sleepy."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word: to me sleep comes. The dative frame you met a moment ago is already back at work, and the form carrying it is येते — the very leave- taking word you learned in your first courtesy run, doing a different job here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झ is the breathy jha you have from mājhaṁ; ो the familiar o mark; प and णे are old friends. झो-प-णे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the word Marathi did not keep",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The inherited Indo-Aryan verb for sleeping is Sanskrit स्वपिति svapiti, and Hindi still uses its descendant: सोना sonā. Behind it stands Indo-European swep-, which Latin took as sopor, \"deep sleep\" — so English soporific is a cousin of Hindi's word for going to bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Marathi's झोपणे (jhopṇe) is not that word. It rests on native झोप, whose pre-Marathi ancestry is not securely established, and this lesson does not invent one for it. What can be said is the pattern: with the eye, and again with sleep, Marathi let the inherited word go and built on something of its own."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhopṇe — to sleep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **jhopṇe** — to sleep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malā jhop yete. — I am sleepy, \"to me sleep comes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **malā jhop yete.** — I am sleepy, \"to me sleep comes\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "basā, then malā baraṁ vāṭtaṁ, then malā jhop yete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **basā**, then **malā baraṁ vāṭtaṁ**, then **malā jhop yete**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "the English word that is cousin to Hindi's sleep-word — soporific",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: the English word that is cousin to Hindi's sleep-word — **soporific**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say that you are sleepy. (Malā jhop yete.) Is झोपणे (jhopṇe) the same word as Hindi's सोना? (No — Marathi built its own, as it did with the eye.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: झोप; Wiktionary: svapiti."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C23-chalne",
+      "sequence": 950,
+      "title": "चालणे (chālṇe) — to walk, and the yes that comes out of it",
+      "headword": "चालणे",
+      "romanization": "chālṇe",
+      "gloss": "to walk, to go along — and the everyday yes that means it will walk",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0b8a9e43ce6124fa",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "विचार rested on a root meaning to turn, to move about. Its close relative walks in here on its own two feet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चालणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चालणे — chālṇe — to walk, to go along."
+            },
+            {
+              "kind": "speech",
+              "text": "मी चालतो / चालते. — mī chālto / chālte. — I walk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "च before ा lands closer to English ts than to ch in most Marathi mouths, so चा is nearer tsā — the same thing that happens in chār. Then ल and णे. चा-ल-णे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the yes that means it will walk",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चालेल. — chālel. — That will do. / Fine by me."
+            },
+            {
+              "kind": "speech",
+              "text": "Formally this is the verb in the future: it will walk. In use it is one of the commonest small yeses in the language — offered a time, a plan, a cup of tea, you answer चालेल and the matter is settled. Beside बरं, which agrees, चालेल accepts."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — moving, and thinking",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चालणे (chālṇe) continues Sanskrit चलति calati, \"moves, stirs,\" on the root चल् cal-, which is widely taken to be a variant of चर् car-, \"to move about\" — the root you already met sitting inside विचार. Sanskrit चंचल cañcala, \"restless,\" is built on the same piece. So thinking and walking, in this language, are two speeds of one old verb for moving."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chālṇe — to walk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **chālṇe** — to walk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī chālto or mī chālte, whichever declares you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **mī chālto** or **mī chālte**, whichever declares you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chālel. — that will do",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **chālel.** — that will do]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "someone asks how you are; answer malā baraṁ vāṭtaṁ, then accept their offer with chālel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: someone asks how you are; answer **malā baraṁ vāṭtaṁ**, then accept their offer with **chālel**]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Accept an offer in one word. (Chālel.) What is चालेल literally? (It will walk.) Which word you already knew stands on the same moving root? (विचार.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: चालणे (chālṇe); Wiktionary: चलति."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R23-wellbeing-verbs",
+      "sequence": 960,
+      "title": "One visit, four verbs",
+      "headword": "बसा / वाटतं / झोप / चालेल",
+      "romanization": "basā / vāṭtaṁ / jhop / chālel",
+      "gloss": "sit, feel, sleep, that will do — four wellbeing moves from memory",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9e773bd3d2f4dd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the four infinitives in order: बसणे (basṇe), वाटणे (vāṭṇe), झोपणे (jhopṇe), चालणे (chālṇe)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run it once as a small scene, then repair only what went missing."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R23-wellbeing-verbs-check",
+              "prompt": "Invite someone to sit, say that you feel fine, and accept their offer in one word.",
+              "assesses": [
+                "MR-LEX-BASNE",
+                "MR-GRAMMAR-DATIVE-FEELING",
+                "MR-SENSE-CHALEL-OKAY"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "basa, mala baram vatam, chalel",
+                "बसा, मला बरं वाटतं, चालेल"
+              ],
+              "feedback": {
+                "correct": "The whole visit runs.",
+                "incorrect": "Repair in order: basa, mala baram vatam, chalel."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the four is a word Marathi built for itself instead of keeping the inherited one? (झोपणे (jhopṇe).) Which one goes back to a root for settling a dwelling? (बसणे (basṇe).) When you answer that you are well, which word carries the \"well\"? (बरं.) And which body word have you met for the place feeling is said to sit? (हृदय.) Then stop."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

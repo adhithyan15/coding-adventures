@@ -38,6 +38,10 @@ is a one-line change here. See `code/specs/task-app-super-app.md` (§2.6, Phase 
 - Complete (✓) or delete a task.
 - **Everything persists**: the whole workspace is saved to IndexedDB after each change
   and restored on reload (falls back to in-memory storage where IndexedDB is absent).
+- **Persistence stays honest**: the rendered shell names the active backend and browser
+  record, warns persistently when fallback memory or a background write is not durable,
+  and preserves the most recently rejected record as `workspace/web-corrupt` before
+  starting fresh. The warning is non-modal and never steals capture focus.
 
 ## Develop
 

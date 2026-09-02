@@ -5,6 +5,7 @@ chapter: 3
 type: phrase
 headword: സുഖമാണോ?
 gloss: how are you? (lit. "are you well?")
+romanization: "sukhamāṇō?"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [ML-C02-aanu, ML-C03-engane]
 sounds: [question-o]

@@ -55,6 +55,9 @@
 
 use layout_flexbox::layout_flexbox_with;
 use layout_float::{shrink_to_fit, ExclusionSpace, FloatStyle};
+use layout_generated::{
+    generated_kind, marker_gap, marker_position, GeneratedKind, MarkerPosition,
+};
 use layout_grid::layout_grid_with;
 use layout_inline::{layout_inline_run_in_regions_with_options, InlineOptions, InlineRegion};
 use layout_ir::{
@@ -62,6 +65,7 @@ use layout_ir::{
     TextContent, TextMeasurer,
 };
 use layout_positioned::{stable_stack, PositionedStyle};
+use layout_replaced::{intrinsic_inline_size, resolve_replaced_size};
 use layout_table::layout_table_with;
 
 pub const VERSION: &str = "0.3.0";
@@ -374,7 +378,28 @@ fn lay_out_container<M: TextMeasurer>(
     let mut max_inline_right = padding.left;
     let mut prev_margin_bottom: f64 = 0.0;
     let mut have_placed_block = false;
-    let mut index = 0;
+    let outside_marker = node.children.first().filter(|child| {
+        generated_kind(child) == Some(GeneratedKind::Marker)
+            && marker_position(child) == MarkerPosition::Outside
+    });
+    if let Some(marker) = outside_marker {
+        let gutter_width = padding.left.max(0.0);
+        let mut positioned = lay_out_any(
+            marker,
+            unconstrained_height(gutter_width),
+            measurer,
+            0.0,
+            padding.top,
+            LayoutContext {
+                parent_abs_x: context.parent_abs_x + x,
+                parent_abs_y: context.parent_abs_y + y,
+                ..context
+            },
+        );
+        positioned.x = (padding.left - positioned.width - marker_gap(marker)).max(0.0);
+        children_positioned.push(positioned);
+    }
+    let mut index = usize::from(outside_marker.is_some());
     let mut exclusions = ExclusionSpace::new(inner_max_width);
 
     while index < node.children.len() {
@@ -636,10 +661,7 @@ fn intrinsic_inline_sizes<M: TextMeasurer>(node: &LayoutNode, measurer: &M) -> (
         return (preferred_min, preferred);
     }
     if matches!(node.content, Some(Content::Image(_))) {
-        let width = match node.width {
-            Some(SizeValue::Fixed(width)) => width,
-            _ => node.min_width.unwrap_or(0.0),
-        };
+        let width = intrinsic_inline_size(node);
         return (width, width);
     }
     let mut preferred_min: f64 = 0.0;
@@ -759,36 +781,21 @@ fn lay_out_text_leaf<M: TextMeasurer>(
 
 fn lay_out_image_leaf(
     node: &LayoutNode,
-    _constraints: Constraints,
+    constraints: Constraints,
     x: f64,
     y: f64,
     _margin: Edges,
     _padding: Edges,
     outer_max_width: f64,
 ) -> PositionedNode {
-    // Image layout v1: size purely from node's width/height hints.
-    // No intrinsic-size resolution (the renderer handles that).
-    let outer_width = match node.width {
-        Some(SizeValue::Fixed(v)) => v,
-        Some(SizeValue::Percent(fraction)) => outer_max_width * fraction.clamp(0.0, 1.0),
-        _ => outer_max_width,
-    };
-    let outer_width =
-        clamp_with_min_max(outer_width, node.min_width, node.max_width).min(outer_max_width);
-
-    let outer_height = match node.height {
-        Some(SizeValue::Fixed(v)) => v,
-        Some(SizeValue::Percent(_)) => 0.0,
-        _ => 0.0, // placeholder; renderer supplies intrinsic height if known
-    };
-    let outer_height = clamp_with_min_max(outer_height, node.min_height, node.max_height);
+    let size = resolve_replaced_size(node, outer_max_width, constraints.max_height);
 
     // Caller has already accounted for margin in the passed-in x, y.
     PositionedNode {
         x,
         y,
-        width: outer_width,
-        height: outer_height,
+        width: size.width,
+        height: size.height,
         id: node.id.clone(),
         content: node.content.clone(),
         children: Vec::new(),
@@ -805,7 +812,7 @@ mod tests {
     use super::*;
     use layout_ir::{
         constraints_fixed, edges_all, edges_xy, font_spec, rgb, size_fill, size_fixed, size_wrap,
-        Color, Content, FontSpec, LayoutNode, TextAlign, TextContent,
+        Color, Content, FontSpec, ImageContent, ImageFit, LayoutNode, TextAlign, TextContent,
     };
 
     /// Trivial measurer: every character is (size * 0.5) wide, single
@@ -911,6 +918,23 @@ mod tests {
         assert_eq!(p.children[0].y, p.children[1].y);
         assert_eq!(p.children[1].y, p.children[2].y);
         assert_eq!(p.height, 12.0);
+    }
+
+    #[test]
+    fn outside_generated_marker_uses_padding_gutter_without_narrowing_inline_content() {
+        let marker = inline_text("C.", 10.0).with_ext(
+            "generated",
+            layout_generated::generated_ext(GeneratedKind::Marker, MarkerPosition::Outside),
+        );
+        let content = inline_text("Content", 10.0);
+        let node = LayoutNode::container(vec![marker, content]).with_padding(Edges {
+            left: 30.0,
+            ..Edges::default()
+        });
+        let positioned = layout_block(&node, constraints_fixed(120.0, 500.0), &MonoMeasurer::new());
+        assert_eq!(positioned.children.len(), 2);
+        assert!(positioned.children[0].x < positioned.children[1].x);
+        assert_eq!(positioned.children[1].x, 30.0);
     }
 
     #[test]
@@ -1255,6 +1279,32 @@ mod tests {
         assert_eq!(out.children[0].width, 55.0);
         assert_eq!(out.children[0].x, 185.0);
         assert_eq!(out.height, 12.0);
+    }
+
+    #[test]
+    fn floated_image_uses_replaced_intrinsic_size() {
+        let floated = LayoutNode::leaf_image(ImageContent {
+            src: "fixture.gif".into(),
+            fit: ImageFit::Contain,
+        })
+        .with_ext(
+            "replaced",
+            layout_replaced::replaced_ext(Some(80.0), Some(40.0), None),
+        )
+        .with_ext("float", float_style("right", "none"));
+        let out = layout_block(
+            &LayoutNode::container(vec![floated]),
+            constraints_fixed(240.0, 200.0),
+            &MonoMeasurer::new(),
+        );
+        assert_eq!(
+            (
+                out.children[0].x,
+                out.children[0].width,
+                out.children[0].height
+            ),
+            (160.0, 80.0, 40.0)
+        );
     }
 
     fn inline_text(value: &str, size: f64) -> LayoutNode {

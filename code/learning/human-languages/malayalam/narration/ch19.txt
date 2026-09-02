@@ -3,7 +3,7 @@ Malayalam, chapter 19: Asking Someone's Age.
 
 
 Lesson 1 of 2.
-നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? — "to you, how much age exists?"
+നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? (niṅṅaḷkkŭ ethra vayassuṇṭŭ?) — "to you, how much age exists?"
 
 Warm-up.
 [pause 2 seconds]
@@ -13,7 +13,7 @@ You'll want to know.
 വയസ്സ് (vayass) = "age" — the same Sanskrit वयस् (vayas, "age, vigor," PIE cousin of Latin vīs) behind Kannada's vayassu and Telugu's vayasu.
 
 Grammar Lens: dative subject + "exists".
-നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? — "How old are you?" (formal/plural) — literally "to you, how much age exists?" (ningaḷkku ethra vayassuṇṭŭ? — from ningaḷkku, "to you" [dative] + ethra vayassu, "how much age" + uṇṭŭ, "exists.")
+നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? (niṅṅaḷkkŭ ethra vayassuṇṭŭ?) — "How old are you?" (formal/plural) — literally "to you, how much age exists?" (ningaḷkku ethra vayassuṇṭŭ? — from ningaḷkku, "to you" [dative] + ethra vayassu, "how much age" + uṇṭŭ, "exists.")
 എനിക്ക് ഇരുപത് വയസ്സുണ്ട്. — "I am twenty years old." — literally "to me twenty age exists." (enikku irupatu vayassuṇṭŭ.)
 This is a real grammatical departure from Kannada and Telugu's plain "your age how-much?" Malayalam puts the person in the dative case ("to you," not "your") and adds ഉണ്ട് (uṇṭŭ, "exists, there is") — the same existential verb Malayalam uses for ordinary possession and existence sentences generally. So the literal shape is "to me, twenty years' worth of age exists" — a dative-subject-plus-existential-verb construction, genuinely different from its two Dravidian cousins even though the age-word itself is identical.
 

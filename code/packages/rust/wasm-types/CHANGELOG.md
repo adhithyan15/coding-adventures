@@ -2,6 +2,495 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.23] - 2026-09-01 (add: `WasmModule::missing_data_count_section`)
+
+New field for the same fresh corpus-prioritization pass as `wasm-
+module-parser`/`wasm-validator`'s own CHANGELOGs (`code/specs/
+W07-wasm-post-mvp-epics.md`'s "Addendum (2026-09-01)" item 2,
+`binary.wast`'s "memory.init/data.drop requires a data count section"
+`assert_malformed` cases).
+
+- **New `WasmModule::missing_data_count_section: bool`** (default
+  `false` via the existing `#[derive(Default)]`). `true` only when this
+  module was parsed from a BINARY module that had no data count section
+  (§12, binary id `0x0c`) at all. Deliberately phrased as a "missing"
+  flag rather than `has_data_count_section` so every EXISTING
+  `WasmModule` construction site — every hand-built test fixture across
+  this crate and its sibling crates, and every TEXT-form module `wasm-
+  wast-parser::module::parse_module_expr` builds directly (no binary
+  round-trip, so no literal "data count section" concept even exists
+  there) — keeps its current, correct behavior for free via `bool`'s own
+  `Default`, instead of needing to opt in one by one. Only `wasm-
+  module-parser`'s binary path, the one place that actually knows
+  whether §12 was present in the bytes it just parsed, ever sets this to
+  `true`. `wasm-validator`'s type-checker is the one place that reads it
+  (its `0x08`/`0x09` — `memory.init`/`data.drop` — opcode arms), since
+  it's the only crate that walks function-body instructions precisely
+  enough to know when those opcodes are actually used.
+- Two existing tests in this crate updated for the new field: `wasm_
+  module_has_all_fields` (which deliberately uses struct-literal syntax
+  with every field named, to catch exactly this kind of drift) and `wasm_
+  module_default_is_empty` (asserts the new field's `Default` is
+  `false`).
+
+## [0.1.22] - 2026-09-01 (fix: tables can now carry a concrete element type)
+
+Found while root-causing a real, previously-shipped regression: the whole
+vendored `br_table.wast` corpus file (a foundational MVP-level control-
+flow test, no GC-proposal syntax) was failing every single directive —
+see `wasm-validator`'s and `wasm-conformance`'s own CHANGELOGs for the
+full root-cause writeup and corpus-impact diff. This package's own piece
+of the fix: `TableType::element_type` is only a `u8` tag (`0x70` funcref
+/ `0x6F` externref) — there was no way to represent "this table holds
+references to exactly function type `$t`" (the function-references
+proposal's `(table $t (ref null $t) ...)`), only "this table holds some
+funcref".
+
+- **New `WasmModule::table_concrete_element_types: Vec<Option<ValueType>>`**
+  — parallel to `tables`, same "allowed to be shorter than, or entirely
+  absent from, the vec it augments" convention `type_kinds`/
+  `type_subtyping` already established. `None` (or an index past the end)
+  means the table's `element_type` byte is authoritative, exactly as
+  before this field existed; `Some(vt)` (`vt` always `ConcreteFuncRef`/
+  `NonNullConcreteFuncRef` in this crate's text format) is the table's
+  REAL declared element type. Only module-DEFINED tables get an entry
+  here — import tables have no concrete-typed-table text syntax in this
+  crate, mirroring `functions: Vec<u32>`'s own "imports live in
+  `imports`" convention.
+  Purely additive: `element_type` keeps holding `FUNCREF` alongside a
+  concrete entry (every concrete function reference is still funcref-
+  family), so any pre-existing consumer that only reads the byte tag
+  keeps working unchanged.
+- `WasmModule` derives `Default`, so this field defaults to an empty
+  `Vec` and every existing `WasmModule { ..., ..Default::default() }`
+  test literal across the workspace kept compiling unchanged. The two
+  spots that build a `WasmModule` with every field spelled out (this
+  crate's own `wasm_module_has_all_fields` test, and `wasm-runtime`'s
+  `tests/v128_persistent_storage.rs`) needed one line each added.
+
+## [0.1.21] - 2026-09-01 (W34 fourth slice — cross-module canonical equivalence, epic closed)
+
+Two new free functions supporting `wasm-runtime`'s cross-module
+import-compatibility check (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`,
+final slice): the same real canonical algorithm the third slice wired
+into WITHIN-module checks, now usable when the two sides of a comparison
+live in two entirely separate `canonical_types` tables (one per
+independently-validated module, no shared numbering at all).
+
+- **`canonical_type_entries_equivalent(a: Option<&(Rc<CanonicalGroup>, u32)>, b: Option<&(Rc<CanonicalGroup>, u32)>) -> bool`**
+  — the actual comparison logic factored out of `canonical_types_equivalent`
+  (which now just extracts two entries from ONE table and delegates here),
+  so it can also be called directly with two entries from two DIFFERENT
+  tables. `Rc::ptr_eq` fast path first (hits whenever both entries came
+  from the SAME `canonicalize_types` call, thanks to that function's own
+  interning), full derived `PartialEq` fallback otherwise — identical
+  contract and cost profile to the pre-existing function, just no longer
+  hardcoded to a single-table shape. `None` on either side is
+  conservatively `false`, never a wrong `true`.
+- **`canonical_chain_reaches(type_subtyping, canonical_types, start_idx, target) -> bool`**
+  — the cross-module counterpart to `nominal_subtype_chain`'s own
+  termination check: climbs ONE module's own local `sub` chain, starting
+  at `start_idx` (reflexively including it), checking each ancestor
+  against an EXTERNAL `target` from a different module's own canonical
+  table. Needed because real WASM func-import compatibility is a
+  SUBTYPING relation, not plain equality — an export declared `(sub
+  $parent (func))` must be importable at its own `$parent` type, not only
+  at its exact declared type (`type-subtyping.wast`'s own `M6`/`M7`
+  "Linking" cases). A declared supertype relationship is only ever
+  meaningful within the module that declared it, so this walks exactly
+  ONE module's table, never crossing between two modules' own `sub`
+  chains. Same `MAX_SUBTYPE_CHAIN_HOPS` bound as `nominal_subtype_chain`,
+  for the identical termination/complexity reason.
+- 6 new unit tests: `canonical_type_entries_equivalent` compared across
+  two genuinely separate `canonicalize_types` calls (both the isomorphic-
+  positive and differently-positioned-negative cases, plus every `None`
+  combination); `canonical_chain_reaches` climbing a real declared chain to
+  reach an external target (both the zero-hop reflexive case and the
+  one-hop climb), and correctly failing to match a genuinely unrelated
+  target.
+
+**Security review finding, fixed before push**: a dedicated security-review
+sub-agent, briefed on the NEW trust boundary this slice opens (the first
+time this epic compares two INDEPENDENTLY-ATTACKER-CONTROLLED modules'
+type data against each other, rather than one module's own data against
+itself), found a real HIGH-severity DoS — this epic's FOURTH consecutive
+slice with a genuine finding in its own review. `MAX_CANONICAL_TREE_
+WEIGHT` bounds any ONE `CanonicalGroup` tree's shape at construction time
+(so any ONE full structural comparison is itself bounded), but nothing
+bounded how many times a full, near-max-weight comparison could be
+ATTEMPTED across an entire `wasm-runtime::instantiate()` call: the
+cross-module case can never hit the `Rc::ptr_eq` fast path that makes the
+WITHIN-module case cheap (two different modules' `canonicalize_types`
+calls never intern into the same allocation), and an attacker who
+controls both the importing and exporting module can multiply one
+expensive-but-capped comparison by an arbitrary, byte-cheap import count
+(each import declaration costs only a few bytes, unlike the expensive
+type itself) — `imports × hops (≤1,000) × per-comparison cost
+(≤1,000,000 nodes)`, each factor individually capped but their PRODUCT
+unbounded.
+
+Fixed by adding:
+- **`CrossModuleComparisonBudget`** — a shared, mutable work counter
+  (`MAX_CROSS_MODULE_CANONICAL_COMPARISON_BUDGET = 4_000_000`, `new()`/
+  `with_budget(u64)`/`remaining()`), meant to be created ONCE per
+  `wasm-runtime::instantiate()` call and threaded `&mut` through that
+  call's ENTIRE import-resolution loop (not reset per import). `take(cost)`
+  uses `checked_sub`, floors at zero (never wraps, never panics), and
+  reports "out of budget" once exhausted.
+- **`canonical_type_entries_equivalent_budgeted`** and seven private
+  per-field/per-variant helper functions (`group_equal_budgeted`,
+  `subtype_equal_budgeted`, `comp_type_equal_budgeted`, `field_type_
+  equal_budgeted`, `storage_type_equal_budgeted`, `val_type_equal_
+  budgeted`, `heap_ref_equal_budgeted`) — a hand-written, budget-aware
+  structural-equality walk mirroring derived `PartialEq`'s exact recursive
+  shape (every field, every enum variant, every `Vec` length-checked
+  before zipping), but charging the shared budget one unit per node
+  visited — checked BEFORE recursing into any child, so exhaustion can
+  never be preceded by uncharged work — and bailing out to "not equal"
+  (fail CLOSED, never a false accept) the instant it's exhausted, rather
+  than continuing an unconditional full walk. `canonical_chain_reaches`
+  (this slice's own new cross-module chain walk) and `wasm-execution`'s
+  `HostFunction::canonically_matches` (see that crate's own CHANGELOG)
+  both now take this budget.
+- Existing WITHIN-module comparisons (`canonical_types_equivalent`,
+  `nominal_subtype_chain`, `is_assignable`'s termination check) are
+  UNCHANGED and keep using the unbudgeted comparison — the amplification
+  this fix closes is specific to the cross-module, attacker-controlled-
+  import-count case; within one module, triggering many genuinely-
+  different expensive comparisons requires declaring that many expensive
+  types, itself bounded by module size.
+- A re-review confirmed the fix's completeness directly, not just its
+  presence: every field/variant of `CanonicalGroup`'s tree is covered by
+  the budgeted walk (checked against the real struct/enum definitions,
+  not assumed from the design), budget-before-work ordering holds in all
+  seven helper functions, `Rc::ptr_eq`'s fast path can never fire
+  incorrectly across two different modules' allocations, and the budget
+  arithmetic has no overflow/panic/divide-by-zero path.
+- New regression test `cross_module_comparison_budget_exhausts_and_fails_
+  closed`: proves the budget genuinely exhausts and fails closed using a
+  small custom budget (`with_budget(20)`), not by actually spending
+  millions of real iterations — confirms both those two genuinely-
+  different types stay correctly rejected throughout, and that a
+  genuinely-equivalent (but not `Rc`-identical) pair is CONSERVATIVELY
+  rejected once the budget runs out, proving the fail-closed direction
+  applies even to real matches, not only mismatches.
+
+Full 257-file conformance baseline re-confirmed byte-for-byte identical
+before and after this fix, since it changes worst-case performance only,
+never behavior.
+
+## [0.1.20] - 2026-09-01 (W34 third slice — wire canonical equivalence into within-module subtyping)
+
+`nominal_subtype_chain` (the shared, security-reviewed `sub`-chain walk
+`wasm-validator`'s static `is_assignable` and `wasm-execution`'s runtime
+`call_indirect`/`ref.cast`/`ref.test` dispatch both call) now upgrades its
+reflexive base case AND every hop's own termination check from raw type-
+index equality to real canonical equivalence, per the GC proposal's own
+rule: "subtyping is nominal modulo type canonicalisation" — exactly the
+one line of `MVP.md` this whole spec has been building toward.
+
+- **Breaking change to `nominal_subtype_chain`'s signature**: gains a new
+  `canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>]` parameter
+  (second position, matching `ValidatedModule::canonical_types`'/
+  `WasmExecutionContext::canonical_types`'s own shape). Every existing
+  caller either already has real canonical data to pass (`wasm-validator`,
+  `wasm-execution` — see their own CHANGELOGs) or passes `&[]` (`WasmModule::
+  func_type_is_nominal_subtype`, which never carried canonical data and
+  stays nominal-only by design — see that method's own doc comment). An
+  empty slice is a strict, zero-behavior-change superset of the pre-W34
+  nominal-only rule: `canonical_types_equivalent` on an empty/too-short
+  slice always reports `false`, proven by a new regression test
+  (`nominal_subtype_chain_with_empty_canonical_table_matches_old_nominal_
+  only_behavior`).
+- **New `canonical_types_equivalent` free function** — the one shared
+  comparison both `nominal_subtype_chain` and `wasm-validator::
+  ValidatedModule::canonically_equivalent` now use, so the two copies of
+  this comparison (chain-walk termination, public post-validation
+  accessor) can never drift apart. `false`, conservatively, whenever
+  either side is out of range or uncanonicalized (`None`) — never a wrong
+  `true`.
+- **3 new unit tests**: a positive case (two independently-declared,
+  nominally-unrelated but canonically-equivalent types, accepted in both
+  directions once real canonical data is supplied, correctly REJECTED by
+  the nominal-only `func_type_is_nominal_subtype` on the same pair); a
+  negative case (genuinely different shapes, still rejected even with
+  real canonical data present); and the empty-table backward-compatibility
+  proof above.
+
+### Security fix (found by this slice's own review, fixed before push)
+
+Wiring canonical equivalence into per-instruction call sites (`is_
+assignable`, `call_indirect_type_matches`) turned a real, previously-
+unreachable cost into a reachable one: `canonical_types_equivalent`
+compared two `Rc<CanonicalGroup>`s via derived `PartialEq`, which walks
+the FULL tree by CONTENT (never by pointer) whenever the two `Rc`s are
+different allocations -- true for every pair of independently-declared,
+canonically-equivalent-but-unrelated groups, exactly the case this slice
+exists to accept. A security-review sub-agent built a real reproduction:
+two ~19-level "doubling" `rec` chains (each near `MAX_CANONICAL_TREE_
+WEIGHT`) referenced from two locals, with a function body repeatedly
+flowing a value between them -- `validate()` took **over a minute** on a
+~130KB crafted module (~123,000x slower than an equal-sized module that
+never triggers the deep comparison), an entirely real, previously-
+unreachable algorithmic-complexity DoS (this cost did not exist before
+this slice wired canonical checks into per-instruction validation).
+
+Fixed by interning: `canonicalize_types` now deduplicates content-
+identical groups it produces WITHIN one call into a single shared `Rc`
+allocation (a `HashSet<Rc<CanonicalGroup>>`, queried by borrowed
+`&CanonicalGroup` content via `Rc<T>: Borrow<T>`, so no redundant clone
+is needed just to look up a candidate), and `canonical_types_equivalent`
+tries `Rc::ptr_eq` FIRST before falling back to full structural `==`.
+Since interning guarantees identical content built by the SAME
+`canonicalize_types` call always shares one allocation, this makes the
+actually-reachable within-module case (everything this slice's own
+call sites use) a genuine O(1) check after the first comparison, matching
+`MVP.md`'s own Note 2 ("canonicalising them bottom-up in linear time
+upfront... constant-time" comparison) precisely rather than only in
+spirit. Interning itself costs at most one extra hash+lookup per group --
+the same order of work `canonicalize_types` already pays to BUILD that
+group, so this is a constant-factor addition, not a new algorithmic-
+complexity class, and every existing `CanonicalCost` cap still bounds it
+exactly as before. Cross-module comparison (two SEPARATE `canonicalize_
+types` calls) is deliberately unaffected -- this cache is local to one
+call, not a global/thread-shared interner, since no reachable call site
+in this slice needs cross-module comparability yet (revisit if slice 4's
+cross-module wiring measures a real need).
+
+Verified empirically, not just reasoned about: a scaled-down reproduction
+of the review's own attack shape (two 19-level doubling chains, 4,000
+repeated cross-assignments) took **15.4s** with interning/the `Rc::ptr_eq`
+fast path disabled and **~100ms** with them restored — confirmed by
+temporarily reverting each fix in turn and re-running, not merely
+asserted. New regression test
+`identical_groups_within_one_module_intern_to_the_same_rc_allocation`
+proves the mechanism directly (`Rc::ptr_eq`, not merely `==`, on two
+independently-declared, differently-indexed, `sub`-unrelated identical
+multi-member groups). Full conformance baseline re-confirmed byte-for-
+byte identical before and after this fix (a pure performance change, zero
+behavior change).
+
+## [0.1.19] - 2026-09-01 (W34 second slice — canonical type-group equivalence, real multi-member `rec` groups)
+
+Lifts the first slice's `rec_group_size == 1` restriction: `canonicalize_
+types` now correctly canonicalizes real multi-member `rec` groups with
+group-relative De Bruijn numbering, per `MVP.md`'s own "rolling"/"tying"
+mechanism and the reference interpreter's `roll_rec_type` (re-verified
+fresh against `WebAssembly/gc`'s current `interpreter/syntax/types.ml` and
+`interpreter/valid/match.ml` — byte-for-byte identical to what the W34
+spec cites).
+
+- **Real group-relative `Rec(i)` numbering** — a reference to ANY member of
+  the group currently being tied (not just to the referencing member
+  itself) now ties to `CanonicalHeapRef::Rec(i)`, where `i` is that
+  member's own position within the group (`target_idx - group_start`),
+  not a module-absolute index. `resolve_heap_index` was generalized from a
+  `self_idx`-based self-reference check to a `[group_start, group_end)`
+  range check; every other helper (`canonicalize_value_type`,
+  `canonicalize_field_type`, `canonicalize_comp_type`) is reused unchanged
+  in shape, exactly as the first slice's own addendum predicted. A
+  singleton group is now just the `group_end - group_start == 1` case of
+  the same machinery, not a separate code path.
+- **`canonicalize_types` now processes GROUPS, not individual flat
+  indices** — a contiguous range of `rec_group_size` indices sharing one
+  shape is built together as ONE `CanonicalGroup` (all members' bodies
+  resolved against the SAME group bounds), then shared via `Rc::clone`
+  across every one of that group's flat indices, differing only in the
+  `u32` position half of `(Rc<CanonicalGroup>, u32)`. If ANY member fails
+  to canonicalize, the WHOLE group's every member becomes `None` — never a
+  partial group.
+- **Two separately-declared multi-member groups with identical internal
+  wiring canonicalize equal, regardless of flat-index numbering or which
+  module they came from**; two groups with the same member count but
+  different internal reference wiring do NOT — proven directly by new
+  unit tests, not just asserted. Composition of the first slice's `Outer`
+  (cross-group embedding) with the new multi-member `Rec` numbering is
+  proven both directions: a later type referencing an earlier multi-member
+  group, and a later multi-member group mixing an `Outer` reference and an
+  in-group `Rec` reference within the SAME member.
+- **New DoS finding, closed in the same slice that introduced its own
+  precondition**: real multi-member groups make "one group referencing an
+  earlier one from several sibling positions at once" far more natural
+  than the first slice's singleton-only groups ever could. A chain of such
+  branching references DOUBLES the total node count a full structural
+  `PartialEq`/`Hash`/`Drop` traversal must visit at every level (while
+  `Rc` sharing keeps actual memory linear), which the first slice's own
+  `MAX_CANONICAL_OUTER_DEPTH` (bounding STACK depth, i.e. the longest
+  single reference chain) does NOT catch, since branching leaves that
+  longest chain short even as the total node count explodes
+  exponentially. Closed by threading a second, independent cost dimension
+  (`CanonicalCost::weight`, summed — not maxed — across sibling
+  references) alongside the existing depth, capped at
+  `MAX_CANONICAL_TREE_WEIGHT` (1,000,000). A new regression test
+  (`outer_embedding_weight_is_capped_for_branching_reference_chains`)
+  builds a 40-level doubling chain and confirms it is rejected quickly
+  rather than hanging or exhausting memory.
+- **9 new unit tests** in `wasm-types` (2-member mutual group group-
+  relative numbering; cross-module comparability for a real multi-member
+  group; same member count with different wiring correctly NOT equal;
+  both directions of `Outer`+multi-`Rec` composition; the W33/W34 addenda's
+  own worked "3-cycle" example, canonical forms confirmed directly per
+  this slice's own scope boundary; `type-canon.wast`'s real 5-member
+  fixture; inconsistent multi-member metadata still safely producing
+  `None`; the branching-weight DoS regression above) plus 2 new
+  `wasm-validator` tests exercising the same through the real `validate()`
+  entry point.
+- Corpus impact: none observable in this slice's own tally (nothing wires
+  canonical equivalence into any validation/execution DECISION path yet —
+  that remains slice 3/4's job); see the full 257-file baseline diff in
+  `wasm-conformance`'s own CHANGELOG and `code/specs/
+  W34-wasm-gc-canonical-type-equivalence.md`'s addendum for the
+  measurement.
+
+## [0.1.18] - 2026-09-01 (W34 first slice — canonical type-group equivalence, singleton groups)
+
+Adds `CanonicalGroup`/`CanonicalSubtype`/`CanonicalCompType`/
+`CanonicalFieldType`/`CanonicalStorageType`/`CanonicalValType`/
+`CanonicalHeapRef`/`AbstractHeapKind` and the `canonicalize_types` free
+function (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`) — the
+first slice of the real WasmGC canonical type-group equivalence algorithm
+(MVP.md's own "tying"/"rolling" mechanism, and the reference interpreter's
+`roll_rec_type`/`match_def_type`), grounded directly in both sources.
+
+- **Scope: `rec_group_size == 1` groups only** — every plain,
+  non-`rec`-wrapped `(type ...)` field, and every explicit
+  `(rec (type ...))` with exactly one member. A self-reference inside such
+  a group ties to `CanonicalHeapRef::Rec(0)` (the only in-group reference a
+  singleton can express); a reference to an EARLIER singleton group embeds
+  that group's already-computed canonical form wholesale via
+  `CanonicalHeapRef::Outer` (an `Rc<CanonicalGroup>`, not the design
+  sketch's `Box` — sharing, not deep-cloning, the referenced subtree at
+  every embed site, matching the "cheap to clone" contract `wasm-validator::
+  ValidatedModule`'s own new `canonical_types` cache field needs).
+  Multi-member `rec` groups (real De Bruijn numbering across MORE than one
+  member) are explicitly deferred to a later slice — every member of such a
+  group canonicalizes to `None`, never a wrong or partial value.
+- **`canonicalize_types` never recurses** — it processes flat type-section
+  indices in strictly increasing order and only ever looks up
+  ALREADY-COMPUTED entries for anything outside the group being built, so a
+  cyclic or self-referential type structure (even one from a hand-built
+  `WasmModule` that skipped validation entirely) can only ever produce a
+  `None` entry, never a panic, infinite loop, or stack overflow.
+- **Security fix (found in review, before push): `MAX_CANONICAL_OUTER_DEPTH`
+  (1,000, mirroring this crate's own pre-existing `MAX_SUBTYPE_CHAIN_HOPS`
+  convention)** — a security review empirically confirmed that while
+  *building* a `CanonicalGroup` tree never recurses (see above), a long
+  CHAIN of singleton groups each referencing only the immediately
+  preceding one (no cycle needed) builds a genuinely nested `Outer`-
+  embedding tree whose compiler-derived `Drop`/`PartialEq`/`Hash` DO
+  recurse to tear down or compare — reliably crashing the process (real
+  stack overflow) at tens of thousands of chained links, reachable from a
+  small, realistic module. `resolve_heap_index` now refuses (`None`) to
+  extend a chain past 1,000 links, the one place new depth is introduced,
+  closing this for all three derived traversals at once with a wide
+  safety margin below the depth that was shown to matter.
+- **Cross-module comparability, proven directly**: two independently-built
+  `WasmModule`s with isomorphic singleton-group shapes at completely
+  different flat indices canonicalize to structurally-equal
+  `CanonicalGroup` values (`derive(PartialEq, Eq, Hash)` all the way down,
+  comparing contents through every `Rc`, never pointers) — see the new
+  cross-module unit tests in `src/lib.rs`.
+- **`AbstractHeapKind` correction vs. the spec's own design sketch**: the
+  spec document's `AbstractHeapKind` sketch (written before re-verifying
+  against current code) listed only the ten WasmGC-proposal-native kinds
+  (`Any`/`Eq`/`I31`/`Struct`/`Array`/`Func`/`None`/`Extern`/`NoExtern`/
+  `NoFunc`) and omitted `Exn`/`NoExn` — but `ValueType::Exnref`/
+  `ValueType::NullExnref` (W24, the separate exceptions proposal) already
+  exist in this crate and need somewhere to tie to. Added both; see the
+  spec's own addendum for the full account.
+- No corpus pass-count impact expected or observed from this slice alone
+  (nothing wires `canonical_types` into any validator/execution decision
+  point yet — that starts at a later slice); the full 257-file conformance
+  baseline diff is byte-for-byte identical before/after this change.
+
+## [0.1.17] - 2026-09-01 (W33 fourth slice — struct/array TEXT-format representation)
+
+Adds the type-system vocabulary `wasm-wast-parser`'s struct/array TEXT-format
+grammar needs, closing the gap the first three W33 slices' own addenda all
+independently confirmed as the real remaining blocker (`code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s addenda):
+
+- **`StorageType`** (`Val(ValueType) | I8 | I16`) — the GC proposal's real
+  `storagetype` grammar, previously entirely unmodeled (`FieldType.val_type`
+  was a bare `ValueType` with no way to express packed 8/16-bit field
+  storage at all). `FieldType.val_type` is renamed to `FieldType.storage:
+  StorageType` — a breaking rename, fixed at every call site in this
+  workspace (`wasm-module-parser`, `wasm-module-encoder`, `iir-to-wasm`,
+  this crate's own tests); `FieldType::plain(val_type, mutable)` is a new
+  convenience constructor matching the old `{ val_type, mutable }` literal
+  shape for the (overwhelming majority) non-packed case.
+- **`ArrayType`** (`{ element: FieldType }`) — did not exist anywhere in this
+  repo before this slice (confirmed via a repo-wide grep, not assumed); a
+  new `WasmModule::array_types: Vec<ArrayType>` field holds them, alongside
+  the pre-existing `struct_types`.
+- **`TypeKind`** (`Func | Struct(u32) | Array(u32)`) and a new
+  `WasmModule::type_kinds: Vec<TypeKind>` parallel ledger — needed because
+  real WAT text freely interleaves `(type $t (struct ...))` among
+  `(type $t (func ...))` declarations, and `wasm-wast-parser`'s own two-pass
+  design can append MORE func types to `types` in its second pass (`dedup_
+  type`, for an inline-only function signature) strictly AFTER a struct/array
+  type earlier in the SAME module has already been assigned its flat
+  type-section index — breaking the pre-existing `types.len() + k` offset
+  formula the very first time either happens (both are real, common shapes
+  in `struct.wast`/`array.wast`'s own vendored text, not hypothetical edge
+  cases). `WasmModule::struct_type_at`/`array_type_at` resolve a flat index
+  `type_kinds`-aware first, falling back to the legacy offset formula when
+  `type_kinds` is empty — so every pre-existing binary-decoded or hand-built
+  `WasmModule` (which never populates `type_kinds`) is completely unaffected.
+- **`ValueType::ArrayRef(u32)`/`NonNullArrayRef(u32)`** — the array-hierarchy
+  analogues of the existing `StructRef`/`NonNullStructRef`, same two-byte
+  `0x63`/`0x64` encoding (disambiguated by index space, not by tag byte,
+  exactly like `StructRef`/`ConcreteFuncRef` already are). Wired into
+  `is_bottom_subtype_of` (`NullRef <: ArrayRef(_)`, any index) and
+  `is_non_null_subtype_of` (`NonNullArrayRef(i) <: ArrayRef(i)` same index,
+  `NonNullArrayRef(_) <: Anyref` any index) — the array-hierarchy mirror of
+  every rule `StructRef`/`NonNullStructRef` already had.
+
+11 new unit tests (`StorageType`/`ArrayType`/`TypeKind`/`struct_type_at`/
+`array_type_at`/`ArrayRef` subtyping and encoding); all 78 tests in this
+crate pass. Binary-format array/packed-field encoding (`wasm-module-parser`/
+`wasm-module-encoder`) is deliberately NOT extended by this slice — this
+repo's WASM conformance harness runs entirely through the TEXT-format
+pipeline (`wasm-wast-parser` → `WasmModule` → `wasm-execution`, never through
+a binary round-trip for a plain `(module ...)` script directive; see
+`wasm-conformance`'s own pipeline doc comment), so it isn't required for
+`struct.wast`/`array.wast` conformance and is out of scope here — recorded
+as a real, still-open gap in this slice's own spec addendum.
+
+## [0.1.16] - 2026-08-31 (W33 second slice — real dynamic dispatch, item 4)
+
+Extracts the nominal reflexive/transitive subtype-chain walk out of
+`WasmModule::func_type_is_nominal_subtype` into a new free function,
+`nominal_subtype_chain(type_subtyping: &[TypeSubtyping], sub_idx, super_idx)
+-> bool`, so `wasm-execution`'s new runtime `call_indirect`/`ref.cast`/
+`ref.test` dynamic dispatch checks (W33's own item (4), see `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s second addendum) can reuse the
+EXACT same, already security-reviewed (cycle-safe, hop-capped) walk instead
+of re-implementing it against a bare `&[TypeSubtyping]` slice — `wasm-
+execution::WasmExecutionContext` deliberately doesn't hold a full
+`WasmModule` (see that struct's own doc comments), so a method on
+`WasmModule` alone couldn't be called from there. `WasmModule::
+func_type_is_nominal_subtype` is now a one-line wrapper around this;
+behavior and the `MAX_SUBTYPE_CHAIN_HOPS = 1_000` bound are unchanged.
+
+### Added
+
+- **`nominal_subtype_chain(type_subtyping: &[TypeSubtyping], sub_idx: u32,
+  super_idx: u32) -> bool`**: the free-function form described above.
+- **`any_declares_subtyping(type_subtyping: &[TypeSubtyping]) -> bool`**:
+  whether ANY entry is non-default (a real declared `sub $parent`,
+  non-final, or a real `>1`-member `rec` group). Needed because
+  `wasm-wast-parser`'s `dedup_type` pushes a `TypeSubtyping::default()`
+  placeholder for EVERY type it declares, `sub`-declared or not — so
+  `type_subtyping.is_empty()` is NOT a reliable "this module never uses
+  `sub`" signal (the vector is fully populated for nearly every real
+  module). `wasm-execution`'s new dynamic-dispatch checks use this to
+  decide between two rules: no real `sub` anywhere → the engine's original
+  pre-W33 structural-equality check (zero regression risk for the 256
+  vendored corpus files that never use `sub`); real `sub` present
+  somewhere → the real nominal (reflexive-or-subtype) check GC-proposal
+  type identity actually requires.
+
 ## [0.1.15] - 2026-08-31 (W33 first slice — GC nominal subtyping + `rec` groups)
 
 Implements the `wasm-types` half of `code/specs/

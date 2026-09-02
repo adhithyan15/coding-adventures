@@ -4,14 +4,14 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:67355eabf26b0380",
+  "sourceHash": "fnv1a64:5652147b7ae8d9cf",
   "lessons": [
     {
       "id": "TE-C16-nelalu",
       "sequence": 430,
       "title": "చైత్రం to ఫాల్గుణం — completing the split",
       "headword": "చైత్రం వైశాఖం జ్యేష్ఠం ఆషాఢం శ్రావణం భాద్రపదం ఆశ్వయుజం కార్తీకం మార్గశిరం పుష్యం మాఘం ఫాల్గుణం",
-      "romanization": "",
+      "romanization": "Caitraṁ Vaiśākhaṁ Jyēṣṭhaṁ Āṣāḍhaṁ Śrāvaṇaṁ Bhādrapadaṁ Āśvayujaṁ Kārtīkaṁ Mārgaśiraṁ Puṣyaṁ Māghaṁ Phālguṇaṁ",
       "gloss": "the twelve lunisolar months — matching Kannada and Hindi's shared pan-Indian calendar, completing the split with Tamil/Malayalam's own solar systems",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a76dcd7ba1e054e",
+      "sourceHash": "fnv1a64:9f56e780006666d1",
       "notice": null,
       "blocks": [
         {

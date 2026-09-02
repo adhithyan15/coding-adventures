@@ -1,0 +1,27 @@
+{
+  "chapter": 28,
+  "title": "The Day and Its Times",
+  "label": "ch:gu-day-and-its-times",
+  "canDo": "I can hear and say eight everyday Gujarati time words, and read and write two of them.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C24-time-eight",
+    "kind": "four-skill-vocabulary-time",
+    "summary": "Four parts of a day, the day, the month, today, and now enter meaning-first by ear; two of them reach the page with signs taught long before, the chapter closes on four separately scored skills, and one short return re-scores all eight a lesson later.",
+    "assesses": [
+      "GU-LEX-SAVAAR-01",
+      "GU-LEX-BAPOR-01",
+      "GU-LEX-SAANJ-01",
+      "GU-LEX-RAAT-01",
+      "GU-LEX-DIVAS-01",
+      "GU-LEX-AAJ-01",
+      "GU-LEX-MAHINO-01",
+      "GU-LEX-ATYAARE-01",
+      "GU-SCRIPT-RAAT-01",
+      "GU-SCRIPT-AAJ-01",
+      "GU-PERFORMANCE-TIME-EIGHT-FOUR-SKILL-01"
+    ]
+  }
+}

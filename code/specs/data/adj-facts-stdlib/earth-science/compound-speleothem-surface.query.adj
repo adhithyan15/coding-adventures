@@ -1,0 +1,34 @@
+% ============================================================================
+% compound-speleothem-surface.query.adj — worked recall over the DERIVED
+% compound-speleothem-surface rule.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "does a column touch
+% the ceiling or the floor?" — a question `speleothem-growth-surface.adj`
+% correctly REFUSED to answer, because `speleothem_growth_surface` means
+% the surface a speleothem grows FROM and a column does not grow from a
+% surface at all; it is two speleothems that met.
+%
+% The question was never unanswerable. It was not a question about growth
+% surfaces. Here it is answered in a relation that means what the answer
+% means — the surfaces reached by this speleothem's components — and the
+% answer is BOTH, each traceable to a different source sentence.
+%
+% Two answers are correct in this relation where two rows would have been a
+% misrepresentation in that one. That is the argument for abstaining rather
+% than fudging, made concrete: because the table declined, the honest
+% answer stayed available as a composition, in its own name, with its
+% provenance intact.
+%
+% It states no fact of its own — it only `import`s the rule library (which
+% imports both premise libraries) and asks binding queries.
+%
+% Run (from this directory so the relative imports resolve):
+%     ../../../../packages/rust/target/debug/adj-lang-cli compound-speleothem-surface.query.adj
+% ============================================================================
+
+import "compound-speleothem-surface.adj"
+
+? compound_speleothem_surface(column, $S)      % expect cave_ceiling AND cave_floor -- DERIVED via the two components
+? compound_speleothem_surface($C, cave_floor)  % expect column (reverse through the rule)
+? compound_speleothem_surface(helictite, $S)   % expect abstain -- absent from BOTH premises; composition propagates abstention
+? compound_speleothem_surface(stalactite, $S)  % expect abstain -- not a compound speleothem, so nothing to decompose

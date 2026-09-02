@@ -256,23 +256,21 @@ pub fn compute_c_neg(result_bits: &[u8]) -> u8 {
 /// Overflow occurs only when negating the most-negative value (0x80, 0x8000,
 /// or 0x80000000), because `-(-128) = -128` in two's complement.
 ///
-/// Gate-level: AND(src[MSB]=1, NOT(src[MSB-1])=1, ..., NOT(src[0])=1).
+/// Gate-level: `AND(src[MSB]=1, NOT(src[MSB-1])=1, ..., NOT(src[0])=1)`.
 /// `src_bits` must be LSB-first; `bits` is the width (8, 16, or 32).
 pub fn compute_v_neg(src_bits: &[u8], bits: usize) -> u8 {
     // MSB is src_bits[bits-1]; lower bits must all be 0.
     let msb = src_bits[bits - 1];
-    let lower_all_zero = src_bits[..bits - 1]
-        .iter()
-        .fold(1u8, |acc, &b| {
-            // acc = 1 so far means "all zero"; stays 1 only if current bit is 0
-            // AND(acc, NOT(b))
-            let inv = not_gate(b);
-            // acc & inv
-            let one_bit = not_gate(not_gate(acc)); // identity (just acc, but makes gate explicit)
-            // Use: 1 AND NOT(b) = NOT(OR(NOT(1), b)) ... simplify: just and_gate
-            use logic_gates::gates::and_gate;
-            and_gate(one_bit, inv)
-        });
+    let lower_all_zero = src_bits[..bits - 1].iter().fold(1u8, |acc, &b| {
+        // acc = 1 so far means "all zero"; stays 1 only if current bit is 0
+        // AND(acc, NOT(b))
+        let inv = not_gate(b);
+        // acc & inv
+        let one_bit = not_gate(not_gate(acc)); // identity (just acc, but makes gate explicit)
+                                               // Use: 1 AND NOT(b) = NOT(OR(NOT(1), b)) ... simplify: just and_gate
+        use logic_gates::gates::and_gate;
+        and_gate(one_bit, inv)
+    });
     use logic_gates::gates::and_gate;
     and_gate(msb, lower_all_zero)
 }

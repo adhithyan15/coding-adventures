@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C18-practice",
+    "language": "urdu",
+    "chapter": 18,
+    "sequence": 1010,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38e696ca32f401b9",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

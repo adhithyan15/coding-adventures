@@ -1,0 +1,22 @@
+{
+  "language": "marwadi",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:7cd0163cf6e20ced",
+  "lessonIds": [
+    "MW-C20-hear-churma",
+    "MW-C20-churma",
+    "MW-C20-hear-chaay",
+    "MW-W20-ya",
+    "MW-C20-chaay",
+    "MW-R20-food-new-two",
+    "MW-C20-food-seven",
+    "MW-R20-script-close"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch25.txt",
+  "json": "marwadi/narration/ch25.json",
+  "textHash": "fnv1a64:c48f365b542b3b6a",
+  "jsonHash": "fnv1a64:a241c5634c8dcbe0",
+  "findings": []
+}

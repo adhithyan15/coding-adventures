@@ -5,14 +5,15 @@
 //! testsuite (`wasm-conformance`), not by inspection. Each test here
 //! reproduces the exact shape of the failing testsuite case in isolation.
 
-use wasm_execution::{HostFunction, Table, WasmEngineConfig, WasmExecutionEngine, WasmValue};
+use std::rc::Rc;
+use wasm_execution::{HostFunction, Table, TableElement, WasmEngineConfig, WasmExecutionEngine, WasmValue};
 use wasm_types::{FuncType, FunctionBody, ValueType, WasmModule};
 
 fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     let module = wasm_wast_parser::parse_module(wat).expect("module should parse");
     let func_types: Vec<FuncType> = module.functions.iter().map(|&t| module.types[t as usize].clone()).collect();
     let func_bodies: Vec<Option<FunctionBody>> = module.code.iter().cloned().map(Some).collect();
-    let host_functions: Vec<Option<Box<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
+    let host_functions: Vec<Option<Rc<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
 
     // Build tables (only needed by the call_indirect tests below) and apply
     // this module's element segments -- `call_depth_guard.rs`'s helper
@@ -28,7 +29,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
             // (i32.const 0) ...)` -- a real offset-expression evaluator
             // isn't needed to reproduce these bugs, so this just assumes 0.
             for (j, &func_idx) in elem.function_indices.iter().enumerate() {
-                table.set(j as u32, func_idx).expect("elem segment should fit the table");
+                table.set(j as u32, func_idx.map(TableElement::Raw)).expect("elem segment should fit the table");
             }
         }
     }
@@ -194,7 +195,7 @@ fn host_functions_survive_a_trapped_call_and_are_usable_by_a_later_call() {
         func_types: vec![echo_type.clone(), trap_type],
         // fn 0 is a host import (no body); fn 1 is `unreachable; end`.
         func_bodies: vec![None, Some(FunctionBody { locals: vec![], code: vec![0x00, 0x0B] })],
-        host_functions: vec![Some(Box::new(EchoI32(echo_type)) as Box<dyn HostFunction>), None],
+        host_functions: vec![Some(Rc::new(EchoI32(echo_type)) as Rc<dyn HostFunction>), None],
     };
     let mut engine = WasmExecutionEngine::new(engine_config);
 

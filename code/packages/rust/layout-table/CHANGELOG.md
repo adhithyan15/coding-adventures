@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Include shared replaced intrinsic widths in automatic and fixed table track
+  contributions.
+
 ## 0.1.0
 
 - Add fixed and automatic table sizing with intrinsic minimum/preferred widths.

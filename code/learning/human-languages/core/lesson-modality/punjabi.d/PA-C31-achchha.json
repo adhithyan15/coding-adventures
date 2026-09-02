@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C31-achchha",
+    "language": "punjabi",
+    "chapter": 31,
+    "sequence": 1950,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:66b5cd3749897d39"
+  },
+  "findings": []
+}

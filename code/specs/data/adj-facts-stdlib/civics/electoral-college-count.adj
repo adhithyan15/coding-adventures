@@ -1,0 +1,107 @@
+% ============================================================================
+% electoral-college-count — the numbers USA.gov states about the U.S.
+% Electoral College (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% "How many electoral votes do you need to win?" is a question with an
+% exact, checkable answer, and exactly the kind an engine should return
+% from a citation rather than from a model's recollection of a number.
+% Recall is a binding query:
+%
+%     ? electoral_college_count(electors_needed_to_win, $N)
+%       % 270
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `electoral_college_count(quantity, count)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the number WITH its source, on the CPU, with zero model
+% calls, and abstains on any quantity not one of these four. The query
+% also runs BACKWARD, binding the quantity from the number:
+%
+%     ? electoral_college_count($Q, 538)
+%       % total_electors
+%
+% NINTH library in `civics/`, and the first about elections themselves
+% rather than the branches of government or the path of a bill. A
+% full-tree grep for `elector`/`electoral`/`electoral_college` across every
+% shipped `.adj` returned nothing beforehand. (The numerals 538 and 270 do
+% appear elsewhere in this stdlib — as a count of infant bones and inside
+% NCBI Bookshelf identifiers — which is coincidence, not coverage; a future
+% reader grepping for the bare numbers will hit those.)
+%
+% THE FIRST COLUMN NAMES WHAT IS COUNTED, because the units differ. Three
+% rows count ELECTORS and one counts STATES, so a bare `count` column would
+% be ambiguous on its own; the quantity atom carries the unit
+% (`total_electors`, `winner_take_all_states`) rather than leaving a reader
+% to infer it from context.
+%
+% Provenance: quoted verbatim from USA.gov's "Electoral College" page:
+%
+%     quantity (this table's atom)     count   quote (verbatim)
+%     -------------------------------  -----   -------------------------------------------------------
+%     total_electors                     538   "Including Washington, D.C.'s three electors, there are
+%     district_of_columbia_electors        3      currently 538 electors in all." (one sentence states
+%                                                 both numbers)
+%     electors_needed_to_win             270   "A candidate needs the vote of at least 270 electors—
+%                                                 more than half of all electors—to win the
+%                                                 presidential election."
+%     winner_take_all_states              48   "In 48 states and Washington, D.C., the winner gets all
+%                                                 the electoral votes for that state."
+%
+% curl-fetched the raw page and read it byte-for-byte before writing this
+% file (not just an AI-summarized WebFetch); the URL was reachability-
+% checked from this machine before any scoping work, and the em dashes in
+% the 270 sentence were confirmed to be U+2014 rather than hyphens so the
+% quote is byte-faithful. `trust authoritative` — USA.gov is the U.S.
+% General Services Administration's official guide to government
+% information, a first-party .gov publisher of exactly the fact being
+% recalled, the same tier the eight sibling civics libraries cite.
+%
+% A NOTE ON "CURRENTLY". The source says "there are CURRENTLY 538 electors
+% in all", and that hedge is real: the total tracks congressional
+% apportionment and D.C.'s three electors, so it is stable but not
+% constitutionally fixed. The row records what the source states, and the
+% verbatim sentence carrying the word "currently" travels with every
+% answer, so a reader sees the qualifier rather than inheriting a bare
+% number presented as timeless. (Compare `veto-override.adj`, where the
+% source's "in most cases" is kept inside the recalled atom itself; here
+% the hedge attaches to the whole count rather than to a distinguishable
+% value, so carrying it in the citation is the faithful placement.)
+%
+% Honest abstention:
+%
+%   - Maine and Nebraska "assign their electors using a proportional
+%     system" — a METHOD, not a count, and the reason those two states are
+%     excluded from the 48. Different axis, its own future table.
+%   - The three components the page lists for the process (selection of
+%     electors, meeting of electors, counting of the votes by Congress) are
+%     a list of what the process INCLUDES, not counts, and the page does
+%     not number them; tabling them as an ordered sequence would assign
+%     positions the source never states (see `bill-stage-successor.adj`'s
+%     header for the case that established this rule).
+%   - "This has happened twice" (no candidate winning a majority, sending
+%     the vote to the House) and the 2016/2000 popular-vote outcomes are
+%     counts of HISTORICAL OCCURRENCES, a different subject from the size
+%     of the College. Not rows here.
+%   - The penalties a "rare elector who votes for someone else" may face —
+%     fined, disqualified, replaced, prosecuted — are consequences, not
+%     counts. Their own future table.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table electoral_college_count {
+    columns quantity, count
+
+    row (total_electors, 538)
+    row (district_of_columbia_electors, 3)
+    row (electors_needed_to_win, 270)
+    row (winner_take_all_states, 48)
+
+    source "Including Washington, D.C.'s three electors, there are currently 538 electors in all."
+    locator "https://www.usa.gov/electoral-college"
+    trust authoritative
+
+    cites "A candidate needs the vote of at least 270 electors—more than half of all electors—to win the presidential election." locator "https://www.usa.gov/electoral-college"
+    cites "In 48 states and Washington, D.C., the winner gets all the electoral votes for that state." locator "https://www.usa.gov/electoral-college"
+}

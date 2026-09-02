@@ -53,10 +53,10 @@ use report::{DirectiveKind, DirectiveOutcome};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
+use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
 use wasm_module_parser::WasmModuleParser;
 use wasm_runtime::{WasmInstance, WasmRuntime};
-use wasm_types::{ExternalKind, FuncType, GlobalType, WasmModule};
+use wasm_types::{CanonicalGroup, ExternalKind, FuncType, GlobalType, WasmModule};
 use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, F32LaneExpected, F64LaneExpected, ModuleSource};
 use wasm_wast_parser::{parse_script, WastParseError};
 
@@ -139,21 +139,58 @@ impl HostInterface for RegistryHost {
     fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Function)?;
         let func_type = instance_rc.borrow().func_types.get(index as usize)?.clone();
-        let (group_shape, is_final) = {
+        let (group_shape, is_final, canonical_type, type_idx) = {
             let instance = instance_rc.borrow();
             match combined_function_type_idx(&instance, index) {
-                Some(t) => (instance.module.type_group_shape(t), instance.module.type_subtyping_at(t).is_final),
-                None => ((1, 0), true),
+                Some(t) => (
+                    instance.module.type_group_shape(t),
+                    instance.module.type_subtyping_at(t).is_final,
+                    // W34 fourth slice: the EXPORTING module's own already-
+                    // computed canonical form for this function's type-
+                    // section index, cloned (cheap, `Rc`-backed) at
+                    // resolution time -- see `HostFunction::canonical_type`'s
+                    // own doc comment. `instance.canonical_types` (NOT
+                    // `instance.module`) is the same "cloned once at
+                    // `instantiate()` time from `ValidatedModule::
+                    // canonical_types()`" field `wasm-runtime`'s own
+                    // `WasmExecutionEngine` wiring already uses (W34 third
+                    // slice) -- reusing it here means a `CrossModuleFunction`
+                    // never needs to re-derive canonicalization itself.
+                    instance.canonical_types.get(t as usize).cloned().flatten(),
+                    // W34 fourth slice: this function's own flat type-
+                    // section index, kept (not just consumed above) so
+                    // `HostFunction::canonically_matches` can climb this
+                    // function's own module-LOCAL nominal `sub` chain
+                    // lazily at match time, re-borrowing `instance` --
+                    // see that method's own doc comment for why a declared
+                    // supertype relationship can only ever be walked
+                    // within the module that declared it.
+                    Some(t),
+                ),
+                None => ((1, 0), true, None, None),
             }
         };
-        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final }))
+        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final, canonical_type, type_idx }))
     }
 
-    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Global)?;
         let instance = instance_rc.borrow();
         let gtype = instance.global_types.get(index as usize)?.clone();
-        let gval = *instance.globals.get(index as usize)?;
+        // Real cross-instance global sharing (real corpus vendoring pass,
+        // `instance.wast`'s "Import is not generative" tests / `linking.
+        // wast`'s `mut_glob` tests): `.clone()` here clones the `Rc`
+        // pointer, NOT the `WasmValue` it points to (mirrors `resolve_
+        // memory`/`resolve_table`'s own W28 `.cloned()` fix immediately
+        // below/above -- see either's doc comment for the full
+        // rationale). Before this fix this line was `*instance.globals.
+        // get(index as usize)?` -- a genuine VALUE copy of whatever the
+        // global held at THIS EXACT MOMENT -- so the importing instance's
+        // own `globals` slot and the exporting instance's original
+        // silently diverged the moment either side executed a
+        // `global.set`, exactly the shape `LinearMemory`/`Table` had
+        // before W28.
+        let gval = instance.globals.get(index as usize)?.clone();
         Some((gtype, gval))
     }
 
@@ -191,8 +228,15 @@ impl HostInterface for RegistryHost {
         // so `.cloned()` shares storage rather than copying it. Still
         // does NOT give a table entry real cross-instance function
         // IDENTITY -- see `Table`'s own doc comment in `wasm-execution`
-        // for the deliberately out-of-scope follow-on that remains
-        // (`linking0.wast`/`linking3.wast`'s one known-gap `fail` each).
+        // for the deliberately out-of-scope follow-on that remains.
+        // Confirmed (real corpus bug-hunt pass, W-next) to be the root
+        // cause of every remaining WRONG-VALUE (not not-yet-supported)
+        // `assert_return` failure in `elem.wast`, `linking.wast`, and
+        // `linking3.wast` -- NOT `linking0.wast`, whose own one
+        // remaining failure turned out to be a completely different,
+        // since-fixed bug (active element segments were being applied
+        // AFTER data segments instead of before -- see `wasm-runtime::
+        // instantiate()`'s own comment on that fix).
         let table = instance_rc.borrow().tables.get(index as usize).cloned();
         table
     }
@@ -310,6 +354,23 @@ struct CrossModuleFunction {
     /// alongside `group_shape` — see `HostFunction::is_final`'s own doc
     /// comment.
     is_final: bool,
+    /// W34 fourth slice: this function's own real canonical type-group
+    /// identity, computed alongside `group_shape`/`is_final` above (from
+    /// the EXPORTING instance's own `canonical_types` table) — see
+    /// `HostFunction::canonical_type`'s own doc comment. `None` whenever
+    /// the exporting module's own type-section index wasn't canonicalized
+    /// (out of range, or the type it belongs to has an internally-
+    /// inconsistent `rec`-group shape — see `wasm_types::canonicalize_types`'s
+    /// own doc comment), in which case `wasm-runtime`'s import check falls
+    /// back to the pre-existing three-part conservative guard, unchanged.
+    canonical_type: Option<(Rc<CanonicalGroup>, u32)>,
+    /// W34 fourth slice: this function's own flat type-section index in
+    /// the EXPORTING instance's own module, kept so `canonically_matches`
+    /// can climb that module's own `type_subtyping` chain lazily (via a
+    /// fresh borrow of `instance`) rather than needing the whole chain
+    /// eagerly precomputed here. `None` in exactly the same case
+    /// `canonical_type` is `None` (an unresolvable combined type index).
+    type_idx: Option<u32>,
 }
 
 impl HostFunction for CrossModuleFunction {
@@ -328,6 +389,18 @@ impl HostFunction for CrossModuleFunction {
 
     fn is_final(&self) -> bool {
         self.is_final
+    }
+
+    fn canonical_type(&self) -> Option<(Rc<CanonicalGroup>, u32)> {
+        self.canonical_type.clone()
+    }
+
+    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32), budget: &mut wasm_types::CrossModuleComparisonBudget) -> bool {
+        let Some(type_idx) = self.type_idx else {
+            return false;
+        };
+        let instance = self.instance.borrow();
+        wasm_types::canonical_chain_reaches(&instance.module.type_subtyping, &instance.canonical_types, type_idx, Some(target), budget)
     }
 }
 
@@ -897,7 +970,15 @@ impl Executor {
                     .exports
                     .iter()
                     .find(|(n, kind, _)| n == name && *kind == ExternalKind::Global)
-                    .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).copied())
+                    // W35 third slice: `GlobalStorage::value`, not the
+                    // whole `GlobalStorage` -- a real funcref global's
+                    // `value` here is the reserved `WasmValue::Ref(Some(0))`
+                    // sentinel (see that struct's own doc comment); its
+                    // real identity lives in `func_ref`, unused by this
+                    // action (mechanical fallout only, per this slice's
+                    // own scope -- `wasm-conformance`'s own funcref-
+                    // equality/cross-module propagation is slice 4's job).
+                    .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).map(|g| g.borrow().value))
                     // A global read is not a call -- there's no engine
                     // `ctx` involved at all -- but UNLIKE at the time this
                     // comment was first written (SIMD PR1b-3), a
@@ -1188,6 +1269,104 @@ mod tests {
         let null_module = r#"(module (func (export "get") (result funcref) (ref.null func)))"#;
         let results = outcomes(&format!(r#"{null_module} (assert_return (invoke "get") (ref.func))"#));
         assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
+    }
+
+    /// Regression test for a real, previously-shipped bug found while
+    /// prioritizing the vendored testsuite corpus: `br_table.wast` (a
+    /// foundational MVP-level control-flow file, no GC-proposal syntax
+    /// involved) was TOTALLY failing -- `module 0/1`, `assert_return
+    /// 0/161` -- with `ValidationError: TypeMismatch: expected
+    /// ConcreteFuncRef(1), found Funcref` on an entirely ordinary `(table
+    /// funcref (elem $f))`-style construct
+    /// (`code/packages/rust/wasm-conformance/tests/fixtures/testsuite/
+    /// br_table.wast`'s own `meet-funcref-1`, vendored unchanged from the
+    /// official spec testsuite).
+    ///
+    /// This is the simplest possible reproduction of the FIRST of the
+    /// bug's two root causes: `(table $t (ref null $t) (elem $tf))`
+    /// declares a table whose element type is the CONCRETE function type
+    /// `$t`, not generic `funcref` -- but `wasm-wast-parser` used to
+    /// silently discard that reftype entirely (see the removed comment
+    /// this fix replaced, "this crate only tracks FUNCREF tables"),
+    /// leaving `table.get $t` with no way to know the table was anything
+    /// but generic `funcref`. A `br_table` branching to a label that
+    /// genuinely requires the NARROWER `$t` type then failed even though
+    /// the actual value in the table (`$tf`, of type `$t`) is exactly
+    /// right.
+    #[test]
+    fn table_get_on_a_concrete_funcref_table_keeps_its_concrete_type() {
+        // The exported function's declared result is the CONCRETE type
+        // `(ref null $t)`, not generic `funcref` -- its implicit-return
+        // check (every function body's own final assignability check
+        // against its declared results) only passes if `table.get $t`
+        // really did push `$t`'s concrete type. Before this fix it pushed
+        // generic `Funcref` instead, which is NOT assignable to a
+        // concrete-typed result slot (the opposite direction from
+        // `ConcreteFuncRef <: Funcref`), so this alone reproduces the
+        // regression without needing a value-comparing `assert_return`.
+        let results = outcomes(
+            r#"
+            (module
+              (type $t (func))
+              (func $tf)
+              (table $t (ref null $t) (elem $tf))
+              (func (export "get-as-concrete") (result (ref null $t))
+                (table.get $t (i32.const 0))
+              )
+            )
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+    }
+
+    /// The SECOND of the two root causes behind the `br_table.wast`
+    /// regression `table_get_on_a_concrete_funcref_table_keeps_its_
+    /// concrete_type` above documents: even once `table.get` correctly
+    /// pushes the table's own concrete type, `br_table`'s multi-target
+    /// type check was ORDER-DEPENDENT, which the real spec is not.
+    ///
+    /// `br_table`'s typing rule requires that the SAME operand value(s)
+    /// be simultaneously assignable to every listed target AND the
+    /// default target -- a "meet" over all of them, not a left-to-right
+    /// chain. The old implementation instead re-pushed each target's OWN
+    /// declared type after checking it, so checking a WIDER target (here,
+    /// `$l1`'s generic `(ref null func)`) before a NARROWER one (`$l2`'s
+    /// concrete `(ref null $t)`) irreversibly widened the value away,
+    /// and the narrower target's check then failed spuriously -- even
+    /// though the actual value is perfectly assignable to BOTH.
+    ///
+    /// This is `br_table.wast`'s own `meet-funcref-1` (vendored
+    /// unchanged): its label list `$l1 $l1 $l2` deliberately checks the
+    /// generic target ($l1, twice) before the concrete one ($l2, the
+    /// default) -- exactly the ordering the old chain-based algorithm got
+    /// wrong. `meet-funcref-2` (`$l2 $l2 $l1`, concrete first) already
+    /// passed even before this fix, which is WHY this needed a dedicated
+    /// order-sensitive test rather than trusting one passing permutation.
+    #[test]
+    fn br_table_targets_type_check_regardless_of_which_order_they_are_listed_in() {
+        let module = r#"
+            (module
+              (type $t (func))
+              (func $tf)
+              (table $t (ref null $t) (elem $tf))
+              (func (export "meet-wide-target-first") (param i32) (result (ref null func))
+                (block $l1 (result (ref null func))
+                  (block $l2 (result (ref null $t))
+                    (br_table $l1 $l1 $l2 (table.get $t (i32.const 0)) (local.get 0))
+                  )
+                )
+              )
+              (func (export "meet-narrow-target-first") (param i32) (result (ref null func))
+                (block $l1 (result (ref null func))
+                  (block $l2 (result (ref null $t))
+                    (br_table $l2 $l2 $l1 (table.get $t (i32.const 0)) (local.get 0))
+                  )
+                )
+              )
+            )
+        "#;
+        let results = outcomes(module);
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
     }
 
     #[test]
@@ -1984,5 +2163,96 @@ mod tests {
             "#,
         );
         assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)));
+    }
+
+    // ── W34 fourth slice: cross-module canonical type-group equivalence
+    // (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`) ──────────────
+
+    /// Two independently-declared, structurally-identical `rec` groups, at
+    /// GENUINELY different flat type-section indices in each module (the
+    /// importer has two unrelated padding types declared FIRST, so its own
+    /// `rec` group starts at index 2, not 0 like the exporter's) -- no
+    /// shared numbering between the two modules at all, exactly the
+    /// cross-module comparability property the whole canonicalization
+    /// algorithm exists for (MVP.md's own "no shared context... upfront").
+    /// Before this slice, `wasm-runtime`'s import check only compared raw
+    /// `FuncType` shape plus `(rec_group_size, rec_group_position)` plus
+    /// finality -- none of which is even DECLARED equal here in a way that
+    /// proves real canonical equivalence rather than coincidental shape
+    /// matching, so this is a genuine, not vacuous, positive proof point
+    /// (mirrors `type-subtyping.wast`'s own `M3`/`M4` "Linking" cases, and
+    /// `type-equivalence.wast`'s "Semantic types (link time)" section).
+    #[test]
+    fn cross_module_isomorphic_rec_groups_with_no_shared_numbering_link_successfully() {
+        // The MVP.md/`type-equivalence.wast` "Isomorphic recursive types"
+        // headline shape (two mutually-referencing members, no `sub`
+        // relation declared at all): `$a1` and `$a2` (exporter) tie to the
+        // identical shape as `$b1`/`$b2` (importer) once De-Bruijn-numbered
+        // relative to their OWN group, regardless of the group's absolute
+        // starting index in each module.
+        let results = outcomes(
+            r#"
+            (module
+              (rec
+                (type $a1 (func (param i32 (ref $a2))))
+                (type $a2 (func (param i32 (ref $a1))))
+              )
+              (func (export "g") (type $a2))
+            )
+            (register "IsoExport")
+            (module
+              (type $pad0 (func (param i32)))
+              (type $pad1 (func (param i64)))
+              (rec
+                (type $b1 (func (param i32 (ref $b2))))
+                (type $b2 (func (param i32 (ref $b1))))
+              )
+              (func (import "IsoExport" "g") (type $b2))
+            )
+            "#,
+        );
+        // The importing module's own directive is index 2 (export module=0,
+        // register=1, import module=2) -- `Pass` here means real linking
+        // succeeded, not merely that the directive was gradeable.
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "{:?}", results[2]);
+    }
+
+    /// The `M5`-shaped negative case (`type-subtyping.wast` lines 652-666,
+    /// this crate's own vendored corpus copy): superficially similar to the
+    /// positive case above (the same type NAMES, `$f1`/`$f2`/`$g1`/`$g2`,
+    /// are deliberately reused across both modules, copy-paste-style), but
+    /// ONE internal reference is wired to a DIFFERENT earlier group than
+    /// its counterpart -- the exporter's `$g2`'s declared supertype `$f2`
+    /// sits in a `rec` group whose OTHER member (an anonymous struct)
+    /// references `$f1` (a group declared even EARLIER, NOT itself), while
+    /// the importer's `$g1`'s declared supertype `$f1`'s own sibling struct
+    /// references `$f1` REFLEXIVELY (`Rec(0)`, its own group). Canonicalized,
+    /// these tie to genuinely different shapes (`Outer` vs `Rec` at that
+    /// position) despite every group's own size/position/finality/`FuncType`
+    /// shape matching -- exactly the class of mismatch the OLD three-part
+    /// conservative guard could never see, and canonical equivalence must
+    /// NOT be fooled into accepting.
+    #[test]
+    fn cross_module_copy_paste_shaped_type_mismatch_is_correctly_rejected() {
+        let results = outcomes(
+            r#"
+            (module
+              (rec (type $f1 (sub (func))) (type (struct (field (ref $f1)))))
+              (rec (type $f2 (sub (func))) (type (struct (field (ref $f1)))))
+              (rec (type $g2 (sub $f2 (func))) (type (struct)))
+              (func (export "g") (type $g2))
+            )
+            (register "Sneaky")
+            (assert_unlinkable
+              (module
+                (rec (type $f1 (sub (func))) (type (struct (field (ref $f1)))))
+                (rec (type $g1 (sub $f1 (func))) (type (struct)))
+                (func (import "Sneaky" "g") (type $g1))
+              )
+              "incompatible import type"
+            )
+            "#,
+        );
+        assert_eq!(results[2], (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass), "{:?}", results[2]);
     }
 }

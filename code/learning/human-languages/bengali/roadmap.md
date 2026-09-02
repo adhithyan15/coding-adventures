@@ -123,12 +123,57 @@ a gated reading course.
   confirmed cousin family in the track — **heart**, *kardía*, *cor*).
   **Authored.**
 
+- **Ch. 16 — Hanging From the Head-Line, One Piece at a Time** (`BN-W01-*`):
+  the first nine pieces — **ন**, **া**, **আ**, **হ**, **ম**, **স**, **ক**,
+  **্**, **র** — taught one per lesson, then **নমস্কার** read back from them,
+  conjunct included. The inherent vowel is **ô**, not *a*; **স** is written
+  *s* and said *sh*. **Authored.**
+
+- **Chs. 17–19 — the script strand continued** (`BN-W02-*`, `BN-W03-*`,
+  `BN-W04-*`): seventeen more pieces, eighteen words handed back to the eye,
+  and no chapter that is a block of alphabet. The shape is the owner's own:
+  a word is glossed and spoken chapters earlier, a later lesson teaches one
+  piece of it, something else intervenes, and then the word is read.
+
+  - **Ch. 17 — Five More Pieces, Six More Words**: **ি** (written left, heard
+    right) → **আমি** → **ল** (one l where the south keeps three) → **লাল** →
+    **ত** (dental, and *not* the English *t*) → **তিন** → **ু** (the first
+    mark below the line) → **তুমি** → **ে** → **কেমন**. Three of the five
+    additions are vowel signs, because a sign **multiplies** — every consonant
+    already held can take it — where a consonant only adds.
+  - **Ch. 18 — The Breath That Is a Letter**: **ো** (not a new shape at all:
+    **ে** in front and **া** behind, at once) → **কালো** → **ব** (the letter
+    that swallowed Sanskrit's *v*, which is the whole sound-fingerprint) →
+    **আবার** → **ভ** → **ভালো** (কালো's near-twin, one letter apart) → **খ**
+    → **মুখ** → **দ** → **সাদা** → **ধ** → **দুধ**, where the plain dental and
+    its breathy partner finally stand in one three-piece word. The
+    plain/breathy square is the unit the whole Indian consonant order is
+    built from.
+  - **Ch. 19 — Both Bodies of a Vowel**: **চ** → **চা** → **প** (the lips, and
+    the last place of articulation — the map of the mouth is complete) →
+    **পরিবার**, six pieces, where a bare consonant carries the inherent **ô**
+    mid-word → **জ** → **জল**, two letters and **no signs**, the cleanest
+    picture of an abugida the book can show → **ী** (a second i-sign for a
+    length Bengali no longer says) → **নীল** → **ই** → **ভাই** ("nothing to
+    lean on" is not "start of word") → **এ** → **এক**, whose independent
+    opening vowel is exactly why Ch. 6 said its five numerals could not
+    demonstrate the inherent vowel.
+
+  `taughtGlyphs` 9 → 26, `neverTaughtGlyphs` **39 → 22**. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 13 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
-| 14+ | Verb tenses (the past and future of these fourteen verbs) — always tracing the sound-shift back to Sanskrit |
+| 20 | The script strand's fifth tranche: **য**, **়**, **ও**, **গ**, **ছ** — the five untaught glyphs the corpus shows most often, each with a word already glossed and waiting (হ্যাঁ, কাপড়, হওয়া, লাগা, আছি) |
+| 21 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
+| 22+ | Verb tenses (the past and future of these fourteen verbs) — always tracing the sound-shift back to Sanskrit |
+
+Structural work, filed as **HL-C194** in `BACKLOG.d/`: the script strand sits
+after all fifteen content chapters, which is why `scriptClosureViolations` is
+unmoved at 65 while `neverTaughtGlyphs` has fallen from 48 to 22. Interleaving
+the strand into chapters 1–6 was measured to be worth seventeen violations;
+relocating chapter 16 alone is worth three.
 
 Note: Bengali marks "you" **three** ways by register — *tui* (intimate) / *tumi*
 (familiar) / *āpni* (respectful) — a finer distinction than the two-way split of

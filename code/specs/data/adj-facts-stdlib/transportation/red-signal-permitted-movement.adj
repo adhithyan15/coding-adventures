@@ -1,0 +1,117 @@
+% ============================================================================
+% red-signal-permitted-movement — which movements a steady CIRCULAR RED
+% signal permits (adj-facts-stdlib, TRANSPORTATION).
+% ============================================================================
+% Recall is a membership binding query:
+%
+%     ? red_signal_permitted_movement($M)
+%       % turn_right_after_stopping
+%       % turn_left_from_one_way_street_into_one_way_street_after_stopping
+%
+% A native `table` (ADJ-TABLES RS-5) with ONE column, matching its sibling
+% `green-signal-permitted-movement.adj` exactly: each `row` lowers to a
+% ground relation `red_signal_permitted_movement(movement)` carrying the
+% source citation, so membership is the ordinary SLD query and anything not
+% shipped as a row ABSTAINS.
+%
+% *** READ THIS TABLE NEXT TO ITS GREEN SIBLING. THAT CONTRAST IS THE
+% POINT. ***
+%
+%     green_signal_permitted_movement    red_signal_permitted_movement
+%     -------------------------------    -----------------------------
+%     straight_through                   (none)
+%     turn_right                         turn_right_AFTER_STOPPING
+%     turn_left                          turn_left_FROM_A_ONE_WAY_STREET
+%                                        _INTO_A_ONE_WAY_STREET_AFTER_STOPPING
+%     u_turn                             (none)
+%
+% Green permits `turn_right` OUTRIGHT. Red permits it only AFTER STOPPING.
+% A driver who reads the two tables as saying the same thing about right
+% turns has made exactly the mistake these libraries exist to prevent — so
+% `turn_right` is deliberately NOT a row here, and a query for it ABSTAINS.
+%
+% BE PRECISE ABOUT WHAT THE CONTRAST IS AND IS NOT. The difference is the
+% STOPPING requirement, and nothing else. An earlier draft of this header
+% also claimed red is permitted "only where no device prohibits it", as
+% though device-prohibition were a red-specific narrowing. IT IS NOT: the
+% manual's green sentence carries a parallel exception in the same
+% paragraph, continuing "except as such movement is modified by lane-use
+% signs, turn prohibition signs, lane markings, roadway design, separate
+% turn signal indications, or other traffic control devices." Both
+% permissions are device-modifiable; only red is conditioned on stopping.
+%
+% (That green clause is NOT in the shipped `green-signal-permitted-movement
+% .adj` citation, which stops just before it — a truncation of exactly the
+% kind this header warns against two paragraphs below. FILED AS ISSUE #13916
+% rather than fixed here, since editing a sibling library's provenance
+% belongs in its own change.)
+%
+% THE QUALIFIER SPLIT FOLLOWS THE SETTLED PLACEMENT RULE, and this sentence
+% needs both halves of it at once:
+%
+%   - "AFTER STOPPING" modifies EACH MOVEMENT individually, so it rides
+%     INSIDE the atom — the same rule `veto-override.adj` and
+%     `karst-process-zone.adj` apply. Right-on-red is never permitted
+%     WITHOUT stopping, so an unqualified `turn_right` is a claim this
+%     source does not make.
+%   - "EXCEPT WHEN A TRAFFIC CONTROL DEVICE IS IN PLACE PROHIBITING A TURN
+%     ON RED OR A STEADY RED ARROW SIGNAL INDICATION IS DISPLAYED" modifies
+%     the WHOLE PERMISSION rather than any one movement, so it stays in the
+%     CITATION, which is quoted in full including that clause. This is the
+%     same treatment `sign-shape.adj` gave the warning-sign default, and for
+%     the same reason: A CITATION HAS TO CARRY THE QUALIFIER IT IS BEING
+%     USED TO JUSTIFY. Quoting from "vehicular traffic facing a steady
+%     CIRCULAR RED" would have been shorter and would have silently dropped
+%     the exception from the evidence.
+%
+% Provenance: one sentence from Section 4D.04 of the 2009 MUTCD, the same
+% chapter and locator `green-signal-permitted-movement.adj` and
+% `traffic-lights.adj` already cite:
+%
+%     "Except when a traffic control device is in place prohibiting a turn
+%      on red or a steady RED ARROW signal indication is displayed,
+%      vehicular traffic facing a steady CIRCULAR RED signal indication is
+%      permitted to enter the intersection to turn right, or to turn left
+%      from a one-way street into a one-way street, after stopping."
+%
+% `trust authoritative` — the FHWA is the first-party federal publisher and
+% this is the standard itself rather than a description of it. The page was
+% CONTENT-verified by RAW TEXT EXTRACTION (HTTP 200, 652 structured lines)
+% and the sentence confirmed verbatim in that extraction: 324 characters,
+% pure ASCII, no quote characters requiring escaping.
+%
+% Honest abstention:
+%
+%   - `turn_right` UNQUALIFIED is not a row, as above. This is the
+%     abstention that carries the library.
+%   - `straight_through` and `u_turn` are NOT permitted on red and get no
+%     rows. Their absence is not an oversight: the sentence enumerates
+%     exactly two permitted movements, and the same signal's other
+%     provision requires stopping.
+%   - `turn_left` UNQUALIFIED is not a row either. The permission is
+%     narrower than "turning left" — it is turning left FROM a one-way
+%     street INTO a one-way street. A driver at an ordinary two-way
+%     intersection has no such permission, and flattening the atom would
+%     assert one.
+%   - This table says what is PERMITTED. What a driver MUST do at a red
+%     signal — stop at the stop line, or before the crosswalk, or before
+%     the intersection — is a different relation, stated in a different
+%     paragraph, and belongs in its own table rather than being mixed in
+%     here.
+%   - The RED ARROW indication is a different signal indication with its
+%     own provisions, and gets no rows in a CIRCULAR RED table.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table red_signal_permitted_movement {
+    columns movement
+
+    row (turn_right_after_stopping)
+    row (turn_left_from_one_way_street_into_one_way_street_after_stopping)
+
+    source "Except when a traffic control device is in place prohibiting a turn on red or a steady RED ARROW signal indication is displayed, vehicular traffic facing a steady CIRCULAR RED signal indication is permitted to enter the intersection to turn right, or to turn left from a one-way street into a one-way street, after stopping."
+    locator "https://mutcd.fhwa.dot.gov/htm/2009/part4/part4d.htm"
+    trust authoritative
+}

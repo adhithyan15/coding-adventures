@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:bacb269731720008",
+  "lessonIds": [
+    "MR-C22-dene",
+    "MR-C22-pine",
+    "MR-C22-anne",
+    "MR-C22-thevne",
+    "MR-R22-request-verbs"
+  ],
+  "tex": "marathi/book/chapters/ch22-request-verbs.tex"
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W03-shada-read",
+    "language": "bengali",
+    "chapter": 18,
+    "sequence": 1900,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1036e1271b7e7f50",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

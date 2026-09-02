@@ -4,14 +4,14 @@
   "chapter": 8,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:715871f2b2727f8e",
+  "sourceHash": "fnv1a64:42dd63a3df3973c1",
   "lessons": [
     {
       "id": "GU-C02-naam",
       "sequence": 91,
       "title": "નામ (nām) — \"name,\" a word older than Europe",
       "headword": "નામ",
-      "romanization": "",
+      "romanization": "nām",
       "gloss": "name",
       "script": "gujarati",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:556eaa0d16698b89",
+      "sourceHash": "fnv1a64:d41a4f7ca9e7962c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -125,7 +125,7 @@
       "sequence": 100,
       "title": "મારું (mārũ) — \"my,\" and gender again",
       "headword": "મારું",
-      "romanization": "",
+      "romanization": "mārũ",
       "gloss": "my (neuter; also મારો m. / મારી f.)",
       "script": "gujarati",
       "modality": "sight",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6687990baa692033",
+      "sourceHash": "fnv1a64:74848d4ef998a410",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -275,7 +275,7 @@
       "sequence": 110,
       "title": "છે (chhe) — \"is,\" a copula all Gujarati's own",
       "headword": "છે",
-      "romanization": "",
+      "romanization": "chhe",
       "gloss": "is (the copula)",
       "script": "gujarati",
       "modality": "sight",
@@ -283,7 +283,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:816e67d1d4112707",
+      "sourceHash": "fnv1a64:70297cdd06d56906",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -409,7 +409,7 @@
       "sequence": 120,
       "title": "મારું નામ … છે (mārũ nām … chhe) — \"my name is…\"",
       "headword": "મારું નામ … છે",
-      "romanization": "",
+      "romanization": "mārũ nām … chhe",
       "gloss": "my name is…",
       "script": "gujarati",
       "modality": "voice",
@@ -417,7 +417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a9cd69762f34128",
+      "sourceHash": "fnv1a64:d7f3497ab46e51a3",
       "notice": null,
       "blocks": [
         {
@@ -514,7 +514,7 @@
       "sequence": 130,
       "title": "તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) — \"pleased to meet you\"",
       "headword": "તમને મળીને આનંદ થયો",
-      "romanization": "",
+      "romanization": "tamne maḷīne ānand thayo",
       "gloss": "pleased to meet you (lit. \"meeting you, joy happened\")",
       "script": "gujarati",
       "modality": "sight",
@@ -522,7 +522,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c59fc0203ae4ca2",
+      "sourceHash": "fnv1a64:043a1409bbb084fb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -569,7 +569,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "તમને મળીને આનંદ થયો = તમને (tamne, \"to you\") + મળીને (maḷīne, \"having met\") + આનંદ થયો (ānand thayo, \"joy happened\") — literally \"having met you, joy happened.\" The key word આનંદ (ānand, \"joy, bliss\") is Sanskrit — ā- (\"fully\") + nand (\"to rejoice\") — the ānanda of sat-cit-ānanda (\"being-consciousness-bliss\"), and a common Gujarati name. So a simple greeting reaches, as Sanskrit did, for the word for the deepest happiness."
+              "text": "તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) = તમને (tamne, \"to you\") + મળીને (maḷīne, \"having met\") + આનંદ થયો (ānand thayo, \"joy happened\") — literally \"having met you, joy happened.\" The key word આનંદ (ānand, \"joy, bliss\") is Sanskrit — ā- (\"fully\") + nand (\"to rejoice\") — the ānanda of sat-cit-ānanda (\"being-consciousness-bliss\"), and a common Gujarati name. So a simple greeting reaches, as Sanskrit did, for the word for the deepest happiness."
             }
           ]
         },
@@ -637,7 +637,7 @@
       "sequence": 140,
       "title": "તું / તમે (tũ / tame) — \"you,\" familiar and respectful",
       "headword": "તું / તમે",
-      "romanization": "",
+      "romanization": "tũ / tame",
       "gloss": "you (familiar / respectful)",
       "script": "gujarati",
       "modality": "sight",
@@ -645,7 +645,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e574a3c1dbb87c1d",
+      "sourceHash": "fnv1a64:0ccf9fe758d7f6f0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -789,7 +789,7 @@
       "sequence": 150,
       "title": "શું (shũ) — \"what\"",
       "headword": "શું",
-      "romanization": "",
+      "romanization": "shũ",
       "gloss": "what",
       "script": "gujarati",
       "modality": "sight",
@@ -797,7 +797,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f88a097b5acb1bd6",
+      "sourceHash": "fnv1a64:3960ed92a6f9431c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -941,7 +941,7 @@
       "sequence": 160,
       "title": "તમારું નામ શું છે? (tamārũ nām shũ chhe?) — \"what's your name?\"",
       "headword": "તમારું નામ શું છે?",
-      "romanization": "",
+      "romanization": "tamārũ nām shũ chhe?",
       "gloss": "what's your name?",
       "script": "gujarati",
       "modality": "sight",
@@ -949,7 +949,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5e83dfbe5eda55c6",
+      "sourceHash": "fnv1a64:c83b02212c009d5a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -985,7 +985,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "તમારું (tamārũ, \"your,\" the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (is) becomes literally \"your name what is?\" Gujarati keeps the verb last and drops the question-word shũ into the object slot."
+              "text": "તમારું (tamārũ, \"your,\" the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (chhe) (is) becomes literally \"your name what is?\" Gujarati keeps the verb last and drops the question-word shũ into the object slot."
             }
           ]
         },

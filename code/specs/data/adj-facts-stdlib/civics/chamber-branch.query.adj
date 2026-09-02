@@ -1,0 +1,24 @@
+% ============================================================================
+% chamber-branch.query.adj — worked recall over the civics
+% chamber/branch two-hop composition library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which branch is the
+% Senate part of?" — it states no civics fact of its own — it only
+% `import`s the grounded rule and asks binding queries. The answer is
+% DERIVED, composing congress-chamber's chamber->body fact with
+% government-branch-member's branch->member fact through the `congress`
+% atom they share, so every answer carries BOTH citations in its `steps`
+% trail. The last two queries demonstrate INHERITED abstention: the rule
+% adds no facts of its own, so it abstains exactly where its premises do.
+%
+% Run (from this directory so the relative imports resolve):
+%     ../../../../packages/rust/target/debug/adj-lang-cli chamber-branch.query.adj
+% ============================================================================
+
+import "chamber-branch.adj"
+
+? chamber_branch(senate, $B)                   % expect legislative (direct, two-hop derivation)
+? chamber_branch(house_of_representatives, $B) % expect legislative (direct)
+? chamber_branch($C, legislative)              % expect two solutions: senate, house_of_representatives (reverse -- enumerates a branch's chambers)
+? chamber_branch(supreme_court, $B)            % expect abstain -- congress_chamber abstains on it (judicial branch, not a chamber of Congress), so this rule inherits that abstention
+? chamber_branch(president, $B)                % expect abstain -- likewise executive

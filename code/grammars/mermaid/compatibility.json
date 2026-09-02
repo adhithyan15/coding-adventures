@@ -135,14 +135,14 @@
     {
       "id": "packet",
       "headers": ["packet", "packet-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "packet",
       "smoke_source": "packet-beta\n0-7: \"Header\""
     },
     {
       "id": "kanban",
       "headers": ["kanban"],
-      "status": "detected",
+      "status": "partial",
       "ir": "board",
       "smoke_source": "kanban\nTodo\n  task1[Task]"
     },

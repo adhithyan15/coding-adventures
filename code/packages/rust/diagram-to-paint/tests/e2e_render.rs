@@ -14,20 +14,22 @@ mod apple {
     use diagram_ir::{
         EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody, TemporalDiagram, TemporalKind,
     };
+    use diagram_layout_board::layout_board_diagram;
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
     use diagram_layout_grid::layout_grid_diagram;
+    use diagram_layout_packet::layout_packet_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
     use diagram_layout_structural::layout_structural_diagram;
     use diagram_layout_temporal::layout_temporal_diagram;
     use diagram_to_paint::{
-        diagram_to_paint, diagram_to_paint_chart, diagram_to_paint_sequence,
+        diagram_to_paint, diagram_to_paint_board, diagram_to_paint_chart, diagram_to_paint_packet, diagram_to_paint_sequence,
         diagram_to_paint_structural, diagram_to_paint_temporal, DiagramToPaintOptions,
     };
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_block, parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
+        parse_block, parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_kanban, parse_packet, parse_pie,
         parse_mindmap, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
         parse_sequence_diagram, parse_state_diagram, parse_timeline,
         parse_to_diagram as parse_mermaid_to_diagram, parse_xychart,
@@ -244,6 +246,64 @@ mod apple {
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_block_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_packet_to_png() {
+        let packet = parse_packet(
+            "packet-beta\ntitle Native packet fields\n0-7: \"Version\"\n8-15: \"Flags\"\n16-31: \"Payload length\"\n32-63: \"Sequence number\"",
+        )
+        .expect("packet parse failed");
+        let layout = layout_packet_diagram(&packet);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_packet(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_packet_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_kanban_to_png() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]\n    grammar[Write grammar]\n    ir[Lower semantic IR]\n  doing[In progress]\n    layout[Build board layout]\n  done[Done]\n    paint[Render native paint]",
+        )
+        .expect("kanban parse failed");
+        let layout = layout_board_diagram(&board);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_board(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_kanban_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

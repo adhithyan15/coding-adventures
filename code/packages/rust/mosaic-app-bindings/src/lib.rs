@@ -641,6 +641,7 @@ mod tests {
             assert!(source.contains("rejected persisted state"));
             assert!(source.contains("restoredSnapshot"));
             assert!(source.contains("persistenceWarning") || source.contains("PersistenceWarning"));
+            assert!(source.contains("storage-warning"));
 
             let restored = source.find(restore_marker).unwrap();
             let created = source.find(create_marker).unwrap();

@@ -26,6 +26,10 @@ const TIMELINE_TOKEN_GRAMMAR_SOURCE: &str =
 const MINDMAP_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/mindmap.tokens");
 const BLOCK_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/block.tokens");
+const PACKET_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/packet.tokens");
+const KANBAN_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/kanban.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -88,6 +92,14 @@ pub fn create_mermaid_mindmap_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_block_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, BLOCK_TOKEN_GRAMMAR_SOURCE, "block.tokens")
+}
+
+pub fn create_mermaid_packet_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, PACKET_TOKEN_GRAMMAR_SOURCE, "packet.tokens")
+}
+
+pub fn create_mermaid_kanban_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, KANBAN_TOKEN_GRAMMAR_SOURCE, "kanban.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -316,6 +328,16 @@ pub fn try_tokenize_mermaid_block(source: &str) -> Result<Vec<Token>, String> {
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_packet(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_packet_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
+pub fn try_tokenize_mermaid_kanban(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_kanban_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_xychart(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_xychart_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -347,6 +369,29 @@ mod tests {
             .map(|token| token.value.as_str())
             .collect::<Vec<_>>();
         assert_eq!(lines, ["columns 2", "A[Parser] B(IR)", "A --> B"]);
+    }
+
+    #[test]
+    fn tokenizes_packet_fields_as_complete_lines() {
+        let tokens = try_tokenize_mermaid_packet(
+            "packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n",
+        )
+        .unwrap();
+        let lines = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
+            .map(|token| token.value.as_str())
+            .collect::<Vec<_>>();
+        assert_eq!(lines, ["0-7: \"Header\"", "8-31: \"Payload\""]);
+    }
+
+    #[test]
+    fn tokenizes_kanban_indentation_as_complete_lines() {
+        let tokens =
+            try_tokenize_mermaid_kanban("kanban\n  Todo\n    task[Write tests]\n").unwrap();
+        let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
+        assert!(values.contains(&"  Todo"));
+        assert!(values.contains(&"    task[Write tests]"));
     }
 
     #[test]

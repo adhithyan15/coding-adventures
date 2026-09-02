@@ -12,18 +12,28 @@ import {
   loadWorkspace,
   makeWorkspaceRecord,
   openWorkspaceStorage,
+  preserveRejectedWorkspace,
+  RECOVERY_WORKSPACE_KEY,
   saveWorkspace,
   WORKSPACE_KEY,
 } from "../src/persistence";
 
 describe("workspace persistence", () => {
   it("returns undefined on a first visit", async () => {
-    const storage = await openWorkspaceStorage();
+    const { storage } = await openWorkspaceStorage();
     expect(await loadWorkspace(storage)).toBeUndefined();
   });
 
+  it("describes the volatile fallback in plain language", async () => {
+    const session = await openWorkspaceStorage();
+    expect(session.durable).toBe(false);
+    expect(session.status).toBe("Temporary session only");
+    expect(session.location).toContain("closing or reloading removes these changes");
+    expect(session.warning).toContain("Durable local storage is unavailable");
+  });
+
   it("round-trips an engine snapshot plus host state", async () => {
-    const storage = await openWorkspaceStorage();
+    const { storage } = await openWorkspaceStorage();
     saveWorkspace(storage, makeWorkspaceRecord('{"id":"project"}', ["t1", "t2"], 2, 123));
 
     const rec = await loadWorkspace(storage);
@@ -40,7 +50,7 @@ describe("workspace persistence", () => {
     // same data may sit on different projects), which makes remembering it the host's
     // job. Without it, a reload silently drops you back on the first project and your
     // tasks look like they vanished.
-    const storage = await openWorkspaceStorage();
+    const { storage } = await openWorkspaceStorage();
     saveWorkspace(storage, makeWorkspaceRecord("{}", [], 0, 1, "p2"));
     expect((await loadWorkspace(storage))!.activeProject).toBe("p2");
   });
@@ -59,8 +69,23 @@ describe("workspace persistence", () => {
     expect(rec.order).toEqual(["a"]);
   });
 
+  it("preserves a rejected record under the fixed recovery key", async () => {
+    const { storage } = await openWorkspaceStorage();
+    const rejected = makeWorkspaceRecord("not-an-engine-snapshot", ["t1"], 1, 10);
+    await preserveRejectedWorkspace(storage, rejected);
+
+    const recovery = await storage.get<typeof rejected>("workspace", RECOVERY_WORKSPACE_KEY);
+    expect(recovery).toMatchObject({
+      id: RECOVERY_WORKSPACE_KEY,
+      snapshot: "not-an-engine-snapshot",
+      order: ["t1"],
+      counter: 1,
+      savedAt: 10,
+    });
+  });
+
   it("keeps a single workspace record, overwriting on re-save", async () => {
-    const storage = await openWorkspaceStorage();
+    const { storage } = await openWorkspaceStorage();
     saveWorkspace(storage, makeWorkspaceRecord("{}", [], 0, 1));
     saveWorkspace(storage, makeWorkspaceRecord('{"v":2}', ["x"], 5, 2));
     await Promise.resolve(); // let the fire-and-forget writes settle
@@ -71,5 +96,16 @@ describe("workspace persistence", () => {
     expect(rec!.snapshot).toBe('{"v":2}');
     expect(rec!.order).toEqual(["x"]);
     expect(rec!.counter).toBe(5);
+  });
+
+  it("reports a failed background save instead of rejecting silently", async () => {
+    const warning = await new Promise<string>((resolve) => {
+      saveWorkspace(
+        { put: () => Promise.reject(new Error("quota exhausted")) } as any,
+        makeWorkspaceRecord("{}", [], 0, 1),
+        resolve,
+      );
+    });
+    expect(warning).toBe("Could not save changes to local storage: quota exhausted");
   });
 });

@@ -552,11 +552,26 @@ fn encode_struct_type(st: &StructType) -> Vec<u8> {
 /// Encode one field of a WasmGC struct type.
 ///
 /// ```text
-/// <val_type encoding>   ;; ValueType::encode()
+/// <storage_type encoding>   ;; StorageType::Val(_) -> ValueType::encode(); I8/I16 -> one packed-type byte
 /// <mutability: 0x00 = immutable, 0x01 = mutable>
 /// ```
+///
+/// W33 fourth slice: `FieldType.val_type: ValueType` widened to `FieldType.
+/// storage: StorageType` so packed `i8`/`i16` fields (real WasmGC vocabulary,
+/// previously unrepresentable in this crate at all) have a byte encoding.
+/// `0x78`/`0x77` are this repo's own internal choice for the two packed-type
+/// tags -- this crate's TEXT-format pipeline (`wasm-wast-parser` ->
+/// `WasmModule` -> `wasm-execution`) never round-trips a struct/array type
+/// through this BINARY encoder at all (see `wasm-conformance`'s own pipeline
+/// doc comment), so no vendored corpus module exercises this byte value; it
+/// is documented here for whichever future slice adds real binary-format
+/// struct/array support, not exercised by this slice's own scope.
 fn encode_field_type(ft: &FieldType) -> Vec<u8> {
-    let mut bytes = ft.val_type.encode();
+    let mut bytes = match ft.storage {
+        wasm_types::StorageType::Val(vt) => vt.encode(),
+        wasm_types::StorageType::I8 => vec![0x78],
+        wasm_types::StorageType::I16 => vec![0x77],
+    };
     bytes.push(if ft.mutable { 0x01 } else { 0x00 });
     bytes
 }
@@ -1232,8 +1247,8 @@ mod tests {
             }],
             struct_types: vec![StructType {
                 fields: vec![
-                    FieldType { val_type: ValueType::Anyref, mutable: true },
-                    FieldType { val_type: ValueType::Anyref, mutable: true },
+                    FieldType::plain(ValueType::Anyref, true),
+                    FieldType::plain(ValueType::Anyref, true),
                 ],
             }],
             functions: vec![0],
@@ -1336,8 +1351,8 @@ mod tests {
         let module = WasmModule {
             struct_types: vec![StructType {
                 fields: vec![
-                    FieldType { val_type: ValueType::NonNullStructRef(0), mutable: false },
-                    FieldType { val_type: ValueType::StructRef(0), mutable: true },
+                    FieldType::plain(ValueType::NonNullStructRef(0), false),
+                    FieldType::plain(ValueType::StructRef(0), true),
                 ],
             }],
             ..Default::default()

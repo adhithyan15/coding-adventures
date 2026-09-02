@@ -1,0 +1,19 @@
+{
+  "id": "MW-PATH-019",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C20-hear-churma",
+    "MW-C20-churma",
+    "MW-C20-hear-chaay",
+    "MW-W20-ya",
+    "MW-C20-chaay",
+    "MW-R20-food-new-two",
+    "MW-C20-food-seven",
+    "MW-R20-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-033-FOOD-SEVEN"
+  ],
+  "after": []
+}

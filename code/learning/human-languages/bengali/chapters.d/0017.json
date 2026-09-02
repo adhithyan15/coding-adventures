@@ -1,0 +1,27 @@
+{
+  "chapter": 17,
+  "title": "Five More Pieces, Six More Words",
+  "label": "ch:bn-pieces-into-words",
+  "canDo": "I can read six Bengali words I already say — নাম, আমি, লাল, তিন, তুমি and কেমন — by adding five pieces to the nine I already write, and I can say why a vowel sign written in front of a consonant is still spoken after it.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-W02-kemon-read",
+    "kind": "reading",
+    "summary": "The six words of the chapter read back in one pass, introducing no new shape — and the count that shows why three of the five additions being vowel signs was worth more than three more consonants.",
+    "assesses": [
+      "BN-SCRIPT-NAAM-READ-01",
+      "BN-SCRIPT-I-MATRA-01",
+      "BN-SCRIPT-AMI-READ-01",
+      "BN-SCRIPT-LA-01",
+      "BN-SCRIPT-LAL-READ-01",
+      "BN-SCRIPT-TA-01",
+      "BN-SCRIPT-TIN-READ-01",
+      "BN-SCRIPT-U-MATRA-01",
+      "BN-SCRIPT-TUMI-READ-01",
+      "BN-SCRIPT-E-MATRA-01",
+      "BN-SCRIPT-KEMON-READ-01"
+    ]
+  }
+}

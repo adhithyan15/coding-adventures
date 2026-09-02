@@ -1,5 +1,193 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.94 — 2026-09-01 — test fixture update for `wasm-types`' new `missing_data_count_section` field
+
+No functional change in this crate. `wasm-types` 0.1.23 added `WasmModule::
+missing_data_count_section` (see that crate's own CHANGELOG — part of the
+same pass as `wasm-module-parser`/`wasm-validator`'s `binary.wast`
+data-count-section fixes). One existing test here,
+`module_binary_directive_builds_a_real_module_from_decoded_bytes`,
+compared a real (binary-parsed) `WasmModule` against a bare `WasmModule::
+default()` — updated to expect `missing_data_count_section: true` instead,
+since the test's own module has no data count section at all (a plain
+`"\00\61\73\6d\01\00\00\00"` magic+version binary), and that's now
+correctly reflected rather than silently dropped. Harmless either way in
+this specific module since it also has no `memory.init`/`data.drop` to
+gate.
+
+## 0.1.93 — 2026-09-01 — fix: `(table $t reftype (elem ...))` no longer discards its reftype
+
+Root-caused while prioritizing the vendored testsuite corpus: the whole
+`br_table.wast` file (a foundational MVP-level control-flow test, no
+GC-proposal syntax at all) was failing every directive — `module 0/1`,
+`assert_return 0/161` — with `ValidationError: TypeMismatch: expected
+ConcreteFuncRef(1), found Funcref` on `(table $t (ref null $t) (elem
+$tf))`, about as ordinary a construct as the corpus has. See
+`wasm-validator`'s and `wasm-conformance`'s own CHANGELOGs for the full
+two-part root cause and the corpus-impact diff; this is the parser-side
+half.
+
+`build_table_limits_and_elements`'s `[reftype, (elem e*)]` shorthand
+branch (the `(table funcref (elem $f))`/`(table $t (ref null $t) (elem
+$tf))` form every table-with-inline-elements declaration in the corpus
+uses) never even LOOKED at the reftype token — it sliced straight to
+`rest[1]` for the `(elem ...)` list, per the comment this fix removed:
+"this crate only tracks FUNCREF tables". True for the plain-keyword case,
+but silently wrong for a function-references-proposal `(ref null $t)`/
+`(ref $t)` reftype: the table's element type stayed the `TableType::
+default()`-style `FUNCREF` placeholder no matter what the source
+actually declared, indistinguishable from an ordinary generic-funcref
+table to every downstream consumer.
+
+- The reftype token (`rest[0]`) is now actually read: `funcref`/
+  `externref` atoms keep their existing byte-tag-only handling, and
+  anything else is parsed via the SAME `parse_value_type` this crate
+  already uses for func params/results/globals/locals (`(ref null $t)`/
+  `(ref $t)`/`(ref null func)`/`(ref null extern)` — no new grammar, just
+  reuse). A resulting `ConcreteFuncRef`/`NonNullConcreteFuncRef` is
+  recorded in the new `WasmModule::table_concrete_element_types[storage_idx]`
+  (see `wasm-types`'s own CHANGELOG for that field) — `element_type`
+  itself stays `FUNCREF`, so nothing that only reads the byte tag changes
+  behavior.
+- The pass-1 placeholder push (`collect_symbols`'s `"table"` arm) now
+  pushes a matching `None` into `table_concrete_element_types` in
+  lockstep with its existing `tables.push(...)`, so index alignment holds
+  even before pass 2 (`build_table_limits_and_elements`) runs.
+- The numeric-limits form (`(table $t N M reftype)`) is UNCHANGED and
+  still only accepts the `funcref`/`externref` atoms — no corpus file
+  combines a concrete reftype with that form, and the real regression
+  only ever used the inline-`elem` shorthand, so this fix stayed scoped
+  to the branch that actually needed it (confirmed via the full
+  programmatic baseline diff in `wasm-conformance`'s CHANGELOG: exactly
+  one file's tally changed).
+
+## 0.1.92 — 2026-09-01 — W34 third slice: allow struct/array bodies inside `sub`
+
+Found and fixed while implementing `code/specs/
+W34-wasm-gc-canonical-type-equivalence.md`'s third slice (wiring canonical
+equivalence into `wasm-validator`): a real, previously-undiscovered
+parser-level gap, not merely the "explicitly out of scope, deferred"
+limitation W33's fourth slice's own doc comment described it as.
+`parse_composite_body`'s `(sub ...)` branch unconditionally rejected any
+composite body that wasn't `(func ...)` (`reject_non_func_body`'s old,
+hardcoded message: "'struct'/'array' bodies are not supported inside
+'sub'"). The vendored `type-subtyping.wast`'s own "Definitions"/"Invalid
+subtyping definitions" sections declare struct/array `sub` relationships
+extensively (`(type $e0 (sub (array i32)))`, `(type $s0 (sub (struct)))`)
+— every one of those modules failed to PARSE AT ALL before this fix, never
+even reaching `wasm-validator`'s own struct/array structural-subtype
+checker (see that crate's own CHANGELOG for the matching fix this would
+have made unreachable).
+
+- `parse_composite_body`'s `sub` branch now dispatches on the wrapped
+  body's own head keyword (`struct`/`array`/`func`), exactly like the
+  bare (non-`sub`) branch already did — producing a real `ParsedComposite::
+  Struct`/`Array` with the declared supertype/finality preserved.
+  `peek_member_kind` (phase A) already anticipated this correctly (it
+  already looks INSIDE a `sub` wrapper to find `struct`/`array`/`func`),
+  so `MemberKind`/`TypeKind` were already right even before this fix —
+  only `parse_composite_body`'s own body-parsing branch was hardcoded.
+- **Companion bug fixed in the same pass**: the phase-B "write" step's
+  `ParsedComposite::Struct`/`Array` arms silently discarded the parsed
+  `supertype`/`is_final` entirely (harmless before this fix, since a
+  struct/array `ParsedComposite` could never carry anything but the
+  phase-A default `(None, true)` — `sub` was func-only). Now that a
+  `(sub $parent (struct/array ...))` can produce a REAL declared
+  supertype/finality, this write is load-bearing — both arms now set
+  `type_subtyping[idx].supertype`/`.is_final`, matching the `Func` arm's
+  pre-existing behavior.
+- 3 new unit tests: a `sub`-wrapped struct with a declared supertype, a
+  `sub`-wrapped array with a declared supertype, and `sub final` marking
+  a struct final.
+
+## 0.1.91 — 2026-09-01 — W33 fourth slice: struct/array TEXT-format grammar + instructions
+
+Closes the gap every prior W33 slice's addendum independently confirmed
+as the real remaining blocker for `struct.wast`/`array.wast`: this crate
+had ZERO text-format parsing for `(type $t (struct ...))`/`(type $t
+(array ...))` declarations.
+
+- `(struct (field ...) ...)`/`(array ...)` type bodies, inside a plain
+  `(type ...)` or a `(rec ...)` group (reusing the existing rec-group
+  two-phase forward-reference machinery): field lists (multiple unnamed
+  fields per clause, `(field)` with zero fields, named single fields),
+  packed `i8`/`i16` storage, mutability, and duplicate-field-name
+  detection (`struct.wast`'s own "duplicate field" `assert_malformed`
+  case).
+- `collect_symbols`'s type/rec loop now peeks each member's composite
+  kind (func/struct/array) in phase A, before any body is parsed, so a
+  `(ref $t)` field can forward-reference a not-yet-parsed sibling in the
+  SAME rec group and still resolve to the right `ValueType` variant.
+  `wasm_types::TypeKind` bookkeeping keeps the existing binary/legacy
+  `types.len() + k` convention completely undisturbed for every module
+  that never declares a struct/array.
+- `struct.new`/`struct.new_default`/`struct.get`/`struct.get_s`/
+  `struct.get_u`/`struct.set` and `array.new`/`array.new_default`/
+  `array.new_fixed`/`array.get`/`array.get_s`/`array.get_u`/`array.set`/
+  `array.len` — folded form only (matching `ref.test`/`ref.cast`'s own
+  established scope). Sub-opcode numbering deliberately preserves
+  `struct.new`(0x00)/`struct.get`(0x02)/`struct.set`(0x04)'s pre-existing
+  bytes (the McCarthy Lisp/LANG77 backend's own shipped runtime
+  semantics) rather than renumbering to match the real GC spec exactly
+  — see `encode_gc_struct_array_instr`'s own doc comment for the full
+  byte table and why this is safe (this repo's `0xFB` bytecode never
+  round-trips through anything outside this crate's own parser +
+  `wasm-execution`'s decoder).
+- `array.new_data`/`array.new_elem`/`array.copy`/`array.fill`/etc. are
+  deliberately NOT wired — they need real data-/elem-segment
+  integration this slice does not attempt.
+- Added `ValueType::NonNullArrayAny` for `(ref array)` — needed by
+  `array.wast`'s own `array.len` helper param, used 4 times in the real
+  vendored text.
+- Fixed a real correctness bug in `dedup_type` (this slice's own earlier
+  change): `Iterator::position` stops at the first VALUE match
+  regardless of a trailing `.filter()`, so it could never continue past
+  a value-matching struct/array dummy placeholder to find a LATER real
+  func type that also matches — now finds the first index satisfying
+  both conditions together, in one pass.
+
+Full-corpus baseline re-run: `struct.wast` now passes 100% across every
+directive kind; `array.wast`'s basic-instructions/type-syntax sections
+likewise (its `array.new_data`/`array.new_elem` sections stay honestly
+not-yet-supported). `type-rec.wast`/`type-subtyping.wast` show a small
+number of new, individually-traced fails — all attributable to the
+pre-existing, already-documented (3b) canonical-type-group-equivalence
+gap and the separately-tracked "no instruction-level type checker"
+limitation, both now newly REACHABLE rather than newly broken. See
+`code/specs/W33-wasm-gc-recursive-type-subtyping.md`'s own addendum for
+the full accounting. 28 new unit tests; all 370 tests in this crate pass.
+
+## 0.1.90 — 2026-08-31 — W33 second slice: `ref.test`/`ref.cast` TEXT-format parsing (item 4)
+
+Adds `ref.test`/`ref.test null`/`ref.cast`/`ref.cast null` (GC proposal)
+to the folded-instruction encoder (`encode_flat_instr`) — previously
+recognized NOWHERE in this crate (zero matches for either name, confirmed
+by direct grep before this slice), so every corpus module using them
+(`type-subtyping.wast`'s entire "Runtime types" section, lines 283-534)
+failed to parse at all, regardless of whether the underlying type/`sub`
+machinery existed. Only the CONCRETE-type case is supported — `(ref $t)`
+(non-null) / `(ref null $t)` (nullable), reusing `parse_value_type` (the
+same parser `local`/`global`/`param`/`result` declarations already use);
+an abstract heap type (`(ref any)`, `(ref func)`, ...) is rejected with a
+clear parse error, matching this crate's existing struct/array TEXT-format
+scope boundary (still open, unrelated to this change) rather than
+silently mis-encoding. Only the FOLDED form is implemented — no
+bare/flat-atom-stream counterpart, since every real corpus use folds both
+the type descriptor and the value operand; see `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s second addendum for the full
+item-4 accounting across all four touched crates.
+
+### Fixed
+
+- `wasm-execution`'s binary decoder never consumed `ref.cast`'s (`0xFB
+  0x16`/`0x17`) LEB128 heap-type immediate at all (fell into a no-
+  immediate default), which would have corrupted decoding of every
+  instruction after it in the same function body the moment any producer
+  emitted the bytes — moot until this slice, since nothing could parse
+  `ref.cast` from text before now, but fixed alongside this parser change
+  since the two are the same bug from opposite ends. See `wasm-execution`'s
+  own CHANGELOG for the runtime-side fix.
+
 ## 0.1.89 — 2026-08-31 — W33 first slice: `(rec ...)` group parsing + `(sub [final] ...)` nominal subtyping
 
 Implements items (3a) and half of (1)/(2) of `code/specs/

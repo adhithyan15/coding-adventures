@@ -1,6 +1,6 @@
 [package]
 name = "iir-codegen-adapters"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Unified IIR backend registry: compile an IIRModule to BEAM, WASM, JVM, or CLR by name"
 license = "MIT"

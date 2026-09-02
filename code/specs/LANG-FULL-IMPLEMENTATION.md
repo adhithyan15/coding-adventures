@@ -16,10 +16,10 @@ language**, and each frontend was a **deliberate subset**:
 | Twig | Scalars, variadic and boxed dynamic arithmetic, typed and forward-referenced globals, cons/list operations, records, unions/`match`, closures (including capture), and typed E4 string literal/named/local/function-call proofs run on the five code generators; lists, records, unions, and closures also run on VM/JIT | VM/JIT still lack the executed symbol/quote and forward-referenced-global cells; boxed dynamic-global arithmetic and captured/reassigned or otherwise untyped strings remain |
 | Nib | typed calls, arithmetic/control flow, consts/statics, and one-nibble BCD storage run on all 7 standard backends; BCD statics also execute through the complete Intel-4004 RAM map | Full Intel-4004 arithmetic/control-flow parity remains |
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
-| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | scalar and array strings, runtime input and concat, mixed numeric/string `DATA`/`READ`/`RESTORE`, general `^`, deterministic math builtins, `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN`, multi-dimensional real arrays, `GOSUB`/`RETURN`, and BA7 `f64` arithmetic/formatting all run on every backend; portable `RND` remains |
+| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | scalar and array strings, runtime input and concat, mixed numeric/string `DATA`/`READ`/`RESTORE`, general `^`, deterministic math builtins, portable seeded/repeatable `RND`, `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN`, multi-dimensional real arrays, `GOSUB`/`RETURN`, and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
 | McCarthy Lisp | F1–F7 — scalars, cons/car/cdr, predicates, `COND`, symbols, `LAMBDA`/`LABEL`, capture, and recursion — run uniformly on its dedicated VM, native AOT, JIT, WASM, JVM, CLR, BEAM, and LLVM | no open McCarthy core/backend gap; W16 is the authoritative 19-program × 8-backend conformance proof |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct name- and value-mode formal procedures including declared, nested-capturing, self- and mutually-recursively-forwarded, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters with isolated element copies ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays with per-coordinate and declaration-extent validation ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus finite literal-only real `+`/`-`/`*`/`/`, exact checked straight-line integer and real scalar snapshots including path-independent conditional integer subexpressions, capped side-effect-free tracked integer powers with checked arithmetic and integer-valued standard-function exponents, checked tracked-arithmetic and pure `abs`/`sign` plus exact-widening `entier`, exact integral tracked `sqrt` including checked `+`/`-`/`*` composition and path-independent pure conditionals, and path-independent pure conditional real-power exponent unrolling, plus bounded tracked integer, tracked-function, and path-independent conditional exponents in real-value metadata, integer-valued standard functions, and path-independent equal conditional assignments, capped signed integral arithmetic real power exponents, conditional/composed static standard-function output including canonical transcendental identities and exact integer-valued results, and initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); runtime real formatting, changed recursive scalar actuals requiring a thunk ABI, and dynamic procedure descriptors remain follow-up work |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct name- and value-mode formal procedures including declared, nested-capturing, self- and mutually-recursively-forwarded, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters with isolated element copies ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays with per-coordinate and declaration-extent validation ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus finite literal-only real `+`/`-`/`*`/`/`, exact checked straight-line integer and real scalar snapshots including path-independent conditional integer subexpressions, capped side-effect-free tracked integer powers with checked arithmetic and integer-valued standard-function exponents, checked tracked-arithmetic and pure `abs`/`sign` plus exact-widening `entier`, exact integral tracked `sqrt` including nesting, checked `+`/`-`/`*` composition, and path-independent pure conditionals, and path-independent pure conditional real-power exponent unrolling, plus bounded tracked integer, tracked-function, and path-independent conditional exponents in real-value metadata, integer-valued standard functions, and path-independent equal conditional assignments, capped signed integral arithmetic real power exponents, conditional/composed static standard-function output including canonical transcendental identities and exact integer-valued results, and initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); runtime real formatting, changed recursive scalar actuals requiring a thunk ABI, and dynamic procedure descriptors remain follow-up work |
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
@@ -747,7 +747,12 @@ backend immediately) come before the enabler-dependent items.
   `PRINT ABS(-42)` → `42`, `PRINT SGN(-5)` → `-1`. **`ATN(X)` ✅** and **`TAN(X)` ✅**
   (dartmouth-basic-iir-compiler 0.33.0, BA-arctan) lower to `f64_atan` / `f64_tan` IIR ops;
   `PRINT ATN(0)` → `0`, `PRINT TAN(0)` → `0` verified on all 7 backends.
-  `SIN`, `COS`, `LOG`, `EXP`, and `RND` still need a cross-backend math helper — deferred.
+  `SIN`, `COS`, `LOG`, and `EXP` lower to the shared deterministic `f64` math
+  operations on all 7 backends (VM-016). **`RND(X)` ✅** (VM-018) uses a
+  Park–Miller helper with one typed module-global `i64` state: negative
+  arguments reseed-and-advance, zero repeats, and positive arguments advance.
+  The fixed default seed and integer recurrence give all seven backends the
+  same sequence without host entropy.
 
 ### ALGOL 60
 - ✅ **AL-grammar-sync** — the checked-in Rust parser artifact is generated from
@@ -978,8 +983,10 @@ backend immediately) come before the enabler-dependent items.
   local snapshots, including checked arithmetic that composes pure built-in
   `abs` and `sign` calls over those exact values, plus exact integral built-in
   `sqrt` results over losslessly widened tracked integer arithmetic, including
-  checked `+`, `-`, and `*` composition over those integral forms and pure
-  path-independent conditionals with exact integral square-root branches. Pure
+  nested exact integral square roots, checked `+`, `-`, and `*` composition over
+  those integral forms, pure built-in `abs`, `sign`, and `entier` calls over
+  exact integral square-root results, and pure path-independent conditionals
+  with exact integral square-root branches. Pure
   conditional exponent
   expressions whose tracked integer branches prove the same bounded value also
   retain multiplication while their selector still executes. Invalid
@@ -1238,15 +1245,15 @@ backend immediately) come before the enabler-dependent items.
 
 ## Suggested global ordering
 
-1. **Twig TW7 VM/JIT parity** — add generic-engine support for symbols/quote and
-   forward-referenced globals, then prove boxed dynamic-global arithmetic.
+1. **Oct O4 intrinsic semantics** — define the portable meaning of the Intel
+   8008 operations, then prove each intrinsic on the standard backends and the
+   historical machine.
 2. **E4 dynamic string follow-ups** — continue beyond the typed immutable
    scalar/local foothold into captured/reassigned strings and untyped or
    closure-derived parameters without per-frontend shortcuts.
-3. **Dartmouth BASIC's remaining numeric/string tail** — finish the math builtins
-   and dynamic string data paths named in the executed backlog.
-4. The hardware-specific tails: **Nib BCD/4004 storage** and **Oct's O4 8008
-   intrinsics**; Oct requires an explicit portable-semantics decision first.
+3. **Historical-machine depth** — continue beyond Nib's completed BCD/4004 RAM
+   mapping into arithmetic/control-flow fidelity where the executed backlog
+   identifies a concrete portable-vs-hardware gap.
 
 This roadmap is the contract; each ☐ becomes a `feat(lang-full): …` PR, checked off here as
 it merges.

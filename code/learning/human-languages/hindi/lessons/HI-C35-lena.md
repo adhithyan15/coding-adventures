@@ -8,7 +8,7 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 900
 chapter: 35
 type: word
-headword: लेना
+headword: लेना / लाभ
 gloss: to take — worn down from Sanskrit labh-, which also sits, undisguised, in the noun लाभ
 romanization: "lenā"
 concept_tag: VERB-TAKE

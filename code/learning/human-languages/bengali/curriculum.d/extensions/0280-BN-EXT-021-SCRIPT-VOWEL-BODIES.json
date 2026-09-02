@@ -1,0 +1,24 @@
+{
+  "id": "BN-EXT-021-SCRIPT-VOWEL-BODIES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read six more Bengali words I already say, and say which of a vowel's two forms to write, and why, from whether there is a consonant in front of it.",
+  "prerequisites": [
+    "BN-EXT-020-SCRIPT-BREATH-AND-PAIRS"
+  ],
+  "lessons": [
+    "BN-W04-cha",
+    "BN-W04-chaa-read",
+    "BN-W04-pa",
+    "BN-W04-poribar-read",
+    "BN-W04-ja",
+    "BN-W04-jol-read",
+    "BN-W04-ii-matra",
+    "BN-W04-nil-read",
+    "BN-W04-i-indep",
+    "BN-W04-bhai-read",
+    "BN-W04-e-indep",
+    "BN-W04-ek-read"
+  ]
+}

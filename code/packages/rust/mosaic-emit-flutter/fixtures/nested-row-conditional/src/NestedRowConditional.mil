@@ -1,0 +1,5 @@
+component NestedRowConditional {
+  slot outer-visible : bool ;
+  slot inner-focused : bool ;
+  slot value : text ;
+}

@@ -24,6 +24,22 @@ The current native pipeline supports documented subsets of:
 - `timeline`
 - `mindmap`
 - `block` / `block-beta`
+- `packet` / `packet-beta`
+- `kanban`
+
+The initial `kanban` subset preserves indentation-defined columns and cards,
+including plain labels and explicit `id[label]` forms, in typed board IR.
+`diagram-layout-board` resolves deterministic column/card geometry before a
+dedicated backend-neutral PaintScene lowering path. Icons, classes, shape-data
+metadata, styles, links, assignments, priorities, and field configuration
+remain outside the partial compatibility claim.
+
+The initial `packet` subset uses dedicated line-preserving token and parser
+grammars. Contiguous absolute inclusive bit ranges with quoted labels, titles,
+and accessibility metadata lower into typed packet IR. `diagram-layout-packet`
+places fields on deterministic 32-bit rows before dedicated backend-neutral
+PaintScene lowering. Relative ranges, row-spanning fields, configuration, and
+styling remain outside the partial compatibility claim.
 
 The initial `block` subset uses dedicated line-preserving token and parser
 grammars. Column counts, flat node grids, explicit spaces, core node shapes,

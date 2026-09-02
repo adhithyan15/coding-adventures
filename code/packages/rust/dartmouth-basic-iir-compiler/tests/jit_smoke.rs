@@ -206,6 +206,25 @@ fn jit_basic_mixed_data_preserves_order_and_restore() {
         "mixed DATA/READ/RESTORE should preserve type and source order");
 }
 
+/// VM-018 — the portable RND contract is deterministic and stateful. A
+/// negative argument reseeds and advances inside `DEF FNR`, a positive call in
+/// `main` advances the same state, zero repeats it through `FNR`, and the final
+/// positive call advances once more. Integer buckets avoid depending on decimal
+/// rendering details while distinguishing every transition and proving that
+/// sibling functions share one sequence.
+#[test]
+fn jit_basic_rnd_seed_advance_and_repeat() {
+    let src = "10 DEF FNR(X) = RND(X)\n\
+               20 PRINT INT(FNR(-1) * 1000000)\n\
+               30 PRINT INT(RND(1) * 1000000)\n\
+               40 PRINT INT(FNR(0) * 1000000)\n\
+               50 PRINT INT(RND(1) * 1000000)\n\
+               60 END\n";
+    let got = jit_execute_and_capture_prints(src);
+    assert_eq!(got, "22\n85032\n85032\n601352\n",
+        "RND must follow the documented Park–Miller sequence");
+}
+
 /// A READ target whose type disagrees with the next DATA item must trap rather
 /// than silently reading the placeholder from the parallel value array.
 #[test]

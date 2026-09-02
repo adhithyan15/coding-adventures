@@ -33,6 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
+    LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
@@ -581,6 +582,179 @@ where
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
+
+/// Lower packet field rectangles and shaped labels into backend-neutral paint.
+pub fn diagram_to_paint_packet<S, M, R>(
+    diagram: &LayoutedPacketDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions = Vec::new();
+    let mut text_children = Vec::new();
+
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(
+            title,
+            0.0,
+            8.0,
+            diagram.width,
+            options.title_font.size * 1.2,
+            options.title_font.clone(),
+            Color { r: 15, g: 23, b: 42, a: 255 },
+        ));
+    }
+    for field in &diagram.fields {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: field.x,
+            y: field.y,
+            width: field.width,
+            height: field.height,
+            fill: Some(field.style.fill.clone()),
+            stroke: Some(field.style.stroke.clone()),
+            stroke_width: Some(field.style.stroke_width),
+            corner_radius: Some(0.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        let mut range_font = options.label_font.clone();
+        range_font.size = 10.0;
+        let bit_range = if field.start_bit == field.end_bit {
+            field.start_bit.to_string()
+        } else {
+            format!("{}-{}", field.start_bit, field.end_bit)
+        };
+        text_children.push(text_node_no_wrap(
+            &bit_range,
+            field.x + 4.0,
+            field.y + 4.0,
+            (field.width - 8.0).max(1.0),
+            12.0,
+            range_font,
+            css_to_color(&field.style.text_color),
+        ));
+        text_children.push(text_node_no_wrap(
+            &field.label.text,
+            field.x + 4.0,
+            field.y + 27.0,
+            (field.width - 8.0).max(1.0),
+            options.label_font.size * 1.2,
+            options.label_font.clone(),
+            css_to_color(&field.style.text_color),
+        ));
+    }
+
+    let text_root = PositionedNode {
+        x: 0.0,
+        y: 0.0,
+        width: diagram.width,
+        height: diagram.height,
+        id: None,
+        content: None,
+        children: text_children,
+        ext: HashMap::new(),
+    };
+    let text_scene = layout_to_paint(
+        &text_root,
+        &LayoutToPaintOptions {
+            width: diagram.width,
+            height: diagram.height,
+            background: Color { r: 0, g: 0, b: 0, a: 0 },
+            device_pixel_ratio: 1.0,
+            shaper: options.shaper,
+            metrics: options.metrics,
+            resolver: options.resolver,
+        },
+    );
+    instructions.extend(text_scene.instructions);
+
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
+    let bg = options.background;
+    PaintScene {
+        width: diagram.width,
+        height: diagram.height,
+        background: if bg.a == 255 {
+            format!("rgb({}, {}, {})", bg.r, bg.g, bg.b)
+        } else {
+            format!("rgba({}, {}, {}, {:.4})", bg.r, bg.g, bg.b, f64::from(bg.a) / 255.0)
+        },
+        instructions,
+        id: None,
+        metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
+
+/// Lower Kanban columns and cards into backend-neutral paint instructions.
+pub fn diagram_to_paint_board<S, M, R>(
+    board: &LayoutedBoardDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions = Vec::new();
+    let mut text_children = Vec::new();
+    for column in &board.columns {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(), x: column.x, y: column.y,
+            width: column.width, height: column.height,
+            fill: Some(column.style.fill.clone()), stroke: Some(column.style.stroke.clone()),
+            stroke_width: Some(column.style.stroke_width),
+            corner_radius: Some(column.style.corner_radius),
+            stroke_dash: None, stroke_dash_offset: None,
+        }));
+        let mut heading_font = options.title_font.clone();
+        heading_font.size = 16.0;
+        text_children.push(text_node_no_wrap(
+            &column.label.text, column.x + 12.0, column.y + 14.0,
+            column.width - 24.0, 22.0, heading_font,
+            css_to_color(&column.style.text_color),
+        ));
+        for card in &column.cards {
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(), x: card.x, y: card.y,
+                width: card.width, height: card.height,
+                fill: Some(card.style.fill.clone()), stroke: Some(card.style.stroke.clone()),
+                stroke_width: Some(card.style.stroke_width),
+                corner_radius: Some(card.style.corner_radius),
+                stroke_dash: None, stroke_dash_offset: None,
+            }));
+            text_children.push(text_node(
+                &card.label.text, card.x + 10.0, card.y + 18.0,
+                card.width - 20.0, card.height - 24.0,
+                options.label_font.clone(), css_to_color(&card.style.text_color),
+            ));
+        }
+    }
+    let root = PositionedNode {
+        x: 0.0, y: 0.0, width: board.width, height: board.height,
+        id: None, content: None, children: text_children, ext: HashMap::new(),
+    };
+    instructions.extend(layout_to_paint(&root, &LayoutToPaintOptions {
+        width: board.width, height: board.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0, shaper: options.shaper,
+        metrics: options.metrics, resolver: options.resolver,
+    }).instructions);
+    let bg = options.background;
+    PaintScene {
+        width: board.width, height: board.height,
+        background: format!("rgba({}, {}, {}, {:.4})", bg.r, bg.g, bg.b, f64::from(bg.a) / 255.0),
+        instructions, id: None, metadata: None,
     }
 }
 

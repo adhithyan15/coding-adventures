@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch404.txt",
   "json": "spanish/narration/ch404.json",
-  "textHash": "fnv1a64:94ffdd6e2ebd8c65",
-  "jsonHash": "fnv1a64:51bf4f143292ad12",
+  "textHash": "fnv1a64:d625e44c3279ebda",
+  "jsonHash": "fnv1a64:ec4134f8b9e30e6c",
   "findings": []
 }

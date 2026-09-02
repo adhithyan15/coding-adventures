@@ -61,6 +61,16 @@ fn triangle_decomposition_count_derives_two_with_full_audit_trail() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // THE WHOLE CITATION, anchored on its JSON key and closed by the
+    // terminating quote. This sentence carries a qualifier, so a
+    // truncation would silently drop meaning -- the defect issue #13916
+    // shipped. Pinning a fragment narrows that hole rather than closing
+    // it, because `contains` on a fragment cannot see what precedes or
+    // follows it. See issue #13918.
+    assert!(
+        out.contains("\"source\":\"Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles. A polygonal diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon. A quadrilateral has exactly two diagonals, each splitting it into two triangles; drawing either one divides the quadrilateral into exactly two triangular regions.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(
         out.contains("\"N\":\"2\""),
         "a square decomposes into 2 triangles: {out}"

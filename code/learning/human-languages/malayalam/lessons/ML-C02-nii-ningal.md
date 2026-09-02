@@ -5,6 +5,7 @@ chapter: 2
 type: word
 headword: നീ / നിങ്ങൾ
 gloss: you (familiar / respectful)
+romanization: "nī / niṅṅaḷ"
 concept_tag: PRONOUN-YOU
 prerequisites: [ML-C02-peru]
 sounds: [long-ii]

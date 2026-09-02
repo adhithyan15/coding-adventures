@@ -106,15 +106,25 @@ through.
   ஒன்று takes in front of a noun, closing on **ஒரு தேநீர் வேண்டும்**. The
   chapter exists because the writing strand ran out of room before the script
   ran out of letters. In the book, Chapter 39.
-- **The script strand, W01–W20** ([`lessons/TA-W*`](./lessons/)): 24 lessons
+- **Chapter 65 — Doing, and Undoing** ([`lessons/TA-C65-*`](./lessons/)):
+  குடி (*kuḍi*, drink), நட (*naḍa*, walk), நிறுத்து (*niṟuttu*, stop),
+  திற (*tiṟa*, open), மூடு (*mūḍu*, close). The track's first verbs taught
+  **at pre-A1** — every earlier verb lesson realises an A1 or A2 spine node, so
+  Tamil sat one word short of the pre-A1 verb floor while holding twenty-three
+  verb lessons. Built out of pairs: each verb arrives beside the act that undoes
+  it, and குடி completes the pair சாப்பிடு had been holding alone. The
+  chapter carries the writing strand's `TA-W21-read-kudi` in third position and
+  closes on a zero-new-material retrieval lesson. In the book, Chapter 65.
+- **The script strand, W00–W21** ([`lessons/TA-W*`](./lessons/)): 42 lessons
   marked `delivery: script`, one after roughly every third speaking lesson from
-  Chapter 4 to Chapter 39. They teach curves, the abugida, retroflexion, the
+  Chapter 4 to Chapter 65. They teach curves, the abugida, retroflexion, the
   three Tamil n letters, the puḷḷi, the vowel signs, and then spell — one word
   per lesson — words the learner has already been saying, from **வணக்கம்** to
-  **ஒன்று**. Chapters 1–3 hold no writing lesson at all, on purpose. The script
-  is still not finished: twelve glyphs the Chapter 7 numbers use — ஏ, ஐ and the
-  ten Tamil digits ௧–௰ — remain untaught, and closing that is what Chapters 40
-  and 41 are for.
+  **ஒன்று** and on to **குடி**, the first word in the strand that costs no
+  new letter. Chapters 1–3 hold no writing lesson at all, on purpose. Every glyph the
+  track prints is now a glyph some script lesson teaches: `neverTaughtGlyphs` is
+  **0**, and it is meant to stay there, so a new word whose spelling would need a
+  fifty-second shape is not a candidate.
 
 ---
 
@@ -153,9 +163,9 @@ than the ability to read the letters.
 
 ## Book / fonts
 
-The 38-chapter book compiles with XeLaTeX using **vendored** Noto fonts
+The 65-chapter book compiles with XeLaTeX using **vendored** Noto fonts
 (`../../_fonts/`) for Tamil and every comparison script, with no system-font
-dependency. Chapters 6–38 are generated from canonical lesson ASTs and checked
+dependency. Chapters 6–65 are generated from canonical lesson ASTs and checked
 against Language Ladder source hashes. Build the isolated entrypoint with
 `code/scripts/check-book-compile.sh --strict tamil` from the repository root.
 

@@ -32,9 +32,9 @@ use crate::sexpr::{expect_get, parse_source, SExpr};
 use crate::WastParseError;
 use std::collections::HashMap;
 use wasm_types::{
-    DataSegment, Element, Export, ExternalKind, FuncType, FunctionBody, Global, GlobalType,
-    Import, ImportTypeInfo, Limits, MemoryType, TableType, TypeSubtyping, ValueType, WasmModule,
-    FUNCREF,
+    ArrayType, DataSegment, Element, Export, ExternalKind, FieldType, FuncType, FunctionBody,
+    Global, GlobalType, Import, ImportTypeInfo, Limits, MemoryType, StorageType, StructType,
+    TableType, TypeKind, TypeSubtyping, ValueType, WasmModule, FUNCREF,
 };
 
 /// Parse a whole WAT source text: the plain-`.wat` entry point, and also
@@ -231,6 +231,15 @@ struct ModuleCtx {
     /// proposal). `throw`/`catch`/`catch_ref` reference a tag by this
     /// same name/index space, mirroring `func_names`/`table_names`/etc.
     tag_names: HashMap<String, u32>,
+    /// A struct type's own named fields — `flat type-section index ->
+    /// ($field-name -> field index)` (W33 fourth slice). `StructType`
+    /// itself carries no field-name metadata (see its own doc comment in
+    /// `wasm-types`), so `struct.get $t $field`/`struct.get_s`/`struct.
+    /// get_u`/`struct.set` (all of which the real corpus names fields by
+    /// `$name`, e.g. `struct.wast`'s own `(struct.get 0 $x ...)`) need this
+    /// side table to resolve `$field` the same way `type_names`/`func_names`
+    /// resolve everything else.
+    struct_field_names: HashMap<u32, HashMap<String, u32>>,
 }
 
 fn resolve_idx(map: &HashMap<String, u32>, expr: &SExpr, space: &'static str) -> Result<u32, WastParseError> {
@@ -253,7 +262,52 @@ fn resolve_idx(map: &HashMap<String, u32>, expr: &SExpr, space: &'static str) ->
     }
 }
 
-fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<ValueType, WastParseError> {
+/// Resolve a concrete `(ref $t)`/`(ref null $t)` type-name reference `idx`
+/// to the right [`ValueType`] variant, given which composite kind `idx`
+/// names (W33 fourth slice).
+///
+/// Before struct/array TEXT-format support existed, EVERY concrete
+/// reference named a function type (`wasm-wast-parser` could parse nothing
+/// else), so `parse_value_type` always produced `ConcreteFuncRef`/
+/// `NonNullConcreteFuncRef` unconditionally. Now that a `$t` can equally
+/// well name a struct or array type, this dispatches on `module.type_kinds`
+/// (populated by `collect_symbols`'s type/rec loop — see that loop's own
+/// doc comment for why it's safe to consult even for a FORWARD reference to
+/// a not-yet-fully-parsed sibling within the SAME `rec` group: the sibling's
+/// `TypeKind` variant, struct vs. array vs. func, is fixed during phase A,
+/// before any member's body is parsed in phase B). An index `type_kinds`
+/// doesn't cover at all (empty/out of range — a legacy/binary-decoded
+/// module, or simply an out-of-range index this parser deliberately defers
+/// to `wasm-validator` per this file's own established convention) falls
+/// back to `ConcreteFuncRef`/`NonNullConcreteFuncRef`, this function's
+/// pre-W33-fourth-slice behavior, unchanged.
+fn concrete_ref_value_type(module: &WasmModule, idx: u32, nullable: bool) -> ValueType {
+    match module.type_kinds.get(idx as usize) {
+        Some(wasm_types::TypeKind::Struct(_)) => {
+            if nullable {
+                ValueType::StructRef(idx)
+            } else {
+                ValueType::NonNullStructRef(idx)
+            }
+        }
+        Some(wasm_types::TypeKind::Array(_)) => {
+            if nullable {
+                ValueType::ArrayRef(idx)
+            } else {
+                ValueType::NonNullArrayRef(idx)
+            }
+        }
+        _ => {
+            if nullable {
+                ValueType::ConcreteFuncRef(idx)
+            } else {
+                ValueType::NonNullConcreteFuncRef(idx)
+            }
+        }
+    }
+}
+
+fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<ValueType, WastParseError> {
     // `(ref null func)` / `(ref null extern)` -- the fully-spelled-out
     // nullable abstract-heap-type syntax, semantically identical to the bare
     // `funcref`/`externref` keywords below (WASM17; found in the real
@@ -301,20 +355,31 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<V
                 Some("func") => Ok(ValueType::Funcref),
                 Some("extern") => Ok(ValueType::Externref),
                 Some("i31") => Ok(ValueType::I31ref),
-                Some(_) => Ok(ValueType::ConcreteFuncRef(resolve_idx(type_names, &items[2], "type")?)),
+                Some(_) => Ok(concrete_ref_value_type(module, resolve_idx(type_names, &items[2], "type")?, true)),
                 None => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" }),
             };
         }
         if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("i31") {
             return Ok(ValueType::I31ref);
         }
+        // `(ref array)` -- non-null reference to the ABSTRACT top of the
+        // array hierarchy (W33 fourth slice), needed for `array.wast`'s own
+        // `array.len` helper param (`(param $v (ref array))`, four times in
+        // the real vendored text) -- see `ValueType::NonNullArrayAny`'s own
+        // doc comment for why only the non-null spelling is modeled. Must
+        // come before the generic `(ref $t)` concrete-reference branch
+        // below (same reasoning as the `i31` special case just above:
+        // `array` is a bare keyword here, not a type name to resolve).
+        if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("array") {
+            return Ok(ValueType::NonNullArrayAny);
+        }
         // W32 second slice: `(ref $t)` -- non-null concrete reference, no
-        // `null` keyword. Must come AFTER the `(ref i31)` check above (i31
-        // stays unified into `I31ref` regardless of nullability, see that
-        // branch's own doc comment) so it only ever catches a real
-        // named/numeric type reference here.
+        // `null` keyword. Must come AFTER the `(ref i31)`/`(ref array)`
+        // checks above (both stay their own dedicated variant regardless
+        // of nullability spelling, see those branches' own doc comments)
+        // so it only ever catches a real named/numeric type reference here.
         if items.len() == 2 && items[0].as_atom() == Some("ref") {
-            return Ok(ValueType::NonNullConcreteFuncRef(resolve_idx(type_names, &items[1], "type")?));
+            return Ok(concrete_ref_value_type(module, resolve_idx(type_names, &items[1], "type")?, false));
         }
         return Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" });
     }
@@ -435,7 +500,7 @@ fn parse_ref_null_heap_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> 
 /// `$name`/`(export ...)`/`(type ...)` fields the caller has already
 /// consumed and any params'/locals' own `$name`s (signature-only; names
 /// are collected separately for the encoder's local scope).
-fn parse_func_signature(fields: &[&SExpr], type_names: &HashMap<String, u32>) -> Result<FuncType, WastParseError> {
+fn parse_func_signature(fields: &[&SExpr], type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<FuncType, WastParseError> {
     let mut params = Vec::new();
     let mut results = Vec::new();
     for f in fields {
@@ -443,16 +508,16 @@ fn parse_func_signature(fields: &[&SExpr], type_names: &HashMap<String, u32>) ->
             let items = f.as_list().unwrap();
             // `(param $name type)` (exactly one, named) or `(param type type ...)` (positional, any count).
             if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                params.push(parse_value_type(&items[2], type_names)?);
+                params.push(parse_value_type(&items[2], type_names, module)?);
             } else {
                 for t in &items[1..] {
-                    params.push(parse_value_type(t, type_names)?);
+                    params.push(parse_value_type(t, type_names, module)?);
                 }
             }
         } else if f.is_keyword_list("result") {
             let items = f.as_list().unwrap();
             for t in &items[1..] {
-                results.push(parse_value_type(t, type_names)?);
+                results.push(parse_value_type(t, type_names, module)?);
             }
         }
     }
@@ -473,12 +538,48 @@ fn parse_func_signature(fields: &[&SExpr], type_names: &HashMap<String, u32>) ->
 /// in lockstep — a fresh implicit type is always final, has no declared
 /// supertype, and is its own singleton group, exactly `TypeSubtyping`'s
 /// own `Default`.
+/// W33 fourth slice: the search below must SKIP any `types[p]` slot that
+/// isn't really a func type — once struct/array declarations exist,
+/// `types[p]` at a struct/array flat index holds an unused DUMMY empty
+/// `FuncType` (see [`wasm_types::TypeKind`]'s own doc comment for why that
+/// slot exists at all), and an empty `(func)` with no params/results is a
+/// perfectly ordinary, real thing a module can ALSO declare — without this
+/// guard, `dedup_type` would find the dummy first and silently hand out a
+/// struct/array's own flat index as if it were a matching real empty func
+/// type, corrupting BOTH types (the struct/array becomes unreachable at its
+/// own index, and the caller gets a "func type" that is actually a struct).
 fn dedup_type(module: &mut WasmModule, ty: FuncType) -> u32 {
-    if let Some(idx) = module.types.iter().position(|t| *t == ty) {
+    let is_real_func_slot = |p: usize| !matches!(module.type_kinds.get(p), Some(TypeKind::Struct(_)) | Some(TypeKind::Array(_)));
+    // Security/correctness review finding: `Iterator::position` stops at
+    // the FIRST value-match regardless of `is_real_func_slot`, so a
+    // trailing `.filter(...)` on its result can only accept or reject
+    // THAT ONE candidate -- it can never continue searching past a
+    // value-matching dummy struct/array placeholder to find a LATER real
+    // func entry that also matches. Whenever an empty `(func)` (the most
+    // common signature, and exactly what every struct/array dummy
+    // placeholder itself is) appears BEFORE its real, legitimate match
+    // in `types`, that combination silently returned "no match" and
+    // inserted a REDUNDANT duplicate type instead of reusing the real
+    // one -- corrupting every later index-identity comparison built on
+    // top of it (nominal subtyping, `ref.func`'s own type index). Finding
+    // the first index satisfying BOTH conditions TOGETHER, in one pass,
+    // fixes this.
+    if let Some(idx) = module.types.iter().enumerate().position(|(p, t)| *t == ty && is_real_func_slot(p)) {
         idx as u32
     } else {
         module.types.push(ty);
         module.type_subtyping.push(TypeSubtyping::default());
+        // Keep `type_kinds` in lockstep with `types` -- see `TypeKind`'s own
+        // doc comment on why every `types.push` needs a matching entry here
+        // once ANY struct/array type exists in the module (this keeps
+        // `types.len() == type_kinds.len()` an invariant regardless of
+        // whether THIS particular module ever declares one).
+        if !module.type_kinds.is_empty() || !module.struct_types.is_empty() || !module.array_types.is_empty() {
+            while module.type_kinds.len() < module.types.len() - 1 {
+                module.type_kinds.push(TypeKind::Func);
+            }
+            module.type_kinds.push(TypeKind::Func);
+        }
         (module.types.len() - 1) as u32
     }
 }
@@ -487,25 +588,108 @@ fn dedup_type(module: &mut WasmModule, ty: FuncType) -> u32 {
 // Pass 1 — collect every index space's names and sizes.
 // ─────────────────────────────────────────────────────────────────────────
 
+/// Which composite-type shape one `(type ...)`/`(rec ...)` group member
+/// declares — determined ONLY by peeking the body's own head keyword (W33
+/// fourth slice), cheap enough to compute in phase A (before any member's
+/// body is actually parsed) so `(ref $t)`/`(ref null $t)` forward
+/// references to a not-yet-parsed SIBLING can still resolve to the right
+/// [`ValueType`] variant during phase B — see [`concrete_ref_value_type`]'s
+/// own doc comment.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum MemberKind {
+    Func,
+    Struct,
+    Array,
+}
+
+/// Peek `sig_form`'s head keyword to determine its [`MemberKind`], WITHOUT
+/// parsing the body — the `sub`-wrapped case looks past `[final] $parent?`
+/// to the wrapped body's own head, matching exactly the skip logic
+/// [`parse_composite_body`] performs for real. A missing body (`None`, a
+/// bare `(type $name)`) or any other unrecognized shape defaults to `Func`
+/// (the pre-existing empty-`FuncType` default), letting `parse_composite_body`
+/// itself raise the real, precise parse error for a genuinely malformed
+/// body — this function's ONLY job is picking a name's `ValueType` variant
+/// ahead of time, never validating.
+fn peek_member_kind(sig_form: Option<&[SExpr]>) -> MemberKind {
+    let Some(sig) = sig_form else { return MemberKind::Func };
+    let body_head = if sig.first().and_then(|e| e.as_atom()) == Some("sub") {
+        let mut rest = &sig[1..];
+        if rest.first().and_then(|e| e.as_atom()) == Some("final") {
+            rest = &rest[1..];
+        }
+        if rest.first().is_some_and(|e| e.as_list().is_none()) {
+            rest = &rest[1..];
+        }
+        rest.first().and_then(|e| e.as_list()).and_then(|b| b.first()).and_then(|e| e.as_atom())
+    } else {
+        sig.first().and_then(|e| e.as_atom())
+    };
+    match body_head {
+        Some("struct") => MemberKind::Struct,
+        Some("array") => MemberKind::Array,
+        _ => MemberKind::Func,
+    }
+}
+
+/// One `(type ...)`/`(rec ...)` group member's fully-parsed composite body
+/// (W33 fourth slice) — the struct/array-aware successor to the pre-slice
+/// "every type is a `FuncType`, no exceptions" shape.
+enum ParsedComposite {
+    Func(FuncType),
+    /// The struct body, plus its `$name -> field index` table (for
+    /// `struct.get $t $field`-shaped instructions later) — see
+    /// `ModuleCtx::struct_field_names`'s own doc comment.
+    Struct(StructType, HashMap<String, u32>),
+    Array(ArrayType),
+}
+
 /// Parses one type-section entry's signature form: either a bare `(func
-/// ...)` body (implicitly final, no declared supertype -- the pre-GC/MVP
-/// default) or the GC proposal's `(sub [final] $parent? (func ...))`
-/// wrapper (W33 first slice: `code/specs/
+/// ...)`/`(struct ...)`/`(array ...)` body (implicitly final, no declared
+/// supertype -- the pre-GC/MVP default) or the GC proposal's `(sub [final]
+/// $parent? (comptype))` wrapper (W33 first slice: `code/specs/
 /// W33-wasm-gc-recursive-type-subtyping.md`). Returns the resolved
-/// `FuncType` body plus the declared supertype (if any) and finality.
+/// composite body plus the declared supertype (if any) and finality.
+///
+/// **W34 third slice** (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+/// `sub` is no longer func-only -- a `(sub $parent (struct ...))`/`(sub
+/// $parent (array ...))` now parses to a real `ParsedComposite::Struct`/
+/// `Array`, exactly like the bare (non-`sub`) case just below already did.
+/// This closes a real, previously-undiscovered parser-level gap this
+/// slice's own investigation found (not previously recorded anywhere): the
+/// vendored `type-subtyping.wast`'s own "Definitions"/"Invalid subtyping
+/// definitions" sections declare struct/array `sub` relationships
+/// extensively (e.g. `(type $e0 (sub (array i32)))`, `(type $s0 (sub
+/// (struct)))`) -- before this fix, EVERY one of those modules failed to
+/// PARSE at all (a hard `UnexpectedToken` error from the old `reject_non_
+/// func_body` call this branch used to make unconditionally), never even
+/// reaching `wasm-validator`'s `check_type_subtyping` -- so this slice's
+/// own fix to that function's struct/array structural checker (see its own
+/// doc comment) would have been unreachable from any real `.wast` source
+/// without this companion parser fix. `peek_member_kind` (this file, just
+/// above) already anticipated this: it already looks INSIDE a `sub`
+/// wrapper to find `struct`/`array`/`func`, so `MemberKind`/`TypeKind`
+/// were already computed correctly for a struct/array-kind `sub`-wrapped
+/// member even before this fix -- only this function's OWN body-parsing
+/// branch was still hardcoded to func.
 ///
 /// `sig_form` is `None` for a bare `(type $name)` with no body at all --
-/// this crate already tolerated that before this slice by defaulting to
-/// an empty func type, preserved here unchanged.
+/// this crate already tolerated that before W33 by defaulting to an empty
+/// func type, preserved here unchanged.
 ///
 /// This crate only tracks a SINGLE declared supertype (`sub`'s real
 /// grammar is `typeidx*`, zero or more) -- the real corpus never
 /// exercises more than one, and a second supertype atom here will simply
 /// fail to resolve as the composite-type body (a clear parse error, not a
 /// silent misparse).
-fn parse_type_body(pos: usize, sig_form: Option<&[SExpr]>, type_names: &HashMap<String, u32>) -> Result<(FuncType, Option<u32>, bool), WastParseError> {
+fn parse_composite_body(
+    pos: usize,
+    sig_form: Option<&[SExpr]>,
+    type_names: &HashMap<String, u32>,
+    module: &WasmModule,
+) -> Result<(ParsedComposite, Option<u32>, bool), WastParseError> {
     let Some(sig) = sig_form else {
-        return Ok((FuncType { params: vec![], results: vec![] }, None, true));
+        return Ok((ParsedComposite::Func(FuncType { params: vec![], results: vec![] }), None, true));
     };
     if sig.first().and_then(|e| e.as_atom()) == Some("sub") {
         let mut rest = &sig[1..];
@@ -524,45 +708,218 @@ fn parse_type_body(pos: usize, sig_form: Option<&[SExpr]>, type_names: &HashMap<
         let body = rest.first().and_then(|e| e.as_list()).ok_or(WastParseError::UnexpectedToken {
             pos,
             found: "".to_string(),
-            expected: "a composite type body ('(func ...)') inside 'sub'",
+            expected: "a composite type body ('(func ...)'/'(struct ...)'/'(array ...)') inside 'sub'",
         })?;
-        reject_non_func_body(pos, body)?;
-        let sig_fields: Vec<&SExpr> = body.iter().skip(1).collect();
-        let func_type = parse_func_signature(&sig_fields, type_names)?;
-        Ok((func_type, supertype, is_final))
+        match body.first().and_then(|e| e.as_atom()) {
+            Some("struct") => {
+                let (st, field_names) = parse_struct_body(body, type_names, module)?;
+                Ok((ParsedComposite::Struct(st, field_names), supertype, is_final))
+            }
+            Some("array") => {
+                let at = parse_array_body(pos, body, type_names, module)?;
+                Ok((ParsedComposite::Array(at), supertype, is_final))
+            }
+            _ => {
+                reject_non_func_body(pos, body)?;
+                let sig_fields: Vec<&SExpr> = body.iter().skip(1).collect();
+                let func_type = parse_func_signature(&sig_fields, type_names, module)?;
+                Ok((ParsedComposite::Func(func_type), supertype, is_final))
+            }
+        }
     } else {
-        reject_non_func_body(pos, sig)?;
-        let sig_fields: Vec<&SExpr> = sig.iter().skip(1).collect();
-        let func_type = parse_func_signature(&sig_fields, type_names)?;
-        Ok((func_type, None, true))
+        match sig.first().and_then(|e| e.as_atom()) {
+            Some("struct") => {
+                let (st, field_names) = parse_struct_body(sig, type_names, module)?;
+                Ok((ParsedComposite::Struct(st, field_names), None, true))
+            }
+            Some("array") => {
+                let at = parse_array_body(pos, sig, type_names, module)?;
+                Ok((ParsedComposite::Array(at), None, true))
+            }
+            _ => {
+                reject_non_func_body(pos, sig)?;
+                let sig_fields: Vec<&SExpr> = sig.iter().skip(1).collect();
+                let func_type = parse_func_signature(&sig_fields, type_names, module)?;
+                Ok((ParsedComposite::Func(func_type), None, true))
+            }
+        }
     }
 }
 
-/// W32 second slice fix (found while investigating why a struct-declaring
-/// module started reporting a misleading `Pass` once `(ref $t)` parsing
-/// landed, NOT a pre-existing test this slice broke): a `(type ... (struct
-/// ...))` / `(type ... (array ...))` body's head atom is NOT "func", but
-/// callers of this used to swallow it anyway -- `parse_func_signature`
-/// only ever recognizes `(param ...)`/`(result ...)` fields, so a
-/// struct's `(field ...)` entries were silently ignored and EVERY
-/// struct/array type declaration silently became an EMPTY `(func)` type
-/// instead of a real parse error. Reject explicitly instead: a real "not
-/// yet supported" (this parser has no struct/array TEXT-format type
-/// declarations at all, see `wasm_types::ValueType::NonNullStructRef`'s
-/// own doc comment) must stay a `NotYetSupported` grade at the
-/// conformance-harness level, never silently downgrade the type into a
-/// fabricated `func` shape a later reference can walk into unnoticed.
+/// W32 second slice fix, updated by W33's fourth slice: a `(type ... (struct
+/// ...))` / `(type ... (array ...))` body's head atom is NOT "func" -- once
+/// upon a time `parse_func_signature` silently swallowed every non-`param`/
+/// `result` field, turning every struct/array declaration into a
+/// fabricated empty `(func)` type instead of a real parse error. Struct/array
+/// bodies now have their own real parsers ([`parse_struct_body`]/
+/// [`parse_array_body`]), reached directly by [`parse_composite_body`]
+/// (both its bare and, since W34's third slice, its `sub`-wrapped branch);
+/// this function's remaining job is narrower: reject a bare "unknown
+/// composite-type keyword" -- something that's neither `func`, `struct`,
+/// NOR `array` -- reaching either branch by mistake.
 fn reject_non_func_body(pos: usize, body: &[SExpr]) -> Result<(), WastParseError> {
     if let Some(head) = body.first().and_then(|e| e.as_atom()) {
         if head != "func" {
             return Err(WastParseError::UnexpectedToken {
                 pos,
                 found: head.to_string(),
-                expected: "a func type body ('(func ...)') -- struct/array type declarations are not yet supported by this parser",
+                expected: "a composite type body ('(func ...)', '(struct ...)', or '(array ...)')",
             });
         }
     }
     Ok(())
+}
+
+/// Parse a field/element's **storage type** (W33 fourth slice): either the
+/// two packed types (`i8`/`i16`, bare atoms unique to this position -- they
+/// are NOT valid [`ValueType`]s anywhere else, e.g. a local/param/global)
+/// or an ordinary [`parse_value_type`] value type, including a concrete
+/// `(ref $t)`/`(ref null $t)` reference (which may forward-reference a
+/// not-yet-parsed sibling in the SAME `rec` group -- see
+/// [`concrete_ref_value_type`]'s own doc comment for why that's safe).
+fn parse_storage_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<StorageType, WastParseError> {
+    if let Some(atom) = expr.as_atom() {
+        match atom {
+            "i8" => return Ok(StorageType::I8),
+            "i16" => return Ok(StorageType::I16),
+            _ => {}
+        }
+    }
+    Ok(StorageType::Val(parse_value_type(expr, type_names, module)?))
+}
+
+/// Parse one field/element's full storage description, INCLUDING an
+/// optional `(mut ...)` wrapper: `storage` or `(mut storage)`.
+fn parse_field_storage(expr: &SExpr, type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<(StorageType, bool), WastParseError> {
+    if expr.is_keyword_list("mut") {
+        let items = expr.as_list().unwrap();
+        let inner = expect_get(items, 1)?;
+        Ok((parse_storage_type(inner, type_names, module)?, true))
+    } else {
+        Ok((parse_storage_type(expr, type_names, module)?, false))
+    }
+}
+
+/// Parse a `(struct (field ...) ...)` type body (W33 fourth slice) into a
+/// real [`StructType`] plus its `$name -> field index` table.
+///
+/// Grammar (per the real GC proposal, verified directly against
+/// `struct.wast`'s own vendored corpus text):
+/// ```text
+/// (field)                          -- zero fields (a no-op clause)
+/// (field storage)                  -- ONE unnamed field
+/// (field storage storage ...)      -- MULTIPLE unnamed fields, one clause
+/// (field $name storage)            -- ONE named field
+/// (field (mut storage))            -- mutable, unnamed
+/// (field $name (mut storage))      -- mutable, named
+/// ```
+/// A `$name` claims EXACTLY one field (struct.wast never names more than
+/// one field per named clause, and the grammar itself only allows a name
+/// before a SINGLE storage entry, never before a list of several). Field
+/// count has no cap here — mirroring `wasm-module-parser::parse_struct_type`'s
+/// own "do NOT pre-allocate from an attacker-controlled count" pattern: this
+/// is a `Vec::new()` grown one push at a time from real, already-tokenized
+/// S-expression fields (no huge count can be claimed up front the way a raw
+/// LEB128 byte stream could), so there is nothing to over-allocate against —
+/// the tokenizer's own `MAX_NESTING_DEPTH`/overall source-length limits are
+/// what actually bound how many `(field ...)` clauses a single `.wast`
+/// source can contain.
+fn parse_struct_body(sig: &[SExpr], type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<(StructType, HashMap<String, u32>), WastParseError> {
+    let mut fields = Vec::new();
+    let mut field_names: HashMap<String, u32> = HashMap::new();
+    for clause in &sig[1..] {
+        let items = clause.as_list().ok_or(WastParseError::UnexpectedToken {
+            pos: clause.pos(),
+            found: "atom".to_string(),
+            expected: "a '(field ...)' clause",
+        })?;
+        if items.first().and_then(|e| e.as_atom()) != Some("field") {
+            return Err(WastParseError::UnexpectedToken {
+                pos: clause.pos(),
+                found: items.first().and_then(|e| e.as_atom()).unwrap_or("list").to_string(),
+                expected: "a '(field ...)' clause",
+            });
+        }
+        let mut rest = &items[1..];
+        let mut name = None;
+        if let Some(a) = rest.first().and_then(|e| e.as_atom()) {
+            if a.starts_with('$') {
+                name = Some(a.to_string());
+                rest = &rest[1..];
+            }
+        }
+        if let Some(name) = name {
+            if rest.len() != 1 {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: clause.pos(),
+                    found: "".to_string(),
+                    expected: "a named field ('(field $name storage)') to have exactly one storage type",
+                });
+            }
+            let (storage, mutable) = parse_field_storage(&rest[0], type_names, module)?;
+            if field_names.contains_key(&name) {
+                return Err(WastParseError::DuplicateIdentifier { pos: clause.pos(), name, space: "field" });
+            }
+            field_names.insert(name, fields.len() as u32);
+            fields.push(FieldType { storage, mutable });
+        } else {
+            for entry in rest {
+                let (storage, mutable) = parse_field_storage(entry, type_names, module)?;
+                fields.push(FieldType { storage, mutable });
+            }
+        }
+    }
+    Ok((StructType { fields }, field_names))
+}
+
+/// Parse an `(array storage)` / `(array (mut storage))` type body (W33
+/// fourth slice) into a real [`ArrayType`].
+fn parse_array_body(pos: usize, sig: &[SExpr], type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<ArrayType, WastParseError> {
+    let elem_expr = sig.get(1).ok_or(WastParseError::UnexpectedToken {
+        pos,
+        found: "".to_string(),
+        expected: "an array element storage type",
+    })?;
+    let (storage, mutable) = parse_field_storage(elem_expr, type_names, module)?;
+    Ok(ArrayType { element: FieldType { storage, mutable } })
+}
+
+/// Extract one `(type $name? sig_form?)`/`(rec ...)`-member's own signature
+/// form (the trailing `(func ...)`/`(struct ...)`/`(array ...)`/`(sub
+/// ...)` list, if any) -- shared by phase A's cheap [`peek_member_kind`]
+/// pre-scan and phase B's real [`parse_composite_body`] call, so the two
+/// can never disagree about which s-expression IS the body.
+fn member_sig_form(items: &[SExpr]) -> Option<&[SExpr]> {
+    let mut rest = &items[1..];
+    if rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) {
+        rest = &rest[1..];
+    }
+    rest.first().and_then(|e| e.as_list())
+}
+
+/// The flat type-section index a concrete reference `ValueType` names, for
+/// any of the three composite kinds (W33 fourth slice generalizes this
+/// from "func only") -- `None` for a non-reference or abstract-heap-type
+/// value.
+fn referenced_type_idx(vt: &ValueType) -> Option<u32> {
+    match vt {
+        ValueType::ConcreteFuncRef(idx)
+        | ValueType::NonNullConcreteFuncRef(idx)
+        | ValueType::StructRef(idx)
+        | ValueType::NonNullStructRef(idx)
+        | ValueType::ArrayRef(idx)
+        | ValueType::NonNullArrayRef(idx) => Some(*idx),
+        _ => None,
+    }
+}
+
+/// As [`referenced_type_idx`], for one struct field/array element's
+/// storage type -- a packed `i8`/`i16` never references another type.
+fn field_referenced_type_idx(f: &FieldType) -> Option<u32> {
+    match f.storage {
+        StorageType::Val(vt) => referenced_type_idx(&vt),
+        StorageType::I8 | StorageType::I16 => None,
+    }
 }
 
 fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
@@ -614,7 +971,15 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
         let group_start = ctx.module.types.len() as u32;
         let group_size = members.len() as u32;
 
-        // Phase A: register names, reserve indices with placeholder bodies.
+        // Phase A: register names, reserve indices with placeholder bodies
+        // -- INCLUDING each member's composite KIND (func/struct/array),
+        // determined by a cheap head-keyword peek (W33 fourth slice) rather
+        // than a full body parse. This is what lets phase B resolve a
+        // `(ref $t)` FORWARD reference to a not-yet-parsed sibling's real
+        // `ValueType` variant (`StructRef` vs `ArrayRef` vs
+        // `ConcreteFuncRef`) -- see `concrete_ref_value_type`'s own doc
+        // comment.
+        let mut member_kinds: Vec<MemberKind> = Vec::with_capacity(members.len());
         for (i, m) in members.iter().enumerate() {
             let items = m.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
@@ -625,6 +990,10 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                     ctx.type_names.insert(name.to_string(), group_start + i as u32);
                 }
             }
+            let sig_form = member_sig_form(items);
+            let kind = peek_member_kind(sig_form);
+            member_kinds.push(kind);
+
             ctx.module.types.push(FuncType { params: vec![], results: vec![] });
             ctx.module.type_subtyping.push(TypeSubtyping {
                 supertype: None,
@@ -632,18 +1001,39 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                 rec_group_size: group_size,
                 rec_group_position: i as u32,
             });
+            // `type_kinds` stays EMPTY (the legacy "every type is a func"
+            // convention -- see `TypeKind`'s own doc comment) for as long
+            // as every member seen so far is a func AND it hasn't already
+            // been started by an earlier group. The moment either a
+            // struct/array member appears, or it's already active, every
+            // slot (including plain func ones) needs a real entry so
+            // `type_kinds.len() == types.len()` stays an invariant.
+            if kind != MemberKind::Func || !ctx.module.type_kinds.is_empty() {
+                while ctx.module.type_kinds.len() + 1 < ctx.module.types.len() {
+                    ctx.module.type_kinds.push(TypeKind::Func);
+                }
+                // The real struct/array `k` isn't known yet (its own
+                // `struct_types`/`array_types` push happens in phase B,
+                // once the body is actually parsed) -- `u32::MAX` is a
+                // placeholder never read before phase B overwrites it two
+                // dozen lines below (nothing consults a `TypeKind::Struct`/
+                // `Array`'s inner index before then; only the ENUM VARIANT
+                // itself matters during parsing, for picking `StructRef`
+                // vs. `ArrayRef` vs. `ConcreteFuncRef`).
+                ctx.module.type_kinds.push(match kind {
+                    MemberKind::Func => TypeKind::Func,
+                    MemberKind::Struct => TypeKind::Struct(u32::MAX),
+                    MemberKind::Array => TypeKind::Array(u32::MAX),
+                });
+            }
         }
 
         // Phase B: parse every member's real body -- every name in this
         // group (and every earlier one) resolves now.
         for (i, m) in members.iter().enumerate() {
             let items = m.as_list().unwrap();
-            let mut rest = &items[1..];
-            if rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) {
-                rest = &rest[1..];
-            }
-            let sig_form = rest.first().and_then(|e| e.as_list());
-            let (func_type, supertype, is_final) = parse_type_body(m.pos(), sig_form, &ctx.type_names)?;
+            let sig_form = member_sig_form(items);
+            let (composite, supertype, is_final) = parse_composite_body(m.pos(), sig_form, &ctx.type_names, &ctx.module)?;
             // Numeric type-index references (`(ref 2)`, unlike `(ref
             // $name)`) bypass `resolve_idx`'s name-registration check
             // entirely -- it just parses the digits, with no notion of
@@ -660,24 +1050,58 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             // own end -- everything at or before `group_start +
             // group_size` (this group's own members, or any earlier,
             // already-fully-registered group) stays legal.
+            //
+            // W33 fourth slice: generalized from "func params/results only"
+            // to every referenced type index in ANY composite kind's body
+            // (a struct/array field can equally well reference a func,
+            // struct, or array type forward-within-group).
             let max_allowed = group_start + group_size;
-            let out_of_group = func_type
-                .params
-                .iter()
-                .chain(func_type.results.iter())
-                .filter_map(|vt| match vt {
-                    ValueType::ConcreteFuncRef(idx) | ValueType::NonNullConcreteFuncRef(idx) => Some(*idx),
-                    _ => None,
-                })
-                .chain(supertype)
-                .find(|idx| *idx >= max_allowed);
+            let referenced: Vec<u32> = match &composite {
+                ParsedComposite::Func(ft) => ft.params.iter().chain(ft.results.iter()).filter_map(referenced_type_idx).collect(),
+                ParsedComposite::Struct(st, _) => st.fields.iter().filter_map(field_referenced_type_idx).collect(),
+                ParsedComposite::Array(at) => field_referenced_type_idx(&at.element).into_iter().collect(),
+            };
+            let out_of_group = referenced.into_iter().chain(supertype).find(|idx| *idx >= max_allowed);
             if let Some(idx) = out_of_group {
                 return Err(WastParseError::UnknownIdentifier { pos: m.pos(), name: idx.to_string(), space: "type" });
             }
             let idx = (group_start + i as u32) as usize;
-            ctx.module.types[idx] = func_type;
-            ctx.module.type_subtyping[idx].supertype = supertype;
-            ctx.module.type_subtyping[idx].is_final = is_final;
+            match composite {
+                ParsedComposite::Func(func_type) => {
+                    ctx.module.types[idx] = func_type;
+                    ctx.module.type_subtyping[idx].supertype = supertype;
+                    ctx.module.type_subtyping[idx].is_final = is_final;
+                }
+                ParsedComposite::Struct(struct_type, field_names) => {
+                    let k = ctx.module.struct_types.len() as u32;
+                    ctx.module.struct_types.push(struct_type);
+                    ctx.module.type_kinds[idx] = TypeKind::Struct(k);
+                    ctx.struct_field_names.insert(idx as u32, field_names);
+                    // W34 third slice: a real, previously-undiscovered
+                    // companion bug to the `sub`-struct/array parse
+                    // restriction this slice's own investigation found and
+                    // fixed just above (`parse_composite_body`) -- this
+                    // arm used to silently DISCARD `supertype`/`is_final`
+                    // entirely (harmless before this slice, since a
+                    // struct/array `ParsedComposite` could never carry
+                    // anything but the phase-A default `(None, true)` --
+                    // `sub` was func-only). Now that a `(sub $parent
+                    // (struct/array ...))` can produce a REAL declared
+                    // supertype/finality, this write is load-bearing: see
+                    // the identical `Func` arm just above, which already
+                    // did this correctly.
+                    ctx.module.type_subtyping[idx].supertype = supertype;
+                    ctx.module.type_subtyping[idx].is_final = is_final;
+                }
+                ParsedComposite::Array(array_type) => {
+                    let k = ctx.module.array_types.len() as u32;
+                    ctx.module.array_types.push(array_type);
+                    ctx.module.type_kinds[idx] = TypeKind::Array(k);
+                    // See the identical fix on the `Struct` arm just above.
+                    ctx.module.type_subtyping[idx].supertype = supertype;
+                    ctx.module.type_subtyping[idx].is_final = is_final;
+                }
+            }
         }
     }
 
@@ -746,7 +1170,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                 }
                 _ => {}
             }
-            let import = build_import_shell(items, desc, kind, &ctx.type_names)?;
+            let import = build_import_shell(items, desc, kind, &ctx.type_names, &ctx.module)?;
             ctx.module.imports.push(import);
         }
     }
@@ -795,6 +1219,14 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                 }
             }
             ctx.module.tables.push(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None }, is64: false }); // fixed in pass 2
+            // Placeholder kept in lockstep with the `tables` push just
+            // above -- see `WasmModule::table_concrete_element_types`'s
+            // own doc comment for why this parallel vec exists at all.
+            // `None` here (no concrete type) is pass 2's default; the
+            // `(table $t (ref null $t) (elem ...))` shorthand branch in
+            // `build_table_limits_and_elements` overwrites this SAME
+            // index with `Some(vt)` when the source actually names one.
+            ctx.module.table_concrete_element_types.push(None);
         } else if f.is_keyword_list("memory") {
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
@@ -876,7 +1308,7 @@ fn insert_unique(
     Ok(())
 }
 
-fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str, type_names: &HashMap<String, u32>) -> Result<Import, WastParseError> {
+fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str, type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<Import, WastParseError> {
     let module_name = match &items[1] {
         SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
         other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "a module name string" }),
@@ -957,7 +1389,7 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str, type_names: &
                 desc.get(1)
             }
             .ok_or(WastParseError::UnexpectedEof)?;
-            ImportTypeInfo::Global(parse_global_type(type_field, type_names)?)
+            ImportTypeInfo::Global(parse_global_type(type_field, type_names, module)?)
         }
         // W21 (exceptions proposal): a tag import's real type index needs
         // `resolve_func_signature_ref` (mutable `&mut ctx.module` access
@@ -1069,15 +1501,15 @@ fn parse_memory_limits(fields: &[SExpr]) -> Result<(Limits, bool, bool), WastPar
     Ok((limits, shared, is64))
 }
 
-fn parse_global_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<GlobalType, WastParseError> {
+fn parse_global_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<GlobalType, WastParseError> {
     if expr.is_keyword_list("mut") {
         let items = expr.as_list().unwrap();
         // `(mut)` with no trailing value type is syntactically a valid
         // keyword-list (arity isn't checked by `is_keyword_list`) but has
         // no second element.
-        Ok(GlobalType { value_type: parse_value_type(expect_get(items, 1)?, type_names)?, mutable: true })
+        Ok(GlobalType { value_type: parse_value_type(expect_get(items, 1)?, type_names, module)?, mutable: true })
     } else {
-        Ok(GlobalType { value_type: parse_value_type(expr, type_names)?, mutable: false })
+        Ok(GlobalType { value_type: parse_value_type(expr, type_names, module)?, mutable: false })
     }
 }
 
@@ -1199,7 +1631,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 let rest = &items[name_skip..];
                 let space_idx = num_import_globals + global_i;
                 let (type_start, _) = handle_inline_export(rest, "global", space_idx, ctx)?;
-                let gt = parse_global_type(expect_get(rest, type_start)?, &ctx.type_names)?;
+                let gt = parse_global_type(expect_get(rest, type_start)?, &ctx.type_names, &ctx.module)?;
                 let init_instrs = rest.get(type_start + 1..).unwrap_or(&[]);
                 let mut code = Vec::new();
                 encode_instr_list(init_instrs, &mut InstrCtx::empty(ctx), &mut code)?;
@@ -1333,7 +1765,7 @@ fn resolve_func_signature_ref(desc_rest: &[SExpr], ctx: &mut ModuleCtx) -> Resul
         return resolve_idx(&ctx.type_names, expect_get(items, 1)?, "type");
     }
     let sig_fields: Vec<&SExpr> = leading.iter().collect();
-    let ty = parse_func_signature(&sig_fields, &ctx.type_names)?;
+    let ty = parse_func_signature(&sig_fields, &ctx.type_names, &ctx.module)?;
     Ok(dedup_type(&mut ctx.module, ty))
 }
 
@@ -1529,11 +1961,11 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize, code_idx: 
             let items = f.as_list().unwrap();
             if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
                 local_names.insert(items[1].as_atom().unwrap().to_string(), *next_local);
-                locals_decl.push(parse_value_type(&items[2], &ctx.type_names)?);
+                locals_decl.push(parse_value_type(&items[2], &ctx.type_names, &ctx.module)?);
                 *next_local += 1;
             } else {
                 for t in &items[1..] {
-                    locals_decl.push(parse_value_type(t, &ctx.type_names)?);
+                    locals_decl.push(parse_value_type(t, &ctx.type_names, &ctx.module)?);
                     *next_local += 1;
                 }
             }
@@ -1629,12 +2061,65 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         return Ok(());
     }
 
-    // `[reftype, (elem e*)]` -- skip the reftype keyword (this crate only
-    // tracks FUNCREF tables, matching every MVP-era table declaration),
-    // then resolve the elem list's own function references. `(table
-    // funcref ())` -- a syntactically valid but EMPTY inner list -- has no
-    // "elem" head atom at all, so this must confirm one is actually
-    // present before slicing `[1..]`, not just that the list is non-empty.
+    // `[reftype, (elem e*)]`. The reftype is either the plain `funcref`/
+    // `externref` keyword (every MVP-era table declaration -- the ONLY
+    // two atoms this branch recognized before), or a function-references-
+    // proposal `(ref null $t)`/`(ref $t)`/`(ref null func)`/`(ref null
+    // extern)` list naming a CONCRETE function type -- `parse_value_type`
+    // already parses that exact grammar for func params/results/globals/
+    // locals, so it's reused here rather than duplicated.
+    //
+    // Real corpus regression this closes: `br_table.wast`'s own
+    // `(table $t (ref null $t) (elem $tf))` -- before this branch parsed
+    // the reftype at all, it was silently discarded (see the removed
+    // comment this replaced, "this crate only tracks FUNCREF tables"),
+    // leaving `$t`'s table looking exactly like a generic `funcref` table
+    // to every downstream consumer. `table.get $t` then pushed
+    // `ValueType::Funcref` unconditionally, and the file's own
+    // `meet-funcref-*`/`meet-multi-ref` tests -- which `br_table` across
+    // labels typed `(ref null func)` AND the narrower `(ref null $t)`/
+    // `(ref $t)` -- failed validation with `TypeMismatch: expected
+    // ConcreteFuncRef(1), found Funcref` on an entirely ordinary,
+    // MVP-adjacent construct (no GC-proposal struct/array syntax
+    // involved). See `WasmModule::table_concrete_element_types`'s own doc
+    // comment for the field this now populates, and `wasm-validator`'s
+    // `table.get`/`table.set` opcode arms for the consuming side.
+    //
+    // `(table funcref ())` -- a syntactically valid but EMPTY inner list
+    // -- has no "elem" head atom at all, so this must confirm one is
+    // actually present before slicing `[1..]`, not just that the list is
+    // non-empty.
+    let reftype = expect_get(rest, 0)?;
+    match reftype.as_atom() {
+        Some("funcref") => {}
+        Some("externref") => ctx.module.tables[storage_idx as usize].element_type = wasm_types::EXTERNREF,
+        _ => match parse_value_type(reftype, &ctx.type_names, &ctx.module) {
+            Ok(ValueType::Funcref) => {}
+            Ok(ValueType::Externref) => ctx.module.tables[storage_idx as usize].element_type = wasm_types::EXTERNREF,
+            Ok(vt @ (ValueType::ConcreteFuncRef(_) | ValueType::NonNullConcreteFuncRef(_))) => {
+                // Every concrete function reference is still funcref-
+                // family -- `element_type` (the byte every pre-existing
+                // consumer reads) stays FUNCREF; only the richer parallel
+                // vec records which concrete type it actually is.
+                ctx.module.tables[storage_idx as usize].element_type = wasm_types::FUNCREF;
+                ctx.module.table_concrete_element_types[storage_idx as usize] = Some(vt);
+            }
+            Ok(other) => {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: reftype.pos(),
+                    found: format!("{other:?}"),
+                    expected: "funcref, externref, or a concrete function reference type",
+                })
+            }
+            Err(_) => {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: reftype.pos(),
+                    found: reftype.as_atom().unwrap_or("list").to_string(),
+                    expected: "funcref or externref",
+                })
+            }
+        },
+    }
     let elem_items = expect_get(rest, 1)?
         .as_list()
         .ok_or(WastParseError::UnexpectedEof)?;
@@ -2986,7 +3471,7 @@ fn encode_stream_instr(
                 resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?
             } else {
                 let refs: Vec<&SExpr> = sig_fields.iter().collect();
-                let ty = parse_func_signature(&refs, &icx.module.type_names)?;
+                let ty = parse_func_signature(&refs, &icx.module.type_names, &icx.module.module)?;
                 dedup_type(&mut icx.module.module, ty)
             };
             out.push(info.opcode);
@@ -3362,6 +3847,237 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
     Ok(())
 }
 
+/// `struct.new`/`struct.new_default`/`struct.get`/`struct.get_s`/
+/// `struct.get_u`/`struct.set` and `array.new`/`array.new_default`/
+/// `array.new_fixed`/`array.get`/`array.get_s`/`array.get_u`/`array.set`/
+/// `array.len` (GC proposal, W33 fourth slice: `code/specs/
+/// W33-wasm-gc-recursive-type-subtyping.md`) -- FOLDED form only, the same
+/// scoping precedent `ref.test`/`ref.cast` set (see that arm's own doc
+/// comment): every real corpus use in `struct.wast`/`array.wast` folds both
+/// the type immediate and the value operand(s).
+///
+/// Factored into its own function, called from a single `if` in
+/// [`encode_flat_instr`], rather than inlined as a run of `if name == ...`
+/// arms directly in that function's body -- purely for stack-frame-size
+/// reasons: in a debug build a function's stack frame is sized for the
+/// union of every branch's own locals (`type_idx`/`field_idx`/`count`
+/// here), and `encode_flat_instr` recurses up to `MAX_INSTR_NESTING_DEPTH`
+/// times through deeply folded instructions -- adding these locals
+/// directly inline there once measurably overflowed the real OS stack
+/// under that recursion, before the depth counter itself ever tripped
+/// (the exact failure `resolve_leading_memidx_token`'s own doc comment
+/// already documents for the SAME reason). Returns `Ok(true)` if `name`
+/// names one of these instructions (its bytes are already pushed to
+/// `out`); `Ok(false)` if `name` isn't recognized here at all, so the
+/// caller's own dispatch continues.
+///
+/// ## Sub-opcode numbering: intentionally NOT byte-identical to the real
+/// GC proposal's own table
+///
+/// `struct.new` (`0x00`)/`struct.get` (`0x02`)/`struct.set` (`0x04`)
+/// already had REAL runtime semantics in `wasm-execution` before this
+/// slice (the McCarthy Lisp/LANG77 backend's own binary-format-only GC
+/// support, see `wasm-execution::gc`'s module doc comment) -- but the
+/// real spec's own numbering places `struct.get_u` at `0x04` and
+/// `struct.set` at `0x05`, one slot later than this repo's pre-existing,
+/// already-shipped `struct.set = 0x04`. Renumbering `struct.set` to
+/// match the spec would silently reinterpret every byte sequence
+/// `iir-to-wasm`'s `wasm-module-encoder::GcInstruction::StructSet`
+/// already emits (LANG77's own cons-cell mutation) as `struct.get_u`
+/// instead -- a real, silent behavior change to a shipped feature this
+/// slice's own scope has no business touching. Instead, `struct.get_s`/
+/// `struct.get_u` claim the two sub-opcode bytes (`0x03`/`0x05`) this
+/// repo's OWN pre-existing scheme left unused, preserving
+/// `struct.new`/`struct.get`/`struct.set`'s bytes byte-for-byte. Array
+/// sub-opcodes (`0x06`-`0x0F`) had no pre-existing use in this repo at
+/// all, so they DO match the real spec's own numbering exactly -- there
+/// was nothing to preserve compatibility with.
+///
+/// ```text
+///   sub   instruction          repo-internal, this slice   real GC spec
+///   0x00  struct.new           (pre-existing, unchanged)   0x00 (matches)
+///   0x01  struct.new_default   NEW                         0x01 (matches)
+///   0x02  struct.get           (pre-existing, unchanged)   0x02 (matches)
+///   0x03  struct.get_s         NEW                         0x03 (matches)
+///   0x04  struct.set           (pre-existing, unchanged)   0x04 is get_u in spec
+///   0x05  struct.get_u         NEW                         0x05 is set in spec
+///   0x06  array.new            NEW                         0x06 (matches)
+///   0x07  array.new_default    NEW                         0x07 (matches)
+///   0x08  array.new_fixed      NEW                         0x08 (matches)
+///   0x0B  array.get            NEW                         0x0B (matches)
+///   0x0C  array.get_s          NEW                         0x0C (matches)
+///   0x0D  array.get_u          NEW                         0x0D (matches)
+///   0x0E  array.set            NEW                         0x0E (matches)
+///   0x0F  array.len            NEW                         0x0F (matches)
+/// ```
+///
+/// This is safe PURELY because this repo's `0xFB`-prefixed bytecode never
+/// round-trips through anything OUTSIDE this crate's own text parser +
+/// `wasm-execution`'s own decoder (the WASM conformance pipeline never
+/// encodes to real binary for a plain `(module ...)` script directive --
+/// see `wasm-conformance`'s own pipeline doc comment) -- there is no
+/// external tool this byte-level deviation could ever desync from.
+/// `array.new_data`/`array.new_elem`/`array.copy`/`array.fill`/
+/// `array.init_data`/`array.init_elem` are deliberately NOT wired here --
+/// they need real data-/elem-segment integration this slice does not
+/// attempt (see the accompanying spec addendum) -- any module using them
+/// stays an honest parse error at this crate's boundary, `NotYetSupported`
+/// at the conformance-harness level, never a silent misencoding.
+fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<bool, WastParseError> {
+    if matches!(name, "struct.new" | "struct.new_default") {
+        encode_struct_new(name, args, icx, out)?;
+        return Ok(true);
+    }
+    if matches!(name, "struct.get" | "struct.get_s" | "struct.get_u" | "struct.set") {
+        encode_struct_get_set(name, args, icx, out)?;
+        return Ok(true);
+    }
+    if matches!(name, "array.new" | "array.new_default") {
+        encode_array_new(name, args, icx, out)?;
+        return Ok(true);
+    }
+    if name == "array.new_fixed" {
+        encode_array_new_fixed(args, icx, out)?;
+        return Ok(true);
+    }
+    if matches!(name, "array.get" | "array.get_s" | "array.get_u" | "array.set") {
+        encode_array_get_set(name, args, icx, out)?;
+        return Ok(true);
+    }
+    if name == "array.len" {
+        encode_array_len(args, icx, out)?;
+        return Ok(true);
+    }
+    Ok(false)
+}
+
+/// `struct.new $t`/`struct.new_default $t` (W33 fourth slice). Split out of
+/// [`encode_gc_struct_array_instr`] into its OWN function -- not merely
+/// inlined there -- for the identical stack-frame-size reason that
+/// function's own doc comment explains: `struct.get`/`array.new_fixed`
+/// etc.'s recursion re-enters `encode_gc_struct_array_instr` itself (their
+/// own operands are encoded from INSIDE it, via `encode_instr_list`), so
+/// keeping every instruction's locals in ONE big function would size that
+/// function's frame for the union of ALL of them, defeating the whole
+/// point of factoring struct/array logic out of `encode_flat_instr` in the
+/// first place. Each GC instruction group gets its own minimally-sized
+/// function instead.
+fn encode_struct_new(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    encode_instr_list(&args[1..], icx, out)?;
+    out.push(0xFB);
+    out.push(if name == "struct.new" { 0x00 } else { 0x01 });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    Ok(())
+}
+
+/// `struct.get`/`struct.get_s`/`struct.get_u`/`struct.set` (W33 fourth
+/// slice) -- see [`encode_struct_new`]'s doc comment for why this is its
+/// own function rather than inlined.
+fn encode_struct_get_set(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    let field_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+    let field_idx = match field_expr {
+        SExpr::Atom(s, pos) if s.starts_with('$') => icx
+            .module
+            .struct_field_names
+            .get(&type_idx)
+            .and_then(|m| m.get(s))
+            .copied()
+            .ok_or_else(|| WastParseError::UnknownIdentifier { pos: *pos, name: s.clone(), space: "field" })?,
+        SExpr::Atom(s, pos) => {
+            s.parse::<u32>().map_err(|_| WastParseError::UnexpectedToken { pos: *pos, found: s.clone(), expected: "a field index" })?
+        }
+        other => {
+            return Err(WastParseError::UnexpectedToken {
+                pos: other.pos(),
+                found: "list".to_string(),
+                expected: "a field index or $identifier",
+            });
+        }
+    };
+    encode_instr_list(&args[2..], icx, out)?;
+    out.push(0xFB);
+    out.push(match name {
+        "struct.get" => 0x02,
+        "struct.get_s" => 0x03,
+        "struct.get_u" => 0x05,
+        _ => 0x04, // struct.set
+    });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(field_idx as u64));
+    Ok(())
+}
+
+/// `array.new $t`/`array.new_default $t` (W33 fourth slice) -- see
+/// [`encode_struct_new`]'s doc comment for why this is its own function.
+fn encode_array_new(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    encode_instr_list(&args[1..], icx, out)?;
+    out.push(0xFB);
+    out.push(if name == "array.new" { 0x06 } else { 0x07 });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    Ok(())
+}
+
+/// `array.new_fixed $t N <elem>...` (W33 fourth slice) -- see
+/// [`encode_struct_new`]'s doc comment for why this is its own function.
+/// `N` is a LITERAL element count (unlike every other immediate here, not
+/// an index resolved via a name table) -- it must equal `args[2..].len()`
+/// for the module to be well-formed, but that arity check is left to
+/// `wasm-validator` (this parser's established division of responsibility
+/// for exactly this class of mismatch, e.g. `build_func`'s own doc comment
+/// on `(type $sig)` param-count mismatches), not duplicated here.
+fn encode_array_new_fixed(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    let count_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+    let count: u32 = count_expr
+        .as_atom()
+        .and_then(|s| s.parse().ok())
+        .ok_or_else(|| WastParseError::UnexpectedToken { pos: count_expr.pos(), found: "".to_string(), expected: "a literal element count" })?;
+    encode_instr_list(&args[2..], icx, out)?;
+    out.push(0xFB);
+    out.push(0x08);
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(count as u64));
+    Ok(())
+}
+
+/// `array.get`/`array.get_s`/`array.get_u`/`array.set` (W33 fourth slice)
+/// -- see [`encode_struct_new`]'s doc comment for why this is its own
+/// function.
+fn encode_array_get_set(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    encode_instr_list(&args[1..], icx, out)?;
+    out.push(0xFB);
+    out.push(match name {
+        "array.get" => 0x0B,
+        "array.get_s" => 0x0C,
+        "array.get_u" => 0x0D,
+        _ => 0x0E, // array.set
+    });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    Ok(())
+}
+
+/// `array.len` (W33 fourth slice) -- see [`encode_struct_new`]'s doc
+/// comment for why this is its own function. No type immediate -- an
+/// array's length is a property of the heap object itself, not of its
+/// static type (see the real GC proposal's own `array.len` typing rule:
+/// `[(ref null array)] -> [i32]`, the abstract `array` heap type, not a
+/// concrete one).
+fn encode_array_len(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    encode_instr_list(args, icx, out)?;
+    out.push(0xFB);
+    out.push(0x0F);
+    Ok(())
+}
+
 /// Encode a **folded** instruction (`(name args...)`) — `args` mixes zero
 /// or more operand sub-expressions (encoded first, recursively) with this
 /// instruction's own trailing immediate atoms, per instruction kind. See
@@ -3528,6 +4244,70 @@ fn encode_flat_instr(
         encode_instr_list(args, icx, out)?;
         out.push(0xFB);
         out.push(0x1E);
+        return Ok(());
+    }
+    // `ref.test` / `ref.cast` (GC proposal, W33 second slice item 4: `code/
+    // specs/W33-wasm-gc-recursive-type-subtyping.md`'s second addendum).
+    // Unlike every GC instruction above, the TEXT-format immediate here is a
+    // full reftype descriptor -- `(ref $t)` (non-null) or `(ref null $t)`
+    // (nullable) -- so this reuses `parse_value_type` (the SAME parser
+    // `local`/`global`/`param`/`result` value-type declarations already
+    // use), not `ref.null`'s own bare-heaptype-keyword parser (`parse_ref_
+    // null_heap_type`): `ref.test`/`ref.cast` spell nullability via the
+    // `ref [null]` wrapper itself, encoded into WHICH of the two sub-opcodes
+    // is emitted, exactly like `ref.null $ht`'s own binary encoding has no
+    // separate nullability bit (a `ref.null`-produced value is always
+    // nullable) -- see the real GC proposal's binary-format table:
+    // `ref.test (ref ht)`/`(ref null ht)` = `0xFB 0x14`/`0x15 <ht>`;
+    // `ref.cast (ref ht)`/`(ref null ht)` = `0xFB 0x16`/`0x17 <ht>`.
+    //
+    // Only the CONCRETE-type cases this crate's `ValueType` can represent
+    // (`ConcreteFuncRef`/`NonNullConcreteFuncRef`, W11/W32) are supported —
+    // an abstract heap type (`(ref any)`, `(ref func)`, `(ref i31)`, ...) is
+    // explicitly out of scope: this crate's struct/array TEXT-format type
+    // declarations don't exist yet either (W33's own "Recommended scope"
+    // step 2, still open), and no vendored corpus case needs an abstract
+    // heap type for `ref.test`/`ref.cast` specifically (every real use in
+    // `type-subtyping.wast`'s "Runtime types" section names a concrete `$t`).
+    // Rejecting cleanly here (a parse error, same as an unrecognized
+    // instruction) rather than silently mis-encoding is deliberate.
+    //
+    // Only the FOLDED form is supported (no bare/flat-atom-stream
+    // counterpart, unlike `ref.i31`/`ref.null` above) — every real corpus
+    // use folds both the type descriptor and the value operand
+    // (`(ref.cast (ref $t0) (table.get ...))`), and this crate's own
+    // "support both forms symmetrically" convention (see `throw`'s own
+    // comment) is a nice-to-have, not exercised by anything vendored, so
+    // left undone here rather than adding untested surface.
+    if name == "ref.test" || name == "ref.cast" {
+        let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+        let (type_idx, nullable) = match parse_value_type(ty_expr, &icx.module.type_names, &icx.module.module)? {
+            ValueType::NonNullConcreteFuncRef(idx) => (idx, false),
+            ValueType::ConcreteFuncRef(idx) => (idx, true),
+            _ => {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: ty_expr.pos(),
+                    found: "abstract heap type".to_string(),
+                    expected: "a concrete (ref $t) / (ref null $t) heap type",
+                });
+            }
+        };
+        encode_instr_list(&args[1..], icx, out)?;
+        out.push(0xFB);
+        out.push(match (name, nullable) {
+            ("ref.test", false) => 0x14,
+            ("ref.test", true) => 0x15,
+            ("ref.cast", false) => 0x16,
+            (_, _) => 0x17, // "ref.cast", nullable
+        });
+        out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+        return Ok(());
+    }
+    // `struct.new`/`struct.new_default`/.../`array.len` (GC proposal, W33
+    // fourth slice) -- factored into a separate function purely to keep
+    // THIS function's own per-call stack frame small; see
+    // `encode_gc_struct_array_instr`'s own doc comment for why.
+    if encode_gc_struct_array_instr(name, args, icx, out)? {
         return Ok(());
     }
     // Atomic memory operations (WASM18): see the matching comment in
@@ -4146,7 +4926,7 @@ fn encode_flat_instr(
                 resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?
             } else {
                 let sig_fields: Vec<&SExpr> = args[sig_start..operand_start].iter().collect();
-                let ty = parse_func_signature(&sig_fields, &icx.module.type_names)?;
+                let ty = parse_func_signature(&sig_fields, &icx.module.type_names, &icx.module.module)?;
                 dedup_type(&mut icx.module.module, ty)
             };
             out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
@@ -4327,7 +5107,7 @@ fn encode_blocktype(items: &[SExpr], icx: &mut InstrCtx) -> Result<(Vec<u8>, usi
         return Ok((wasm_leb128::encode_signed(type_idx as i64), sig_end));
     }
     let refs: Vec<&SExpr> = sig_fields.iter().collect();
-    let ty = parse_func_signature(&refs, &icx.module.type_names)?;
+    let ty = parse_func_signature(&refs, &icx.module.type_names, &icx.module.module)?;
     if ty.params.is_empty() && ty.results.len() <= 1 {
         match ty.results.first().map(|t| t.byte_tag()) {
             None => return Ok((vec![0x40], sig_end)),
@@ -6419,21 +7199,328 @@ mod tests {
     }
 
     #[test]
-    fn struct_type_declaration_is_rejected_not_silently_misparsed_as_an_empty_func() {
-        // Regression guard: a `(type ... (struct ...))` body used to be
+    fn struct_type_declaration_is_a_real_struct_not_a_fabricated_empty_func() {
+        // W33 fourth slice: a `(type ... (struct ...))` body used to be
         // silently swallowed by `parse_func_signature` (which only
         // recognizes `(param ...)`/`(result ...)` fields) into a bogus
-        // EMPTY `(func)` type -- invisible until `(ref $t)` parsing (this
-        // slice) made it possible to reference that bogus type in a way
-        // that validated. Must now be a clean parse error instead.
-        let err = parse_module("(module (type $s (struct)))").unwrap_err();
+        // EMPTY `(func)` type -- W32's second slice made that a clean
+        // parse error instead (see this test's own pre-fourth-slice name,
+        // preserved in git history). Now it's a REAL struct type: `types`
+        // still gets a placeholder (never read) at this flat index, but
+        // `struct_types`/`type_kinds` carry the real data.
+        let m = parse_module("(module (type $s (struct)))").unwrap();
+        assert_eq!(m.struct_types.len(), 1);
+        assert!(m.struct_types[0].fields.is_empty());
+        assert_eq!(m.type_kinds, vec![TypeKind::Struct(0)]);
+    }
+
+    #[test]
+    fn array_type_declaration_is_a_real_array() {
+        let m = parse_module("(module (type $a (array i32)))").unwrap();
+        assert_eq!(m.array_types.len(), 1);
+        assert_eq!(m.array_types[0].element.storage, StorageType::Val(ValueType::I32));
+        assert!(!m.array_types[0].element.mutable);
+        assert_eq!(m.type_kinds, vec![TypeKind::Array(0)]);
+    }
+
+    /// **W34 third slice** (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+    /// a `(sub ... (struct ...))`/`(sub ... (array ...))` body used to be a
+    /// hard parse error (`reject_non_func_body`'s old, unconditional
+    /// "'struct'/'array' bodies are not supported inside 'sub'" rejection,
+    /// found by this slice's own investigation, not previously recorded) --
+    /// the vendored `type-subtyping.wast`'s own "Definitions"/"Invalid
+    /// subtyping definitions" sections declare exactly this shape
+    /// extensively (`(type $e0 (sub (array i32)))`, `(type $s0 (sub
+    /// (struct)))`), so every one of those modules failed to parse at all
+    /// before this fix, never even reaching `wasm-validator`. Now a real
+    /// `StructType`/`ArrayType` with the declared supertype/finality
+    /// preserved, exactly like the bare (non-`sub`) case already worked.
+    #[test]
+    fn sub_wrapped_struct_type_parses_as_a_real_struct_with_its_declared_supertype() {
+        let m = parse_module("(module (type $s0 (sub (struct))) (type $s1 (sub $s0 (struct (field i32)))))").unwrap();
+        assert_eq!(m.struct_types.len(), 2);
+        assert!(m.struct_types[0].fields.is_empty());
+        assert_eq!(m.struct_types[1].fields.len(), 1);
+        assert_eq!(m.type_kinds, vec![TypeKind::Struct(0), TypeKind::Struct(1)]);
+        assert_eq!(m.type_subtyping[0].supertype, None);
+        assert!(!m.type_subtyping[0].is_final); // `sub` without `final` is open
+        assert_eq!(m.type_subtyping[1].supertype, Some(0));
+    }
+
+    #[test]
+    fn sub_wrapped_array_type_parses_as_a_real_array_with_its_declared_supertype() {
+        let m = parse_module("(module (type $a0 (sub (array i32))) (type $a1 (sub $a0 (array i32))))").unwrap();
+        assert_eq!(m.array_types.len(), 2);
+        assert_eq!(m.array_types[0].element.storage, StorageType::Val(ValueType::I32));
+        assert_eq!(m.type_kinds, vec![TypeKind::Array(0), TypeKind::Array(1)]);
+        assert_eq!(m.type_subtyping[1].supertype, Some(0));
+    }
+
+    #[test]
+    fn sub_wrapped_final_struct_type_is_marked_final() {
+        let m = parse_module("(module (type $s0 (sub final (struct))))").unwrap();
+        assert!(m.type_subtyping[0].is_final);
+    }
+
+    // ── W33 fourth slice: real corpus struct/array field-list grammar ──────────
+    // (`struct.wast`/`array.wast`'s own "Type syntax" modules, verified
+    // against the pinned-SHA vendored text directly, not paraphrased.)
+
+    #[test]
+    fn struct_wast_type_syntax_module_parses_every_field_shape() {
+        let src = r#"
+(module
+  (type (struct))
+  (type (struct (field)))
+  (type (struct (field i8)))
+  (type (struct (field i8 i8 i8 i8)))
+  (type (struct (field $x1 i32) (field $y1 i32)))
+  (type (struct (field i8 i16 i32 i64 f32 f64 anyref funcref (ref 0) (ref null 1))))
+  (type (struct (field i32 i64 i8) (field) (field) (field (ref null i31) anyref)))
+  (type (struct (field $x2 i32) (field f32 f64) (field $y2 i32)))
+)
+"#;
+        let m = parse_module(src).expect("real struct.wast text must parse");
+        assert_eq!(m.struct_types.len(), 8);
+        assert!(m.struct_types[0].fields.is_empty());
+        assert!(m.struct_types[1].fields.is_empty(), "'(field)' with no storage types declares zero fields");
+        assert_eq!(m.struct_types[2].fields.len(), 1);
+        assert_eq!(m.struct_types[2].fields[0].storage, StorageType::I8);
+        assert_eq!(m.struct_types[3].fields.len(), 4, "one '(field ...)' clause can list several unnamed fields");
+        assert_eq!(m.struct_types[4].fields.len(), 2);
+        // Field 5 exercises every scalar + a self/forward numeric type ref.
+        assert_eq!(m.struct_types[5].fields.len(), 10);
+        assert_eq!(m.struct_types[5].fields[0].storage, StorageType::I8);
+        assert_eq!(m.struct_types[5].fields[1].storage, StorageType::I16);
+        // Field 6 mixes a genuinely empty '(field)' clause between real ones.
+        assert_eq!(m.struct_types[6].fields.len(), 5);
+    }
+
+    #[test]
+    fn struct_wast_duplicate_field_name_is_malformed() {
+        let err = parse_module("(module (type (struct (field $x i32) (field $x i32))))").unwrap_err();
+        assert!(matches!(err, WastParseError::DuplicateIdentifier { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn struct_wast_binding_structure_module_self_and_forward_references_resolve() {
+        // struct.wast's own "Binding structure" module: a two-member `rec`
+        // group where EVERY field self- or forward-references BOTH group
+        // members (by numeric AND by name), plus a later standalone type
+        // referenced from an EARLIER function param.
+        let src = r#"
+(module
+  (rec
+    (type $s0 (struct (field (ref 0) (ref 1) (ref $s0) (ref $s1))))
+    (type $s1 (struct (field (ref 0) (ref 1) (ref $s0) (ref $s1))))
+  )
+  (func (param (ref $forward)))
+  (type $forward (struct))
+)
+"#;
+        let m = parse_module(src).expect("mutual self/forward struct references must resolve");
+        assert_eq!(m.struct_types.len(), 3);
+        let f = &m.struct_types[0].fields;
+        assert_eq!(f.len(), 4);
+        // `(ref $t)` with no `null` keyword is NON-NULL by this crate's own
+        // grammar (`parse_value_type`'s established rule) -- so the
+        // numeric and named spellings of the same target agree exactly:
+        // fields 0/2 (self) and 1/3 (forward sibling) are pairwise equal.
+        assert_eq!(f[0].storage, StorageType::Val(ValueType::NonNullStructRef(0)), "(ref 0) -- numeric, self");
+        assert_eq!(f[1].storage, StorageType::Val(ValueType::NonNullStructRef(1)), "(ref 1) -- numeric, forward sibling");
+        assert_eq!(f[2].storage, StorageType::Val(ValueType::NonNullStructRef(0)), "(ref $s0) -- named, self");
+        assert_eq!(f[3].storage, StorageType::Val(ValueType::NonNullStructRef(1)), "(ref $s1) -- named, forward sibling");
+    }
+
+    #[test]
+    fn struct_wast_forward_ref_to_a_not_yet_started_group_is_unknown_type() {
+        let err = parse_module("(module (type (struct (field (ref 1)))))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownIdentifier { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn array_wast_type_syntax_module_parses_every_element_shape() {
+        // Verbatim from `array.wast`'s own "Type syntax" module EXCEPT one
+        // line, `(type (array (ref struct)))` -- a non-null ABSTRACT heap
+        // type (`struct`, unparameterized), which this crate already
+        // deliberately does not parse for `(ref func)`/`(ref extern)` etc.
+        // (see `parse_value_type`'s own doc comment) -- an existing,
+        // pre-W33-fourth-slice scope boundary this slice does not attempt
+        // to widen, not a new gap. See the dedicated test just below for
+        // that specific line's own honest (clean-error, not panicking)
+        // behavior.
+        let src = r#"
+(module
+  (type (array i8))
+  (type (array i16))
+  (type (array i32))
+  (type (array i64))
+  (type (array f32))
+  (type (array f64))
+  (type (array anyref))
+  (type (array (ref 0)))
+  (type (array (ref null 1)))
+  (type (array (mut i8)))
+  (type (array (mut i16)))
+  (type (array (mut i32)))
+  (type (array (mut i64)))
+  (type (array (mut anyref)))
+  (type (array (mut (ref 0))))
+)
+"#;
+        let m = parse_module(src).expect("real array.wast text must parse");
+        assert_eq!(m.array_types.len(), 15);
+        assert_eq!(m.array_types[0].element.storage, StorageType::I8);
+        assert!(!m.array_types[0].element.mutable);
+        assert_eq!(m.array_types[9].element.storage, StorageType::I8);
+        assert!(m.array_types[9].element.mutable, "'(array (mut i8))' is mutable");
+    }
+
+    #[test]
+    fn array_element_naming_an_abstract_non_null_heap_type_is_a_clean_error() {
+        // `(ref struct)` (non-null, unparameterized) -- out of scope for
+        // the SAME reason `(ref func)`/`(ref extern)` already are (see
+        // `parse_value_type`'s own doc comment); must be a real parse
+        // error, never a panic or a silent misparse.
+        let err = parse_module("(module (type (array (ref struct))))").unwrap_err();
         assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
     }
 
     #[test]
-    fn array_type_declaration_is_also_rejected() {
-        let err = parse_module("(module (type $a (array i32)))").unwrap_err();
-        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    fn array_wast_binding_structure_module_mutual_forward_reference_resolves() {
+        let src = r#"
+(module
+  (rec
+    (type $s0 (array (ref $s1)))
+    (type $s1 (array (ref $s0)))
+  )
+  (func (param (ref $forward)))
+  (type $forward (array i32))
+)
+"#;
+        let m = parse_module(src).expect("mutual array self/forward references must resolve");
+        assert_eq!(m.array_types.len(), 3);
+        assert_eq!(m.array_types[0].element.storage, StorageType::Val(ValueType::NonNullArrayRef(1)));
+        assert_eq!(m.array_types[1].element.storage, StorageType::Val(ValueType::NonNullArrayRef(0)));
+    }
+
+    // ── W33 fourth slice: struct/array instruction folded-form encoding ────────
+
+    #[test]
+    fn struct_new_and_new_default_encode_the_type_index_immediate() {
+        let m = parse_module(
+            r#"(module
+                 (type $vec (struct (field f32) (field $y (mut f32)) (field f32)))
+                 (func (export "new") (result anyref) (struct.new_default $vec))
+                 (func (export "mk") (result anyref) (struct.new $vec (f32.const 1) (f32.const 2) (f32.const 3)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0xFB, 0x01, 0x00, 0x0B], "struct.new_default $vec (type 0)");
+        assert_eq!(
+            code_of(&m, 1),
+            &[0x43, 0, 0, 128, 63, 0x43, 0, 0, 0, 64, 0x43, 0, 0, 64, 64, 0xFB, 0x00, 0x00, 0x0B],
+            "operands pushed before struct.new's own opcode+type-index"
+        );
+    }
+
+    #[test]
+    fn struct_get_get_s_get_u_set_resolve_field_by_name_and_by_number() {
+        let m = parse_module(
+            r#"(module
+                 (type $vec (struct (field f32) (field $y (mut f32))))
+                 (func (param $v (ref $vec)) (result f32) (struct.get 0 0 (local.get $v)))
+                 (func (param $v (ref $vec)) (result f32) (struct.get $vec $y (local.get $v)))
+                 (func (param $v (ref $vec)) (result f32) (struct.get_s $vec 0 (local.get $v)))
+                 (func (param $v (ref $vec)) (result f32) (struct.get_u $vec 0 (local.get $v)))
+                 (func (param $v (ref $vec)) (param $y f32) (struct.set $vec $y (local.get $v) (local.get $y)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0xFB, 0x02, 0x00, 0x00, 0x0B], "struct.get by numeric type+field");
+        assert_eq!(code_of(&m, 1), &[0x20, 0x00, 0xFB, 0x02, 0x00, 0x01, 0x0B], "struct.get by $name resolves 'y' to field 1");
+        assert_eq!(code_of(&m, 2), &[0x20, 0x00, 0xFB, 0x03, 0x00, 0x00, 0x0B], "struct.get_s -> sub-opcode 0x03");
+        assert_eq!(code_of(&m, 3), &[0x20, 0x00, 0xFB, 0x05, 0x00, 0x00, 0x0B], "struct.get_u -> sub-opcode 0x05 (this repo's own numbering, see the encoder's doc comment)");
+        assert_eq!(code_of(&m, 4), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x04, 0x00, 0x01, 0x0B], "struct.set stays at its pre-existing 0x04, unchanged");
+    }
+
+    #[test]
+    fn struct_get_unknown_field_name_is_a_clean_error() {
+        let err = parse_module(
+            r#"(module
+                 (type $vec (struct (field $x f32)))
+                 (func (param $v (ref $vec)) (result f32) (struct.get $vec $bogus (local.get $v)))
+               )"#,
+        )
+        .unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownIdentifier { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn array_new_new_default_new_fixed_encode_correctly() {
+        let m = parse_module(
+            r#"(module
+                 (type $vec (array f32))
+                 (func (result anyref) (array.new $vec (f32.const 1) (i32.const 3)))
+                 (func (result anyref) (array.new_default $vec (i32.const 3)))
+                 (func (result anyref) (array.new_fixed $vec 2 (f32.const 1) (f32.const 2)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x43, 0, 0, 128, 63, 0x41, 3, 0xFB, 0x06, 0x00, 0x0B],
+            "array.new: value then length, then 0xFB 0x06 <type_idx>"
+        );
+        assert_eq!(code_of(&m, 1), &[0x41, 3, 0xFB, 0x07, 0x00, 0x0B], "array.new_default: length, then 0xFB 0x07 <type_idx>");
+        assert_eq!(
+            code_of(&m, 2),
+            &[0x43, 0, 0, 128, 63, 0x43, 0, 0, 0, 64, 0xFB, 0x08, 0x00, 0x02, 0x0B],
+            "array.new_fixed: N operands, then 0xFB 0x08 <type_idx> <count>"
+        );
+    }
+
+    #[test]
+    fn array_get_get_s_get_u_set_len_encode_correctly() {
+        let m = parse_module(
+            r#"(module
+                 (type $vec (array f32))
+                 (type $bvec (array i8))
+                 (type $mvec (array (mut f32)))
+                 (func (param $v (ref $vec)) (param $i i32) (result f32) (array.get $vec (local.get $v) (local.get $i)))
+                 (func (param $v (ref $bvec)) (param $i i32) (result i32) (array.get_s $bvec (local.get $v) (local.get $i)))
+                 (func (param $v (ref $bvec)) (param $i i32) (result i32) (array.get_u $bvec (local.get $v) (local.get $i)))
+                 (func (param $v (ref $mvec)) (param $i i32) (param $y f32) (array.set $mvec (local.get $v) (local.get $i) (local.get $y)))
+                 (func (param $v (ref array)) (result i32) (array.len (local.get $v)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x0B, 0x00, 0x0B], "array.get");
+        assert_eq!(code_of(&m, 1), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x0C, 0x01, 0x0B], "array.get_s (type 1 = $bvec)");
+        assert_eq!(code_of(&m, 2), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x0D, 0x01, 0x0B], "array.get_u");
+        assert_eq!(code_of(&m, 3), &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0xFB, 0x0E, 0x02, 0x0B], "array.set (type 2 = $mvec)");
+        assert_eq!(code_of(&m, 4), &[0x20, 0x00, 0xFB, 0x0F, 0x0B], "array.len takes NO type immediate");
+    }
+
+    #[test]
+    fn deeply_folded_struct_instructions_do_not_overflow_the_real_stack() {
+        // Regression guard for the stack-frame-size hazard this slice's own
+        // `encode_gc_struct_array_instr` factoring exists to avoid (see its
+        // doc comment) -- mirrors `deeply_nested_folded_arithmetic_errors_
+        // cleanly_not_stack_overflow`'s own shape, but built entirely out of
+        // struct instructions so a regression in THIS code path specifically
+        // would be caught here even if the arithmetic-only test stayed green.
+        let mut src = String::from("(module (type $s (struct (field $x f32))) (func (result f32) ");
+        for _ in 0..MAX_INSTR_NESTING_DEPTH + 1 {
+            src.push_str("(struct.get $s $x ");
+        }
+        src.push_str("(struct.new $s (f32.const 0))");
+        for _ in 0..MAX_INSTR_NESTING_DEPTH + 1 {
+            src.push(')');
+        }
+        src.push_str("))");
+        let err = parse_module(&src).unwrap_err();
+        assert!(matches!(err, WastParseError::TooDeeplyNested { .. }), "{err:?}");
     }
 
     #[test]

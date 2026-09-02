@@ -1,0 +1,16 @@
+{
+  "language": "marwadi",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:c1da11dc627f1c2a",
+  "lessonIds": [
+    "MW-C19-hear-roti",
+    "MW-W19-tta",
+    "MW-C19-roti",
+    "MW-C19-hear-baati",
+    "MW-C19-baati",
+    "MW-R19-food-new-two",
+    "MW-C19-food-five",
+    "MW-R19-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch24-food-five.tex"
+}

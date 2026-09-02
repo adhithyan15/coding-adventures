@@ -15,7 +15,12 @@ it("pins Gujarati continuity", () => expectLanguageContinuity("gujarati"));
 it("pins Gujarati modality", () => expectLanguageModality("gujarati"));
 it("pins Gujarati lesson-content budgets", () =>
   expectLanguageLessonBudgets("gujarati", {
-    lessons: 165,
+    // HL-C271: 165 -> 179. Chapter 28 adds fourteen lessons -- eight ear-first
+    // time words, one oral checkpoint, two familiar-script writing returns, a
+    // four-skill payoff, its R1 return, and one distant R3 return of the map
+    // words. None of them declares an idiom, sense, or culture claim, so only
+    // the lesson total moves.
+    lessons: 179,
     idioms: 12,
     senses: 6,
     cultureClaims: 15,
@@ -145,6 +150,10 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["25", 7],
     ["26", 7],
     ["27", 8],
+    // HL-C271: chapter 28, "The Day and Its Times". Fourteen lessons, thirteen
+    // of them ear-first: the eight new headwords are heard and said before any
+    // of them is shown, and only two ever reach the page in this chapter.
+    ["28", 14],
   ]);
 });
 
@@ -310,6 +319,17 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "dictation-transcription",
     "delayed-copy",
     "guided-copy",
+    "dictation-transcription",
+    "dictation-transcription",
+    // HL-C271, chapter 28. Five entries out of fourteen lessons, and the ratio
+    // is the point: the chapter teaches eight words by ear and asks the hand
+    // for two of them. The two guided copies are the words for night and
+    // today, both spelled entirely from signs taught before chapter 8; the
+    // delayed copy is the chapter payoff, and the two dictations are its R1
+    // return and the distant R3 return of the map words.
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
     "dictation-transcription",
     "dictation-transcription",
   ]);
@@ -642,7 +662,19 @@ it("closes Gujarati doorway R4 at position 134", () => {
   const beforeCheckpoint = measureContinuity(ordered.slice(0, 134));
   const afterCheckpoint = measureContinuity(lessons);
   expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(248);
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(299);
+  // HL-C271: 299 -> 339. The whole-track figure rose because the TRACK GOT
+  // LONGER, not because chapter 28 skipped a return: every atom the new
+  // chapter introduces is serviced inside it, and the chapter also closes R3
+  // for the map words and gives GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01 its first
+  // revisit ever. What moved is R4 eligibility. R4 opens 80 lessons after an
+  // atom appears, so a 165-lesson track could only ever measure atoms
+  // introduced at or before position 84; at 179 lessons it can measure up to
+  // position 98, and the thirty-six atoms of the core-verb chapters (13-16)
+  // became measurable in the same breath as they were found wanting. That debt
+  // was always there and is now visible, which is the direction this number is
+  // supposed to move. Clearing it needs its own fifth-return slab, filed in
+  // BACKLOG.d rather than smuggled into a vocabulary chapter.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(339);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
@@ -741,6 +773,24 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C23-hear-dukaan-recall",
     "GU-C23-hear-gaam-recall",
     "GU-C23-map-ten-payoff",
+    "GU-C24-aaj-guided-copy",
+    "GU-C24-aaj-reading",
+    "GU-C24-day-parts-four-listening",
+    "GU-C24-day-parts-four-speaking",
+    "GU-C24-hear-aaj-recall",
+    "GU-C24-hear-atyaare-recall",
+    "GU-C24-hear-bapor-recall",
+    "GU-C24-hear-divas-recall",
+    "GU-C24-hear-mahino-recall",
+    "GU-C24-hear-raat-recall",
+    "GU-C24-hear-saanj-recall",
+    "GU-C24-hear-savaar-recall",
+    "GU-C24-raat-guided-copy",
+    "GU-C24-raat-reading",
+    "GU-C24-time-eight-listening",
+    "GU-C24-time-eight-reading",
+    "GU-C24-time-eight-speaking",
+    "GU-C24-time-eight-writing",
     "GU-R03-doorway-three-r1-dictation",
     "GU-R03-doorway-three-r1-reading",
     "GU-R04-doorway-nine-r2-dictation",
@@ -815,6 +865,12 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R23-shaalaa-rasto-r2-reading",
     "GU-R23-shaalaa-rasto-r2-speaking",
     "GU-R23-shaalaa-rasto-r2-writing",
+    "GU-R24-map-ten-r3-listening",
+    "GU-R24-map-ten-r3-speaking",
+    "GU-R24-map-ten-r3-writing",
+    "GU-R24-time-eight-r1-listening",
+    "GU-R24-time-eight-r1-speaking",
+    "GU-R24-time-eight-r1-writing",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",

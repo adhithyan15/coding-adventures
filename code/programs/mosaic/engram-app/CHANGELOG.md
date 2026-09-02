@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **Fixed: the web bundle only worked when served from a domain root.** The
+  React host's `WASM_URL` was `"/engram_engine.wasm"` — root-absolute — while
+  its sibling `engram-host.mjs` had always used the relative form. The `.ts`
+  copy is the one the Vite bundle ships. Combined with Vite's default
+  `base: "/"`, the published v0.3.0 bundle returned 200 for `index.html` and
+  404 for both its script and its engine when served from any subdirectory,
+  rendering a blank page that looks like a working deploy.
+
+  Verified by serving the corrected bundle from `/deep/nested/engram/`: entry
+  point, hashed chunk, and wasm all 200, with the engine's magic bytes intact.
+  The `base` fix is in the Mosaic React emitter, since Engram is the first app
+  to build through `--emit-project` and so the first to depend on the
+  generated Vite config at all.
+
 - Added `scripts/build-web.sh`, a cross-platform build for the web host:
   compiles the engine to wasm, emits the app as a complete React/Vite project,
   and installs the wasm runtime into it. `--build` also produces `dist/`;
@@ -18,6 +32,25 @@
   compiled. Vite copies `public/` into `dist/`, and a missing engine there is a
   runtime failure behind a successful build — the same shape of bug the install
   step exists to prevent, so it is checked rather than assumed.
+
+- **Fixed: the generated Qt project never compiled.** `main.cpp` calls
+  `MosaicHost::registerTypes()` and `mosaicHost.attach(root)` on whatever
+  `MosaicHost` the project ships. Engram installs its own over the generated one
+  through `[host_assets]`, and it declared neither:
+
+  ```
+  main.cpp:27: error: 'registerTypes' is not a member of 'MosaicHost'
+  main.cpp:47: error: 'class MosaicHost' has no member named 'attach'
+  ```
+
+  Added as no-ops, matching Mosaic's generated host, which declares both and
+  leaves both empty — they are extension points, not behaviour. This host reaches
+  the engine over `engram-capi` and needs neither QML type registration nor a
+  root-object handle.
+
+  Nothing caught this because nothing ever compiled the output: `build-all.ps1`
+  emits without building, and `tests/package_compiles.rs` asserts on emitted text.
+  The new Qt CI gate builds it, which is how it surfaced.
 
 - Preserved Engram Anki import/export host-side error details in Qt, SwiftUI,
   and Compose `hostResult` statuses so generated shells show actionable read,

@@ -5,6 +5,7 @@ chapter: 2
 type: phrase
 headword: సంతోషం
 gloss: joy / pleased to meet you
+romanization: "santōṣam"
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [TE-C02-naa-peru]
 sounds: [anusvara]
