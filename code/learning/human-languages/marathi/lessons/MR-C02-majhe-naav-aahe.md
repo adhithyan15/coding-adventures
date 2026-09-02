@@ -1,7 +1,7 @@
 ---
 id: MR-C02-majhe-naav-aahe
-sequence: 75
-chapter: 5
+sequence: 275
+chapter: 9
 type: phrase
 headword: माझं नाव … आहे
 romanization: "mājhaṁ nāv … āhe"

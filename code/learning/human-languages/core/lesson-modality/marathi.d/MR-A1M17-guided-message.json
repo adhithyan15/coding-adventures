@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1M17-guided-message",
     "language": "marathi",
-    "chapter": 20,
-    "sequence": 856,
+    "chapter": 24,
+    "sequence": 1056,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:caf2940c9eb540cf",
+    "sourceHash": "fnv1a64:90bc72006dbce792",
     "detachableSegments": [
       "Writing — connected composition"
     ],

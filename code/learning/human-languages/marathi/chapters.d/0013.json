@@ -1,26 +1,23 @@
 {
   "chapter": 13,
-  "title": "Water, Tea, Milk, and Bhakri",
-  "label": "ch:mr-request-food-drink",
-  "canDo": "I can politely ask for water, tea, milk, or bhakri in Marathi, name which of the four is a Chinese loan and which never touched Sanskrit at all, and say why all three of Marathi's genders already show up in one short chapter.",
+  "title": "Numbers One to Five",
+  "label": "ch:numbers-one-to-five",
+  "canDo": "I can count from one to five in Marathi, say चार as tsār rather than chār, and tell which of Marathi's differences from Hindi is an innovation and which is Hindi holding on to something older.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-COUNT-ONE-TO-FIVE"
   ],
   "payoff": {
-    "lesson": "MR-C10-bhakari",
-    "kind": "production",
-    "summary": "The chapter closes on भाकरी, the request that breaks every pattern the first three set: the reader produces all four requests with कृपया, sorts पाणी and दूध (inherited from Sanskrit) against चहा (a Chinese loan by the overland route) against भाकरी (native to Marathi's own ground, sharing Sanskrit with none of them), and names the three genders the four words already cover.",
+    "lesson": "MR-C06-number-differences",
+    "kind": "task",
+    "summary": "Account for all three tells: दोन's final n copied from the rhyme of tiṇṇi/doṇṇi, पाच dropping the nasal Hindi पाँच still writes, and चार spelled as everywhere else but pronounced with a ts.",
     "assesses": [
-      "MR-LEX-PAANI",
-      "MR-PHRASE-KRUPAYA",
-      "MR-ETYMON-PAANI-DRINK",
-      "MR-LEX-CHAHA",
-      "MR-ETYMON-CHAHA-OVERLAND",
-      "MR-LEX-DUDH",
-      "MR-ETYMON-DUDH-DUGDHA",
-      "MR-LEX-BHAKARI",
-      "MR-ETYMON-BHAKARI-LUMP",
-      "MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER"
+      "MR-LEX-NUMBERS-ONE-TO-FIVE",
+      "MR-SCRIPT-DON-FINAL-N",
+      "MR-SCRIPT-PAACH-NONNASAL",
+      "MR-SOUND-CHA-TSAA",
+      "MR-ETYMON-DON-ANALOGY",
+      "MR-ETYMON-PAACH-NASAL-RETENTION",
+      "MR-HISTORY-SELECTIVE-RETENTION"
     ]
   }
 }

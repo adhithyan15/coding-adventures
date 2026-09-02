@@ -1,146 +1,203 @@
-Marathi, chapter 13: Water, Tea, Milk, and Bhakri.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 13: Numbers One to Five.
+10 lessons. You can do the first 6 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
-पाणी (pāṇī) — the first thing you'll actually ask for.
+Lesson 1 of 10.
+Three signs after a durable gap — durable script retrieval — first doorway batch.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Warm-up.
+Close the earlier script pages and keep one blank line ready.
+
+Wrap-up Recall.
+Cover the answer. Write dhanyavād, then the two-dot breath sign, independent long ā, and breathy bha from their spoken names. Compare: धन्यवाद; ः आ भ. Stop after one retrieval and one repair.
+[question — say your answer, then pause 32 seconds]
+Write dhanyavad, visarga, independent aa, and bha after a durable gap.
+
+
+Lesson 2 of 10.
+Three more signs after a durable gap — durable script retrieval — second doorway batch.
+
+Warm-up.
+Close the earlier script pages and keep one blank line ready.
+
+Wrap-up Recall.
+Cover the answer. Write the e-mark, one-dot anusvāra, and dental ta from their spoken names. Then compare: े ं त. Stop after one retrieval and one repair.
+[question — say your answer, then pause 28 seconds]
+Write e-mark, anusvara, and ta after a durable gap.
+
+
+Lesson 3 of 10.
+Keep three voiced consonants apart — durable script retrieval — voiced consonant batch.
+
+Warm-up.
+Close the earlier script pages and keep one blank line ready.
+
+Wrap-up Recall.
+Cover the answer. Write dental da, breathy dha, and quiet ba from sound. Then compare: द ध ब. Stop after one retrieval and one repair.
+[question — say your answer, then pause 28 seconds]
+Write da, dha, and ba after a durable gap.
+
+
+Lesson 4 of 10.
+The final three doorway signs — durable script retrieval — final doorway batch.
+
+Warm-up.
+Close the earlier script pages and keep one blank line ready.
+
+Wrap-up Recall.
+Cover the answer. Write ya, Marathi curled-back ḷa, and va from sound. Then compare: य ळ व. Stop after one retrieval and one repair.
+[question — say your answer, then pause 28 seconds]
+Write ya, lla, and va after a durable gap.
+
+
+Lesson 5 of 10.
+एक, दोन, तीन, चार, पाच — one to five.
 
 Warm-up.
 [pause 2 seconds]
-आवडणे told you what you like; प्रेम करणे what you love. This chapter asks for something smaller and more frequent than either: a drink.
+Marathi and Hindi both use Devanagari and both descend from Sanskrit, so their numbers look almost identical. Almost is where the interest is.
 
-You'll want to know: पाणी.
-पाणी — pāṇī — water.
+You'll want to know: the five.
+[a table of 5 rows, read aloud]
+1. Marathi: एक. said: ek.
+2. Marathi: दोन. said: don.
+3. Marathi: तीन. said: tīn.
+4. Marathi: चार. said: chār — but see below.
+5. Marathi: पाच. said: pāch.
 
-The letters in this word.
-Nothing new here. प pa you have from punhā; ण you have from every -णे verb so far; ी is the familiar long ī. पा-णी.
-
-Grammar Lens: asking politely.
-पाणी, कृपया. — pāṇī, kṛpayā. — Water, please.
-कृपया kṛpayā is Sanskrit's own instrumental of कृपा kṛpā, "mercy, kindness" — literally "by kindness, out of kindness." Name the thing you want, add कृपया, and the request is complete: no verb for "give" required. This is the pattern the whole chapter reuses, and the first time this track has built a "please" of any kind — a spine node this book had left empty until now.
-
-The word, taken apart — the oldest drinking word you own.
-पाणी continues Maharastri Prakrit pāṇīa, from Sanskrit पानीय pānīya, "that which is to be drunk," built on पा pā-, "to drink." That root is Indo-European peh₃(i)-, and English keeps two disguised pieces of it: potion and poison both come through Latin potare, "to drink" — a poison, by origin, is just a drink gone wrong. Greek turned the same idea into sympotēs, "one who drinks together," which English keeps as symposium.
+What you've built: three Marathi tells.
+Set them against Hindi. Two differences are visible and one is audible:
+[a table of 3 rows, read aloud]
+number: 2. Hindi: दो do. Marathi: दोन don: final n.
+number: 5. Hindi: पाँच pāṁch. Marathi: पाच pāch: no nasal mark.
+number: 4. Hindi: चार chār. Marathi: चार tsār: same spelling, different sound.
+Do not explain all three histories yet. First make the five forms automatic; the next lesson earns the deeper comparison.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: pāṇī — water]
+[your turn — say: "ek, don, tīn, tsār, pāch"]
 [pause 8 seconds for the answer]
-[your turn — say: pāṇī, kṛpayā. — water, please]
+[your turn — say: the visible tells — don has n; pāch has no nasal mark]
 [pause 8 seconds for the answer]
-[your turn — run: malā marāṭhī āvaḍte, then pāṇī, kṛpayā — liking and requesting, side by side]
+[your turn — say: the audible tell — written chār, Marathi tsār]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask for water politely. (Pāṇī, kṛpayā.) What does कृपया literally mean? ("By kindness.") Which two English words for a drink, and one for a whole gathering of them, share pāṇī's root? (Potion, poison, symposium.)
-Sources: Wiktionary: पाणी (pāṇī); Wiktionary: कृपया.
+Count to five in Marathi. (Ek, don, tīn, tsār, pāch.) Where does Marathi add a letter compared with Hindi? (दोन, don.) Which form drops a nasal mark? (पाच, pāch.) What differs in चार without differing in spelling? (Marathi's च is nearer ts before ā.) Next: explain where those differences came from.
 
 
-Lesson 2 of 4.
-चहा (chahā) — a word that took the overland road.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 6 of 10.
+Why Marathi two rhymes with three — why Marathi two rhymes with three, and why Hindi preserves a different piece of five.
 
 Warm-up.
 [pause 2 seconds]
-पाणी, कृपया (pāṇī, kṛpayā) — water, please. Say it once more, then ask for something that is not water at all.
+Count once: ek, don, tīn, tsār, pāch. Which two words end in n? (Don and tīn.)
 
-You'll want to know: चहा.
-चहा — chahā — tea.
-चहा, कृपया. — chahā, kṛpayā. — Tea, please.
+The word, taken apart — दोन borrowed from “three”.
+The tempting guess is that Marathi दोन don kept something Hindi दो do lost. It did not.
+Sanskrit's neuter word for three, त्रीणि trī́ṇi, became Prakrit tiṇṇi. In three, the ṇ genuinely belongs to the word. The doubled consonant is a Prakrit trade for the lost r.
+The word for two was then reshaped to match its neighbour: Prakrit doṇṇi copied the shape of tiṇṇi. Marathi don's final n is therefore an innovation, a rhyme borrowed from the number next door. Hindi do simply never took it.
+English numbers did this too: four acquired its initial f- by analogy with five. Familiar sequences pull neighbouring words toward one another.
 
-The letters in this word.
-Nothing new. च you already say near ts from Chapter 9's चार; ह is नमस्कार's; ा the familiar long ā. Cha-hā.
+What you've built: पाच and the nasal Hindi kept.
+Marathi पाच pāch and Hindi पाँच pāṁch tell the opposite story. Hindi's chandrabindu ँ records the nasal of Sanskrit pañca; Marathi's spelling drops it.
+So neither language is simply “older.” Marathi innovated in don, while Hindi retained an older feature in pāṁch. Comparing both descendants reveals the history that either one alone could hide.
 
-The word, taken apart — the one word in this chapter with no Sanskrit in it.
-Every other word in this chapter reaches back to Sanskrit. चहा (chahā) does not — it is a loanword from Mandarin cha, and it reached Marathi by the overland route, through Persian and Turkic trade, the same road that gave Hindi चाय chāy, Bengali cha, and Persian chāy their words for the same drink. A second branch of the same plant travelled by sea: Dutch traders carried the Hokkien word te to Western Europe, which is why English says tea, not cha. One plant, two words, two trade routes.
-चहा (chahā) is also this chapter's first masculine noun, against पाणी (pāṇī)'s neuter — a reminder that Marathi's three genders do not sort words by where they came from.
+Sounds you'll need: चार and the change its spelling hides.
+Both write चार, but Marathi pronounces च before ā nearer ts: tsār. The letters stayed aligned while the sound moved.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: chahā, kṛpayā — tea, please]
+[your turn — say: the borrowed rhyme — tiṇṇi … doṇṇi]
 [pause 8 seconds for the answer]
-[your turn — name: the two trade routes — overland to chāy/chahā, by sea to tea]
+[your turn — say: innovation — Marathi don's final n]
 [pause 8 seconds for the answer]
-[your turn — say: both requests — pāṇī, kṛpayā … chahā, kṛpayā]
+[your turn — say: retention — Hindi pāṁch's nasal]
+[pause 8 seconds for the answer]
+[your turn — say: same spelling, shifted sound — chār / tsār]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask for tea politely. (Chahā, kṛpayā.) Which language does चहा (chahā) ultimately come from? (Mandarin Chinese, cha.) Which English word for the same plant took the sea route instead? (Tea.)
-Sources: Wiktionary: चहा (chahā).
+Did Marathi don preserve an ancient ending? (No: two copied three.) Which language retains Sanskrit pañca's nasal in writing? (Hindi.) Why can neither daughter be called simply older? (Each changed or retained a different feature.) What does Marathi change without respelling चार? (Ch shifts toward ts before ā.)
+[question — say your answer, then pause 8 seconds]
+Did Marathi don preserve an ancient final n?
 
 
-Lesson 3 of 4.
-दूध (dūdh) — back to Sanskrit, and a surprising English cousin.
+Lesson 7 of 10.
+The six marks (sahā khuṇā), with the page shut — durable retrieval of the six marks, by sound and place, with no page.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-चहा (chahā) broke the pattern — a loanword with no Sanskrit behind it. This next word rejoins पाणी (pāṇī)'s family: inherited, traceable, Indo-European.
-
-You'll want to know: दूध.
-दूध — dūdh — milk.
-दूध, कृपया. — dūdh, kṛpayā. — Milk, please.
-
-The letters in this word.
-One new mark: ू, the long ū vowel sign — a longer hook under the consonant than any you've written so far. द you have from dhanyavād and madat; ध from dhanyavād too. Dū-dh.
-
-The word, taken apart — milk, and the root behind "doughty".
-दूध (dūdh) continues Maharastri Prakrit duddha, from Sanskrit दुग्ध dugdha, "milked, milk" — literally the past participle of दुह् duh-, "to milk." That root traces to Indo-European dʰewgʰ-, "to be fit, to be of use, to produce" — milking as producing something useful. Germanic kept the same root for a different sense of "useful, capable": English doughty, "brave and able," is dūhtig in Old English, built on this exact root. Milk and doughtiness, four thousand years apart, share one ancestor.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: dūdh, kṛpayā — milk, please]
-[pause 8 seconds for the answer]
-[your turn — say: what dugdha literally was — "milked"]
-[pause 8 seconds for the answer]
-[your turn — run: all three requests — pāṇī, chahā, dūdh — kṛpayā]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Ask for milk politely. (Dūdh, kṛpayā.) What English word for "brave and capable" shares दूध (dūdh)'s root? (Doughty.)
-Sources: Wiktionary: दूध (dūdh).
-
-
-Lesson 4 of 4.
-भाकरी (bhākarī) — the request that breaks the pattern.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
-[pause 2 seconds]
-Three requests so far: pāṇī, chahā, dūdh. Two inherited from Sanskrit, one borrowed from Chinese. The fourth belongs to neither story.
-
-You'll want to know: भाकरी.
-भाकरी — bhākarī — a round flatbread, the everyday Maharashtrian bread — of jowar, bajra, or rice flour, not wheat.
-भाकरी, कृपया. — bhākarī, kṛpayā. — Bhakri, please.
-
-The letters in this word.
-Nothing new. भ from bheṭū, क from everywhere, र from marāṭhī, ी the familiar long ī. Bhā-ka-rī.
-
-The word, taken apart — the one word that stayed home.
-भाकरी is inherited from Old Marathi bhākarī, from Proto-Indo-Aryan bʰakkaras, "heap, pile, lump" — the flatbread named for the lump of dough it started as. That reconstruction is as far back as the sources trace it; its own root before Proto-Indo-Aryan is not established, so this lesson claims none rather than inventing one.
-Unlike पाणी (pāṇī) and दूध (dūdh), भाकरी (bhākarī) is not a Sanskrit tatsama or tadbhava — it never touched classical Sanskrit. And unlike चहा (chahā), it is no loanword either — a regional word, close kin to Gujarati bhākhrī and Kannada bakkari, and simply not Hindi's word for bread: Hindi asks for रोटी roṭī, an unrelated root. A Delhi shopkeeper would not recognize the request; a Pune one would hand you lunch.
-
-Why it's said this way.
-Say the four requests once more and notice their genders: पाणी (pāṇī) neuter, चहा (chahā) masculine, दूध (dūdh) neuter, भाकरी (bhākarī) feminine. Four everyday nouns, all three of Marathi's genders, in one short chapter — proof, alongside the verbs' present-tense endings, that the third gender Hindi lost is not a museum piece here.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: all four requests, kṛpayā each time — pāṇī, chahā, dūdh, bhākarī]
-[pause 8 seconds for the answer]
-[your turn — say: "I eat bhakri" — mī bhākarī khāto or khāte, putting Chapter 7's खाणे to work on a word it never had before]
-[pause 8 seconds for the answer]
-[your turn — name: which of the four is neither Sanskrit nor a loanword — bhākarī]
-[pause 8 seconds for the answer]
+Nothing to look at. Every answer here is a place on an imaginary line: before the letter, above it, or under it.
 
 Wrap-up Recall.
-[pause 3 seconds]
-What did भाकरी's Proto-Indo-Aryan ancestor mean? (A heap, a lump.) What does Hindi ask for instead? (रोटी, an unrelated root.) Give all four requests with their genders. (पाणी (pāṇī) n, चहा m, दूध n, भाकरी f — all with कृपया.) Sort the four sources: two from Sanskrit, one a Chinese loan, one purely regional. (Pāṇī, dūdh — Sanskrit; chahā — Chinese; bhākarī — regional.)
-Sources: Wiktionary: भाकरी (bhākarī).
+[pause 2 seconds]
+Which mark is written before the letter it is read after? (Short i.)
+[pause 2 seconds]
+Which two hang below the line? (Short u and long ū.)
+[pause 2 seconds]
+Which curl opens the other way from short u? (The vocalic r.)
+[pause 2 seconds]
+Which nasal mark sits in a crescent? (The candrabindu.)
+[pause 2 seconds]
+And which vowel needs no mark at all, because every consonant already carries it? (Short a.)
+[question — say your answer, then pause 42 seconds]
+Say where each of the six marks (sahā khuṇā) goes, and which of the two below-the-line hooks travels further.
+
+
+Lesson 8 of 10.
+Two rows, rebuilt from two questions — durable retrieval of the two rows, by sound and place, with no page.
+
+Warm-up.
+You do not need to remember seven letters. You need to remember two questions and the order they come in.
+
+Wrap-up Recall.
+[pause 2 seconds]
+Back of the mouth, four steps. (ka, kha, ga, gha.)
+[pause 2 seconds]
+Roof of the mouth, the same four. (ca, cha, ja, jha.)
+[pause 2 seconds]
+Which of the eight has both the voice and the breath at the palate? (jha.)
+[pause 2 seconds]
+And which one does Marathi also say as ts? (ca.)
+[question — say your answer, then pause 45 seconds]
+Say the four velar letters and the four palatal ones in order, naming the voice and breath state of each.
+
+
+Lesson 9 of 10.
+The curled row (vaḷlelī olī), without a model — durable retrieval of the curled row, by sound and place, with no page.
+
+Warm-up.
+One question decides all five: where is the tongue, and is it doing anything different from the dental row you learned first?
+
+Wrap-up Recall.
+[pause 2 seconds]
+Tongue curled back: plain, breathy, voiced, nasal. (ṭa, ṭha, ḍa, ṇa.)
+[pause 2 seconds]
+Which of them ends every infinitive you have learned? (ṇa.)
+[pause 2 seconds]
+Lips closed, voice off, one dot fewer than ba. (pa.)
+[question — say your answer, then pause 40 seconds]
+Name the four curled letters in order and the lip letter that differs from ba by one dot.
+
+
+Lesson 10 of 10.
+The last six (śevaṭce sahā), without a model — durable retrieval of the last six, by sound and place, with no page.
+
+Warm-up.
+Two letters your mouth keeps apart, two it no longer does, and three vowels that come in more than one shape.
+
+Wrap-up Recall.
+[pause 2 seconds]
+Which l does Hindi not have? (The curled one.)
+[pause 2 seconds]
+Which two sibilants are kept apart only in spelling? (śa and ṣa.)
+[pause 2 seconds]
+How many written forms does the u vowel have? (Four.)
+[pause 2 seconds]
+And which vowel opens the word for one? (e.)
+[question — say your answer, then pause 42 seconds]
+Name the plain l beside the curled one, the two sibilants written apart but said alike, and the three vowels that also have marks.

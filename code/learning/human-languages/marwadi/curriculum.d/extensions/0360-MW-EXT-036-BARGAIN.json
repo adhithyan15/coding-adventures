@@ -1,0 +1,26 @@
+{
+  "id": "MW-EXT-036-BARGAIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can react to a price as too high and make one polite counter-offer, holding a three-turn exchange in four separately scored skills.",
+  "prerequisites": [
+    "MW-EXT-035-PRICE-QUESTION"
+  ],
+  "lessons": [
+    "MW-C23-hear-ghano",
+    "MW-C23-ghano",
+    "MW-C23-hear-price-answer",
+    "MW-C23-price-answer",
+    "MW-R23-answer-two",
+    "MW-C23-hear-thodu",
+    "MW-C23-thodu",
+    "MW-C23-hear-karo",
+    "MW-C23-karo",
+    "MW-C23-hear-bargain-request",
+    "MW-C23-bargain-request",
+    "MW-R23-bargain-two",
+    "MW-C23-counter-four",
+    "MW-R23-script-close"
+  ]
+}

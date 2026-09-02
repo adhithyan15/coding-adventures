@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C22-pine
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 880
-chapter: 22
+sequence: 1080
+chapter: 26
 type: word
 headword: पिणे
 romanization: piṇe

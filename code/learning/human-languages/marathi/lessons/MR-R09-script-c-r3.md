@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R09-script-c-r3
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 337
-chapter: 9
+sequence: 537
+chapter: 13
 type: review
 headword: द / ध / ब
 romanization: "da / dha / ba"

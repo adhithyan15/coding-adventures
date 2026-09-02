@@ -10,7 +10,8 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
 import { measureScriptClosure } from "../src/script-closure.js";
-import { loadEverything } from "../src/loader.js";
+import { loadChapterPolicy, loadEverything } from "../src/loader.js";
+import { measureScriptRamp } from "../src/ramp.js";
 
 // TAMIL LETTER KA, MA, NA; TAMIL SIGN VIRAMA.
 const KA = "க";
@@ -201,14 +202,29 @@ describe("the real corpus", () => {
     // The point of the whole module. HL08's glyph budget flags tens of lessons
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
-    expect(report.summary.violations).toBeGreaterThan(500);
+    //
+    // That claim is asserted as a COMPARISON rather than as a magic floor,
+    // because the floor repeated exactly the mistake the `tracksTeachingNothing`
+    // line below already records. `toBeGreaterThan(500)` went red at 498 the
+    // moment Marathi's second Devanagari runway retired its forty-four
+    // violations alongside Urdu's Nastaliq ladder moving to the front of its
+    // book. A test that fails when debt is PAID is pointing the wrong way.
+    //
+    // The comparison keeps the claim without ratcheting: whatever the absolute
+    // numbers become, closure must still find several times what the pace budget
+    // finds, or this module has stopped earning its place beside HL08.
+    const paceViolations = measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations;
+    expect(paceViolations).toBeGreaterThan(0);
+    expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
+    // And a CEILING on the absolute debt, so it may fall and never grow.
+    // 498 as of the Marathi runway; whoever raises it writes down why.
+    expect(report.summary.violations).toBeLessThanOrEqual(498);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
     // a track, 8 -> 5, and the floor failed. Debt assertions belong the other way
     // up, so this is now a CEILING on the same footing as the forward-reference
     // one — it may fall, never grow, and whoever raises it writes down why.
-    // `violations` above still carries this test's stated point on its own.
     expect(report.summary.tracksTeachingNothing).toBeLessThanOrEqual(5); // 8 -> 5: chinese (HL-C209), japanese (HL-C211), gujarati (HL-C215)
   });
 

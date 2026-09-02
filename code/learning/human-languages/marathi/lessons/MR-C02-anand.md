@@ -1,7 +1,7 @@
 ---
 id: MR-C02-anand
-sequence: 95
-chapter: 5
+sequence: 295
+chapter: 9
 type: phrase
 headword: भेटून आनंद झाला
 romanization: "bheṭūn ānand jhālā"
@@ -38,7 +38,7 @@ the feeling **joy**.
 
 The verb **झाला** (*jhālā*, "happened/became") also carries gender — *jhālā* by
 default here for the event *ānand*. And **भेटून** (*bheṭūn*) is built on **भेटणे**
-(*bheṭṇe*, "to meet") — a verb you will meet again in Chapter 7's goodbye, *punhā
+(*bheṭṇe*, "to meet") — a verb you will meet again in Chapter 11's goodbye, *punhā
 bheṭū* ("we'll meet again").
 
 ## Guided Practice

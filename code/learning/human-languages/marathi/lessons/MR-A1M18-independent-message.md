@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M18-independent-message
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 857
+sequence: 1057
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: independent named-reader message
 gloss: write the practised 30-40-word message from reader and purpose alone

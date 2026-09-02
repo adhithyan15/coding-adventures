@@ -1,17 +1,16 @@
 {
   "language": "telugu",
   "chapter": 8,
-  "sourceHash": "fnv1a64:16af43b3c588d608",
+  "sourceHash": "fnv1a64:f7745cd75aeaea23",
   "lessonIds": [
     "TE-C08-dayachesi",
-    "TE-S03-letter-ka",
-    "TE-S111-letter-sa"
+    "TE-S112-letter-ca"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "telugu/narration/ch08.txt",
   "json": "telugu/narration/ch08.json",
-  "textHash": "fnv1a64:6e79b4315fb81f68",
-  "jsonHash": "fnv1a64:98f0add5506fd627",
+  "textHash": "fnv1a64:259156778aab600f",
+  "jsonHash": "fnv1a64:75694619ec593f01",
   "findings": []
 }

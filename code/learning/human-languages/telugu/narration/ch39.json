@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea and Milk, Two Roads",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0cf1da0f4a0e2ba6",
+  "sourceHash": "fnv1a64:a0bbc1f45d7947fd",
   "lessons": [
     {
       "id": "TE-C39-tii",
@@ -278,7 +278,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:816feb487b32df64",
+      "sourceHash": "fnv1a64:82f3f1e3399aaef9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -305,7 +305,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: థ — what does it do?"
+              "text": "Before the new one: థ — what does it do? And one from further back: జ?"
             },
             {
               "kind": "pause",
@@ -423,6 +423,10 @@
             {
               "kind": "speech",
               "text": "Which character is this — ◌ృ? What vowel does it put on the consonant it attaches to, and what does it take off? (Puts ṛ on; takes the built-in a off.) Which standing letter is its partner? (ఋ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌ీ — what does it do?"
             }
           ]
         }

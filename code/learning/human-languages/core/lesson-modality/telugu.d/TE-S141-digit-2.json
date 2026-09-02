@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S141-digit-2",
+    "language": "telugu",
+    "chapter": 2,
+    "sequence": 115,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a6780c73707a3b67",
+    "detachableSegments": [
+      "Script you'll notice: ౨",
+      "Writing: ౨ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

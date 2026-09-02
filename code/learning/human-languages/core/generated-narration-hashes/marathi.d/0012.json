@@ -1,18 +1,19 @@
 {
   "language": "marathi",
   "chapter": 12,
-  "sourceHash": "fnv1a64:7d5c0d8371241f77",
+  "sourceHash": "fnv1a64:4e073fd67c477dbc",
   "lessonIds": [
-    "MR-C09-ghene",
-    "MR-C09-vicharne",
-    "MR-C09-madat-karne",
-    "MR-C09-avadne"
+    "MR-C05-bolne",
+    "MR-C05-mi-marathi-bolto",
+    "MR-C05-rahne",
+    "MR-C05-kaam-karne",
+    "MR-C05-practice"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 2,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch12.txt",
   "json": "marathi/narration/ch12.json",
-  "textHash": "fnv1a64:330d538828f25c5d",
-  "jsonHash": "fnv1a64:1d2faf10995c4ead",
+  "textHash": "fnv1a64:0ea038c53e1d9527",
+  "jsonHash": "fnv1a64:af3f2954782d1245",
   "findings": []
 }

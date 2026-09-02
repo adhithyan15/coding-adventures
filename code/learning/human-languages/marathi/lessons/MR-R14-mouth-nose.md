@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R14-mouth-nose
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 690
-chapter: 17
+sequence: 890
+chapter: 21
 type: review
 headword: तोंड / नाक
 romanization: tond / naak

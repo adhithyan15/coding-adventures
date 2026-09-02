@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R23-wellbeing-verbs",
     "language": "marathi",
-    "chapter": 23,
-    "sequence": 960,
+    "chapter": 27,
+    "sequence": 1160,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a9e773bd3d2f4dd0"
+    "sourceHash": "fnv1a64:58c175d0fa31aedd"
   },
   "findings": []
 }

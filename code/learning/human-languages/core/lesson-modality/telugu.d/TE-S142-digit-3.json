@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S142-digit-3",
+    "language": "telugu",
+    "chapter": 3,
+    "sequence": 145,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2319bfd7397a5881",
+    "detachableSegments": [
+      "Script you'll notice: ౩",
+      "Writing: ౩ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

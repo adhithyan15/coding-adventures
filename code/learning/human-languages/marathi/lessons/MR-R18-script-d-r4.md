@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R18-script-d-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 810
-chapter: 18
+sequence: 1010
+chapter: 22
 type: review
 headword: य / ळ / व
 romanization: "ya / lla / va"

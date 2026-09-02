@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R18-script-c-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 800
-chapter: 18
+sequence: 1000
+chapter: 22
 type: review
 headword: द / ध / ब
 romanization: "da / dha / ba"

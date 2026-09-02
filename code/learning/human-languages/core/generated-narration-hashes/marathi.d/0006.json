@@ -1,20 +1,22 @@
 {
   "language": "marathi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:22a90b76fa956f06",
+  "sourceHash": "fnv1a64:0ad6cedb73130fa8",
   "lessonIds": [
-    "MR-C03-kasa",
-    "MR-C03-tumhi-kase-aahat",
-    "MR-C03-mi",
-    "MR-C03-mi-bara-aahe",
-    "MR-C03-kaahi-harkat-nahi",
-    "MR-C03-practice"
+    "MR-W06-kha",
+    "MR-W06-ga",
+    "MR-W06-gha",
+    "MR-W06-ca",
+    "MR-W06-cha",
+    "MR-W06-ja",
+    "MR-W06-jha",
+    "MR-R06-two-rows-recall"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch06.txt",
   "json": "marathi/narration/ch06.json",
-  "textHash": "fnv1a64:832a05c3830ccaf3",
-  "jsonHash": "fnv1a64:3aa9b4cbf4b3ced8",
+  "textHash": "fnv1a64:3255d2d81537fb0d",
+  "jsonHash": "fnv1a64:9ee594d075be1449",
   "findings": []
 }

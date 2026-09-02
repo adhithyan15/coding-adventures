@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R14-eye-ear",
     "language": "marathi",
-    "chapter": 17,
-    "sequence": 680,
+    "chapter": 21,
+    "sequence": 880,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f2af9dd62aa85f2a"
+    "sourceHash": "fnv1a64:5ad6d91f98528bcb"
   },
   "findings": []
 }

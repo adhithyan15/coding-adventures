@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C07-mahit-asne
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 430
-chapter: 10
+sequence: 630
+chapter: 14
 type: word
 headword: माहीत असणे
 romanization: māhīt asṇe

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F04-first-three-select
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 860
+sequence: 1060
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "नाव · शहर · भाषा"
 gloss: choose which known profile detail belongs in each of the first three form rows

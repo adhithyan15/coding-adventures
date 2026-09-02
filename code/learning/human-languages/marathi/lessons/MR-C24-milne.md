@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C24-milne
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 1000
-chapter: 24
+sequence: 1200
+chapter: 28
 type: word
 headword: मिळणे
 romanization: miḷṇe
