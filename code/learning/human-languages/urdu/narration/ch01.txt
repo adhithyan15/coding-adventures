@@ -1,28 +1,32 @@
 Urdu, chapter 1: Greetings and responses.
-6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 6.
 سلام (salām) — hello across a family of languages.
 
-Notice the direction.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — notice the direction until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+This is the first Urdu word in this book, and the one you will reach for most. Nothing has to be written today. Look, listen, say it.
+
+Script — notice the direction.
 Urdu is written right to left, traditionally in the flowing Nastaliq style. Begin with four letters:
 س (sīn) s, ل l, ا long ā, م m becomes salām.
 Letters usually connect inside a word. The tall ا does not connect onward to the final م, creating a visible break. That is enough script for today.
+Each of these letters gets a lesson of its own later; their shapes and names here follow Zero Zabar: the Urdu alphabet.
 
-Meaning and history.
+The word, taken apart.
 salām is both a greeting and the word “peace.” Urdu received it through the Persian-Arabic literary world. Its consonants s-l-m belong to a Semitic family concerned with peace, safety, and wholeness. Persian salâm and Arabic salām are the same historical word; Hebrew shalom is a relative.
 
-Use it.
-Say salām as a friendly short greeting. You will later extend it into the full conventional exchange.
+Guided Practice — use it.
+Say salām as a friendly short greeting. You will later extend it into the full conventional exchange. For now the safest reply is the same word back.
 A: سلام! — salām!
 B: سلام! — salām!
 
-Quick recall.
-Read سلام right to left. Which letter carries the long ā? ا. Say salām once while picturing the meaning “peace.”
-
-Source.
-Zero Zabar: the Urdu alphabet.
+Wrap-up Recall.
+Read سلام right to left. Which letter carries the long ā? ا. Now cover the romanization and say salām once, picturing “peace.”
 
 
 Lesson 2 of 6.
@@ -67,7 +71,7 @@ Urdu normally omits short-vowel marks. In شکریہ (shukriyā), the visible le
 You already know ش sh, ک k, and ر r. Add ی y/i and final ہ. That is two new shapes, not five. The final vowel is pronounced long ā in this familiar expression.
 
 The word, taken apart.
-The central consonants sh-k-r belong to the Arabic family for gratitude and thanks; Arabic shukran is a close comparison. Urdu shukriyā reflects the centuries-long Persian-Arabic layer of its vocabulary.
+The central consonants sh-k-r belong to the Arabic family for gratitude and thanks; Arabic shukran is a close comparison. Urdu shukriyā reflects the centuries-long Persian-Arabic layer of its vocabulary — and for all that history it is an ordinary, everyday modern Urdu expression.
 
 Guided Practice.
 salām — Hello. You can say it; its letters are still ahead of you, so it is printed here the way you say it.
@@ -92,6 +96,7 @@ The two words.
 The phrase is written right to left, so جی is the word on the right:
 جی jī + ہاں hā̃ becomes jī hā̃ becomes yes.
 In جی, ج gives j and ی stretches the vowel to ī. In ہاں, the final sign ں marks a nasal vowel: let some air pass through your nose as you say ā. It is not a full English n at the end.
+That sign has a name — nūn ghunna — and you will meet it again.
 
 Grammar Lens: respect inside “yes”.
 ہاں alone means “yes.” جی adds respect and attentive warmth; it can also be used by itself as a polite response. Learning jī hā̃ first gives you a safe answer for many situations.
@@ -148,7 +153,7 @@ Stretch ī slightly and nasalize it. The final ں does not add a strong separate
 
 Grammar Lens: one word, two future jobs.
 As a complete answer, nahī̃ means “no.” Inside a sentence it commonly means “not.” That second job will matter when the track introduces verbs. Today you only need the complete answer.
-This is inherited Indo-Aryan vocabulary and is shared with Hindi नहीं nahī̃. The scripts differ, but the spoken word and grammar align closely.
+Unlike the Persian-Arabic vocabulary that opened this chapter, this word is inherited Indo-Aryan, part of Urdu's own core. Hindi says the same spoken word, nahī̃, and writes it in a different script — which you do not need here. The page looks different; the word and its grammar align closely.
 
 Guided Practice.
 jī hā̃ — yes. Said, not yet read: its first letter is one you have not met.

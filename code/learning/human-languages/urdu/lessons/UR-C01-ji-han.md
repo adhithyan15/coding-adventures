@@ -51,6 +51,8 @@ In **جی**, **ج** gives *j* and **ی** stretches the vowel to *ī*. In **ہا�
 the final sign **ں** marks a nasal vowel: let some air pass through your nose
 as you say *ā*. It is not a full English *n* at the end.
 
+That sign has a name — **nūn ghunna** — and you will meet it again.
+
 ## Grammar Lens: respect inside “yes”
 <!-- hl-knowledge: introduces=[UR-REGISTER-JI-RESPECT]; assesses=[] -->
 
