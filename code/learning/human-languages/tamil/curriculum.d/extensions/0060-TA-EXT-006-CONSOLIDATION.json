@@ -1,0 +1,11 @@
+{
+  "id": "TA-EXT-006-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the five Chapter 1 words in a short spoken exchange.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C01-practice"
+  ]
+}

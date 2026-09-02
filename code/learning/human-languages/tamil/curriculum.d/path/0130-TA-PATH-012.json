@@ -5,11 +5,14 @@
     "TA-C04-po",
     "TA-C04-poy-varugiren",
     "TA-C04-mindum-sandippom",
-    "TA-C04-naalai"
+    "TA-C04-naalai",
+    "TA-C04-practice"
   ],
   "before": [
     "TA-EXT-012-LANGUAGE-SPECIFIC"
   ],
-  "inline": [],
+  "inline": [
+    "TA-EXT-012-CONSOLIDATION"
+  ],
   "after": []
 }

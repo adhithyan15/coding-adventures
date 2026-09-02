@@ -201,7 +201,13 @@ describe("the real corpus", () => {
     // The point of the whole module. HL08's glyph budget flags tens of lessons
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
-    expect(report.summary.violations).toBeGreaterThan(500);
+    // Was `toBeGreaterThan(500)`, and it just failed for the reason the note
+    // below already predicted for its neighbour: Tamil's closure tranche took
+    // that track 21 -> 0, the corpus fell 510 -> 489, and a FLOOR on debt went
+    // red because debt was PAID. A floor on debt rewards leaving debt in place.
+    // Flipped to the ceiling its neighbour already uses: it may fall, never
+    // grow, and whoever raises it writes down why.
+    expect(report.summary.violations).toBeLessThanOrEqual(489); // 510 -> 489: tamil (HL-C194)
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed

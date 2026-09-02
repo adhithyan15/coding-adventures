@@ -53,7 +53,7 @@ person or many.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PHONO-VANAKKAM-01] -->
 
-Say it *va-ṇak-kam*. The ṇ is a **retroflex** *n* —
+Say it *va-ṇak-kam*. The ṇ is a **retroflex** *n* —
 curl the tongue back to the roof of the mouth, further back than an English
 *n*. The *kk* is **held**, a beat longer than a single *k*,
 and that length is doing real work: Tamil distinguishes words by it.
@@ -61,8 +61,8 @@ and that length is doing real work: Tamil distinguishes words by it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TA-ETYMON-VANAKKAM-02]; assesses=[] -->
 
-வணக்கம் (*vaṇakkam*) comes from the verb வணங்கு
-(*vaṇaṅku*), “to bow, to pay homage.” Turned into a noun of the action,
+**வணக்கம்** (*vaṇakkam*) comes from the verb *vaṇaṅku*, “to bow, to pay
+homage.” Turned into a noun of the action,
 it means “a bowing, an act of reverence” — the idea of *namaste*,
 but from a **native Tamil** root, not a Sanskrit one. That is Tamil's
 whole personality: an old language that keeps its home-grown words where its

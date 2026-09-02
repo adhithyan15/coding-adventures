@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TA-C01-illai
+spine_node: SPINE-RESPOND-BASIC
 sequence: 40
 chapter: 1
 type: word
@@ -10,18 +12,33 @@ concept_tag: RESPONSE-NO
 prerequisites: [TA-C01-aam]
 sounds: [independent-vowel-i, matra-ai, pulli-virama]
 roots: [il]
-est_minutes: 1
 reviews_of: [TA-C01-aam]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-LEX-C01-ILLAI-01]
+practises:
+  knowledge: [TA-LEX-C01-ILLAI-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
 ---
+
 
 # இல்லை (illai) — "no"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The other half of the pair. One word, and then the lesson that puts
 all five together.
 
-## The word
+## You'll want to know: இல்லை
+<!-- hl-knowledge: introduces=[TA-LEX-C01-ILLAI-01]; assesses=[] -->
 
 **இல்லை** — *illai* — **"no."**
 
@@ -38,7 +55,7 @@ five words together.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Say it *il-lai*, with the *l* **held** across the join — the
-same doubling you met in *vaṇak-kam*. The ending is the diphthong
+same doubling you met in *vaṇak-kam*. The ending is the diphthong
 *ai*, as in English “eye,” not two separate vowels.
 
 ## The word, taken apart
@@ -46,8 +63,8 @@ same doubling you met in *vaṇak-kam*. The ending is the diphthong
 
 இல்லை (*illai*) is built on இல் (*il*), “not-being,
 absence” — so it is not really the adjective “no” but the statement
-**“[it] is not, [there] is not.”** Its positive twin is உண்டு
-(*uṇḍu*), “there is.”
+**“[it] is not, [there] is not.”** Its positive twin is *uṇḍu*,
+“there is.”
 
 ## Grammar lens
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -60,6 +77,7 @@ everyday “no” and the word that makes a whole sentence negative — a deeply
 Dravidian habit, unlike English or Hindi.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-ILLAI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "illai" — two beats, the *l* held across the join]
@@ -67,6 +85,7 @@ Dravidian habit, unlike English or Hindi.
 - [YOU SAY: it alone, as a complete answer]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-ILLAI-01] -->
 
 [PAUSE 3s] Say **இல்லை**. Is it closer to English *no*, or to *is not*?
 (**Is not** — it is a statement, not a label.) Next: the word for thank you.

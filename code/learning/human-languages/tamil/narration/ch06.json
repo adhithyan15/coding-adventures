@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Dative Case and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:51f51964a94c56b4",
+  "sourceHash": "fnv1a64:bfa1250ec5a2b2db",
   "lessons": [
     {
       "id": "TA-C06-dative-ukku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fefd6585b85ebcb8",
+      "sourceHash": "fnv1a64:d34c3a73a0a12016",
       "notice": null,
       "blocks": [
         {
@@ -58,8 +58,8 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "word: பெயர் peyar — name. + the dative: பெயருக்கு peyarukku. meaning: to/for the name.",
-                "word: வேலை vēlai — work. + the dative: வேலைக்கு vēlaikku. meaning: for work."
+                "word: peyar — name. + the dative: peyarukku. meaning: to/for the name.",
+                "word: vēlai — work. + the dative: vēlaikku. meaning: for work."
               ]
             },
             {
@@ -72,7 +72,7 @@
             },
             {
               "kind": "speech",
-              "text": "நான் nāṉ (\"I\") becomes எனக்கு enakku (\"to me\")."
+              "text": "nāṉ (\"I\") becomes enakku (\"to me\")."
             },
             {
               "kind": "speech",
@@ -112,11 +112,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vēlaikku\" — \"for work,\" from Ch. 5's வேலை",
+              "instruction": "\"vēlaikku\" — \"for work,\" from Ch. 5's vēlai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"*vēlaikku*\" — \"for work,\" from Ch. 5's வேலை]"
+              "source": "[YOU SAY: \"*vēlaikku*\" — \"for work,\" from Ch. 5's *vēlai*]"
             }
           ]
         },
@@ -133,7 +133,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does -உக்கு mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is \"to me\"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண (ṇa)."
+              "text": "What does -உக்கு mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is \"to me\"? (enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண (ṇa)."
             }
           ]
         }
@@ -628,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2af170cba5d5680",
+      "sourceHash": "fnv1a64:70c590bfa64096d6",
       "notice": null,
       "blocks": [
         {
@@ -644,7 +644,7 @@
             },
             {
               "kind": "speech",
-              "text": "In Chapter 5 you said நான் தமிழ் பேசுகிறேன் — \"I speak Tamil,\" with nāṉ as the subject. Now say \"I know Tamil.\" Tamil will not let you use nāṉ."
+              "text": "In Chapter 5 you said nāṉ tamiḻ pēsugiṟēṉ — \"I speak Tamil,\" with nāṉ as the subject. Now say \"I know Tamil.\" Tamil will not let you use nāṉ."
             }
           ]
         },

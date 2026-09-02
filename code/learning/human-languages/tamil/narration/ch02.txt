@@ -11,7 +11,15 @@ Warm-up.
 
 The word, taken apart.
 பெயர் (peyar, "name") is native Dravidian, from Proto-Dravidian peyar / pēr — and it is not related to Sanskrit nāma (Hindi nām, English name). Here the two great families part: Indo-European shares one word for "name" from Ireland to North India, but the Dravidian south kept its own.
-Across the family: Tamil peyar, Malayalam pēr, Telugu pēru — the same Dravidian root; Kannada hesaru (also Dravidian, with p becomes h); only Hindi nām and English name are the Indo-European word.
+Across the family:
+[a table of 6 rows, read aloud]
+Language: Tamil. "Name": peyar. Source: native Dravidian (peyar).
+Language: Malayalam. "Name": pēr. Source: the same Dravidian root.
+Language: Telugu. "Name": pēru. Source: the same Dravidian root.
+Language: Kannada. "Name": hesaru. Source: Dravidian (pesar, with p becomes h).
+Language: Hindi. "Name": nām. Source: Sanskrit nāman (Indo-European).
+Language: English. "Name": name. Source: Indo-European.
+Four Dravidian tongues share peyar/pēru; only the Indo-European languages have name/nām.
 
 Guided Practice.
 [pause 1 second]
@@ -56,7 +64,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the two atoms — eṉ and peyar — and notice a whole word English needs that Tamil doesn't.
 
-The phrase, assembled.
+The phrase, taken apart.
 eṉ (my) + peyar (name) + your name.
 என் பெயர் … (eṉ peyar …) = "my name …" becomes "my name is…"
 Eṉ peyar Arun. becomes "My name is Arun."
@@ -130,7 +138,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the question — your + name + what — and note, again, no "is."
 
-The phrase, assembled.
+The phrase, taken apart.
 உங்கள் (uṅgaḷ, "your") = the possessive of nīṅgaḷ ("you," respectful).
 உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) = literally "your name what?" = "what's your name?"
 Three words, no verb — the zero copula holds for questions too. Tamil never adds an "is."
@@ -157,8 +165,8 @@ Warm-up.
 [pause 2 seconds]
 The warm close — and a sound almost unique to Tamil.
 
-The phrase.
-The full form is உங்களை சந்தித்ததில் மகிழ்ச்சி (uṅgaḷai sandittatil magiḻcci) — "in having met you, joy."
+You'll want to know: மகிழ்ச்சி.
+The full form is uṅgaḷai sandittatil magiḻcci — "in having met you, joy." Say it; the extra two words are longer than you need today, and மகிழ்ச்சி on its own already carries the whole meaning.
 
 The word, taken apart.
 மகிழ்ச்சி (magiḻcci, "joy, gladness") is native Dravidian, from magiḻ ("to rejoice"). It carries the letter ழ (ḻ) — a retroflex glide almost unique to Tamil, with no English equivalent (the same sound in the name Tamiḻ itself). In casual speech, a smile or the English "nice to meet you" also does the job.
@@ -182,12 +190,12 @@ Warm-up.
 [pause 2 seconds]
 Every atom built, and every one of them native Dravidian.
 
-The dialogue.
+The exchange — the whole introduction.
 [a table of 4 rows, read aloud]
-என் பெயர் மீரா. (eṉ peyar Mira) means My name is Mira.
-உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) (uṅgaḷ peyar eṉṉa) means What's your name?
-என் பெயர் அருண். (eṉ peyar Arun) means My name is Arun.
-மகிழ்ச்சி. (magiḻcci) means Pleased to meet you.
+eṉ peyar Mira. means My name is Mira.
+uṅgaḷ peyar eṉṉa? means What's your name?
+eṉ peyar Arun. means My name is Arun.
+magiḻcci. means Pleased to meet you.
 Every atom native and traced:
 peyar from Dravidian peyar (not English name).
 eṉ from nāṉ ("I").

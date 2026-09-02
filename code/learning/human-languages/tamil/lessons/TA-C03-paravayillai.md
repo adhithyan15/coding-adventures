@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TA-C03-paravayillai
+spine_node: SPINE-COURTESY-THANK
 chapter: 3
 sequence: 220
 type: phrase
@@ -10,29 +12,45 @@ concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [TA-C01-illai, TA-C01-nandri-family-register]
 sounds: [illai-negative]
 roots: [illai-not-dravidian]
-est_minutes: 4
 reviews_of: [TA-C01-illai, TA-C01-nandri-family-register, TA-C01-nandri]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-LEX-C03-PARAVAYILLAI-01]
+practises:
+  knowledge: [TA-LEX-C03-PARAVAYILLAI-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
 ---
+
 
 # பரவாயில்லை (paravāyillai) — "no problem"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[TA-LEX-C03-PARAVAYILLAI-01]; assesses=[] -->
 
 [PAUSE 2s] When someone thanks you — or apologises — this is the easy, gracious
 reply, and it hides one of the most Tamil words there is.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **பரவாயில்லை** literally means "**there is no harm**" — *paravāy* ("harm, trouble")
-+ **இல்லை** (*illai*, "is-not, there-is-not"). It serves as "it's okay / no worries
-/ never mind / you're welcome." The key atom, **இல்லை** (*illai*), you already
++ *illai* ("is-not, there-is-not"). It serves as "it's okay / no worries
+/ never mind / you're welcome." The key atom, *illai*, you already
 met in Chapter 1 — the Tamil word for negation and non-existence, the mirror of
 *iru* ("to be"). Where *iru* says "it is," *illai* says "it is not." This one word
 is shared, in almost the same shape, across Tamil, Kannada, and Malayalam
 (*illa*) — one of the deep bonds of the Dravidian south. (Telugu alone breaks
 away, using *lēdu*.)
 
-## Grammar Lens: இல்லை, the all-purpose "no"
+## Grammar Lens: *illai*, the all-purpose "no"
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *Illai* negates existence and equations alike: *nāṉ illai* ("it's not me"),
 *paṇam illai* ("there's no money"). It is also, on its own, one way to say plain
@@ -40,6 +58,7 @@ away, using *lēdu*.)
 affirm or deny almost anything.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C03-PARAVAYILLAI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "paravāyillai"]
@@ -47,6 +66,7 @@ affirm or deny almost anything.
 - [YOU SAY: the *iru* / *illai* pair — "is" and "is-not"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C03-PARAVAYILLAI-01] -->
 
 [PAUSE 3s] What does *paravāyillai* literally say, and which Dravidian languages
 share its *illai*? ("There is no harm"; Tamil, Kannada, Malayalam — Telugu uses
