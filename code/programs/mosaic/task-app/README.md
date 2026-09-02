@@ -20,7 +20,11 @@ canonical engine state and user-visible core slots after every step. See
 `code/specs/task-app-presentation-contract-v1.md` for coverage and the two explicit
 host-only exclusions (theme storage and locale-formatted calendar copy).
 The first-run product acceptance and its focused follow-up queue are recorded in
-`code/specs/task-app-first-run-usability-audit-v1.md`.
+`code/specs/task-app-first-run-usability-audit-v1.md`. Which of Mosaic's nine
+backends TaskApp is actually finished on — six gated and shipped, three
+(`html`, `webcomponent`, `paint`) carrying no TaskApp coverage at all — is
+measured in `code/specs/task-app-platform-completion-v1.md`, which owns the
+ordered completion queue.
 
 ```text
 TaskApp.mil / .mll / .msl        (Mosaic: interface / layout / style)
@@ -86,6 +90,12 @@ window without one.
 - Use the round completion control to complete or reopen a task; Edit changes
   the name or optional due date directly in List; select the task name to reveal
   scheduling details; Delete removes it.
+- **Startup is never a blank page** — a loading state shows while the engine and
+  saved workspace initialize, and a failed start becomes a message with the
+  underlying detail and a retry that re-runs initialization in place, rather than
+  an empty page and a console error. The host-neutral contract is
+  `code/specs/task-app-startup-states-v1.md`; generated native hosts still report
+  startup failure only through process and log evidence (#13984).
 - **Persistence is explicit** — the whole workspace is saved to IndexedDB after each
   change and restored on reload when durable browser storage is available (see
   `host/web/`); an in-app warning identifies volatile fallback, failed writes, or a
@@ -162,9 +172,10 @@ signed distribution packages. Each includes exact prerequisites and a launcher
 that takes one version-specific pre-upgrade snapshot of existing local state. The
 macOS app is neither Developer ID signed nor notarized, and its bundled dylib is
 not an iOS artifact. The Windows folder is self-contained but unsigned and is not
-an MSIX installer. Signing and installation lifecycle work remains tracked under
-[#13522](https://github.com/adhithyan15/coding-adventures/issues/13522), so release
-notes never imply broader coverage. To cut the next release, first move the relevant
+an MSIX installer. Signing and notarization are tracked under
+[#13977](https://github.com/adhithyan15/coding-adventures/issues/13977) — they need
+credentials this repository does not hold — so release notes never imply broader
+coverage. To cut the next release, first move the relevant
 entries into this changelog's version section, choose the SemVer bump from the policy
 above, and dispatch the workflow with a new matching version and tag.
 

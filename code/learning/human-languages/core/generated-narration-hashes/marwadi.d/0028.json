@@ -1,0 +1,28 @@
+{
+  "language": "marwadi",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:d134e917be59818e",
+  "lessonIds": [
+    "MW-C23-hear-ghano",
+    "MW-C23-ghano",
+    "MW-C23-hear-price-answer",
+    "MW-C23-price-answer",
+    "MW-R23-answer-two",
+    "MW-C23-hear-thodu",
+    "MW-C23-thodu",
+    "MW-C23-hear-karo",
+    "MW-C23-karo",
+    "MW-C23-hear-bargain-request",
+    "MW-C23-bargain-request",
+    "MW-R23-bargain-two",
+    "MW-C23-counter-four",
+    "MW-R23-script-close"
+  ],
+  "voiceLessons": 11,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch28.txt",
+  "json": "marwadi/narration/ch28.json",
+  "textHash": "fnv1a64:1ce6d35f2586aba9",
+  "jsonHash": "fnv1a64:2a4d5a942442939f",
+  "findings": []
+}

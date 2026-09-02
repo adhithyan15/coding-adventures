@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 24,
-  "output": "marathi/book/chapters/ch24-passing-verbs.tex",
+  "output": "marathi/book/chapters/ch24-a1-named-reader-message.tex",
   "unicodeScript": "Devanagari",
   "scriptCommand": "mr"
 }

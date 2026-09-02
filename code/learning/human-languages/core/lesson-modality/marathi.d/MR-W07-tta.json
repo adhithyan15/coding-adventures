@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W07-tta",
+    "language": "marathi",
+    "chapter": 7,
+    "sequence": 80,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a261a0ff2c2bd175",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

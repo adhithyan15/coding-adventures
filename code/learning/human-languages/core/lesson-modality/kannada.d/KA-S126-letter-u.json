@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S126-letter-u",
     "language": "kannada",
-    "chapter": 21,
-    "sequence": 501,
+    "chapter": 16,
+    "sequence": 445,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:30ce1568323f542b",
+    "sourceHash": "fnv1a64:4da49975832e6e36",
     "detachableSegments": [
       "Script you'll notice: ಉ",
       "Writing: ಉ — copy what you see"

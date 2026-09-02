@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S114-vowel-sign-o",
     "language": "kannada",
-    "chapter": 10,
-    "sequence": 386,
+    "chapter": 6,
+    "sequence": 332,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:e96a2b4e886d5101",
+    "sourceHash": "fnv1a64:00417b571dacee15",
     "detachableSegments": [
       "Script you'll notice: ◌ೊ",
       "Writing: ◌ೊ — copy what you see"

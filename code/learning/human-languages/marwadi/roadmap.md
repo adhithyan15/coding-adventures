@@ -70,14 +70,35 @@ before the word that needs it. Three-word, five-word, and seven-word food maps
 close in separately scored listening, speaking, reading, and independent
 writing. The strict report remains all-zero at 197 lessons.
 
-The track now carries nineteen everyday nouns across food, shopping, and
-transport and not one transaction, which makes the next dependency-unblocking
-slice a function rather than a fourth noun domain: one source-backed
-interaction, taught once and reused across all three noun sets. Offering,
-accepting, refusing, and asking for more join the earlier debt list -- the
-contrasting no response before a complete yes/no exchange, okay, casual
-gratitude, a you're-welcome response, and a full request for water. The binding
-constraint on that slice is now the script rather than the vocabulary: **ख, झ,
-ञ, ढ, ध, फ, ष, ळ**, the independent vowels other than **आ** and **ई**, and
-**ृ** are still untaught, so candidate sentences have to be checked against the
-taught set before they are scheduled.
+Chapters 26--31 add sixty lessons and take the track to 257 lessons and 71
+distinct taught headwords. They add no fourth noun domain. Instead one
+five-turn counter exchange is taught once and run unchanged over the shopping,
+transport, and food words already secured, so the slice is almost pure
+reinforcement of nineteen nouns that previously had no use. Ten new words and
+eight complete lines arrive; five of the words are verbs, which closes the
+HL09 3.1 verb-vocabulary criterion at pre-A1 and leaves vocabulary as the only
+remaining blocker on the level. Exactly one Devanagari sign is new, **ख**,
+isolated against **क** by breath one lesson before **दिखावो** needs it, and
+Chapters 27--31 add none. Every candidate sentence was glyph-checked before
+scheduling, which is why **चाहिए** and **और** are absent. The strict report
+remains all-zero at 257 lessons.
+
+Each of the six chapters ends by retrieving its most-leaned-on signs ALONE
+rather than inside a word, and Chapter 31 adds a lesson that does only that.
+This was deliberate: the corpus reviews a `SCRIPT-RECOG` atom about twice
+against fourteen times for a `LEX` atom, and Marwadi is the track best placed
+to show what closing that gap looks like. Its `SCRIPT` atoms moved from a mean
+of 7.59 reviews to 9.81, above its own `LEX` atoms at 9.64, and the
+least-drilled single sign went from three reviews to six.
+
+What the transaction still cannot do sets the next slice's shape. Nothing here
+understands a number, so no amount a seller names can be read; refusing a final
+price and walking away, thanking somebody for doing what you asked, and asking
+again more softly are untaught, and so are the earlier debts -- the contrasting
+no response before a complete yes/no exchange, okay, casual gratitude, a
+you're-welcome response, and a full request for water. The binding constraint
+remains the script rather than the vocabulary: **झ, ञ, ढ, ध, फ, ष, ळ**, the
+independent vowels other than **आ** and **ई**, and **ृ** are still untaught, so
+candidate sentences have to be checked against the taught set before they are
+scheduled. The digits are untaught as well, which is what puts numbers -- and
+therefore a priced answer -- out of reach for now.

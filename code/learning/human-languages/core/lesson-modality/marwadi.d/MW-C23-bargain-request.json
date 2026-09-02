@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C23-bargain-request",
+    "language": "marwadi",
+    "chapter": 28,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5c24367e25b59b5"
+  },
+  "findings": []
+}

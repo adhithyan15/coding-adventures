@@ -1,0 +1,18 @@
+{
+  "id": "MW-PATH-024",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C25-hear-lavo",
+    "MW-C25-lavo",
+    "MW-C25-hear-bring-request",
+    "MW-C25-bring-request",
+    "MW-R25-bring-two",
+    "MW-C25-request-five",
+    "MW-R25-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-038-BRING-REQUEST"
+  ],
+  "after": []
+}

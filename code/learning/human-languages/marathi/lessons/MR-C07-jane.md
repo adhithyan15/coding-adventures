@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C07-jane
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 390
-chapter: 10
+sequence: 590
+chapter: 14
 type: word
 headword: जाणे
 romanization: jāṇe

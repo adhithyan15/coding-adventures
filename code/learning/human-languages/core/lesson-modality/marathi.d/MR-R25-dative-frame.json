@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R25-dative-frame",
     "language": "marathi",
-    "chapter": 25,
-    "sequence": 1030,
+    "chapter": 29,
+    "sequence": 1230,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9de89d28a04085cf"
+    "sourceHash": "fnv1a64:7b009c09b5550a81"
   },
   "findings": []
 }

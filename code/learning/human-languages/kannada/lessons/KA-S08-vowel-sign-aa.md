@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S08-vowel-sign-aa
 spine_node: SPINE-MEET-GREET
-sequence: 415
+sequence: 355
 delivery: script
-chapter: 13
+chapter: 8
 type: writing
 headword: "ಾ"
 gloss: the single character ಾ — recognised inside words you already say

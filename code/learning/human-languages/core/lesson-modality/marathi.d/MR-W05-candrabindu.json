@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W05-candrabindu",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 64,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dc1d6dfed197be78",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

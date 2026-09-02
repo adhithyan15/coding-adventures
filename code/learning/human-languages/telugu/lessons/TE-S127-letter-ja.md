@@ -19,21 +19,21 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-127]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-126, TE-SCRIPT-RECOG-127]
+  knowledge: [TE-SCRIPT-RECOG-127, TE-SCRIPT-RECOG-126, TE-SCRIPT-RECOG-121, TE-SCRIPT-RECOG-115]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S126-letter-nna]
+reviews_of: [TE-S126-letter-nna, TE-S121-letter-lla, TE-S115-vowel-sign-e]
 ---
 
 # జ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-126] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-126, TE-SCRIPT-RECOG-121] -->
 
-[PAUSE 1s] Before the new one: ణ — what does it do?
+[PAUSE 1s] Before the new one: ణ — what does it do? And one from further back: ళ?
 
 [PAUSE 2s] One character this time — and you have been saying it for pages
 without knowing which mark on the page it was.
@@ -81,7 +81,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find జ once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-127] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-127, TE-SCRIPT-RECOG-115] -->
 
 [PAUSE 3s] Which character is this — జ? What sound does it carry? (***ja***.)
 Read రోజు aloud, letter by letter, and then as one word.
+
+One more, from much earlier: ◌ె — what does it do?

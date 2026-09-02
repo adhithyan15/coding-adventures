@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R22-request-verbs
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 910
-chapter: 22
+sequence: 1110
+chapter: 26
 type: review
 headword: द्या / प्या / आणा / ठेवा
 romanization: dyā / pyā / āṇā / ṭhevā

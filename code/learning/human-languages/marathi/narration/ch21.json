@@ -2,32 +2,25 @@
   "version": 1,
   "language": "marathi",
   "chapter": 21,
-  "title": "A Six-Field Profile",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:887c247b97502497",
+  "title": "Family Memory at Real Distance",
+  "drivablePrefix": 12,
+  "sourceHash": "fnv1a64:5bc4b055e3194288",
   "lessons": [
     {
-      "id": "MR-A1F04-first-three-select",
-      "sequence": 860,
-      "title": "Choose the first three answers",
-      "headword": "नाव · शहर · भाषा",
-      "romanization": "",
-      "gloss": "choose which known profile detail belongs in each of the first three form rows",
+      "id": "MR-R14-mitra-r2",
+      "sequence": 850,
+      "title": "After a gap — मित्र (mitra)",
+      "headword": "मित्र",
+      "romanization": "mitra",
+      "gloss": "friend — retrieve meaning, history, and borrowing type after a real gap",
       "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d35736804de9e35f",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:368764289d4eb1d4",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -35,76 +28,900 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
               "kind": "speech",
-              "text": "Read three known labels: नाव, शहर, भाषा. Today you choose what each row asks for; you do not yet write the whole form."
+              "text": "Friend. Old root meaning to bind. Borrowed whole from Sanskrit. Say the three answers: मित्र (mitra) — bind — tatsama."
             }
           ]
         },
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided practice — one profile, three choices",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
               "kind": "speech",
-              "text": "Profile A says in the support language: name Arun; city Pune; language Marathi. Point to the matching detail when each Marathi label is shown. Keep the profile card open. There is no Marathi answer bank to copy."
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-mitra-r2-check",
+              "prompt": "Complete: friend = __; old root = __; borrowing type = __.",
+              "assesses": [
+                "MR-LEX-MITRA",
+                "MR-ETYMON-MITRA-BIND",
+                "MR-GRAMMAR-TATSAMA-BORROWING"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "mitra; bind; tatsama",
+                "मित्र; bind; tatsama"
+              ],
+              "feedback": {
+                "correct": "All three parts survived the gap.",
+                "incorrect": "Repair only the missing part: mitra; bind; tatsama."
+              }
             }
           ]
         },
         {
           "index": 2,
           "type": "recall",
-          "title": "Wrap-up recall",
+          "title": "Wrap-up Recall",
           "segments": [
             {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
               "kind": "speech",
-              "text": "Stop after three meaning choices."
+              "text": "Say मित्र (mitra) once more, then stop."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-kutumb-r2",
+      "sequence": 860,
+      "title": "After a gap — कुटुंब (kutumb)",
+      "headword": "कुटुंब",
+      "romanization": "kutumb",
+      "gloss": "family — retrieve the noun and Marathi gender after a real gap",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:610df818ef31fef5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Family. Marathi gender. Answer: कुटुंब (kutumb) — neuter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "MR-A1F04-first-three-select-check",
-              "prompt": "Match the labels to Profile A's details: नाव; शहर; भाषा.",
+              "id": "MR-R14-kutumb-r2-check",
+              "prompt": "Give family in Marathi and its Marathi gender.",
               "assesses": [
-                "MR-A1-FORM-LABEL-NAAV",
-                "MR-A1-FORM-LABEL-SHAHAR",
-                "MR-A1-FORM-LABEL-BHASHA"
+                "MR-LEX-KUTUMB",
+                "MR-GRAMMAR-KUTUMB-NEUTER"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "kutumb; neuter",
+                "कुटुंब; neuter"
+              ],
+              "feedback": {
+                "correct": "Right: kutumb, neuter.",
+                "incorrect": "Repair two pieces: kutumb; neuter."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say कुटुंब (kutumb) once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-siblings",
+      "sequence": 870,
+      "title": "Sibling retrieval",
+      "headword": "भाऊ / बहीण",
+      "romanization": "bhau / bahin",
+      "gloss": "brother and sister — one secure English cousin and one unrelated root",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86b3a6d38f36dd5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say brother, sister: भाऊ, बहीण."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The two words and their histories",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाऊ is a secure cousin of English brother. Do not extend that claim to बहीण and English sister; those roots are unrelated."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-siblings-check",
+              "prompt": "Say brother and sister, then name the one securely related to English.",
+              "assesses": [
+                "MR-LEX-BHAU",
+                "MR-ETYMON-BHAU-BROTHER",
+                "MR-LEX-BAHIN"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "bhau, bahin; bhau is related to brother",
+                "भाऊ, बहीण; भाऊ"
+              ],
+              "feedback": {
+                "correct": "Yes: bhau is the secure cousin.",
+                "incorrect": "Brother is bhau; sister is bahin; only bhau is the secure English cousin."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "भाऊ, बहीण."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-eye-ear",
+      "sequence": 880,
+      "title": "Eye and ear retrieval",
+      "headword": "डोळा / कान",
+      "romanization": "dola / kaan",
+      "gloss": "eye and ear — retrieve two face words and the Marathi retroflex lateral",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ad6d91f98528bcb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eye: डोळा. Ear: कान. In डोळा, keep ळ retroflex; do not replace it with ordinary ल."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-eye-ear-check",
+              "prompt": "Give eye and ear in Marathi; identify the special consonant in dola.",
+              "assesses": [
+                "MR-LEX-DOLA",
+                "MR-SCRIPT-RETROFLEX-LA",
+                "MR-LEX-KAAN"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "dola, kaan; retroflex l",
+                "डोळा, कान; ळ"
+              ],
+              "feedback": {
+                "correct": "Right: dola, kaan, and retroflex ळ.",
+                "incorrect": "Retrieve: dola, kaan, retroflex ळ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "डोळा, कान."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-mouth-nose",
+      "sequence": 890,
+      "title": "Mouth and nose retrieval",
+      "headword": "तोंड / नाक",
+      "romanization": "tond / naak",
+      "gloss": "mouth and nose — retrieve the everyday mouth word and its formal doublet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6e996cb4d5ce4b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everyday mouth is तोंड; formal मुख stands beside it. Nose is नाक."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-mouth-nose-check",
+              "prompt": "Give everyday mouth, its formal doublet, and nose.",
+              "assesses": [
+                "MR-LEX-TOND",
+                "MR-GRAMMAR-TOND-MUKH-DOUBLET",
+                "MR-LEX-NAAK"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "tond, mukh, naak",
+                "तोंड, मुख, नाक"
+              ],
+              "feedback": {
+                "correct": "Exactly: tond, mukh, naak.",
+                "incorrect": "Repair the trio: tond, mukh, naak."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "तोंड, नाक."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-food",
+      "sequence": 900,
+      "title": "Three request nouns",
+      "headword": "पाणी / चहा / दूध",
+      "romanization": "paani / chaha / dudh",
+      "gloss": "water, tea, and milk — three tiny request nouns from memory",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f836bcdd26b83152",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say water, tea, milk in order: पाणी, चहा, दूध."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-food-check",
+              "prompt": "Give water, tea, and milk in Marathi.",
+              "assesses": [
+                "MR-LEX-PAANI",
+                "MR-LEX-CHAHA",
+                "MR-LEX-DUDH"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "paani, chaha, dudh",
+                "पाणी, चहा, दूध"
+              ],
+              "feedback": {
+                "correct": "All three are back.",
+                "incorrect": "Repair in order: paani, chaha, dudh."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repeat once, then stop."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-doing",
+      "sequence": 910,
+      "title": "Three doing verbs",
+      "headword": "घेणे / विचारणे / मदत करणे",
+      "romanization": "ghene / vicharne / madat karne",
+      "gloss": "take, ask, and help — three action verbs retrieved without a model",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:723a77c002fd4946",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take: घेणे. Ask: विचारणे. Help: मदत करणे."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-doing-check",
+              "prompt": "Give take, ask, and help in Marathi.",
+              "assesses": [
+                "MR-LEX-GHENE",
+                "MR-LEX-VICHARNE",
+                "MR-LEX-MADAT-KARNE"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "ghene, vicharne, madat karne",
+                "घेणे, विचारणे, मदत करणे"
+              ],
+              "feedback": {
+                "correct": "Three verbs, retrieved cleanly.",
+                "incorrect": "Repair in order: ghene, vicharne, madat karne."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repeat the trio once."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-mind",
+      "sequence": 920,
+      "title": "Three mind-and-page verbs",
+      "headword": "विचार करणे / समजणे / लिहिणे",
+      "romanization": "vichar karne / samajne / lihine",
+      "gloss": "think, understand, and write — three mind-and-page verbs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87ab2872660608b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Think: विचार करणे. Understand: समजणे. Write: लिहिणे."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-mind-check",
+              "prompt": "Give think, understand, and write in Marathi.",
+              "assesses": [
+                "MR-LEX-VICHAR-KARNE",
+                "MR-LEX-SAMAJNE",
+                "MR-LEX-LIHINE"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "vichar karne, samajne, lihine",
+                "विचार करणे, समजणे, लिहिणे"
+              ],
+              "feedback": {
+                "correct": "The three verbs survived the gap.",
+                "incorrect": "Repair: vichar karne, samajne, lihine."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repeat once."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-core",
+      "sequence": 930,
+      "title": "Three core verbs",
+      "headword": "असणे / जाणे / येणे",
+      "romanization": "asne / jane / yene",
+      "gloss": "be, go, and come — the three core motion-and-state verbs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66fe9e2a0e3fab9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Be: असणे. Go: जाणे. Come: येणे."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-core-check",
+              "prompt": "Give be, go, and come in Marathi.",
+              "assesses": [
+                "MR-LEX-ASNE-AAHE",
+                "MR-LEX-JANE",
+                "MR-LEX-YENE"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "asne, jane, yene",
+                "असणे, जाणे, येणे"
+              ],
+              "feedback": {
+                "correct": "Three core verbs, still available.",
+                "incorrect": "Repair: asne, jane, yene."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repeat once."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R14-mitra-r3",
+      "sequence": 940,
+      "title": "Durable retrieval — मित्र (mitra)",
+      "headword": "मित्र",
+      "romanization": "mitra",
+      "gloss": "friend — durable retrieval of word, binding root, and tatsama path",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:907188ab77ece59b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recover the word for friend, its old root meaning, and the name for a Sanskrit form borrowed whole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-mitra-r3-check",
+              "prompt": "After the long gap: friend; root meaning; borrowing type.",
+              "assesses": [
+                "MR-LEX-MITRA",
+                "MR-ETYMON-MITRA-BIND",
+                "MR-GRAMMAR-TATSAMA-BORROWING"
               ],
               "responseSeconds": 20,
               "acceptedResponses": [
-                "name arun; city pune; language marathi"
+                "mitra; to bind; tatsama",
+                "मित्र; to bind; tatsama",
+                "mitra, bind, tatsama"
               ],
               "feedback": {
-                "correct": "Each label now selects one requested detail.",
-                "incorrect": "Repair only the first label-detail match that failed."
+                "correct": "Durable recall: mitra, bind, tatsama.",
+                "incorrect": "Repair only what failed, then close the model: mitra; bind; tatsama."
               }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "मित्र (mitra). One clean retrieval is enough."
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-A1F05-last-three-select",
-      "sequence": 861,
-      "title": "Choose the last three answers",
-      "headword": "आवडते पेय · आवडती कृती · मित्राचे नाव",
-      "romanization": "",
-      "gloss": "choose the requested favorite and friend details without copying Marathi answers",
+      "id": "MR-R14-numbers",
+      "sequence": 950,
+      "title": "Count, then notice",
+      "headword": "एक ते पाच",
+      "romanization": "ek te paach",
+      "gloss": "one to five — count and recover Marathi's diagnostic sound history",
       "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6acb9575ff81b0c7",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:505325805a2ce6d2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -112,80 +929,88 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
               "kind": "speech",
-              "text": "Say the three jobs once: favorite drink, favorite activity, friend's name. Keep -ते, -ती, and -चे attached to the printed labels."
+              "text": "Count one through five. Then say चार with Marathi tsā-, and remember that a language can innovate in one place while retaining an older feature in another."
             }
           ]
         },
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided practice — one profile, three choices",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
               "kind": "speech",
-              "text": "Profile A says: favorite drink tea; favorite activity reading; friend Mira. Choose the requested detail for each Marathi label. Do not write a full row yet."
+              "text": "Answer once, then repair only the missing piece."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R14-numbers-check",
+              "prompt": "Count one to five and give Marathi's diagnostic pronunciation of four.",
+              "assesses": [
+                "MR-LEX-NUMBERS-ONE-TO-FIVE",
+                "MR-SOUND-CHA-TSAA",
+                "MR-HISTORY-SELECTIVE-RETENTION"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ek, don, tin, chaar, paach; chaar begins tsaa-",
+                "एक, दोन, तीन, चार, पाच; tsaa"
+              ],
+              "feedback": {
+                "correct": "Right: the count and Marathi tsaa- are both back.",
+                "incorrect": "Repair the count, then isolate chaar with tsaa-."
+              }
             }
           ]
         },
         {
           "index": 2,
           "type": "recall",
-          "title": "Wrap-up recall",
+          "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Stop before entry begins."
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-A1F05-last-three-select-check",
-              "prompt": "Match the last three labels to Profile A's details.",
-              "assesses": [
-                "MR-A1-FORM-LABEL-AVDATE-PEY",
-                "MR-A1-FORM-AGREEMENT-NEUTER",
-                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
-                "MR-A1-FORM-AGREEMENT-FEMININE",
-                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
-                "MR-A1-FORM-POSSESSIVE-NEUTER"
-              ],
-              "responseSeconds": 22,
-              "acceptedResponses": [
-                "favorite drink tea; favorite activity reading; friend's name mira"
-              ],
-              "feedback": {
-                "correct": "The three longer labels each select one known detail.",
-                "incorrect": "Repair the label meaning before any spelling."
-              }
+              "kind": "speech",
+              "text": "Count once more without looking."
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-A1F06-first-three-supported",
-      "sequence": 862,
-      "title": "Enter the first three values",
-      "headword": "नाव: ___ · शहर: ___ · भाषा: ___",
-      "romanization": "",
-      "gloss": "complete three visible form rows from a support-language profile card",
+      "id": "MR-R14-kutumb-r3",
+      "sequence": 960,
+      "title": "Durable family comparison",
+      "headword": "मित्र / कुटुंब",
+      "romanization": "mitra / kutumb",
+      "gloss": "friend and family — durable comparison of five Chapter 18 memories",
       "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "writing-type",
-        "writing-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a06edd11ecd4ee56",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:fff6c02695677433",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -193,624 +1018,70 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "pause",
+              "seconds": 7,
+              "perItem": false,
+              "source": "[PAUSE 7s]"
+            },
+            {
               "kind": "speech",
-              "text": "Keep Profile A visible: Arun; Pune; Marathi. The card gives meanings, not copyable Devanagari answers."
+              "text": "Friend: मित्र (mitra); old root to bind; tatsama. Family: कुटुंब (kutumb); neuter in Marathi."
             }
           ]
         },
         {
           "index": 1,
-          "type": "writing",
-          "title": "Writing — supported controlled composition",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Complete only these rows:"
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
               "kind": "speech",
-              "text": "नाव: ______ शहर: ______ भाषा: ______."
-            },
-            {
-              "kind": "speech",
-              "text": "Choose the requested known value and write it in Devanagari. The labels stay visible because they are the form, not an answer model."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Stop after three rows."
+              "text": "Answer once, then repair only the missing piece."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "MR-A1F06-first-three-supported-check",
-              "prompt": "Using Profile A, complete the first three blank rows without a Marathi answer bank.",
+              "id": "MR-R14-kutumb-r3-check",
+              "prompt": "Give the five-part durable comparison for mitra and kutumb.",
               "assesses": [
-                "MR-A1-FORM-LABEL-NAAV",
-                "MR-A1-FORM-LABEL-SHAHAR",
-                "MR-A1-FORM-LABEL-BHASHA"
-              ],
-              "responseSeconds": 45,
-              "acceptedResponses": [
-                "नाव: अरुण; शहर: पुणे; भाषा: मराठी"
-              ],
-              "feedback": {
-                "correct": "Three requested known values are independently selected and written.",
-                "incorrect": "Repair only the first incorrect value; leave later rows closed."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-A1F07-first-three-spelling",
-      "sequence": 863,
-      "title": "Repair one value, not the whole form",
-      "headword": "अरुण · पुणे · मराठी",
-      "romanization": "",
-      "gloss": "repair only the orthography of the first three selected values",
-      "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:56dfff25da763ef5",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover yesterday's entries. Say which row held the first spelling difference. Do not recopy a correct row."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "writing",
-          "title": "Writing — bounded spelling repair",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write only the failed value from name, city, language. Compare in three passes: base letters, vowel signs, then the final headline. If it is correct, write the next requested value once instead."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "One repair pass is enough."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-A1F07-first-three-spelling-check",
-              "prompt": "Write only the first value that needs repair; if none failed, write Profile A's city value once.",
-              "assesses": [
-                "MR-A1-FORM-LABEL-NAAV",
-                "MR-A1-FORM-LABEL-SHAHAR",
-                "MR-A1-FORM-LABEL-BHASHA"
-              ],
-              "responseSeconds": 28,
-              "acceptedResponses": [
-                "पुणे",
-                "अरुण",
-                "मराठी"
-              ],
-              "feedback": {
-                "correct": "One bounded value was repaired without recopying the form.",
-                "incorrect": "Return to the first differing character and stop there."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-A1F08-last-three-supported",
-      "sequence": 864,
-      "title": "Enter the last three values",
-      "headword": "आवडते पेय: ___ · आवडती कृती: ___ · मित्राचे नाव: ___",
-      "romanization": "",
-      "gloss": "complete the last three visible rows from a support-language profile card",
-      "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:ab8ef150fd2290c5",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Keep Profile A visible: tea; reading; Mira. Say the three printed label endings once: -ते, -ती, -चे."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "writing",
-          "title": "Writing — supported controlled composition",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Complete only the three blank value spaces. The support-language card chooses the meanings; you supply the known Marathi spellings. No Marathi answer bank is visible."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Stop after three rows."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-A1F08-last-three-supported-check",
-              "prompt": "Using Profile A, complete the last three blank rows without a Marathi answer bank.",
-              "assesses": [
-                "MR-A1-FORM-LABEL-AVDATE-PEY",
-                "MR-A1-FORM-AGREEMENT-NEUTER",
-                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
-                "MR-A1-FORM-AGREEMENT-FEMININE",
-                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
-                "MR-A1-FORM-POSSESSIVE-NEUTER"
-              ],
-              "responseSeconds": 55,
-              "acceptedResponses": [
-                "आवडते पेय: चहा; आवडती कृती: वाचणे; मित्राचे नाव: मीरा"
-              ],
-              "feedback": {
-                "correct": "Three requested values are selected while the printed agreement stays intact.",
-                "incorrect": "Repair value choice first; repair label agreement in the next lesson."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-A1F09-last-three-agreement",
-      "sequence": 865,
-      "title": "Repair endings before values",
-      "headword": "-ते · -ती · -चे",
-      "romanization": "",
-      "gloss": "repair form-label agreement separately from value spelling",
-      "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:ec73c1c64be55f81",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover the values. Look only at the labels and say: neuter drink -ते, feminine activity -ती, neuter name -चे."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "writing",
-          "title": "Writing — bounded agreement repair",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Complete only these endings: आवड__ पेय, आवड__ कृती, मित्रा__ नाव. Do not rewrite tea, reading, or Mira. This pass repairs grammar separately from value spelling."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Stop before values return."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-A1F09-last-three-agreement-check",
-              "prompt": "Supply only the three missing endings: आवड__ पेय; आवड__ कृती; मित्रा__ नाव.",
-              "assesses": [
-                "MR-A1-FORM-AGREEMENT-NEUTER",
-                "MR-A1-FORM-AGREEMENT-FEMININE",
-                "MR-A1-FORM-POSSESSIVE-NEUTER"
+                "MR-LEX-MITRA",
+                "MR-ETYMON-MITRA-BIND",
+                "MR-GRAMMAR-TATSAMA-BORROWING",
+                "MR-LEX-KUTUMB",
+                "MR-GRAMMAR-KUTUMB-NEUTER"
               ],
               "responseSeconds": 24,
               "acceptedResponses": [
-                "ते; ती; चे",
-                "-ते; -ती; -चे"
+                "mitra; bind; tatsama; kutumb; neuter",
+                "मित्र; bind; tatsama; कुटुंब; neuter"
               ],
               "feedback": {
-                "correct": "Agreement and possessive are repaired in one bounded pass.",
-                "incorrect": "Match the noun first: neuter, feminine, neuter."
+                "correct": "All five memories are available at distance.",
+                "incorrect": "Repair only the missing row, then answer again without the model."
               }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-A1F10-first-three-delayed",
-      "sequence": 866,
-      "title": "Delay the first three entries",
-      "headword": "नाव: अरुण · शहर: पुणे · भाषा: मराठी",
-      "romanization": "",
-      "gloss": "fill the first three rows after a short delay, without an answer model",
-      "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:72c929c1371de5fb",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Read Profile A once: Arun, Pune, Marathi. Close it and wait ten seconds."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "writing",
-          "title": "Writing — delayed controlled composition",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "With only the three printed Marathi labels visible, fill all three values from the delayed profile. There is no romanization and no completed row to copy. Compare only after all three values are written."
             }
           ]
         },
         {
           "index": 2,
           "type": "recall",
-          "title": "Wrap-up recall",
+          "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Stop after one delayed attempt."
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-A1F10-first-three-delayed-check",
-              "prompt": "After the delay, complete Profile A's first three rows without an answer model.",
-              "assesses": [
-                "MR-A1-FORM-LABEL-NAAV",
-                "MR-A1-FORM-LABEL-SHAHAR",
-                "MR-A1-FORM-LABEL-BHASHA"
-              ],
-              "responseSeconds": 50,
-              "acceptedResponses": [
-                "नाव: अरुण; शहर: पुणे; भाषा: मराठी"
-              ],
-              "feedback": {
-                "correct": "The first half survives after support is removed.",
-                "incorrect": "Record the first failed row; repair it tomorrow, not during scoring."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-A1F11-last-three-delayed",
-      "sequence": 867,
-      "title": "Delay the last three entries",
-      "headword": "आवडते पेय: चहा · आवडती कृती: वाचणे · मित्राचे नाव: मीरा",
-      "romanization": "",
-      "gloss": "fill the last three rows after a short delay, separating labels from values",
-      "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:9a531bfe66c96e4e",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
               "kind": "speech",
-              "text": "Read Profile A once: tea, reading, Mira. Close it and wait ten seconds."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "writing",
-          "title": "Writing — delayed controlled composition",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Fill the three values with only the blank form visible. Compare in two passes afterward: requested value first, then the printed -ते / -ती / -चे forms."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Stop after one delayed attempt."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-A1F11-last-three-delayed-check",
-              "prompt": "After the delay, complete Profile A's last three rows without an answer model.",
-              "assesses": [
-                "MR-A1-FORM-LABEL-AVDATE-PEY",
-                "MR-A1-FORM-AGREEMENT-NEUTER",
-                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
-                "MR-A1-FORM-AGREEMENT-FEMININE",
-                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
-                "MR-A1-FORM-POSSESSIVE-NEUTER"
-              ],
-              "responseSeconds": 60,
-              "acceptedResponses": [
-                "आवडते पेय: चहा; आवडती कृती: वाचणे; मित्राचे नाव: मीरा"
-              ],
-              "feedback": {
-                "correct": "The second half survives after support is removed.",
-                "incorrect": "Record whether value choice or label agreement failed; repair only that dimension later."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-A1F12-six-field-supported",
-      "sequence": 868,
-      "title": "Join the two halves",
-      "headword": "six-field Marathi profile",
-      "romanization": "",
-      "gloss": "join two mastered three-row batches while the support-language profile remains visible",
-      "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:b79c1a837fb4998f",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Keep Profile A visible. The first three and last three rows have already passed separately; today the only new load is joining them."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "writing",
-          "title": "Writing — supported six-field composition",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Complete the six blank Marathi rows from the support-language profile. There is no Marathi value bank or completed example. Check rows 1–3, pause, then rows 4–6. Repair only the first failed half."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The independent profile changes next time."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-A1F12-six-field-supported-check",
-              "prompt": "With Profile A visible but no Marathi answer bank, complete all six blank rows.",
-              "assesses": [
-                "MR-A1-FORM-LABEL-NAAV",
-                "MR-A1-FORM-LABEL-SHAHAR",
-                "MR-A1-FORM-LABEL-BHASHA",
-                "MR-A1-FORM-LABEL-AVDATE-PEY",
-                "MR-A1-FORM-AGREEMENT-NEUTER",
-                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
-                "MR-A1-FORM-AGREEMENT-FEMININE",
-                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
-                "MR-A1-FORM-POSSESSIVE-NEUTER"
-              ],
-              "responseSeconds": 90,
-              "acceptedResponses": [
-                "नाव: अरुण; शहर: पुणे; भाषा: मराठी; आवडते पेय: चहा; आवडती कृती: वाचणे; मित्राचे नाव: मीरा"
-              ],
-              "feedback": {
-                "correct": "Two mastered halves now form one supported six-field form.",
-                "incorrect": "Record the first failed half and stop; do not recopy correct rows."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-A1F13-six-field-independent",
-      "sequence": 869,
-      "title": "Complete a new six-field form",
-      "headword": "independent six-field Marathi profile",
-      "romanization": "",
-      "gloss": "complete a new six-field profile without romanization, an answer bank, or a completed model",
-      "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block"
-      ],
-      "sourceHash": "fnv1a64:4298f62aa1fb5a7c",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Profile B says: name Mira; city Pune; language Marathi; favorite drink milk; favorite activity writing; friend Arun. These meanings are the task. No Marathi values are displayed."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "writing",
-          "title": "Writing — independent controlled composition",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Complete the six printed Marathi labels from Profile B. There is no romanization, Marathi answer bank, or completed model. Do not reveal the answer while scoring. The task is untimed; timing belongs to the later checkpoint issue."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up recall — checkpoint",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "This proves untimed practical-form composition only. It does not claim timed writing or full A1 readiness."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-A1F13-six-field-independent-check",
-              "prompt": "Without a Marathi value model, complete Profile B's six-field form.",
-              "assesses": [
-                "MR-A1-FORM-LABEL-NAAV",
-                "MR-A1-FORM-LABEL-SHAHAR",
-                "MR-A1-FORM-LABEL-BHASHA",
-                "MR-A1-FORM-LABEL-AVDATE-PEY",
-                "MR-A1-FORM-AGREEMENT-NEUTER",
-                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
-                "MR-A1-FORM-AGREEMENT-FEMININE",
-                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
-                "MR-A1-FORM-POSSESSIVE-NEUTER"
-              ],
-              "responseSeconds": 110,
-              "acceptedResponses": [
-                "नाव: मीरा; शहर: पुणे; भाषा: मराठी; आवडते पेय: दूध; आवडती कृती: लिहिणे; मित्राचे नाव: अरुण"
-              ],
-              "feedback": {
-                "correct": "A new six-field profile is independently selected and written in Devanagari.",
-                "incorrect": "Do not reveal the model during scoring; record the first failed row or repair dimension."
-              }
+              "text": "मित्र (mitra), कुटुंब (kutumb). End the session here."
             }
           ]
         }

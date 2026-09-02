@@ -1,5 +1,10 @@
 {
   "language": "kannada",
   "chapter": 4,
-  "output": "kannada/book/chapters/ch04-farewells.tex"
+  "output": "kannada/book/chapters/ch04-farewells.tex",
+  "embeddedLessonIds": [
+    "KA-S04-vowel-sign-i",
+    "KA-S113-letter-lla",
+    "KA-S110-letter-ba"
+  ]
 }

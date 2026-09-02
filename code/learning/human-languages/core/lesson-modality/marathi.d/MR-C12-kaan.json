@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C12-kaan",
     "language": "marathi",
-    "chapter": 15,
-    "sequence": 610,
+    "chapter": 19,
+    "sequence": 810,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:20aa0092e12d7df3",
+    "sourceHash": "fnv1a64:35746beb47413228",
     "detachableSegments": [
       "The letters in this word"
     ]

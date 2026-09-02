@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S116-letter-ka
 spine_node: SPINE-MEET-GREET
-sequence: 406
+sequence: 342
 delivery: script
-chapter: 12
+chapter: 7
 type: writing
 headword: "ಕ"
 gloss: the single character ಕ — recognised inside words you already say
@@ -49,8 +49,7 @@ You already say these, and every one of them has ಕ somewhere inside it:
 
 - **ನಮಸ್ಕಾರ** *namaskāra* — hello / greetings (namaskāra — "a making of a bow")
 - **ಕೆಲಸ ಮಾಡು** *kelasa māḍu* — to work (lit. "work-do")
-- **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು** *nanage kannaḍa gottu* — 'I know Kannada'
-- **ಒಂದು ಎರಡು ಮೂರು ನಾಲ್ಕು ಐದು** *ondu eraḍu mūru nālku aidu* — one to five
+- **ನಾಲ್ಕು** *nālku* — four
 
 ## Writing: ಕ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-116] -->

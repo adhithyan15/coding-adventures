@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F12-six-field-supported
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 868
+sequence: 1068
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "six-field Marathi profile"
 gloss: join two mastered three-row batches while the support-language profile remains visible

@@ -1,11 +1,11 @@
 {
   "language": "kannada",
   "chapter": 20,
-  "sourceHash": "fnv1a64:3fed2593f88c8541",
+  "sourceHash": "fnv1a64:6adf8f10d4bea0bb",
   "lessonIds": [
     "KA-C20-hannondu-ippattu",
     "KA-C20-havamana",
-    "KA-S124-letter-pa"
+    "KA-S128-letter-jha"
   ],
   "tex": "kannada/book/chapters/ch20-numbers-and-weather.tex"
 }

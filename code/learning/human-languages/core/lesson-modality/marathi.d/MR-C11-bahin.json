@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C11-bahin",
     "language": "marathi",
-    "chapter": 14,
-    "sequence": 590,
+    "chapter": 18,
+    "sequence": 790,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:829dcb910fee3bfe",
+    "sourceHash": "fnv1a64:a596fdd740f9c6c8",
     "detachableSegments": [
       "The letters in this word"
     ]

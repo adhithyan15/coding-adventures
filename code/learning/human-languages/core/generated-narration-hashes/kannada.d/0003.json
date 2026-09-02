@@ -1,12 +1,14 @@
 {
   "language": "kannada",
   "chapter": 3,
-  "sourceHash": "fnv1a64:5e7ea2c74c9eb4eb",
+  "sourceHash": "fnv1a64:4839275941aa321a",
   "lessonIds": [
     "KA-C03-hege",
+    "KA-S03-sign-virama",
     "KA-C03-niivu-hegiddiira",
     "KA-C03-naanu",
     "KA-C03-cennaagi",
+    "KA-S112-letter-ga",
     "KA-C03-paravaagilla",
     "KA-C03-practice"
   ],
@@ -14,7 +16,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch03.txt",
   "json": "kannada/narration/ch03.json",
-  "textHash": "fnv1a64:1193ebd2ef13eeea",
-  "jsonHash": "fnv1a64:650a36e23f5c11c2",
+  "textHash": "fnv1a64:bdebe56cd5684244",
+  "jsonHash": "fnv1a64:9553e8272e3c87ff",
   "findings": []
 }

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M03-meeting-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 842
+sequence: 1042
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "भेटून आनंद झाला."
 gloss: add the familiar pleased-to-meet-you line without joining it to the identity line

@@ -1,0 +1,13 @@
+{
+  "id": "MR-EXT-037-SECOND-RUNWAY-FIRST-RETRIEVAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can name the last six signs of the second runway a chapter after meeting them, without a model.",
+  "prerequisites": [
+    "MR-EXT-034-SIBILANT-RUNWAY"
+  ],
+  "lessons": [
+    "MR-R09-runway-tail-r2"
+  ]
+}

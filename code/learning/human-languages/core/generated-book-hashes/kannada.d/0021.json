@@ -1,10 +1,9 @@
 {
   "language": "kannada",
   "chapter": 21,
-  "sourceHash": "fnv1a64:9645d03abdbd7aeb",
+  "sourceHash": "fnv1a64:8074dc099ec05055",
   "lessonIds": [
-    "KA-C21-naayi-bekku",
-    "KA-S126-letter-u"
+    "KA-C21-naayi-bekku"
   ],
   "tex": "kannada/book/chapters/ch21-dog-and-cat.tex"
 }

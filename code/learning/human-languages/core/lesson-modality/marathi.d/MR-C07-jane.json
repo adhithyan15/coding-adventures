@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C07-jane",
     "language": "marathi",
-    "chapter": 10,
-    "sequence": 390,
+    "chapter": 14,
+    "sequence": 590,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f52a86b878f5c246"
+    "sourceHash": "fnv1a64:612f6aa383d6f458"
   },
   "findings": []
 }

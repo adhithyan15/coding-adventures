@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F13-six-field-independent
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 869
+sequence: 1069
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "independent six-field Marathi profile"
 gloss: complete a new six-field profile without romanization, an answer bank, or a completed model

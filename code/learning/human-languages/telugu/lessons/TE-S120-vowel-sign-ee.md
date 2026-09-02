@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S120-vowel-sign-ee
 spine_node: SPINE-MEET-GREET
-sequence: 441
+sequence: 55
 delivery: script
-chapter: 17
+chapter: 1
 type: writing
 headword: "ే"
 gloss: the single character ే — recognised inside words you already say
 romanization: "ē"
-prerequisites: [TE-S119-vowel-sign-ii]
+prerequisites: [TE-S07-vowel-sign-aa]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-119]
+  knowledge: [TE-SCRIPT-RECOG-07]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-120]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-119, TE-SCRIPT-RECOG-120]
+  knowledge: [TE-SCRIPT-RECOG-120, TE-SCRIPT-RECOG-07]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S119-vowel-sign-ii]
+reviews_of: [TE-S07-vowel-sign-aa]
 ---
 
 # ◌ే — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-119] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-07] -->
 
-[PAUSE 1s] Before the new one: ◌ీ — what does it do?
+[PAUSE 1s] Before the new one: ◌ా — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ే
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-120]; assesses=[] -->
@@ -49,8 +49,6 @@ You already say these, and every one of them has ◌ే somewhere inside it:
 
 - **లేదు** *lēdu* — no / there isn't (lēdu)
 - **సరే** *sarē* — okay / alright (sarē)
-- **పేరు** *pēru* — name
-- **నేను** *nēnu* — I
 
 ## Writing: ◌ే — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-120] -->

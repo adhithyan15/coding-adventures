@@ -1,22 +1,29 @@
 {
   "language": "telugu",
   "chapter": 2,
-  "sourceHash": "fnv1a64:181ecaff66df548a",
+  "sourceHash": "fnv1a64:ea31596781d8f6fa",
   "lessonIds": [
     "TE-C02-peru",
+    "TE-S109-letter-na",
     "TE-C02-naa",
+    "TE-S02-vowel-sign-u",
     "TE-C02-naa-peru",
+    "TE-S140-digit-1",
     "TE-C02-nuvvu-miiru",
+    "TE-S05-sign-virama",
     "TE-C02-emiti",
+    "TE-S141-digit-2",
     "TE-C02-mii-peru-emiti",
+    "TE-S08-vowel-sign-i",
     "TE-C02-santosham",
+    "TE-S04-sign-anusvara",
     "TE-C02-practice"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 0,
   "text": "telugu/narration/ch02.txt",
   "json": "telugu/narration/ch02.json",
-  "textHash": "fnv1a64:d4998ab30345bf85",
-  "jsonHash": "fnv1a64:6a7affb2c99149ed",
+  "textHash": "fnv1a64:9e673b146d3bc497",
+  "jsonHash": "fnv1a64:be5faad101abd2d7",
   "findings": []
 }

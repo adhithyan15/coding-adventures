@@ -1,10 +1,11 @@
 {
   "language": "kannada",
   "chapter": 14,
-  "sourceHash": "fnv1a64:e09d7cfe310320b5",
+  "sourceHash": "fnv1a64:655b636881d4e56e",
   "lessonIds": [
     "KA-C14-kaalagalu",
-    "KA-S118-letter-dda"
+    "KA-S123-sign-anusvara",
+    "KA-S145-digit-six"
   ],
   "tex": "kannada/book/chapters/ch14-seasons.tex"
 }

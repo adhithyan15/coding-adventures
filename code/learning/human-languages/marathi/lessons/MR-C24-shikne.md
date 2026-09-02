@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C24-shikne
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 990
-chapter: 24
+sequence: 1190
+chapter: 28
 type: word
 headword: शिकणे
 romanization: shikṇe

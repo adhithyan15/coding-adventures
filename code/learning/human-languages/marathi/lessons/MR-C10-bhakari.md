@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C10-bhakari
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 550
-chapter: 13
+sequence: 750
+chapter: 17
 type: word
 headword: भाकरी
 romanization: bhākarī

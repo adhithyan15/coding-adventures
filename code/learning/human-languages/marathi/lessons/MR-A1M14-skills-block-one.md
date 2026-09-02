@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M14-skills-block-one
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 853
+sequence: 1053
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: first skills block
 gloss: order the known know-read-write lines without joining their grammar

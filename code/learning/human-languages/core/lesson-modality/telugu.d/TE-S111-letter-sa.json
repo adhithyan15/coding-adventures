@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S111-letter-sa",
     "language": "telugu",
-    "chapter": 8,
-    "sequence": 356,
+    "chapter": 5,
+    "sequence": 275,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:c996a9ab677c58e2",
+    "sourceHash": "fnv1a64:37ce8b84d085090c",
     "detachableSegments": [
       "Script you'll notice: స",
       "Writing: స — copy what you see"

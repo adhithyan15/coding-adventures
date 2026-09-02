@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C22-kitno",
+    "language": "marwadi",
+    "chapter": 27,
+    "sequence": 2090,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5d3d2e3113579f24"
+  },
+  "findings": []
+}

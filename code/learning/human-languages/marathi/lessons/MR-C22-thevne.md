@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C22-thevne
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 900
-chapter: 22
+sequence: 1100
+chapter: 26
 type: word
 headword: ठेवणे
 romanization: ṭhevṇe

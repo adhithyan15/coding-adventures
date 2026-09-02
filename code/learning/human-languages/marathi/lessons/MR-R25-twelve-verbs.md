@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R25-twelve-verbs
 spine_node: SPINE-RESPOND-BASIC
-sequence: 1020
-chapter: 25
+sequence: 1220
+chapter: 29
 type: review
 headword: बारा क्रियापदं
 romanization: bārā kriyāpadaṁ
