@@ -95,7 +95,12 @@ describe("the plan CLI", () => {
     // 7 -> 8 partial: `exam-inventory-tamil-a1.json` lands, partial in all four
     // for the same reason every proxy-derived file is: a proxy lends a level and
     // cannot close a dimension.
-    expect(out).toMatch(/0 complete and 8 partial of 138/);
+    // 8 -> 9 partial: `exam-inventory-kannada-a1.json` lands, partial in all four
+    // dimensions like every proxy-derived file before it. Its phonology dimension is
+    // partial for a reason the others are not: Kannada's script column was MEASURED
+    // rather than assumed, and came back 42 characters taught against 69 used --
+    // the opposite of Tamil's 52 of 52.
+    expect(out).toMatch(/0 complete and 9 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -122,7 +127,8 @@ describe("the plan CLI", () => {
     // the only one this test corrupts, so this number tracks the written total
     // minus exactly one.
     // 6 -> 7: Tamil A1 joins it too, on the same rule.
-    expect(out).toMatch(/0 complete and 7 partial of 138/);
+    // 7 -> 8: Kannada A1 joins the readable remainder, on the same rule.
+    expect(out).toMatch(/0 complete and 8 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -190,7 +196,19 @@ describe("the plan CLI", () => {
     // hand-written one named in a sentence and then deferred. RE-MEASURED for
     // the same reason as the line above: this branch was written when the total
     // was 529 across 6 inventories, and Telugu and Tamil landed in between.
-    expect(out).toMatch(/792 uncovered point\(s\) across 8 written/);
+    // 792 -> 883, and 8 -> 9 written. `core/exam-inventory-kannada-a1.json`
+    // enumerates 258 A1 points and the corpus covers 167, so Kannada contributes its
+    // 91 unmapped points. RE-MEASURED against the merged tree rather than composed:
+    // this branch read 793 from `npm run plan` before Kannada chapters 1, 2 and 4
+    // were retired, and the retirement moved it on its own. Nothing regressed -- a
+    // twenty-second track stopped being unmeasurable.
+    //
+    // 258 is the smallest Indic denominator in the file and that is a property of the
+    // LANGUAGE, in the same way Tamil's 262 is: Kannada has no article, no gender and
+    // no letter case, so four article points collapse into two, four gender points
+    // into two, and nine punctuation points into three. Every collapse lists all its
+    // source points in `derivedFrom`.
+    expect(out).toMatch(/883 uncovered point\(s\) across 9 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -199,7 +217,7 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/792 uncovered point\(s\) across 8 written/);
+    expect(out).toMatch(/883 uncovered point\(s\) across 9 written/);
     // 529 -> 686, and 6 -> 7 written. `core/exam-inventory-telugu-a1.json`
     // enumerates 326 A1 points and the corpus covers 169, so Telugu contributes
     // its 157 unmapped points. The unmeasured remainder falls 18 -> 17 for the
@@ -221,8 +239,8 @@ describe("the plan CLI", () => {
     // points collapse into one because modern Tamil uses the same marks as
     // English. Every collapse lists all of its source points in `derivedFrom`,
     // which is what the totality test above checks.
-    expect(out).toMatch(/0 complete and 8 partial of 138/);
-    expect(out).toMatch(/the other 16 track\(s\)/);
+    expect(out).toMatch(/0 complete and 9 partial of 138/);
+    expect(out).toMatch(/the other 15 track\(s\)/);
   }, 120_000);
 
   it("rejects a flag used as another flag's value", () => {
