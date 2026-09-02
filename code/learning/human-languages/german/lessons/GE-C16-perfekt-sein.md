@@ -1,67 +1,92 @@
 ---
+schema_version: 2
 id: GE-C16-perfekt-sein
-sequence: 325
-chapter: 16
-type: phrase
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 430
+chapter: 18
+type: grammar
 headword: ich bin gegangen
-gloss: the perfect with sein for motion, arrival, and change of state
+gloss: the perfect built on sein — the family of verbs that refuses haben
 concept_tag: GE-PAST-PERFEKT-SEIN
-prerequisites: [GE-C16-sein, GE-C15-perfekt, GE-C03-gehen]
-sounds: [ich-laut, ge-prefix]
+prerequisites: [GE-C03-gehen, GE-C16-war-practice]
+sounds: [ge-prefix, ich-laut]
 roots: [germanic-ga-participle]
-etymology_hook: "German uses sein with a bounded motion/change family while ordinary activity verbs keep haben"
-est_minutes: 4
-reviews_of: [GE-C16-sein, GE-C15-perfekt, GE-C03-gehen]
+etymology_hook: "German splits its compound past between haben and sein, and the line it draws is motion and change of state — the same line French draws"
+duration:
+  max_seconds: 190
+requires:
+  knowledge: [GE-LEX-GEHEN-01, GE-GRAMMAR-SEIN-ICH-BIN-01, GE-GRAMMAR-SEIN-DU-BIST-01, GE-GRAMMAR-SEIN-ER-IST-01, GE-GRAMMAR-SEIN-WIR-SIND-01]
+introduces:
+  knowledge: [GE-GRAMMAR-PERFEKT-SEIN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-GRAMMAR-PERFEKT-SEIN-01, GE-LEX-GEHEN-01, GE-GRAMMAR-SEIN-ICH-BIN-01, GE-GRAMMAR-SEIN-DU-BIST-01, GE-GRAMMAR-SEIN-ER-IST-01, GE-GRAMMAR-SEIN-WIR-SIND-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C15-perfekt, GE-C03-gehen, GE-C16-praesens-practice]
 ---
 
-# Ich bin gegangen — the perfect with sein
+# ich bin gegangen — the perfect built on sein
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SEIN-ICH-BIN-01, GE-LEX-GEHEN-01] -->
 
-[PAUSE 2s] Chapter 15 built **ich habe gelernt** with *haben*. A smaller family
-uses **sein**.
+[PAUSE 2s] You built the everyday past with *haben* — **ich habe gelernt**. A
+particular family of verbs refuses *haben* and takes this chapter's verb
+instead.
 
-| | |
+## Grammar Lens: which verbs take sein
+<!-- hl-knowledge: introduces=[GE-GRAMMAR-PERFEKT-SEIN-01]; assesses=[GE-LEX-GEHEN-01] -->
+
+> Verbs of **motion** and **change of state** build their perfect with
+> **sein**, not *haben*.
+
+An action that leaves you somewhere else, or leaves you something else, takes
+*sein*. An ordinary activity that leaves you where you were keeps *haben*:
+*ich habe gearbeitet*, *ich habe getanzt*.
+
+*Gehen* is the model, and because every present form of *sein* now belongs to
+you, the whole thing reads off without a single new word:
+
+| German | English |
 |---|---|
-| ich **bin gegangen** | I went / have gone |
-| du **bist gegangen** | you went |
-| er **ist gegangen** | he went |
-| wir **sind gegangen** | we went |
+| *ich **bin** gegangen* | I went / I have gone |
+| *du **bist** gegangen* | you went |
+| *er **ist** gegangen* | he went |
+| *wir **sind** gegangen* | we went |
 
-## The family
+The recipe is the one you already know, with the helper swapped:
 
-The centre is a change of place or state with a clear result:
+> present form of **sein** + past participle, and the participle goes **last**
 
-| verb | perfect | meaning |
-|---|---|---|
-| gehen | **bin gegangen** | went |
-| kommen | **bin gekommen** | came |
-| fahren | **bin gefahren** | travelled |
-| werden | **bin geworden** | became |
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-SEIN-01] -->
 
-Ordinary activity without that result usually keeps **haben**: *ich habe
-gearbeitet*, *ich habe getanzt*.
-
-A small learned group also takes *sein*: **sein** itself (*bin gewesen*),
-**bleiben** (*bin geblieben*), plus verbs such as *gelingen* (succeed),
-*geschehen / passieren* (happen), and *begegnen* (meet).
-
-Build each perfect as:
-
-> present form of **sein** + past participle
-
-The participle stays at the end, just as it did with *haben*.
+- `ge-prefix` — *gegangen* opens with the same unstressed **ge-** that wrapped
+  *gelernt* and *gesagt*. It is never stressed; the weight falls on *-gang-*.
+- `ich-laut` — and *ich* keeps its soft ending right before it, so the phrase
+  runs *ich bin ge-GANG-en* without a break.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-SEIN-DU-BIST-01, GE-GRAMMAR-SEIN-WIR-SIND-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: “ich bin gegangen; wir sind gegangen”]
-- [YOU SAY: “ich habe gelernt; ich bin gegangen”]
-- [YOU SAY: “bin gekommen; bin geworden; bin geblieben”]
+- [YOU SAY: "ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen"]
+- [YOU SAY: the contrast — "ich habe gelernt … ich bin gegangen"]
+- [YOU SAY: the rule — "motion and change take sein"]
+
+[REPEAT x2] "ich bin gegangen."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-SEIN-ER-IST-01] -->
 
-[PAUSE 3s] Which broad family takes *sein*? (Resultative **motion/change**.) Say
-“I went.” (**Ich bin gegangen**.) Name two learned exceptions. (**Sein,
-bleiben**, or *geschehen*.) Where does the participle go? (**At the end**.) Next:
-compare German agreement with French.
+[PAUSE 3s] Which family of verbs takes *sein*? (**Motion and change of
+state**.) Say "I went." (**Ich bin gegangen**.) Where does the participle sit?
+(**At the end**.) Which helper does *arbeiten* take? (***Haben*** — it is an
+activity, not a change.) Next: the first of the family, and it is the one you
+say most.

@@ -52,7 +52,7 @@ first word to the last — everything in it has had its own lesson.
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HALLO-01, GE-LEX-ICH-HEISSE-01, GE-LEX-WIE-HEISSEN-SIE-01, GE-LEX-FREUT-MICH-02, GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-LEX-SEHR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01, GE-LEX-BIS-MORGEN-01, GE-LEX-AUF-WIEDERSEHEN-01] -->
 
-Everything from chapter 1 to here, in one conversation:
+Everything from your first greeting to here, in one conversation:
 
 | German | English |
 |---|---|

@@ -1,17 +1,22 @@
 {
   "language": "german",
   "chapter": 17,
-  "sourceHash": "fnv1a64:58c4ffb2df0e7c2a",
+  "sourceHash": "fnv1a64:2d7a3df157cf84ae",
   "lessonIds": [
-    "GE-C17-kopf",
-    "GE-C17-kopf-haupt",
-    "GE-C17-hand"
+    "GE-C16-ich-war",
+    "GE-C16-du-warst",
+    "GE-C16-er-war",
+    "GE-C16-wir-waren",
+    "GE-C16-drei-wurzeln",
+    "GE-C16-suppletion",
+    "GE-C16-haeufig-unregelmaessig",
+    "GE-C16-war-practice"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch17.txt",
   "json": "german/narration/ch17.json",
-  "textHash": "fnv1a64:0f6cf37951ace1c7",
-  "jsonHash": "fnv1a64:a6e8471870bd73fc",
+  "textHash": "fnv1a64:b363d37f2030b4f9",
+  "jsonHash": "fnv1a64:0aa3fd0e52802e99",
   "findings": []
 }

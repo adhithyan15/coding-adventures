@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-021-CONSOLIDATION",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can run the six present forms of German's verb for “to be” in either direction and use them in a short exchange.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C16-praesens-practice"
+  ]
+}

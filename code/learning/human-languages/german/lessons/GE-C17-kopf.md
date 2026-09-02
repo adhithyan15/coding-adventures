@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C17-kopf
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 610
-chapter: 17
+chapter: 19
 type: word
 headword: der Kopf
 gloss: the head — masculine, capitalised, with final pf

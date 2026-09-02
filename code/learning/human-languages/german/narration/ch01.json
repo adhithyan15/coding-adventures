@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a7324f68e35cfc42",
+  "sourceHash": "fnv1a64:54ef2b17236ca37b",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -226,7 +226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a81ca14b03a8aa4",
+      "sourceHash": "fnv1a64:9f816fd68a054558",
       "notice": null,
       "blocks": [
         {
@@ -302,7 +302,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English splits good (adjective) from well (adverb); Spanish splits bueno from bien; French splits bon from bien. German does not — gut is both. \"A good day\" is ein guter Tag — and the very same gut is how you say you are doing well, which is what Chapter 3 is built on. One word covers the whole job, so the Romance bien/bueno pair collapses back into a single German word."
+              "text": "English splits good (adjective) from well (adverb); Spanish splits bueno from bien; French splits bon from bien. German does not — gut is both. \"A good day\" is ein guter Tag — and the very same gut is how you say you are doing well, which is what the wellbeing exchange is built on. One word covers the whole job, so the Romance bien/bueno pair collapses back into a single German word."
             }
           ]
         },

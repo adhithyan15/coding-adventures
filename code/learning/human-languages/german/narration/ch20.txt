@@ -1,33 +1,69 @@
-German, chapter 20: Sorry.
-1 lesson. All 1 can be done entirely by ear.
+German, chapter 20: Yes and No.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-Entschuldigung — “sorry” / “excuse me”.
+Lesson 1 of 2.
+ja — yes.
 
 Warm-up.
 [pause 2 seconds]
-You already know bitte does triple duty for "please," "you're welcome," and "here you go." German's word for sorry is just as hard-working: Entschuldigung covers both "excuse me" and "I'm sorry."
+The easiest German word to say, and one English almost shares.
 
 The word, taken apart.
-ent- = a "removal / undoing" prefix — the same shape as in entdecken ("un-cover" becomes discover) or entfernen ("un-distance" becomes remove).
-Schuld = "guilt, fault, blame" (also, separately, "debt" — a Schuld can be money owed or wrong done).
--igung = a noun-forming suffix, roughly "-ing/-ation."
-So Entschuldigung is literally "an un-guilting" — the act of removing blame. Saying it hands the guilt back: I release you from any fault (when getting someone's attention or brushing past) or I ask you to release me from mine (when apologizing).
-Schuld has a striking cousin: it traces to the same ancient Germanic root as English shall and should — a verb that originally meant "to owe." Schuld (what is owed, guilt) and shall (what one is obliged to do) are, at root, the same idea of an obligation outstanding.
+ja = yes. Said yah — remember German j is pronounced like English y, never the English "j."
+It's an ancient Germanic word, and English kept the very same root in the one word that still clearly shows it:
+yea — the old, formal "yes" (the yeas and the nays in a vote) — this is ja's direct cousin, same Proto-Germanic root.
+aye — the sailor's and parliament's "yes" (Aye, aye, captain) — sounds like a cousin, but its origin is actually uncertain; it may come from a different word entirely, so don't bank on it.
+So German ja and English yea are the same little word, split between two cousin languages. (English's everyday yes is a compound of that same yea with an old "be it so.")
 
-Why it's said this way: Everyday repair and deeper regret.
-For deeper regret — real sorrow, not a bump in the hallway — German often reaches for es tut mir leid, literally "it does to-me sorrow":
-es = "it," tut = "does" (from tun, "to do"), mir = "to me," Leid = "sorrow, suffering" (a cousin of English loath, both from a root meaning "hateful, painful").
-Use Entschuldigung for the everyday sorry/excuse-me (stepping on a foot, interrupting), and es tut mir leid when you mean it more — condolences, a real regret. The two overlap; native speakers move between them by feel.
+Grammar Lens: A German habit to file away.
+German also has a third answer-word, doch, for one special job: contradicting a negative — exactly like French si. If someone says something isn't so and you insist it is, you say doch, not ja:
+Du kommst nicht? ("You're not coming?") — Doch! ("Yes I am!")
+You'll drill doch on its own later; for now, keep ja for a plain yes and know doch is waiting for the contradictions.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Schuld" — guilt/fault — then "Entschuldigung," sorry / excuse me]
+[your turn — say: "ja" — yah, the j like English y]
 [pause 8 seconds for the answer]
-[your turn — say: the deeper phrase — "es tut mir leid," it pains me / I'm so sorry]
+[your turn — say: the English cousin — "yea… ja" (and maybe aye)]
+[pause 8 seconds for the answer]
+[your turn — say: the contradiction preview — "Du kommst nicht? — Doch!"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does Entschuldigung literally mean, piece by piece? ("Un-guilting" — ent- "away" + Schuld "guilt/fault.") What English word shares Schuld's ancient root? (Shall/should — both from a root meaning "to owe.") What's the deeper phrase for real regret? (Es tut mir leid, "it does to me sorrow.")
+How do you say yes in German? (ja, yah.) How is the j pronounced? (Like English y.) Which English word is ja's firm direct cousin? (yea — aye only looks like one; its origin is uncertain.) What German word answers yes specifically to contradict a negative? (doch.)
+
+
+Lesson 2 of 2.
+nein — no.
+
+Warm-up.
+[pause 2 seconds]
+German's "no" is a tiny sentence with a number hidden inside it.
+
+The word, taken apart.
+nein = no. Said to rhyme with English nine (the ei in German is always eye).
+Take it apart and it's two words fused: ni + ein — literally "not one." English did the exact same trick: ne + one becomes none. So German nein and English none are the same idea — "not a single one" — hardened into a bare "no."
+
+Why it's said this way: One "no" runs across the whole chain.
+That n‑ at the front is not a coincidence. A single ancient sound — linguists write it PIE ne — is the negator behind an astonishing sweep of languages you're learning:
+[a table of 4 rows, read aloud]
+from PIE ne: Latin, nōn becomes Spanish no, French non.
+from PIE ne: German, nein (ni-ein).
+from PIE ne: Hindi, nahīṃ (from na).
+from PIE ne: English, no, not, none.
+Learn nein and you've really met the same "n‑of‑no" that will greet you again in Hindi, and that also sits inside Spanish and French. One negative, half the world.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "nein" — rhymes with nine]
+[pause 8 seconds for the answer]
+[your turn — say: taken apart — "ni + ein = not one", like English none]
+[pause 8 seconds for the answer]
+[your turn — say: the family — "nōn… non… nein… nahīṃ" — all the PIE ne]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say no in German? (nein, rhymes with nine.) What two words is it fused from, and what do they mean? (ni + ein — "not one.") Which English word is built the same way? (none = ne + one.) What ancient sound links German nein, Latin nōn and Hindi nahīṃ? (PIE ne, the negator.)

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C19-bitte-requests
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 660
-chapter: 19
+chapter: 21
 type: phrase
 headword: bitte
 gloss: please — place the familiar courtesy word after a small request
@@ -45,7 +45,7 @@ Now give that same small word its other everyday job: **please**.
 > **Wasser, bitte.** — Water, please.
 
 Nothing here is new except the job **bitte** is doing. You learned **Wasser**
-in Chapter 11. Put **bitte** after the thing you want and the two known words
+with the food. Put **bitte** after the thing you want and the two known words
 become a complete, polite small request. The comma marks the little pause you
 will naturally hear before **bitte**.
 

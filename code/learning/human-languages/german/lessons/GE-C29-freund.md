@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C29-freund
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 900
-chapter: 29
+chapter: 31
 type: word
 headword: der Freund
 gloss: friend — a Germanic cousin of English friend, both frozen out of the same old verb meaning "to love"
@@ -36,7 +36,7 @@ reviews_of: [GE-C28-milch, GE-C02-freut-mich]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MILCH-02] -->
 
-[PAUSE 2s] Chapter 2 taught you **freut mich** — "pleased to meet you,"
+[PAUSE 2s] You were taught **freut mich** — "pleased to meet you,"
 literally "it gladdens me." The person doing the gladdening has a name of
 their own, and it is built from the very same root.
 
@@ -83,6 +83,6 @@ moving and became one.
 
 [PAUSE 3s] Give "friend" with its article. (**Der Freund**.) What part of
 speech did *Freund* start out as? (**A verb** — a frozen present participle of
-"to love.") Which Chapter 2 phrase shares its root? (**Freut mich**.) Which day
+"to love.") Which greeting phrase shares its root? (**Freut mich**.) Which day
 of the week carries the same PIE root one step further? (**Freitag /
 Friday**, from the goddess **Frigg**.)

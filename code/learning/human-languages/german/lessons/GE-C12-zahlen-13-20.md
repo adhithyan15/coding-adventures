@@ -35,7 +35,7 @@ the identical thing** — because *-teen* **is** *ten*.
 | 19 | **neunzehn** | nineteen | neun + zehn |
 | 20 | **zwanzig** | twenty | ← *twaintig*, "**two tens**" |
 
-Every one is **your Chapter 6 digit + zehn** — and the English column is the same
+Every one is **your first-ten digit + zehn** — and the English column is the same
 compound with *-teen* (which is just **ten** again: *thir-teen* = "three-ten").
 Only two small wearings-down: *sech(s)zehn* and *sieb(en)zehn* clip a sound for
 easier speech, exactly as English *thir-* and *fif-* did to *three* and *five*.

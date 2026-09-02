@@ -1,12 +1,11 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:1ba2aad899a5e871",
+  "sourceHash": "fnv1a64:f4477f44bed36642",
   "lessonIds": [
-    "GE-C31-arm",
-    "GE-C31-finger",
-    "GE-C31-fuss",
-    "GE-C31-herz"
+    "GE-C29-freund",
+    "GE-C29-freundin",
+    "GE-C29-familie"
   ],
-  "tex": "german/book/chapters/ch31-hand-table-complete.tex"
+  "tex": "german/book/chapters/ch31-friend-and-family.tex"
 }
