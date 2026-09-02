@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-W03-o-matra
 spine_node: SPINE-MEET-GREET
-sequence: 410
+sequence: 440
 delivery: script
 chapter: 6
 type: writing

@@ -1,19 +1,21 @@
 {
   "language": "bengali",
   "chapter": 9,
-  "sourceHash": "fnv1a64:5464c57537141518",
+  "sourceHash": "fnv1a64:2e3b59cf196620dd",
   "lessonIds": [
-    "BN-C05-bola",
-    "BN-C05-ami-bangla-boli",
-    "BN-C05-kaj-kora",
-    "BN-C05-thaka",
-    "BN-C05-practice"
+    "BN-W04-pa",
+    "BN-W03-da",
+    "BN-W03-dha",
+    "BN-W04-cha",
+    "BN-W04-chha",
+    "BN-W04-achhi-read",
+    "BN-W04-ja"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch09.txt",
   "json": "bengali/narration/ch09.json",
-  "textHash": "fnv1a64:90267e80f3285ac9",
-  "jsonHash": "fnv1a64:f80f34953c71b976",
+  "textHash": "fnv1a64:8e021848fe1fd4d6",
+  "jsonHash": "fnv1a64:2195611a19b1ee8b",
   "findings": []
 }

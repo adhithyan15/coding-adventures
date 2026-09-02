@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C10-dudh",
     "language": "bengali",
-    "chapter": 14,
-    "sequence": 800,
+    "chapter": 16,
+    "sequence": 890,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:aacafdb25c199664",
+    "sourceHash": "fnv1a64:e148a82499ff05d3",
     "detachableSegments": [
       "The letters in this word"
     ]
