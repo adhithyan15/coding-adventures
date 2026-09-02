@@ -37,6 +37,26 @@ against a closed issue and tracked nowhere. It is now #13977, and the README,
 backlog, and spec all point there. Historical changelog entries keep their
 original references.
 
+### Fixed - changelog rolled forward past the published v0.1.0 (#13625)
+
+`task-app-v0.1.0` published on 2026-08-31, but this file still headed its top
+section `[0.1.0] - Unreleased`, so 16 entries that landed *after* the tag were
+filed under a version that had already shipped. The section is now split at the
+real tag boundary — established by reading this file as it existed at
+`task-app-v0.1.0`, not inferred from dates: `[Unreleased]` holds the 16
+post-release entries, and `[0.1.0] - 2026-08-31` holds the 45 present at the tag.
+
+Splitting it surfaced a second, older defect — the file carried **two**
+`## [0.1.0] - Unreleased` headings, one at line 5 and one 940 lines below. Both
+are present at the v0.1.0 tag and on current main, so this predates the release
+rather than coming from it. The duplicate is removed and v0.1.0 is now one
+contiguous section. Entry counts were checked either side of both edits
+(16 + 45 = 61, matching the 61 present before), so the restructure dropped
+nothing.
+
+The CI gate that keeps a published version from sitting marked `Unreleased`
+remains #13625's own work; this is the data correction that gate would catch.
+
 ### Fixed - visible local-storage and recovery status (#13690)
 
 Trestle now keeps its local-only persistence model and data location visible in
