@@ -159,6 +159,8 @@ layout EngramApp {
             add-note-type-label : slot: collection-add-note-type-label ,
             delete-note-label : slot: collection-delete-note-label ,
             delete-note-type-label : slot: collection-delete-note-type-label ,
+            delete-note-disabled : slot: collection-delete-note-disabled ,
+            delete-note-type-disabled : slot: collection-delete-note-type-disabled ,
             onImportAnki : emit: onImportAnki ,
             onExportAnki : emit: onExportAnki ,
             onPruneUnusedMedia : emit: onPruneUnusedMedia ,
