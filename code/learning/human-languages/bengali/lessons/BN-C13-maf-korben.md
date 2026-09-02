@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C13-maf-korben
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1020
-chapter: 13
+sequence: 970
+chapter: 19
 type: word
 headword: মাফ করবেন
 romanization: maf korben

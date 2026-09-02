@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W01-ma
 spine_node: SPINE-MEET-GREET
-sequence: 1640
+sequence: 110
 delivery: script
-chapter: 16
+chapter: 2
 type: writing
 headword: ম
 romanization: "mô"

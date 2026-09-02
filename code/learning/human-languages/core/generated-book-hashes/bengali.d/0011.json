@@ -1,12 +1,14 @@
 {
   "language": "bengali",
   "chapter": 11,
-  "sourceHash": "fnv1a64:89cb40fe92cb7cd8",
+  "sourceHash": "fnv1a64:fe85756fbc22556f",
   "lessonIds": [
-    "BN-C11-bondhu",
-    "BN-C11-poribar",
-    "BN-C11-bhai",
-    "BN-C11-bon"
+    "BN-C07-howa",
+    "BN-C07-jaowa",
+    "BN-C07-asha",
+    "BN-C07-khaowa",
+    "BN-C07-dekha",
+    "BN-C07-jana"
   ],
-  "tex": "bengali/book/chapters/ch11-friend-family-brother-sister.tex"
+  "tex": "bengali/book/chapters/ch11-core-verbs.tex"
 }

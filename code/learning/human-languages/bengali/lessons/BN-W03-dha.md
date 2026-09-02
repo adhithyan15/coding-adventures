@@ -2,25 +2,25 @@
 schema_version: 2
 id: BN-W03-dha
 spine_node: SPINE-MEET-GREET
-sequence: 1910
+sequence: 550
 delivery: script
-chapter: 18
+chapter: 8
 type: writing
 headword: ধ
 romanization: "dhô"
 gloss: "the consonant dha — the fourth breathy partner, and the grid is complete"
-prerequisites: [BN-W03-shada-read]
+prerequisites: [BN-W03-da]
 sounds: []
 roots: []
 etymology_hook: "With the breathy partner of the dental d in hand, the reader holds a full four-cell square of one place of articulation, which is the unit the whole Indian consonant order is built from."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-DA-01, BN-SCRIPT-TA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-SHADA-READ-01]
+  knowledge: [BN-SCRIPT-DA-01, BN-SCRIPT-TA-01, BN-SCRIPT-U-MATRA-01]
 introduces:
   knowledge: [BN-SCRIPT-DHA-01]
 practises:
-  knowledge: [BN-SCRIPT-DA-01, BN-SCRIPT-TA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-SHADA-READ-01, BN-SCRIPT-DHA-01]
+  knowledge: [BN-SCRIPT-DA-01, BN-SCRIPT-TA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-DHA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,9 +31,9 @@ reviews_of: [BN-W03-da]
 # ধ — the consonant dha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-SHADA-READ-01, BN-SCRIPT-DA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-U-MATRA-01, BN-SCRIPT-DA-01] -->
 
-[PAUSE 2s] Read **সাদা**, then write **দ** from memory.
+[PAUSE 2s] Write **দ** from memory, and say where the tongue touches for it.
 
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-DHA-01]; assesses=[BN-SCRIPT-DA-01, BN-SCRIPT-TA-01, BN-SCRIPT-U-MATRA-01] -->
@@ -69,7 +69,7 @@ With the u-sign:
 
 - [YOU WRITE: ধ]
 - [YOU WRITE: ত দ ধ]
-- [YOU READ: সাদা]
+- [YOU WRITE: দা ধা]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-DHA-01, BN-SCRIPT-DA-01] -->

@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C02-ki
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 110
-chapter: 2
+sequence: 210
+chapter: 3
 type: word
 headword: কি
+romanization: "ki"
 gloss: what
 concept_tag: QUESTION-WHAT
 prerequisites: [BN-C02-naam]

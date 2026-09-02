@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C12-chokh
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 900
-chapter: 12
+sequence: 910
+chapter: 18
 type: word
 headword: চোখ
 romanization: chokh
@@ -34,7 +34,7 @@ reviews_of: [BN-C11-bon, BN-C07-dekha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BON-01] -->
 
-[PAUSE 2s] A new chapter, and a new use for Chapter 3's check-in — the parts
+[PAUSE 2s] A new chapter, and a new use for Chapter 5's check-in — the parts
 of you that check-in is actually asking about.
 
 ## You'll want to know: চোখ

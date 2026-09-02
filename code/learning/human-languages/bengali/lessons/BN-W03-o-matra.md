@@ -2,44 +2,44 @@
 schema_version: 2
 id: BN-W03-o-matra
 spine_node: SPINE-MEET-GREET
-sequence: 1810
+sequence: 410
 delivery: script
-chapter: 18
+chapter: 6
 type: writing
 headword: ো
 romanization: "-o"
 gloss: "the o-sign — one sound, wrapped around the letter in two pieces you already own"
-prerequisites: [BN-W02-kemon-read]
+prerequisites: [BN-W04-e-indep]
 sounds: []
 roots: []
 etymology_hook: "The o-sign is not a new shape at all: it is the e-sign in front and the a-sign behind, written around one consonant, which is why a script with fifty letters needs far fewer than fifty strokes."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01, BN-SCRIPT-KEMON-READ-01]
+  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01, BN-SCRIPT-E-INDEP-01]
 introduces:
   knowledge: [BN-SCRIPT-O-MATRA-01]
 practises:
-  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01, BN-SCRIPT-KEMON-READ-01, BN-SCRIPT-O-MATRA-01]
+  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-O-MATRA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W02-kemon-read]
+reviews_of: [BN-W04-e-indep]
 ---
 # ো — the o-sign, wrapped around its letter
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-KEMON-READ-01, BN-SCRIPT-E-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-E-INDEP-01, BN-SCRIPT-E-MATRA-01] -->
 
-[PAUSE 2s] Read **কেমন**, then write **ে** on its own.
+[PAUSE 2s] Read **আমি**, then write **ে** and **এ** and say which is the sign.
 
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-O-MATRA-01]; assesses=[BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01] -->
 
-The last chapter promised that **ে** would come back joined to something. Here
-it is:
+Two lessons ago **ে** stood in front of its consonant on its own. Here it is
+again, joined to something:
 
 > ো
 
@@ -67,7 +67,7 @@ one inside.
 
 - [YOU WRITE: ো]
 - [YOU WRITE: কো]
-- [YOU READ: কেমন]
+- [YOU READ: আমি]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-O-MATRA-01, BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01] -->

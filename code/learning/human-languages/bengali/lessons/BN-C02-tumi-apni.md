@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C02-tumi-apni
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 120
-chapter: 2
+sequence: 220
+chapter: 3
 type: word
 headword: তুমি / আপনি
+romanization: "tumi / āpni"
 gloss: you (familiar / respectful; also তুই intimate)
 concept_tag: PRONOUN-YOU
 prerequisites: [BN-C02-naam]

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C03-ami",
     "language": "bengali",
-    "chapter": 3,
-    "sequence": 150,
+    "chapter": 5,
+    "sequence": 310,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:474fab755bbe5c90",
+    "sourceHash": "fnv1a64:587411728843e0ea",
     "detachableSegments": [
       "The letters in this word"
     ]

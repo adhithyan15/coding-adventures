@@ -26,7 +26,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 5 | ashi | আসি | "I'll come again" goodbye; স = "sh"; no gender on the verb |
 | 6 | practice | (recap) | the five greetings + the sound-fingerprint |
 
-## Chapter 2 — Introducing Yourself
+## Chapter 3 — Introducing Yourself
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -39,7 +39,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 13 | alaap | আলাপ করে ভালো লাগলো | "pleased to meet you"; *ālāp* ← Sanskrit *ālāpa* (a rāga's opening) |
 | 14 | practice | (dialogue) | the whole exchange |
 
-## Chapter 3 — How Are You
+## Chapter 5 — How Are You
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -50,7 +50,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 19 | kono-bepar-na | কোনো ব্যাপার না | "no matter / you're welcome"; *nā* ← PIE *ne |
 | 20 | practice | (dialogue) | the whole how-are-you exchange |
 
-## Chapter 4 — Farewells
+## Chapter 7 — Farewells
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -60,7 +60,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 24 | kal-dekha-hobe | কাল দেখা হবে | "see you tomorrow"; *kāl* = tomorrow *and* yesterday ← *kāla* |
 | 25 | practice | (dialogue) | the farewells |
 
-## Chapter 5 — The First Verbs
+## Chapter 9 — The First Verbs
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -70,13 +70,13 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 29 | kaj-kora | কাজ করা | "to work" (noun + *kôrā*) ← √kṛ, the root of *nômoshkar* |
 | 30 | practice | (dialogue) | three verbs, one gender-free engine |
 
-## Chapter 6 — Numbers 1–5
+## Chapter 10 — Numbers 1–5
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
 | 31 | numbers-1-5 | এক দুই তিন চার পাঁচ | *dui* keeps the vowel Hindi *do* and Marathi *don* flattened |
 
-## Chapter 7 — The Core Verbs
+## Chapter 11 — The Core Verbs
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -87,7 +87,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 36 | dekha | দেখা | "to see" ← √dṛś → **dragon**; vowel harmony, *dekhi* vs *dækhe* |
 | 37 | jana | জানা | "to know" ← √jñā → **know**; জানা facts vs চেনা people |
 
-## Chapter 8 — The Mind and the Page
+## Chapter 12 — The Mind and the Page
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -96,7 +96,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 40 | pora | পড়া | "to read" ← √paṭh; the flap **ড়**, and √pat's twin → **feather** |
 | 41 | lekha | লেখা | "to write" ← √likh "scratch"; every **-া** form is also a noun |
 
-## Chapter 9 — Taking, Asking, Helping, Liking
+## Chapter 13 — Taking, Asking, Helping, Liking
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -105,7 +105,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 44 | sahajjo-kora | সাহায্য করা | "to help" ← *saha* "together" + √i "go"; the final inherent **o** |
 | 45 | bhalo-laga | ভালো লাগা | "to like" ← √lag "stick" — *āmār bhālo lāge*; vs ভালোবাসা |
 
-## Chapter 10 — Tea, Water, Milk, and Rice
+## Chapter 14 — Tea, Water, Milk, and Rice
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -114,7 +114,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 48 | dudh | দুধ | "milk" ← √duh; cousin **doughty**, not the look-alike **dough** |
 | 49 | bhat | ভাত | "rice" ← √bhaj "to share" — a root Ch. 11 picks back up |
 
-## Chapter 11 — Friend, Family, Brother, and Sister
+## Chapter 16 — Friend, Family, Brother, and Sister
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -123,7 +123,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 52 | bhai | ভাই | "brother" — simply *is* English "brother," PIE *bʰréh₂tēr* |
 | 53 | bon | বোন | "sister" ← *bhaginī* ← *bhaga* "a share," the same root as ভাত |
 
-## Chapter 12 — Eye, Mouth, Nose, and Heart
+## Chapter 18 — Eye, Mouth, Nose, and Heart
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C15-shari
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1220
-chapter: 15
+sequence: 1140
+chapter: 22
 type: word
 headword: শাড়ি
 romanization: shari

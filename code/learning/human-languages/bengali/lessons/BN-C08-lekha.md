@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C08-lekha
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 530
-chapter: 8
+sequence: 730
+chapter: 12
 type: word
 headword: লেখা
 romanization: lekhā
@@ -12,7 +12,7 @@ concept_tag: VERB-WRITE
 prerequisites: [BN-C08-pora, BN-C06-numbers-1-5]
 sounds: [kha-aspirate, e-to-i-harmony]
 roots: [likh-scratch]
-etymology_hook: "লেখা is Sanskrit √likh 'to scratch, to engrave' — and Latin scrībere and Germanic wrītan also began as scratching, three unrelated roots that had the same idea, so the resemblance is convergence and not kinship and is named as such; the lesson's own point is that লেখা is simultaneously a verb and a noun, which is what Chapter 4's দেখা হবে was doing all along"
+etymology_hook: "লেখা is Sanskrit √likh 'to scratch, to engrave' — and Latin scrībere and Germanic wrītan also began as scratching, three unrelated roots that had the same idea, so the resemblance is convergence and not kinship and is named as such; the lesson's own point is that লেখা is simultaneously a verb and a noun, which is what Chapter 7's দেখা হবে was doing all along"
 duration:
   max_seconds: 296
 requires:
@@ -73,7 +73,7 @@ finding here is a shared idea, not a family tree.
 | পড়া | to read | study, homework |
 | দেখা | to see | a seeing, a meeting |
 
-Every **-া** form you have met does this. That is what Chapter 4's **দেখা হবে**
+Every **-া** form you have met does this. That is what Chapter 7's **দেখা হবে**
 was: not "we will see" but "**a seeing** will happen." It also builds nouns
 straight out of verbs — **লেখাপড়া** (*lekhāpôṛā*), "writing-reading," is the
 ordinary word for **education**. And the causative from three lessons back still

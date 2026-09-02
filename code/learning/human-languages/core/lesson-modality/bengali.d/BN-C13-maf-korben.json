@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C13-maf-korben",
     "language": "bengali",
-    "chapter": 13,
-    "sequence": 1020,
+    "chapter": 19,
+    "sequence": 970,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8f474ddd4d824d26",
+    "sourceHash": "fnv1a64:feb0e06083ee157f",
     "detachableSegments": [
       "The letters in this word"
     ]

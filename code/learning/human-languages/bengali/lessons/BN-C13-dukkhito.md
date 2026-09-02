@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C13-dukkhito
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1010
-chapter: 13
+sequence: 960
+chapter: 19
 type: word
 headword: দুঃখিত
 romanization: dukkhito

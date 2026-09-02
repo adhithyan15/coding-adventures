@@ -1,18 +1,12 @@
 {
   "language": "bengali",
   "chapter": 16,
-  "sourceHash": "fnv1a64:02ca3eaf2ccc4806",
+  "sourceHash": "fnv1a64:be66f45586a4b829",
   "lessonIds": [
-    "BN-W01-na",
-    "BN-W01-aa-matra",
-    "BN-W01-aa",
-    "BN-W01-ha",
-    "BN-W01-ma",
-    "BN-W01-sa",
-    "BN-W01-ka",
-    "BN-W01-hasanta",
-    "BN-W01-ra",
-    "BN-W01-nomoshkar-read"
+    "BN-C11-bondhu",
+    "BN-C11-poribar",
+    "BN-C11-bhai",
+    "BN-C11-bon"
   ],
-  "tex": "bengali/book/chapters/ch16-script-first.tex"
+  "tex": "bengali/book/chapters/ch16-friend-family-brother-sister.tex"
 }

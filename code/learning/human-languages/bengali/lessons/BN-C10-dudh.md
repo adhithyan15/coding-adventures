@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C10-dudh
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 720
-chapter: 10
+sequence: 800
+chapter: 14
 type: word
 headword: দুধ
 romanization: dudh
@@ -34,7 +34,7 @@ reviews_of: [BN-C10-jol, BN-C10-cha, BN-C09-sahajjo-kora]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01] -->
 
-[PAUSE 2s] Chapter 9 met a word that had to end in a vowel nobody wrote —
+[PAUSE 2s] Chapter 13 met a word that had to end in a vowel nobody wrote —
 সাহায্য, *sāhājjo*. This word looks like it could do the same thing. It
 doesn't.
 

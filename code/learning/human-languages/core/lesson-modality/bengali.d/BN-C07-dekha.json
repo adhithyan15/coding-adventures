@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C07-dekha",
     "language": "bengali",
-    "chapter": 7,
-    "sequence": 440,
+    "chapter": 11,
+    "sequence": 680,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:fdbc818ec1394d03"
+    "sourceHash": "fnv1a64:e363de75b47fbbf8"
   },
   "findings": []
 }

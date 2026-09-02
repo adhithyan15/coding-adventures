@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C06-numbers-1-5",
     "language": "bengali",
-    "chapter": 6,
-    "sequence": 340,
+    "chapter": 10,
+    "sequence": 630,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b90d02828e8f4352"
+    "sourceHash": "fnv1a64:5e021f858f9f7911"
   },
   "findings": []
 }
