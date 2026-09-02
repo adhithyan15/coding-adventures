@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W34-comma",
+    "language": "marathi",
+    "chapter": 34,
+    "sequence": 1420,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a418a745de1d0b11",
+    "detachableSegments": [
+      "Script: the comma does the joining work for all but the last pair",
+      "Writing — copy, then place"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

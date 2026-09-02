@@ -7,7 +7,11 @@
     "HI-PATH-029-C",
     "HI-PATH-029-E",
     "HI-PATH-42-VERBS",
-    "HI-PATH-43-SEESAY"
+    "HI-PATH-43-SEESAY",
+    "HI-PATH-69-KI",
+    "HI-PATH-70-INFINITIVE",
+    "HI-PATH-72-WHEN",
+    "HI-PATH-73-KAR"
   ],
   "omits": [
     "VERB-INFINITIVE",

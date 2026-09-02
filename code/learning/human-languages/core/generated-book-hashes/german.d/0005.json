@@ -1,0 +1,23 @@
+{
+  "language": "german",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:a507fdec50e4b96c",
+  "lessonIds": [
+    "GE-C05-wohnen",
+    "GE-C05-verbstamm",
+    "GE-C05-er-sie-es",
+    "GE-C05-wir",
+    "GE-C05-ihr",
+    "GE-C05-endungen-hoerbar",
+    "GE-C05-in",
+    "GE-C05-wo",
+    "GE-C05-machen",
+    "GE-C05-was",
+    "GE-C05-lernen",
+    "GE-C05-deutsch",
+    "GE-C05-ich-lerne-deutsch",
+    "GE-C05-pronomen-regel",
+    "GE-C05-practice"
+  ],
+  "tex": "german/book/chapters/ch05-first-verbs.tex"
+}

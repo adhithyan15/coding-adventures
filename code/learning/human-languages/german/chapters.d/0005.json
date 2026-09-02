@@ -2,15 +2,38 @@
   "chapter": 5,
   "title": "The First Verbs",
   "label": "ch:first-verbs",
-  "canDo": "I can build short present-tense German sentences with the chapter's first verbs.",
+  "canDo": "I can conjugate any regular German verb, ask where someone lives and what they are doing, and build my own present-tense sentences instead of reciting them.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-SAY-WHAT-I-DO",
+    "SPINE-NAME-EVERYDAY-ACTIONS"
   ],
   "payoff": {
     "lesson": "GE-C05-practice",
     "kind": "task",
-    "summary": "Complete GE-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense German sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Until now the book handed over fixed phrases. This chapter hands over the machine: take the -en off a German verb and the stem that is left accepts six endings, learned once and applied to thousands of words. Three verbs run through it — wohnen, machen, lernen — along with the pronouns the paradigm needs and the question words wo and was. It ends with Ich lerne Deutsch, the first sentence in the book assembled from parts nobody handed over whole, and with the reason German keeps its pronoun when Spanish drops it.",
+    "assesses": [
+      "GE-LEX-WOHNEN-01",
+      "GE-LEX-MACHEN-01",
+      "GE-LEX-LERNEN-01",
+      "GE-LEX-ER-01",
+      "GE-LEX-SIE-SHE-02",
+      "GE-LEX-WIR-01",
+      "GE-LEX-IHR-01",
+      "GE-LEX-IN-01",
+      "GE-LEX-ICH-WOHNE-IN-02",
+      "GE-LEX-WO-01",
+      "GE-LEX-WAS-01",
+      "GE-LEX-WAS-MACHST-DU-02",
+      "GE-LEX-DEUTSCH-01",
+      "GE-LEX-ICH-LERNE-DEUTSCH-01",
+      "GE-GRAMMAR-VERB-STEM-01",
+      "GE-GRAMMAR-WEAK-SINGULAR-02",
+      "GE-GRAMMAR-THIRD-PERSON-T-03",
+      "GE-GRAMMAR-WIR-EN-02",
+      "GE-GRAMMAR-IHR-T-02",
+      "GE-GRAMMAR-ENDINGS-AUDIBLE-01",
+      "GE-GRAMMAR-OVERT-SUBJECT-01"
+    ],
+    "note": "Chapter 5 is now generated from schema-v2 lessons, so the payoff is atom-scored rather than authored: it claims all fourteen lexical atoms and all seven grammar rules, which is 21 of the chapter's 30 atoms. The grammar share is unusually high because this chapter's subject IS the grammar -- the stem, the six endings, their audibility, and the overt-subject rule are the thing being taught, not scaffolding around a word list. The per-word pronunciation and etymology atoms are drilled in their own lessons and are deliberately not claimed here."
   }
 }

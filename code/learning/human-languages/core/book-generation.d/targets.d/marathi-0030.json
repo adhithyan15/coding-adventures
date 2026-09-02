@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 30,
+  "output": "marathi/book/chapters/ch30-flat-joins.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

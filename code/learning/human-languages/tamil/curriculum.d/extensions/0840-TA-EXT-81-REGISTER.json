@@ -1,0 +1,12 @@
+{
+  "id": "TA-EXT-81-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise the spoken clip of a word I learnt in its written form.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C81-two-tamils",
+    "TA-C81-which-tamil"
+  ]
+}

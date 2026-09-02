@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02]
+  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02]
+  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -36,7 +36,7 @@ reviews_of: [TA-W07-numbers-6-10-delayed-copy]
 Cover the answer line. Every sound and shape has had a supported turn.
 
 ## Writing — dictation and transcription
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 [YOU HEAR: *aaru — eezhu — onpatu*]
@@ -45,7 +45,7 @@ Write the three numerals from sound alone. For *eezhu*, also write the word.
 Then uncover: **௬ — ௭ ஏழு — ௯**. Repair one place.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 [PAUSE 3s] Write the numeral for *pattu*. (**௰**.) Write seven. (**ஏழு**.)
 Next, compare only forms you can already hear and read.

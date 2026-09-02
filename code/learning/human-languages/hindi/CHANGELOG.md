@@ -2,96 +2,67 @@
 
 ## [Unreleased]
 
-### Added - 35 more pre-A1 words, chosen against the A1 exam inventory: 155/282 -> 173/282
+### Added - the joining column: 155 -> 176 of 282 A1 points
 
-Seven chapters (68-74), five lessons each, one new headword per lesson. The
-pre-A1 vocabulary criterion moves **155 -> 190 of 300**, and the shortfall the
-completion plan tracks falls 145 -> 110, exactly 35.
+**Chapters 68-74 teach Hindi's joining words, and A1 exam coverage moves
+155/282 (55%) -> 176/282 (62%).** Measured with `measureExamCoverage` against
+`core/exam-inventory-hindi-a1.json`, before and after, on the tree - not
+arithmetic on the deltas.
 
-The words were NOT chosen by topic. `npm run plan` names the vocabulary item as
-a count and cannot say which words; `core/exam-inventory-hindi-a1.json` can, and
-every one of its 127 uncovered points carried a note naming the missing word and
-the mock item that needs it. Choosing against that list closed **18 exam points
-with 35 words**:
+- **`Samuchchay (joining clauses)` goes 0/6 to 6/6, and `Prashn (asking
+  questions)` 5/10 to 10/10.** Fifteen items closed twenty-one points, because
+  they were chosen against the inventory rather than by topic: six of the
+  twenty-one fell in the communicative-function column the tranche was not
+  aimed at (asking a preference, saying what you want, asking about ability,
+  saying why you cannot do something, asking when something happens), and one in
+  pronunciation.
+- **What is taught, one item per lesson:**
 
-    68  MEET-GREET              desh, Bharat, shahar, bhasha, angrezi
-    69  POLITE-REQUEST-REPAIR   gari, rel, steshan, tikat, jana
-    70  EXCHANGE-NAMES          khel, khelna, kriket, gana, aram
-    71  CHECK-WELLBEING         aaj, bhi, bahut, kab, kyon
-    72  RESPOND-BASIC           paisa, rupaya, dam, mahanga, kharidna
-    73  COURTESY-THANK          hotal, nashta, bil, vetar, pina
-    74  TAKE-LEAVE              khula, band, pravesh, nikas, der
+  | ch. | items |
+  |---|---|
+  | 68 | *aur* and - **या** or - **लेकिन** but |
+  | 69 | the verb comes last - **कि** that |
+  | 70 | **सकना** can - **चाहना** want - the -ना form as an object |
+  | 71 | **क्यों** why - **क्योंकि** because |
+  | 72 | **कब** when? - **जब … तब** when/then |
+  | 73 | **-कर** having done |
+  | 74 | **क्या …?** the polar particle - the rising voice - **… ना?** the tag |
 
-**A1 exam coverage: 155/282 (55%) -> 173/282 (61%).** Core lexis 35/65 -> 43/65,
-adverbs 7/10 -> 9/10, questions 5/10 -> 7/10, the verb 11/27 -> 13/27,
-communicative functions 44/65 -> 46/65, the noun 6/9 -> 7/9, the adjective
-5/9 -> 6/9. The denominator did not move; 18 points that had `probe: null`
-now name atoms that exist.
-
-Four of those points were called out by name in the previous entry as the
-track's most conspicuous holes and are now closed: **`jana` is taught**
-(HI-A1-V-25, "the single highest-traffic missing verb in the level"); **`aaj`
-is taught** (HI-A1-ADV-03); **`kab` and `kyon` are taught in their own lessons**
-rather than named in passing in a list (HI-A1-Q-07, HI-A1-Q-08); and **the
-public-sign vocabulary exists** — `khula`, `band`, `pravesh`, `nikas` are items
-1 to 4 of BOTH mocks' reading papers and the first 35 of that paper's 100
-points (HI-A1-F-60, HI-A1-LEX-62).
-
-The verb criterion closed too. Hindi taught **2** distinct verb headwords at or
-below pre-A1 against a target of 5; `jana`, `khelna`, `kharidna` and `pina`
-bring it to **6**, and `verb-vocabulary/hindi/pre-A1` has left the plan. Each of
-the four is a canonical `VERB-*` concept owned by an A1 or A2 spine node, so
-each required deleting the concept from that node's `omits` and adding it to
-its `relocates` — the ledger mechanism, not a retag.
-
-**The writing ramp is interleaved rather than blocked.** Every word arrives
-glossed and romanized first, which is what makes its headword exposure rather
-than something the reader must decode; the SPELLING of it is asked for one
-lesson later, when the next word is being introduced by ear. So lesson 2 of each
-chapter writes word 1 while hearing word 2, lesson 4 writes word 3, and the
-payoff lesson writes words 4 and 5 and says all five. Twenty-one of the
-thirty-five lessons carry `writing` alongside listening, speaking and reading.
-
-**Reinforcement went DOWN while 35 lessons went in: 54 -> 53 thin atoms at
-pre-A1.** A naive append does the opposite. Measured on the first draft, this
-tranche drove the count 54 -> 68, and the twelve extra were exactly the fourth
-and fifth atom of every chapter: within a chapter each word is retrieved by the
-lessons after it, so words 1-3 accumulate revisits and words 4-5 have nowhere
-left to go. The fix is structural, not a pin reseat. Every chapter-opening
-lesson now declares the TWO preceding words -- reaching across the chapter
-boundary -- and its Warm-up and Guided Practice retrieve both by name, and the
-second lesson of each chapter picks up the one that is still short. The two lessons
-that open chapter 68 reach back past the A1 name-field runway to `ghas` and
-`kuan`, the last two words of the previous vocabulary run, and pick up the
-runway's own payoff atom on the way -- three atoms that had been sitting at the
-end of the corpus with their windows unjudged. A side effect worth having: the
-retrieval lines alternate `[YOU RECALL: say ... then read ...]`, so the
-modalities intermix by construction rather than by scheduling.
-
-**Zero new Devanagari glyphs.** All 35 headwords, every example sentence and
-every citation are spelled from the 47 glyphs the track's own writing lessons
-teach. The corpus still shows 11 it has never taught and that number did not
-move. This ruled out real candidates — `daktar` needs the candra-o sign,
-`thoda` needs `tha`, `parhna` needs `dha`-nuqta — and is why the health chapter
-that was designed for this tranche was cut: with no word for the doctor it
-closed one exam point, against five for the small-words chapter that replaced
-it. HI-A1-LEX-43 stays uncovered and its note says why.
-
-Three lessons teach a word against a look-alike the reader already holds, which
-is where a beginner's eye actually fails: `bhi` against `abhi`, `bil` against
-`bilkul` and `billi`, `band` against `bandar`. Two lessons declare a second
-sense rather than a second headword — `gana` is both the song and the singing,
-`khana` is both the food the reader has held since the tea chapter and the
-doing word, which is what covers HI-A1-V-26.
-
-Notes were rewritten on five points this tranche moved WITHOUT closing, so the
-file does not contradict itself: HI-A1-LEX-18 (breakfast now taught, lunch and
-dinner not), HI-A1-LEX-40 (a verb of buying exists, no dwelling transaction
-does), HI-A1-LEX-53 (`gana` gives the music corner a foothold, five arts
-domains remain), HI-A1-F-24 (the content words for saying where you are from
-exist, the `se` frame does not), HI-A1-ADJ-05 (`Bharat` is taught as a NAME,
-the relational adjective is not).
-
+- **`aur` is taught GLOSS-FIRST, and the letter debt is written into the
+  lesson.** Its opening vowel is the independent *au*, which no Hindi writing
+  lesson has ever drawn and which the corpus shows exactly once, inside
+  *aurat*. Its Devanagari therefore appears only in the headword, where the
+  romanization exemption makes it exposure; the body is entirely romanized and
+  says in as many words that the letter is owed. The word carries a clause join
+  in five of the six mock profile texts and is far too load-bearing to wait for
+  a script lesson. This is the shape the Marathi tranche used for **सांगणे**.
+- **Every other item is spelled from Devanagari the corpus already teaches.**
+  The candidate list was filtered against the track's taught-glyph set before a
+  word of prose was written, and the first draft still had seventeen closure
+  violations - **झ** inside *mujhe*, **छ** inside *acchā*, **ौ** inside *kaun*
+  - every one of which was rewritten around rather than waved through.
+  `scriptClosureViolations` and `neverTaughtGlyphs` are unchanged at 38 and 11.
+- **Four spine omissions close.** `VERB-CAN` (HI-C70-sakna), `VERB-WANT`
+  (HI-C70-chahna), `CONNECTIVE-BECAUSE` (HI-C71-kyonki) and `QUESTION-POLAR`
+  (HI-C74-kya-polar). `SPINE-SAY-WHY` and `SPINE-SAY-WHAT-I-WANT` now omit
+  nothing at all.
+- **The tranche's own reinforcement debt is zero**, and `atomsNeverRevisited`
+  FALLS 81 -> 79: the two atoms rescued are ones the older track had nothing
+  later to revisit them with. `reinforcementWindowMisses` rises 1035 -> 1071,
+  and every one of the 36 is pre-existing debt this tranche EXPOSED rather than
+  created - twenty-three more lessons made reinforcement windows fit that the
+  end of the track had previously cut off. Not one of the 36 is on a lesson in
+  this tranche.
+- **Chapter 74 was split rather than crammed.** The intonation question started
+  as a section of the **क्या** lesson and pushed its COMPUTED duration to 308
+  seconds against a 300-second ceiling. Trimming prose moved it by four seconds
+  and made the lesson worse; lifting it into its own lesson - one new item per
+  lesson - fixed it and is the better book.
+- **Left uncovered, with the reason written into the inventory:**
+  `HI-A1-V-21` (*chahiye* takes a noun where *chahna* takes a verb, and it needs
+  the independent vowel **ए**, which no writing lesson has drawn - a script
+  lesson as much as a vocabulary one) and `HI-A1-F-39` (the asking half now
+  exists; *janna* still has no atom, and half a pair is not the point).
 
 ### Added - an A1 exam inventory, measured against a proxy with a real syllabus behind it
 

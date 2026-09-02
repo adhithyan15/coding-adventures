@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6d41dcb1b22650ae",
+  "sourceHash": "fnv1a64:e8e5d4f6c20ae53e",
   "lessons": [
     {
       "id": "TA-C07-numbers-1-5",
@@ -143,7 +143,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:71eeb03d8f24b1d7",
+      "sourceHash": "fnv1a64:4e999aa5e5f22889",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -241,7 +241,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8ada89e136e632c2",
+      "sourceHash": "fnv1a64:a84549401e076c67",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -348,7 +348,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a04814c57eef12a0",
+      "sourceHash": "fnv1a64:bcb6a333e5b2c636",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -450,7 +450,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:bb7be40279a454e0",
+      "sourceHash": "fnv1a64:ccd3a17cd2f7b07e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -515,7 +515,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:41bdbac590e878c9",
+      "sourceHash": "fnv1a64:32f223413998d869",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -580,7 +580,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:642bb5a6b54c411f",
+      "sourceHash": "fnv1a64:ba4c4429b3259dd5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -936,7 +936,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1343641b18683394",
+      "sourceHash": "fnv1a64:160ed82d882b5d3d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1034,7 +1034,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7341114bb88cc4fd",
+      "sourceHash": "fnv1a64:4d5cd863b1eb5752",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1141,7 +1141,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4ef938f8ba898ca1",
+      "sourceHash": "fnv1a64:4785c09b5604581d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1243,7 +1243,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ff86b94031c65568",
+      "sourceHash": "fnv1a64:b722b068881c907a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1503,7 +1503,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:87e19d12b038ac4a",
+      "sourceHash": "fnv1a64:f50eaf0026252220",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1568,7 +1568,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:5f977f457797fc66",
+      "sourceHash": "fnv1a64:d1fb511e9d73e3b6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2085,7 +2085,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:564384eb1e25444a",
+      "sourceHash": "fnv1a64:168d258c532ebd02",
       "notice": {
         "modality": "pen",
         "needs": [],

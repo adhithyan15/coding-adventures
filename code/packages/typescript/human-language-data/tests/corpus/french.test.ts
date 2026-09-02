@@ -45,12 +45,23 @@ it("pins French modality", () => expectLanguageModality("french"));
 // 16 -> 17 culture claims: English `noon` is Latin nona hora, "the ninth hour",
 // which drifted from mid-afternoon to midday; it lived only in a hand-written
 // culture block and is now owned by FR-C08-midi.
+// 108 -> 119 lessons: retiring handwritten chapter 1, the first thing a reader ever
+// meets. Its eleven schema-v1 lessons already mirrored the .tex section for section --
+// the block gap was ZERO in both directions -- so nothing had to be written; all eleven
+// were typed instead. The chapter lands at exactly twelve atoms, the ceiling: ten words
+// and phrases (salut, bien, bon, jour, bonjour, soir, bonsoir, nuit, bonne nuit), the two
+// grammar rules the greetings run on (adjective agreement, and the gender the article
+// carries), and the writing runway's FR-ORTHO-SALUT-01. Net +11 (0 new, 0 retired).
+// 17 -> 20 culture claims: the three `culture` blocks the hand-written chapter printed --
+// salut is strictly informal, bonjour is near-obligatory on entering anywhere, and bonne
+// nuit is a bedtime farewell rather than an evening greeting -- were prose in the lessons
+// and typed by nobody. Each is now owned and assessed.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 108,
+    lessons: 119,
     idioms: 3,
     senses: 7,
-    cultureClaims: 17,
+    cultureClaims: 20,
     unitPrefix: "FR",
   }));
 

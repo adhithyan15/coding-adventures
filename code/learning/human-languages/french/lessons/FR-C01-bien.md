@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C01-bien
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 10
 chapter: 1
 type: word
@@ -9,23 +11,42 @@ concept_tag: WORD-WELL
 prerequisites: [FR-C01-salut]
 sounds: [nasal-in]
 roots: [bene, bonus]
-est_minutes: 3
+etymology_hook: "bien ← Latin bene, 'well' — the bene- of benefit, benevolent and benediction, and the very same word in Spanish"
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [FR-LEX-SALUT-01]
+introduces:
+  knowledge: [FR-LEX-BIEN-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-BIEN-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+variety: standard-contemporary
+register: neutral
 reviews_of: [FR-C01-salut]
 ---
 
 # bien — "well," a whole answer
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] A tiny, essential word: **bien**, "well." It carries a good chunk
 of everyday conversation, and its root reaches straight into English.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `nasal-in` — **ien** is a **nasal** *byan*: air through the nose, and the
   *n* itself is silent. Not "bee-en." → [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[FR-LEX-BIEN-02]; assesses=[] -->
 
 **bien** — "well." Root: Latin **bene** ("well"). The English *bene-* family
 is yours already:
@@ -43,6 +64,7 @@ is yours already:
 ("Well / good.") Intensified: "**très bien**" ("very well").
 
 ## Grammar Lens: the "good" it pairs with
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *bien* is the **adverb** ("well" — *how* something is done). The **adjective**
 "good" (describing a thing) is a different word, **bon** — the next lesson.
@@ -50,6 +72,7 @@ This is the same *well* vs. *good* split as English, and the same *bien* vs.
 *bueno* split as Spanish; French's adjective is *bon*, from Latin *bonus*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BIEN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bien" — nasal *byan*]
@@ -57,6 +80,7 @@ This is the same *well* vs. *good* split as English, and the same *bien* vs.
 - [YOU SAY: "bien" then English "benefit", "benevolent"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BIEN-02] -->
 
 [PAUSE 3s] French *bien* and Spanish *bien* come from the same Latin word —
 which one? (*bene*, "well.") Adverb or adjective? (Adverb — "good" the

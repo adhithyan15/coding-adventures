@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C70-infinitive-object",
+    "language": "hindi",
+    "chapter": 70,
+    "sequence": 2700,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fe8dfee7a7c06a43"
+  },
+  "findings": []
+}

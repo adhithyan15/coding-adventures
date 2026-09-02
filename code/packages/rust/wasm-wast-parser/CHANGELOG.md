@@ -1,5 +1,69 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.105 — 2026-09-02 — fix: reject non-power-of-two `align=N` memarg immediates (closes `align.wast`/`align64.wast`/`simd_align.wast`)
+
+Closes the largest remaining coherent NYS cluster in the wasm-conformance
+corpus (post-#14141, every real directive in all 257 files passed except
+this one): `align.wast` (46 `assert_malformed` cases) and `align64.wast`
+(46 cases), both entirely built out of one rule this crate never checked.
+
+**Root cause**: `parse_memarg` converted a text-format `align=N` clause to
+its binary `log2(N)` encoding via `n.trailing_zeros()` UNCONDITIONALLY,
+with no check that `N` is actually a power of two. `align=0`
+(`0u32.trailing_zeros() == 32`) silently produced a nonsense out-of-range
+log2 baked straight into the encoded module. `align=7`
+(`7u32.trailing_zeros() == 0`) silently downgraded to `align=1`, which is
+always <= any instruction's natural access width, so the module parsed
+AND validated cleanly instead of being rejected -- hiding a real
+malformed-input case as a falsely-valid one, every time. The real spec
+text-format grammar (the upstream reference interpreter's own
+`ALIGN_EQ_NAT` parser rule) requires `align=N` to name a power of two for
+exactly this reason: there's no encoding for "align to 7 bytes."
+
+**Fix**: `parse_memarg` now returns `Result<_, WastParseError>` and
+rejects any `align=N` where `N` isn't a power of two (new
+`WastParseError::InvalidAlignment { pos, value }` variant) --
+distinguished from `align.wast`'s sibling `assert_invalid` cases (a
+syntactically valid power-of-two `align=N` that's simply larger than the
+instruction's natural width, a SEMANTIC rule `wasm-validator` already
+checks) purely by WHERE it's caught: this is a text-format syntax defect,
+caught here at parse time, before any log2 value is ever computed.
+
+**Stack-frame regression, fixed in the same commit**: making
+`parse_memarg` fallible pushed `encode_flat_instr`'s four
+`memarg`-touching match arms (plain loads/stores, atomics, SIMD
+load/store, SIMD lane load/store) over this crate's known debug-build
+stack-frame-size hazard -- see `resolve_leading_memidx_token`'s and
+`encode_gc_struct_array_instr`'s own doc comments for the mechanism (a
+debug build sizes a function's frame for the union of every match arm's
+locals, and `encode_flat_instr` sits on the hot recursive path every
+folded instruction funnels through). Caught immediately by this crate's
+own `deeply_folded_struct_instructions_do_not_overflow_the_real_stack`
+regression test going from a clean error to a genuine SIGABRT -- not a
+hypothetical, an actual `cargo test` abort. Fixed by moving all four
+arms' full bodies into new `#[inline(never)]` functions
+(`encode_memop_flat`, `encode_atomic_memop_flat`, `encode_simd_memop_
+flat`, `encode_simd_memop_lane_flat`), the same technique already
+established in this file for the identical hazard. Confirmed empirically:
+the regression test SIGABRTs with the fallible `parse_memarg` call inline
+in `encode_flat_instr`, and passes once each arm is its own function.
+
+**Corpus impact** (measured via `--write-baseline`, diffed programmatically
+against the pre-fix baseline across all 257 files -- no other file's
+tally changed):
+- `align.wast`: `assert_malformed` 2/48 (46 not yet supported) -> 48/48.
+- `align64.wast`: `assert_malformed` 0/46 (46 not yet supported) -> 46/46.
+- `simd_align.wast` (same shared root cause, unplanned bonus): `assert_
+  malformed` 12/34 (22 not yet supported) -> 34/34.
+
+New tests: `align_zero_is_rejected_as_malformed`, `align_non_power_of_
+two_is_rejected_as_malformed`, `align_non_power_of_two_rejected_on_
+store_too`, `align_zero_rejected_on_memory64_load` (representative cases
+straight from `align.wast`/`align64.wast`'s own source), plus `valid_
+power_of_two_alignments_still_parse` (regression guard: 1/2/4/8 still
+parse, and `align=16` on `f64.load` -- syntactically valid, semantically
+rejected by the validator instead -- still parses here).
+
 ## 0.1.104 — 2026-09-02 — feat: elem-segment three-layer fix + `array.init_elem`/`array.new_elem` -- W38 slices 4/5, GC array bulk ops
 
 Slices 4/5 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan

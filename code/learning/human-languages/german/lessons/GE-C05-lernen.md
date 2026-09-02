@@ -1,62 +1,82 @@
 ---
+schema_version: 2
 id: GE-C05-lernen
-sequence: 200
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 202
 chapter: 5
 type: word
 headword: lernen
-gloss: to learn (a third weak verb — the pattern is yours)
+gloss: to learn — and its noun is English lore
 concept_tag: VERB-LEARN
-prerequisites: [GE-C05-wohnen]
-sounds: [r-uvular-german]
+prerequisites: [GE-C05-verbstamm, GE-C05-machen]
+sounds: [herz-short-e, r-uvular-german]
 roots: [liznojan-germanic]
-etymology_hook: "lernen ← Germanic liznōjan 'to learn' → English 'learn'; kin of 'lore' (what is learned)"
-est_minutes: 3
-reviews_of: [GE-C05-machen]
+etymology_hook: "lernen IS English learn, and its noun die Lehre is English lore, the body of what has been learned"
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [GE-GRAMMAR-VERB-STEM-01, GE-LEX-MACHEN-01, GE-GRAMMAR-WEAK-SINGULAR-02]
+introduces:
+  knowledge: [GE-LEX-LERNEN-01, GE-SOUND-LERNEN-01, GE-ETYMON-LERNEN-LORE-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-LERNEN-01, GE-SOUND-LERNEN-01, GE-ETYMON-LERNEN-LORE-02, GE-GRAMMAR-VERB-STEM-01, GE-LEX-MACHEN-01, GE-GRAMMAR-WEAK-SINGULAR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C05-machen, GE-C05-verbstamm]
 ---
 
-# lernen — "to learn," and it *is* English learn
+# lernen — "to learn," and its noun is *lore*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-VERB-STEM-01, GE-LEX-MACHEN-01] -->
 
-[PAUSE 2s] A third weak verb to make the pattern automatic — **lernen** ("to
-learn") — and it sets up your first full German sentence. It's a straight cousin
-of English *learn*.
+[PAUSE 2s] Third verb, same machine — and this is the one you are going to need
+to describe what you are doing right now.
+
+## You'll want to know: lernen
+<!-- hl-knowledge: introduces=[GE-LEX-LERNEN-01]; assesses=[GE-GRAMMAR-WEAK-SINGULAR-02] -->
+
+> **lernen** — "to learn."
+
+Stem **lern-**: *ich lerne*, *du lernst*, *er lernt*. Three verbs now, one
+pattern.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[GE-SOUND-LERNEN-01]; assesses=[GE-LEX-LERNEN-01] -->
 
-- `r-uvular-german` — the German **r** is a soft guttural at the back of the
-  throat: **lernen** = *LER-nen*.
+- `r-uvular-german` — the German **r** is a soft scrape at the back of the
+  throat, nothing like the English *r* made with the tongue tip.
+
+So: *LER-nen*, with a short *e* as in English *bed*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[GE-ETYMON-LERNEN-LORE-02]; assesses=[GE-LEX-LERNEN-01] -->
 
-**lernen** comes from Germanic **liznōjan**, *"to learn, to get to know"* — the
-**same root as English "learn."** Its close relatives are lovely:
+**lernen** is English **learn** — the same Germanic root, barely disguised.
 
-- **lore** — the body of what has been *learned* (folklore, the *lore* of a
-  craft).
-- **last** (a shoemaker's *last*) and Gothic *lais* ("I know") share the deep
-  root — the idea of *following a track* to knowledge.
+Its relatives are the good part. The German noun is **die Lehre**, "the teaching,
+the body of what is taught" — and that word is English **lore**. Folklore is the
+*Lehre* of a folk; the lore of a craft is what its learners have accumulated.
 
-So *lernen* isn't foreign at all — it's *learn*, and its noun *die Lehre* ("the
-teaching, the lesson") is *lore*.
-
-## Grammar Lens: same weak endings, one last time
-
-| ich lerne · du lernst · er lernt | (-e / -st / -t) |
-| wir lernen · ihr lernt · sie lernen | |
-
-Three verbs — *wohne, mache, lerne* — one pattern. You now conjugate the regular
-German present.
+So German kept the verb and the noun in the same family, and English kept both
+too — it just stopped noticing that *learn* and *lore* were relatives.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-LERNEN-01, GE-SOUND-LERNEN-01, GE-ETYMON-LERNEN-LORE-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "lernen" — *LER-nen*, guttural *r*]
-- [YOU SAY: "ich lerne, du lernst, er lernt"]
-- [YOU SAY: "lernen" then English "learn, lore" — one Germanic root]
+- [YOU SAY: "lernen" (*LER-nen*) — scrape the *r* at the back]
+- [YOU SAY: "lernen" and English "learn"]
+- [YOU SAY: "die Lehre" and English "lore" — folklore]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-LERNEN-01, GE-ETYMON-LERNEN-LORE-02] -->
 
-[PAUSE 3s] What English verb is *lernen*? (*Learn* — same root.) What English noun
-for "accumulated knowledge" shares it? (*Lore*.) Say "I learn." (*Ich lerne*.)
-Next: build your first German sentence — **Ich lerne Deutsch**.
+[PAUSE 3s] What does *lernen* mean? ("To learn.") What is its noun, and which
+English word is that? (*Die Lehre*; *lore*.) Give the *ich* form. (*Ich lerne*.)

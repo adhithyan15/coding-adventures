@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:a4d8c6d796feb00d",
+  "lessonIds": [
+    "TA-C80-other",
+    "TA-C80-one-and-other",
+    "TA-W35-read-marradu",
+    "TA-C80-price"
+  ],
+  "tex": "tamil/book/chapters/ch80-one-the-other-and-the-price.tex"
+}

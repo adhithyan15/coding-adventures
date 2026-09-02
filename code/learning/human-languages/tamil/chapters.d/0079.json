@@ -1,0 +1,20 @@
+{
+  "chapter": 79,
+  "title": "When",
+  "label": "ch:ta-when",
+  "canDo": "I can ask when, point at a time already named, and say that two things happen together.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C79-when-clause",
+    "kind": "production",
+    "summary": "Complete TA-C79-when-clause and say the three time-words, then a when-clause.",
+    "assesses": [
+      "TA-LEX-C79-WHEN-01",
+      "TA-LEX-C79-WHEN-02",
+      "TA-SCRIPT-READ-EPPOTHU-01",
+      "TA-GRAMMAR-C79-WHEN-03"
+    ]
+  }
+}

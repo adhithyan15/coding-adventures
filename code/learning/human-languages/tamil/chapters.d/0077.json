@@ -1,0 +1,20 @@
+{
+  "chapter": 77,
+  "title": "Saying, and Thinking",
+  "label": "ch:ta-saying-and-thinking",
+  "canDo": "I can report what was said and give an opinion, by putting a whole sentence inside another.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TA-C77-opinion",
+    "kind": "production",
+    "summary": "Complete TA-C77-opinion and give an opinion about two different things.",
+    "assesses": [
+      "TA-LEX-C77-SAY-01",
+      "TA-GRAMMAR-C77-SAY-02",
+      "TA-SCRIPT-READ-SOL-01",
+      "TA-PRAGMATICS-C77-OPINION-03"
+    ]
+  }
+}

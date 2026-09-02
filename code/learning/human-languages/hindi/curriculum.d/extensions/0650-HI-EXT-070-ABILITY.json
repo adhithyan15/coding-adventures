@@ -1,0 +1,13 @@
+{
+  "id": "HI-EXT-070-ABILITY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I am and am not able to do, using the bare verb stem in front of sakna.",
+  "prerequisites": [
+    "HI-EXT-069-CLAUSE-AS-OBJECT"
+  ],
+  "lessons": [
+    "HI-C70-sakna"
+  ]
+}

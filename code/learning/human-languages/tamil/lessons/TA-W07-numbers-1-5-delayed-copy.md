@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 120
 requires:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -36,14 +36,14 @@ reviews_of: [TA-W07-numbers-1-5-guided-copy]
 Study **௧ ௨ ௩ ௪ ௫** for five seconds. Say each number, then cover the row.
 
 ## Writing — delayed copy
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 <!-- hl-writing-stage: delayed-copy -->
 
 Write the five numerals in order while the model is hidden. Peek once if one
 will not come, cover it again, and continue. Uncover and repair one place.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 
 [PAUSE 3s] What changed from the previous lesson? (**The model was hidden
 before writing.**)

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C05-in",
+    "language": "german",
+    "chapter": 5,
+    "sequence": 198,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9261c0f9f366d0f3"
+  },
+  "findings": []
+}

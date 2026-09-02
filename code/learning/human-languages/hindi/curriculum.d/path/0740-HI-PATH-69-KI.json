@@ -1,0 +1,14 @@
+{
+  "id": "HI-PATH-69-KI",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C69-verb-last",
+    "HI-C69-ki",
+    "HI-R69-reported"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-069-CLAUSE-AS-OBJECT"
+  ],
+  "after": []
+}

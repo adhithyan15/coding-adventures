@@ -12,8 +12,11 @@ it("pins Hindi continuity", () => expectLanguageContinuity("hindi"));
 it("pins Hindi modality", () => expectLanguageModality("hindi"));
 it("pins Hindi lesson-content budgets", () =>
   expectLanguageLessonBudgets("hindi", {
-    // pre-A1 vocabulary round four: +35 lessons, +7 chapters (chapters 68-74).
-    lessons: 322,
+    // 310 -> 343: this vocabulary tranche adds thirty-three lessons in seven
+    // chapters (75-81), one new word each. Thirty-five were authored; kab and
+    // kyon were cut, because #14113's joining tranche teaches both and a
+    // headword introduced twice is a hard error. Re-measured against the tree.
+    lessons: 343,
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.

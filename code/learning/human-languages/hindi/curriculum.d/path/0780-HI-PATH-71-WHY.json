@@ -1,0 +1,14 @@
+{
+  "id": "HI-PATH-71-WHY",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "HI-C71-kyon",
+    "HI-C71-kyonki",
+    "HI-R71-reasons"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-071-WHY-AND-BECAUSE"
+  ],
+  "after": []
+}

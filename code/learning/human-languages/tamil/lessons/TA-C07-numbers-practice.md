@@ -15,11 +15,11 @@ roots: [proto-dravidian-numbers]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-LEX-NUMBERS-6-10-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-ETYMON-NUMBERS-1-5-FAMILY-01, TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-GRAMMAR-NUMBERS-6-10-03, TA-ETYMON-NUMBERS-6-10-FAMILY-01, TA-ETYMON-NUMBERS-6-10-FAMILY-02]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-ETYMON-NUMBERS-1-5-FAMILY-01, TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-GRAMMAR-NUMBERS-6-10-03, TA-ETYMON-NUMBERS-6-10-FAMILY-01, TA-ETYMON-NUMBERS-6-10-FAMILY-02, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -37,7 +37,7 @@ reviews_of: [TA-C07-numbers-1-5-family, TA-C07-numbers-6-10-family, TA-W07-numbe
 shape appears in this lesson.
 
 ## Guided Practice — read, not recite
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-LEX-NUMBERS-6-10-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 Read these shuffled numerals:
 
@@ -54,14 +54,14 @@ Now check against **௧ ௨ ௩ ௪ ௫ ௬ ௭ ௮ ௯ ௰**.
 - Which Kannada shift links Tamil *pattu* to Kannada *hattu*? (***p* to *h*.**)
 
 ## Writing — independent dictation
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-ETYMON-NUMBERS-1-5-FAMILY-01, TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-GRAMMAR-NUMBERS-6-10-03, TA-ETYMON-NUMBERS-6-10-FAMILY-01, TA-ETYMON-NUMBERS-6-10-FAMILY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-ETYMON-NUMBERS-1-5-FAMILY-01, TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-GRAMMAR-NUMBERS-6-10-03, TA-ETYMON-NUMBERS-6-10-FAMILY-01, TA-ETYMON-NUMBERS-6-10-FAMILY-02, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 Cover the answer. [YOU HEAR: *eezhu*] Write its numeral and word. Uncover:
 **௭ — ஏழு**. Repair one shape if needed.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-LEX-NUMBERS-6-10-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 [PAUSE 3s] Count one to ten, then read **௯ ௪ ௭** out of order. You can now
 hear, say, read, and write a representative part of the sequence.

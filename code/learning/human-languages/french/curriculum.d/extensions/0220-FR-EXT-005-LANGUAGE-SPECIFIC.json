@@ -1,0 +1,11 @@
+{
+  "id": "FR-EXT-005-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can choose between salut, bonjour, bonsoir and bonne nuit for the person in front of me and the hour of the day, and write salut from memory.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C01-practice"
+  ]
+}

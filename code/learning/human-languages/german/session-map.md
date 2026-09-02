@@ -106,6 +106,33 @@ this chapter and are now measured with the rest.
 
 Reviews of earlier words fold into each session per the interval schedule.
 
+## Chapter 5 — The First Verbs
+
+| # | Session | What it adds |
+|---|---|---|
+| 55 | wohnen | to live, to dwell (= English *wont*, accustomed) |
+| 56 | der Stamm | the stem: drop *-en*, add endings; *-e* and *-st*; weak verbs |
+| 57 | er · sie · es | he, she, it — matched to *der/die/das*; all take *-t* |
+| 58 | wir | we (= English *we*); *-en*, which is the dictionary form again |
+| 59 | ihr | you all — the plural English lost with *thou*; *-t* |
+| 60 | (the audible endings) | German endings can be heard; French ones cannot |
+| 61 | in | in — unchanged from English; *Ich wohne in …* |
+| 62 | wo | where (= *where* worn down); the German *w-* question family |
+| 63 | machen | to make, to do (= English *make*, by the consonant shift) |
+| 64 | was | what — the *t*-to-*s* swap once more; *Was machst du?* |
+| 65 | lernen | to learn; its noun *die Lehre* is English *lore* |
+| 66 | Deutsch | German, from *diutisc*, "of the people" — English *Dutch* |
+| 67 | Ich lerne Deutsch | the first sentence assembled from owned parts |
+| 68 | (the overt subject) | why German keeps the pronoun: structure, not sound |
+| 69 | practice | building sentences from a pattern, not reciting them |
+
+The six-row conjugation grid was split: each pronoun gets its own session with
+the one ending it takes, so no lesson introduces more than one paradigm cell.
+*wo*, *was* and *in* were used in the chapter's dialogue and taught nowhere, and
+now come before the sentences that need them.
+
+Reviews of earlier words fold into each session per the interval schedule.
+
 ## Chapters 16, 17 and 18 — sein, its past, and the past built on it
 
 Split from one hand-written chapter. `sein` is the only German verb whose forms
@@ -157,5 +184,5 @@ one atom per grammar cell the material is twenty-four atoms, which is twice
 
 ## Next
 
-Chapter 5 — the first verbs, and the first self-built sentence. Chapters 5–15
-are still hand-written LaTeX; see `../BACKLOG.d/` for the retirement queue.
+Chapter 6 — the numbers one to ten. Chapters 6–15 are still hand-written LaTeX;
+see `../BACKLOG.d/` for the retirement queue.
