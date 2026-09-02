@@ -12,6 +12,18 @@
 - Validate tool identifiers as namespaced (`artifact.write`), reject a bare
   namespace, reject duplicates, and sort them so two skills declaring the same
   tools generate byte-identical manifests.
+- Accept only LITERAL Markdown in capability and tool bullets and in the section
+  headings that introduce them. `inline_text` resolves an image to its alt text,
+  drops raw inline HTML while keeping the text around it, and concatenates with
+  no separator, so a bullet could authorize a tool that the rendered document
+  never shows: `- ![&#97;dmin&#46;exec&#95;all](pixel.png)` yielded
+  `admin.exec_all`, absent from the source bytes and rendered as a picture. Only
+  `Text` and `CodeSpan` are accepted now.
+- Count `## Tools needed` headings in nested blocks toward ambiguity. A decoy
+  section inside a block quote was silently ignored, letting an author stage a
+  document whose visible declaration was not the effective one.
+- Enforce `MAX_ALLOWED_TOOLS` at parse time for a clearer error than the
+  manifest's later rejection.
 
 - Re-export manifest types from the shared strict agent-manifest package.
 - Emit schema-v2 manifests with complete per-channel message-schema versions;

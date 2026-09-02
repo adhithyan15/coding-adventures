@@ -4,7 +4,7 @@
 #![deny(missing_docs)]
 
 pub use chief_of_staff_agent_manifest::{
-    AgentManifest, Capability, ChannelAccess, MANIFEST_VERSION,
+    AgentManifest, Capability, ChannelAccess, MANIFEST_VERSION, MAX_ALLOWED_TOOLS,
 };
 use document_ast::{BlockNode, InlineNode, ListChildNode};
 use std::collections::{BTreeMap, BTreeSet};
@@ -376,18 +376,24 @@ fn parse_list(value: Option<&String>) -> Result<Vec<String>, SkillParseError> {
 ///
 /// Required rather than optional, and `- none` is the way to say "calls no
 /// tools" -- the same shape `## Capabilities needed` already uses. Manifest
-/// schema v3 requires `allowed_tools` precisely so that \n\n## Tools needed\n- none\n"calls no tools" is
+/// schema v3 requires `allowed_tools` precisely so that "calls no tools" is
 /// declared instead of defaulted into; letting an absent section mean an empty
 /// list here would put the default back one layer up and undo that.
 fn parse_allowed_tools(nodes: &[BlockNode]) -> Result<Vec<String>, SkillParseError> {
+    // Counted across nested blocks too, so a decoy section in a block quote
+    // makes the document ambiguous instead of being silently ignored.
+    if count_tools_headings(nodes) > 1 {
+        return Err(SkillParseError::AmbiguousToolsSection);
+    }
     let sections = nodes
         .iter()
         .enumerate()
         .filter_map(|(index, node)| match node {
-            BlockNode::Heading(heading) if heading.level == 2 => inline_text(&heading.children)
-                .trim()
-                .eq_ignore_ascii_case("tools needed")
-                .then_some(index),
+            BlockNode::Heading(heading) if heading.level == 2 => {
+                literal_inline_text(&heading.children)
+                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("tools needed"))
+                    .then_some(index)
+            }
             _ => None,
         })
         .collect::<Vec<_>>();
@@ -416,7 +422,14 @@ fn parse_allowed_tools(nodes: &[BlockNode]) -> Result<Vec<String>, SkillParseErr
             ListChildNode::ListItem(item) => &item.children,
             ListChildNode::TaskItem(item) => &item.children,
         };
-        let value = block_text(blocks).trim().to_string();
+        // Literal only. `block_text` would resolve an image to its alt text
+        // and drop raw HTML, which authorizes a tool the rendered document
+        // does not show -- see `literal_inline_text`.
+        let Some(value) = literal_item_text(blocks).map(|text| text.trim().to_string()) else {
+            return Err(SkillParseError::InvalidTool(
+                block_text(blocks).trim().to_string(),
+            ));
+        };
         if value.eq_ignore_ascii_case("none") {
             if list.children.len() != 1 {
                 return Err(SkillParseError::InvalidTool(value));
@@ -424,6 +437,9 @@ fn parse_allowed_tools(nodes: &[BlockNode]) -> Result<Vec<String>, SkillParseErr
             return Ok(Vec::new());
         }
         if !valid_tool_id(&value) || !(3..=128).contains(&value.len()) {
+            return Err(SkillParseError::InvalidTool(value));
+        }
+        if tools.len() >= MAX_ALLOWED_TOOLS {
             return Err(SkillParseError::InvalidTool(value));
         }
         if !seen.insert(value.clone()) {
@@ -467,10 +483,11 @@ fn parse_capabilities(
         .iter()
         .enumerate()
         .filter_map(|(index, node)| match node {
-            BlockNode::Heading(heading) if heading.level == 2 => inline_text(&heading.children)
-                .trim()
-                .eq_ignore_ascii_case("capabilities needed")
-                .then_some(index),
+            BlockNode::Heading(heading) if heading.level == 2 => {
+                literal_inline_text(&heading.children)
+                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("capabilities needed"))
+                    .then_some(index)
+            }
             _ => None,
         })
         .collect::<Vec<_>>();
@@ -499,7 +516,13 @@ fn parse_capabilities(
             ListChildNode::ListItem(item) => &item.children,
             ListChildNode::TaskItem(item) => &item.children,
         };
-        let value = block_text(blocks).trim().to_string();
+        // Literal only, for the same reason as the tools section: an image's
+        // alt text would grant `fs:write:/` while rendering as a picture.
+        let Some(value) = literal_item_text(blocks).map(|text| text.trim().to_string()) else {
+            return Err(SkillParseError::InvalidCapability(
+                block_text(blocks).trim().to_string(),
+            ));
+        };
         if value.eq_ignore_ascii_case("none") {
             if list.children.len() != 1 {
                 return Err(SkillParseError::InvalidCapability(value));
@@ -630,6 +653,83 @@ fn block_text(nodes: &[BlockNode]) -> String {
         })
         .collect::<Vec<_>>()
         .join(" ")
+}
+
+/// Extract inline text ONLY when every node is literal, else `None`.
+///
+/// `inline_text` is for prose. It is unsafe for anything that becomes an
+/// authorization decision, because it resolves an image to its **alt text**,
+/// drops raw inline HTML while keeping the text around it, and concatenates
+/// with no separator. Each of those lets a tool identifier be authorized that
+/// a reader cannot see:
+///
+/// ```text
+///   - ![&#97;dmin&#46;exec&#95;all](pixel.png)     -> "admin.exec_all"
+///   - context.read<span hidden>_write_all</span>  -> "context.read_write_all"
+///   - artifact<span></span>.<span></span>write    -> "artifact.write"
+/// ```
+///
+/// The first renders as a picture and the second renders as `context.read`, so
+/// the rendered document and a source diff are defeated at the same time.
+///
+/// Only `Text` and `CodeSpan` survive here. A code span is allowed because it
+/// renders as its own literal content; everything else -- images, raw HTML,
+/// links, autolinks, emphasis, breaks -- is rejected rather than flattened.
+///
+/// One residual is accepted knowingly: HTML entity references decode into
+/// `Text` before this sees them, so `admin&period;exec_all` still yields
+/// `admin.exec_all`. That case renders faithfully, so a reader of the rendered
+/// document sees the real identifier; only a raw-bytes grep is fooled. The
+/// answer to that is to scan the signed manifest's `allowed_tools` rather than
+/// the Markdown, which is what declaring it in the manifest is for.
+fn literal_inline_text(nodes: &[InlineNode]) -> Option<String> {
+    let mut text = String::new();
+    for node in nodes {
+        match node {
+            InlineNode::Text(value) => text.push_str(&value.value),
+            InlineNode::CodeSpan(value) => text.push_str(&value.value),
+            _ => return None,
+        }
+    }
+    Some(text)
+}
+
+/// A list item's literal text, if it is exactly one paragraph of literal inlines.
+fn literal_item_text(blocks: &[BlockNode]) -> Option<String> {
+    match blocks {
+        [BlockNode::Paragraph(paragraph)] => literal_inline_text(&paragraph.children),
+        _ => None,
+    }
+}
+
+/// Count level-2 "tools needed" headings ANYWHERE, including nested blocks.
+///
+/// The section scan runs over top-level children only, so a decoy
+/// `## Tools needed` inside a block quote is neither matched nor counted. That
+/// lets an author stage a document whose visible declaration is not the
+/// effective one: a prominent quoted "Tools needed / none" above a real
+/// section granting anything. Counting nested occurrences makes that
+/// ambiguous rather than silently ignored.
+fn count_tools_headings(nodes: &[BlockNode]) -> usize {
+    nodes
+        .iter()
+        .map(|node| match node {
+            BlockNode::Heading(heading) if heading.level == 2 => usize::from(
+                literal_inline_text(&heading.children)
+                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("tools needed")),
+            ),
+            BlockNode::Blockquote(value) => count_tools_headings(&value.children),
+            BlockNode::List(value) => value
+                .children
+                .iter()
+                .map(|child| match child {
+                    ListChildNode::ListItem(item) => count_tools_headings(&item.children),
+                    ListChildNode::TaskItem(item) => count_tools_headings(&item.children),
+                })
+                .sum(),
+            _ => 0,
+        })
+        .sum()
 }
 
 fn inline_text(nodes: &[InlineNode]) -> String {
@@ -924,6 +1024,107 @@ mod tests {
                 "should have rejected {bad:?}"
             );
         }
+    }
+
+    #[test]
+    fn a_tool_a_reader_cannot_see_is_never_authorized() {
+        // Security review, 2026-09-02. `block_text` resolved an image to its
+        // ALT TEXT, dropped raw inline HTML while keeping surrounding text, and
+        // concatenated with no separator. Each case below produced a signed
+        // `allowed_tools` entry that the rendered document does not show.
+        let head = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        let with = |tools: &str| format!("{head}\n## Tools needed\n{tools}");
+
+        for attack in [
+            // Renders as a picture. The identifier is entity-encoded, so it is
+            // absent from the source bytes AND invisible when rendered.
+            "- ![&#97;dmin&#46;exec&#95;all](https://example.com/pixel.png)\n",
+            // Renders as `context.read`; the suffix is hidden HTML.
+            "- context.read<span style=\"display:none\">_write_all</span>\n",
+            // Empty tags fuse fragments into an identifier present nowhere.
+            "- artifact<span></span>.<span></span>write\n",
+            // Alt text concatenated with following text.
+            "- ![admin.](x.png)exec_all\n",
+            // A link renders as its label, not necessarily its target.
+            "- [artifact.write](https://evil.example)\n",
+            "- <https://evil.example/artifact.write>\n",
+        ] {
+            assert!(
+                matches!(
+                    parse_skill(&with(attack)),
+                    Err(SkillParseError::InvalidTool(_))
+                ),
+                "should have rejected non-literal bullet {attack:?}"
+            );
+        }
+
+        // A code span renders as its own literal content, so it stays legal.
+        let skill = parse_skill(&with("- `artifact.write`\n")).unwrap();
+        assert_eq!(skill.manifest.allowed_tools, vec!["artifact.write"]);
+    }
+
+    #[test]
+    fn a_capability_a_reader_cannot_see_is_never_granted() {
+        // The identical hole existed in the capabilities section and was
+        // strictly worse: `- ![fs:write:/](x.png)` granted filesystem write
+        // while rendering as a picture.
+        let make = |caps: &str| {
+            format!("# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n{caps}\n## Tools needed\n- none\n")
+        };
+        for attack in [
+            "- ![fs:write:/](https://example.com/pixel.png)\n",
+            "- net:connect<span>:evil.example:443</span>\n",
+            "- [fs:write:/](https://evil.example)\n",
+        ] {
+            assert!(
+                matches!(
+                    parse_skill(&make(attack)),
+                    Err(SkillParseError::InvalidCapability(_))
+                ),
+                "should have rejected non-literal capability {attack:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_heading_that_does_not_read_as_tools_needed_does_not_declare_tools() {
+        let tail = "\n- admin.exec_all\n";
+        let head = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        // Renders as "Tools 🖼" / as a link to an attacker URL.
+        for heading in [
+            "## Tools ![needed](x.png)",
+            "## [Tools needed](https://evil.example)",
+        ] {
+            assert_eq!(
+                parse_skill(&format!("{head}\n{heading}{tail}")),
+                Err(SkillParseError::MissingToolsSection),
+                "heading {heading:?} must not match"
+            );
+        }
+    }
+
+    #[test]
+    fn a_decoy_tools_section_makes_the_document_ambiguous() {
+        // A prominent quoted "Tools needed / none" above a real section was
+        // silently ignored, so the visible declaration was not the effective
+        // one. Nested occurrences now count.
+        let source = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n\n> ## Tools needed\n>\n> - none\n\nSome prose here.\n\n## Tools needed\n- admin.exec_all\n";
+        assert_eq!(
+            parse_skill(source),
+            Err(SkillParseError::AmbiguousToolsSection)
+        );
+    }
+
+    #[test]
+    fn rejects_more_tools_than_the_manifest_bound_allows() {
+        let head = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        let bullets = (0..=MAX_ALLOWED_TOOLS)
+            .map(|index| format!("- ns.tool_{index}\n"))
+            .collect::<String>();
+        assert!(matches!(
+            parse_skill(&format!("{head}\n## Tools needed\n{bullets}")),
+            Err(SkillParseError::InvalidTool(_))
+        ));
     }
 
     #[test]
