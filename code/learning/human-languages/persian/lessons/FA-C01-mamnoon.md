@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FA-C01-mamnoon
+spine_node: SPINE-COURTESY-THANK
 sequence: 20
 chapter: 1
 type: word
@@ -11,38 +13,73 @@ prerequisites: [FA-C01-salam]
 sounds: [rtl, short-vowels-unwritten, long-u]
 roots: [m-n-n]
 etymology_hook: Persian mamnun came through Arabic and originally carried the sense favored or obliged.
-est_minutes: 4
 reviews_of: []
+duration:
+  max_seconds: 174
+requires:
+  knowledge: [FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01]
+introduces:
+  knowledge: [FA-LEX-MAMNUN-01, FA-ETYMON-MAMNUN-MNN-02, FA-SCRIPT-SHORT-VOWELS-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FA-LEX-MAMNUN-01, FA-ETYMON-MAMNUN-MNN-02, FA-SCRIPT-SHORT-VOWELS-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral-friendly
+variety: contemporary-iranian-persian
 ---
 
 # ممنون — thank you
 
-## Reuse what you know
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-You already know final **م** *m* from **سلام**. In **ممنون**, it appears first,
-on the right. Read the visible consonants right to left:
+[PAUSE 2s] One more expression, and the exchange starts to work: *mamnun*.
 
-> م · م · ن · و · ن → **mamnun**
+## The letters in this word
+<!-- hl-knowledge: introduces=[FA-SCRIPT-SHORT-VOWELS-01]; assesses=[] -->
 
-Persian normally leaves short vowels unwritten, so the first *a* is something
-you learn with the word. **و** supplies the long *u* sound here. Its sound can
-change in other words; today, it is simply *u*.
+> **ممنون** — *mamnun* — thank you
 
-## Meaning and history
+Read it the way you read the greeting: from the right edge, as one whole word
+with its romanization beside it. One thing about the writing is worth noticing
+now, because it is true of nearly every Persian word you will meet: **the short
+vowels are not written**. The *a* in *mamnun* is part of the word you hear, not
+a mark you read. The letters themselves get their own lessons later; none is
+being asked of you today.
 
-**mamnun** literally describes someone as grateful or obliged, and in ordinary
-conversation it works as “thanks.” Persian received the word from Arabic. Its
-consonant family is **m-n-n**, associated in Arabic with favor or kindness.
+## The word, taken apart
+<!-- hl-knowledge: introduces=[FA-ETYMON-MAMNUN-MNN-02]; assesses=[] -->
 
-## Build the exchange
+*mamnun* literally describes someone as **grateful or obliged**, and in ordinary
+conversation it simply works as “thanks.” Persian received it from Arabic, where
+the consonant family **m-n-n** gathers ideas of favour and kindness — the same
+kind of three-consonant family that gave you *salâm*.
+
+## Why it's said this way
+<!-- hl-knowledge: introduces=[FA-LEX-MAMNUN-01]; assesses=[] -->
+
+Build the smallest exchange there is, and treat each expression as one social
+move rather than a sentence to analyse:
 
 - A: **سلام** — *salâm* — Hello.
 - B: **سلام** — *salâm* — Hello.
 - A: **ممنون** — *mamnun* — Thank you.
 
-Do not add a new grammar rule. Treat **mamnun** as one useful social move.
+No grammar is due. Two people, three moves.
 
-## Quick recall
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-MAMNUN-01, FA-ETYMON-MAMNUN-MNN-02, FA-SCRIPT-SHORT-VOWELS-01] -->
 
-Which direction do you read? Right to left. Which visible letter carries long
-*u* here? **و**. Say: **salâm — mamnun**.
+- [YOU SAY: *salâm* — *mamnun*, the two moves in order]
+- [YOU SAY: what *mamnun* literally describes — someone grateful or obliged]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-MAMNUN-01, FA-ETYMON-MAMNUN-MNN-02, FA-SCRIPT-SHORT-VOWELS-01] -->
+
+Say *salâm — mamnun* without looking. What does *mamnun* literally describe?
+(**Someone grateful, or obliged to you.**) Which vowels does Persian writing
+leave out? (**The short ones.**)

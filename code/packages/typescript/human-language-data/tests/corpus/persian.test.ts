@@ -12,7 +12,7 @@ it("pins Persian continuity", () => expectLanguageContinuity("persian"));
 it("pins Persian modality", () => expectLanguageModality("persian"));
 it("pins Persian lesson-content budgets", () =>
   expectLanguageLessonBudgets("persian", {
-    lessons: 68,
+    lessons: 71,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,
@@ -58,7 +58,11 @@ it("pins Persian's peace-root payoff inside the chapter-one practice", () => {
     entry.namespace === "etymon-atom" && entry.root === "FA-ETYMON-SALAM-SLM-02"
   )).toMatchObject({
     introducedBy: "FA-C01-salam",
-    payoffs: ["FA-W00-alef-guided-copy", "FA-C01-practice"],
-    payoffCount: 2,
+    // FA-C01-mamnoon joined when it was migrated to schema v2 and declared what
+    // it actually leans on: its own cousinweb points back at salâm's
+    // three-consonant family to explain m-n-n. A third spend of the peace root,
+    // not a looser assertion.
+    payoffs: ["FA-W00-alef-guided-copy", "FA-C01-mamnoon", "FA-C01-practice"],
+    payoffCount: 3,
   });
 });

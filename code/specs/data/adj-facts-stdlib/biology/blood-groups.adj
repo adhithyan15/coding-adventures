@@ -58,7 +58,7 @@ table blood_type_antigen {
     row (ab, a_and_b_antigens)
     row (o, no_antigens)
 
-    source "He called the antigens A and B, and depending upon which antigen the RBC expressed, blood either belonged to blood group A or blood group B. A third blood group contained RBCs that reacted as if they lacked the properties of A and B, and this group was later called \"O\" after the German word \"Ohne\", which means \"without\". The following year the fourth blood group, AB, was added to the ABO blood group system. These RBCs expressed both A and B antigens."
+    source "Landsteiner explained that the reactions between the RBCs and serum were related to the presence of markers (antigens) on the RBCs and antibodies in the serum. Agglutination occurred when the RBC antigens were bound by the antibodies in the serum. He called the antigens A and B, and depending upon which antigen the RBC expressed, blood either belonged to blood group A or blood group B. A third blood group contained RBCs that reacted as if they lacked the properties of A and B, and this group was later called \"O\" after the German word \"Ohne\", which means \"without\". The following year the fourth blood group, AB, was added to the ABO blood group system. These RBCs expressed both A and B antigens."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK2267/"
     trust authoritative
 }
