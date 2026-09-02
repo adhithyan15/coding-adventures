@@ -2,31 +2,31 @@
   "version": 1,
   "language": "hindi",
   "level": "A1",
-  "about": "An enumeration of what an A1 Hindi candidate must be able to do, restated in the project's own words. It is NOT sourced from a Hindi awarding body and must not be read as one. core/exam-levels.json maps Hindi A1 to the Dakshina Bharat Hindi Prachar Sabha 'Prathmic' rung with basis 'editorial' -- the project's judgement, not a published alignment -- and that judgement was re-checked before this file was written. DBHPS publishes the NAMES of its examinations (Parichaya, Prathamic, Madhyama, Rashtrabhasha, Praveshika, Rashtrabhasha Visharad, Rashtrabhasha Praveen) and the prescribed readers for each, but no content syllabus: no grammar inventory, no word list, no can-do descriptors, and no A1/A2 split. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO DBHPS. Kendriya Hindi Sansthan and the Central Hindi Training Institute were checked for the same and publish no public level-split content inventory either, and no Council of Europe Reference Level Description exists for Hindi. Two things therefore bound this enumeration, and `scope` names which of them bounds each dimension: (1) the CEFR Companion Volume's published A1 descriptors, which are finite and level-split but language-neutral, so every Hindi exponent chosen to realise a descriptor is the project's choice and not the Council's; and (2) the project's own checked-in Hindi A1 contract -- hindi/assessment-spec.md, hindi/task-shapes/a1.json, and the two timed mocks in hindi/mocks/a1/ -- which IS finite, IS specific to Hindi, and IS what a learner is actually scored against, but which this project wrote itself. Every point here is consequently editorial. The strongest claims in the file are the ones whose `note` cites a numbered item in a checked-in A1 mock: for those the demand is written down and dated rather than inferred, and a reader can check the claim against the mock in one step. Every scope dimension is `partial`, this inventory is NOT complete, and the coverage percentage it produces is a measure of the corpus against this list -- never an exam-readiness claim.",
-  "source": "No awarding-body content syllabus exists for Hindi A1; see `about`. The bounding sources are the project's own checked-in A1 contract at https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/assessment-spec.md and the Council of Europe CEFR Companion Volume A1 descriptors at https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions. The DBHPS pages that were checked and found to publish exam names but no syllabus are https://www.dbhpscentral.org/Syllabus.html and https://dbhpscentral.org/examination.html (checked 2026-09-01).",
+  "about": "An enumeration of what an A1 Hindi candidate must be able to do. Two separate claims are stacked here and they have different strengths, so read them apart. THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, which restates the A1 inventory the Instituto Cervantes publishes behind DELE -- a real awarding body, a published syllabus, finite and split into A1 and A2 columns. Spanish is used here as a PROXY FOR LEVEL: it is asked what an A1 learner must HANDLE, not what Spanish grammar it names, and each such demand is given the Hindi exponent that carries the same load. Every one of the proxy's 273 points is accounted for -- 264 are cited by some point's `derivedFrom`, and the remaining 9 are Spanish-typographic demands with no Devanagari counterpart, named with a reason in the generator. THE HINDI EXPONENTS are editorial throughout. Deciding that Spanish's `a` before a human object is answered by Hindi's `ko`, or that its drinking toast is answered by the shubh- formulas, is this project's judgement and nobody else's. ATTRIBUTE NOTHING TO DELE OR THE INSTITUTO CERVANTES ABOUT HINDI: they published a Spanish syllabus and have said nothing whatever about this language. Why a proxy at all: no Hindi awarding body publishes a content syllabus. core/exam-levels.json maps Hindi A1 to the Dakshina Bharat Hindi Prachar Sabha 'Prathmic' rung with basis 'editorial', and that was re-checked before this file was written. DBHPS publishes the NAMES of its examinations (Parichaya, Prathamic, Madhyama, Rashtrabhasha, Praveshika, Rashtrabhasha Visharad, Rashtrabhasha Praveen) and the prescribed readers, and no grammar inventory, no word list, no can-do descriptors and no A1/A2 split. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO DBHPS EITHER. Kendriya Hindi Sansthan and the Central Hindi Training Institute publish no level-split content inventory, and no Council of Europe Reference Level Description exists for Hindi. An earlier draft of this file built its point set from the CEFR Companion Volume's A1 descriptors alone and reached 172 points; measuring against a descriptor-derived list turned out to flatter the corpus, because descriptors are deliberately abstract where a syllabus enumerates. The proxy adds 110 points and drops none. Each point carries `derivedFrom`: either the proxy point ids whose demand it answers, or `hindi-specific` for the 22 points that answer no Spanish demand at all -- the Devanagari script points, the postposition and oblique-case system, the nuqta, the register split, the karna compound verbs. A proxy is a scaffold, not a template to translate, and those 22 are why. Every scope dimension is `partial`, this inventory is NOT complete, and the coverage percentage it produces is a measure of the corpus against this list -- never an exam-readiness claim.",
+  "source": "No awarding-body content syllabus exists for Hindi; see `about`. The point set is derived structurally from the project's own restatement of the DELE/PCIC A1 inventory at code/learning/human-languages/core/exam-inventory-es-a1.json, whose own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and its sibling function, notion and orthography inventories. The Hindi exponents and the gap notes are bounded by the project's own checked-in A1 contract at https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/assessment-spec.md with hindi/task-shapes/a1.json and the two timed mocks in hindi/mocks/a1/. The DBHPS pages checked and found to publish exam names but no syllabus are https://www.dbhpscentral.org/Syllabus.html and https://dbhpscentral.org/examination.html (checked 2026-09-01).",
   "scope": {
     "communicative-functions": {
       "status": "partial",
-      "source": "https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-descriptors and https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/mocks/a1/",
-      "note": "The CEFR Companion Volume's A1 column IS finite and level-split, which is what closes a dimension, but it is language-neutral: it says a candidate can 'ask and answer questions about personal details' and never says which Hindi words do that. The forty points here pair each A1 descriptor the level implies with the exponent this project would accept, and the exponent is always our choice. Where a checked-in A1 mock item pins the exponent down -- the cafe price turn, the sign-reading items, the named-reader message -- the point's note cites the item. This dimension closes when a Hindi-specific functional inventory with published exponents exists, or when the project declares its own mock set the definitive A1 function list and freezes it."
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/mocks/a1/",
+      "note": "The proxy's functional column IS finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Hindi is our choice every time, and a function inventory without its exponents is half a source. All 54 proxy function points are answered here, plus two the proxy has no A1 slot for but the track's own A1 speaking construct scores: register choice and conversational repair. Where a checked-in A1 mock item pins an exponent down -- the cafe price turn, the sign-reading items, the named-reader message -- the point's note cites the item, and those are the strongest claims in the file."
     },
     "grammar": {
       "status": "partial",
-      "source": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/mocks/a1/ and https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/task-shapes/a1.json",
-      "note": "THE HARDEST DIMENSION TO SOURCE, AND THE REASON THIS FILE IS PARTIAL RATHER THAN COMPLETE. There is no published Hindi equivalent of the PCIC grammar inventory or the Goethe word list -- nothing that enumerates Hindi constructions and marks them A1 or A2. The grammar points here were derived the only defensible way available: by reading every stimulus in the two checked-in A1 mocks and enumerating the construction each one requires, then adding the constructions those constructions presuppose. That yields a floor, not a closure -- a construction absent from both mocks is absent from this list too, however ordinary it is. Treat a covered grammar point as 'the track teaches what these two mocks demand of it', never as 'the track teaches A1 Hindi grammar'."
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns) and https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/mocks/a1/",
+      "note": "THE DIMENSION THE PROXY HELPS MOST, AND STILL DOES NOT CLOSE. There is no published Hindi equivalent of the PCIC grammar inventory, so before the proxy this column was built by reading every stimulus in the two checked-in A1 mocks and enumerating the construction each required -- a floor, since a construction absent from both mocks was absent from the list. Walking the proxy's grammar column raised that floor considerably: the article points surfaced that nothing tells a learner Hindi HAS no article; the reflexive-se point surfaced `apna`, which both mocks use and neither the descriptors nor a mock-reading had named; the direct-object-`a` point surfaced object-marking `ko`. It still does not close, because a demand Spanish does not make can still be an A1 demand in Hindi -- the oblique case and the ergative `ne` are the obvious ones -- and no source bounds those."
     },
     "phonology-orthography": {
       "status": "partial",
-      "source": "The Unicode Devanagari block (U+0900-U+097F) for the inventory of letters, and https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/pronunciation-reference.md",
-      "note": "The written half is nearly closed and the spoken half is not, which is the same shape the Spanish inventory records. Devanagari's letter inventory IS finite and enumerable, so the script points can state exactly which letters the track has an atom for and which it does not; that is a real boundary and the notes give the counts. Pronunciation has no such boundary: no source separates A1 Hindi phonology from A2, so contrasts, stress and intonation are enumerated here on the project's judgement and left honestly unmapped where nothing teaches them. Drawing the A1/A2 pronunciation line ourselves would be the editorial promotion the Spanish file declines to make, so this dimension stays partial for the same stated reason."
+      "source": "The Unicode Devanagari block (U+0900-U+097F) for the inventory of letters, code/learning/human-languages/core/exam-inventory-es-a1.json for the orthographic demands, and hindi/pronunciation-reference.md",
+      "note": "The dimension where the proxy is LEAST useful, and it is worth saying why rather than quietly under-enumerating. Spanish's orthography column is about an alphabet the learner already has: accents, capitals, punctuation. Hindi's demand is a different writing system, so most of this column is `hindi-specific` and four of the nine untransferable proxy points are Spanish typography. Devanagari's letter inventory IS finite and enumerable, so the script points state exactly which letters the track has an atom for and which it does not, and the notes give the counts -- that half is nearly closed. Pronunciation is not: no source separates A1 Hindi phonology from A2, so contrasts, stress and intonation are enumerated on the project's judgement and left honestly unmapped where nothing teaches them. Drawing that A1/A2 line ourselves would be the editorial promotion the Spanish file itself declines to make, so this dimension stays partial for the same stated reason."
     },
     "lexicon": {
       "status": "partial",
-      "source": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/mocks/a1/ and the topic areas named in hindi/assessment-spec.md",
-      "note": "No published A1 Hindi word list exists -- no DBHPS list, no Goethe-style Wortliste, no ranked frequency band adopted by any Hindi awarding body. What is enumerated here is twenty-five DOMAINS, bounded by the topics the checked-in A1 mocks and assessment spec actually test, with a probe naming representative headwords the track would need in each. A domain point is therefore a claim that the track has a usable foothold in that domain, not that it holds the domain's full A1 vocabulary. No per-word count is claimed complete and none should be inferred: this file deliberately contains no 'holds N headwords' point, because a probe cannot honestly express one."
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 36 general-notion and 77 specific-notion A1 points) and the topic areas named in hindi/assessment-spec.md",
+      "note": "No published A1 Hindi word list exists -- no DBHPS list, no Goethe-style Wortliste, no ranked frequency band adopted by any Hindi awarding body. What the proxy supplies is a bounded set of DOMAINS, which is a real improvement on topic areas we chose ourselves: the walk added shopping and payment, transport, free time, media, written correspondence, documents and educational institutions, every one of which the mocks test and none of which the earlier descriptor-derived draft enumerated. A domain point claims the track has a usable foothold in that domain, NOT that it holds the domain's full A1 vocabulary. No per-word count is claimed complete and none should be inferred: this file deliberately contains no 'holds N headwords' point, because a probe cannot honestly express one."
     }
   },
-  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. Every atom named in every probe in this file was checked against the atoms the hindi track actually introduces at the time of writing; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point. A point the corpus cannot demonstrate gets `probe: null` and a note saying what is missing and, wherever the demand is written down, which checked-in A1 mock item makes it.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. Every atom named in every probe was checked mechanically against the atoms the hindi track actually introduces; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point. A point the corpus cannot demonstrate gets `probe: null` and a note saying what is missing and, wherever the demand is written down, which checked-in A1 mock item makes it. One deliberate liberty is taken and named here so it is not a hidden generosity: a probe may combine a verb atom with the present-habitual template atom, because that lesson explicitly teaches the template as applying to any stem. HI-A1-F-32 is the only point that relies on it and says so. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or `hindi-specific` -- and is carried for auditability; no code reads it.",
   "points": [
     {
       "id": "HI-A1-N-01",
@@ -35,19 +35,49 @@
       "probe": [
         "HI-CONCEPT-C02-NAAM-01",
         "HI-FORM-NAME-MIRA-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-N-01"
     },
     {
       "id": "HI-A1-N-02",
+      "category": "Sangya (the noun)",
+      "label": "forms of address: the honorific -ji on a name or on a bare yes",
+      "probe": [
+        "HI-CONCEPT-C07-HAAN-01"
+      ],
+      "derivedFrom": "ES:A1-N-01, ES:A1-F5-03"
+    },
+    {
+      "id": "HI-A1-N-03",
+      "category": "Sangya (the noun)",
+      "label": "place names: the city you live in, and the country",
+      "probe": null,
+      "derivedFrom": "ES:A1-N-01, ES:A1-NE20-02",
+      "note": "Not one settlement or country name is introduced. `shahar` ('city') is not taught either, and it is a required form field in BOTH mocks' writing papers."
+    },
+    {
+      "id": "HI-A1-N-04",
+      "category": "Sangya (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": [
+        "HI-CONCEPT-C25-DIN-01",
+        "HI-CONCEPT-C26-RAAT-01",
+        "HI-CONCEPT-C18-GHANTA-01"
+      ],
+      "derivedFrom": "ES:A1-N-02"
+    },
+    {
+      "id": "HI-A1-N-05",
       "category": "Sangya (the noun)",
       "label": "grammatical gender is inherent: the -a/-i lean helps and then fails, so gender is learned with the word",
       "probe": [
         "HI-CONCEPT-C36-KURSI-01",
         "HI-CONCEPT-C37-CHAI-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-N-03, ES:A1-ADJ-03"
     },
     {
-      "id": "HI-A1-N-03",
+      "id": "HI-A1-N-06",
       "category": "Sangya (the noun)",
       "label": "gender by heteronymy for people: pita/mata, bhai/bahin, beta/beti",
       "probe": [
@@ -55,101 +85,95 @@
         "HI-CONCEPT-C12-BHAAI-BAHIN-01",
         "HI-LEX-SON",
         "HI-LEX-DAUGHTER"
-      ]
+      ],
+      "derivedFrom": "ES:A1-N-04"
     },
     {
-      "id": "HI-A1-N-04",
+      "id": "HI-A1-N-07",
       "category": "Sangya (the noun)",
       "label": "number: forming the plural of a masculine -a noun, a feminine -i noun, and a consonant-final noun",
       "probe": null,
-      "note": "No atom teaches plural morphology. The corpus introduces log ('people') as a lexical item and nothing else. Both checked-in A1 mocks require a plural read (mock 1 item 16 and mock 2 item 20 both turn on 'do bhashaen bolti hai'), so this is a demand the level makes and the track does not meet."
+      "derivedFrom": "ES:A1-N-05",
+      "note": "No atom teaches plural morphology; `log` ('people') is introduced as a lexical item and nothing else. Mock 1 item 16 and mock 2 item 20 both turn on `do bhashaen bolti hai`."
     },
     {
-      "id": "HI-A1-N-05",
+      "id": "HI-A1-N-08",
       "category": "Sangya (the noun)",
       "label": "the oblique form a noun takes before a postposition (larka -> larke ko)",
       "probe": null,
-      "note": "The corpus teaches me (in) and the ka/ke genitive, but never the case change the noun in front of them undergoes. Nothing to probe."
+      "derivedFrom": "hindi-specific",
+      "note": "No Spanish counterpart: Spanish nouns do not inflect for case. The corpus teaches `me` and the `ka` genitive but never the case change the noun in front of them undergoes."
     },
     {
-      "id": "HI-A1-N-06",
+      "id": "HI-A1-N-09",
       "category": "Sangya (the noun)",
       "label": "a numeral stands in front of the noun it counts (ek chay)",
       "probe": [
         "HI-CONCEPT-C06-NUMBERS-1-5-01",
         "HI-CONCEPT-C37-CHAI-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-Q-01"
     },
     {
-      "id": "HI-A1-PRON-01",
-      "category": "Sarvanam (pronouns)",
-      "label": "first-person singular main",
-      "probe": [
-        "HI-CONCEPT-C03-MAIN-01"
-      ]
+      "id": "HI-A1-DET-01",
+      "category": "Nirdeshak (determiners and definiteness)",
+      "label": "Hindi has no article: definiteness is carried by bareness, by ek, and by a demonstrative",
+      "probe": null,
+      "derivedFrom": "ES:A1-ART-01, ES:A1-ART-02, ES:A1-ART-03, ES:A1-ART-04",
+      "note": "The single largest structural difference from the proxy language, and the corpus never states it. Spanish spends four A1 points on the article; a learner arriving from English or Spanish needs to be told once that Hindi has none and what does the work instead. `ek chay dijiye` is taught, but as a cafe formula, not as indefiniteness."
     },
     {
-      "id": "HI-A1-PRON-02",
-      "category": "Sarvanam (pronouns)",
-      "label": "second person: choosing between respectful ap and familiar tum",
-      "probe": [
-        "HI-CONCEPT-C02-AAPTUM-01"
-      ]
-    },
-    {
-      "id": "HI-A1-PRON-03",
-      "category": "Sarvanam (pronouns)",
-      "label": "third person / demonstrative yah and vah",
+      "id": "HI-A1-DET-02",
+      "category": "Nirdeshak (determiners and definiteness)",
+      "label": "the demonstratives yah and vah, and Hindi's two-way near/far split",
       "probe": [
         "HI-LEX-C40-DEIXIS-01",
-        "HI-LEX-C40-DEIXIS-02"
-      ]
+        "HI-LEX-C40-DEIXIS-02",
+        "HI-GRAMMAR-C40-DEIXIS-SYSTEM"
+      ],
+      "derivedFrom": "ES:A1-DEM-01, ES:A1-DEM-02"
     },
     {
-      "id": "HI-A1-PRON-04",
-      "category": "Sarvanam (pronouns)",
-      "label": "first-person plural ham",
+      "id": "HI-A1-DET-03",
+      "category": "Nirdeshak (determiners and definiteness)",
+      "label": "a demonstrative used adnominally, in front of its noun (yah kitab)",
       "probe": null,
-      "note": "ham appears only as a substring inside mehman in the corpus's headwords; no lesson introduces it. Mock 2 reading item 10 ('ham station par milenge') requires it."
+      "derivedFrom": "ES:A1-DEM-03",
+      "note": "The deixis chapter teaches yah and vah as standalone pronouns -- 'this one', 'that one' -- and never puts either in front of a noun."
     },
     {
-      "id": "HI-A1-PRON-05",
-      "category": "Sarvanam (pronouns)",
+      "id": "HI-A1-DET-04",
+      "category": "Nirdeshak (determiners and definiteness)",
       "label": "possessive mera, and its agreement mera / meri / mere with the thing owned",
       "probe": [
         "HI-CONCEPT-C02-MERAA-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-POS-01, ES:A1-POS-03"
     },
     {
-      "id": "HI-A1-PRON-06",
-      "category": "Sarvanam (pronouns)",
+      "id": "HI-A1-DET-05",
+      "category": "Nirdeshak (determiners and definiteness)",
       "label": "possessive apka for the respectful addressee",
       "probe": [
         "HI-CONCEPT-C02-AAPKANAAMKYAHAI-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-POS-01"
     },
     {
-      "id": "HI-A1-PRON-07",
-      "category": "Sarvanam (pronouns)",
-      "label": "the oblique first person mujhe, when the sentence will not let you be its subject",
-      "probe": [
-        "HI-CONCEPT-C35-PASAND-01"
-      ]
-    },
-    {
-      "id": "HI-A1-PRON-08",
-      "category": "Sarvanam (pronouns)",
-      "label": "the other oblique pronouns: apko, use, hamen, tumhen",
+      "id": "HI-A1-DET-06",
+      "category": "Nirdeshak (determiners and definiteness)",
+      "label": "the remaining possessives: uska, hamara, tumhara",
       "probe": null,
-      "note": "Only mujhe is introduced, and it is introduced as part of the pasand frame rather than as a paradigm. Nothing probes the rest of the series."
+      "derivedFrom": "ES:A1-POS-01, ES:A1-POS-02",
+      "note": "Only mera and apka are introduced. A learner cannot say whose anything is unless it is their own or the addressee's."
     },
     {
-      "id": "HI-A1-PRON-09",
-      "category": "Sarvanam (pronouns)",
-      "label": "the y- / v- / k- system: one stem set gives near, far and interrogative",
-      "probe": [
-        "HI-GRAMMAR-C40-DEIXIS-SYSTEM"
-      ]
+      "id": "HI-A1-DET-07",
+      "category": "Nirdeshak (determiners and definiteness)",
+      "label": "the reflexive possessive apna, which replaces the possessive when the owner is the subject",
+      "probe": null,
+      "derivedFrom": "ES:A1-PRON-04",
+      "note": "Hindi's counterpart to Spanish reflexive `se`, and it is not optional: `main mera dost` is wrong where `main apna dost` is right. BOTH mocks' personal accounts use it -- `apne dost ke sath`, `apne parivar ke sath` -- and nothing in the corpus introduces it."
     },
     {
       "id": "HI-A1-ADJ-01",
@@ -157,7 +181,8 @@
       "label": "an attributive adjective stands in front of its noun",
       "probe": [
         "HI-GRAMMAR-C41-ADJ-SYSTEM"
-      ]
+      ],
+      "derivedFrom": "ES:A1-ADJ-01, ES:A1-ADJ-05"
     },
     {
       "id": "HI-A1-ADJ-02",
@@ -166,7 +191,8 @@
       "probe": [
         "HI-GRAMMAR-C41-ADJ-SYSTEM",
         "HI-CONCEPT-C02-MERAA-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-ADJ-03, ES:A1-ADJ-04, ES:A1-SN-02"
     },
     {
       "id": "HI-A1-ADJ-03",
@@ -175,7 +201,8 @@
       "probe": [
         "HI-CONCEPT-C11-LAAL-NIILA-01",
         "HI-CONCEPT-C03-THIK-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-ADJ-03"
     },
     {
       "id": "HI-A1-ADJ-04",
@@ -183,30 +210,198 @@
       "label": "predicative use: an adjective plus the copula (main thik hun)",
       "probe": [
         "HI-CONCEPT-C03-THIK-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-ADJ-01, ES:A1-SV-03"
     },
     {
       "id": "HI-A1-ADJ-05",
       "category": "Visheshan (the adjective)",
-      "label": "degree: kam and zyada as everyday quantifiers",
-      "probe": [
-        "HI-LEX-C64-MEASURE-04",
-        "HI-LEX-C64-MEASURE-05"
-      ]
+      "label": "relational adjectives naming origin or nationality (bharatiya, hindustani)",
+      "probe": null,
+      "derivedFrom": "ES:A1-ADJ-02, ES:A1-NG3-07",
+      "note": "No country name, no nationality adjective. `hindi` is taught only inside `main hindi bolta hun`."
     },
     {
       "id": "HI-A1-ADJ-06",
       "category": "Visheshan (the adjective)",
-      "label": "thoda as a hedging quantifier ('a little')",
+      "label": "the intensifier bahut, and kafi",
       "probe": null,
-      "note": "Mock 1 listening item 12 keys on 'han, thodi'. No lesson introduces thoda/thodi."
+      "derivedFrom": "ES:A1-ADJ-06, ES:A1-SADJ-01, ES:A1-NG2-03, ES:A1-Q-04",
+      "note": "`bahut` is the single commonest intensifier in spoken Hindi and the direct counterpart of the proxy's `muy`. Neither it nor `kafi` is introduced, so no taught adjective can be graded at all."
     },
     {
       "id": "HI-A1-ADJ-07",
       "category": "Visheshan (the adjective)",
-      "label": "comparison with se (X Y se bara hai)",
+      "label": "kam and zyada as everyday quantifiers",
+      "probe": [
+        "HI-LEX-C64-MEASURE-04",
+        "HI-LEX-C64-MEASURE-05"
+      ],
+      "derivedFrom": "ES:A1-Q-03, ES:A1-NG2-02, ES:A1-ADV-03"
+    },
+    {
+      "id": "HI-A1-ADJ-08",
+      "category": "Visheshan (the adjective)",
+      "label": "thoda as a hedging quantifier",
       "probe": null,
-      "note": "Comparison needs the postposition se, which the corpus never introduces. See HI-A1-POST-04."
+      "derivedFrom": "ES:A1-NG2-03",
+      "note": "Mock 1 listening item 12 keys on `han, thodi`."
+    },
+    {
+      "id": "HI-A1-ADJ-09",
+      "category": "Visheshan (the adjective)",
+      "label": "comparison: X is bigger than Y",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG2-02",
+      "note": "Hindi compares with the postposition `se`, which is untaught. See HI-A1-POST-04."
+    },
+    {
+      "id": "HI-A1-PRON-01",
+      "category": "Sarvanam (pronouns)",
+      "label": "first-person singular main",
+      "probe": [
+        "HI-CONCEPT-C03-MAIN-01"
+      ],
+      "derivedFrom": "ES:A1-PRON-01"
+    },
+    {
+      "id": "HI-A1-PRON-02",
+      "category": "Sarvanam (pronouns)",
+      "label": "second person: choosing between respectful ap and familiar tum",
+      "probe": [
+        "HI-CONCEPT-C02-AAPTUM-01"
+      ],
+      "derivedFrom": "ES:A1-PRON-01"
+    },
+    {
+      "id": "HI-A1-PRON-03",
+      "category": "Sarvanam (pronouns)",
+      "label": "third person yah and vah used as subject pronouns",
+      "probe": [
+        "HI-LEX-C40-DEIXIS-01",
+        "HI-LEX-C40-DEIXIS-02"
+      ],
+      "derivedFrom": "ES:A1-PRON-01"
+    },
+    {
+      "id": "HI-A1-PRON-04",
+      "category": "Sarvanam (pronouns)",
+      "label": "the subject pronoun paradigm as a whole, including ham and the plural third person",
+      "probe": null,
+      "derivedFrom": "ES:A1-PRON-01",
+      "note": "`ham` is never introduced -- mock 2 reading item 10 is `ham station par milenge` -- and neither is the plural `ve`. Three of the paradigm's slots are taught and the rest are absent."
+    },
+    {
+      "id": "HI-A1-PRON-05",
+      "category": "Sarvanam (pronouns)",
+      "label": "the oblique first person mujhe, when the sentence will not let you be its subject",
+      "probe": [
+        "HI-CONCEPT-C35-PASAND-01"
+      ],
+      "derivedFrom": "ES:A1-PRON-03, ES:A1-SV-05"
+    },
+    {
+      "id": "HI-A1-PRON-06",
+      "category": "Sarvanam (pronouns)",
+      "label": "the other oblique pronouns: apko, use, hamen, tumhen",
+      "probe": null,
+      "derivedFrom": "ES:A1-PRON-02, ES:A1-SV-05",
+      "note": "Only mujhe is introduced, and only as part of the pasand frame rather than as a paradigm."
+    },
+    {
+      "id": "HI-A1-PRON-07",
+      "category": "Sarvanam (pronouns)",
+      "label": "a pronoun in front of a postposition (mere liye, mere sath, mere pas)",
+      "probe": null,
+      "derivedFrom": "ES:A1-PRON-08",
+      "note": "Hindi's counterpart to the proxy's stressed post-prepositional pronouns. Needs the oblique possessive plus a compound postposition, and neither is taught."
+    },
+    {
+      "id": "HI-A1-PRON-08",
+      "category": "Sarvanam (pronouns)",
+      "label": "the y- / v- / k- system: one stem set gives near, far and interrogative",
+      "probe": [
+        "HI-GRAMMAR-C40-DEIXIS-SYSTEM"
+      ],
+      "derivedFrom": "hindi-specific",
+      "note": "No Spanish counterpart. Spanish's deictic series are three unrelated stems; Hindi's are one machine with a swappable first consonant, and the corpus teaches it as such."
+    },
+    {
+      "id": "HI-A1-PRON-09",
+      "category": "Sarvanam (pronouns)",
+      "label": "the relative pronoun jo, and the jo/vo correlative pair",
+      "probe": null,
+      "derivedFrom": "ES:A1-PRON-05, ES:A1-SUB-04, ES:A1-SUB-05",
+      "note": "Hindi relativises with a correlative pair rather than a single relative word, so this is the k-/j-/v- machine again one rung up. Neither `jo` nor the pattern is introduced."
+    },
+    {
+      "id": "HI-A1-PRON-10",
+      "category": "Sarvanam (pronouns)",
+      "label": "the exclamative: kitna accha!",
+      "probe": null,
+      "derivedFrom": "ES:A1-PRON-07",
+      "note": "`kitna` is introduced only inside the memorised age question."
+    },
+    {
+      "id": "HI-A1-NUM-01",
+      "category": "Sankhya-vachak (quantifiers and numerals)",
+      "label": "the numerals one to ten",
+      "probe": [
+        "HI-CONCEPT-C06-NUMBERS-1-5-01",
+        "HI-CONCEPT-C21-NUMBERS-6-10-01"
+      ],
+      "derivedFrom": "ES:A1-Q-01, ES:A1-NG2-01"
+    },
+    {
+      "id": "HI-A1-NUM-02",
+      "category": "Sankhya-vachak (quantifiers and numerals)",
+      "label": "the irregular numerals eleven to twenty",
+      "probe": [
+        "HI-CONCEPT-C22-GYARAH-BEES-01"
+      ],
+      "derivedFrom": "ES:A1-Q-01, ES:A1-NG2-01"
+    },
+    {
+      "id": "HI-A1-NUM-03",
+      "category": "Sankhya-vachak (quantifiers and numerals)",
+      "label": "the numerals twenty-one to one hundred",
+      "probe": null,
+      "derivedFrom": "ES:A1-Q-01, ES:A1-NG2-01",
+      "note": "The corpus stops at bis. Mock 2 reading item 4 prices tea at `pachas rupaye`, and no price, no age over twenty and no house number can be read or said."
+    },
+    {
+      "id": "HI-A1-NUM-04",
+      "category": "Sankhya-vachak (quantifiers and numerals)",
+      "label": "the ordinals to tenth (pahla, dusra, tisra), and the distributive ek ... dusra",
+      "probe": null,
+      "derivedFrom": "ES:A1-Q-02, ES:A1-NG2-01, ES:A1-CO-05, ES:A1-NG3-06",
+      "note": "Not one ordinal is introduced, so nothing can be put in sequence -- no first floor, no second platform, no 'one ... the other'."
+    },
+    {
+      "id": "HI-A1-NUM-05",
+      "category": "Sankhya-vachak (quantifiers and numerals)",
+      "label": "the Devanagari digits 0-9 as written on signs and forms",
+      "probe": null,
+      "derivedFrom": "hindi-specific",
+      "note": "No Spanish counterpart: Spanish uses the same digits the learner already has. Hindi does not, and no atom introduces the Devanagari digit shapes. Both mocks render times and quantities in words, which conceals the gap rather than closing it."
+    },
+    {
+      "id": "HI-A1-NUM-06",
+      "category": "Sankhya-vachak (quantifiers and numerals)",
+      "label": "measures of size, distance and weight",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG2-04",
+      "note": "Size is taught (bara, chhota). Distance needs `dur`/`pas` and weight needs a unit; neither exists."
+    },
+    {
+      "id": "HI-A1-NUM-07",
+      "category": "Sankhya-vachak (quantifiers and numerals)",
+      "label": "mathematics: the notion of number itself",
+      "probe": [
+        "HI-CONCEPT-C06-NUMBERS-1-5-01",
+        "HI-CONCEPT-C22-GYARAH-BEES-01"
+      ],
+      "derivedFrom": "ES:A1-NE16-01"
     },
     {
       "id": "HI-A1-V-01",
@@ -214,7 +409,8 @@
       "label": "the -na infinitive names the verb and yields the stem",
       "probe": [
         "HI-CONCEPT-C05-BOLNA-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-V-12"
     },
     {
       "id": "HI-A1-V-02",
@@ -224,14 +420,16 @@
         "HI-CONCEPT-C03-HUN-01",
         "HI-CONCEPT-C02-HAI-01",
         "HI-CONCEPT-C05-BOLTAHUN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-V-02, ES:A1-SV-02, ES:A1-NG1-03"
     },
     {
       "id": "HI-A1-V-03",
       "category": "Kriya (the verb)",
       "label": "the copula with tum: ho",
       "probe": null,
-      "note": "ho occurs inside the age frame ('tum kitne sal ke ho?') but no atom introduces the tum copula, so nothing demonstrates it independently of that one memorised question."
+      "derivedFrom": "ES:A1-V-01",
+      "note": "`ho` occurs inside the age frame but no atom introduces the tum copula, so nothing demonstrates it independently of that one memorised question."
     },
     {
       "id": "HI-A1-V-04",
@@ -239,7 +437,8 @@
       "label": "the present habitual: stem + -ta/-ti/-te + hona",
       "probe": [
         "HI-CONCEPT-C05-BOLTAHUN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-V-01, ES:A1-V-03"
     },
     {
       "id": "HI-A1-V-05",
@@ -247,7 +446,8 @@
       "label": "the present habitual agrees twice: participle for gender and number, copula for person",
       "probe": [
         "HI-CONCEPT-C05-BOLTAHUN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-SN-03"
     },
     {
       "id": "HI-A1-V-06",
@@ -255,113 +455,196 @@
       "label": "negating a statement by putting nahin in front of the verb",
       "probe": [
         "HI-CONCEPT-C07-NAHIN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-OS-01"
     },
     {
       "id": "HI-A1-V-07",
       "category": "Kriya (the verb)",
       "label": "the present continuous raha/rahi/rahe hai as a productive pattern",
       "probe": null,
-      "note": "The continuous appears twice as a fixed frame -- 'ek baj raha hai' in the hour lesson and 'barish ho rahi hai' in the weather lesson -- but no atom presents it as a pattern that applies to any stem, the way the habitual lesson does for -ta."
+      "derivedFrom": "ES:A1-V-03, ES:A1-V-13",
+      "note": "It appears twice as a fixed frame -- `ek baj raha hai` in the hour lesson, `barish ho rahi hai` in the weather lesson -- but no atom presents it as a pattern applying to any stem, the way the habitual lesson does for -ta."
     },
     {
       "id": "HI-A1-V-08",
       "category": "Kriya (the verb)",
-      "label": "recognising a future form in a set phrase (phir milenge)",
+      "label": "the existential: X hai for 'there is'",
       "probe": [
-        "HI-CONCEPT-C04-MILENGE-01"
-      ]
+        "HI-CONCEPT-C20-MAUSAM-01"
+      ],
+      "derivedFrom": "ES:A1-V-02, ES:A1-OS-04, ES:A1-NG1-01, ES:A1-NG1-02"
     },
     {
       "id": "HI-A1-V-09",
       "category": "Kriya (the verb)",
-      "label": "forming the future productively: -unga / -ega / -engi and its agreement",
+      "label": "possession: mere pas X hai",
       "probe": null,
-      "note": "Both mocks depend on it in the very first scored part: mock 1 reading item 8 ('main panch baje aunga'), item 11 ('bas das minat me aegi'), mock 2 item 8 and item 13. milenge is taught as one memorised farewell, not as a tense."
+      "derivedFrom": "ES:A1-NG1-01",
+      "note": "Hindi has no verb 'to have'; possession is `at me there is`, which needs `pas` and the oblique possessive. Neither is taught, so a learner cannot say they have anything."
     },
     {
       "id": "HI-A1-V-10",
       "category": "Kriya (the verb)",
-      "label": "the past / perfective, and the ne construction that goes with it",
-      "probe": null,
-      "note": "Nothing in the corpus is past-tense. This is arguably outside a minimal A1 construct, but the level's own can-do descriptors include saying where one came from and reporting a completed everyday event, and neither mock avoids the ambiguity by design."
+      "label": "recognising a future form in a set phrase (phir milenge)",
+      "probe": [
+        "HI-CONCEPT-C04-MILENGE-01"
+      ],
+      "derivedFrom": "ES:A1-F3-06"
     },
     {
       "id": "HI-A1-V-11",
+      "category": "Kriya (the verb)",
+      "label": "forming the future productively: -unga / -ega / -engi and its agreement",
+      "probe": null,
+      "derivedFrom": "ES:A1-F3-05, ES:A1-F3-06",
+      "note": "Both mocks depend on it in the first scored part: mock 1 reading item 8 `main panch baje aunga`, item 11 `bas das minat me aegi`, mock 2 items 8 and 13. `milenge` is taught as one memorised farewell, not as a tense."
+    },
+    {
+      "id": "HI-A1-V-12",
+      "category": "Kriya (the verb)",
+      "label": "the past copula tha/thi, and the past habitual",
+      "probe": null,
+      "derivedFrom": "ES:A1-V-04, ES:A1-V-05",
+      "note": "Nothing in the corpus is past-tense. The proxy spends five A1 points on past morphology; Hindi needs at minimum `tha` to say where one was or what one used to do."
+    },
+    {
+      "id": "HI-A1-V-13",
+      "category": "Kriya (the verb)",
+      "label": "the perfective participle, its irregulars (kiya, gaya, diya), and the ne construction",
+      "probe": null,
+      "derivedFrom": "ES:A1-V-06, ES:A1-V-07, ES:A1-V-08, ES:A1-V-10, ES:A1-V-14",
+      "note": "Hindi's ergative `ne` has no Spanish counterpart and is the hardest single thing at this level, but the demand behind the proxy's preterite points is the same: report something that happened."
+    },
+    {
+      "id": "HI-A1-V-14",
+      "category": "Kriya (the verb)",
+      "label": "the perfect: participle plus hona",
+      "probe": null,
+      "derivedFrom": "ES:A1-V-09",
+      "note": "Downstream of the perfective participle, which is itself absent; see HI-A1-V-13."
+    },
+    {
+      "id": "HI-A1-V-15",
       "category": "Kriya (the verb)",
       "label": "the polite -iye imperative used for requests (dijiye, kijiye)",
       "probe": [
         "HI-CONCEPT-C37-CHAI-01",
         "HI-CONCEPT-C09-MAAF-KIJIYE-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-V-11, ES:A1-F4-01"
     },
     {
-      "id": "HI-A1-V-12",
+      "id": "HI-A1-V-16",
       "category": "Kriya (the verb)",
       "label": "the plain and familiar imperatives (bol, bolo, boliye as a series)",
       "probe": null,
-      "note": "Only the -iye form is introduced, and only inside two fixed courtesy phrases. No atom presents the imperative as a paradigm."
+      "derivedFrom": "ES:A1-V-11",
+      "note": "Only the -iye form is introduced, and only inside two fixed courtesy phrases."
     },
     {
-      "id": "HI-A1-V-13",
+      "id": "HI-A1-V-17",
       "category": "Kriya (the verb)",
       "label": "the negative imperative with mat",
       "probe": null,
-      "note": "Mock 2 reading item 3 is exactly this ('yahan mat baithiye'). The corpus introduces neither mat nor na as a prohibitive."
+      "derivedFrom": "ES:A1-F4-06",
+      "note": "Mock 2 reading item 3 is exactly this: `yahan mat baithiye`."
     },
     {
-      "id": "HI-A1-V-14",
+      "id": "HI-A1-V-18",
+      "category": "Kriya (the verb)",
+      "label": "the conjunctive participle -kar, Hindi's everyday clause-chainer",
+      "probe": null,
+      "derivedFrom": "ES:A1-V-13",
+      "note": "The load-bearing counterpart of the proxy's gerund. `kha kar`, `dekh kar`: Hindi chains events with it constantly and the corpus never introduces it."
+    },
+    {
+      "id": "HI-A1-V-19",
       "category": "Kriya (the verb)",
       "label": "noun + karna compound verbs (kam karna, madad karna, pasand karna)",
       "probe": [
         "HI-CONCEPT-C05-KARNA-01",
         "HI-CONCEPT-C35-MADAD-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific",
+      "note": "No Spanish counterpart. Hindi makes most of its borrowed vocabulary verbal this way, and the corpus teaches the pattern explicitly."
     },
     {
-      "id": "HI-A1-V-15",
+      "id": "HI-A1-V-20",
       "category": "Kriya (the verb)",
       "label": "the experiencer frame: mujhe X pasand hai, where the liked thing is the subject",
       "probe": [
         "HI-CONCEPT-C35-PASAND-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-SV-01, ES:A1-F3-01"
     },
     {
-      "id": "HI-A1-V-16",
+      "id": "HI-A1-V-21",
       "category": "Kriya (the verb)",
       "label": "chahiye for wanting and needing",
       "probe": null,
-      "note": "Mock 1 reading item 12 ('mujhe chay chahiye') and profile 2 ('use pani chahiye') both key on it; mock 2 listening item 9 does too. No lesson introduces chahiye."
+      "derivedFrom": "ES:A1-F3-04",
+      "note": "Mock 1 reading item 12 `mujhe chay chahiye`, profile 2 `use pani chahiye`, mock 2 listening item 9. Nothing introduces it."
     },
     {
-      "id": "HI-A1-V-17",
+      "id": "HI-A1-V-22",
       "category": "Kriya (the verb)",
-      "label": "sakna for ability and possibility (a sakte hain)",
+      "label": "chahna, to want to do something",
       "probe": null,
-      "note": "Mock 2 reading item 14 is 'kya ap kal a sakte hain?'. Nothing in the corpus introduces sakna."
+      "derivedFrom": "ES:A1-F3-04, ES:A1-SUB-02",
+      "note": "Distinct from chahiye (HI-A1-V-21): chahiye takes a noun, chahna takes another verb. Neither is introduced, so neither wanting a thing nor wanting to do something can be said."
     },
     {
-      "id": "HI-A1-V-18",
+      "id": "HI-A1-V-23",
+      "category": "Kriya (the verb)",
+      "label": "sakna for ability and possibility",
+      "probe": null,
+      "derivedFrom": "ES:A1-F2-12, ES:A1-F2-16, ES:A1-F2-17, ES:A1-NG6-09",
+      "note": "Mock 2 reading item 14 is `kya ap kal a sakte hain?`. The proxy spends four A1 points on ability and possibility; Hindi routes all four through this one verb, and it is absent."
+    },
+    {
+      "id": "HI-A1-V-24",
+      "category": "Kriya (the verb)",
+      "label": "janna, to know",
+      "probe": null,
+      "derivedFrom": "ES:A1-F2-13, ES:A1-F2-14, ES:A1-NG7-01",
+      "note": "The negation lesson's own example sentence is `main nahin janta`, so the learner meets the word, but no atom introduces it and it cannot be used affirmatively."
+    },
+    {
+      "id": "HI-A1-V-25",
       "category": "Kriya (the verb)",
       "label": "jana, and the go-somewhere frame every A1 routine description needs",
       "probe": null,
-      "note": "Neither jana nor its stem is introduced anywhere. Every personal-account item in both mocks uses it (kam par jati hun, train se kam par jata hai, bazar jata hun), and the A1 speaking interview asks about transport and routine. This is the single highest-traffic missing verb in the level."
+      "derivedFrom": "ES:A1-V-02, ES:A1-NG3-04",
+      "note": "Neither `jana` nor its stem is introduced anywhere. Every personal-account item in both mocks uses it, and the A1 speaking interview asks about transport and routine. The single highest-traffic missing verb in the level."
     },
     {
-      "id": "HI-A1-V-19",
+      "id": "HI-A1-V-26",
       "category": "Kriya (the verb)",
       "label": "khana and pina as verbs, distinguished from khana the noun",
       "probe": null,
-      "note": "khana is introduced as the masculine noun 'food'. The verb sense, and pina at all, are untaught; mock 1's account has 'khana khati hun' and mock 2's has 'chay piti hai'."
+      "derivedFrom": "ES:A1-NE05-01",
+      "note": "`khana` is introduced as the masculine noun 'food'. The verb sense, and `pina` at all, are untaught; mock 1's account has `khana khati hun` and mock 2's has `chay piti hai`."
+    },
+    {
+      "id": "HI-A1-V-27",
+      "category": "Kriya (the verb)",
+      "label": "transitive sentences: a verb with an object",
+      "probe": [
+        "HI-CONCEPT-C05-MAINHINDIBOLTAHUN-01"
+      ],
+      "derivedFrom": "ES:A1-OS-06, ES:A1-SV-04"
     },
     {
       "id": "HI-A1-POST-01",
       "category": "Parsarg (postpositions and case)",
-      "label": "postpositions follow their noun where English would put a preposition in front",
+      "label": "postpositions follow their noun where the proxy language would put a preposition in front",
       "probe": [
         "HI-CONCEPT-C05-RAHNA-01",
         "HI-CONCEPT-C19-AGE-GRAMMAR-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific",
+      "note": "The structural inversion the proxy cannot express. Spanish has no postpositions at all."
     },
     {
       "id": "HI-A1-POST-02",
@@ -369,7 +652,8 @@
       "label": "me for location and containment",
       "probe": [
         "HI-CONCEPT-C05-RAHNA-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NG3-01"
     },
     {
       "id": "HI-A1-POST-03",
@@ -377,49 +661,161 @@
       "label": "the genitive ka / ke / ki for possession and belonging",
       "probe": [
         "HI-CONCEPT-C19-AGE-GRAMMAR-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-SN-01, ES:A1-POS-03"
     },
     {
       "id": "HI-A1-POST-04",
       "category": "Parsarg (postpositions and case)",
       "label": "se for origin, instrument and means (Dilli se, bas se)",
       "probe": null,
-      "note": "Load-bearing in both mocks: 'Aman Dilli se hai', 'Ravi bas se school jata hai', 'ap kahan se hain?', 'main Bhopal se hun', 'train se kam par jata hai'. The corpus never introduces se, and the A1 speaking interview's origin question cannot be answered without it."
+      "derivedFrom": "ES:A1-NG3-07, ES:A1-F1-03",
+      "note": "Load-bearing in both mocks: `Aman Dilli se hai`, `Ravi bas se school jata hai`, `ap kahan se hain?`, `main Bhopal se hun`, `train se kam par jata hai`. Never introduced, and the A1 speaking interview's origin question cannot be answered without it."
     },
     {
       "id": "HI-A1-POST-05",
       "category": "Parsarg (postpositions and case)",
       "label": "par for location at a point (ghar par, station par)",
       "probe": null,
-      "note": "Mock 1 reading item 14 and mock 2 item 10 both turn on it. Untaught."
+      "derivedFrom": "ES:A1-NG3-01",
+      "note": "Mock 1 reading item 14 and mock 2 item 10 both turn on it."
     },
     {
       "id": "HI-A1-POST-06",
       "category": "Parsarg (postpositions and case)",
-      "label": "ko as a free postposition marking an object or a recipient",
+      "label": "ko marking an animate or definite object, and a recipient",
       "probe": null,
-      "note": "Only the fused mujhe is present. ko itself is never introduced, so neither a marked object nor a dative recipient can be built."
+      "derivedFrom": "ES:A1-SV-04, ES:A1-SV-05, ES:A1-PRON-02",
+      "note": "The exact counterpart of the proxy's `a` before a human direct object -- the same demand, a different marker. Only the fused `mujhe` is present; `ko` itself is never introduced."
     },
     {
       "id": "HI-A1-POST-07",
       "category": "Parsarg (postpositions and case)",
-      "label": "ke sath for accompaniment",
+      "label": "ke sath for accompaniment, and ke bina for its absence",
       "probe": null,
-      "note": "Mock 1's account has 'apne dost ke sath' and mock 2's has 'apne parivar ke sath'. Untaught."
+      "derivedFrom": "ES:A1-NG1-02",
+      "note": "Mock 1's account has `apne dost ke sath` and mock 2's has `apne parivar ke sath`."
     },
     {
       "id": "HI-A1-POST-08",
       "category": "Parsarg (postpositions and case)",
       "label": "spatial compound postpositions: ke pas, ke samne, ke piche",
       "probe": null,
-      "note": "Mock 2 listening item 6 ('bas station ke samne hai') and item 11 ('nahin, pas hai') both need them. Untaught."
+      "derivedFrom": "ES:A1-NG3-02, ES:A1-NG3-03, ES:A1-NG3-05",
+      "note": "Mock 2 listening item 6 `bas station ke samne hai` and item 11 `nahin, pas hai`. The proxy spends three A1 points on relative position, distance and direction; Hindi routes all three through this construction and none of it is taught."
     },
     {
       "id": "HI-A1-POST-09",
       "category": "Parsarg (postpositions and case)",
       "label": "se ... tak for a span of days or hours",
       "probe": null,
-      "note": "Mock 2's account opens 'somvar se shukravar tak'. The weekday nouns are taught; the frame that spans them is not."
+      "derivedFrom": "ES:A1-NG3-06",
+      "note": "Mock 2's account opens `somvar se shukravar tak`. The weekday nouns are taught; the frame that spans them is not."
+    },
+    {
+      "id": "HI-A1-POST-10",
+      "category": "Parsarg (postpositions and case)",
+      "label": "ke liye for purpose and benefit",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-07, ES:A1-PRON-08",
+      "note": "The proxy expresses purpose with para plus an infinitive; Hindi uses the oblique infinitive plus ke liye. Neither the postposition nor the oblique infinitive is taught."
+    },
+    {
+      "id": "HI-A1-ADV-01",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "place deictics: yahan and vahan",
+      "probe": [
+        "HI-LEX-C40-DEIXIS-03",
+        "HI-LEX-C40-DEIXIS-04"
+      ],
+      "derivedFrom": "ES:A1-ADV-01, ES:A1-NG3-01"
+    },
+    {
+      "id": "HI-A1-ADV-02",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "time deictics: abhi, ab, and kal for both yesterday and tomorrow",
+      "probe": [
+        "HI-LEX-C49-LEAVE-01",
+        "HI-LEX-C64-MEASURE-01",
+        "HI-CONCEPT-C04-KALMILTEHAIN-01"
+      ],
+      "derivedFrom": "ES:A1-ADV-02"
+    },
+    {
+      "id": "HI-A1-ADV-03",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "aaj, the word for today",
+      "probe": null,
+      "derivedFrom": "ES:A1-ADV-02, ES:A1-NG4-02",
+      "note": "Not introduced anywhere, and it is hard to overstate how often the level needs it: mock 1 reading items 3 and 9 and listening item 6, mock 2 reading items 8 and 11 and its whole writing task, which is about why you cannot meet TODAY. `kal` is taught and its anchor is not."
+    },
+    {
+      "id": "HI-A1-ADV-04",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "parson, the day after tomorrow",
+      "probe": [
+        "HI-LEX-C49-LEAVE-02"
+      ],
+      "derivedFrom": "ES:A1-ADV-02"
+    },
+    {
+      "id": "HI-A1-ADV-05",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "manner adverbs: jaldi and dhire",
+      "probe": [
+        "HI-LEX-C64-MEASURE-02",
+        "HI-LEX-C64-MEASURE-03"
+      ],
+      "derivedFrom": "ES:A1-ADV-04"
+    },
+    {
+      "id": "HI-A1-ADV-06",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "evaluative manner: doing something well, and doing it badly",
+      "probe": null,
+      "derivedFrom": "ES:A1-ADV-04, ES:A1-NG6-07",
+      "note": "`thik` and `achha` cover 'well'. No word for 'badly' -- neither `bura` nor `kharab` -- is introduced, so the proxy's bien/mal pair is half present and cannot be contrasted."
+    },
+    {
+      "id": "HI-A1-ADV-07",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "polarity adverbs: han and nahin",
+      "probe": [
+        "HI-CONCEPT-C07-HAAN-01",
+        "HI-CONCEPT-C07-NAHIN-01"
+      ],
+      "derivedFrom": "ES:A1-ADV-05"
+    },
+    {
+      "id": "HI-A1-ADV-08",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "the additive bhi, Hindi's 'also' and 'too'",
+      "probe": null,
+      "derivedFrom": "ES:A1-ADV-06",
+      "note": "One of the highest-frequency words in the language and the counterpart of the proxy's tambien/tampoco point. Untaught, so nothing can be added to anything."
+    },
+    {
+      "id": "HI-A1-ADV-09",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "interrogative adverbs: kahan and kaise",
+      "probe": [
+        "HI-LEX-C40-DEIXIS-06",
+        "HI-CONCEPT-C03-KAISE-01"
+      ],
+      "derivedFrom": "ES:A1-ADV-07"
+    },
+    {
+      "id": "HI-A1-ADV-10",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "short response adverbs: sach, bas, zarur, shayad, bilkul",
+      "probe": [
+        "HI-LEX-C48-REPLY-01",
+        "HI-LEX-C48-REPLY-02",
+        "HI-LEX-C48-REPLY-03",
+        "HI-LEX-C48-REPLY-04",
+        "HI-LEX-C48-REPLY-05"
+      ],
+      "derivedFrom": "ES:A1-NG1-05"
     },
     {
       "id": "HI-A1-Q-01",
@@ -427,14 +823,16 @@
       "label": "kya as the content question word 'what'",
       "probe": [
         "HI-CONCEPT-C02-KYA-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-PRON-06, ES:A1-OS-03"
     },
     {
       "id": "HI-A1-Q-02",
       "category": "Prashn (asking questions)",
       "label": "kya in first position turning a statement into a yes/no question",
       "probe": null,
-      "note": "The kya lesson teaches only the 'what' sense. Mock 1 listening item 12 and mock 2 reading item 14 both open with the polar kya, and it is the ordinary way an A1 speaking interlocutor asks anything."
+      "derivedFrom": "ES:A1-OS-02",
+      "note": "The kya lesson teaches only the 'what' sense. Mock 1 listening item 12 and mock 2 reading item 14 both open with the polar kya, and it is the ordinary way an A1 interlocutor asks anything."
     },
     {
       "id": "HI-A1-Q-03",
@@ -442,7 +840,8 @@
       "label": "kaun for a person",
       "probe": [
         "HI-LEX-C40-DEIXIS-05"
-      ]
+      ],
+      "derivedFrom": "ES:A1-PRON-06, ES:A1-F1-02"
     },
     {
       "id": "HI-A1-Q-04",
@@ -450,7 +849,8 @@
       "label": "kahan for a place",
       "probe": [
         "HI-LEX-C40-DEIXIS-06"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F1-02"
     },
     {
       "id": "HI-A1-Q-05",
@@ -458,7 +858,8 @@
       "label": "kaise / kaisa for manner and condition",
       "probe": [
         "HI-CONCEPT-C03-KAISE-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F2-03"
     },
     {
       "id": "HI-A1-Q-06",
@@ -466,28 +867,40 @@
       "label": "kitna / kitne for quantity",
       "probe": [
         "HI-CONCEPT-C19-AGE-GRAMMAR-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-PRON-06"
     },
     {
       "id": "HI-A1-Q-07",
       "category": "Prashn (asking questions)",
       "label": "kab for time",
       "probe": null,
-      "note": "Named in passing in the kya lesson's list of k- words, but never introduced as a word a learner can use. Mock 1 listening item 11 ('bas kab aegi?') and mock 2 item 8 ('ap kab aengi?') both ask it, and the A1 speaking role-play requires asking when a train leaves."
+      "derivedFrom": "ES:A1-OS-03",
+      "note": "Named in passing in the kya lesson's list of k- words and never taught. Mock 1 listening item 11 `bas kab aegi?` and mock 2 item 8 `ap kab aengi?` both ask it, and the A1 speaking role-play requires asking when a train leaves."
     },
     {
       "id": "HI-A1-Q-08",
       "category": "Prashn (asking questions)",
-      "label": "kyon for reason",
+      "label": "kyon for reason, and kyonki for giving one",
       "probe": null,
-      "note": "Same status as kab: listed in the kya lesson's etymology table, never taught. Mock 2's writing task requires saying why you cannot meet."
+      "derivedFrom": "ES:A1-ADV-08, ES:A1-SUB-06",
+      "note": "Same status as kab: listed in the kya lesson's etymology table, never taught. Mock 2's writing task requires saying WHY you cannot meet."
     },
     {
       "id": "HI-A1-Q-09",
       "category": "Prashn (asking questions)",
       "label": "a question word sits in the clause's normal slot rather than being fronted",
       "probe": null,
-      "note": "The deixis-system lesson generalises the k- shape but says nothing about where the question word goes. No atom states the word-order rule."
+      "derivedFrom": "ES:A1-OS-03",
+      "note": "The deixis-system lesson generalises the k- shape but says nothing about where the question word goes. A probe must point at a claim the corpus makes, not at a pattern a reader might induce."
+    },
+    {
+      "id": "HI-A1-Q-10",
+      "category": "Prashn (asking questions)",
+      "label": "the tag question: ... hai na?",
+      "probe": null,
+      "derivedFrom": "ES:A1-F1-04",
+      "note": "Hindi's counterpart to the proxy's confirmation tag, and the ordinary way to check a fact in conversation. Untaught."
     },
     {
       "id": "HI-A1-NEG-01",
@@ -495,7 +908,8 @@
       "label": "nahin as the bare answer 'no'",
       "probe": [
         "HI-CONCEPT-C07-NAHIN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-ADV-05, ES:A1-F1-05"
     },
     {
       "id": "HI-A1-NEG-02",
@@ -503,14 +917,26 @@
       "label": "ji han and ji nahin as the courteous answers",
       "probe": [
         "HI-CONCEPT-C07-HAAN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F1-05"
     },
     {
       "id": "HI-A1-NEG-03",
       "category": "Nishedh (negation)",
       "label": "contrasting two alternatives negatively (X se nahin, Y se)",
       "probe": null,
-      "note": "Mock 2 reading item 13 is 'main bas se nahin, train se jaunga'. Needs se, which is untaught."
+      "derivedFrom": "ES:A1-CO-02",
+      "note": "Mock 2 reading item 13 is `main bas se nahin, train se jaunga`. Needs `se`."
+    },
+    {
+      "id": "HI-A1-NEG-04",
+      "category": "Nishedh (negation)",
+      "label": "expressing ignorance: main nahin janta",
+      "probe": [
+        "HI-CONCEPT-C07-NAHIN-01"
+      ],
+      "derivedFrom": "ES:A1-F2-08, ES:A1-F2-15",
+      "note": "Covered by an unusual route: the negation lesson's own worked example IS this sentence, so the learner is shown it complete. Recorded here rather than silently credited, because the atom is about the negator and the credit is for the example it carries."
     },
     {
       "id": "HI-A1-S-01",
@@ -518,152 +944,171 @@
       "label": "the copular sentence: X Y hai",
       "probe": [
         "HI-CONCEPT-C02-MERANAAMHAI-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-OS-05, ES:A1-SV-02"
     },
     {
       "id": "HI-A1-S-02",
       "category": "Vakya (the sentence)",
       "label": "the verb comes last",
       "probe": null,
-      "note": "Every taught sentence is verb-final, so the learner sees the order constantly, but no atom states it. A probe must point at a claim the corpus makes, not at a pattern a reader might induce."
+      "derivedFrom": "ES:A1-SV-06",
+      "note": "Every taught sentence is verb-final, so the learner sees the order constantly, but no atom states it. The proxy's counterpart point is about word-order FLEXIBILITY; Hindi's is about a fixed position the learner must actively adopt, which is the larger demand of the two."
     },
     {
       "id": "HI-A1-S-03",
       "category": "Vakya (the sentence)",
-      "label": "joining two clauses with aur",
+      "label": "the vocative: addressing a named reader or hearer",
       "probe": null,
-      "note": "aur carries a clause join in five of the six mock profile texts. It is never introduced."
+      "derivedFrom": "ES:A1-SN-04",
+      "note": "The writing task in both mocks is addressed to a named person -- Reema, Mohan -- and the rubric awards 10 of that task's 60 points for a clear named reader. No atom covers address."
     },
     {
       "id": "HI-A1-S-04",
       "category": "Vakya (the sentence)",
       "label": "closing a written sentence with the danda",
       "probe": null,
-      "note": "HI-W06-name-sentence-stop teaches exactly this and declares an EMPTY introduces list, so it contributes no atom and cannot be probed. The gap is in the lesson's knowledge contract, not in the teaching: fixing this one frontmatter field would make the point measurable."
+      "derivedFrom": "hindi-specific",
+      "note": "No Spanish counterpart -- the proxy's punctuation points are about the full stop, the comma and the inverted question mark. HI-W06-name-sentence-stop teaches the danda and declares an EMPTY `introduces` list, so it contributes no atom and cannot be probed. The gap is in the lesson's knowledge contract, not in the teaching."
     },
     {
       "id": "HI-A1-S-05",
       "category": "Vakya (the sentence)",
       "label": "producing a connected two-sentence message for a named reader",
       "probe": null,
-      "note": "HI-W06-two-sentence-card and HI-W06-two-sentence-no-model teach it and, like HI-A1-S-04, declare empty introduces lists. The A1 writing paper's second task -- 30 to 40 words to a named reader, worth 60 of that paper's 100 points -- rests on this rung."
+      "derivedFrom": "ES:A1-NE09-02",
+      "note": "HI-W06-two-sentence-card and HI-W06-two-sentence-no-model teach it and, like HI-A1-S-04, declare empty introduces lists. The A1 writing paper's second task -- 30 to 40 words to a named reader, 60 of that paper's 100 points -- rests on this rung."
     },
     {
-      "id": "HI-A1-NUM-01",
-      "category": "Sankhya aur samay (numbers, time and date)",
-      "label": "the numerals one to ten",
-      "probe": [
-        "HI-CONCEPT-C06-NUMBERS-1-5-01",
-        "HI-CONCEPT-C21-NUMBERS-6-10-01"
-      ]
-    },
-    {
-      "id": "HI-A1-NUM-02",
-      "category": "Sankhya aur samay (numbers, time and date)",
-      "label": "the irregular numerals eleven to twenty",
-      "probe": [
-        "HI-CONCEPT-C22-GYARAH-BEES-01"
-      ]
-    },
-    {
-      "id": "HI-A1-NUM-03",
-      "category": "Sankhya aur samay (numbers, time and date)",
-      "label": "the numerals twenty-one to one hundred",
+      "id": "HI-A1-CJ-01",
+      "category": "Samuchchay (joining clauses)",
+      "label": "joining with aur",
       "probe": null,
-      "note": "The corpus stops at bis. Mock 2 reading item 4 prices tea at pachas rupaye, and no price, age over twenty, or house number can be read or said."
+      "derivedFrom": "ES:A1-CO-01",
+      "note": "`aur` carries a clause join in five of the six mock profile texts. Never introduced."
     },
     {
-      "id": "HI-A1-NUM-04",
-      "category": "Sankhya aur samay (numbers, time and date)",
-      "label": "the Devanagari digits 0-9 as written on signs and forms",
+      "id": "HI-A1-CJ-02",
+      "category": "Samuchchay (joining clauses)",
+      "label": "the alternative ya",
       "probe": null,
-      "note": "No atom introduces the Devanagari digit shapes. Both mocks' form-reading parts render times and quantities in words, which conceals the gap rather than closing it."
+      "derivedFrom": "ES:A1-CO-03",
+      "note": "Mock 1 listening item 9 is `chay ya pani?`, and the A1 speaking task asks a preference by offering alternatives. Untaught."
     },
     {
-      "id": "HI-A1-NUM-05",
-      "category": "Sankhya aur samay (numbers, time and date)",
+      "id": "HI-A1-CJ-03",
+      "category": "Samuchchay (joining clauses)",
+      "label": "the adversative lekin",
+      "probe": null,
+      "derivedFrom": "ES:A1-CO-04, ES:A1-F2-09",
+      "note": "Neither lekin nor par is introduced, so no taught sentence can be qualified or contradicted -- which also closes off the proxy's counter-argument function point."
+    },
+    {
+      "id": "HI-A1-CJ-04",
+      "category": "Samuchchay (joining clauses)",
+      "label": "the complementiser ki, for reporting what someone thinks or says",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-03, ES:A1-F2-02, ES:A1-F2-11",
+      "note": "`sochna` and `samajhna` are taught as dictionary verbs, but with no `ki` there is no way to attach what is thought, so three of the proxy's opinion points have no Hindi route at all."
+    },
+    {
+      "id": "HI-A1-CJ-05",
+      "category": "Samuchchay (joining clauses)",
+      "label": "the infinitive as the subject or object of another verb",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-01, ES:A1-SUB-02",
+      "note": "The infinitive itself IS taught (HI-A1-V-01), but only as the dictionary form. Nothing puts one inside another clause, and the verbs that would govern it -- chahna, sakna -- are absent."
+    },
+    {
+      "id": "HI-A1-CJ-06",
+      "category": "Samuchchay (joining clauses)",
+      "label": "jab for simultaneity, and the jab/tab correlative",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-08",
+      "note": "The same correlative machine as `jo`/`vo` (HI-A1-PRON-09). Hindi is unusually systematic here and the corpus teaches the y-/v-/k- version of it, then stops."
+    },
+    {
+      "id": "HI-A1-T-01",
+      "category": "Samay aur tarikh (time and date)",
       "label": "the days of the week",
       "probe": [
         "HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01",
         "HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NG4-02"
     },
     {
-      "id": "HI-A1-NUM-06",
-      "category": "Sankhya aur samay (numbers, time and date)",
+      "id": "HI-A1-T-02",
+      "category": "Samay aur tarikh (time and date)",
       "label": "the months of the year",
       "probe": [
         "HI-CONCEPT-C16-MAHINE-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NG4-02"
     },
     {
-      "id": "HI-A1-NUM-07",
-      "category": "Sankhya aur samay (numbers, time and date)",
+      "id": "HI-A1-T-03",
+      "category": "Samay aur tarikh (time and date)",
+      "label": "the seasons",
+      "probe": [
+        "HI-CONCEPT-C14-RITU-01"
+      ],
+      "derivedFrom": "ES:A1-NG4-02"
+    },
+    {
+      "id": "HI-A1-T-04",
+      "category": "Samay aur tarikh (time and date)",
       "label": "the parts of the day: subah, dopahar, sham, rat",
       "probe": [
         "HI-CONCEPT-C28-SUBAH-01",
         "HI-CONCEPT-C30-DOPAHAR-WIDENED-01",
         "HI-CONCEPT-C29-SHAAM-01",
         "HI-CONCEPT-C26-RAAT-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NG4-01"
     },
     {
-      "id": "HI-A1-NUM-08",
-      "category": "Sankhya aur samay (numbers, time and date)",
+      "id": "HI-A1-T-05",
+      "category": "Samay aur tarikh (time and date)",
       "label": "telling the hour with bajna (ek baj raha hai)",
       "probe": [
         "HI-CONCEPT-C18-GHANTA-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NG4-01"
     },
     {
-      "id": "HI-A1-NUM-09",
-      "category": "Sankhya aur samay (numbers, time and date)",
+      "id": "HI-A1-T-06",
+      "category": "Samay aur tarikh (time and date)",
       "label": "naming a clock time as an appointment: X baje",
       "probe": null,
-      "note": "The hour lesson teaches the predicate 'ek baj raha hai' -- it is one o'clock -- but not the adverbial baje that both mocks use throughout ('panch baje aunga', 'nau baje shuru hoga', 'sat baje uthti hun', 'char baje'). Reading the hour is taught; arranging to meet at it is not."
+      "derivedFrom": "ES:A1-NG4-01, ES:A1-NG1-04",
+      "note": "The hour lesson teaches the predicate `ek baj raha hai` -- it IS one o'clock -- but not the adverbial `baje` that both mocks use throughout: `panch baje aunga`, `nau baje shuru hoga`, `sat baje uthti hun`, `char baje`. Reading the hour is taught; arranging to meet at it is not."
     },
     {
-      "id": "HI-A1-NUM-10",
-      "category": "Sankhya aur samay (numbers, time and date)",
-      "label": "kal for both yesterday and tomorrow, and parson",
-      "probe": [
-        "HI-CONCEPT-C04-KALMILTEHAIN-01",
-        "HI-LEX-C49-LEAVE-02"
-      ]
-    },
-    {
-      "id": "HI-A1-NUM-11",
-      "category": "Sankhya aur samay (numbers, time and date)",
-      "label": "abhi, ab, jaldi as points and speeds on the day",
-      "probe": [
-        "HI-LEX-C49-LEAVE-01",
-        "HI-LEX-C64-MEASURE-01",
-        "HI-LEX-C64-MEASURE-02"
-      ]
-    },
-    {
-      "id": "HI-A1-NUM-12",
-      "category": "Sankhya aur samay (numbers, time and date)",
+      "id": "HI-A1-T-07",
+      "category": "Samay aur tarikh (time and date)",
       "label": "giving and asking an age",
       "probe": [
         "HI-CONCEPT-C19-UMR-01",
         "HI-CONCEPT-C19-AGE-GRAMMAR-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NG5-04, ES:A1-F1-03"
     },
     {
-      "id": "HI-A1-NUM-13",
-      "category": "Sankhya aur samay (numbers, time and date)",
-      "label": "the seasons",
-      "probe": [
-        "HI-CONCEPT-C14-RITU-01"
-      ]
-    },
-    {
-      "id": "HI-A1-NUM-14",
-      "category": "Sankhya aur samay (numbers, time and date)",
+      "id": "HI-A1-T-08",
+      "category": "Samay aur tarikh (time and date)",
       "label": "writing today's date",
       "probe": null,
-      "note": "Mock 1's writing paper requires 'aj ki tarikh' as one of six form fields worth 16 of that task's 40 content points. Neither tarikh nor a date format is taught, and the numerals above twenty needed to write one are absent too."
+      "derivedFrom": "ES:A1-NE03-01",
+      "note": "Mock 1's writing paper requires `aj ki tarikh` as one of six form fields worth 16 of that task's 40 content points. Neither `tarikh` nor a date format is taught, and the numerals above twenty needed to write one are absent too."
+    },
+    {
+      "id": "HI-A1-T-09",
+      "category": "Samay aur tarikh (time and date)",
+      "label": "before and after: pahle and baad",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG4-03, ES:A1-NG3-06",
+      "note": "Nothing can be sequenced in time."
     },
     {
       "id": "HI-A1-SCR-01",
@@ -671,7 +1116,8 @@
       "label": "the shirorekha head-line letters hang from",
       "probe": [
         "HI-CONCEPT-W01-SHIROREKHA-NA-MA-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-SCR-02",
@@ -679,7 +1125,9 @@
       "label": "the abugida principle: a bare consonant already carries the inherent a",
       "probe": [
         "HI-CONCEPT-W02-ABUGIDA-KA-TA-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific",
+      "note": "The deepest script difference from the proxy, which is alphabetic. Devanagari is an abugida and nothing in a Spanish inventory has anything to say about it."
     },
     {
       "id": "HI-A1-SCR-03",
@@ -687,7 +1135,8 @@
       "label": "matras replace the inherent vowel",
       "probe": [
         "HI-CONCEPT-W03-MATRAS-NAAM-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-O1-02"
     },
     {
       "id": "HI-A1-SCR-04",
@@ -695,7 +1144,8 @@
       "label": "the i-matra is written before the consonant it is pronounced after",
       "probe": [
         "HI-CONCEPT-W03-PREPOSED-I-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-SCR-05",
@@ -703,7 +1153,8 @@
       "label": "the virama stops a consonant's vowel",
       "probe": [
         "HI-CONCEPT-W05-VIRAMA-NAMASTE-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-SCR-06",
@@ -711,7 +1162,9 @@
       "label": "conjunct consonants fuse a vowel-less consonant with the next",
       "probe": [
         "HI-CONCEPT-W05-CONJUNCTS-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-O1-03",
+      "note": "The nearest proxy point is the one about digraphs; conjuncts are a far larger demand, since Hindi builds hundreds of them and their shapes are not always predictable from the parts."
     },
     {
       "id": "HI-A1-SCR-07",
@@ -720,7 +1173,9 @@
       "probe": [
         "HI-SCRIPT-CHANDRABINDU-01",
         "HI-CONCEPT-C07-HAAN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-O2-02",
+      "note": "Mapped to the proxy's diacritic point: both are a mark that changes a word without changing a letter."
     },
     {
       "id": "HI-A1-SCR-08",
@@ -728,7 +1183,8 @@
       "label": "word-final schwa is written and not said",
       "probe": [
         "HI-SCRIPT-SCHWA-DROP-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-O1-07"
     },
     {
       "id": "HI-A1-SCR-09",
@@ -740,7 +1196,8 @@
         "HI-SCRIPT-RECOG-122",
         "HI-SCRIPT-RECOG-123",
         "HI-SCRIPT-RECOG-124"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-SCR-10",
@@ -749,7 +1206,8 @@
       "probe": [
         "HI-SCRIPT-DA-RETROFLEX-01",
         "HI-SCRIPT-RECOG-07"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-SCR-11",
@@ -759,14 +1217,16 @@
         "HI-SCRIPT-AA-01",
         "HI-SCRIPT-II-01",
         "HI-SCRIPT-RECOG-03"
-      ]
+      ],
+      "derivedFrom": "ES:A1-O1-02"
     },
     {
       "id": "HI-A1-SCR-12",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the remaining independent vowels: i, u, uu, e, ai, o, au",
       "probe": null,
-      "note": "Only a, aa and ii have atoms. Seven of the ten independent vowel letters are untaught, and A1 reading is unromanized by the track's own rule."
+      "derivedFrom": "ES:A1-O1-02",
+      "note": "Only a, aa and ii have atoms. Seven of the ten are untaught, and A1 reading is unromanized by the track's own rule."
     },
     {
       "id": "HI-A1-SCR-13",
@@ -778,51 +1238,82 @@
         "HI-SCRIPT-U-MATRA-01",
         "HI-SCRIPT-AI-MATRA-01",
         "HI-SCRIPT-RECOG-112"
-      ]
+      ],
+      "derivedFrom": "ES:A1-O1-02"
     },
     {
       "id": "HI-A1-SCR-14",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the remaining matras: uu, o, au and the vocalic ri",
       "probe": null,
-      "note": "No atom introduces them, so a word as ordinary as 'do' or 'kaun' cannot be decoded from taught pieces."
+      "derivedFrom": "ES:A1-O1-02",
+      "note": "No atom introduces them, so a word as ordinary as `do` or `kaun` cannot be decoded from taught pieces."
     },
     {
       "id": "HI-A1-SCR-15",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the full consonant series, ka-varga through pa-varga and the semivowels and sibilants",
       "probe": null,
-      "note": "The track has letter atoms for eighteen consonants (na ma ka ta ra sa pa ha ya ca sa-ssa la kha da dha bha ba da-retroflex). Fifteen more that ordinary A1 text needs -- ga gha cha ja jha ta-retroflex tha-retroflex dha-retroflex na-retroflex tha pha ba-plain va sha -- have none. Since the A1 reading paper forbids romanization, the letters with no atom are a hard ceiling on it, not a stylistic gap."
+      "derivedFrom": "ES:A1-O1-01, ES:A1-O1-03",
+      "note": "The proxy's alphabet point, and the place the proxy most understates Hindi's demand. The track has letter atoms for eighteen consonants (na ma ka ta ra sa pa ha ya ca ssa la kha da dha bha ba retroflex-da). Fifteen more that ordinary A1 text needs -- ga gha cha ja jha retroflex-ta retroflex-tha retroflex-dha retroflex-na tha pha plain-ba va sha -- have none. Since the A1 reading paper forbids romanization, the letters with no atom are a hard ceiling on it."
     },
     {
       "id": "HI-A1-SCR-16",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the nuqta letters qa, kha, ga, za, fa and the flapped ra, rha",
       "probe": null,
-      "note": "The single sharpest finding in this file. The corpus's own headwords are FULL of nuqta: shukriya, khushi, zarur, safed, darvaza, mez, sabzi, zyada, safar, tohfa, bukhar, fasal, khushbu, mulaqat. Learners are shown the letters constantly and never taught the mark, so no atom can be probed for it."
+      "derivedFrom": "hindi-specific",
+      "note": "The single sharpest finding in this file, and one the proxy could never have surfaced. The corpus's own headwords are FULL of nuqta: shukriya, khushi, zarur, safed, darvaza, mez, sabzi, zyada, safar, tohfa, bukhar, fasal, khushbu, mulaqat. Learners are shown the letters constantly and never taught the mark."
     },
     {
       "id": "HI-A1-SCR-17",
       "category": "Devanagari lipi (script and orthography)",
-      "label": "writing a complete known sentence, with word spacing",
-      "probe": [
-        "HI-CONCEPT-W04-WRITE-MERA-NAAM-01"
-      ]
+      "label": "Devanagari has no capital letters, so the proxy's capitalisation rules do not apply",
+      "probe": null,
+      "derivedFrom": "ES:A1-O1-04, ES:A1-O1-05",
+      "note": "Recorded rather than dropped, because a learner coming from a bicameral script has to be told once that sentence-initial and proper-noun capitals have no Devanagari equivalent. No atom says it."
     },
     {
       "id": "HI-A1-SCR-18",
       "category": "Devanagari lipi (script and orthography)",
-      "label": "completing a form field in Devanagari with no visible model",
+      "label": "writing a complete known sentence, with word spacing",
       "probe": [
-        "HI-FORM-NAME-NO-MODEL-01"
-      ]
+        "HI-CONCEPT-W04-WRITE-MERA-NAAM-01"
+      ],
+      "derivedFrom": "ES:A1-O1-07"
     },
     {
       "id": "HI-A1-SCR-19",
       "category": "Devanagari lipi (script and orthography)",
+      "label": "completing a form field in Devanagari with no visible model",
+      "probe": [
+        "HI-FORM-NAME-NO-MODEL-01"
+      ],
+      "derivedFrom": "ES:A1-NE03-01"
+    },
+    {
+      "id": "HI-A1-SCR-20",
+      "category": "Devanagari lipi (script and orthography)",
       "label": "completing every field of an A1 practical form (name, city, language, time, drink, date)",
       "probe": null,
+      "derivedFrom": "ES:A1-NE03-01",
       "note": "The form rung proves exactly one field, the name. Both mocks' writing task 1 asks for six, and the rubric gives a blank field no content point."
+    },
+    {
+      "id": "HI-A1-SCR-21",
+      "category": "Devanagari lipi (script and orthography)",
+      "label": "the comma, and the question mark Hindi borrows from the Latin script",
+      "probe": null,
+      "derivedFrom": "ES:A1-O3-02, ES:A1-O3-04",
+      "note": "Hindi writes a question mark but never an opening one, and uses the Latin comma. Neither is introduced, and the danda (HI-A1-S-04) is the only terminator the corpus touches at all."
+    },
+    {
+      "id": "HI-A1-SCR-22",
+      "category": "Devanagari lipi (script and orthography)",
+      "label": "abbreviations and symbols on signs and forms",
+      "probe": null,
+      "derivedFrom": "ES:A1-O4-01, ES:A1-O4-02, ES:A1-O4-03",
+      "note": "The rupee sign, `Dr.`, `No.`: nothing of the kind is taught, and the A1 reading paper opens on signs and form extracts."
     },
     {
       "id": "HI-A1-PH-01",
@@ -830,7 +1321,8 @@
       "label": "the aspirated/unaspirated contrast changes the word",
       "probe": [
         "HI-SCRIPT-BHA-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-PH-02",
@@ -839,7 +1331,8 @@
       "probe": [
         "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
         "HI-SCRIPT-DA-RETROFLEX-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-PH-03",
@@ -848,7 +1341,8 @@
       "probe": [
         "HI-CONCEPT-C07-HAAN-01",
         "HI-SCRIPT-CHANDRABINDU-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-PH-04",
@@ -857,28 +1351,32 @@
       "probe": [
         "HI-SCRIPT-II-MATRA-01",
         "HI-SCRIPT-U-MATRA-01"
-      ]
+      ],
+      "derivedFrom": "hindi-specific"
     },
     {
       "id": "HI-A1-PH-05",
       "category": "Uccharan (pronunciation)",
       "label": "the borrowed consonants z, f and q as sounds, not just as spellings",
       "probe": null,
-      "note": "The corpus teaches the words that carry them and never the sounds. See HI-A1-SCR-16, its written twin."
+      "derivedFrom": "hindi-specific",
+      "note": "The spoken twin of HI-A1-SCR-16."
     },
     {
       "id": "HI-A1-PH-06",
       "category": "Uccharan (pronunciation)",
       "label": "rising intonation marks a yes/no question when no kya is present",
       "probe": null,
-      "note": "No atom addresses intonation. The A1 listening paper plays every exchange as speech, and the polar questions in it are carried by intonation as often as by kya."
+      "derivedFrom": "ES:A1-OS-02",
+      "note": "No atom addresses intonation. The A1 listening paper plays every exchange as speech, and its polar questions are carried by intonation as often as by kya."
     },
     {
       "id": "HI-A1-PH-07",
       "category": "Uccharan (pronunciation)",
       "label": "word stress and the rhythm of a phrase",
       "probe": null,
-      "note": "Untreated in the corpus. Recorded at A1 for the same reason the Spanish inventory records its pronunciation gap: no source draws an A1/A2 line for it, so the point is enumerated and left honestly unmapped."
+      "derivedFrom": "hindi-specific",
+      "note": "Untreated in the corpus, and enumerated here for the same reason the Spanish inventory records its own pronunciation gap: no source draws an A1/A2 line for it, so drawing one ourselves would be the editorial promotion that file declines to make."
     },
     {
       "id": "HI-A1-F-01",
@@ -887,474 +1385,1195 @@
       "probe": [
         "HI-CONCEPT-C01-NAMASTE-01",
         "HI-CONCEPT-C01-NAMASKAR-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F5-01, ES:A1-F6-01"
     },
     {
       "id": "HI-A1-F-02",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "greet in the morning",
+      "label": "respond to a greeting",
       "probe": [
-        "HI-CONCEPT-C31-SUPRABHAT-01"
-      ]
+        "HI-CONCEPT-C01-NAMASTE-01"
+      ],
+      "derivedFrom": "ES:A1-F5-02, ES:A1-F6-02"
     },
     {
       "id": "HI-A1-F-03",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "greet in the afternoon",
+      "label": "greet in the morning",
       "probe": [
-        "HI-CONCEPT-C33-SHUBH-DOPAHAR-01"
-      ]
+        "HI-CONCEPT-C31-SUPRABHAT-01"
+      ],
+      "derivedFrom": "ES:A1-F5-01"
     },
     {
       "id": "HI-A1-F-04",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "greet in the evening",
+      "label": "greet in the afternoon",
       "probe": [
-        "HI-CONCEPT-C32-SHUBH-SANDHYA-01"
-      ]
+        "HI-CONCEPT-C33-SHUBH-DOPAHAR-01"
+      ],
+      "derivedFrom": "ES:A1-F5-01"
     },
     {
       "id": "HI-A1-F-05",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "wish someone good night",
+      "label": "greet in the evening",
       "probe": [
-        "HI-CONCEPT-C27-SHUBH-RAATRI-01"
-      ]
+        "HI-CONCEPT-C32-SHUBH-SANDHYA-01"
+      ],
+      "derivedFrom": "ES:A1-F5-01"
     },
     {
       "id": "HI-A1-F-06",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "judge which greeting register a situation wants",
+      "label": "wish someone good night",
       "probe": [
-        "HI-CONCEPT-C32-EVENING-REGISTER-01"
-      ]
+        "HI-CONCEPT-C27-SHUBH-RAATRI-01"
+      ],
+      "derivedFrom": "ES:A1-F5-01"
     },
     {
       "id": "HI-A1-F-07",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "judge which greeting register a situation wants",
+      "probe": [
+        "HI-CONCEPT-C32-EVENING-REGISTER-01"
+      ],
+      "derivedFrom": "hindi-specific",
+      "note": "Hindi's Sanskritic/Perso-Arabic register split has no Spanish A1 counterpart, and the corpus teaches it deliberately -- dhanyavad against shukriya, kripaya against dijiye."
+    },
+    {
+      "id": "HI-A1-F-08",
       "category": "Sanvad-karya (communicative functions)",
       "label": "take leave, formally and casually",
       "probe": [
         "HI-CONCEPT-C01-ALVIDA-01",
         "HI-CONCEPT-C04-PHIRMILENGE-01",
         "HI-CONCEPT-C04-CHALTAHUN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F5-11"
     },
     {
-      "id": "HI-A1-F-08",
+      "id": "HI-A1-F-09",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "propose closing the conversation",
+      "probe": [
+        "HI-CONCEPT-C04-CHALTAHUN-01"
+      ],
+      "derivedFrom": "ES:A1-F6-06"
+    },
+    {
+      "id": "HI-A1-F-10",
       "category": "Sanvad-karya (communicative functions)",
       "label": "say you will see someone tomorrow",
       "probe": [
         "HI-CONCEPT-C04-KALMILTEHAIN-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F5-11"
     },
     {
-      "id": "HI-A1-F-09",
+      "id": "HI-A1-F-11",
       "category": "Sanvad-karya (communicative functions)",
       "label": "thank someone, choosing between the Sanskritic and the everyday word",
       "probe": [
         "HI-CONCEPT-C01-DHANYAVAD-01",
         "HI-CONCEPT-C01-SHUKRIYA-01"
-      ]
-    },
-    {
-      "id": "HI-A1-F-10",
-      "category": "Sanvad-karya (communicative functions)",
-      "label": "answer thanks",
-      "probe": [
-        "HI-CONCEPT-C03-AAPKASWAGATHAI-01"
-      ]
-    },
-    {
-      "id": "HI-A1-F-11",
-      "category": "Sanvad-karya (communicative functions)",
-      "label": "apologise",
-      "probe": [
-        "HI-CONCEPT-C09-MAAF-KIJIYE-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F5-07"
     },
     {
       "id": "HI-A1-F-12",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "say please in writing and on a sign",
+      "label": "answer thanks",
       "probe": [
-        "HI-CONCEPT-C08-KRIPAYA-01"
-      ]
+        "HI-CONCEPT-C03-AAPKASWAGATHAI-01"
+      ],
+      "derivedFrom": "ES:A1-F5-07"
     },
     {
       "id": "HI-A1-F-13",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "make a spoken request across a counter with the -iye form",
+      "label": "apologise",
       "probe": [
-        "HI-CONCEPT-C37-CHAI-01"
-      ]
+        "HI-CONCEPT-C09-MAAF-KIJIYE-01"
+      ],
+      "derivedFrom": "ES:A1-F5-06"
     },
     {
       "id": "HI-A1-F-14",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "give your name",
+      "label": "say please in writing and on a sign",
       "probe": [
-        "HI-CONCEPT-C02-MERANAAMHAI-01"
-      ]
+        "HI-CONCEPT-C08-KRIPAYA-01"
+      ],
+      "derivedFrom": "ES:A1-F4-02"
     },
     {
       "id": "HI-A1-F-15",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "ask someone's name",
+      "label": "make a spoken request across a counter with the -iye form",
       "probe": [
-        "HI-CONCEPT-C02-AAPKANAAMKYAHAI-01"
-      ]
+        "HI-CONCEPT-C37-CHAI-01"
+      ],
+      "derivedFrom": "ES:A1-F4-02, ES:A1-F4-01"
     },
     {
       "id": "HI-A1-F-16",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "say you are pleased to meet someone",
+      "label": "give your name",
       "probe": [
-        "HI-CONCEPT-C02-KHUSHI-01"
-      ]
+        "HI-CONCEPT-C02-MERANAAMHAI-01"
+      ],
+      "derivedFrom": "ES:A1-F1-01, ES:A1-F5-04"
     },
     {
       "id": "HI-A1-F-17",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "ask how someone is",
+      "label": "ask someone's name",
       "probe": [
-        "HI-CONCEPT-C03-AAPKAISEHAIN-01"
-      ]
+        "HI-CONCEPT-C02-AAPKANAAMKYAHAI-01"
+      ],
+      "derivedFrom": "ES:A1-F1-02"
     },
     {
       "id": "HI-A1-F-18",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "say how you are",
+      "label": "say you are pleased to meet someone",
       "probe": [
-        "HI-CONCEPT-C03-THIK-01"
-      ]
+        "HI-CONCEPT-C02-KHUSHI-01"
+      ],
+      "derivedFrom": "ES:A1-F5-05"
     },
     {
       "id": "HI-A1-F-19",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "say which language you speak",
-      "probe": [
-        "HI-CONCEPT-C05-MAINHINDIBOLTAHUN-01"
-      ]
+      "label": "introduce a third person (ye mere dost hain)",
+      "probe": null,
+      "derivedFrom": "ES:A1-F5-04",
+      "note": "Introducing oneself is taught; introducing somebody else needs the adnominal demonstrative (HI-A1-DET-03) and the honorific plural, and neither is."
     },
     {
       "id": "HI-A1-F-20",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "say where you live",
+      "label": "ask how someone is",
       "probe": [
-        "HI-CONCEPT-C05-RAHNA-01"
-      ]
+        "HI-CONCEPT-C03-AAPKAISEHAIN-01"
+      ],
+      "derivedFrom": "ES:A1-F6-02"
     },
     {
       "id": "HI-A1-F-21",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "ask where someone is from, and say where you are from",
-      "probe": null,
-      "note": "The first question of the A1 speaking interview and of mock 1 listening item 10. It needs se, which is untaught. See HI-A1-POST-04."
+      "label": "say how you are",
+      "probe": [
+        "HI-CONCEPT-C03-THIK-01"
+      ],
+      "derivedFrom": "ES:A1-F6-02"
     },
     {
       "id": "HI-A1-F-22",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "say which language you speak",
+      "probe": [
+        "HI-CONCEPT-C05-MAINHINDIBOLTAHUN-01"
+      ],
+      "derivedFrom": "ES:A1-F1-03, ES:A1-NG7-02"
+    },
+    {
+      "id": "HI-A1-F-23",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "say where you live",
+      "probe": [
+        "HI-CONCEPT-C05-RAHNA-01"
+      ],
+      "derivedFrom": "ES:A1-F1-03"
+    },
+    {
+      "id": "HI-A1-F-24",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask where someone is from, and say where you are from",
+      "probe": null,
+      "derivedFrom": "ES:A1-F1-03, ES:A1-NG3-07",
+      "note": "The first question of the A1 speaking interview and of mock 1 listening item 10. Needs `se`."
+    },
+    {
+      "id": "HI-A1-F-25",
       "category": "Sanvad-karya (communicative functions)",
       "label": "say what work you do",
       "probe": [
         "HI-LEX-C47-ROLE-01",
         "HI-CONCEPT-C03-HUN-01"
-      ]
-    },
-    {
-      "id": "HI-A1-F-23",
-      "category": "Sanvad-karya (communicative functions)",
-      "label": "give your age",
-      "probe": [
-        "HI-CONCEPT-C19-AGE-GRAMMAR-01"
-      ]
-    },
-    {
-      "id": "HI-A1-F-24",
-      "category": "Sanvad-karya (communicative functions)",
-      "label": "answer a question yes or no",
-      "probe": [
-        "HI-CONCEPT-C07-HAAN-01",
-        "HI-CONCEPT-C07-NAHIN-01"
-      ]
-    },
-    {
-      "id": "HI-A1-F-25",
-      "category": "Sanvad-karya (communicative functions)",
-      "label": "say what you like",
-      "probe": [
-        "HI-CONCEPT-C35-PASAND-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F1-03, ES:A1-NE07-01"
     },
     {
       "id": "HI-A1-F-26",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "order a drink",
+      "label": "give your age",
       "probe": [
-        "HI-CONCEPT-C37-CHAI-01"
-      ]
+        "HI-CONCEPT-C19-AGE-GRAMMAR-01"
+      ],
+      "derivedFrom": "ES:A1-F1-03"
     },
     {
       "id": "HI-A1-F-27",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "ask what something costs",
+      "label": "give the rest of your personal data: surname, address, telephone number",
       "probe": null,
-      "note": "Required by mock 1's speaking role-play part 3, which is 40 of that paper's 100 points. Needs kitne ka, rupaye, and numerals above twenty -- none of which the corpus has."
+      "derivedFrom": "ES:A1-NE03-01",
+      "note": "Name and age are taught. No word for surname, address or telephone exists, and `shahar` -- a required field in both mocks' forms -- is not taught either."
     },
     {
       "id": "HI-A1-F-28",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "say what you need",
-      "probe": null,
-      "note": "Needs chahiye. See HI-A1-V-16."
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "HI-CONCEPT-C07-HAAN-01",
+        "HI-CONCEPT-C07-NAHIN-01"
+      ],
+      "derivedFrom": "ES:A1-F1-05, ES:A1-F2-06, ES:A1-F2-07"
     },
     {
       "id": "HI-A1-F-29",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "ask when something happens",
-      "probe": null,
-      "note": "Needs kab. See HI-A1-Q-07."
+      "label": "ask for an evaluation (kaisa hai?)",
+      "probe": [
+        "HI-CONCEPT-C03-KAISE-01",
+        "HI-CONCEPT-C02-HAI-01"
+      ],
+      "derivedFrom": "ES:A1-F2-03"
     },
     {
       "id": "HI-A1-F-30",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "propose meeting again",
+      "label": "evaluate something as good, fine or correct",
       "probe": [
-        "HI-CONCEPT-C04-KALMILTEHAIN-01"
-      ]
+        "HI-CONCEPT-C03-THIK-01",
+        "HI-LEX-C41-ADJ-03"
+      ],
+      "derivedFrom": "ES:A1-F2-04, ES:A1-F2-05, ES:A1-NG6-01, ES:A1-NG6-04, ES:A1-NG6-05, ES:A1-NG6-06, ES:A1-NG6-07"
     },
     {
       "id": "HI-A1-F-31",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "propose a specific day, time and place to meet",
-      "probe": null,
-      "note": "The writing task in BOTH mocks ends on it. kal milte hain proposes a day and nothing else; the time needs baje (HI-A1-NUM-09) and the place needs par or me with a place noun the corpus does not have."
+      "label": "express certainty, and express doubt",
+      "probe": [
+        "HI-LEX-C48-REPLY-03",
+        "HI-LEX-C48-REPLY-04",
+        "HI-LEX-C48-REPLY-05"
+      ],
+      "derivedFrom": "ES:A1-F2-08, ES:A1-F2-10, ES:A1-F2-11, ES:A1-NG1-05"
     },
     {
       "id": "HI-A1-F-32",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "decline, and say why you cannot",
-      "probe": null,
-      "note": "Mock 2's writing task opens on it. Needs kyon and a negated modal."
+      "label": "ask for an opinion, and give one",
+      "probe": [
+        "HI-CONCEPT-C34-SOCHNA-01",
+        "HI-CONCEPT-C02-KYA-01",
+        "HI-CONCEPT-C05-BOLTAHUN-01"
+      ],
+      "derivedFrom": "ES:A1-F2-01",
+      "note": "Covered by productive combination, not by a single lesson: `sochna` is introduced, and the habitual template is introduced as applying to any stem, so `ap kya sochte hain?` is buildable from taught parts. Attaching the OPINION ITSELF is not -- that needs `ki`, and HI-A1-CJ-04 records it as missing."
     },
     {
       "id": "HI-A1-F-33",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "say you did not understand, and ask for a repetition",
-      "probe": null,
-      "note": "samajhna is taught as a dictionary verb; no atom builds the repair move, and the A1 speaking construct scores interaction and repair at 25 percent of every part."
+      "label": "show you are following what is said",
+      "probe": [
+        "HI-LEX-C41-ADJ-03",
+        "HI-CONCEPT-C07-HAAN-01"
+      ],
+      "derivedFrom": "ES:A1-F6-04"
     },
     {
       "id": "HI-A1-F-34",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "describe the weather",
+      "label": "say what you like",
       "probe": [
-        "HI-CONCEPT-C20-MAUSAM-01"
-      ]
+        "HI-CONCEPT-C35-PASAND-01"
+      ],
+      "derivedFrom": "ES:A1-F3-01"
     },
     {
       "id": "HI-A1-F-35",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "describe a daily routine",
-      "probe": null,
-      "note": "The one-minute prepared description and the personal-account listening part in both mocks are routines. The habitual tense is taught, but jana, uthna, baje, se and par -- everything a routine is made of besides the tense -- are not."
+      "label": "say what you prefer",
+      "probe": [
+        "HI-CONCEPT-C35-PASAND-01"
+      ],
+      "derivedFrom": "ES:A1-F3-03",
+      "note": "The pasand lesson teaches `pasand karna` explicitly as the active choosing sense, nearer to 'I prefer' than to 'I like'."
     },
     {
       "id": "HI-A1-F-36",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "ask for help",
-      "probe": [
-        "HI-CONCEPT-C35-MADAD-01"
-      ]
+      "label": "ask a preference by offering alternatives",
+      "probe": null,
+      "derivedFrom": "ES:A1-F3-02",
+      "note": "Needs `ya`. Mock 1 listening item 9 is `chay ya pani?`."
     },
     {
       "id": "HI-A1-F-37",
       "category": "Sanvad-karya (communicative functions)",
-      "label": "welcome someone",
-      "probe": [
-        "HI-CONCEPT-C03-AAPKASWAGATHAI-01"
-      ]
+      "label": "say what you want, and ask what someone wants",
+      "probe": null,
+      "derivedFrom": "ES:A1-F3-04, ES:A1-F2-01",
+      "note": "Needs `chahiye` or `chahna`; see HI-A1-V-21 and HI-A1-V-22."
     },
     {
       "id": "HI-A1-F-38",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask about and state plans and intentions",
+      "probe": null,
+      "derivedFrom": "ES:A1-F3-05, ES:A1-F3-06",
+      "note": "Needs the productive future; see HI-A1-V-11."
+    },
+    {
+      "id": "HI-A1-F-39",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask whether someone knows something, and say you do",
+      "probe": null,
+      "derivedFrom": "ES:A1-F2-13, ES:A1-F2-14",
+      "note": "Needs `janna`; see HI-A1-V-24. The negative half of this pair IS reachable, which is why HI-A1-NEG-04 is covered and this is not."
+    },
+    {
+      "id": "HI-A1-F-40",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask about and express ability",
+      "probe": null,
+      "derivedFrom": "ES:A1-F2-16, ES:A1-F2-17, ES:A1-NG6-09",
+      "note": "Needs `sakna` or `ana`; see HI-A1-V-23."
+    },
+    {
+      "id": "HI-A1-F-41",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "give an instruction",
+      "probe": [
+        "HI-CONCEPT-C37-CHAI-01"
+      ],
+      "derivedFrom": "ES:A1-F4-01"
+    },
+    {
+      "id": "HI-A1-F-42",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "respond to an order or request",
+      "probe": [
+        "HI-CONCEPT-C03-THIK-01",
+        "HI-LEX-C48-REPLY-03"
+      ],
+      "derivedFrom": "ES:A1-F4-04"
+    },
+    {
+      "id": "HI-A1-F-43",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "grant permission",
+      "probe": [
+        "HI-LEX-C48-REPLY-03"
+      ],
+      "derivedFrom": "ES:A1-F4-05"
+    },
+    {
+      "id": "HI-A1-F-44",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "refuse permission",
+      "probe": null,
+      "derivedFrom": "ES:A1-F4-06",
+      "note": "Needs the prohibitive `mat`; see HI-A1-V-17."
+    },
+    {
+      "id": "HI-A1-F-45",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "HI-CONCEPT-C35-MADAD-01"
+      ],
+      "derivedFrom": "ES:A1-F4-03"
+    },
+    {
+      "id": "HI-A1-F-46",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "offer and invite",
+      "probe": null,
+      "derivedFrom": "ES:A1-F4-07",
+      "note": "The -iye form is taught only inside two fixed courtesy phrases, and no offer formula -- `chay lijiye`, `aiye` -- is introduced."
+    },
+    {
+      "id": "HI-A1-F-47",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "accept an offer or invitation",
+      "probe": [
+        "HI-CONCEPT-C07-HAAN-01",
+        "HI-CONCEPT-C01-DHANYAVAD-01"
+      ],
+      "derivedFrom": "ES:A1-F4-08"
+    },
+    {
+      "id": "HI-A1-F-48",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "decline an offer or invitation",
+      "probe": [
+        "HI-CONCEPT-C07-NAHIN-01",
+        "HI-CONCEPT-C01-DHANYAVAD-01"
+      ],
+      "derivedFrom": "ES:A1-F4-09"
+    },
+    {
+      "id": "HI-A1-F-49",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "say why you cannot do something",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-06, ES:A1-F4-09",
+      "note": "Mock 2's writing task opens on it and needs `kyonki` plus a negated modal."
+    },
+    {
+      "id": "HI-A1-F-50",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "welcome someone",
+      "probe": [
+        "HI-CONCEPT-C03-AAPKASWAGATHAI-01"
+      ],
+      "derivedFrom": "ES:A1-F4-07"
+    },
+    {
+      "id": "HI-A1-F-51",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "offer a good wish for the occasion",
+      "probe": [
+        "HI-CONCEPT-C27-SHUBH-RAATRI-01",
+        "HI-CONCEPT-C31-SUPRABHAT-01"
+      ],
+      "derivedFrom": "ES:A1-F5-09",
+      "note": "The proxy's exponent is a drinking toast, which is not the Hindi move. The transferable demand is a set-phrase well-wish, and the shubh- formulas are exactly that."
+    },
+    {
+      "id": "HI-A1-F-52",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "congratulate",
+      "probe": null,
+      "derivedFrom": "ES:A1-F5-10",
+      "note": "`badhai ho` is the formula, and no lesson introduces it."
+    },
+    {
+      "id": "HI-A1-F-53",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "offer condolences",
+      "probe": null,
+      "derivedFrom": "ES:A1-F5-08",
+      "note": "No condolence formula is taught. The track has a rich courtesy-noun chapter and no words for this occasion."
+    },
+    {
+      "id": "HI-A1-F-54",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask for a person and respond",
+      "probe": null,
+      "derivedFrom": "ES:A1-F6-03",
+      "note": "Needs a calling formula and the honorific plural for a third person."
+    },
+    {
+      "id": "HI-A1-F-55",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "derivedFrom": "ES:A1-F6-05",
+      "note": "Needs the prohibitive; see HI-A1-V-17."
+    },
+    {
+      "id": "HI-A1-F-56",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "say you did not understand, and ask for a repetition",
+      "probe": null,
+      "derivedFrom": "hindi-specific",
+      "note": "No Spanish A1 counterpart in the proxy's function list, but the A1 speaking construct scores interaction and REPAIR at 25 percent of every part, so it is a scored demand here. `samajhna` is taught as a dictionary verb and no atom builds the repair move."
+    },
+    {
+      "id": "HI-A1-F-57",
       "category": "Sanvad-karya (communicative functions)",
       "label": "point at a thing and ask what it is",
       "probe": [
         "HI-LEX-C40-DEIXIS-01",
         "HI-CONCEPT-C02-KYA-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-F1-02"
     },
     {
-      "id": "HI-A1-F-39",
+      "id": "HI-A1-F-58",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "describe the weather",
+      "probe": [
+        "HI-CONCEPT-C20-MAUSAM-01"
+      ],
+      "derivedFrom": "ES:A1-NE20-04"
+    },
+    {
+      "id": "HI-A1-F-59",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "describe a daily routine",
+      "probe": null,
+      "derivedFrom": "ES:A1-V-03",
+      "note": "The one-minute prepared description and the personal-account listening part in both mocks are routines. The habitual tense is taught, but `jana`, `uthna`, `baje`, `se` and `par` -- everything a routine is made of besides the tense -- are not."
+    },
+    {
+      "id": "HI-A1-F-60",
       "category": "Sanvad-karya (communicative functions)",
       "label": "read a public sign: entrance, exit, open, closed",
       "probe": null,
-      "note": "Items 1 to 4 of BOTH mocks' reading papers, and the first 35 of that paper's 100 points. The corpus introduces no sign vocabulary at all -- not pravesh, nikas, band, khula, bahar, or dhyan den."
+      "derivedFrom": "ES:A1-NG5-05",
+      "note": "Items 1 to 4 of BOTH mocks' reading papers, and the first 35 of that paper's 100 points. The corpus introduces no sign vocabulary at all -- not pravesh, nikas, band, khula, bahar or dhyan den."
     },
     {
-      "id": "HI-A1-F-40",
+      "id": "HI-A1-F-61",
       "category": "Sanvad-karya (communicative functions)",
       "label": "read a practical form's field labels and say which field holds what",
       "probe": [
         "HI-FORM-LABEL-NAME-01",
         "HI-FORM-NAME-CUE-MAP-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NE03-01"
+    },
+    {
+      "id": "HI-A1-F-62",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask what something costs",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG6-02, ES:A1-NE12-03",
+      "note": "Required by mock 1's speaking role-play part 3, 40 of that paper's 100 points. Needs `kitne ka`, `rupaye` and numerals above twenty; the corpus has none of them."
+    },
+    {
+      "id": "HI-A1-F-63",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "ask when something happens",
+      "probe": null,
+      "derivedFrom": "ES:A1-OS-03",
+      "note": "Needs `kab`; see HI-A1-Q-07."
+    },
+    {
+      "id": "HI-A1-F-64",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "propose meeting again",
+      "probe": [
+        "HI-CONCEPT-C04-KALMILTEHAIN-01"
+      ],
+      "derivedFrom": "ES:A1-F4-07"
+    },
+    {
+      "id": "HI-A1-F-65",
+      "category": "Sanvad-karya (communicative functions)",
+      "label": "propose a specific day, time and place to meet",
+      "probe": null,
+      "derivedFrom": "ES:A1-F4-07",
+      "note": "The writing task in BOTH mocks ends on it. `kal milte hain` proposes a day and nothing else; the time needs `baje` and the place needs `par` or `me` with a place noun the corpus does not have."
     },
     {
       "id": "HI-A1-LEX-01",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "personal identity: name and age",
+      "label": "sight and looking",
       "probe": [
-        "HI-CONCEPT-C02-NAAM-01",
-        "HI-CONCEPT-C19-UMR-01"
-      ]
+        "HI-LEX-LOOK",
+        "HI-CONCEPT-C38-AANKH-01"
+      ],
+      "derivedFrom": "ES:A1-NG5-01"
     },
     {
       "id": "HI-A1-LEX-02",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "the family",
+      "label": "hearing and listening",
       "probe": [
-        "HI-CONCEPT-C12-PITAA-MAATAA-01",
-        "HI-CONCEPT-C12-BHAAI-BAHIN-01",
-        "HI-LEX-FAMILY",
-        "HI-LEX-SON",
-        "HI-LEX-DAUGHTER"
-      ]
+        "HI-LEX-LISTEN",
+        "HI-LEX-C46-BODY-03"
+      ],
+      "derivedFrom": "ES:A1-NG5-02"
     },
     {
       "id": "HI-A1-LEX-03",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "people and social roles",
+      "label": "colour",
       "probe": [
-        "HI-CONCEPT-C39-DOST-01",
-        "HI-CONCEPT-C39-BACCHA-01",
-        "HI-LEX-C47-ROLE-01",
-        "HI-LEX-C47-ROLE-02"
-      ]
+        "HI-CONCEPT-C11-KAALAA-SAFED-01",
+        "HI-CONCEPT-C11-LAAL-NIILA-01",
+        "HI-CONCEPT-C24-HARA-PILA-01"
+      ],
+      "derivedFrom": "ES:A1-NG5-03"
     },
     {
       "id": "HI-A1-LEX-04",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "the body",
+      "label": "attractiveness: beautiful and ugly",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG6-03",
+      "note": "Neither `sundar` nor any opposite is introduced."
+    },
+    {
+      "id": "HI-A1-LEX-05",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "interest",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG6-08",
+      "note": "Nothing expresses finding something interesting or dull. pasand (HI-A1-F-34) covers liking and stops there."
+    },
+    {
+      "id": "HI-A1-LEX-06",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "ease and difficulty",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG6-10",
+      "note": "`asan` and `mushkil` are both untaught, so a learner cannot say the language is hard."
+    },
+    {
+      "id": "HI-A1-LEX-07",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "reflection and knowledge",
+      "probe": [
+        "HI-CONCEPT-C34-SOCHNA-01",
+        "HI-CONCEPT-C34-SAMAJHNA-01",
+        "HI-CONCEPT-C35-PUCHNA-01"
+      ],
+      "derivedFrom": "ES:A1-NG7-01"
+    },
+    {
+      "id": "HI-A1-LEX-08",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "parts of the body",
       "probe": [
         "HI-CONCEPT-C13-SIR-01",
         "HI-CONCEPT-C13-HAATH-01",
         "HI-CONCEPT-C38-AANKH-01",
         "HI-LEX-C46-BODY-01",
         "HI-LEX-C53-BODY-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NE01-01"
     },
     {
-      "id": "HI-A1-LEX-05",
+      "id": "HI-A1-LEX-09",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "the house and its parts",
-      "probe": [
-        "HI-CONCEPT-C36-GHAR-01",
-        "HI-CONCEPT-C36-KAMRA-01",
-        "HI-CONCEPT-C36-DARVAAZA-01",
-        "HI-LEX-C58-HOUSE-03"
-      ]
+      "label": "physical characteristics of a person",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE01-02",
+      "note": "`bara` and `chhota` are taught for things. No word for tall, short, thin or heavy, and the `purana` lesson says explicitly that it is used of things and not of people."
     },
     {
-      "id": "HI-A1-LEX-06",
+      "id": "HI-A1-LEX-10",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "furniture and household objects",
+      "label": "actions and positions of the body",
       "probe": [
-        "HI-CONCEPT-C36-KURSI-01",
-        "HI-LEX-C51-WELCOME-04",
-        "HI-LEX-C61-FIRE-02"
-      ]
+        "HI-LEX-SIT",
+        "HI-LEX-STAND",
+        "HI-LEX-COME"
+      ],
+      "derivedFrom": "ES:A1-NE01-03, ES:A1-NG3-04"
     },
     {
-      "id": "HI-A1-LEX-07",
+      "id": "HI-A1-LEX-11",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "food and drink",
+      "label": "character and personality adjectives",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE02-01",
+      "note": "Only `achha`. Nothing describes a person's disposition."
+    },
+    {
+      "id": "HI-A1-LEX-12",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "personal identity: name and age",
       "probe": [
-        "HI-CONCEPT-C15-PAANI-ROTI-01",
+        "HI-CONCEPT-C02-NAAM-01",
+        "HI-CONCEPT-C19-UMR-01"
+      ],
+      "derivedFrom": "ES:A1-NE03-01"
+    },
+    {
+      "id": "HI-A1-LEX-13",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "documents: passport and identity card",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE03-02",
+      "note": "Untaught. The A1 reading paper opens on form extracts, which is the setting these words belong to."
+    },
+    {
+      "id": "HI-A1-LEX-14",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "personal objects",
+      "probe": [
+        "HI-CONCEPT-C37-KITAAB-01",
+        "HI-LEX-C45-ASK-02",
+        "HI-LEX-C45-ASK-05"
+      ],
+      "derivedFrom": "ES:A1-NE03-03"
+    },
+    {
+      "id": "HI-A1-LEX-15",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "family relationships",
+      "probe": [
+        "HI-CONCEPT-C12-PITAA-MAATAA-01",
+        "HI-CONCEPT-C12-BHAAI-BAHIN-01",
+        "HI-LEX-FAMILY",
+        "HI-LEX-SON",
+        "HI-LEX-DAUGHTER"
+      ],
+      "derivedFrom": "ES:A1-NE04-01"
+    },
+    {
+      "id": "HI-A1-LEX-16",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "social relationships: friend, neighbour, guest",
+      "probe": [
+        "HI-CONCEPT-C39-DOST-01",
+        "HI-LEX-C47-ROLE-04",
+        "HI-LEX-C47-ROLE-05"
+      ],
+      "derivedFrom": "ES:A1-NE04-02"
+    },
+    {
+      "id": "HI-A1-LEX-17",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "celebrations and social occasions",
+      "probe": [
+        "HI-LEX-C57-GIFT-01",
+        "HI-LEX-C57-GIFT-02",
+        "HI-LEX-C51-WELCOME-02"
+      ],
+      "derivedFrom": "ES:A1-NE04-03"
+    },
+    {
+      "id": "HI-A1-LEX-18",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "the meals of the day",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE05-01",
+      "note": "`khana` is taught as the noun 'food'. No word for breakfast, lunch or dinner, and no verb for eating; see HI-A1-V-26."
+    },
+    {
+      "id": "HI-A1-LEX-19",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "drink",
+      "probe": [
         "HI-CONCEPT-C37-CHAI-01",
         "HI-CONCEPT-C37-DUDH-01",
-        "HI-CONCEPT-C37-KHAANA-01"
-      ]
+        "HI-CONCEPT-C15-PAANI-ROTI-01"
+      ],
+      "derivedFrom": "ES:A1-NE05-02"
     },
     {
-      "id": "HI-A1-LEX-08",
+      "id": "HI-A1-LEX-20",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "kitchen staples",
+      "label": "foodstuffs",
       "probe": [
         "HI-LEX-C52-KITCHEN-01",
         "HI-LEX-C52-KITCHEN-02",
         "HI-LEX-C52-KITCHEN-04",
         "HI-LEX-C52-KITCHEN-05"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NE05-03"
     },
     {
-      "id": "HI-A1-LEX-09",
+      "id": "HI-A1-LEX-21",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "animals",
+      "label": "dishes and courses",
       "probe": [
-        "HI-CONCEPT-C23-KUTTA-BILLI-01",
-        "HI-LEX-C54-ANIMAL-01",
-        "HI-LEX-C54-ANIMAL-03"
-      ]
+        "HI-CONCEPT-C15-PAANI-ROTI-01",
+        "HI-LEX-C52-KITCHEN-01",
+        "HI-LEX-C51-WELCOME-05"
+      ],
+      "derivedFrom": "ES:A1-NE05-04"
     },
     {
-      "id": "HI-A1-LEX-10",
+      "id": "HI-A1-LEX-22",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "colours",
+      "label": "the eating place: ordering, the server, the bill",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE05-05",
+      "note": "Ordering one drink is taught (HI-A1-F-15). Nothing else in the scene is: no word for restaurant, server or bill, and no price. Mock 1's speaking role-play is set in a cafe."
+    },
+    {
+      "id": "HI-A1-LEX-23",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "educational institutions",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE06-01",
+      "note": "`school` appears in four separate mock items across the two papers and is introduced nowhere."
+    },
+    {
+      "id": "HI-A1-LEX-24",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "teaching staff and students",
       "probe": [
-        "HI-CONCEPT-C11-KAALAA-SAFED-01",
-        "HI-CONCEPT-C11-LAAL-NIILA-01",
-        "HI-CONCEPT-C24-HARA-PILA-01"
-      ]
+        "HI-LEX-C47-ROLE-01",
+        "HI-LEX-C47-ROLE-02"
+      ],
+      "derivedFrom": "ES:A1-NE06-02"
     },
     {
-      "id": "HI-A1-LEX-11",
+      "id": "HI-A1-LEX-25",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "the sky and the natural world",
+      "label": "learning and teaching",
+      "probe": [
+        "HI-CONCEPT-C34-PADHNA-01",
+        "HI-CONCEPT-C34-LIKHNA-01"
+      ],
+      "derivedFrom": "ES:A1-NE06-04"
+    },
+    {
+      "id": "HI-A1-LEX-26",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "teaching materials and classroom furniture",
+      "probe": [
+        "HI-CONCEPT-C37-KITAAB-01",
+        "HI-CONCEPT-C36-KURSI-01",
+        "HI-LEX-C51-WELCOME-04"
+      ],
+      "derivedFrom": "ES:A1-NE06-07"
+    },
+    {
+      "id": "HI-A1-LEX-27",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "the education system: timetable, examinations and marks",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE06-03, ES:A1-NE06-05",
+      "note": "Teacher and student are taught (HI-A1-LEX-24) and nothing that surrounds them is. Mock 1 listening item 5 is a class starting at nine."
+    },
+    {
+      "id": "HI-A1-LEX-28",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "classroom language",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE06-06",
+      "note": "The directions a candidate reads on the paper itself. From A2 onward the track's own assessment spec says directions are in Hindi, so this becomes load-bearing one level up."
+    },
+    {
+      "id": "HI-A1-LEX-29",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "professions and posts",
+      "probe": [
+        "HI-LEX-C47-ROLE-01",
+        "HI-LEX-C47-ROLE-02",
+        "HI-LEX-C47-ROLE-03"
+      ],
+      "derivedFrom": "ES:A1-NE07-01"
+    },
+    {
+      "id": "HI-A1-LEX-30",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "workplaces, tools and work clothing",
+      "probe": [
+        "HI-LEX-C56-ROAD-05",
+        "HI-LEX-C56-ROAD-04",
+        "HI-LEX-C62-HANDS-02",
+        "HI-LEX-C45-ASK-02"
+      ],
+      "derivedFrom": "ES:A1-NE07-02"
+    },
+    {
+      "id": "HI-A1-LEX-31",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "working activity",
+      "probe": [
+        "HI-CONCEPT-C05-KARNA-01"
+      ],
+      "derivedFrom": "ES:A1-NE07-03"
+    },
+    {
+      "id": "HI-A1-LEX-32",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "unemployment, job-seeking, and rights at work",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE07-04, ES:A1-NE07-05, ES:A1-NE07-06",
+      "note": "Untaught. The proxy places these at A1; whether they belong at A1 in Hindi is a judgement this file does not make, so the point is enumerated and left unmapped rather than dropped."
+    },
+    {
+      "id": "HI-A1-LEX-33",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "free time and entertainment",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE08-01, ES:A1-NE08-02",
+      "note": "Nothing at all: no word for playing, resting, or an outing. Mock 2's listening profile has somebody playing cricket in the evening."
+    },
+    {
+      "id": "HI-A1-LEX-34",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "sport and games",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE08-03, ES:A1-NE08-04",
+      "note": "Mock 2's listening profile has Imran playing cricket in the evening, and neither the game nor the verb for playing is taught."
+    },
+    {
+      "id": "HI-A1-LEX-35",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "written correspondence",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE09-02",
+      "note": "The A1 writing paper's main task IS a written message, and no word for letter, message or note is taught."
+    },
+    {
+      "id": "HI-A1-LEX-36",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "media, telephone, press, broadcast and the internet",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE09-01, ES:A1-NE09-03, ES:A1-NE09-04, ES:A1-NE09-05, ES:A1-NE09-06",
+      "note": "Wholly untaught. The proxy spends five A1 points here; the A1 form asks for a telephone number and the track has no word for a telephone."
+    },
+    {
+      "id": "HI-A1-LEX-37",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "types and parts of a dwelling",
+      "probe": [
+        "HI-CONCEPT-C36-GHAR-01",
+        "HI-CONCEPT-C36-KAMRA-01",
+        "HI-CONCEPT-C36-DARVAAZA-01",
+        "HI-LEX-C58-HOUSE-03"
+      ],
+      "derivedFrom": "ES:A1-NE10-02"
+    },
+    {
+      "id": "HI-A1-LEX-38",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "household objects and furniture",
+      "probe": [
+        "HI-CONCEPT-C36-KURSI-01",
+        "HI-LEX-C51-WELCOME-04",
+        "HI-LEX-C61-FIRE-02",
+        "HI-LEX-C58-HOUSE-05"
+      ],
+      "derivedFrom": "ES:A1-NE10-04"
+    },
+    {
+      "id": "HI-A1-LEX-39",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "domestic activities",
+      "probe": [
+        "HI-CONCEPT-C05-KARNA-01",
+        "HI-LEX-C61-FIRE-05"
+      ],
+      "derivedFrom": "ES:A1-NE10-03"
+    },
+    {
+      "id": "HI-A1-LEX-40",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "buying, selling and renting a home",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE10-01",
+      "note": "The dwelling and its parts are well taught (HI-A1-LEX-37); the transactions around it are not, and neither is any verb of buying or selling."
+    },
+    {
+      "id": "HI-A1-LEX-41",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "health and illness",
+      "probe": [
+        "HI-LEX-C63-STATE-04",
+        "HI-LEX-C63-STATE-05",
+        "HI-LEX-C63-STATE-01",
+        "HI-LEX-C63-STATE-02",
+        "HI-LEX-C63-STATE-03"
+      ],
+      "derivedFrom": "ES:A1-NE13-01"
+    },
+    {
+      "id": "HI-A1-LEX-42",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "hygiene",
+      "probe": [
+        "HI-LEX-C45-ASK-05",
+        "HI-CONCEPT-C15-PAANI-ROTI-01"
+      ],
+      "derivedFrom": "ES:A1-NE13-04"
+    },
+    {
+      "id": "HI-A1-LEX-43",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "health services, centres and medicines",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE13-02, ES:A1-NE13-03, ES:A1-NE11-03",
+      "note": "The symptoms are taught and the doctor, the clinic and the medicine are not, so the vocabulary stops exactly where a learner would need to act on it."
+    },
+    {
+      "id": "HI-A1-LEX-44",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "postal, financial, protection and security services",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE11-01, ES:A1-NE11-02, ES:A1-NE11-04",
+      "note": "Untaught. These are the everyday errands an A1 learner in-country actually runs."
+    },
+    {
+      "id": "HI-A1-LEX-45",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "places, people and activities of shopping",
+      "probe": [
+        "HI-LEX-C56-ROAD-04",
+        "HI-LEX-C56-ROAD-03"
+      ],
+      "derivedFrom": "ES:A1-NE12-01"
+    },
+    {
+      "id": "HI-A1-LEX-46",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "clothing, footwear and accessories",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE12-02",
+      "note": "`kapra` is taught as the material, cloth. No garment, no footwear."
+    },
+    {
+      "id": "HI-A1-LEX-47",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "payment: money, price and change",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE12-03, ES:A1-NG6-02, ES:A1-NE15-01",
+      "note": "No unit of money, no price word, and no numeral above twenty, so the cafe role-play's price turn cannot be attempted."
+    },
+    {
+      "id": "HI-A1-LEX-48",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "transport: bus, train, bicycle, station",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE14-03",
+      "note": "Both mocks' reading, listening and speaking papers ask about transport, and the A1 speaking interview lists it as one of five interview topics. The corpus has `safar` ('a journey') and nothing that moves."
+    },
+    {
+      "id": "HI-A1-LEX-49",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "travel objects, documents and accommodation",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE14-01, ES:A1-NE14-02",
+      "note": "safar (a journey) and mulaqat (a meeting) are taught as abstractions. Nothing packs, books or stays anywhere."
+    },
+    {
+      "id": "HI-A1-LEX-50",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "commerce, businesses, industry and energy",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE15-02, ES:A1-NE15-03, ES:A1-NE15-04",
+      "note": "Untaught, and plausibly above A1 in practice; enumerated because the proxy places it at A1 and this file does not silently overrule the proxy on level."
+    },
+    {
+      "id": "HI-A1-LEX-51",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "computing and new technology",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE16-02",
+      "note": "Untaught. The corpus is a deliberately traditional village-and-household lexicon, which is a coherent choice and still leaves this A1 domain empty."
+    },
+    {
+      "id": "HI-A1-LEX-52",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "government, politics and the law",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE17-01, ES:A1-NE17-02",
+      "note": "Untaught."
+    },
+    {
+      "id": "HI-A1-LEX-53",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "the arts: music, dance, image, literature, stage and screen",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE18-01, ES:A1-NE18-02, ES:A1-NE18-03, ES:A1-NE18-04, ES:A1-NE18-05, ES:A1-NE18-06",
+      "note": "Untaught, in a track whose etymology lessons are steeped in literary Sanskrit and Persian. The proxy spends six A1 points here and the corpus has kitab."
+    },
+    {
+      "id": "HI-A1-LEX-54",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "religion and observance",
+      "probe": [
+        "HI-LEX-C50-COURTESY-04",
+        "HI-LEX-C51-WELCOME-02",
+        "HI-LEX-C45-ASK-03",
+        "HI-LEX-C50-COURTESY-05"
+      ],
+      "derivedFrom": "ES:A1-NE19-01",
+      "note": "One of the few domains where the track is RICHER than the proxy: blessing, garland, oil lamp and the bow are all taught, and the greeting chapter's etymologies are about the gesture."
+    },
+    {
+      "id": "HI-A1-LEX-55",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "the universe and the sky",
       "probe": [
         "HI-LEX-C55-SKY-01",
         "HI-LEX-C55-SKY-02",
+        "HI-LEX-C55-SKY-03",
         "HI-LEX-C55-SKY-05"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NE20-01"
     },
     {
-      "id": "HI-A1-LEX-12",
+      "id": "HI-A1-LEX-56",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "weather words",
+      "label": "geography: country, town, city, capital",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE20-02",
+      "note": "`gaon` ('village') is taught. Neither `desh` nor `shahar` is, and `shahar` is a required field in both mocks' writing papers."
+    },
+    {
+      "id": "HI-A1-LEX-57",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "urban and rural spaces",
+      "probe": [
+        "HI-LEX-C56-ROAD-01",
+        "HI-LEX-C56-ROAD-02",
+        "HI-LEX-C56-ROAD-05",
+        "HI-LEX-C56-ROAD-03"
+      ],
+      "derivedFrom": "ES:A1-NE20-03"
+    },
+    {
+      "id": "HI-A1-LEX-58",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "climate and weather",
       "probe": [
         "HI-CONCEPT-C20-MAUSAM-01"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NE20-04"
     },
     {
-      "id": "HI-A1-LEX-13",
+      "id": "HI-A1-LEX-59",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "places in a town",
+      "label": "fauna",
       "probe": [
-        "HI-LEX-C56-ROAD-03",
-        "HI-LEX-C56-ROAD-04",
-        "HI-LEX-C56-ROAD-01"
-      ]
+        "HI-CONCEPT-C23-KUTTA-BILLI-01",
+        "HI-LEX-C54-ANIMAL-01",
+        "HI-LEX-C54-ANIMAL-03",
+        "HI-LEX-C60-YARD-01"
+      ],
+      "derivedFrom": "ES:A1-NE20-05"
     },
     {
-      "id": "HI-A1-LEX-14",
+      "id": "HI-A1-LEX-60",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "school and study",
+      "label": "flora",
       "probe": [
-        "HI-CONCEPT-C37-KITAAB-01",
-        "HI-CONCEPT-C34-PADHNA-01",
-        "HI-CONCEPT-C34-LIKHNA-01"
-      ]
+        "HI-LEX-C51-WELCOME-01",
+        "HI-LEX-C66-FIELD-04",
+        "HI-LEX-C66-FIELD-01",
+        "HI-LEX-C66-FIELD-03"
+      ],
+      "derivedFrom": "ES:A1-NE20-06"
     },
     {
-      "id": "HI-A1-LEX-15",
+      "id": "HI-A1-LEX-61",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "work",
-      "probe": [
-        "HI-CONCEPT-C05-KARNA-01",
-        "HI-LEX-C47-ROLE-03"
-      ]
+      "label": "naming a second language, and naming nationalities",
+      "probe": null,
+      "derivedFrom": "ES:A1-ADJ-02, ES:A1-F1-03",
+      "note": "`hindi` is taught inside `main hindi bolta hun`. `angrezi` is not, and neither is any country name -- yet mock 1 item 16 and mock 2 item 20 both key on someone speaking TWO languages, and `bhasha` is a form field in both writing papers."
     },
     {
-      "id": "HI-A1-LEX-16",
+      "id": "HI-A1-LEX-62",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "the words a town sign or a station announcement uses",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG5-05",
+      "note": "The lexical twin of HI-A1-F-60. `dhyan den`, `shuru`, `taiyar`, `der se`, `khula`, `band`, `pravesh`, `nikas`, `platform`: none is introduced, and they carry the opening items of both papers that are scored first."
+    },
+    {
+      "id": "HI-A1-LEX-63",
+      "category": "Shabd-bhandar (core lexis)",
+      "label": "courtesy nouns",
+      "probe": [
+        "HI-LEX-C50-COURTESY-01",
+        "HI-LEX-C65-GRACE-01"
+      ],
+      "derivedFrom": "hindi-specific",
+      "note": "The track teaches a whole chapter of abstract courtesy nouns -- gratitude, favour, respect, kindness, entreaty, permission, manners -- which the proxy has no A1 counterpart for."
+    },
+    {
+      "id": "HI-A1-LEX-64",
       "category": "Shabd-bhandar (core lexis)",
       "label": "everyday action verbs",
       "probe": [
@@ -1365,89 +2584,18 @@
         "HI-LEX-LOOK",
         "HI-LEX-LISTEN",
         "HI-LEX-SPEAK"
-      ]
+      ],
+      "derivedFrom": "ES:A1-NE01-03"
     },
     {
-      "id": "HI-A1-LEX-17",
+      "id": "HI-A1-LEX-65",
       "category": "Shabd-bhandar (core lexis)",
-      "label": "verbs of the mind",
+      "label": "verbal expression: speaking and writing",
       "probe": [
-        "HI-CONCEPT-C34-SOCHNA-01",
-        "HI-CONCEPT-C34-SAMAJHNA-01",
-        "HI-CONCEPT-C35-PUCHNA-01"
-      ]
-    },
-    {
-      "id": "HI-A1-LEX-18",
-      "category": "Shabd-bhandar (core lexis)",
-      "label": "bodily states: hunger, thirst, sleep, fever, pain",
-      "probe": [
-        "HI-LEX-C63-STATE-01",
-        "HI-LEX-C63-STATE-02",
-        "HI-LEX-C63-STATE-03",
-        "HI-LEX-C63-STATE-04",
-        "HI-LEX-C63-STATE-05"
-      ]
-    },
-    {
-      "id": "HI-A1-LEX-19",
-      "category": "Shabd-bhandar (core lexis)",
-      "label": "courtesy nouns",
-      "probe": [
-        "HI-LEX-C50-COURTESY-01",
-        "HI-LEX-C65-GRACE-01"
-      ]
-    },
-    {
-      "id": "HI-A1-LEX-20",
-      "category": "Shabd-bhandar (core lexis)",
-      "label": "adverbs of manner and degree",
-      "probe": [
-        "HI-LEX-C64-MEASURE-02",
-        "HI-LEX-C64-MEASURE-03",
-        "HI-LEX-C64-MEASURE-04",
-        "HI-LEX-C64-MEASURE-05"
-      ]
-    },
-    {
-      "id": "HI-A1-LEX-21",
-      "category": "Shabd-bhandar (core lexis)",
-      "label": "short response words: sac, bas, zarur, shayad, bilkul",
-      "probe": [
-        "HI-LEX-C48-REPLY-01",
-        "HI-LEX-C48-REPLY-02",
-        "HI-LEX-C48-REPLY-03",
-        "HI-LEX-C48-REPLY-04",
-        "HI-LEX-C48-REPLY-05"
-      ]
-    },
-    {
-      "id": "HI-A1-LEX-22",
-      "category": "Shabd-bhandar (core lexis)",
-      "label": "transport: bas, tren, saikil, station, gari",
-      "probe": null,
-      "note": "Both mocks' reading, listening and speaking papers ask about transport, and the A1 speaking interview lists it as one of five interview topics. The corpus has safar ('a journey') and nothing that moves."
-    },
-    {
-      "id": "HI-A1-LEX-23",
-      "category": "Shabd-bhandar (core lexis)",
-      "label": "money and shopping: rupaya, dam, kitne ka",
-      "probe": null,
-      "note": "dukan and bazar are taught as places. No unit of money, no price word, and no numeral above twenty, so the cafe role-play's price turn cannot be attempted."
-    },
-    {
-      "id": "HI-A1-LEX-24",
-      "category": "Shabd-bhandar (core lexis)",
-      "label": "naming a second language, and naming countries and nationalities",
-      "probe": null,
-      "note": "hindi is taught inside 'main hindi bolta hun'. angrezi is not, and neither is bharat or any country name -- yet mock 1 item 16 and mock 2 item 20 both key on someone speaking TWO languages, and 'bhasha' is a form field in both writing papers."
-    },
-    {
-      "id": "HI-A1-LEX-25",
-      "category": "Shabd-bhandar (core lexis)",
-      "label": "the words a town sign or a station announcement uses",
-      "probe": null,
-      "note": "The lexical twin of HI-A1-F-39. dhyan den, shuru, taiyar, der se, khula, band, pravesh, nikas, platform: none is introduced, and they carry the opening items of both papers that are scored first."
+        "HI-CONCEPT-C05-BOLNA-01",
+        "HI-CONCEPT-C34-LIKHNA-01"
+      ],
+      "derivedFrom": "ES:A1-NG7-02"
     }
   ]
 }

@@ -2,52 +2,75 @@
 
 ## [Unreleased]
 
-### Added - an A1 exam inventory, and the first measured answer for an Indic track
+### Added - an A1 exam inventory, measured against a proxy with a real syllabus behind it
 
-`core/exam-inventory-hindi-a1.json` enumerates **172 things an A1 Hindi
+`core/exam-inventory-hindi-a1.json` enumerates **282 things an A1 Hindi
 candidate must be able to do**, each probed by the knowledge atoms whose
 presence would demonstrate the track teaches it. Hindi is the first track
 outside Spanish, French and German to have one, and the first Indic track whose
 exam gap is a measurement rather than a proxy.
 
-**The number: Hindi covers 116 of 172 points (67%).** Zero points are partly
-taught - every probe names atoms that actually exist - so the shortfall is 56
-points with nothing in the corpus corresponding to them at all. By category:
+**The number: Hindi covers 155 of 282 points (55%).** Zero points are partly
+taught - every probe names atoms that actually exist - so the shortfall is 127
+points with nothing in the corpus corresponding to them. By category:
 
-    31/40  Sanvad-karya (communicative functions)
-    21/25  Shabd-bhandar (core lexis)
-    14/19  Devanagari lipi (script and orthography)
-    10/14  Sankhya aur samay (numbers, time and date)
-     9/19  Kriya (the verb)
-     3/9   Parsarg (postpositions and case)
+    44/65  Sanvad-karya (communicative functions)
+    35/65  Shabd-bhandar (core lexis)
+    14/22  Devanagari lipi (script and orthography)
+     7/10  Kriya-visheshan (adverbs)
+     6/9   Samay aur tarikh (time and date)
+    11/27  Kriya (the verb)
+     5/10  Sarvanam (pronouns)
+     3/10  Parsarg (postpositions and case)
      1/5   Vakya (the sentence)
+     0/6   Samuchchay (joining clauses)
 
 The shape is the finding. Hindi greets, thanks, apologises, introduces itself
-and names a great deal of the world. It cannot yet say where it is from
-(`se`), where it will be (`par`), when anything happens (`kab`, `X baje`),
-what anything costs (no numeral above twenty, no unit of money), or how to get
-anywhere (`jana` is introduced nowhere, and every personal-account item in both
-A1 mocks uses it).
+and names a great deal of the world. It cannot join two clauses at all - `aur`,
+`ya`, `lekin`, `ki`, `jab` and `jo` are none of them taught - and it cannot say
+where it is from (`se`), where it will be (`par`), when anything happens
+(`kab`, `X baje`), what anything costs, what day it is (`aaj` is untaught while
+`kal` is), or how it gets anywhere: **`jana` is introduced nowhere**, and every
+personal-account item in both A1 mocks uses it.
 
-**What is sourced and what is judged.** The Dakshina Bharat Hindi Prachar Sabha
-ladder that `core/exam-levels.json` names for Hindi publishes the NAMES of its
+**Why the target list is 282 and not 172.** A first draft of this file built
+its point set from the CEFR Companion Volume's A1 descriptors and reached 172
+points, measuring 67%. Descriptors are deliberately abstract where a syllabus
+enumerates, so that ruler was short and the number flattered the corpus. The
+point set is now derived structurally from `core/exam-inventory-es-a1.json`,
+which restates the inventory the Instituto Cervantes publishes behind DELE - a
+real awarding body with a published, finite, A1/A2-split syllabus - used as a
+**proxy for level**: it is asked what an A1 learner must *handle*, not what
+Spanish grammar it names. All 273 proxy points are accounted for, 264 mapped
+and 9 named as Spanish typography with no Devanagari counterpart, and the
+generator refuses to emit the file if any is left unaccounted.
+
+The proxy earned its keep. It surfaced demands no descriptor and no
+mock-reading had named: that nothing tells a learner Hindi **has no article**;
+the reflexive possessive **`apna`**, which both mocks use; object-marking
+**`ko`**, the exact counterpart of Spanish's `a` before a human object; and
+whole lexical domains the earlier draft never enumerated - transport, payment,
+free time, media, written correspondence, documents, educational institutions.
+It added 110 points and removed none.
+
+**Nothing is attributed to anybody.** DBHPS publishes the names of its
 examinations and the prescribed readers, and no content syllabus - no grammar
 inventory, no word list, no can-do descriptors, no A1/A2 split. Kendriya Hindi
 Sansthan and the Central Hindi Training Institute publish none either, and no
-Council of Europe Reference Level Description exists for Hindi. **Nothing in
-the new file is attributed to DBHPS**, and the file says so in those words. The
-enumeration is bounded instead by the CEFR Companion Volume's published A1
-descriptors, which are finite and level-split but language-neutral, and by this
-project's own checked-in A1 contract - `assessment-spec.md`,
-`task-shapes/a1.json` and the two timed mocks in `mocks/a1/`. Every point is
-therefore editorial, and all four `scope` dimensions are `partial`: the
-inventory is deliberately NOT complete, and the plan still queues the work to
-finish it.
+Council of Europe Reference Level Description exists for Hindi. The file says
+**NOTHING IN THIS FILE MAY BE ATTRIBUTED TO DBHPS** and, equally,
+**ATTRIBUTE NOTHING TO DELE OR THE INSTITUTO CERVANTES ABOUT HINDI**: they
+published a Spanish syllabus and have said nothing whatever about this
+language. Every Hindi exponent is an editorial judgement, all four `scope`
+dimensions are `partial`, and the inventory is deliberately NOT complete.
 
-The strongest claims in the file are the gap notes that cite a numbered mock
-item - "mock 2 reading item 3 is `yahan mat baithiye`, and the corpus
-introduces neither `mat` nor `na`" - because those are checkable in one step
-against an artifact that already existed.
+A proxy is a scaffold, not a template to translate. **22 points are
+`hindi-specific`** and answer no Spanish demand at all: the Devanagari script
+points, the postposition and oblique-case system, the nuqta, the
+Sanskritic/Perso-Arabic register split, the `karna` compound verbs, and the
+abstract courtesy nouns the track teaches a whole chapter of. Every point
+carries a `derivedFrom` field naming the proxy points it answers or marking it
+Hindi-specific, so the derivation is auditable rather than asserted.
 
 Two gaps are worth naming here because they are cheap to close:
 
@@ -62,7 +85,7 @@ Two gaps are worth naming here because they are cheap to close:
   bukhar, fasal, khushbu, mulaqat. Every corpus-internal metric counts those
   lessons as taught; only an external target list surfaces the mark itself.
 
-`npm run plan` now names Hindi exam-point work - *cover 56 of 172 A1 exam
+`npm run plan` now names Hindi exam-point work - *cover 127 of 282 A1 exam
 point(s) hindi does not teach* - where it previously reported Hindi among the
 tracks that could not be measured at all. The plan's exam-inventory line moves
 to *0 complete and 5 partial of 138*, and the unmeasured remainder falls from

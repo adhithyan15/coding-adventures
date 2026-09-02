@@ -134,11 +134,19 @@ describe("the plan CLI", () => {
     // and -10 are closed by the qualities rung's own lessons, and -09 needed no
     // authoring at all — its note claimed the corpus never introduces `saber`, which
     // stopped being true when chapter 389 authored it two slices earlier.
-    // 190 -> 246, and 4 -> 5 written. `core/exam-inventory-hindi-a1.json`
-    // enumerates 172 A1 points and the track covers 116 of them, so Hindi
-    // contributes its 56 unmapped points to the total. The unmeasured remainder
+    // 190 -> 317, and 4 -> 5 written. `core/exam-inventory-hindi-a1.json`
+    // enumerates 282 A1 points and the track covers 155 of them, so Hindi
+    // contributes its 127 unmapped points to the total. The unmeasured remainder
     // falls 20 -> 19 for the same reason: Hindi stopped being a proxy.
-    expect(out).toMatch(/246 uncovered point\(s\) across 5 written/);
+    //
+    // The Hindi denominator is 282 and not 172 because its point set is derived
+    // structurally from the DELE-sourced Spanish inventory used as a proxy for
+    // LEVEL. A first draft built from CEFR descriptors alone reached 172 and
+    // measured 67%; the proxy added 110 demands the descriptors never
+    // enumerated -- `apna`, object-marking `ko`, transport, payment, `aaj` --
+    // and the honest figure fell to 55%. A ruler drawn too short flatters the
+    // corpus, so the bigger denominator is the point, not a side effect.
+    expect(out).toMatch(/317 uncovered point\(s\) across 5 written/);
     expect(out).toMatch(/0 complete and 5 partial of 138/);
     expect(out).toMatch(/the other 19 track\(s\)/);
   }, 120_000);
