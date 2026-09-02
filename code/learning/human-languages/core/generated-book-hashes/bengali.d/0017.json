@@ -1,19 +1,10 @@
 {
   "language": "bengali",
   "chapter": 17,
-  "sourceHash": "fnv1a64:a5004dd60e4e4f45",
+  "sourceHash": "fnv1a64:c72a37709cc4f9d1",
   "lessonIds": [
-    "BN-W02-naam-read",
-    "BN-W02-i-matra",
-    "BN-W02-ami-read",
-    "BN-W02-la",
-    "BN-W02-lal-read",
-    "BN-W02-ta",
-    "BN-W02-tin-read",
-    "BN-W02-u-matra",
-    "BN-W02-tumi-read",
-    "BN-W02-e-matra",
-    "BN-W02-kemon-read"
+    "BN-W04-poribar-read",
+    "BN-W04-bhai-read"
   ],
-  "tex": "bengali/book/chapters/ch17-pieces-into-words.tex"
+  "tex": "bengali/book/chapters/ch17-family-on-the-page.tex"
 }

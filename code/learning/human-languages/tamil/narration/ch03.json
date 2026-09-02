@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:82e0ad2da16cf73f",
+  "sourceHash": "fnv1a64:83374f39e28002b5",
   "lessons": [
     {
       "id": "TA-C03-eppadi",
@@ -114,7 +114,7 @@
       "sequence": 190,
       "title": "நீங்கள் எப்படி இருக்கிறீர்கள்? (nīṅgaḷ eppaḍi irukkiṟīrgaḷ?)",
       "headword": "நீங்கள் எப்படி இருக்கிறீர்கள்?",
-      "romanization": "",
+      "romanization": "nīṅgaḷ eppaḍi irukkiṟīrgaḷ?",
       "gloss": "how are you? (respectful)",
       "script": "tamil",
       "modality": "voice",
@@ -122,7 +122,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0842834ee732703",
+      "sourceHash": "fnv1a64:3000eb2fca9e5fe1",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நீங்கள் எப்படி இருக்கிறீர்கள்? = நீங்கள் (nīṅgaḷ, \"you,\" respectful) + எப்படி (eppaḍi, \"how\") + இருக்கிறீர்கள் (irukkiṟīrgaḷ, \"are/exist\") — \"you how are?\" The verb comes last, as in every Tamil sentence."
+              "text": "நீங்கள் எப்படி இருக்கிறீர்கள்? (nīṅgaḷ eppaḍi irukkiṟīrgaḷ?) = நீங்கள் (nīṅgaḷ, \"you,\" respectful) + எப்படி (eppaḍi, \"how\") + இருக்கிறீர்கள் (irukkiṟīrgaḷ, \"are/exist\") — \"you how are?\" The verb comes last, as in every Tamil sentence."
             },
             {
               "kind": "speech",

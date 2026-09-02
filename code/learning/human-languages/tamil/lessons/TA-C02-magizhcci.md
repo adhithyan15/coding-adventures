@@ -4,6 +4,7 @@ chapter: 2
 sequence: 165
 type: phrase
 headword: மகிழ்ச்சி
+romanization: "magiḻcci"
 gloss: joy / pleased to meet you
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [TA-C02-en-peyar]

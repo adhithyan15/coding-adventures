@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W04-cha",
     "language": "bengali",
-    "chapter": 19,
-    "sequence": 1930,
+    "chapter": 8,
+    "sequence": 560,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:f86d58205ae10e66",
+    "sourceHash": "fnv1a64:9a28ad5ba68203e4",
     "detachableSegments": [
       "Script"
     ],

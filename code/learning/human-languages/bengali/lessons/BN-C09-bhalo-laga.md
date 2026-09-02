@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C09-bhalo-laga
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 630
-chapter: 9
+sequence: 770
+chapter: 13
 type: word
 headword: ভালো লাগা
 romanization: bhālo lāgā
@@ -47,7 +47,7 @@ does not.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ভালো** is yours from Chapter 3. The new half is **লাগা**: **লা** + **গা**,
+**ভালো** is yours from Chapter 5. The new half is **লাগা**: **লা** + **গা**,
 **গ** being a hard *g* as in *go*.
 
 ## The word, taken apart

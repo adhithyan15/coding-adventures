@@ -1,9 +1,14 @@
 {
   "language": "bengali",
   "chapter": 6,
-  "sourceHash": "fnv1a64:04fde9b62723721f",
+  "sourceHash": "fnv1a64:0489e2836e8751ba",
   "lessonIds": [
-    "BN-C06-numbers-1-5"
+    "BN-W02-ami-read",
+    "BN-W02-la",
+    "BN-W02-e-matra",
+    "BN-W04-e-indep",
+    "BN-W03-o-matra",
+    "BN-W02-kemon-read"
   ],
-  "tex": "bengali/book/chapters/ch06-numbers-1-5.tex"
+  "tex": "bengali/book/chapters/ch06-sign-made-of-two-signs.tex"
 }

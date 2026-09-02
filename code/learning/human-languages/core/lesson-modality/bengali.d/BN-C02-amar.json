@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C02-amar",
     "language": "bengali",
-    "chapter": 2,
-    "sequence": 80,
+    "chapter": 3,
+    "sequence": 180,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3b54acf2ae17b4b6",
+    "sourceHash": "fnv1a64:489b5fab3a994630",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -6,6 +6,7 @@ sequence: 540
 chapter: 11
 type: word
 headword: கருப்பு வெள்ளை சிவப்பு நீலம்
+romanization: "karuppu veḷḷai sivappu nīlam"
 gloss: black, white, red, blue — three native Tamil colors, and one Sanskrit loan
 concept_tag: TA-COLOUR-BASIC
 prerequisites: [TA-C10-vaara-kizhamai]

@@ -6,6 +6,7 @@ sequence: 630
 chapter: 17
 type: etymology
 headword: நடுப்பகல், நடு இரவு
+romanization: "naṭuppakal, naṭu iravu"
 gloss: Tamil kept transparent middle-day and middle-night synonyms beside the older fused forms
 prerequisites: [TA-C17-nanpakal-nalliravu]
 sounds: [tamil-gemination]

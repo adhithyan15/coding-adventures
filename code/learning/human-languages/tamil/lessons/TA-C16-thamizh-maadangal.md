@@ -6,6 +6,7 @@ sequence: 600
 chapter: 16
 type: word
 headword: சித்திரை வைகாசி ஆனி ஆடி ஆவணி புரட்டாசி ஐப்பசி கார்த்திகை மார்கழி தை மாசி பங்குனி
+romanization: "Chithirai Vaikāsi Āṉi Āḍi Āvaṇi Puraṭṭāsi Aippasi Kārthigai Mārgazhi Thai Māsi Panguṉi"
 gloss: the twelve months of the Tamil solar calendar — Tamil's OWN calendar, distinct from both the Gregorian and Hindu lunisolar systems
 concept_tag: TA-MONTHS
 prerequisites: [TA-C15-thanneer-arisi]

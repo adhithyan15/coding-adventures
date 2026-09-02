@@ -6,6 +6,7 @@ sequence: 30
 chapter: 1
 type: word
 headword: হ্যাঁ / না
+romanization: "hyã / nā"
 gloss: yes / no (hyã / nā)
 concept_tag: RESPONSE-YESNO
 prerequisites: [BN-C01-dhonnobad]

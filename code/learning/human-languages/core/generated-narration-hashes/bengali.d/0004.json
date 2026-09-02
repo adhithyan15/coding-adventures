@@ -1,19 +1,20 @@
 {
   "language": "bengali",
   "chapter": 4,
-  "sourceHash": "fnv1a64:322ada37d9e4874e",
+  "sourceHash": "fnv1a64:bc3a3b7b527986d2",
   "lessonIds": [
-    "BN-C04-abar",
-    "BN-C04-dekha-hobe",
-    "BN-C04-abar-dekha-hobe",
-    "BN-C04-kal-dekha-hobe",
-    "BN-C04-practice"
+    "BN-W02-naam-read",
+    "BN-W02-i-matra",
+    "BN-W04-i-indep",
+    "BN-W02-ta",
+    "BN-W02-u-matra",
+    "BN-W02-tumi-read"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch04.txt",
   "json": "bengali/narration/ch04.json",
-  "textHash": "fnv1a64:1994915e9d1cd3bf",
-  "jsonHash": "fnv1a64:83ddd841c37b8c48",
+  "textHash": "fnv1a64:823ede58b3c76ac7",
+  "jsonHash": "fnv1a64:2b6830753b9ab2ba",
   "findings": []
 }

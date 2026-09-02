@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 11,
-  "output": "bengali/book/chapters/ch11-friend-family-brother-sister.tex",
+  "output": "bengali/book/chapters/ch11-core-verbs.tex",
   "unicodeScript": "Bengali",
   "scriptCommand": "bn"
 }

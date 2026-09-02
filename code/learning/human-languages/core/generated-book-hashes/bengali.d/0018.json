@@ -1,20 +1,12 @@
 {
   "language": "bengali",
   "chapter": 18,
-  "sourceHash": "fnv1a64:12cc224b196168b3",
+  "sourceHash": "fnv1a64:0fccf692dce39b20",
   "lessonIds": [
-    "BN-W03-o-matra",
-    "BN-W03-kalo-read",
-    "BN-W03-ba",
-    "BN-W03-abar-read",
-    "BN-W03-bha",
-    "BN-W03-bhalo-read",
-    "BN-W03-kha",
-    "BN-W03-mukh-read",
-    "BN-W03-da",
-    "BN-W03-shada-read",
-    "BN-W03-dha",
-    "BN-W03-dudh-read"
+    "BN-C12-chokh",
+    "BN-C12-mukh",
+    "BN-C12-nak",
+    "BN-C12-hridoy"
   ],
-  "tex": "bengali/book/chapters/ch18-breath-is-a-letter.tex"
+  "tex": "bengali/book/chapters/ch18-eye-mouth-nose-heart.tex"
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C02-amar-naam",
     "language": "bengali",
-    "chapter": 2,
-    "sequence": 90,
+    "chapter": 3,
+    "sequence": 190,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e858fa3fcf2976a1"
+    "sourceHash": "fnv1a64:a408f10013350849"
   },
   "findings": []
 }

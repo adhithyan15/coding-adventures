@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C02-alaap",
     "language": "bengali",
-    "chapter": 2,
-    "sequence": 100,
+    "chapter": 3,
+    "sequence": 200,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:62a910da1c2e20d4",
+    "sourceHash": "fnv1a64:1c208aca12983451",
     "detachableSegments": [
       "The letters in this word"
     ]

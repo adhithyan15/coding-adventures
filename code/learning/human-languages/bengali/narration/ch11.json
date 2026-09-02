@@ -2,34 +2,25 @@
   "version": 1,
   "language": "bengali",
   "chapter": 11,
-  "title": "Friend, Family, Brother, and Sister",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:08a61c259a749e99",
+  "title": "The Core Verbs",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:327e8ad0e2eb2e54",
   "lessons": [
     {
-      "id": "BN-C11-bondhu",
-      "sequence": 800,
-      "title": "বন্ধু (bôndhu) — \"friend,\" someone you are bound to",
-      "headword": "বন্ধু",
-      "romanization": "bôndhu",
-      "gloss": "friend — a word built openly on \"to bind,\" and the rare case where Bengali and English share both the word and the picture behind it",
+      "id": "BN-C07-howa",
+      "sequence": 640,
+      "title": "হওয়া (hôwā) — \"to be,\" and the be-verb it stands beside",
+      "headword": "হওয়া",
+      "romanization": "hôwā",
+      "gloss": "to be, to become — the second of Bengali's two be-verbs, and the one that does what আছে cannot",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69164012dbb1e883",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:9e4707c1d1c7885b",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,49 +35,74 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 2 taught you to exchange names. This chapter names the people themselves — starting with the one whose acquaintance you were glad to make."
+              "text": "Chapter 3 said \"my name Arun\" with no verb at all. Chapter 5 put one back for \"how are you.\" Both were right, and this verb is why."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: বন্ধু",
+          "title": "You'll want to know: হওয়া",
           "segments": [
             {
               "kind": "speech",
-              "text": "বন্ধু — bôndhu — friend."
+              "text": "হওয়া — hôwā — to be, to become."
             },
             {
               "kind": "speech",
-              "text": "আমার বন্ধু (āmār bôndhu) — my friend. One word, whether that friend is a man or a woman: Chapter 7 already told you Bengali carries no grammatical gender on its verbs, its adjectives, or its nouns, and বন্ধু is the plainest place to feel it — no ending changes, no second word to learn."
+              "text": "আমি হই (āmi hôi), \"I am, I become.\" সে হয় (se hôy), \"he is.\" Its future is already in your mouth: হবে (hôbe) is the \"will happen\" inside Chapter 7's dækhā hôbe."
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "বন্ধু (bôndhu) is ব (bô) + ন্ধ (ndhô, a conjunct: ন joined to the breathy dental ধ) + ু (u). The conjunct is two consonants pressed together with no vowel between them, said as one cluster: n-dhu."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "বন্ধু (bôndhu) is Sanskrit বন্ধু (bôndhu) (bandhu), kept essentially whole rather than worn down the way চা or ভাত were — Bengali took this one straight from Sanskrit rather than inheriting it through centuries of sound change. It is built on √বন্ধ্ (√bandh, \"to bind, to tie\"), from PIE bʰendʰ- — and here, unusually, the English cousin is not buried: bind, bond and band all come from the very same root. Bengali did not need to explain what a friend is; the word does it for you. A বন্ধু (bôndhu) is, at the root, someone you are bound to."
+              "text": "হওয়া (hôwā) is Sanskrit √ভূ (√bhū, \"to become\") with the bh- worn down to a plain h-: bhavati becomes Prakrit hoï becomes Bengali hô-. The root is PIE bʰuH-, \"to grow, to become,\" and English owns two of its children outright — be and been. Latin built fuī (\"I was\") and futūrus on it, which is English future; Greek built phúsis, \"growth, nature,\" which is physics."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: হ, and the ওয়া that ends a Bengali verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হ is a soft, breathed h carrying Bengali's inherent vowel — hô, not ha. ওয়া (-wā) is the tail every dictionary-form verb wears; you will meet it again on খাওয়া (khāwā) and যাওয়া (jāwā)."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: two be-verbs, and one of them is unfinished",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you mean",
+                "what Bengali uses"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you mean: my name is Arun. what Bengali uses: no verb at all.",
+                "what you mean: I have a book; it is here. what Bengali uses: আছে (āchhe).",
+                "what you mean: he will be a teacher. what Bengali uses: হবে (hôbe)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "আছ-, the verb behind Chapter 5's kemon āchho, means being present. But it is unfinished: it has a present and a past, and nothing else at all. Push it into the future and it stops dead — so Bengali picks up হ- (hôbe), or Chapter 9's থাকা (āmi thākbo, \"I'll be there\"). One job, two verbs, split down the middle."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,34 +115,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bôndhu\" — friend",
+              "instruction": "\"hôwā\" — be, become — then \"āmi hôi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bôndhu\" — friend]"
+              "source": "[YOU SAY: \"hôwā\" — be, become — then \"āmi hôi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār bôndhu\" — my friend, no gender marked either way",
+              "instruction": "the future you already knew — \"hôbe … dækhā hôbe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār bôndhu\" — my friend, no gender marked either way]"
+              "source": "[YOU SAY: the future you already knew — \"hôbe … dækhā hôbe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the root, and its English family — \"bandh … bind, bond, band\"",
+              "instruction": "which verb for \"I have a book,\" and which for \"he will be a teacher\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the root, and its English family — \"bandh … bind, bond, band\"]"
+              "source": "[YOU SAY: which verb for \"I have a book,\" and which for \"he will be a teacher\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -138,36 +154,27 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"my friend\" in Bengali. (আমার বন্ধু (bôndhu).) What root is বন্ধু (bôndhu) built on, and which English words share it? (√bandh, \"to bind\" — bind, bond, band.) Is বন্ধু (bôndhu) a word Bengali inherited through sound change, or one it kept whole from Sanskrit? (Kept whole — a tatsama.) Does বন্ধু (bôndhu) change for a friend who is a woman? (No — Chapter 7 already told you why: no grammatical gender, anywhere in the language.)"
+              "text": "Which Sanskrit root is hôwā, and which two English words are its brothers? (√bhū, \"to become\" — be and been.) What can আছ- not do? (Anything past a present and a past — it has no future of its own.) So what does Bengali reach for instead? (হবে, or থাকা.) Next: one verb, three levels of respect."
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C11-poribar",
-      "sequence": 810,
-      "title": "পরিবার (pôribār) — \"family,\" what surrounds you",
-      "headword": "পরিবার",
-      "romanization": "pôribār",
-      "gloss": "family — literally \"what surrounds you,\" a second word Bengali kept whole from Sanskrit rather than wearing down",
+      "id": "BN-C07-jaowa",
+      "sequence": 650,
+      "title": "যাওয়া (jāwā) — \"to go,\" and the respect that rides on the ending",
+      "headword": "যাওয়া",
+      "romanization": "jāwā",
+      "gloss": "to go — and the verb ending that carries how much respect you are paying",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaf70854fc763281",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:2ded5fb3bcec23e1",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -182,49 +189,78 @@
             },
             {
               "kind": "speech",
-              "text": "Last lesson named one person you are bound to. This one names the whole group."
+              "text": "Chapter 3 gave you three different words for \"you.\" It did not tell you the rest of the bill: each one bends the verb a different way too."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: পরিবার",
+          "title": "You'll want to know: যাওয়া",
           "segments": [
             {
               "kind": "speech",
-              "text": "পরিবার — pôribār — family."
+              "text": "যাওয়া — jāwā — to go."
             },
             {
               "kind": "speech",
-              "text": "আমার পরিবার (āmār pôribār) — my family."
+              "text": "আমি যাই (āmi jāi), \"I go.\" Same -i \"I\" ending as Chapter 9's bôli, on the same -wā dictionary form you met a moment ago."
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "পরিবার (pôribār) is প (pô) + রি (ri) + বা (bā) + র (r, silent at the end, a bare consonant with nothing written after it). Four syllables in the spelling, three said aloud: pô-ri-bār."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "পরিবার (pôribār) is Sanskrit পরিবার (pôribār) (parivāra), a second word Bengali kept whole from Sanskrit rather than letting it wear down — like বন্ধু (bôndhu), another tatsama. It is built from pari-, \"around, about\" (PIE peri-, the same prefix English itself borrowed for peri-meter and peri-phery), plus √বৃ (√vṛ, \"to cover, to surround,\" PIE h₂wer-). That root's secure cousins are Latin operiō, \"to cover,\" and Lithuanian suverti, \"to shut\" — no English word is claimed here, since none is secure. Put the pieces together and a পরিবার (pôribār) is, at the root, what stands around you and covers you."
+              "text": "যাওয়া (jāwā) is Sanskrit √যা (√yā, \"to go, to travel\"), and the whole northern family walks on it: Hindi jānā, Marathi jāṇe, Gujarati javũ, Punjabi jāṇā. Sanskrit's y- hardened to a j- sound right across eastern Indo-Aryan, which is why Bengali still writes the y-letter য but says j."
+            },
+            {
+              "kind": "speech",
+              "text": "Deeper than Sanskrit it goes to PIE yeh₂-, \"to travel\" — and here is an honest limit: English kept no everyday word from that root. The nearest living cousin is Lithuanian jóti, \"to ride.\" A fake English cousin here would be worse than none."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "য is the letter Sanskrit reads as y; Bengali reads it as j, like জ. So a written yā- is a spoken jā- — an un-shift worth keeping, since it disguises dozens of familiar Sanskrit words."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the respect is not in the pronoun, it is in the ending",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "who you are speaking to",
+                "\"you go\""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "who you are speaking to: তুই (tui, intimate). \"you go\": যাস (jāsh).",
+                "who you are speaking to: তুমি (tumi, familiar). \"you go\": যাও (jāo).",
+                "who you are speaking to: আপনি (āpni, respectful). \"you go\": যান (jān)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three endings, one verb. And the same grading runs on into the third person: সে যায় (se jāy) is \"he goes,\" তিনি যান (tini jān) is \"he goes\" said of someone you respect — the very ending আপনি takes. Chapter 9 showed that the ending already means \"I,\" so the pronoun can be dropped. The register cannot. Choose jāsh or jān and you have placed yourself socially, pronoun or no pronoun."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -237,43 +273,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pôribār\" — family",
+              "instruction": "\"jāwā\" — go — then \"āmi jāi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pôribār\" — family]"
+              "source": "[YOU SAY: \"jāwā\" — go — then \"āmi jāi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār pôribār\" — my family",
+              "instruction": "the ladder — \"jāsh … jāo … jān\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār pôribār\" — my family]"
+              "source": "[YOU SAY: the ladder — \"jāsh … jāo … jān\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two pieces — \"pari-, around … vṛ, to cover\"",
+              "instruction": "the two third persons — \"se jāy … tini jān\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two pieces — \"pari-, around … vṛ, to cover\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "a friend, then a family — \"bôndhu … pôribār\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: a friend, then a family — \"bôndhu … pôribār\"]"
+              "source": "[YOU SAY: the two third persons — \"se jāy … tini jān\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -285,36 +312,27 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"my family\" in Bengali. (আমার পরিবার (pôribār).) What does পরিবার (pôribār) mean at the root, piece by piece? (\"Around\" plus \"to cover\" — what surrounds and covers you.) Does its root vṛ have a secure English cousin? (No — the secure cousins are Latin and Lithuanian.)"
+              "text": "Give the three \"you go\" forms and who each is for. (Jāsh intimate, jāo familiar, jān respectful.) If you drop the pronoun, is the respect dropped too? (No — it is in the ending, and cannot be dodged.) Does English have a living cousin of this root? (No — Lithuanian jóti is as close as it gets.) Next: the verb that asks nothing about who you are."
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C11-bhai",
-      "sequence": 820,
-      "title": "ভাই (bhāi) — \"brother,\" which never stopped being the word \"brother\"",
-      "headword": "ভাই",
-      "romanization": "bhāi",
-      "gloss": "brother — not borrowed, not a cousin, but the same word as English \"brother,\" worn down by six thousand years and two different roads",
+      "id": "BN-C07-asha",
+      "sequence": 660,
+      "title": "আসা (āsā) — \"to come,\" the verb that never asks who you are",
+      "headword": "আসা",
+      "romanization": "āsā",
+      "gloss": "to come — the verb that never asks whether a man or a woman is speaking",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80825a339f0b7510",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:49bde82f0cb3a65e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -329,53 +347,74 @@
             },
             {
               "kind": "speech",
-              "text": "Two tatsamas so far, both kept whole from Sanskrit. This one took the other road — worn down by sound change until it barely looks related to where it started. Except it does."
+              "text": "Chapter 1's goodbye, āshi, was one form of this verb. Here is the whole of it — and the one question it refuses to ask you."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: ভাই",
+          "title": "You'll want to know: আসা",
           "segments": [
             {
               "kind": "speech",
-              "text": "ভাই — bhāi — brother."
+              "text": "আসা — āsā — to come."
             },
             {
               "kind": "speech",
-              "text": "আমার ভাই (āmār bhāi) — my brother."
+              "text": "আমি আসি (āmi āsi), \"I come\" — the farewell you already own. সে আসে (se āse), \"he comes.\" আপনি আসেন (āpni āsen), with last lesson's respectful ending."
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ভাই is ভা (bhā, the breathy b from ভাত and ভালো) plus ই (i), a full vowel letter rather than a sign — the two vowels run together into one syllable, bhāi."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "ভাই is Sanskrit ভ্রাতৃ (bhrātṛ), worn down through Magadhi Prakrit bhāi — a tadbhava this time, not a tatsama like বন্ধু (bôndhu) and পরিবার (pôribār): Bengali inherited this one through centuries of sound change rather than lifting it whole. And PIE bʰréh₂tēr sits behind bhrātṛ, the same root that gives English brother, Latin frāter and Greek phrátēr. Nothing here is a cousin standing in for the real thing: ভাই and \"brother\" are, six thousand years apart, the same word."
-            },
+              "text": "The আ- in front is Sanskrit's ā-, \"hither, toward\" — the very prefix that turns going into coming. Hindi's ānā is that ā- welded onto yā-, the go-verb of the last lesson: \"go, but this way.\" Bengali shows the same prefix on a different stem, and the honest position on that stem is that its history is unsettled; this book will not invent one for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: স",
+          "segments": [
             {
               "kind": "speech",
-              "text": "Bengali also uses family words to address people outside the family: an older man might be called দাদা (dādā, \"elder brother\") as a mark of respect, whether or not he is any relation at all. That is a light touch on a habit this chapter will not turn into a system — but it is worth naming, since it means বন্ধু (bôndhu) and ভাই (bhāi) are not always as far apart as they look."
+              "text": "স is written for s and spoken, in this word, as sh — Bengali's standing s becomes sh tilt, the same one that makes namaskāra into nômoshkar. So আসি is āshi, not āsi, though the dictionary form is romanized āsā."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: no gender, not here, not anywhere",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "\"I come,\" man / woman"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "language: Hindi. \"I come,\" man / woman: maiṁ ātā hūṁ / maiṁ ātī hūṁ.",
+                "language: Marathi. \"I come,\" man / woman: mī yeto / mī yete.",
+                "language: Bengali. \"I come,\" man / woman: āmi āsi — one form."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Its sisters make you declare your gender to say the plainest thing in the world. Bengali does not. And this is not a shortcut for beginners that the grammar takes back later: Bengali has no grammatical gender at all. Not on verbs, not on nouns, not on adjectives. The past behaves the same way — আমি এলাম (āmi elām), \"I came,\" is one form for everyone, where Gujarati, which hides gender in its present, brings it straight back in huṁ āvyo / huṁ āvī."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -388,43 +427,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bhāi\" — brother",
+              "instruction": "\"āsā\" — come — then \"āmi āshi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bhāi\" — brother]"
+              "source": "[YOU SAY: \"āsā\" — come — then \"āmi āshi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār bhāi\" — my brother",
+              "instruction": "the neighbours splitting in two — \"ātā … ātī\" and \"yeto … yete\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār bhāi\" — my brother]"
+              "source": "[YOU SAY: the neighbours splitting in two — \"ātā … ātī\" and \"yeto … yete\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the same word, two languages — \"bhrātṛ … brother\"",
+              "instruction": "Bengali not splitting — \"āmi āsi\" — and its past, \"āmi elām\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the same word, two languages — \"bhrātṛ … brother\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "friend, family, brother — \"bôndhu … pôribār … bhāi\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: friend, family, brother — \"bôndhu … pôribār … bhāi\"]"
+              "source": "[YOU SAY: Bengali not splitting — \"āmi āsi\" — and its past, \"āmi elām\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -436,36 +466,27 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"my brother\" in Bengali. (আমার ভাই (bhāi).) Is ভাই (bhāi) a cousin of English \"brother,\" or the same word by descent? (The same word — PIE bʰréh₂tēr, no invention needed.) Is ভাই (bhāi) a tatsama like বন্ধু (bôndhu) and পরিবার (pôribār), or a tadbhava? (A tadbhava — worn down through Prakrit, not kept whole.)"
+              "text": "What does the আ- on this verb mean, and where else have you met it? (Hither, toward — it is the ā- inside Hindi's ānā.) How many forms of \"I come\" does a Bengali speaker need? (One — āmi āsi, whoever is talking.) Is that true of the nouns too? (Yes — Bengali has no grammatical gender anywhere.) Next: a verb that swallows more than food."
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C11-bon",
-      "sequence": 830,
-      "title": "বোন (bon) — \"sister,\" and the root it shares with rice",
-      "headword": "বোন",
-      "romanization": "bon",
-      "gloss": "sister — not built on the root behind English \"sister\" at all, but on the very root that named this book's rice two lessons ago",
+      "id": "BN-C07-khaowa",
+      "sequence": 670,
+      "title": "খাওয়া (khāwā) — \"to eat,\" and the drinking it also does",
+      "headword": "খাওয়া",
+      "romanization": "khāwā",
+      "gloss": "to eat — and, in everyday Bengali, to drink as well",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:572bd690f1dfa551",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:b0092c15738cd221",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -480,53 +501,78 @@
             },
             {
               "kind": "speech",
-              "text": "ভাই (bhāi) turned out to be the very word \"brother.\" This one does not — and where it comes from instead is the surprise this chapter has been saving."
+              "text": "Every verb so far has meant roughly what its English gloss means. This one is wider than its gloss, and the extra width is the lesson."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: বোন",
+          "title": "You'll want to know: খাওয়া",
           "segments": [
             {
               "kind": "speech",
-              "text": "বোন — bon — sister."
+              "text": "খাওয়া — khāwā — to eat."
             },
             {
               "kind": "speech",
-              "text": "আমার বোন (āmār bon) — my sister."
+              "text": "আমি খাই (āmi khāi), \"I eat.\" আপনি খান (āpni khān), with the respectful ending from two lessons back."
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "বোন is ব with the vowel sign ো (bo) plus ন (n), silent at the end — one plain consonant, no cluster, so the inherent vowel drops just as it did on দুধ and ভাত: bon, not bono."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "English \"sister\" descends from PIE swésōr. বোন (bon) does not. It is a tadbhava through Magadhi Prakrit bahiṇī, from Old Indo-Aryan baghinī — a doublet of Sanskrit's own ভগিনী (bhaginī), \"one with a share,\" built on ভগ (bhaga), \"a share, a portion, good fortune.\" And bhaga is a noun from the very same verb that named this chapter's rice two lessons ago: √ভজ্ (√bhaj, \"to divide, to share out\"), PIE bʰeh₂g-. ভাত is \"the portion given\"; বোন (bon) is \"the one with a portion.\" Bengali's word for sister and Bengali's word for rice are, underneath, cousins. Its word for sister and English's are not."
+              "text": "খাওয়া (khāwā) is Sanskrit √খাদ্ (√khād, \"to chew, to bite\"), smoothed through Prakrit khā-. Every neighbour eats with it: Hindi khānā, Marathi khāṇe, Gujarati khāvũ, Punjabi khāṇā."
             },
             {
               "kind": "speech",
-              "text": "The same light touch as last lesson's দাদা applies here: an older woman may be addressed as দিদি (didi, \"elder sister\") as a mark of respect, family or not."
+              "text": "Past Sanskrit the trail goes cold. Khād- has no secure Indo-European pedigree outside Indo-Aryan, so there is no English cousin here — and one will not be manufactured. Some roots are simply local, and saying so is part of the method."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: খ against ক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খ is kh: a k with a puff of breath behind it. Its plain partner ক (k) is the letter in Chapter 9's kāj. The puff is not decoration — it is the whole difference between two words, and Bengali gives each its own letter."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: Bengali eats its drinks",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Bengali",
+                "what it means"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "জল খাওয়া (jôl khāwā) means to drink water — \"water-eat\".",
+                "চা খাওয়া (chā khāwā) means to drink tea.",
+                "ওষুধ খাওয়া (oshudh khāwā) means to take medicine."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi keeps a second verb, pīnā, for drinking. Bengali's everyday speech does not bother: whatever goes in the mouth is khāwā. There is a drink-verb — পান করা (pān kôrā), noun-plus-kôrā in exactly Chapter 9's kāj kôrā shape, built on Sanskrit √পা (√pā, \"to drink\"), whose Latin cousin pōtāre gives English potion and potable. But it belongs to writing and ceremony. Ask for tea in a Kolkata kitchen and you eat it."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -539,52 +585,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bon\" — sister, no trailing vowel",
+              "instruction": "\"khāwā\" — eat — then \"āmi khāi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bon\" — sister, no trailing vowel]"
+              "source": "[YOU SAY: \"khāwā\" — eat — then \"āmi khāi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār bon\" — my sister",
+              "instruction": "the drinking Bengali eats — \"jôl khāwā … chā khāwā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār bon\" — my sister]"
+              "source": "[YOU SAY: the drinking Bengali eats — \"jôl khāwā … chā khāwā\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the shared root — \"bhaj … bhāt, bon\"",
+              "instruction": "the formal drink-verb and its English cousins — \"pān kôrā … potion, potable\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the shared root — \"bhaj … bhāt, bon\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four of this chapter's people — \"bôndhu, pôribār, bhāi, bon\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four of this chapter's people — \"bôndhu, pôribār, bhāi, bon\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "a count of them, using Chapter 6's numbers — \"āmār ek bhāi. āmār dui bon.\" — one brother. two sisters.",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: a count of them, using Chapter 6's numbers — \"āmār ek bhāi. āmār dui bon.\" — one brother. two sisters.]"
+              "source": "[YOU SAY: the formal drink-verb and its English cousins — \"pān kôrā … potion, potable\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -596,7 +624,327 @@
             },
             {
               "kind": "speech",
-              "text": "Is বোন related to English \"sister\"? (No — different root entirely.) What is it related to instead? (ভাত — both trace to √bhaj, \"to share.\") Say \"one brother\" and \"two sisters.\" (Ek bhāi. Dui bon.) Which of those two numbers keeps a vowel Hindi and Marathi lost? (দুই — the -i after the old dv-.) And which number wears the chandrabindu? (পাঁচ, five — not needed here, but still the only one that has it.)"
+              "text": "How do you say \"drink water\" in everyday Bengali? (জল খাওয়া — literally \"water-eat.\") Which Sanskrit root is khāwā, and does English share it? (√khād, \"to chew\" — and no, the root goes no further than Indo-Aryan.) Which verb would a formal text use for drinking, and what English words does its root reach? (পান করা, from √pā — English potion, potable.) Next: one spelling, two vowels."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C07-dekha",
+      "sequence": 680,
+      "title": "দেখা (dækhā) — \"to see,\" and a vowel that moves under a fixed spelling",
+      "headword": "দেখা",
+      "romanization": "dækhā",
+      "gloss": "to see, to look — and the vowel that changes while the spelling stands still",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e363de75b47fbbf8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 7 buried this verb inside dækhā hôbe, \"a seeing will happen.\" Prised out on its own, it carries a sound rule that runs through every verb in this chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দেখা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দেখা — dækhā — to see, to look."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি দেখি (āmi dekhi), \"I see.\" সে দেখে (se dækhe), \"he sees.\" Read those two romanizations again — they are not the same vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দেখা (dækhā) is traced to Sanskrit √দৃশ্ (√dṛś, \"to see\") through the Prakrit stem dekkha-; Hindi's dekhnā is the same word. Sanskrit built darśana, \"a viewing,\" on that root, and further back it is PIE derḱ-, \"to see clearly.\" Greek took it for dérkomai, \"I look,\" and for drákōn, the sharp-gazing serpent — which English borrowed as dragon. Bengali's \"see\" and England's dragons are one word, wearing very different clothes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: দে, said two ways",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দ is a soft dental d, tongue on the teeth. The vowel sign ে on it is written identically every time — but Bengali says it either as a close e (as in English bay) or an open æ (as in English bat), and the page will never tell you which."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending decides the vowel",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Bengali",
+                "said"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Bengali: আমি দেখি. said: dekhi — close e.",
+                "Bengali: সে দেখে. said: dækhe — open æ.",
+                "Bengali: তুমি দেখো. said: dækho — open æ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The rule: when the ending carries the high vowel -i, the stem vowel closes to e. Any other ending leaves it open at æ. That is vowel harmony, and the verb of the first lesson does it too — আমি হই (hôi, closed) against সে হয় (hôy, open). It is a rule your ear must carry alone, because the spelling never budges."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dækhā\" — then the pair, \"dekhi … dækhe\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dækhā\" — then the pair, \"dekhi … dækhe\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same shift on the be-verb — \"hôi … hôy\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same shift on the be-verb — \"hôi … hôy\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root and its odd English relative — \"dṛś … dragon\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root and its odd English relative — \"dṛś … dragon\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending closes the stem vowel to e? (The -i of \"I\" — dekhi, against dækhe and dækho.) Does the spelling record that? (No — দে is written the same either way; only the ear knows.) Which English animal shares this verb's root? (The dragon — Greek drákōn, from PIE derḱ-.) Next: the last verb, and the knowing English lost."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C07-jana",
+      "sequence": 690,
+      "title": "জানা (jānā) — \"to know,\" and the knowing English gave up",
+      "headword": "জানা",
+      "romanization": "jānā",
+      "gloss": "to know a fact — beside চেনা, the second knowing that English merged away",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d03d9d4405984cac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six thousand years ago this verb and the English word you are reading it with were the same word. They still are. But Bengali kept a distinction English threw away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জানা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জানা — jānā — to know."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি জানি (āmi jāni), \"I know.\" আপনি জানেন (āpni jānen), respectfully."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জানা (jānā) is Sanskrit √জ্ঞা (√jñā, \"to know\"), the root under jñāna, \"knowledge.\" Behind it stands PIE ǵneh₃-, and English is full of its children: know and knowledge by the direct Germanic road; notice, recognize and cognition through Latin nōscere; gnosis and diagnosis through Greek gignṓskein. Bengali jāni and English know are one verb, separated only by time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: জ্ঞ, the letter that lies",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is simply জা + না, jā-nā."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: two knowings, and English has one word for both",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Bengali",
+                "what it knows"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Bengali: জানা (jānā). what it knows: a fact, or how to do something.",
+                "Bengali: চেনা (chenā). what it knows: a person or a place, by acquaintance."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "আমি জানি — \"I know\" (that it is so). আমি তাকে চিনি (āmi tāke chini) — \"I know him,\" meaning I am acquainted with him. Say jāni of a person and you have said you know facts about them, which is a colder thing."
+            },
+            {
+              "kind": "speech",
+              "text": "English once had this line and lost it; French still walks it as savoir against connaître, German as wissen against kennen, Spanish as saber against conocer. And listen to chini beside সে চেনে (se chæne): the same vowel harmony as the last lesson, on a brand-new verb."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"jānā\" — know — then \"āmi jāni\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"jānā\" — know — then \"āmi jāni\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other knowing — \"āmi tāke chini\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other knowing — \"āmi tāke chini\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the harmony again — \"chini … chæne\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the harmony again — \"chini … chæne\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six verbs of this chapter — \"hôwā, jāwā, āsā, khāwā, dækhā, jānā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six verbs of this chapter — \"hôwā, jāwā, āsā, khāwā, dækhā, jānā\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which verb knows a person, and which knows a fact? (চেনা for people, জানা (jānā) for facts — the connaître / savoir line.) Name three English children of this root. (Know, notice, diagnosis — Germanic, Latin, Greek.) Why does chini close its vowel where chæne keeps it open? (Vowel harmony — the -i ending closes the stem vowel, as in dekhi.) That closes the chapter: six verbs, no gender on any of them, and the respect always sitting in the ending."
             }
           ]
         }

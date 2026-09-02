@@ -1,22 +1,22 @@
 {
   "chapter": 15,
-  "title": "Cloth, Shirt, Sari, and Glasses",
-  "label": "ch:bn-cloth-shirt-sari-glasses",
-  "canDo": "I can name cloth, a shirt, a sari and glasses in Bengali, and say which word English borrowed directly and which is built on the same Persian word already met for 'eye'.",
+  "title": "Three Words, No New Pieces",
+  "label": "ch:bn-three-words-no-new-pieces",
+  "canDo": "I can read চা, জল and দুধ off the page without learning a single new shape, and say why a reading chapter that adds nothing is still worth its place.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C15-choshma",
-    "kind": "production",
-    "summary": "The chapter closes on চশমা, 'glasses', built on Persian chashm, 'eye' — the very word চোখ's own lesson once named as its only cousin outside the family, here turned into 'eye-thing'. The reader names all four garments — kāpoṛ, jāmā, shāṛi, chôshmā — states that শাড়ি reached English as a direct modern loanword rather than through a shared ancient root, and reaches back to rescue the dative construction and ভালোবাসা, unrevisited since they were taught.",
+    "lesson": "BN-W03-dudh-read",
+    "kind": "reading",
+    "summary": "Milk puts the plain dental and its breathy partner side by side in one three-piece word, then the chapter's three words are read back — every one of them paid for by consonants bought several chapters earlier.",
     "assesses": [
-      "BN-LEX-C15-KAPOR-01",
-      "BN-LEX-C15-JAMA-01",
-      "BN-LEX-C15-SHARI-01",
-      "BN-LEX-C15-CHOSHMA-01",
-      "BN-GRAMMAR-C09-DATIVE-02",
-      "BN-LEX-C09-BHALOBASA-03"
+      "BN-SCRIPT-CHAA-READ-01",
+      "BN-SCRIPT-DA-01",
+      "BN-SCRIPT-DHA-01",
+      "BN-SCRIPT-DUDH-READ-01",
+      "BN-SCRIPT-JOL-READ-01",
+      "BN-SCRIPT-U-MATRA-01"
     ]
   }
 }

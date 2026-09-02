@@ -1,0 +1,257 @@
+Bengali, chapter 21: The Last Sign, and Seven Words Back.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 8.
+মুখ (mukh) — mouth, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write খ, then write ু underneath it.
+
+Script.
+ম + ু + খ becomes মুখ (mukh).
+ম with ু hanging under it — mu.
+খ — the breathy k, and at the end of a word its inherent vowel is gone, so what is left is the closure and the puff.
+mukh — mouth, from the chapter on the face. A tatsama: kept whole out of Sanskrit rather than worn down on the way.
+The end of this word is where a new reader loses the breath. English speakers finishing a word on k stop the air dead; Bengali lets it out. Say mu, close on the back of the tongue, and then open. If the last thing a listener hears is air, it was right.
+There is a smaller thing worth seeing on the page. Three letters, one sign, and the sign is the only mark below the head-line in the whole word. A Bengali word's information is not spread evenly — most of it rides on the band, and the occasional piece that drops below is doing work the eye must not skip.
+
+Guided Practice.
+[your turn — read: মুখ (mukh)]
+[pause 8 seconds for the answer]
+[your turn — read: ভালো]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: মুখ (mukh)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What happens to the breath at the end of মুখ (mukh)? (It comes out — the letter is the breathy one.) And where is the only mark below the head-line? (Under the first letter.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 8.
+লাল (lāl) — red, and the day-word that runs both ways.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ল once, then say where the tongue sits for it.
+
+Script.
+ল + া + ল becomes লাল (lāl).
+The same letter twice, with the mātrā between them. The first ল takes the sign and becomes lā; the second keeps its own inherent vowel, which at the end of a word is barely voiced at all. So the word comes out lāl — one syllable to an English ear, the colour red, the Persian gem-word from the chapter on colours.
+Swap the first shape for ক and you get another word already in your mouth:
+ক + া + ল becomes কাল.
+kāl — the word that means tomorrow and yesterday both, and which the farewell chapter used in kāl dækhā hôbe. Bengali does not think the two days need separate names; the distance from today is what the word records, and the direction comes from the verb.
+Two words, three pieces each, one shape different between them. Reading is starting to be recombination rather than recognition.
+
+Guided Practice.
+[your turn — read: লাল (lāl)]
+[pause 8 seconds for the answer]
+[your turn — read: কাল]
+[pause 8 seconds for the answer]
+[your turn — read: আমি]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: লাল (lāl)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why is the second ল in লাল (lāl) not said lô? (Its inherent vowel is barely voiced at the end of a word.) And which two days does কাল cover? (Yesterday and tomorrow — both.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 8.
+কালো (kālo) — black, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ো, and name the two signs it is made of.
+
+Script.
+ক + া + ল + ো becomes কালো (kālo).
+ক with া after it — kā.
+ল with ো around it — lo.
+kālo — black, the colour that is the same word as Sanskrit kāla, "time," and stands behind both Kālī and Yama.
+This is the first word in the book with two different vowel signs on two consecutive letters, and it is the moment the eye has to stop scanning and start parsing. There are three marks after the first ক and only two of them belong together. Work it as the last lesson said: find the consonant, then look around it.
+Set it beside the red from the last chapter and the two are nearly twins on the page:
+লাল (lāl) and কালো (kālo).
+Both open with a consonant plus া; both close on ল. What separates them is which letter the ল is and what is hanging on it.
+
+Guided Practice.
+[your turn — read: কালো (kālo)]
+[pause 8 seconds for the answer]
+[your turn — read: লাল (lāl)]
+[pause 8 seconds for the answer]
+[your turn — read: কেমন]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: কালো (kālo)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter in কালো (kālo) is wearing the o-sign? (The ল — the second one.) And what else does the same Sanskrit word behind it mean? (Time.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 8.
+সাদা (shādā) — white, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write দ, and say what separates it from ত.
+
+Script.
+স + া + দ + া becomes সাদা (shādā).
+Two consonants, each wearing the same mātrā. As plain a spelling as this book has shown.
+shādā — white. And notice the first sound: the letter is the s-letter, and it is said sh. That was the news of the greeting back in the first script chapter, and it has not changed. In Bengali this letter is sh far more often than it is s, which is the second leg of the track's sound-fingerprint.
+Three colours are now readable:
+লাল lāl — red কালো kālo — black সাদা shādā — white.
+White is the one of the three where Bengali and Hindi went different ways: Hindi took a Persian loan for it and Bengali kept its own word, where for red both took the same Persian gem-name. A page of Bengali colour words is a small map of who borrowed what.
+
+Guided Practice.
+[your turn — read: সাদা (shādā)]
+[pause 8 seconds for the answer]
+[your turn — read: লাল (lāl) কালো (kālo) সাদা (shādā)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: সাদা (shādā)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+The first letter of সাদা (shādā) is written s. How is it said? (sh.) And which of the three colours is the one Bengali kept where Hindi borrowed? (সাদা (shādā) — white.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 8.
+ী (-i (long)) — the second i-sign.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read জল, then write ি and say which side it goes on.
+
+Script.
+ী (-i (long)).
+A second sign for i — and in modern Bengali speech it sounds exactly like the first one.
+Sanskrit distinguished a short i from a long ī, and held words apart by that length alone. Bengali gave the distinction up. The two signs survive because the spellings survive: a word inherited from Sanskrit keeps whichever sign it always had, and the reader learns it word by word rather than by ear.
+That is worth stating plainly rather than apologising for. A script records the history of a language as well as its present, and the cost of that is a handful of spellings a listener could never have guessed. English readers know the arrangement well — the k in know, the gh in night.
+The two signs sit on opposite sides:
+ি goes before its consonant ী (-i (long)) goes after it, like া.
+So they are hard to confuse on the page even while being impossible to tell apart in the ear.
+ন + ী (-i (long)) becomes নী.
+
+Guided Practice.
+[once you have stopped driving — write: ী (-i (long))]
+[once you have stopped driving — write: নী]
+[your turn — read: জল]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Do ি and ী (-i (long)) sound different in Bengali today? (No.) Did they in Sanskrit? (Yes — short and long.) And which side does ী (-i (long)) go on? (After its consonant.)
+Source: Unicode Bengali chart.
+
+
+Lesson 6 of 8.
+নীল (nīl) — blue, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ী (-i (long)), and say which side of its consonant it goes on.
+
+Script.
+ন + ী (-i (long)) + ল becomes নীল (nīl).
+nīl — blue, the colour from Sanskrit nīla, the dye that gave English indigo its trade and gave the Bengal countryside its indigo plantations.
+The sign in the middle is the long one, and that is not a choice a speaker could make. Sanskrit nīla had a long ī, so Bengali writes ী (-i (long)) — even though a Bengali speaker says it no differently from the short sign. The spelling is inherited, and the previous lesson's point is now something you have to act on rather than agree with.
+Four colours are now readable:
+লাল (lāl) — red কালো (kālo) — black সাদা (shādā) — white নীল (nīl) — blue.
+Of these, blue is the one whose spelling carries a fact about Sanskrit rather than about Bengali. Red is a Persian gem-name; black is the word for time; white is the homegrown one Hindi replaced. Four words, four different histories, and the page shows one of them.
+
+Guided Practice.
+[your turn — read: নীল (nīl)]
+[pause 8 seconds for the answer]
+[your turn — read: লাল (lāl) কালো (kālo) সাদা (shādā) নীল (nīl)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: নীল (nīl)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why does নীল take the long i-sign? (Because Sanskrit nīla had a long i.) Can a speaker hear the difference? (No.) And how many colours can you read now? (Four.)
+Source: Unicode Bengali chart.
+
+
+Lesson 7 of 8.
+তিন (tin) — three, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ত, then write ি, and say which side of a consonant the second one goes on.
+
+Script.
+ত + ি + ন becomes তিন (tin).
+Read it the way the mouth needs it, not the way the eye meets it:
+ত — the dental t, tongue on the teeth.
+ি — leaning on that ত from the left, heard after it.
+ন — nô, its inherent vowel almost silent at the end.
+tin — three, counted since the numbers chapter.
+The hook in front of ত is the same trap as আমি, and it will keep being the same trap until the hand has written it twenty times. On the page: hook, t, n. In the mouth: t, i, n.
+This word is also about as old as words get. Sanskrit tri, Latin trēs, Greek treîs, English three — the numbers chapter set that out, and the point here is only that you can now meet it on a page in Kolkata instead of in a table.
+
+Guided Practice.
+[your turn — read: তিন (tin)]
+[pause 8 seconds for the answer]
+[your turn — read: লাল (lāl)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: তিন (tin)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+In তিন (tin), is the hook read before or after the ত? (After — it is only written before.) And what does the word mean? (Three.)
+Source: Unicode Bengali chart.
+
+
+Lesson 8 of 8.
+এক (ek) — one, and the words this reader can now take off a page.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write এ and ই, and say what decides when a vowel gets its own letter.
+
+Script.
+এ + ক becomes এক (ek).
+ek — one. Two pieces, and the first of them is a vowel standing on its own because a word cannot open on a sign.
+The numbers chapter made a remark that could not be checked at the time: it said those five numerals were no good for showing off the inherent ô, because এক (ek) opens on an independent vowel. Here is what that meant. There is no consonant at the front of this word to carry a vowel, so there is no inherent vowel to hear. The claim is now something you can see rather than take on trust.
+And তিন (tin), read two lessons ago, is on the page too, so two of the five numerals are now shapes rather than sounds.
+Count the whole holding. Twenty-six pieces, gathered nine, four, four, eight and one across five script chapters. And with them, nineteen words:
+নমস্কার the greeting, নাম name, তুমি you, আমি I, কেমন how.
+আবার again, ভালো good, চা tea, জল water, দুধ milk.
+পরিবার family, ভাই brother, মুখ (mukh) mouth, লাল (lāl) red, কালো (kālo) black.
+সাদা (shādā) white, নীল (nīl) blue, তিন (tin) three, এক (ek) one.
+with নাক, কি, আসি, আমার and কাল riding along free.
+Every one of them was in the mouth before it was on the page. That order was the whole design: hear a word, use it, and only then be shown what it looks like. A reader who had been handed the alphabet first would have spent twenty-six lessons decoding shapes that meant nothing yet. Every script chapter in this book sits between two chapters of speech for that reason.
+
+Guided Practice.
+[your turn — read: মুখ (mukh) লাল (lāl) কালো (kālo) সাদা (shādā) নীল (nīl)]
+[pause 8 seconds for the answer]
+[your turn — read: এক (ek) তিন (tin)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: এক (ek)]
+[once you have stopped driving — write: এ ই আ ী (-i (long)) ি া ে ো]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why is there no inherent vowel to hear at the start of এক (ek)? (It opens on an independent vowel, not a consonant.) How many pieces do you hold now? (Twenty-six.) How many words? (Nineteen.) And which came first for every one of them — the sound or the shape? (The sound.)
+Source: Unicode Bengali chart.

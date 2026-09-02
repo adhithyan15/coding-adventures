@@ -1,169 +1,195 @@
-Bengali, chapter 5: The First Verbs.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Bengali, chapter 5: How Are You?.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
-বলা (bôlā) — "to speak," your first full verb.
+Lesson 1 of 6.
+আমি (āmi) — "I," cousin of English am.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-So far, "to be." Here is a verb that does something — and it reveals how gloriously simple Bengali verbs are.
+To answer "how are you?" you first need "I" — and it hides the English word am.
 
 The letters in this word.
-ব (bô) + লা (lā) becomes বলা (bôlā). The dictionary form of the verb.
+আ (independent long ā) + মি (mi) becomes আমি (āmi).
 
 The word, taken apart.
-বলা (bôlā, "to speak, to say") is a native Indo-Aryan verb (the same bol- as Hindi bolnā, Punjabi bolṇā). Its ending -আ (-ā) is Bengali's infinitive marker. To say "I speak," add the present ending -ই (-i) to the stem: bôl- + -i becomes বলি (bôli), "I speak."
+আমি (āmi, "I") descends from Sanskrit অস্মি (asmi, "I am"), on the first-person stem asmad. That Sanskrit asmi is from Proto-Indo-European h₁es-, the "to be" root — the very same word that gives English am (and Latin sum). So Bengali's word for "I" is, at the root, a form of "am": "I" and "am" were once one word. Its possessive is the আমার (āmār, "my") from Chapter 3.
 
-Grammar Lens: the verb changes for person — but never for gender.
-Bengali verbs change ending for who speaks: āmi bôli (I say), tumi bôlo (you say), se bôle (he/she says). But — and here is Bengali's great simplification — the verb never changes for gender. There is no "he-form" and "she-form," no masculine/feminine at all: se bôle is "he says" and "she says." Where Hindi and Punjabi make even "I speak" agree with the speaker's gender (boltā/boltī), Bengali dropped grammatical gender entirely. One less thing to track, forever.
+Grammar Lens: "I" can often be dropped.
+Bengali verbs carry the person in their ending — āchhi already means "I am" — so āmi is often left out once it's clear. You still learn it first, because the answer to kēmon āchho? begins with it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "bôlā" (to speak)]
+[your turn — say: "āmi"]
 [pause 8 seconds for the answer]
-[your turn — say: "I speak" — āmi bôli]
+[your turn — say: the pair — āmi (I), āmār (my)]
 [pause 8 seconds for the answer]
-[your turn — say: does "he says" differ from "she says"? (No — se bôle for both; Bengali has no gender)]
+[your turn — say: the English cousin hidden in it (am — from the same asmi)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does the Bengali verb change for, and what does it never change for? (For person — bôli/bôlo/bôle — but never for gender.)
+What Sanskrit word is āmi from, and its English cousin? (Asmi, "I am"; English am — same PIE root h₁es-.)
 
 
-Lesson 2 of 5.
-আমি বাংলা বলি (āmi bānglā bôli) — "I speak Bengali".
+Lesson 2 of 6.
+কেমন (kēmon) — "how," another of the k- questions.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Your first complete, moving sentence — and the language's own name for itself.
+You met কি (ki, "what") in Chapter 3. Here is its sibling.
 
 The letters in this word.
-বাংলা (bānglā): বা (bā) + ং (the anusvāra nasal) + লা (lā).
-
-The sentence, taken apart.
-আমি বাংলা বলি = আমি (āmi, "I") + বাংলা (bānglā, the object) + বলি (bôli, "speak") — "I Bengali speak," the verb last as always. The name বাংলা (bānglā) is the language's own word for itself (English "Bengali" comes from it, via Bangla becomes Bengal). It descends from বঙ্গ (bôngo), the ancient name of the region — so the language is named after its land, the great delta of the Ganges.
-
-Grammar Lens: no gender, so the sentence is the same for anyone.
-Because Bengali verbs carry no gender, আমি বাংলা বলি is exactly the same whether a man or a woman says it — unlike Hindi (maiṁ … boltā/boltī hūṁ). And because the -i ending already means "I," you could even drop āmi: bānglā bôli is a complete "I speak Bengali."
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "āmi bānglā bôli"]
-[pause 8 seconds for the answer]
-[your turn — say: what bānglā is named after (bôngo, the ancient region — the Ganges delta)]
-[pause 8 seconds for the answer]
-[your turn — say: does the sentence change for a man vs. a woman? (No — Bengali has no gender)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I speak Bengali," and give the origin of the name bānglā. (Āmi bānglā bôli; from bôngo, the ancient name of the Bengal region.)
-
-
-Lesson 3 of 5.
-কাজ করা (kāj kôrā) — "to work".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The last verb of the chapter — and, like Hindi's karnā, it is a "do" verb that builds a hundred others.
-
-The letters in this word.
-কাজ (kāj, "work"): কা (kā) + জ (j). করা (kôrā, "do"): ক (kô) + রা (rā).
+কে (kē, kô + the e-sign) + মন (mon) becomes কেমন (kēmon).
 
 The word, taken apart.
-করা (kôrā, "to do, to make") is from Sanskrit √কৃ (√kṛ, "to do"), from PIE kʷer- — the same root you met in Chapter 1's নমস্কার (nômoshkar = namas + kāra, "the making of a bow") and in karma. And কাজ (kāj, "work") is itself from Sanskrit kārya ("work, task," also from √kṛ) — so "work- do" is, at root, "kṛ-thing kṛ-do." Like Hindi, Bengali builds compound verbs as noun + করা:
-কাজ করা (kāj kôrā) = "work-do" = "to work".
-কথা বলা (kôthā bôlā) = "to converse" (using bôlā from earlier).
-So āmi kāj kôri = "I work" — the -i "I" ending, no gender.
+কেমন (kēmon, "how, of what kind") is from the interrogative stem ka-, from PIE kʷo- — the same question-root behind English wh- and Latin qu-. Bengali's questions nearly all begin with this k-: ki (what), ke (who), kôbe (when), kōthāy (where), kēmon (how). It is the Indian branch of the same family of question-words that gave English what/who/how.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "kāj kôrā" (to work)]
+[your turn — say: "kēmon"]
 [pause 8 seconds for the answer]
-[your turn — say: "I work" — āmi kāj kôri]
-[pause 8 seconds for the answer]
-[your turn — say: the Chapter-1 word that shares the √kṛ root (nômoshkar)]
+[your turn — say: the k- question family — ki, ke, kôbe, kōthāy, kēmon]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit root do both kôrā ("do") and kāj ("work") come from, and name a Chapter-1 word built on it. (√kṛ, "to do"; nômoshkar — "the making of a bow.")
+What root do Bengali's question-words share, and its English family? (The interrogative k-, PIE kʷo-; the wh- words.)
 
 
-Lesson 4 of 5.
-থাকা (thākā) — "to live, to stay".
+Lesson 3 of 6.
+তুমি কেমন আছো? (tumi kēmon āchho?) — "how are you?"
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-A second verb, so you can say where you live.
+The everyday "how are you?" — and the first time Bengali brings back a verb "to be."
 
 The letters in this word.
-থা (thā, an aspirated t + long ā) + কা (kā) becomes থাকা (thākā).
+The new word is আছো (āchho, "are you"), from the verb আছা (āchhā, "to be, to exist, to have") + the familiar-you ending -ও (-o). Note the ছ (chh) — a breathy ch.
 
-The word, taken apart.
-থাকা (thākā, "to live, to stay, to remain") is from Sanskrit স্থা (sthā, "to stand, to stay") — the same PIE root steh₂- ("to stand") that gives English stand, stay, state, and Latin stāre. So Bengali's "to live/stay" and English's "to stand/stay" are, at the root, one word. "I live in Kolkata" is আমি কলকাতায় থাকি (āmi Kolkātāy thāki) — stem thāk- + the -i "I" ending, no gender.
+The phrase, taken apart.
+তুমি কেমন আছো? (tumi kēmon āchho?) = তুমি (tumi, familiar "you") + কেমন (kēmon, "how").
+আছো (āchho, "are") — "you how are?", the verb last.
 
-Grammar Lens: "in" comes after the noun.
-কলকাতায় (Kolkātāy) = Kolkata + -য় / -তে (-y/-te, "in, at"), glued to the end of the noun. Bengali uses postpositions (case-endings) where English uses prepositions: "Kolkata-in I live," the verb last.
+Grammar Lens: now the copula returns.
+In Chapter 3, Bengali dropped "is": āmār nām Arun ("my name Arun"). That zero copula works for equations (X is Y). But "how are you?" asks about a state — how you exist — and for that Bengali uses a real verb, আছা (āchhā). So: no verb for "my name is Arun," a real verb for "how are you." Respectful form: আপনি কেমন আছেন? (āpni kēmon āchhen? — āchhen for āpni). Match the "you" to the verb-ending.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "thākā"]
+[your turn — say: the familiar question — tumi kēmon āchho?]
 [pause 8 seconds for the answer]
-[your turn — say: "I live in Kolkata" — āmi Kolkātāy thāki]
+[your turn — say: the respectful version — āpni kēmon āchhen?]
 [pause 8 seconds for the answer]
-[your turn — say: the English cousins of its root sthā (stand, stay, state)]
+[your turn — say: why here Bengali needs a verb but "my name is Arun" didn't (state vs. equation)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit/PIE root is thākā from, and its English cousins? (Sanskrit sthā / PIE steh₂- "to stand"; English stand, stay, state.)
+What verb does "how are you?" use, and why does this need one when "my name is Arun" didn't? (Āchhā, "to be/exist"; it describes a state, not an equation — the zero copula only covers X is Y.)
 
 
-Lesson 5 of 5.
-Chapter 5 — The first verbs.
+Lesson 4 of 6.
+ভালো (bhālo) — "well," and how to answer.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-No new words. Three verbs, one gender-free engine — build real sentences about yourself.
+The word that answers "how are you?" — and one Bengalis say all the time.
 
-How to answer — build the sentences.
+The letters in this word.
+ভা (bhā, an aspirated b + long ā) + লো (lo) becomes ভালো (bhālo).
+
+The word, taken apart.
+ভালো (bhālo, "good, well, fine") is the everyday Bengali "good" — likely from Sanskrit ভদ্র (bhadra, "good, auspicious, gentle"), worn down over centuries into bhālo. It is one of the most-used words in the language: bhālo lāge ("[I] like it"), bhālobāsā ("love," literally "good-dwelling").
+
+The exchange — the reply.
+With the āchhā verb: আমি ভালো আছি (āmi bhālo āchhi) — "I am well" (āchhi = "I am/exist"). The whole exchange:
+— tumi kēmon āchho? ("How are you?") — āmi bhālo āchhi, dhônnobad. ("I'm well, thank you.")
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "bhālo"]
+[pause 8 seconds for the answer]
+[your turn — say: the full reply — āmi bhālo āchhi]
+[pause 8 seconds for the answer]
+[your turn — say: the tender word built on it (bhālobāsā, "love")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the full reply to tumi kēmon āchho?, and name bhālo's likely Sanskrit source. (Āmi bhālo āchhi; Sanskrit bhadra, "good.")
+
+
+Lesson 5 of 6.
+কোনো ব্যাপার না (kono bæpār nā) — "no matter".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+When someone thanks you — or apologises — this is the easy, gracious reply, and it reuses a word from Chapter 1.
+
+The letters in this word.
+কোনো (kono, "any") + ব্যাপার (bæpār, "matter, affair" — with the ya-phola on ব্য) + না (nā, "no/not," from Chapter 1) becomes kono bæpār nā.
+
+The word, taken apart.
+কোনো ব্যাপার না (kono bæpār nā) literally means "[it's] no matter" — kono ("any") + bæpār ("matter, affair") + nā ("not"). It serves as "it's nothing / no worries / never mind / you're welcome." The word ব্যাপার (bæpār, "matter, affair, business") is Sanskrit — vyāpāra ("occupation, dealing"). And না (nā) you met in Chapter 1: the ancient negative, PIE ne, behind English no, not, none. So the reply pairs a Sanskrit noun with the oldest negative in the family.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kono bæpār nā"]
+[pause 8 seconds for the answer]
+[your turn — say: what it literally means ("[it's] no matter")]
+[pause 8 seconds for the answer]
+[your turn — say: the exchange — dhônnobad / kono bæpār nā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does kono bæpār nā literally say, and which Chapter-1 word does it reuse? ("It's no matter"; nā, "not" — PIE ne, English no.)
+
+
+Lesson 6 of 6.
+Chapter 5 — The how-are-you exchange.
+
+Warm-up.
+[pause 2 seconds]
+No new words. The whole responding cycle, from atoms you now own.
+
+The exchange.
 [pause 1 second after each]
-[your turn — say: "I speak Bengali" — āmi bānglā bôli]
+[your turn — say: "How are you?" (familiar) — tumi kēmon āchho?]
 [pause 8 seconds for the answer]
-[your turn — say: "I live in Kolkata" — āmi Kolkātāy thāki]
+[your turn — say: "I'm well, thank you." — āmi bhālo āchhi, dhônnobad.]
 [pause 8 seconds for the answer]
-[your turn — say: "I work" — āmi kāj kôri]
+[your turn — say: "No matter / you're welcome." — kono bæpār nā.]
 [pause 8 seconds for the answer]
-[your turn — say: "he speaks" and "she speaks" — se bôle (the same for both!)]
+[your turn — say: the respectful question — āpni kēmon āchhen?]
 [pause 8 seconds for the answer]
 
-Grammar lens — the engine.
+The word, taken apart — the atoms.
 [pause 2 seconds]
-[your turn — say: the "I" ending on every present verb (-i)]
+[your turn — say: the k- question-word for "how" (kēmon)]
 [pause 8 seconds for the answer]
-[your turn — say: the one thing Bengali verbs never mark (gender)]
+[your turn — say: "I" and the verb "to be/exist" (āmi, āchhā)]
 [pause 8 seconds for the answer]
-[your turn — say: where the verb sits, and where "in" sits (verb last; -y/-te after the noun)]
+[your turn — say: when Bengali needs the verb and when it drops it (state vs. equation)]
 [pause 8 seconds for the answer]
 
 What you've built — roots you now carry.
 [pause 2 seconds]
-bôlā "to speak" (native; bol-, like Hindi/Punjabi).
-thākā "to live" from Sanskrit sthā becomes English stand/stay/state.
-kôrā "to do" from √kṛ — root of nômoshkar; kāj "work" from kārya (also √kṛ).
-bānglā from bôngo, the ancient region — the Ganges delta.
+kēmon from the interrogative k- (PIE kʷo-), cousin of English how/what.
+āmi from Sanskrit asmi, cousin of English am.
+bhālo from Sanskrit bhadra "good"; āmi bhālo āchhi "I'm well".
+nā from PIE ne, English no (in kono bæpār nā).
 
 Wrap-up Recall.
 [pause 3 seconds]
-In one breath, say your language, your city, and your work in Bengali — and note what stays the same for anyone. (Āmi bānglā bôli. Āmi … thāki. Āmi kāj kôri — no gender, so it's the same for a man or a woman.)
+A stranger asks āpni kēmon āchhen? — give a full, polite reply, and answer their thanks. (Āmi bhālo āchhi, dhônnobad — and to thanks, kono bæpār nā.)

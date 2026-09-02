@@ -1,18 +1,17 @@
 {
   "language": "bengali",
   "chapter": 15,
-  "sourceHash": "fnv1a64:f72c5c88d66553d9",
+  "sourceHash": "fnv1a64:fc66370f23bdcff7",
   "lessonIds": [
-    "BN-C15-kapor",
-    "BN-C15-jama",
-    "BN-C15-shari",
-    "BN-C15-choshma"
+    "BN-W04-chaa-read",
+    "BN-W04-jol-read",
+    "BN-W03-dudh-read"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch15.txt",
   "json": "bengali/narration/ch15.json",
-  "textHash": "fnv1a64:7f8b65e1344ca4c4",
-  "jsonHash": "fnv1a64:59e6e5d0b0e5d0b8",
+  "textHash": "fnv1a64:78380a95c4718e5a",
+  "jsonHash": "fnv1a64:bb55a8c3f7f2bbcc",
   "findings": []
 }

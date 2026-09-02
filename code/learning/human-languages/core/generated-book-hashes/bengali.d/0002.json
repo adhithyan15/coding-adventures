@@ -1,16 +1,18 @@
 {
   "language": "bengali",
   "chapter": 2,
-  "sourceHash": "fnv1a64:dcda8e5e7aa8d135",
+  "sourceHash": "fnv1a64:2fbc8c48f6929bc2",
   "lessonIds": [
-    "BN-C02-naam",
-    "BN-C02-amar",
-    "BN-C02-amar-naam",
-    "BN-C02-alaap",
-    "BN-C02-ki",
-    "BN-C02-tumi-apni",
-    "BN-C02-tomar-naam-ki",
-    "BN-C02-practice"
+    "BN-W01-na",
+    "BN-W01-aa-matra",
+    "BN-W01-aa",
+    "BN-W01-ha",
+    "BN-W01-ma",
+    "BN-W01-sa",
+    "BN-W01-ka",
+    "BN-W01-hasanta",
+    "BN-W01-ra",
+    "BN-W01-nomoshkar-read"
   ],
-  "tex": "bengali/book/chapters/ch02-introductions.tex"
+  "tex": "bengali/book/chapters/ch02-script-first.tex"
 }
