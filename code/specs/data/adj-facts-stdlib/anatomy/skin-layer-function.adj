@@ -65,4 +65,5 @@ table skin_layer_function {
     source "The epidermis is the outermost layer of the skin, and protects the body from the environment."
     locator "https://training.seer.cancer.gov/melanoma/anatomy/layers.html"
     trust authoritative
+    cites "The subcutis is also known as the hypodermis or subcutaneous layer, and functions as both an insulator, conserving the body's heat, and as a shock-absorber, protecting the inner organs." locator "https://training.seer.cancer.gov/melanoma/anatomy/layers.html"
 }

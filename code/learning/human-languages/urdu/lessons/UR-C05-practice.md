@@ -43,25 +43,28 @@ expression for the end. Keep the middle unchanged.
 ## The exchange — the complete interaction
 <!-- hl-knowledge: introduces=[UR-DIALOGUE-TAKE-LEAVE]; assesses=[] -->
 
-> A: **سلام! آپ کیسے ہیں؟**
-> *Salām! Āp kaise haiṅ?*
-> B: **میں ٹھیک ہوں، شکریہ۔**
-> *Maiṅ ṭhīk hūṅ, shukriyā.*
-> A: **خدا حافظ۔**
-> *Khudā hāfiz.*
-> B: **خدا حافظ۔**
-> *Khudā hāfiz.*
+> A: *Salām! Āp kaise haiṅ?*
+> B: *Maiṅ ṭhīk hūṅ, shukriyā.*
+> A: **خدا حافظ۔** — *Khudā hāfiz.*
+> B: **خدا حافظ۔** — *Khudā hāfiz.*
 
-Every line is already learned. **Salām** opens; **khudā hāfiz** closes. The
-same farewell works for both speakers, so this practice adds no gender choice,
-pronoun, or copula form.
+Every line is already learned by ear. **Salām** opens; **khudā hāfiz** closes.
+The same farewell works for both speakers, so this practice adds no gender
+choice, pronoun, or copula form.
+
+Only the closing line is printed in script for both voices, because it is the
+only one whose letters you have all been given. Three pieces of the exchange sit
+inside your ladder right now — **سلام**, **شکریہ**, **خدا حافظ** — and the two
+middle lines wait on letters the next three chapters hand you. Nothing in them
+is new to say, only new to see.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-DIALOGUE-TAKE-LEAVE] -->
 
 - [YOU CHOOSE: meeting begins → **salām**]
 - [YOU CHOOSE: interaction ends → **khudā hāfiz**]
-- [YOU RUN: both voices once with script, once without romanization]
+- [YOU RUN: both voices once from the romanization, then read the closing
+  line off the script alone]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL, UR-DIALOGUE-TAKE-LEAVE] -->

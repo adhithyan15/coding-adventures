@@ -90,7 +90,8 @@ From the right edge: ج j, then ا long ā, then ن n, then ا long ā. The ج i
 
 Grammar Lens: the present tense agrees twice.
 “I go” in Urdu is two words after the pronoun, not one:
-میں جاتا ہوں — maiṅ jātā hūṅ — I go (man speaking) میں جاتی ہوں — maiṅ jātī hūṅ — I go (woman speaking).
+maiṅ jātā hūṅ — I go (man speaking) maiṅ jātī hūṅ — I go (woman speaking).
+The frame is printed the way you say it rather than the way it is spelled. The t of jātā and the ū of hūṅ both ride letters you have not been given yet, and a line you cannot decode is not reading practice.
 The first word is the stem jā- plus -tā. It says going, and it agrees with the gender and number of the person doing it: -tā for one man, -tī for one woman, -te for more than one man or for a respectful singular. The second word is hūṅ, which you already own, and it agrees with person — who is speaking.
 Two agreements, split across two words, in one short clause. English makes one agreement at most, and usually none. Say both Urdu lines and let the difference sit in the ear rather than on paper.
 
@@ -202,21 +203,21 @@ Retrieve the opening without looking: shukriyā — jī hā̃ — nahī̃. Air-t
 You'll want to know first — one word.
 بولنا — bolnā — to speak.
 From the right edge: ب b, then و carrying o, then ل l, then ن n, then ا long ā. Strip the -nā and the stem is bol-.
-ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. You have already read پ p in آپ āp, and پ is that identical scoop with three dots below. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail.
+ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. Hold that skeleton in mind: the very next chapter adds pe, which is the identical scoop with three dots below — the p you already say in āp. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail.
 
 Grammar Lens: put it in the frame.
 The stem takes the same two-agreement frame as before:
-میں بولتا ہوں — maiṅ boltā hūṅ — I speak (man speaking) میں بولتی ہوں — maiṅ boltī hūṅ — I speak (woman speaking).
+maiṅ boltā hūṅ — I speak (man speaking) maiṅ boltī hūṅ — I speak (woman speaking).
 Nothing new is being learned there. That is the point of a stem: the machine is already built, and each verb just walks into it.
 
 The word, taken apart — where the trail goes cold.
 bolnā goes back to Prakrit bollaï, “speaks” — and then the trail stops. A link onward to Sanskrit brūte “speaks” has been proposed, but it is not settled, so treat it as a maybe rather than a fact.
-That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived گفتگو guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance.
+That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance.
 
 Guided Practice.
 [your turn — say: bolnā — to speak]
 [pause 8 seconds for the answer]
-[your turn — count: ب one dot below, پ three dots below]
+[your turn — count: ب one dot below — and say what the three-dot version will be]
 [pause 8 seconds for the answer]
 [your turn — say: maiṅ boltā hūṅ, then maiṅ boltī hūṅ]
 [pause 8 seconds for the answer]

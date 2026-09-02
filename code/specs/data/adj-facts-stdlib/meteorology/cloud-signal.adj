@@ -73,4 +73,5 @@ table cloud_signal {
     trust authoritative
 
     cites "Stratus clouds are uniform and flat, producing a gray layer of cloud cover which may be precipitation-free or may cause periods of light precipitation or drizzle." locator "https://www.weather.gov/lmk/cloud_classification"
+    cites "Cirrus clouds are wispy, feathery, and composed entirely of ice crystals. They often are the first sign of an approaching warm front or upper-level jet streak." locator "https://www.weather.gov/lmk/cloud_classification"
 }
