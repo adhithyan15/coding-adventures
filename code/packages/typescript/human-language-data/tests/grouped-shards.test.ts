@@ -240,12 +240,26 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "glossaries.d"))).toHaveLength(tracks);
     expect(readdirSync(join(directory, "answer-keys.d"))).toHaveLength(tracks);
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
-    // The handwritten count STAYS PINNED, and deliberately so — see the note
-    // above on why this particular literal is not part of the write-lock.
-    // This literal is the ONLY place a chapter retirement shows up, which is
-    // the point of pinning it — and so every track retiring one lands here.
-    // This branch retires french chapters 3, 4 and 5, the first three of
-    // French's sixteen, into `targets.d`.
+    // A RATCHET, not a pin: the handwritten set may shrink freely and may never
+    // grow. **Do not tighten this number when your PR retires a chapter.**
+    //
+    // It was a pin, and that was right while retiring a chapter was a rare,
+    // deliberate act — the literal was the only thing that could see a chapter
+    // flipped from `handwritten` into `targets`, which silently deletes the
+    // prose only the LaTeX carries. Then the standing directive became "no
+    // hand-written books remain", and a dozen agents began driving this counter
+    // to zero in parallel. What had been the most stable literal in the file
+    // became the most contended one: eight open PRs edited this single line at
+    // once, every pair of them conflicting, each resolution needing arithmetic
+    // against a tree that had moved again.
+    //
+    // As a ceiling it costs nothing to leave alone. A retirement PR lowers the
+    // count and simply passes. The hazard it still catches is the one that
+    // matters now — a NEW hand-written chapter appearing — which is the only
+    // direction that should ever require a human to think.
+    //
+    // When the retirement completes, tighten this ONCE to `toBe(0)`: at that
+    // point it stops being a ratchet and becomes a guarantee.
     expect(
       readdirSync(join(directory, "handwritten.d")).length,
     ).toBeLessThanOrEqual(69);
@@ -286,7 +300,12 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    // This branch removes three of them: french chapters 3, 4 and 5.
+    // Same ratchet, same reason. This pair went RED on main: Malayalam and
+    // Telugu both branched when the count read 66, both retired five chapters,
+    // and both wrote 61 -- identical literals, so git merged them cleanly with
+    // no conflict and the second to land was five too high. main pinned 61
+    // against 56 real owners. A corpus-wide count cannot be conflict-resolved by
+    // picking a side: both sides were correct when written.
     expect(identities.handwritten.size).toBeLessThanOrEqual(69);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
