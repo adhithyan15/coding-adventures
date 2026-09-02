@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1F02-first-three-copy",
     "language": "marathi",
-    "chapter": 19,
-    "sequence": 826,
+    "chapter": 23,
+    "sequence": 1026,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:7ad9a61d5040980a",
+    "sourceHash": "fnv1a64:3855a0329d003d10",
     "detachableSegments": [
       "Writing — guided copy"
     ],

@@ -1,13 +1,14 @@
 {
   "language": "marathi",
   "chapter": 18,
-  "sourceHash": "fnv1a64:aeb2a6e11f6c7767",
+  "sourceHash": "fnv1a64:9a0e8defb79683cf",
   "lessonIds": [
-    "MR-R18-script-warmup",
-    "MR-R18-script-a-r4",
-    "MR-R18-script-b-r4",
-    "MR-R18-script-c-r4",
-    "MR-R18-script-d-r4"
+    "MR-C11-mitra",
+    "MR-R11-mitra-r1",
+    "MR-C11-kutumb",
+    "MR-R11-kutumb-r1",
+    "MR-C11-bhau",
+    "MR-C11-bahin"
   ],
-  "tex": "marathi/book/chapters/ch18-doorway-script-distance.tex"
+  "tex": "marathi/book/chapters/ch18-friend-and-family.tex"
 }

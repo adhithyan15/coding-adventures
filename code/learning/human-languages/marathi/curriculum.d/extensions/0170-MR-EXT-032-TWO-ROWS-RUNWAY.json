@@ -1,0 +1,20 @@
+{
+  "id": "MR-EXT-032-TWO-ROWS-RUNWAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the velar and palatal rows and rebuild any letter in them from two questions: is the voice on, and is the breath released.",
+  "prerequisites": [
+    "MR-EXT-031-MARKS-RUNWAY"
+  ],
+  "lessons": [
+    "MR-W06-kha",
+    "MR-W06-ga",
+    "MR-W06-gha",
+    "MR-W06-ca",
+    "MR-W06-cha",
+    "MR-W06-ja",
+    "MR-W06-jha",
+    "MR-R06-two-rows-recall"
+  ]
+}

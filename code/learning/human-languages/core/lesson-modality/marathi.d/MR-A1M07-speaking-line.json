@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1M07-speaking-line",
     "language": "marathi",
-    "chapter": 20,
-    "sequence": 846,
+    "chapter": 24,
+    "sequence": 1046,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:9141b37cc1a62443",
+    "sourceHash": "fnv1a64:4e196631079fcb48",
     "detachableSegments": [
       "Writing — delayed copy"
     ],

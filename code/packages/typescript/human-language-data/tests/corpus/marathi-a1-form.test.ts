@@ -22,7 +22,7 @@ it("removes support gently before Marathi's independent A1 practical form", () =
 
   expect(lessons.map((lesson) => lesson.realization.lessonId)).toEqual(FORM_IDS);
   expect(lessons.map((lesson) => Number(lesson.frontmatter.sequence))).toEqual(
-    Array.from({ length: 10 }, (_, index) => 860 + index),
+    Array.from({ length: 10 }, (_, index) => 1060 + index),
   );
   expect(lessons.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 260)).toBe(true);
 

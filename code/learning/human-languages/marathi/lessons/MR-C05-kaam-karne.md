@@ -1,7 +1,7 @@
 ---
 id: MR-C05-kaam-karne
-sequence: 180
-chapter: 8
+sequence: 380
+chapter: 12
 type: word
 headword: काम करणे
 romanization: "kām karṇe"

@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0b8f020f770c51f9",
+  "sourceHash": "fnv1a64:6a270bb3dfab41c5",
   "lessons": [
     {
       "id": "TE-C17-madhyaahnam-ardharaatri",
@@ -136,12 +136,12 @@
       ]
     },
     {
-      "id": "TE-S120-vowel-sign-ee",
+      "id": "TE-S138-letter-gha",
       "sequence": 441,
-      "title": "◌ే (ē) — one character, met inside words you already say",
-      "headword": "ే",
-      "romanization": "ē",
-      "gloss": "the single character ే — recognised inside words you already say",
+      "title": "ఘ (gha) — one character, met inside words you already say",
+      "headword": "ఘ",
+      "romanization": "gha",
+      "gloss": "the single character ఘ — recognised inside words you already say",
       "script": "telugu",
       "modality": "pen",
       "derivedModality": "pen",
@@ -150,7 +150,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f0c93f52467e048d",
+      "sourceHash": "fnv1a64:157f46f739e7b6b4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -158,10 +158,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ◌ే",
+          "Script you'll notice: ఘ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ే and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఘ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -177,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ీ — what does it do?"
+              "text": "Before the new one: ఖ — what does it do? And one from further back: గ?"
             },
             {
               "kind": "pause",
@@ -187,53 +187,49 @@
             },
             {
               "kind": "speech",
-              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice: ◌ే",
+          "title": "Script you'll notice: ఘ",
           "segments": [
             {
               "kind": "speech",
-              "text": "◌ే — ē."
+              "text": "ఘ — gha."
             },
             {
               "kind": "speech",
-              "text": "It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with ē. Replaces, not adds — the a is gone."
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not gh, it is gha."
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ే (ē) somewhere inside it:"
+              "text": "The same trick as last time, one row down. గ is ga; ఘ (gha) is ga with the breath let out behind it."
             },
             {
               "kind": "speech",
-              "text": "లేదు lēdu — no / there isn't (lēdu)."
+              "text": "That is now two breathed pairs — క/ఖ and గ/ఘ (gha) — and they behave identically. When you meet a Telugu letter you do not know, it is worth asking first whether it is a letter you do know wearing extra breath."
             },
             {
               "kind": "speech",
-              "text": "సరే sarē — okay / alright (sarē)."
+              "text": "You already say this one, and the breathed letter is inside it:"
             },
             {
               "kind": "speech",
-              "text": "పేరు pēru — name."
-            },
-            {
-              "kind": "speech",
-              "text": "నేను nēnu — I."
+              "text": "మాఘం Māghaṁ — the eleventh of the twelve months."
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ే — copy what you see",
+          "title": "Writing: ఘ — copy what you see",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ే (ē) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ఘ (gha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -255,33 +251,33 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ే (ē) in the ones that have it",
+              "instruction": "at these two, and say which one has ఘ (gha) and which has గ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find ◌ే in the ones that have it]"
+              "source": "[YOU LOOK: at these two, and say which one has ఘ and which has గ]"
             },
             {
               "kind": "speech",
-              "text": "లేదు, సరే, నమస్కారం."
+              "text": "మాఘం, బాగా."
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "◌ే three times, saying ē as you finish each one",
+              "instruction": "ఘ three times, saying gha and letting the breath out as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ◌ే three times, saying *ē* as you finish each one]"
+              "source": "[YOU TRACE: ఘ three times, saying *gha* and letting the breath out as you finish each one]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ే (ē) once more",
+              "instruction": "back at any page of this chapter and find ఘ (gha) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ◌ే once more]"
+              "source": "[YOU LOOK: back at any page of this chapter and find ఘ once more]"
             }
           ]
         },
@@ -298,7 +294,11 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ◌ే? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ē on; takes the built-in a off.) Name one word you already say that contains it."
+              "text": "Which character is this — ఘ? What sound does it carry, and which plain letter is it built on? (gha, built on గ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: య — what does it do?"
             }
           ]
         }

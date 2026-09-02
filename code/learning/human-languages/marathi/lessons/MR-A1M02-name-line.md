@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M02-name-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 841
+sequence: 1041
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "माझं नाव अरुण आहे."
 gloss: copy the already-practised identity sentence as one message line

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F03-first-three-delayed
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 828
+sequence: 1028
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "नाव · शहर · भाषा"
 gloss: delayed writing of the first three form labels from meaning cues, with no visible model

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C24-mhanne",
     "language": "marathi",
-    "chapter": 24,
-    "sequence": 980,
+    "chapter": 28,
+    "sequence": 1180,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8961fad95845b78e",
+    "sourceHash": "fnv1a64:c601b47c95bf0ef5",
     "detachableSegments": [
       "The letters in this word"
     ]

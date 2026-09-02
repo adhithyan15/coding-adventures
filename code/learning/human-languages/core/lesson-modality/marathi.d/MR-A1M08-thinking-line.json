@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1M08-thinking-line",
     "language": "marathi",
-    "chapter": 20,
-    "sequence": 847,
+    "chapter": 24,
+    "sequence": 1047,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:94677f20d2ffadf4",
+    "sourceHash": "fnv1a64:8e825145020a2b53",
     "detachableSegments": [
       "Writing — delayed copy"
     ],

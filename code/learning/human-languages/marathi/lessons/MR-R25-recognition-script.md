@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R25-recognition-script
 spine_node: SPINE-RESPOND-BASIC
-sequence: 1040
-chapter: 25
+sequence: 1240
+chapter: 29
 type: review
 headword: ह / ो / चा
 romanization: ha / o / chā

@@ -1,13 +1,26 @@
 {
   "language": "marathi",
   "chapter": 24,
-  "sourceHash": "fnv1a64:7eb10b6cf5870ac3",
+  "sourceHash": "fnv1a64:c6427391dce89959",
   "lessonIds": [
-    "MR-C24-sangne",
-    "MR-C24-mhanne",
-    "MR-C24-shikne",
-    "MR-C24-milne",
-    "MR-R24-passing-verbs"
+    "MR-A1M01-reader-greeting",
+    "MR-A1M02-name-line",
+    "MR-A1M03-meeting-line",
+    "MR-A1M04-language-line",
+    "MR-A1M05-reading-line",
+    "MR-A1M06-writing-line",
+    "MR-A1M07-speaking-line",
+    "MR-A1M08-thinking-line",
+    "MR-A1M09-understanding-line",
+    "MR-A1M10-thanks-line",
+    "MR-A1M11-again-line",
+    "MR-A1M12-tomorrow-line",
+    "MR-A1M13-opening-block",
+    "MR-A1M14-skills-block-one",
+    "MR-A1M15-skills-block-two",
+    "MR-A1M16-closing-block",
+    "MR-A1M17-guided-message",
+    "MR-A1M18-independent-message"
   ],
-  "tex": "marathi/book/chapters/ch24-passing-verbs.tex"
+  "tex": "marathi/book/chapters/ch24-a1-named-reader-message.tex"
 }

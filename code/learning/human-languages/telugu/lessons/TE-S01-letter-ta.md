@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S01-letter-ta
 spine_node: SPINE-MEET-GREET
-sequence: 325
+sequence: 255
 delivery: script
-chapter: 6
+chapter: 5
 type: writing
 headword: "త"
 gloss: the single character త — recognised inside words you already say
 romanization: "ta"
-prerequisites: []
+prerequisites: [TE-S146-digit-7]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: []
+  knowledge: [TE-SCRIPT-RECOG-146]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-01]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-01]
+  knowledge: [TE-SCRIPT-RECOG-01, TE-SCRIPT-RECOG-146, TE-SCRIPT-RECOG-123, TE-SCRIPT-RECOG-141]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [TE-S146-digit-7, TE-S123-letter-dda, TE-S141-digit-2]
 ---
 
 # త — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-146, TE-SCRIPT-RECOG-123] -->
 
-[PAUSE 1s] Rounded, curvy letters, most crowned with a small tick or check-mark headstroke; no continuous top line.
+[PAUSE 1s] Before the new one: ౭ — what amount does it stand for? And one from further back: డ?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: త
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-01]; assesses=[] -->
@@ -49,8 +49,6 @@ You already say these, and every one of them has త somewhere inside it:
 
 - **సంతోషం** — joy / pleased to meet you
 - **వెళ్ళి వస్తాను** *veḷḷi vastānu* — goodbye (lit. "I'll go and come back")
-- **నేను తెలుగు మాట్లాడతాను** — I speak Telugu
-- **నాకు తెలుగు వచ్చు** *nāku telugu vaccu* — 'I know Telugu'
 
 ## Writing: త — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01] -->
@@ -76,7 +74,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find త once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01, TE-SCRIPT-RECOG-141] -->
 
 [PAUSE 3s] Which character is this — త? What sound does it carry? (***ta***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ౨ — what amount does it stand for?

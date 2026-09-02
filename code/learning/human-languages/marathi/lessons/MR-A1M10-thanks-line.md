@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M10-thanks-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 849
+sequence: 1049
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "धन्यवाद."
 gloss: close the message body with the already durable thanks word

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 21,
-  "sourceHash": "fnv1a64:3fa1988bd2a97e36",
+  "sourceHash": "fnv1a64:a1e9bdb42f54fc51",
   "lessonIds": [
     "TE-C21-kukka-pilli",
     "TE-S124-letter-e"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch21.txt",
   "json": "telugu/narration/ch21.json",
-  "textHash": "fnv1a64:161ddaba8756590b",
-  "jsonHash": "fnv1a64:e3035a05789f26b0",
+  "textHash": "fnv1a64:43e6819cc1102fde",
+  "jsonHash": "fnv1a64:4cb76ddd8a343af8",
   "findings": []
 }

@@ -1,26 +1,23 @@
 {
   "chapter": 14,
-  "title": "Friend and Family",
-  "label": "ch:mr-friend-and-family",
-  "canDo": "I can name a friend, a family, a brother, and a sister in Marathi, sort each word into a tatsama taken up whole from Sanskrit or a tadbhava worn down by sound change, and say which sibling word is genuinely English's cousin and which is not.",
+  "title": "The Core Verbs",
+  "label": "ch:mr-core-verbs",
+  "canDo": "I can use six everyday Marathi verbs, pick the present-tense ending that agrees with my subject's gender, end every sentence on the verb, and say that I know something the way Marathi says it — with the knower in the dative and आहे closing the line.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "MR-C11-bahin",
-    "kind": "production",
-    "summary": "The chapter closes on बहीण, deliberately not a cousin of English sister: the reader produces मित्र, कुटुंब, भाऊ and बहीण, sorts the four into two tatsamas (मित्र, कुटुंब) and two tadbhavas (भाऊ, बहीण), and names भाऊ as the secure cousin of brother against बहीण's unrelated root — while recalling कुटुंब's gender split from Hindi and मित्र's root in a covenant god's name.",
+    "lesson": "MR-C07-mahit-asne",
+    "kind": "task",
+    "summary": "Say मला माहीत आहे and मला मराठी येते unprompted: the knower in the dative, the verb agreeing with its own subject rather than with the speaker, and आहे closing the sentence — the whole chapter's machinery in two lines.",
     "assesses": [
-      "MR-LEX-MITRA",
-      "MR-ETYMON-MITRA-BIND",
-      "MR-GRAMMAR-TATSAMA-BORROWING",
-      "MR-LEX-KUTUMB",
-      "MR-GRAMMAR-KUTUMB-NEUTER",
-      "MR-LEX-BHAU",
-      "MR-ETYMON-BHAU-BROTHER",
-      "MR-LEX-BAHIN",
-      "MR-ETYMON-BAHIN-NOT-SISTER",
-      "MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT"
+      "MR-LEX-ASNE-AAHE",
+      "MR-GRAMMAR-AAHE-LAST",
+      "MR-LEX-JANE",
+      "MR-GRAMMAR-PRESENT-GENDER",
+      "MR-LEX-YENE",
+      "MR-LEX-MAHIT-JANNE",
+      "MR-GRAMMAR-DATIVE-KNOWLEDGE"
     ]
   }
 }

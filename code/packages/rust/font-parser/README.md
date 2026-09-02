@@ -12,6 +12,12 @@ all the named tables and where they are. This crate finds the tables you need
 to measure text — advance widths, kerning, ascenders, descenders — and
 returns plain Rust structs. No rendering, no shaping, no OS calls.
 
+It also reads the **OpenType `MATH` table** — the constants a maths typesetter
+needs (axis height, fraction rule thickness, numerator/denominator shifts,
+radical gaps, script shifts) and per-glyph italic corrections. Most fonts have
+no `MATH` table; `math_constants` returns `Ok(None)` for those, distinguishing
+*absent* from *corrupt*.
+
 ## What it does not do
 
 - Glyph outline parsing (FNT02 — `glyph-parser`)
@@ -71,3 +77,20 @@ allocation occurs during queries — just integer arithmetic over a `&[u8]`.
 The crate has zero runtime dependencies. It compiles to WASM without any
 JavaScript glue code. The design is inspired by TeX's `.tfm` files: the metrics
 are parsed once, stored as integers, and used purely arithmetically during layout.
+
+## Verifying the MATH table
+
+The `MATH` reader is checked against **fontTools**, an independent
+implementation, reading the same font. `tests/fixtures/stix-two-math.MATH` is
+the real table extracted from STIX Two Math (OFL 1.1 — see the fixture's
+`PROVENANCE.md`), not bytes we wrote.
+
+That distinction is the point: a hand-built fixture and a hand-written reader
+share their author's understanding of the specification, so a wrong stride or a
+transposed field is invisible — both halves are wrong the same way and agree
+perfectly. The expected values come from someone else's implementation.
+
+The specific hazard, pinned by its own test: almost every `MathConstants` entry
+is a `MathValue` — an `int16` followed by an `Offset16` device table. Reading
+them as bare `int16` *appears* to work, because the first field really is the
+value, while halving the stride so every constant after the first is wrong.

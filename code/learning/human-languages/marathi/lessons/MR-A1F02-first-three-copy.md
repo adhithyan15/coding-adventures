@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F02-first-three-copy
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 826
+sequence: 1026
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "नाव · शहर · भाषा"
 gloss: guided copy of the first three form labels and their already-known values

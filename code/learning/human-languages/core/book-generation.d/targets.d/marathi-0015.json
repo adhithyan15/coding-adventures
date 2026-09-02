@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 15,
-  "output": "marathi/book/chapters/ch15-face-parts.tex",
+  "output": "marathi/book/chapters/ch15-mind-and-page.tex",
   "unicodeScript": "Devanagari",
   "scriptCommand": "mr"
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S125-letter-ha",
     "language": "telugu",
-    "chapter": 22,
-    "sequence": 501,
+    "chapter": 5,
+    "sequence": 285,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:2af9029b4fe9a37b",
+    "sourceHash": "fnv1a64:006228cf3adfdcab",
     "detachableSegments": [
       "Script you'll notice: హ",
       "Writing: హ — copy what you see"

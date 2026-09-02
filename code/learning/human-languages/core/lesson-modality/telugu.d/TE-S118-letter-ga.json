@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S118-letter-ga",
     "language": "telugu",
-    "chapter": 15,
-    "sequence": 421,
+    "chapter": 14,
+    "sequence": 411,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:36f51d50ffbdb58a",
+    "sourceHash": "fnv1a64:5192fda2d33677c1",
     "detachableSegments": [
       "Script you'll notice: గ",
       "Writing: గ — copy what you see"

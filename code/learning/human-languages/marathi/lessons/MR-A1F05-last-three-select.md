@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F05-last-three-select
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 861
+sequence: 1061
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "आवडते पेय · आवडती कृती · मित्राचे नाव"
 gloss: choose the requested favorite and friend details without copying Marathi answers

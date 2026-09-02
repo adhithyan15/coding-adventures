@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S04-sign-anusvara
 spine_node: SPINE-MEET-GREET
-sequence: 365
+sequence: 135
 delivery: script
-chapter: 9
+chapter: 2
 type: writing
 headword: "ం"
 gloss: the single character ం — recognised inside words you already say
 romanization: "anusvara"
-prerequisites: [TE-S03-letter-ka]
+prerequisites: [TE-S08-vowel-sign-i]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-03]
+  knowledge: [TE-SCRIPT-RECOG-08]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-04]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-03, TE-SCRIPT-RECOG-04]
+  knowledge: [TE-SCRIPT-RECOG-04, TE-SCRIPT-RECOG-08, TE-SCRIPT-RECOG-140]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S03-letter-ka]
+reviews_of: [TE-S08-vowel-sign-i, TE-S140-digit-1]
 ---
 
 # ◌ం — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-08, TE-SCRIPT-RECOG-140] -->
 
-[PAUSE 1s] Before the new one: క — what does it do?
+[PAUSE 1s] Before the new one: ◌ి — what does it do? And one from further back: ౧?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ం
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-04]; assesses=[] -->
@@ -47,10 +47,8 @@ It is a **nasal**, written as a mark rather than as a letter. It rides on the sy
 
 You already say these, and every one of them has ◌ం somewhere inside it:
 
+- **సంతోషం** — joy / pleased to meet you
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
-- **రేపు కలుద్దాం** *rēpu kaluddām* — see you tomorrow
-- **మళ్ళీ కలుద్దాం** *maḷḷī kaluddām* — we'll meet again
-- **ఉండు** *uṇḍu* — to be, to stay, to live
 
 ## Writing: ◌ం — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-04] -->
@@ -70,7 +68,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ం in the ones that have it]
 
-> నమస్కారం  ·  రేపు కలుద్దాం  ·  ధన్యవాదములు
+> నమస్కారం  ·  సంతోషం  ·  ధన్యవాదములు
 
 - [YOU TRACE: ◌ం three times, humming the nasal at the end of the syllable as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ం once more]

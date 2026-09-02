@@ -10,7 +10,8 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
 import { measureScriptClosure } from "../src/script-closure.js";
-import { loadEverything } from "../src/loader.js";
+import { loadChapterPolicy, loadEverything } from "../src/loader.js";
+import { measureScriptRamp } from "../src/ramp.js";
 
 // TAMIL LETTER KA, MA, NA; TAMIL SIGN VIRAMA.
 const KA = "க";
@@ -202,30 +203,28 @@ describe("the real corpus", () => {
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
     //
-    // This was `toBeGreaterThan(500)` — an absolute FLOOR on the debt, which is
-    // the mistake the paragraph below already diagnoses for its neighbour and
-    // which duly failed the moment enough of the debt was paid down: the
-    // Kannada chapter-7 tranche and its siblings took the corpus from 556 to
-    // 457 and the floor went red for work that made the corpus better.
+    // That claim is asserted as a COMPARISON rather than as a magic floor,
+    // because the floor repeated exactly the mistake the `tracksTeachingNothing`
+    // line below already records. `toBeGreaterThan(500)` went red at 498 the
+    // moment Marathi's second Devanagari runway retired its forty-four
+    // violations alongside Urdu's Nastaliq ladder moving to the front of its
+    // book. A test that fails when debt is PAID is pointing the wrong way.
     //
-    // So the claim is asserted STRUCTURALLY instead: the debt is not one bad
-    // track, it is spread across most of the non-Latin corpus — which is the
-    // thing a per-lesson pace budget cannot see and the sentence above actually
-    // means — under a ceiling that ratchets down. Both survive the debt being
-    // paid; both fail if the measurement collapses to zero, if the debt starts
-    // growing again, or if it retreats into one or two tracks. Neither is
-    // weaker than the floor they replace: a floor of 500 was satisfied by a
-    // corpus that had fixed nothing at all.
-    expect(report.summary.violations).toBeGreaterThan(0);
-    expect(report.summary.violations).toBeLessThanOrEqual(457); // 556 -> 457 as the Indic script tranches land; may fall, never grow
-    expect(report.tracks.filter((track) => track.violations > 0).length).toBeGreaterThanOrEqual(10);
+    // The comparison keeps the claim without ratcheting: whatever the absolute
+    // numbers become, closure must still find several times what the pace budget
+    // finds, or this module has stopped earning its place beside HL08.
+    const paceViolations = measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations;
+    expect(paceViolations).toBeGreaterThan(0);
+    expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
+    // And a CEILING on the absolute debt, so it may fall and never grow.
+    // 498 as of the Marathi runway; whoever raises it writes down why.
+    expect(report.summary.violations).toBeLessThanOrEqual(498);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
     // a track, 8 -> 5, and the floor failed. Debt assertions belong the other way
     // up, so this is now a CEILING on the same footing as the forward-reference
     // one — it may fall, never grow, and whoever raises it writes down why.
-    // `violations` above still carries this test's stated point on its own.
     expect(report.summary.tracksTeachingNothing).toBeLessThanOrEqual(5); // 8 -> 5: chinese (HL-C209), japanese (HL-C211), gujarati (HL-C215)
   });
 

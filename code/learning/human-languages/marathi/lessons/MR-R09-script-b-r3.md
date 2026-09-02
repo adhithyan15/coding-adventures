@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R09-script-b-r3
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 336
-chapter: 9
+sequence: 536
+chapter: 13
 type: review
 headword: े / ं / त
 romanization: "e / anusvara / ta"

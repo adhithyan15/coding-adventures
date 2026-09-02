@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R18-script-b-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 790
-chapter: 18
+sequence: 990
+chapter: 22
 type: review
 headword: े / ं / त
 romanization: "e / anusvara / ta"

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F07-first-three-spelling
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 863
+sequence: 1063
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "अरुण · पुणे · मराठी"
 gloss: repair only the orthography of the first three selected values

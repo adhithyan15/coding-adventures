@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C22-dene",
     "language": "marathi",
-    "chapter": 22,
-    "sequence": 870,
+    "chapter": 26,
+    "sequence": 1070,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:15a575f5ab5d6dfc",
+    "sourceHash": "fnv1a64:310912b5459a6a33",
     "detachableSegments": [
       "The letters in this word"
     ]

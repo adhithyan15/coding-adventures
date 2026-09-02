@@ -2,9 +2,9 @@
 schema_version: 2
 id: TE-S115-vowel-sign-e
 spine_node: SPINE-MEET-GREET
-sequence: 396
+sequence: 385
 delivery: script
-chapter: 12
+chapter: 11
 type: writing
 headword: "ె"
 gloss: the single character ె — recognised inside words you already say
@@ -19,24 +19,24 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-115]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-114, TE-SCRIPT-RECOG-115]
+  knowledge: [TE-SCRIPT-RECOG-115, TE-SCRIPT-RECOG-114, TE-SCRIPT-RECOG-134, TE-SCRIPT-RECOG-146]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S114-letter-la]
+reviews_of: [TE-S114-letter-la, TE-S134-vowel-sign-uu, TE-S146-digit-7]
 ---
 
 # ◌ె — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-114] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-114, TE-SCRIPT-RECOG-134] -->
 
-[PAUSE 1s] Before the new one: ల — what does it do?
+[PAUSE 1s] Before the new one: ల — what does it do? And one from further back: ◌ూ?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ె
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-115]; assesses=[] -->
@@ -76,7 +76,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find ◌ె once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-115] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-115, TE-SCRIPT-RECOG-146] -->
 
 [PAUSE 3s] Which character is this — ◌ె? What vowel does it put on the consonant it attaches to — and what does it take off? (**Puts *e* on; takes the built-in *a* off.**)
 Name one word you already say that contains it.
+
+One more, from much earlier: ౭ — what amount does it stand for?
