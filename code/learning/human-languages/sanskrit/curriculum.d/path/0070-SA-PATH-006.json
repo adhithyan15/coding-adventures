@@ -4,9 +4,12 @@
   "lessons": [
     "SA-C03-katham",
     "SA-C03-bhavan-katham-asti",
-    "SA-C03-kushalam"
+    "SA-C03-kushalam",
+    "SA-C03-kushali-asmi"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "SA-EXT-53-WELLREPLY"
+  ],
   "after": []
 }

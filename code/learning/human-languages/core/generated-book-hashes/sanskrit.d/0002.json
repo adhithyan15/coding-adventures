@@ -1,0 +1,22 @@
+{
+  "language": "sanskrit",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:86d53b2dd6a3ccbc",
+  "lessonIds": [
+    "SA-C02-nama",
+    "SA-C02-mama",
+    "SA-S201-sign-visarga",
+    "SA-C02-asti",
+    "SA-C02-mama-nama-asti",
+    "SA-S04-letter-aa",
+    "SA-C02-bhavan",
+    "SA-C02-tvam",
+    "SA-C02-kim",
+    "SA-S202-letter-bha",
+    "SA-C02-tava-nama-kim",
+    "SA-C02-anandah",
+    "SA-S109-vowel-sign-i",
+    "SA-C02-practice"
+  ],
+  "tex": "sanskrit/book/chapters/ch02-introductions.tex"
+}

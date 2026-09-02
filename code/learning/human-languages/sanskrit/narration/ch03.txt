@@ -1,21 +1,19 @@
 Sanskrit, chapter 3: How Are You?.
-9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+10 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 9.
+Lesson 1 of 10.
 कथम् (katham) — "how," another of the ka- questions.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-You met किम् (kim, "what") in Chapter 2. Here is its sibling in the question-family.
+You met kim ("what") in Chapter 2. Here is its sibling in the question-family.
 
-The letters in this word.
-क (ka) + थ (tha) + म् (bare m, halant) becomes कथम् (katham).
+Sounds you'll need.
+ka, tham. The th is one sound — a t with breath after it, never the th of English thin.
 
 The word, taken apart.
-कथम् (katham, "how, in what way") is from the interrogative stem क- (ka-), PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā ("a telling, a story" — "the how of a thing"), and, worn down, Hindi's kaise.
+katham ("how, in what way") is from the interrogative stem ka-, PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā ("a telling, a story" — "the how of a thing"), and, worn down, Hindi's kaise.
 
 Guided Practice.
 [pause 1 second]
@@ -29,7 +27,7 @@ Wrap-up Recall.
 What root do Sanskrit's question-words share, and its western cousins? (The interrogative ka-, PIE kʷo-; English wh-, Latin qu-.)
 
 
-Lesson 2 of 9.
+Lesson 2 of 10.
 भवान् कथम् अस्ति? (bhavān katham asti?) — "how are you?"
 
 Warm-up.
@@ -37,10 +35,10 @@ Warm-up.
 Three words you own, assembled into the first thing you ask after hello.
 
 The phrase, taken apart.
-भवान् कथम् अस्ति? (bhavān katham asti?) = भवान् (bhavān, respectful "you") + कथम् (katham, "how") + अस्ति (asti, "is") — literally "your honour how is?" Recall from Chapter 2 that bhavān ("your honour") takes a third-person verb — so it is asti ("is"), not "are." The familiar version uses tvam and the second-person verb: त्वं कथम् असि? (tvaṁ katham asi? — asi, "you are").
+bhavān katham asti? = bhavān (respectful "you") + katham ("how") + asti ("is") — literally "your honour how is?" Recall from Chapter 2 that bhavān ("your honour") takes a third-person verb — so it is asti ("is"), not "are." The familiar version uses tvam and the second-person verb: tvaṁ katham asi? (asi, "you are").
 
 Grammar Lens: the copula, three persons.
-You now hold the "to be" verb across persons: अस्मि (asmi, "I am"), असि (asi, "you are"), अस्ति (asti, "is") — the ancestors, respectively, of English am, and (through Latin/Greek) of is/est. "How are you?" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it.
+You now hold the "to be" verb across persons: asmi ("I am"), asi ("you are"), asti ("is") — the ancestors, respectively, of English am, and (through Latin/Greek) of is/est. "How are you?" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it.
 
 Guided Practice.
 [pause 1 second]
@@ -56,7 +54,7 @@ Wrap-up Recall.
 Why is it asti ("is") with bhavān, and what are the three copula forms? (Bhavān = "your honour," a 3rd-person subject; asmi/asi/asti — am / you are / is.)
 
 
-Lesson 3 of 9.
+Lesson 3 of 10.
 ◌ा (ā) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ा and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -96,20 +94,18 @@ Wrap-up Recall.
 Which character is this — ◌ा? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ā on; takes the built-in a off.) Name one word you already say that contains it.
 
 
-Lesson 4 of 9.
+Lesson 4 of 10.
 अहम् (aham) — "I," the ancestor of ego and I.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 To answer "how are you?" you first need "I" — and it is the grandparent of both English I and the word ego.
 
-The letters in this word.
-अ (independent a) + ह (ha) + म् (bare m, halant) becomes अहम् (aham).
+Sounds you'll need.
+a, ham. Two short beats, closing on m.
 
 The word, taken apart.
-अहम् (aham, "I") is from Proto-Indo-European h₁eǵ(H)om — the direct ancestor of Latin ego (whence English ego, egotist), Greek egō, and, worn all the way down, English I itself. So Sanskrit aham, Latin ego, and English I are one word across three continents of time. Its possessive is the मम (mama, "my") from Chapter 2 — and, curiously, "I" (aham) and "my" (mama) come from different ancient roots (eǵ- and me-), a quirk Sanskrit shares with English (I vs. my/me).
+aham ("I") is from Proto-Indo-European h₁eǵ(H)om — the direct ancestor of Latin ego (whence English ego, egotist), Greek egō, and, worn all the way down, English I itself. So Sanskrit aham, Latin ego, and English I are one word across three continents of time. Its possessive is the mama ("my") from Chapter 2 — and, curiously, "I" (aham) and "my" (mama) come from different ancient roots (eǵ- and me-), a quirk Sanskrit shares with English (I vs. my/me).
 
 Grammar Lens: "I" can be dropped.
 Sanskrit verbs carry the person in their ending — asmi already means "I am" — so aham is often left out. You still learn it first, because the answer to katham asi? begins with it.
@@ -128,40 +124,34 @@ Wrap-up Recall.
 What PIE root is aham from, and its cousins? (h₁eǵ(H)om; Latin ego, English I.)
 
 
-Lesson 5 of 9.
-कुशलम् (kuśalam) — "well-being," and how to answer.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 5 of 10.
+कुशलम् (kuśalam) — "well-being".
 
 Warm-up.
 [pause 2 seconds]
 The word that answers "how are you?" — one that once meant, of all things, "skill in cutting sacred grass."
 
-The letters in this word.
-कु (ku) + श (śa, a palatal sh) + ल (la) + म् (m, halant) becomes कुशलम् (kuśalam).
+Sounds you'll need.
+ku, śa, lam. The ś is the sh of ship. Three short beats, closing on a bare m.
 
 The word, taken apart.
-कुशलम् (kuśalam, "well-being, welfare, all-being-well") is native Sanskrit, famously derived from कुश (kuśa, the sacred grass) + a root of "cutting" — so it first meant "skilled [at gathering kuśa grass properly]," hence "adept, fit, in good order," hence "well." A whole idea of wellness grew from a ritual skill. Its adjective is कुशली (kuśalī, "one who is well").
-
-The reply.
-अहं कुशली अस्मि (ahaṁ kuśalī asmi) — "I am well" (aham "I" + kuśalī "well" + asmi "am"). Or simply kuśalam ("[all is] well"). The exchange:
-— bhavān katham asti? ("How are you?") — ahaṁ kuśalī asmi, dhanyavādaḥ. ("I am well, thank you.")
+Kuśalam ("well-being, welfare, all-being-well") is native Sanskrit, famously derived from kuśa (the sacred grass) + a root of "cutting" — so it first meant "skilled [at gathering kuśa grass properly]," hence "adept, fit, in good order," hence "well." A whole idea of wellness grew from a ritual skill. Its adjective is kuśalī ("one who is well").
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "kuśalam"]
+[your turn — say: well-being — kuśalam]
 [pause 8 seconds for the answer]
-[your turn — say: the full reply — ahaṁ kuśalī asmi]
+[your turn — say: its adjective (kuśalī, "one who is well")]
 [pause 8 seconds for the answer]
 [your turn — say: the surprising root (kuśa, the sacred grass becomes "skilled" becomes "well")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the reply to bhavān katham asti?, and kuśalam's surprising origin. (Ahaṁ kuśalī asmi; from kuśa grass becomes "skilled" becomes "well.")
+What does kuśalam mean, and where does it come from? ("Well-being"; from kuśa grass becomes "skilled" becomes "well.")
 
 
-Lesson 6 of 9.
+Lesson 6 of 10.
 म (ma) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: म and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -206,20 +196,49 @@ Wrap-up Recall.
 Which character is this — म? What sound does it carry? (ma.) Name one word you already say that contains it.
 
 
-Lesson 7 of 9.
-न चिन्ता (na cintā) — "no worry".
+Lesson 7 of 10.
+अहं कुशली अस्मि (ahaṁ kuśalī asmi) — "I am well".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Warm-up.
+[pause 2 seconds]
+You have the question and you have the word. Now put the answer together.
+
+Sounds you'll need.
+a, haṁ, ku, śa, lī, as, mi. The ṁ is a hum through the nose that colours the vowel before it rather than a full m; the ī in the fifth beat is long.
+
+The phrase, taken apart.
+Ahaṁ kuśalī asmi — "I am well": aham ("I") + kuśalī ("well") + asmi ("am"). Or simply kuśalam ("[all is] well"). The exchange:
+— bhavān katham asti? ("How are you?") — ahaṁ kuśalī asmi, dhanyavādaḥ. ("I am well, thank you.")
+
+Grammar Lens: asmi is the "I" form of "to be".
+Asti was "is." Asmi is "am" — the same verb wearing its first-person ending -mi. That -mi is the mark of "I" all through the Sanskrit verb, and you will meet it again on every verb in the next chapter.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the question — bhavān katham asti?]
+[pause 8 seconds for the answer]
+[your turn — say: the full reply — ahaṁ kuśalī asmi, dhanyavādaḥ]
+[pause 8 seconds for the answer]
+[your turn — say: the ending that means "I" (-mi, as in asmi)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the reply to bhavān katham asti?, and say which ending marks "I." (Ahaṁ kuśalī asmi; the ending -mi.)
+
+
+Lesson 8 of 10.
+न चिन्ता (na cintā) — "no worry".
 
 Warm-up.
 [pause 2 seconds]
 When someone thanks you, this gentle reply says, simply, "don't give it a thought."
 
-The letters in this word.
-न (na, "not," from Chapter 1) + चिन्ता (cintā, "worry, anxious thought," with the conjunct न्त nt) becomes न चिन्ता (na cintā).
+Sounds you'll need.
+na cin, tā. The c is the ch of church, never a k; the final ā is long.
 
 The word, taken apart.
-न चिन्ता (na cintā) literally means "[there is] no worry / no anxiety" — used for "never mind / no trouble / you're welcome." Two atoms: न (na, "not"), the ancient negative from Chapter 1 — PIE ne, behind English no, not, Latin nōn, and every Indo-Aryan "no." And चिन्ता (cintā, "anxious thought"), from the root चिन्त् (cint, "to think, ponder") — the same cintā borrowed into Hindi and Urdu (cintā mat karo, "don't worry"). So the reply pairs the family's oldest negative with a verb of thinking: "think nothing of it."
+Na cintā literally means "[there is] no worry / no anxiety" — used for "never mind / no trouble / you're welcome." Two atoms: na ("not"), the ancient negative from Chapter 1 — PIE ne, behind English no, not, Latin nōn, and every Indo-Aryan "no." And cintā ("anxious thought"), from the root cint ("to think, ponder") — the same cintā borrowed into Hindi and Urdu (cintā mat karo, "don't worry"). So the reply pairs the family's oldest negative with a verb of thinking: "think nothing of it."
 
 Guided Practice.
 [pause 1 second]
@@ -235,7 +254,7 @@ Wrap-up Recall.
 What does na cintā literally say, and what is its negative na cousin to? ("No worry"; PIE ne — English no/not, Latin nōn.)
 
 
-Lesson 8 of 9.
+Lesson 9 of 10.
 Chapter 3 — The how-are-you exchange.
 
 Warm-up.
@@ -253,14 +272,14 @@ The exchange.
 [your turn — say: the familiar question — tvaṁ katham asi?]
 [pause 8 seconds for the answer]
 
-The atoms.
+How to answer: the atoms.
 [pause 2 seconds]
 [your turn — say: the ka- question-word for "how" (katham)]
 [pause 8 seconds for the answer]
 [your turn — say: "I" and the copula trio (aham; asmi/asi/asti)]
 [pause 8 seconds for the answer]
 
-Roots you now carry (the taproot, both ways).
+What you've built: the roots you now carry.
 [pause 2 seconds]
 katham from the interrogative ka- (PIE kʷo-) becomes English how/what, Latin qu-.
 aham from h₁eǵ(H)om becomes Latin ego, English I.
@@ -272,7 +291,7 @@ Wrap-up Recall.
 A respected stranger asks bhavān katham asti? — give a full reply, and answer their thanks. (Ahaṁ kuśalī asmi, dhanyavādaḥ — and to thanks, na cintā.)
 
 
-Lesson 9 of 9.
+Lesson 10 of 10.
 ◌ु — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ु and Guided Practice until you have stopped, and I will say so again when we reach it.

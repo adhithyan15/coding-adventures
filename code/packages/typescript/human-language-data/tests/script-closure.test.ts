@@ -201,7 +201,17 @@ describe("the real corpus", () => {
     // The point of the whole module. HL08's glyph budget flags tens of lessons
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
-    expect(report.summary.violations).toBeGreaterThan(500);
+    // Was `toBeGreaterThan(500)`. Retiring Sanskrit's hand-written chapters 1-5
+    // romanized their prose and took the track from 31 violations to 21, which
+    // dropped the corpus to 485 and broke the floor. A floor under debt rewards
+    // leaving it alone, which is the very trap the note below describes, so this
+    // is now a CEILING on the same footing: it may fall, never grow, and whoever
+    // raises it writes down why. The test's stated point is kept by the
+    // assertion beneath it, which holds closure against the pace budget directly.
+    expect(report.summary.violations).toBeLessThanOrEqual(485);
+    // Closure still finds far more than HL08's glyph budget ever could: the
+    // budget flags tens of lessons, closure flags hundreds.
+    expect(report.summary.violations).toBeGreaterThan(100);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed

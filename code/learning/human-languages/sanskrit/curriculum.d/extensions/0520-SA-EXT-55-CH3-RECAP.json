@@ -1,0 +1,11 @@
+{
+  "id": "SA-EXT-55-CH3-RECAP",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can hold the whole how-are-you exchange in Sanskrit, question and answer together.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C03-practice"
+  ]
+}
