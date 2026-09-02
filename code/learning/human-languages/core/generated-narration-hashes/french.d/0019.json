@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 19,
-  "sourceHash": "fnv1a64:3975adaa523a3a5c",
+  "sourceHash": "fnv1a64:5c31b83a50fc3a43",
   "lessonIds": [
     "FR-C16-etre",
     "FR-C16-etre-roots",
@@ -13,6 +13,6 @@
   "text": "french/narration/ch19.txt",
   "json": "french/narration/ch19.json",
   "textHash": "fnv1a64:b2561c0ecc265854",
-  "jsonHash": "fnv1a64:2ad6e138e537cf0c",
+  "jsonHash": "fnv1a64:1dbc8dfc49bc28f8",
   "findings": []
 }

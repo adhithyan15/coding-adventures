@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 25,
-  "sourceHash": "fnv1a64:8f24e0777513540d",
+  "sourceHash": "fnv1a64:64fef699810ea645",
   "lessonIds": [
     "FR-C22-chien-chat"
   ],
@@ -10,6 +10,6 @@
   "text": "french/narration/ch25.txt",
   "json": "french/narration/ch25.json",
   "textHash": "fnv1a64:3db884b2cb3ce4df",
-  "jsonHash": "fnv1a64:6203e8e80ee97e6e",
+  "jsonHash": "fnv1a64:393b9791063b2c0b",
   "findings": []
 }

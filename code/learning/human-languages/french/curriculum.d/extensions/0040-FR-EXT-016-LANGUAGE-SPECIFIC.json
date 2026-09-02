@@ -6,6 +6,10 @@
   "canDo": "I can use the additional French material required at this point in the path.",
   "prerequisites": [],
   "lessons": [
-    "FR-C14-age"
+    "FR-C14-an",
+    "FR-C14-jai-vingt-ans",
+    "FR-C14-quel-age",
+    "FR-C14-avoir-etre-langues",
+    "FR-C14-practice"
   ]
 }

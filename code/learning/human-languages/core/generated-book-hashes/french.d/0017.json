@@ -1,0 +1,22 @@
+{
+  "language": "french",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:e83e0516b20eb041",
+  "lessonIds": [
+    "FR-C14-jai",
+    "FR-C14-as",
+    "FR-C14-a",
+    "FR-C14-ai-as-a",
+    "FR-C14-avons",
+    "FR-C14-avez",
+    "FR-C14-ont",
+    "FR-C14-habere",
+    "FR-C14-practice-avoir",
+    "FR-C14-an",
+    "FR-C14-jai-vingt-ans",
+    "FR-C14-quel-age",
+    "FR-C14-avoir-etre-langues",
+    "FR-C14-practice"
+  ],
+  "tex": "french/book/chapters/ch17-avoir-age.tex"
+}

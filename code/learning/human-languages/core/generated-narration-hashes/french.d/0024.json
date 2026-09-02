@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 24,
-  "sourceHash": "fnv1a64:6a1ba4dc24863087",
+  "sourceHash": "fnv1a64:7f8a89a5e7b70061",
   "lessonIds": [
     "FR-C21-le-temps"
   ],
@@ -10,6 +10,6 @@
   "text": "french/narration/ch24.txt",
   "json": "french/narration/ch24.json",
   "textHash": "fnv1a64:42b88cf76dae582b",
-  "jsonHash": "fnv1a64:7f3ab2ca3a5dc896",
+  "jsonHash": "fnv1a64:cf98f94d19cd1d5d",
   "findings": []
 }

@@ -107,12 +107,24 @@ it("pins French modality", () => expectLanguageModality("french"));
 // position, and one for the flag. The culture claim is that one: the tricolour
 // is two-thirds Germanic, because `bleu` and `blanc` are Frankish borrowings
 // inside a Romance language. It was a `culture` block owned by nobody.
+// 175 -> 189 lessons, and 23 -> 24 culture claims: retiring handwritten chapter
+// 17, To Have and How Old You Are. This chapter's cost is a PARADIGM, not
+// vocabulary, and only the fourth reading finds it: the .tex's opening table has
+// ONE ROW PER PERSON -- j'ai, tu as, il a, nous avons, vous avez, ils ont -- and
+// `maxNewGrammarCellsPerLesson` is 1, so six cells is six lessons. Two schema-v1
+// lessons held all six plus the age idiom. Fourteen lessons now own one thing
+// each: six for the paradigm, one for the fact that the three singular forms are
+// homophones (which is WHY French keeps subject pronouns), one for the habere
+// root it shares with `habiter`, and five for having your years. The culture
+// claim is the Romance/Germanic split -- every Romance language on the continent
+// HAS its years and every Germanic one IS them -- which was a bare table in a
+// `culture` block that no lesson owned.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 175,
+    lessons: 189,
     idioms: 3,
     senses: 7,
-    cultureClaims: 23,
+    cultureClaims: 24,
     unitPrefix: "FR",
   }));
 

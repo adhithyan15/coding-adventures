@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 18,
-  "sourceHash": "fnv1a64:1527d15436114b48",
+  "sourceHash": "fnv1a64:69b428b8599aeb40",
   "lessonIds": [
     "FR-C15-passe-compose",
     "FR-C15-passe-simple"
@@ -11,6 +11,6 @@
   "text": "french/narration/ch18.txt",
   "json": "french/narration/ch18.json",
   "textHash": "fnv1a64:23775ab0b1fe04b7",
-  "jsonHash": "fnv1a64:3ae39a00a08551cd",
+  "jsonHash": "fnv1a64:f30a8908e18eab67",
   "findings": []
 }

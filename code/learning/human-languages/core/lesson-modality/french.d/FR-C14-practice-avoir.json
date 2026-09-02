@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C14-practice-avoir",
+    "language": "french",
+    "chapter": 17,
+    "sequence": 510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99c53fde728dcc99"
+  },
+  "findings": []
+}

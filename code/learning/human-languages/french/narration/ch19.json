@@ -4,11 +4,11 @@
   "chapter": 19,
   "title": "To Be, and the Past That Takes It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3975adaa523a3a5c",
+  "sourceHash": "fnv1a64:5c31b83a50fc3a43",
   "lessons": [
     {
       "id": "FR-C16-etre",
-      "sequence": 500,
+      "sequence": 560,
       "title": "être — “to be”",
       "headword": "être",
       "romanization": "être",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:699f96c86179f190",
+      "sourceHash": "fnv1a64:68dc0cf58b17902e",
       "notice": null,
       "blocks": [
         {
@@ -162,7 +162,7 @@
     },
     {
       "id": "FR-C16-etre-roots",
-      "sequence": 505,
+      "sequence": 565,
       "title": "suis / fus / étais — three stems",
       "headword": "suis / fus / étais",
       "romanization": "suis / fus / étais",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:370b9819bb240fc4",
+      "sourceHash": "fnv1a64:6eaf615bdae004d2",
       "notice": null,
       "blocks": [
         {
@@ -302,7 +302,7 @@
     },
     {
       "id": "FR-C16-passe-compose-etre",
-      "sequence": 510,
+      "sequence": 570,
       "title": "Je suis allé — the past built from “be”",
       "headword": "je suis allé(e)",
       "romanization": "je suis allé(e)",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5c22887d6e11213",
+      "sourceHash": "fnv1a64:eb852c5e08feae21",
       "notice": null,
       "blocks": [
         {
@@ -467,7 +467,7 @@
     },
     {
       "id": "FR-C16-pronominal-past",
-      "sequence": 515,
+      "sequence": 575,
       "title": "Elle s’est lavée — pronominal past agreement",
       "headword": "elle s'est lavée / lavé les mains",
       "romanization": "elle s'est lavée / lavé les mains",
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab5f7d79e5eec1e8",
+      "sourceHash": "fnv1a64:da9d622e21dfa656",
       "notice": null,
       "blocks": [
         {
