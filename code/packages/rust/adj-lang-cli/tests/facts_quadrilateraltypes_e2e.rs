@@ -57,7 +57,7 @@ fn geometry_quadrilateral_types_recall_binds_property_with_citation() {
     // it, because `contains` on a fragment cannot see what precedes or
     // follows it. See issue #13918.
     assert!(
-        out.contains("\"source\":\"The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above.\""),
+        out.contains("\"source\":\"a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides.\""),
         "the citation is the whole source sentence, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
@@ -93,9 +93,9 @@ fn geometry_quadrilateral_types_recall_binds_property_with_citation() {
     assert!(out.contains("\"abstained\":true"), "triangle abstains: {out}");
 }
 
-const RECT_PIN: &str = r#""bindings":{"Shape":"rectangle"},"citations":[{"source":"The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above.","locator":"https://mathworld.wolfram.com/Square.html","trust":"authoritative","corroborations":[{"source":"A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles.","locator":"https://mathworld.wolfram.com/Rectangle.html""#;
+const RECT_PIN: &str = r#""bindings":{"Shape":"rectangle"},"citations":[{"source":"a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides.","locator":"https://mathworld.wolfram.com/Square.html","trust":"authoritative","corroborations":[{"source":"A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles.","locator":"https://mathworld.wolfram.com/Rectangle.html""#;
 
-const TRAP_PIN: &str = r#""bindings":{"Property":"two_sides_parallel"},"citations":[{"source":"The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above.","locator":"https://mathworld.wolfram.com/Square.html","trust":"authoritative","corroborations":[{"source":"A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles.","locator":"https://mathworld.wolfram.com/Rectangle.html"},{"source":"A rhombus is a quadrilateral with both pairs of opposite sides parallel and all sides the same length, i.e., an equilateral parallelogram.","locator":"https://mathworld.wolfram.com/Rhombus.html"},{"source":"A parallelogram is a quadrilateral with opposite sides parallel (and therefore opposite angles equal).","locator":"https://mathworld.wolfram.com/Parallelogram.html"},{"source":"A trapezoid is a quadrilateral with two sides parallel.","locator":"https://mathworld.wolfram.com/Trapezoid.html""#;
+const TRAP_PIN: &str = r#""bindings":{"Property":"two_sides_parallel"},"citations":[{"source":"a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides.","locator":"https://mathworld.wolfram.com/Square.html","trust":"authoritative","corroborations":[{"source":"A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles.","locator":"https://mathworld.wolfram.com/Rectangle.html"},{"source":"A rhombus is a quadrilateral with both pairs of opposite sides parallel and all sides the same length, i.e., an equilateral parallelogram.","locator":"https://mathworld.wolfram.com/Rhombus.html"},{"source":"A parallelogram is a quadrilateral with opposite sides parallel (and therefore opposite angles equal).","locator":"https://mathworld.wolfram.com/Parallelogram.html"},{"source":"A trapezoid is a quadrilateral with two sides parallel.","locator":"https://mathworld.wolfram.com/Trapezoid.html""#;
 
 #[test]
 fn quadrilateral_rectangle_answer_carries_its_mathworld_corroboration_intact() {
@@ -151,5 +151,54 @@ fn quadrilateral_trapezoid_answer_carries_all_four_corroborations_in_order() {
     assert!(
         out.contains(TRAP_PIN),
         "trapezoid's answer carries all four MathWorld sentences in order: {out}"
+    );
+}
+
+const QUADRILATERAL_TYPES_PIN: &str = r#""bindings":{"Property":"equal_sides_at_right_angles"},"citations":[{"source":"a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides.","locator":"https://mathworld.wolfram.com/Square.html","trust":"authoritative""#;
+
+#[test]
+fn quadrilateral_property_square_citation_is_a_contiguous_page_span() {
+    let dir = scratch("reground");
+    std::fs::copy(
+        facts_stdlib().join("geometry/quadrilateral-types.adj"),
+        dir.join("quadrilateral-types.adj"),
+    )
+    .expect("copy shipped quadrilateral-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"quadrilateral-types.adj\"
+? quadrilateral_property(square, $Property)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The page's sentence opens: The term "square" can be used to mean either a
+    // square number ("x^2 is the square of x") or a geometric figure...
+    // In the BODY the two formulas are <img class="inlineformula"> images (the
+    // page has 47 of them and zero <math> elements); the surrounding punctuation
+    // and connecting words are ordinary text. The shipped value used to drop that
+    // parenthetical silently while keeping the opening words, so it read as a
+    // whole sentence and appeared on no page in that form.
+    //
+    // The full sentence IS quotable -- the page's <meta> descriptions carry it as
+    // plaintext, parenthetical included. Quoting the body instead is a choice, not
+    // a necessity. An earlier version of this comment claimed otherwise and called
+    // the images MathML; both were wrong.
+    //
+    // The span quoted here runs through "In other words, a square is a regular
+    // polygon with four sides" ON PURPOSE. Without that clause the citation says
+    // only "a geometric figure...", never naming a square -- and this library's
+    // header insists a citation must not drop its subject.
+    //
+    // THIS QUERY IS `square`, NOT one from the authored .query.adj. Those cover
+    // rhombus/parallelogram/trapezoid/rectangle, each grounded by a per-row
+    // `cites`. Only `square` is grounded by the table's `source` -- the value
+    // this installment repaired. Pinning any other row would defend a different
+    // sentence than the one that changed.
+    assert!(
+        out.contains(QUADRILATERAL_TYPES_PIN),
+        "the square citation is a contiguous span of its page: {out}"
     );
 }

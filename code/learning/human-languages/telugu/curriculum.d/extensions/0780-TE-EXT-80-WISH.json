@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-80-WISH",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what I want in Telugu, report what I think, give or refuse permission, invite somebody in, and offer congratulations.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C80-want",
+    "TE-C80-that",
+    "TE-C80-may",
+    "TE-C80-comein",
+    "TE-C80-congratulations"
+  ]
+}

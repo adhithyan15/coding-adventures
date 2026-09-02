@@ -82,7 +82,12 @@ fn electoral_college_count_binds_the_winning_threshold_with_its_sentence() {
     // citation, an assertion either one satisfies pins neither.
     // See issues #13916 and #13918.
     assert!(
-        out.contains("\"source\":\"Including Washington, D.C.'s three electors, there are currently 538 electors in all.\""),
+        // The apostrophe here is U+2019, as the page renders it. This pin
+        // previously carried an ASCII one, matching a citation absent from
+        // its own page. The pin was correct in FORM -- anchored on the JSON
+        // key, closed on the terminating quote -- and it faithfully defended
+        // a wrong value, which is why repairing the value broke it.
+        out.contains("\"source\":\"Including Washington, D.C.’s three electors, there are currently 538 electors in all.\""),
         "the citation is the whole source sentence, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
@@ -199,5 +204,34 @@ fn electoral_college_count_abstains_on_methods_and_on_historical_counts() {
     assert_eq!(
         abstained_count, 2,
         "abstains on the method and on the historical count: {out}"
+    );
+}
+
+const ELEC_PIN: &str = r#""bindings":{"N":"270"},"citations":[{"source":"Including Washington, D.C.’s three electors, there are currently 538 electors in all.","locator":"https://www.usa.gov/electoral-college","trust":"authoritative""#;
+
+#[test]
+fn electoral_college_count_citation_keeps_the_pages_curly_apostrophe() {
+    let dir = scratch("cite_elec");
+    std::fs::copy(
+        facts_stdlib().join("civics/electoral-college-count.adj"),
+        dir.join("electoral-college-count.adj"),
+    )
+    .expect("copy shipped electoral-college-count.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"electoral-college-count.adj\"\n? electoral_college_count(electors_needed_to_win, $N)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator. The replacement
+    // text was taken FROM the page (a candidate swap applied, then confirmed
+    // present in a rendered block), not hand-curled.
+    assert!(
+        out.contains(ELEC_PIN),
+        "the electors citation matches its page: {out}"
     );
 }

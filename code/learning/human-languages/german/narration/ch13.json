@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d26e6b5bb3b7dc17",
+  "sourceHash": "fnv1a64:1b366a5219539681",
   "lessons": [
     {
       "id": "GE-C13-schwarz-weiss",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91824c7953fa0f52",
+      "sourceHash": "fnv1a64:44994a951a66620c",
       "notice": null,
       "blocks": [
         {
@@ -91,7 +91,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from Chapter 11). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour."
+              "text": "This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from the food lesson). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour."
             }
           ]
         },
@@ -118,11 +118,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Wein ist weiß\" — Chapter 11's wine, coloured",
+              "instruction": "\"der Wein ist weiß\" — the same wine, coloured again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Wein ist weiß\" — Chapter 11's wine, coloured]"
+              "source": "[YOU SAY: \"der Wein ist weiß\" — the same wine, coloured again]"
             },
             {
               "kind": "prompt",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ab18db470249d00",
+      "sourceHash": "fnv1a64:cc06dcca9db4665c",
       "notice": null,
       "blocks": [
         {
@@ -305,11 +305,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Wein ist rot\" — Chapter 11's wine again",
+              "instruction": "\"der Wein ist rot\" — the wine you already have, coloured",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Wein ist rot\" — Chapter 11's wine again]"
+              "source": "[YOU SAY: \"der Wein ist rot\" — the wine you already have, coloured]"
             },
             {
               "kind": "prompt",

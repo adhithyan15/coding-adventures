@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C80-congratulations",
+    "language": "telugu",
+    "chapter": 80,
+    "sequence": 2870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00c6c5fcbd3e0811"
+  },
+  "findings": []
+}

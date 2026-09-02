@@ -1,5 +1,22 @@
 # Changelog
 
+- 0.2.13 (mechanical fallout of `wasm_types::Element::declared_type`, W38
+  slices 4/5 -- `code/specs/W38-wasm-gc-array-bulk-ops.md` Correction 2,
+  see `wasm-types`'s own CHANGELOG for the full root-cause writeup): this
+  crate's own `Element` construction sites are all test-only fixtures
+  exercising `encode_element` directly; each now also sets `declared_
+  type: ValueType::Funcref` (every one of them is a plain funcidx-based
+  segment) to keep compiling against `Element`'s new field. No behavior
+  change in this crate.
+
+- 0.2.12 (mechanical fallout of `wasm_types::Element::item_exprs`, W38
+  slice 0 -- `code/specs/W38-wasm-gc-array-bulk-ops.md` Correction 2, see
+  `wasm-types`'s own CHANGELOG for the full root-cause writeup): this
+  crate's own `Element` construction sites are all test-only fixtures
+  exercising `encode_element` directly; each now sets `item_exprs: vec![]`
+  to keep compiling against `Element`'s new field. No behavior change in
+  this crate.
+
 - 0.2.11 (mechanical fallout of `wasm_types::Element::is_declarative`,
   see `wasm-types`'s own CHANGELOG for the full root-cause writeup on the
   active/declarative-elem-segment-drop bug that field closes): this

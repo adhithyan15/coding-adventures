@@ -100,3 +100,30 @@ fn phoneme_segmentation_abstains_honestly_on_an_untabled_word() {
         "cat -> ? has no shipped row -- honest abstention, never invented: {out}"
     );
 }
+
+const PHONEME_SEGMENTATION_PIN: &str = r#""bindings":{"S1":"f","S2":"ee","S3":"t"},"citations":[{"source":"Now I will segment sounds in a word, and I will use the caps to show each sound. Watch me. The word is ‘feet’, /f/ [slide a cap], /ee/ [slide a cap], /t/ [slide a cap], feet [sweep finger below the caps blending the sounds].","locator":"https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice","trust":"consensus""#;
+
+#[test]
+fn phoneme_segmentation_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"phoneme-segmentation.adj\"
+? phoneme_segmentation(feet, $S1, $S2, $S3)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The page quotes this word with PAIRED curly quotes -- U+2018 opening and
+    // U+2019 closing -- and the shipped citation had flattened both to ASCII.
+    // This is NOT the contraction case: curling both ends the same way yields
+    // a form that appears on no page. The replacement was confirmed present in
+    // a rendered block before being written here.
+    assert!(
+        out.contains(PHONEME_SEGMENTATION_PIN),
+        "the phoneme segmentation citation matches its page: {out}"
+    );
+}

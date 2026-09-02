@@ -45,7 +45,7 @@
 % syllable text ("tan"/"set") but is instructional stage direction rather
 % than a stated fact):
 %
-%   "I will change 'suntan' to 'sunset'."
+%   "I will change ‘suntan’ to ‘sunset’."
 %     (states the transformation: suntan -> sunset)
 %   "The second syllable is different."
 %     (states which syllable position changed: second)
@@ -69,7 +69,7 @@ table syllable_substitution {
 
     row (suntan, sunset, second)
 
-    source "I will change 'suntan' to 'sunset'."
+    source "I will change ‘suntan’ to ‘sunset’."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
 }

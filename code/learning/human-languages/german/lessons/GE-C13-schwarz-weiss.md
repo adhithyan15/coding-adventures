@@ -52,7 +52,7 @@ Latin's own *albus* out and became:
 | German | *blank* — still just "**shiny**" |
 
 This is the **reverse** of the usual flow. Latin normally lends **to** Germanic
-(*Fenster* ← *fenestra*, *Wein* ← *vīnum*, from Chapter 11). Here Germanic lent
+(*Fenster* ← *fenestra*, *Wein* ← *vīnum*, from the food lesson). Here Germanic lent
 **to** Latin's daughters — and German kept the original meaning while they turned
 it into a colour.
 
@@ -60,7 +60,7 @@ it into a colour.
 
 [PAUSE 1s]
 - [YOU SAY: "schwarz, weiß"]
-- [YOU SAY: "der Wein ist weiß" — Chapter 11's wine, coloured]
+- [YOU SAY: "der Wein ist weiß" — the same wine, coloured again]
 - [YOU SAY: "weiß · white" — hear the same word]
 - [YOU SAY: "blank" — and remember: French made this one mean *white*]
 

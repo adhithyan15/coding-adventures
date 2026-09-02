@@ -42,6 +42,8 @@ the right thing to assert anyway.
 
 from __future__ import annotations
 
+import time
+
 import argparse
 import sys
 import tempfile
@@ -72,6 +74,39 @@ def _basic_note(col: Collection, deck_id: int, front: str, back: str):
     note["Back"] = back
     col.add_note(note, deck_id)
     return note
+
+
+def _answer(col: Collection, deck_id: int, rating) -> None:
+    """Answer the next queued card in `deck_id` through Anki's own scheduler.
+
+    This is the difference between a fixture that is *packaged* by Anki and one
+    whose CONTENT is Anki's. Assigning `card.type`/`card.due`/`card.left`
+    directly and exporting is still our own belief about those columns wearing
+    an Anki container -- which is the very circularity #13940 is about. Letting
+    the scheduler decide means the values in the file are whatever Anki thinks
+    they should be, including ones we would have got wrong.
+
+    Two mechanical requirements, both of which fail silently otherwise:
+
+    * the deck must be SELECTED -- `get_queued_cards` reads the current deck
+      rather than taking one, and returns an empty queue if the wrong deck is
+      current;
+    * `answer_card` takes a `CardAnswer` built from the card's own scheduling
+      states, and `build_answer` reads a review timer the UI would have started.
+    """
+
+    from anki.scheduler_pb2 import CardAnswer  # noqa: F401  (documents the type)
+
+    col.decks.select(deck_id)
+    queued = col.sched.get_queued_cards()
+    if not queued.cards:
+        raise SystemExit(f"no card queued in deck {deck_id}; nothing to answer")
+    top = queued.cards[0]
+    card = col.get_card(top.card.id)
+    card.timer_started = time.time()
+    col.sched.answer_card(
+        col.sched.build_answer(card=card, states=top.states, rating=rating)
+    )
 
 
 def _export(col: Collection, out_path: Path, *, legacy: bool) -> None:
@@ -106,19 +141,18 @@ def review_scheduled(col: Collection, out: Path) -> str:
     a timestamp -- a distinction that only a real export can settle.
     """
 
+    from anki.scheduler_pb2 import CardAnswer
+
     deck_id = col.decks.id("Review Deck")
-    note = _basic_note(col, deck_id, "capital of France", "Paris")
-    card = note.cards()[0]
-    card.type = 2  # review
-    card.queue = 2
-    card.due = col.sched.today + 5
-    card.ivl = 21
-    card.factor = 2500
-    card.reps = 4
-    card.lapses = 1
-    col.update_card(card)
+    _basic_note(col, deck_id, "capital of France", "Paris")
+    # `Easy` graduates a new card straight to review. `Good` does NOT -- it
+    # only advances a learning step, leaving type=1/queue=1 with `due` as a
+    # timestamp. Checked against Anki 26.08.1 rather than assumed, because a
+    # fixture named "review-scheduled" containing a learning card would have
+    # taught every assertion written against it the wrong meaning of `due`.
+    _answer(col, deck_id, CardAnswer.EASY)
     _export(col, out, legacy=True)
-    return "one Basic note whose card is scheduled for review in 5 days"
+    return "one Basic note graduated to review by answering Easy"
 
 
 def in_learning(col: Collection, out: Path) -> str:
@@ -128,14 +162,15 @@ def in_learning(col: Collection, out: Path) -> str:
     encoding which nothing has ever checked against a real file.
     """
 
+    from anki.scheduler_pb2 import CardAnswer
+
     deck_id = col.decks.id("Learning Deck")
-    note = _basic_note(col, deck_id, "capital of Japan", "Tokyo")
-    card = note.cards()[0]
-    card.type = 1  # learning
-    card.queue = 1
-    card.due = 1_700_000_000  # learning cards use a timestamp, not a day number
-    card.left = 1001
-    col.update_card(card)
+    _basic_note(col, deck_id, "capital of Japan", "Tokyo")
+    # Answering `Again` keeps the card in learning. Whatever Anki then writes
+    # into `left` IS the encoding -- this function used to set 1001 from our
+    # own reading of the packed form, which is precisely the belief the corpus
+    # exists to check rather than to enshrine.
+    _answer(col, deck_id, CardAnswer.AGAIN)
     _export(col, out, legacy=True)
     return "one Basic note whose card is in the learning queue with steps remaining"
 
@@ -198,14 +233,14 @@ def with_media(col: Collection, out: Path) -> str:
 def filtered_deck(col: Collection, out: Path) -> str:
     """`odue` / `odid`, which only appear for cards pulled into a filtered deck."""
 
+    from anki.scheduler_pb2 import CardAnswer
+
     home = col.decks.id("Home Deck")
-    note = _basic_note(col, home, "filtered subject", "filtered answer")
-    card = note.cards()[0]
-    card.type = 2
-    card.queue = 2
-    card.due = col.sched.today
-    card.ivl = 10
-    col.update_card(card)
+    _basic_note(col, home, "filtered subject", "filtered answer")
+    # A review card is the PRECONDITION here, not the thing under test -- but
+    # producing it by assignment would put our own idea of a review card into a
+    # file whose whole purpose is to carry Anki's. Graduate it properly.
+    _answer(col, home, CardAnswer.EASY)
 
     deck = col.sched.get_or_create_filtered_deck(deck_id=0)
     deck.name = "Filtered Deck"

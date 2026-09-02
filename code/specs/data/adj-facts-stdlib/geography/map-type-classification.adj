@@ -10,7 +10,7 @@
 % topographic maps as a KIND of map -- a fact the type/description schema had
 % no room for:
 %
-%     "Topographic maps are reference maps that show the shape of Earth's
+%     "Topographic maps are reference maps that show the shape of Earth’s
 %      surface."
 %
 % New `map_type_classification(type, classification)` table decodes that
@@ -42,12 +42,20 @@
 % topographic row's span does -- correctly abstains rather than inventing a
 % classification for either.
 %
-% Provenance: reproduces, byte-for-byte, the SAME sentence already quoted
-% inside `map-type.adj`'s own header, from the SAME Geology.com "Types of
-% Maps" article that table already cites -- no new WebFetch, only a
-% different schema decoding a different clause of that already-verified
-% quote. `trust consensus` -- the same tier the parent table already
-% carries (Geology.com is a reputable secondary reference).
+% Provenance: the SAME sentence `map-type.adj` quotes in its own header,
+% from the SAME Geology.com "Types of Maps" article that table already
+% cites -- a different schema decoding a different clause of it.
+%
+% THIS PAIR IS NOT CURRENTLY BYTE-IDENTICAL, AND THIS NOTE USED TO CLAIM IT
+% WAS. The apostrophe below was re-verified against the live page under
+% #14070 and is U+2019; `map-type.adj:30` still carries the ASCII form and
+% is tracked in #14111. When that lands the two agree again. The original
+% claim ("byte-for-byte ... no new WebFetch") was made true by neither
+% side once one side was corrected -- an identity asserted between two
+% copies is only as durable as the copy nobody is editing.
+%
+% `trust consensus` -- the same tier the parent table already carries
+% (Geology.com is a reputable secondary reference).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -57,7 +65,7 @@ table map_type_classification {
 
     row (topographic, reference_map)
 
-    source "Topographic maps are reference maps that show the shape of Earth's surface."
+    source "Topographic maps are reference maps that show the shape of Earth’s surface."
     locator "https://geology.com/maps/types-of-maps/"
     trust consensus
 }

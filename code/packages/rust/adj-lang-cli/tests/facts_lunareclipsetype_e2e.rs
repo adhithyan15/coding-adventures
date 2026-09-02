@@ -95,3 +95,28 @@ fn lunar_eclipse_type_abstains_honestly_on_an_untabled_nickname() {
         "blood_moon is a real term the source discusses, but as a nickname for the color effect, not a fourth peer eclipse type -- honest abstention, never invented: {out}"
     );
 }
+
+const LUNAR_PIN: &str = r#""bindings":{"D":"the_moon_moves_into_the_inner_part_of_earths_shadow_the_umbra"},"citations":[{"source":"The Moon moves into the inner part of Earth’s shadow, or the umbra.","locator":"https://science.nasa.gov/moon/eclipses/","trust":"authoritative""#;
+
+#[test]
+fn lunar_eclipse_type_citation_keeps_the_pages_curly_apostrophe() {
+    let dir = scratch("cite_lunar");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"lunar-eclipse-type.adj\"\n? lunar_eclipse_type(total_lunar_eclipse, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator. The replacement
+    // text was taken FROM the page (a candidate swap applied, then confirmed
+    // present in a rendered block), not hand-curled.
+    assert!(
+        out.contains(LUNAR_PIN),
+        "total lunar eclipse's citation matches its page: {out}"
+    );
+}

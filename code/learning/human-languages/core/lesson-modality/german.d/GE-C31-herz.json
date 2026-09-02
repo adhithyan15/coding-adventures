@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C31-herz",
     "language": "german",
-    "chapter": 31,
+    "chapter": 33,
     "sequence": 1000,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7f87a27ffe4287ce"
+    "sourceHash": "fnv1a64:9f5368ee1938e690"
   },
   "findings": []
 }

@@ -1,0 +1,14 @@
+{
+  "id": "KA-PATH-69-ASK",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "KA-C69-is-it",
+    "KA-C69-isnt-it",
+    "KA-C69-why"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-69-ASK"
+  ],
+  "after": []
+}

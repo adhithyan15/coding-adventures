@@ -69,7 +69,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the two atoms into the standard warm goodbye.
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू (punhā bheṭū) — "we'll meet again." Two words, and the whole promise of return is spoken.
 This is the fuller, explicit twin of Chapter 4's येतो (yeto, "I'll come [again]"). Both refuse a final "farewell": one says I'll come back, the other we'll meet again — the subcontinent's shared goodbye-as-promise (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ).
 
@@ -100,7 +100,7 @@ Swap "again" for "tomorrow" and you have a dated goodbye.
 The letters in this word.
 (Skim if you read Devanagari.) उ (u, standalone vowel) + द्या (dyā, द da joined by a halant to य ya with the long-ā stroke) becomes उद्या udyā.
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 उद्या (udyā, "tomorrow") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू (udyā bheṭū) — "we'll meet tomorrow."
 उद्या comes from Sanskrit श्वः (śvaḥ) by way of a later udya-; unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing.
 
@@ -131,7 +131,7 @@ One last, tender goodbye — the Marathi "take care," and with it a letter uniqu
 The letters in this word.
 (Skim if you read Devanagari.) काळजी carries the letter ळ (ḷa) — a retroflex "l," the tongue curled back. Standard Hindi dropped this sound; Marathi (like the Dravidian south and Gujarati) keeps it, and it appears in many everyday Marathi words. का + ळ + जी becomes kāḷjī. Then घ्या (ghyā, "take," respectful).
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 काळजी (kāḷjī, "care, concern") + घ्या (ghyā, "take," the respectful imperative) becomes काळजी घ्या (kāḷjī ghyā) — "take care." To a friend, the familiar imperative: काळजी घे (kāḷjī ghe).
 
 Why it's said this way.
@@ -156,14 +156,14 @@ Warm-up.
 [pause 2 seconds]
 The parting words, together — none of them a bare "goodbye."
 
-The farewells.
+You'll want to know — the farewells.
 [a table of 4 rows, read aloud]
 Marathi: येतो / येते. Say it: yeto / yete. English: I'll be going. ("I come again").
 Marathi: पुन्हा भेटू. Say it: punhā bheṭū. English: See you again.
 Marathi: उद्या भेटू. Say it: udyā bheṭū. English: See you tomorrow.
 Marathi: काळजी घ्या. Say it: kāḷjī ghyā. English: Take care.
 
-Atoms banked this chapter.
+What you've built — atoms banked this chapter.
 पुन्हा (punhā) — again; Sanskrit punar.
 भेटू (bheṭū) — (we'll) meet; the "we" lives in the verb; from bheṭṇe.
 उद्या (udyā) — tomorrow (distinct from kāl, yesterday).
@@ -179,4 +179,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do every Marathi goodbye have in common? (None says "farewell" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto.
+What does every Marathi goodbye have in common? (None says "farewell" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto.

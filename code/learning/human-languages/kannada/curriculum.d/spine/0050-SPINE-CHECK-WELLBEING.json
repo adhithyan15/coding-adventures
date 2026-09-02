@@ -8,7 +8,8 @@
     "KA-PATH-030",
     "KA-PATH-47-BODY",
     "KA-PATH-57-BODY",
-    "KA-PATH-63-HEALTH"
+    "KA-PATH-63-HEALTH",
+    "KA-PATH-69-ASK"
   ],
   "omits": [
     "WORD-GOOD",

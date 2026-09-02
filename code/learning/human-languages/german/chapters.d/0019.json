@@ -1,19 +1,21 @@
 {
   "chapter": 19,
-  "title": "Please",
-  "label": "ch:ge-please",
-  "canDo": "I can ask politely for something in German by putting bitte after the thing I want — Wasser, bitte.",
+  "title": "Head and Hand",
+  "label": "ch:ge-head-and-hand",
+  "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "GE-C19-bitte-requests",
-    "kind": "task",
-    "summary": "Assemble a complete polite request out of two words already learned — Wasser, bitte — and hear the request still living inside bitte via bitten, English bid and bead. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "lesson": "GE-C17-hand",
+    "kind": "production",
+    "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
     "assesses": [
-      "GE-LEX-BITTE-PLEASE-02",
-      "GE-PHRASE-WASSER-BITTE-03",
-      "GE-ETYMON-BITTE-04"
-    ]
+      "GE-LEX-HAND-02",
+      "GE-SOUND-HAND-03",
+      "GE-ETYMON-HAND-04",
+      "GE-ETYMON-HAND-MANUS-05"
+    ],
+    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
   }
 }

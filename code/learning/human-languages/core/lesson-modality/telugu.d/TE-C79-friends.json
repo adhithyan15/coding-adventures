@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C79-friends",
+    "language": "telugu",
+    "chapter": 79,
+    "sequence": 2780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:108ef010600d97a6"
+  },
+  "findings": []
+}

@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+
+### Fixed — the Anki fixtures' scheduling state was still ours
+
+The corpus added for #13940 was exported by Anki but had its scheduling columns
+**assigned by hand first** (`card.type = 2`, `card.ivl = 21`, `card.left =
+1001`), so the container was Anki's while the semantics were still our own
+belief in an Anki wrapper — one level in from the problem the corpus exists to
+solve. The generator's own comment said as much: "Anki packs two numbers into
+`left`. Our importer has an opinion about that encoding which nothing has ever
+checked against a real file" — immediately before writing that opinion into the
+file.
+
+Fixtures are now produced by answering cards through Anki's scheduler. Two
+values changed in ways that matter:
+
+- learning `left` was `1001`, the older packed step encoding. Anki 26.08.1
+  writes **`2`**.
+- filtered `odue` was `0`. Anki writes **`5`** (the original due day), with
+  `due` set to `-100000`. With `odue` at zero, a reader that ignored the column
+  entirely would still have passed.
+
+### Added — the import tests now assert against those fixtures
+
+Five of the seven Anki-authored fixtures were committed and never read by any
+test; only `anki-modern` and `anki-review-scheduled` were, and the latter only
+for its schema version. `tests/anki_authored_oracle.rs` asserts our reader
+against what Anki actually wrote: the day-number/timestamp split between review
+and learning `due`, the distinct negative `queue` values for suspended and
+buried, cloze expansion to one card per deletion, `odid`/`odue` on a filtered
+card, and both members of the media map.
+
+This is #13940's "done when" — real Anki-produced fixtures, asserted against.
+
 **Modern `.anki21b` / `.colpkg` packages now actually import.** They previously
 decompressed and then failed with `invalid Anki V11 JSON in col.conf: EOF while
 parsing a value at line 1 column 0`.

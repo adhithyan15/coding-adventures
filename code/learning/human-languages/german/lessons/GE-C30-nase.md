@@ -3,10 +3,10 @@ schema_version: 2
 id: GE-C30-nase
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 960
-chapter: 30
+chapter: 32
 type: word
 headword: die Nase
-gloss: nose — the fourth face-part, cousin of English nose and of Latin nasus, and the payoff that completes the face Chapter 17 only started
+gloss: nose — the fourth face-part, cousin of English nose and of Latin nasus, and the payoff that completes the face *Kopf* only started
 concept_tag: GE-BODY-NOSE
 prerequisites: [GE-C30-mund, GE-C17-hand]
 sounds: [nase-long-a]
@@ -37,7 +37,7 @@ reviews_of: [GE-C30-mund, GE-C30-ohr, GE-C30-auge, GE-C17-kopf, GE-C17-hand]
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MUND-02, GE-LEX-AUGE-02, GE-LEX-OHR-02] -->
 
 [PAUSE 2s] **Auge. Ohr. Mund.** One part of the face is left, and it closes
-what Chapter 17 opened with *Kopf* and never finished.
+what *Kopf* opened and never finished.
 
 ## You'll want to know: die Nase
 <!-- hl-knowledge: introduces=[GE-LEX-NASE-02]; assesses=[GE-LEX-HAND-02, GE-SOUND-AUGE-03, GE-SOUND-OHR-03, GE-ETYMON-OHR-04, GE-SOUND-MUND-03] -->
@@ -62,7 +62,7 @@ devoicing to *t*.
 **nose** — and, further back, of Latin **nasus**, which gave English **nasal**
 and **nostril**. One Proto-Indo-European root, ***\*nas-***, split into
 Germanic and into Latin independently; German *Nase* and the Latin-derived
-word are family by **descent**, exactly like *rot* and *rouge* in Chapter 13,
+word are family by **descent**, exactly like *rot* and *rouge*,
 never by borrowing.
 
 That gives this small face four parts with four different shapes of story:
@@ -88,4 +88,4 @@ actually looks, not four identical tidy stories.
 Nasen**.) Which Latin word is its distant cousin, and what English word does
 that Latin word give? (**Nasus**, giving **nasal**.) Name all five face and
 head words from Chapters 17 and 30. (**Kopf, Auge, Ohr, Mund, Nase**.) Which of
-the four Chapter 30 words does not trace past Proto-Germanic? (**Mund**.)
+the four words of this chapter does not trace past Proto-Germanic? (**Mund**.)

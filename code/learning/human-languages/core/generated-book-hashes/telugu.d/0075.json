@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:f2fba7741a357488",
+  "lessonIds": [
+    "TE-C75-today",
+    "TE-C75-yesterday",
+    "TE-C75-when",
+    "TE-C75-before",
+    "TE-C75-year"
+  ],
+  "tex": "telugu/book/chapters/ch75-today-yesterday-when.tex"
+}

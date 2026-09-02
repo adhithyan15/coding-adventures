@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C74-because",
+    "language": "telugu",
+    "chapter": 74,
+    "sequence": 2570,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1f992c7ba3a38982"
+  },
+  "findings": []
+}

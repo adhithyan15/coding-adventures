@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C28-kaffee
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 870
-chapter: 28
+chapter: 30
 type: word
 headword: der Kaffee
 gloss: coffee — a loanword that crossed from Arabic to German by way of Turkish and Italian, and the first word in a new polite request
@@ -36,7 +36,7 @@ reviews_of: [GE-C19-bitte-requests, GE-C27-schliessen]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SCHLIESSEN-10] -->
 
-[PAUSE 2s] Chapter 27 ended by closing a hand. Now open the day with something
+[PAUSE 2s] The last chapter ended by closing a hand. Now open the day with something
 to drink — and a new use for a request pattern you already own.
 
 ## You'll want to know: der Kaffee
@@ -44,7 +44,7 @@ to drink — and a new use for a request pattern you already own.
 
 > **der Kaffee** — coffee. Masculine.
 
-Chapter 19 taught you a complete polite request out of two known words:
+**Bitte** taught you a complete polite request out of two known words:
 **Wasser, bitte.** The same pattern takes any drink you can name:
 
 > **Kaffee, bitte.** — Coffee, please.
@@ -68,7 +68,7 @@ German *Kaffee*.** English *coffee* and French *café* took the same Italian
 step, which is why the whole spread of European words for the drink still
 rhymes with each other despite crossing four language families to get here.
 
-Chapter 27 closed on **schließen**, a verb Proto-Germanic built and English
+The last chapter closed on **schließen**, a verb Proto-Germanic built and English
 lost outright. *Kaffee* is the opposite kind of word: nothing here is
 inherited, and nothing needed to be — German simply took the whole word,
 sound and all, the way it took *Wein* centuries earlier.
@@ -78,7 +78,7 @@ sound and all, the way it took *Wein* centuries earlier.
 
 [PAUSE 1s]
 - [YOU SAY: "der Kaffee" — either stress, both correct]
-- [YOU SAY: "Kaffee, bitte." — the Chapter 19 pattern, one word swapped]
+- [YOU SAY: "Kaffee, bitte." — the *bitte* pattern, one word swapped]
 - [YOU SAY: the route — "qahwa, kahve, caffè, Kaffee"]
 
 ## Wrap-up Recall

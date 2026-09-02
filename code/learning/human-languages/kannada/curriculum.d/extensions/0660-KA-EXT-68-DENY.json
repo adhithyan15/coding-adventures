@@ -1,0 +1,14 @@
+{
+  "id": "KA-EXT-68-DENY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deny that something is what you called it, disagree politely, and say that I do not know either.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C68-is-not",
+    "KA-C68-neither",
+    "KA-C68-dont-know",
+    "KA-C68-me-neither"
+  ]
+}

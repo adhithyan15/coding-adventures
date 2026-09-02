@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C30-mund",
     "language": "german",
-    "chapter": 30,
+    "chapter": 32,
     "sequence": 950,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:24fb4a7f4f3cdc45"
+    "sourceHash": "fnv1a64:72a06922008fbc83"
   },
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:402f0ab67bd60025",
+  "lessonIds": [
+    "TE-C78-isit",
+    "TE-C78-doyouknow",
+    "TE-C78-dontknow",
+    "TE-C78-didntunderstand",
+    "TE-C78-isthere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch78.txt",
+  "json": "telugu/narration/ch78.json",
+  "textHash": "fnv1a64:6d92bb18331bd208",
+  "jsonHash": "fnv1a64:e512b8aedebcc3e6",
+  "findings": []
+}

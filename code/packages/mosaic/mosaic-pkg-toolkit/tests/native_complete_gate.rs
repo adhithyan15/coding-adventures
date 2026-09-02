@@ -53,8 +53,10 @@ const ALLOWED_DEGRADATIONS: &[(Backend, &str, &str)] = &[
     // radios) — but the toolkit's own `Radio` component (`Radio.mll`)
     // is a 1:1 HostRadio wrapper with no sibling of its own, so it
     // never qualifies and stays degraded on all four backends here.
-    // SwiftUI has no idiomatic ancestor-grouping widget at all and
-    // remains degraded even for a real multi-radio group.
+    // As of #14126 SwiftUI groups a real multi-radio run too, by
+    // lowering it to a `Picker` whose selection is exclusive by
+    // construction -- so all four backends are degraded HERE for the
+    // same reason, and none of them for a SwiftUI-specific one.
     (Backend::SwiftUI, "Radio", "property.radio-group-ignored"),
     (Backend::Qt, "Radio", "property.radio-group-ignored"),
     (Backend::Flutter, "Radio", "property.radio-group-ignored"),

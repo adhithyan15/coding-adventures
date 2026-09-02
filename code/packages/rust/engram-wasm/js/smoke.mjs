@@ -93,11 +93,14 @@ const demo = await demoHost.getProps({ component: "EngramApp" });
 check("demo host deck name", demo.props.deckName, "Tamil::Script and Roots");
 check("demo host deck total", demo.props.deckTotalValue, "2");
 check("demo host note count", demo.props.collectionNoteCountValue, "5");
-check("demo host deck names", demo.props.deckNames, [
-  "Tamil::Script and Roots",
-  "Hindi::Devanagari",
-  "Kannada::Script",
-  "Spanish::Latin Roots",
+// Each row is [ name, due, new ]. Only Tamil has anything due, so only its row
+// carries a due count -- an empty string rather than "0 due", so the decks with
+// work waiting are the ones that stand out in the list.
+check("demo host deck rows", demo.props.deckRows, [
+  ["Tamil::Script and Roots", "1 due", "1 new"],
+  ["Hindi::Devanagari", "", "1 new"],
+  ["Kannada::Script", "", "1 new"],
+  ["Spanish::Latin Roots", "", "1 new"],
 ]);
 
 // Legacy APKG now runs IN the browser build. These assertions used to expect

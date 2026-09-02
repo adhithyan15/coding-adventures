@@ -1,0 +1,21 @@
+{
+  "chapter": 78,
+  "title": "Yes or No, and I Do Not Know",
+  "label": "ch:te-yes-or-no",
+  "canDo": "I can ask a Telugu yes-or-no question, say I do not know, say I did not understand, and ask whether somebody is there.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C78-isthere",
+    "kind": "production",
+    "summary": "Complete TE-C78-isthere and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C78-YESNO-01",
+      "TE-LEX-C78-YESNO-02",
+      "TE-LEX-C78-YESNO-03",
+      "TE-LEX-C78-YESNO-04",
+      "TE-LEX-C78-YESNO-05"
+    ]
+  }
+}

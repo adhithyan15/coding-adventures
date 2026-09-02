@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C72-when-clause",
+    "language": "kannada",
+    "chapter": 72,
+    "sequence": 2440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09b2a931ee48452b"
+  },
+  "findings": []
+}

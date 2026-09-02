@@ -133,6 +133,28 @@ pieces taught before the whole; and a book you can read straight through.
   rather than as isolated shapes. What is left is upstream of where the chain
   begins; `HL-C217` in the shared backlog says why, and what a Telugu-numerals
   tranche would close next. In the book.
+- **Chapters 74–80 — the exam-driven vocabulary tranche**
+  ([`lessons/TE-C7{4,5,6,7,8,9}-*`, `TE-C80-*`](./lessons/)): seven chapters of
+  five headwords each — **35 new words**, all on pre-A1 spine nodes, which is
+  what makes them count toward the level.
+  మరియు/కానీ/లేదా/ఎందుకు/ఎందుకంటే (and, but, or),
+  ఇవాళ/నిన్న/ఎప్పుడు/ముందు/సంవత్సరం (today, yesterday, when),
+  చాలా/చెడ్డ/మంచిది/సులభం/కష్టం (very good, very bad),
+  నుంచి/పట్టణం/దేశం/భారతదేశం/ముప్పై (where you are from),
+  అవునా/తెలుసా/తెలియదు/అర్థం కాలేదు/ఉన్నారా (yes or no, and I do not know),
+  స్నేహితుడి/మా/అతను/నన్ను/గారు (he, she, and whose), and
+  కావాలి/అని/వచ్చు/రండి/శుభాకాంక్షలు (wanting, allowing, wishing).
+  The words were **not chosen by topic**: every one came off the uncovered list
+  in [`core/exam-inventory-telugu-a1.json`](../core/exam-inventory-telugu-a1.json),
+  which is why 35 headwords closed **44 exam points** and took Telugu A1
+  coverage from 169/326 (52%) to **213/326 (65%)** against an unchanged
+  denominator. One new word per lesson; each lesson's Guided Practice retrieves
+  the two items before it, one from eight lessons back, one from twenty-five,
+  and one older word whose lesson it names as a prerequisite — which is why 35
+  new lessons leave the reinforcement debt slightly *below* where it started
+  (1017 → 1014) instead of above it. Every word is spelled from characters the
+  track already used, so never-taught glyphs stayed at zero. In the book,
+  Chapters 74–80.
 
 ---
 

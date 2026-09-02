@@ -96,3 +96,28 @@ fn possessive_noun_abstains_honestly_on_an_untabled_word() {
         "cat is a real noun but not one of the three tabled here -- honest abstention, never invented: {out}"
     );
 }
+
+const POSSESSIVE_NOUN_PIN: &str = r#""bindings":{"Category":"singular_possessive"},"citations":[{"source":"I adjusted the dog’s collar.","locator":"https://www.grammarly.com/blog/parts-of-speech/possessive-nouns/","trust":"consensus""#;
+
+#[test]
+fn possessive_noun_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"possessive-noun.adj\"
+? possessive_noun(dog, $Category)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator.
+    assert!(
+        out.contains(POSSESSIVE_NOUN_PIN),
+        "the possessive noun citation matches its page: {out}"
+    );
+}

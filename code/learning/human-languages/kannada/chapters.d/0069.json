@@ -1,0 +1,22 @@
+{
+  "chapter": 69,
+  "title": "Asking, and Asking Why",
+  "label": "ch:ka-asking-why",
+  "canDo": "I can turn any Kannada statement into a question, ask for agreement, and ask why.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C69-why",
+    "kind": "production",
+    "summary": "Complete KA-C69-why and ask a yes-or-no question, a tag question and a why question in a row.",
+    "assesses": [
+      "KA-SCRIPT-RECOG-136",
+      "KA-LEX-C69-ASK-01",
+      "KA-GRAMMAR-C69-ASK-02",
+      "KA-LEX-C69-ASK-03",
+      "KA-PRAGMATICS-C69-ASK-04",
+      "KA-LEX-C69-ASK-05"
+    ]
+  }
+}

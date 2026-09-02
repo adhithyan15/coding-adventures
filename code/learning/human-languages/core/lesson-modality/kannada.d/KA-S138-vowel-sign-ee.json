@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S138-vowel-sign-ee",
+    "language": "kannada",
+    "chapter": 70,
+    "sequence": 2360,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:40502b4b09593274",
+    "detachableSegments": [
+      "Script you'll notice: ೇ",
+      "Writing: ೇ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

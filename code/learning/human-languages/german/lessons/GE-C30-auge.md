@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C30-auge
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 930
-chapter: 30
+chapter: 32
 type: word
 headword: das Auge
 gloss: eye — the third gender back on a body part, and a direct Germanic cousin of English eye
@@ -36,7 +36,7 @@ reviews_of: [GE-C29-familie, GE-C17-kopf]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KOPF-02] -->
 
-[PAUSE 2s] Chapter 17 gave you **der Kopf** and **die Hand**. The head has more
+[PAUSE 2s] You already have **der Kopf** and **die Hand**. The head has more
 in it than its own name — starting with what you see with.
 
 ## You'll want to know: das Auge
@@ -65,7 +65,7 @@ and Greek into **ophthalmós** (giving English **ophthalmology**). Three
 branches of one family tree, and English ended up borrowing back two Latin and
 Greek reflexes of the very root it had already inherited natively as *eye*.
 
-Chapter 17's *Kopf* was a container word that took over the everyday job.
+*Kopf* was a container word that took over the everyday job.
 *Auge* needed no such replacement — it has meant "eye" the whole way down.
 
 ## Guided Practice

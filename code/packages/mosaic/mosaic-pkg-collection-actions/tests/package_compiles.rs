@@ -103,6 +103,10 @@ fn collection_actions_frontend_sources_compile() {
             "add-note-type-label",
             "delete-note-label",
             "delete-note-type-label",
+            // #13933 -- a delete with nothing selected used to be a silent
+            // no-op; the control is disabled instead.
+            "delete-note-disabled",
+            "delete-note-type-disabled",
         ]
     );
 

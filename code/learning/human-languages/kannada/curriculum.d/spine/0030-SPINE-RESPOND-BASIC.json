@@ -3,7 +3,8 @@
     "KA-PATH-003",
     "KA-PATH-49-REPLY",
     "KA-PATH-58-REPLY",
-    "KA-PATH-64-JOIN"
+    "KA-PATH-64-JOIN",
+    "KA-PATH-67-LINK"
   ],
   "omits": [
     "RESPONSE-YESNO"

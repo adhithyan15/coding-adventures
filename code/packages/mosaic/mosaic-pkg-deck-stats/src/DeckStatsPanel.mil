@@ -7,7 +7,16 @@ component DeckStatsPanel {
   slot deck-label : text ;
   slot deck-name : text ;
   slot deck-list-label : text ;
-  slot deck-names : list<text> ;
+  // Each row is [ display-name, due-count, new-count ].
+  //
+  // Was a flat `list<text>` of names, which is why the deck list rendered as a
+  // row of identical chips: a deck with 40 cards waiting looked exactly like an
+  // empty one. The whole point of a flashcard app's home screen is telling you
+  // where the work is.
+  //
+  // The host builds these rows -- the component does no counting, matching the
+  // "fat engine, dumb UI" contract the other packages follow.
+  slot deck-rows : list<list<text>> ;
   slot total-label : text ;
   slot total-value : text ;
   slot new-label : text ;
@@ -19,5 +28,5 @@ component DeckStatsPanel {
   slot hidden-label : text ;
   slot hidden-value : text ;
 
-  emit onSelectDeck ( value : text ) ;
+  emit onSelectDeck ( index : number ) ;
 }

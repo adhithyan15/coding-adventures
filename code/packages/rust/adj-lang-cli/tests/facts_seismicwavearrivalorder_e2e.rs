@@ -97,3 +97,28 @@ fn seismic_wave_arrival_order_abstains_honestly_on_an_untabled_wave() {
         "surface_wave is a real seismic wave commonly grouped with p_wave/s_wave, but no clean single-fact parallel definition was found -- honest abstention, never invented: {out}"
     );
 }
+
+const SEIS_PIN: &str = r#""bindings":{"D":"are_the_first_waves_to_arrive_after_an_earthquake"},"citations":[{"source":"P-waves, or Primary waves, are the first waves to arrive as soon as there’s an earthquake.","locator":"https://www.news.caloes.ca.gov/what-are-p-waves-and-s-waves/","trust":"authoritative""#;
+
+#[test]
+fn seismic_wave_arrival_order_citation_keeps_the_pages_curly_apostrophe() {
+    let dir = scratch("cite_seis");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"seismic-wave-arrival-order.adj\"\n? seismic_wave_arrival_order(p_wave, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator. The replacement
+    // text was taken FROM the page (a candidate swap applied, then confirmed
+    // present in a rendered block), not hand-curled.
+    assert!(
+        out.contains(SEIS_PIN),
+        "the p-wave citation matches its page: {out}"
+    );
+}

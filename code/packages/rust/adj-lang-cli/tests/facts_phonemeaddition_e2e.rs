@@ -100,3 +100,30 @@ fn phoneme_addition_abstains_honestly_on_an_untabled_addition() {
         "m/e -> ? has no shipped row -- honest abstention, never invented: {out}"
     );
 }
+
+const PHONEME_ADDITION_PIN: &str = r#""bindings":{"Word":"ice"},"citations":[{"source":"I can add sounds to make new word. Watch me. I say the first sound and slide a cap: /ī/ [slide a cap]. I add the last sound: /s/ [slide a cap so it appears left-to-right for students]. I touch and say the syllables: /ī/, /s/, ‘ice’ [sweep finger below the caps left-to-right].","locator":"https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice","trust":"consensus""#;
+
+#[test]
+fn phoneme_addition_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"phoneme-addition.adj\"
+? phoneme_addition(i, s, $Word)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The page quotes this word with PAIRED curly quotes -- U+2018 opening and
+    // U+2019 closing -- and the shipped citation had flattened both to ASCII.
+    // This is NOT the contraction case: curling both ends the same way yields
+    // a form that appears on no page. The replacement was confirmed present in
+    // a rendered block before being written here.
+    assert!(
+        out.contains(PHONEME_ADDITION_PIN),
+        "the phoneme addition citation matches its page: {out}"
+    );
+}

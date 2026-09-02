@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C68-dont-know",
+    "language": "kannada",
+    "chapter": 68,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70c0203810edce68"
+  },
+  "findings": []
+}

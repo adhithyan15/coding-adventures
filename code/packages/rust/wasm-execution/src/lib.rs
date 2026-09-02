@@ -309,6 +309,10 @@ impl WasmValue {
             | ValueType::ArrayRef(_)
             | ValueType::NonNullArrayRef(_)
             | ValueType::NonNullArrayAny
+            // W38 slice 0: `ArrayRefAny` is nullable at the runtime-value
+            // level too -- same "GC and funcref/externref alike default to
+            // null" reasoning as `Anyref`/`StructRefAny` above.
+            | ValueType::ArrayRefAny
             | ValueType::Funcref
             | ValueType::Externref
             | ValueType::Exnref
@@ -3104,6 +3108,12 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         //   0x0D array.get_u        <type_idx>                    (W33 fourth slice)
         //   0x0E array.set          <type_idx>                    (W33 fourth slice)
         //   0x0F array.len          (none -- no type immediate)   (W33 fourth slice)
+        //   0x09 array.new_data      <type_idx> <data_idx>          (W38 slice 3; SECOND index (data_idx) carried in `field_idx`, repurposed -- same convention as array.copy's `0x11` below)
+        //   0x0A array.new_elem      <type_idx> <elem_idx>          (W38 slice 5; same `field_idx`-carries-second-index convention as `0x09`, just an elem_idx instead of a data_idx)
+        //   0x10 array.fill         <type_idx>                    (W38 slice 2)
+        //   0x11 array.copy         <dest_type_idx> <src_type_idx> (W38 slice 2; SECOND index carried in `field_idx`, repurposed -- see `GcOp::field_idx`'s own doc comment)
+        //   0x12 array.init_data     <type_idx> <data_idx>          (W38 slice 3; same `field_idx`-carries-data_idx convention as `0x09` above)
+        //   0x13 array.init_elem     <type_idx> <elem_idx>          (W38 slice 5; same `field_idx`-carries-second-index convention as `0x12`, just an elem_idx instead of a data_idx)
         //   0x1C ref.i31       (none)
         //   0x1D i31.get_s     (none)
         //   0x1E i31.get_u     (none, W20)
@@ -3175,6 +3185,71 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 // slice; see `wasm-wast-parser::encode_array_len`'s own doc
                 // comment for the real spec rationale).
                 0x0F => (0, 0, 0),
+                // array.new_data <type_idx> <data_idx> (W38 slice 3:
+                // `code/specs/W38-wasm-gc-array-bulk-ops.md`): TWO index
+                // immediates -- same two-index decode shape struct.get/
+                // struct.set's own `0x02..=0x05` arm above already uses,
+                // and array.copy's own `0x11` arm below reuses too. The
+                // data-segment index rides in `field_idx` (repurposed --
+                // see `GcOp::field_idx`'s own doc comment; this op never
+                // touches a struct field, so there is no real ambiguity).
+                0x09 => {
+                    let (t, sz1) = decode_leb_u32(code, offset);
+                    let (data_idx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (t, data_idx, 0)
+                }
+                // array.new_elem <type_idx> <elem_idx> (W38 slice 5:
+                // `code/specs/W38-wasm-gc-array-bulk-ops.md`): same
+                // two-index decode shape as `array.new_data` (`0x09`)
+                // immediately above -- the elem-segment index rides in
+                // `field_idx` (repurposed, same convention).
+                0x0A => {
+                    let (t, sz1) = decode_leb_u32(code, offset);
+                    let (elem_idx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (t, elem_idx, 0)
+                }
+                // array.fill: one index immediate (the array type) -- W38
+                // slice 2, same one-index decode shape as `0x06 | 0x07`
+                // above.
+                0x10 => {
+                    let (t, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    (t, 0, 0)
+                }
+                // array.copy <dest_type_idx> <src_type_idx>: TWO index
+                // immediates -- W38 slice 2, same two-index decode shape
+                // struct.get/struct.set's own `0x02..=0x05` arm above
+                // already uses. The second index rides in `field_idx`
+                // (repurposed -- see `GcOp::field_idx`'s own doc comment;
+                // this op never touches a struct field, so there is no
+                // real ambiguity).
+                0x11 => {
+                    let (dest_t, sz1) = decode_leb_u32(code, offset);
+                    let (src_t, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (dest_t, src_t, 0)
+                }
+                // array.init_data <type_idx> <data_idx> (W38 slice 3): same
+                // two-index decode shape as `array.new_data` (`0x09`) above
+                // -- the data-segment index again rides in `field_idx`.
+                0x12 => {
+                    let (t, sz1) = decode_leb_u32(code, offset);
+                    let (data_idx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (t, data_idx, 0)
+                }
+                // array.init_elem <type_idx> <elem_idx> (W38 slice 5): same
+                // two-index decode shape as `array.init_data` (`0x12`)
+                // immediately above -- the elem-segment index again rides
+                // in `field_idx`.
+                0x13 => {
+                    let (t, sz1) = decode_leb_u32(code, offset);
+                    let (elem_idx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (t, elem_idx, 0)
+                }
                 // ref.i31 / i31.get_s / i31.get_u (W20) (and any unknown
                 // sub-opcode): no immediates.
                 _ => (0, 0, 0),
@@ -4330,6 +4405,30 @@ pub struct WasmExecutionContext {
     /// `table.init` on a dropped segment traps. Module-global and
     /// persistent across calls, never reset per call.
     pub dropped_elements: Vec<bool>,
+    /// Per-elem-segment index, PARALLEL to `elements` (W38 slice 4/5,
+    /// Correction 2: `code/specs/W38-wasm-gc-array-bulk-ops.md`) -- each
+    /// entry's REAL evaluated constant value, computed ONCE at
+    /// instantiation time from `wasm_types::Element::item_exprs` via
+    /// `evaluate_const_expr_gc` (mirroring a global's own `init_expr`
+    /// evaluation) -- the array-bulk-op analogue of `data_segments`, but
+    /// holding real [`WasmValue`]s (which may themselves be fresh
+    /// `gc_heap` handles) instead of raw bytes, because an elem segment's
+    /// items are constant EXPRESSIONS, not a flat byte blob.
+    /// `array.init_elem`/`array.new_elem` read from here; `table.init`/
+    /// `table.copy` are UNCHANGED, still reading `elements` (the
+    /// pre-existing `Vec<Vec<Option<u32>>>`) directly -- two parallel,
+    /// independently-populated views of the SAME underlying segments, not
+    /// one migrated to the other, so zero regression risk to the
+    /// already-shipped table-bulk-ops path. Populated once via
+    /// [`WasmExecutionEngine::set_element_values`] (mirroring `set_
+    /// elements`'s own setter pattern), by `wasm-runtime::instantiate()`.
+    ///
+    /// Shares `dropped_elements` above for bounds/drop-state purposes --
+    /// a dropped segment's `element_values` entry is treated as length-0
+    /// identically to its `elements` entry (both are ALWAYS the same
+    /// length and drop together, since they're two views of one segment
+    /// list), never a second, independent dropped-flag array.
+    pub element_values: Vec<Vec<WasmValue>>,
     /// The module's tag section, indexed by the combined imported+defined
     /// tag index space (W21's `wasm_types::WasmModule::tags` shape,
     /// mirrored here): `tags[N]` is tag `N`'s function-type index into
@@ -4969,7 +5068,15 @@ pub struct GcOp {
     pub sub: u8,
     /// The struct/array type index immediate (0 when the op carries none).
     pub type_idx: u32,
-    /// The field index immediate (0 when the op carries none).
+    /// The field index immediate for `struct.get`/`struct.get_s`/
+    /// `struct.get_u`/`struct.set` (0 when the op carries none). W38
+    /// slice 2 (`code/specs/W38-wasm-gc-array-bulk-ops.md`) REPURPOSES
+    /// this same slot for `array.copy`'s SECOND type index (the SOURCE
+    /// array type -- `type_idx` holds the DESTINATION type for that op)
+    /// rather than adding a new field: `array.copy` never touches a
+    /// struct field, so there is no real ambiguity between the two roles,
+    /// exactly the reuse this spec's own design section calls for ("needs
+    /// an updated doc comment, not a new field").
     pub field_idx: u32,
     /// `array.new_fixed`'s literal element-count immediate (W33 fourth
     /// slice; 0 for every other op, which has no count immediate at all).
@@ -5284,6 +5391,206 @@ fn extend_packed_value(raw: WasmValue, storage: Option<wasm_types::StorageType>,
     let masked = ((v as u32) << shift) >> shift; // zero-extend into the low `bits` bits, high bits clear
     let extended = if signed { (masked << shift) as i32 >> shift } else { masked as i32 };
     Ok(WasmValue::I32(extended))
+}
+
+// ── Helpers: `array.init_data`/`array.new_data` (W38 slice 3, `code/specs/
+// W38-wasm-gc-array-bulk-ops.md`) -- byte-REINTERPRETATION reads from a
+// passive data segment into an array's own declared storage type, mirroring
+// how `memory.init` (0xFC 0x08, lines ~6433 below) already reads from the
+// SAME `ctx.data_segments`/`ctx.dropped_data_segments` fields verbatim, per
+// this spec's own explicit design choice. Both new instructions share these
+// four helpers since (unlike `memory.init`, which only needed this once)
+// TWO instructions need the identical segment-resolution/width/range logic. ──
+
+/// The byte width `array.init_data`/`array.new_data` read per element for a
+/// given array storage type -- `1`/`2` for packed `i8`/`i16` (sign-extended
+/// on `array.get_s`/zero-extended on `array.get_u`, never here; see
+/// [`extend_packed_value`]'s own doc comment for why the STORED value's
+/// sign never matters), `4`/`8`/`16` for `i32`/`f32`/`i64`/`f64`/`v128`, per
+/// the real GC proposal's own `array.init_data`/`array.new_data` validation
+/// rule ("The value type must be numeric or vector"). `None` for a
+/// reference-typed storage (`wasm-validator`'s own `0x09`/`0x12` arms
+/// already reject this statically; this is a defense-in-depth runtime
+/// re-check, matching this codebase's "never trust a decoded module at
+/// runtime regardless of what validation should have caught" posture).
+fn array_data_storage_width(storage: wasm_types::StorageType) -> Option<usize> {
+    match storage {
+        wasm_types::StorageType::I8 => Some(1),
+        wasm_types::StorageType::I16 => Some(2),
+        wasm_types::StorageType::Val(ValueType::I32) | wasm_types::StorageType::Val(ValueType::F32) => Some(4),
+        wasm_types::StorageType::Val(ValueType::I64) | wasm_types::StorageType::Val(ValueType::F64) => Some(8),
+        wasm_types::StorageType::Val(ValueType::V128) => Some(16),
+        wasm_types::StorageType::Val(_) => None, // a reference type -- data segments can never hold references
+    }
+}
+
+/// Resolve `type_idx`'s registered element storage AND its byte width in
+/// one call -- both `array.init_data`/`array.new_data` handlers need both,
+/// immediately after each other, so this bundles the two lookups (and their
+/// two possible defensive errors) into one helper rather than duplicating
+/// the pair at each call site.
+fn array_numeric_storage_width(ctx: &WasmExecutionContext, type_idx: u32, op: &str) -> Result<(wasm_types::StorageType, usize), VMError> {
+    let storage = ctx.array_element_storage.get(type_idx as usize).copied().flatten().ok_or_else(|| {
+        VMError::GenericError(format!(
+            "{op}: no element storage registered for array type {type_idx} (call set_array_element_storage)"
+        ))
+    })?;
+    let width = array_data_storage_width(storage).ok_or_else(|| {
+        VMError::GenericError(format!("{op}: array type {type_idx} storage is not numeric or vector"))
+    })?;
+    Ok((storage, width))
+}
+
+/// Resolve a data-segment index to its byte content for `array.init_data`/
+/// `array.new_data` -- the array-bulk-op analogue of `memory.init`'s own
+/// inline idx/dropped handling (lines ~6480 below), factored into its own
+/// function since TWO instructions need the identical logic here (`memory.
+/// init` only ever needed it once). An out-of-range `idx` is a hard
+/// defensive error (never trusted at runtime regardless of what `wasm-
+/// validator`'s own `0x09`/`0x12` arms should have already caught,
+/// mirroring `memory.init`'s own identical defensive check); an in-range
+/// but DROPPED segment (`data.drop` already ran) degrades to a real, empty
+/// (length-0) slice -- never a separate error path -- exactly `memory.
+/// init`'s own already-established, corpus-verified rule (a dropped
+/// segment behaves as length-0: an access succeeds only when its own
+/// `checked_segment_byte_range` fits inside that empty slice -- i.e.
+/// `s=0, n=0` -- while `s>0` or `n>0` traps against the now-empty
+/// segment, the identical "out of bounds" trap a too-short REAL segment
+/// would also produce; a security-review pass on this exact doc comment's
+/// earlier "`n=0` still succeeds" phrasing correctly flagged it as
+/// imprecise on its own -- `s`'s own value matters too).
+fn resolve_array_data_segment<'a>(ctx: &'a WasmExecutionContext, idx: usize, op: &str) -> Result<&'a [u8], VMError> {
+    if idx >= ctx.data_segments.len() || idx >= ctx.dropped_data_segments.len() {
+        return Err(VMError::GenericError(format!("{op}: data segment index {idx} out of bounds")));
+    }
+    if ctx.dropped_data_segments[idx] {
+        Ok(&[])
+    } else {
+        Ok(ctx.data_segments[idx].as_slice())
+    }
+}
+
+/// Compute the byte range `[offset, offset+count*width)` a segment read
+/// needs, fully overflow-checked (`checked_mul`/`checked_add`, never a bare
+/// arithmetic op -- this campaign's own standing `feedback_verify_dos_
+/// guards_adversarially` lesson: an unchecked `offset + count*width` on
+/// attacker-controlled `i32`-derived `usize` values is exactly the overflow
+/// class that lesson warns about) -- `None` on any overflow OR if the
+/// resulting range doesn't fit inside `segment_len`. The real spec draws no
+/// distinction between "the arithmetic itself overflowed" and "the
+/// arithmetic was fine but the range is out of bounds" -- both simply mean
+/// "this data segment access is out of bounds," so the caller turns either
+/// case into the identical trap.
+///
+/// `offset` (`s` at each call site) is ALREADY a raw BYTE position into the
+/// segment -- per the real spec's own trap condition, `s + n·|t|/8 >
+/// |segment bytes|` (`offset` is bare `s`, only `count` gets multiplied by
+/// `width`) -- NOT an element-index that itself needs scaling by `width`. A
+/// first draft of this function multiplied `offset` by `width` too (`[s*w,
+/// (s+n)*w)` instead of `[s, s+n*w)`), which happened to be indistinguishable
+/// from the correct formula for `width == 1` (every `array_init_data.wast`/
+/// `array_new_data.wast` case using an `i8`-storage array) but produced a
+/// spurious out-of-bounds trap the moment a REAL corpus case exercised a
+/// wider storage type at a nonzero offset -- caught by `array_init_data.
+/// wast`'s own `array_init_data_i16` case (`(i32.const 2) (i32.const 5)
+/// (i32.const 2)`, i16 storage, byte offset `s=5` into a 12-byte segment):
+/// this function's `offset` parameter is exactly this raw byte position,
+/// confirmed against that case's expected result (`array_get_nth_i16(2)` ==
+/// `0x6766`, the segment's own bytes 5-6 read little-endian) before trusting
+/// this fix, not merely against the ones that happened to already pass.
+/// Confirmed against `array.wast`'s own dedicated overflow-probing case too
+/// (`new-overflow`, `(array.new_data $vec $d (i32.const 0x8000_0000)
+/// (i32.const 0x8000_0000))`, `width == 1`): both operands are `usize`-
+/// widened from a full-range `i32`-as-`u32` (max `0xFFFF_FFFF`), so `offset`/
+/// `count*width` (`width` up to 16) can reach at most `~2^36` -- comfortably
+/// inside `usize::MAX` on the 64-bit targets this crate ships for, so
+/// `checked_mul`/`checked_add` here are defense in depth against a future
+/// width/platform change, not a case this specific test currently exercises
+/// via an actual wraparound.
+fn checked_segment_byte_range(offset: usize, count: usize, width: usize, segment_len: usize) -> Option<std::ops::Range<usize>> {
+    let byte_count = count.checked_mul(width)?;
+    let byte_end = offset.checked_add(byte_count)?;
+    if byte_end <= segment_len {
+        Some(offset..byte_end)
+    } else {
+        None
+    }
+}
+
+/// Decode one element's raw bytes (exactly `array_data_storage_width(storage)`
+/// bytes long) into the `WasmValue` `array.init_data`/`array.new_data` store
+/// into the array -- little-endian, per the real spec and confirmed against
+/// `array_new_data.wast`'s own dedicated `array-new-data-little-endian` case
+/// (`\aa\bb\cc\dd` as an `i32` array element reads back `0xddccbbaa`).
+/// Packed `i8`/`i16` storage stores a plain zero-extended `WasmValue::I32`
+/// -- see [`extend_packed_value`]'s own doc comment for why the sign is
+/// irrelevant at storage time (masking happens again at `array.get_s`/
+/// `array.get_u` read time regardless). `v128` storage allocates a fresh
+/// `ctx.v128_heap` slot via [`push_v128`] (bounded by `MAX_V128_HEAP_LEN`),
+/// the same handle-not-bytes representation every other `V128`-producing
+/// opcode in this file uses.
+fn decode_array_element_from_bytes(bytes: &[u8], storage: wasm_types::StorageType, ctx: &mut WasmExecutionContext) -> Result<WasmValue, VMError> {
+    Ok(match storage {
+        wasm_types::StorageType::I8 => WasmValue::I32(bytes[0] as i32),
+        wasm_types::StorageType::I16 => WasmValue::I32(u16::from_le_bytes([bytes[0], bytes[1]]) as i32),
+        wasm_types::StorageType::Val(ValueType::I32) => WasmValue::I32(i32::from_le_bytes(bytes.try_into().unwrap())),
+        wasm_types::StorageType::Val(ValueType::F32) => WasmValue::F32(f32::from_le_bytes(bytes.try_into().unwrap())),
+        wasm_types::StorageType::Val(ValueType::I64) => WasmValue::I64(i64::from_le_bytes(bytes.try_into().unwrap())),
+        wasm_types::StorageType::Val(ValueType::F64) => WasmValue::F64(f64::from_le_bytes(bytes.try_into().unwrap())),
+        wasm_types::StorageType::Val(ValueType::V128) => {
+            let handle = push_v128(ctx, bytes.try_into().unwrap())?;
+            WasmValue::V128(handle)
+        }
+        // `array_data_storage_width` already rejects any reference storage
+        // type before this function is ever reached -- unreachable in
+        // practice, but a clean error (not a panic) if that guard were ever
+        // bypassed, matching this crate's "never panic on adversarial
+        // input" posture.
+        wasm_types::StorageType::Val(_) => return Err(VMError::GenericError("array.init_data/array.new_data: reference-typed array storage is not numeric or vector".to_string())),
+    })
+}
+
+// ── Helper: `array.init_elem`/`array.new_elem` (W38 slice 5, `code/specs/
+// W38-wasm-gc-array-bulk-ops.md`) -- the ELEMENT-segment-sourced mirror of
+// [`resolve_array_data_segment`] immediately above. Reads from `ctx.
+// element_values`/`ctx.dropped_elements` (Correction 2's `element_values`
+// side table, populated once at instantiation time -- see
+// `WasmExecutionContext::element_values`'s own doc comment), NOT `ctx.
+// elements` (the pre-existing `Vec<Vec<Option<u32>>>` `table.init`/
+// `table.copy` keep reading exclusively) -- two parallel views of the same
+// underlying segment list, so this never disturbs the already-shipped
+// table-bulk-ops path. ──
+
+/// Resolve an elem-segment index to its evaluated constant values for
+/// `array.init_elem`/`array.new_elem` -- the elem-segment analogue of
+/// [`resolve_array_data_segment`]. An out-of-range `idx` is a hard
+/// defensive error (never trusted at runtime regardless of what `wasm-
+/// validator`'s own `0x0A`/`0x13` arms should have already caught,
+/// mirroring `resolve_array_data_segment`'s own identical defensive
+/// check); an in-range but DROPPED segment (`elem.drop` already ran, OR
+/// this was an active/declarative segment already consumed/never-live --
+/// `ctx.dropped_elements[idx]` covers all three, exactly as it already
+/// does for `table.init`) degrades to a real, empty (length-0) slice --
+/// never a separate error path -- mirroring `table.init`'s own
+/// already-implemented "a dropped segment behaves as length-0" rule
+/// (real spec text, `array.init_elem`'s own trap-condition table in this
+/// spec: "A dropped elem segment behaves as length-0").
+///
+/// Bounds-checked against BOTH `element_values.len()` and `dropped_
+/// elements.len()` -- the two Vecs are always built with identical length
+/// (one entry per module elem segment, populated together by `wasm-
+/// runtime::instantiate()`), but checking both defensively costs nothing
+/// and matches `table.init`'s own existing dual check at its own read
+/// site.
+fn resolve_array_elem_segment<'a>(ctx: &'a WasmExecutionContext, idx: usize, op: &str) -> Result<&'a [WasmValue], VMError> {
+    if idx >= ctx.element_values.len() || idx >= ctx.dropped_elements.len() {
+        return Err(VMError::GenericError(format!("{op}: elem segment index {idx} out of bounds")));
+    }
+    if ctx.dropped_elements[idx] {
+        Ok(&[])
+    } else {
+        Ok(ctx.element_values[idx].as_slice())
+    }
 }
 
 // ── Helper: real dynamic type check for ref.test/ref.cast (W33 second slice) ──
@@ -6114,6 +6421,89 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 push_wasm(vm, WasmValue::Ref(Some(handle)));
             }
 
+            // array.new_data <type_idx> <data_idx> (W38 slice 3: `code/
+            // specs/W38-wasm-gc-array-bulk-ops.md`): pop [i32 s, i32 n],
+            // allocate a NEW array of `n` elements read from data segment
+            // `data_idx` starting at byte-offset `s`, decoding each
+            // element per the array's own declared STORAGE type -- this
+            // is `array.new` + `array.init_data` fused (no destination
+            // array exists yet, so there is no destination-side bounds
+            // check, only the segment-side one).
+            //
+            // SECURITY: `n` is bounded by `MAX_ARRAY_ALLOC` via `pop_
+            // array_length` BEFORE any segment read or allocation happens
+            // -- same established convention as `array.new`/`array.new_
+            // default`/`array.new_fixed` (W33 fourth slice) and explicitly
+            // required by this spec's own "Execution / trap semantics"
+            // section: an attacker-controlled huge `n` must never reach a
+            // segment-bounds computation, let alone a real allocation,
+            // before this check runs. The segment-bounds check (`checked_
+            // segment_byte_range`) runs strictly AFTER, so a trap there
+            // never leaves a partially-allocated array behind (no array
+            // is allocated at all until every check has passed).
+            0x09 => {
+                let n = pop_array_length(vm, "array.new_data")?;
+                let s = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let (storage, width) = array_numeric_storage_width(ctx, op.type_idx, "array.new_data")?;
+                let segment_bytes = resolve_array_data_segment(ctx, op.field_idx as usize, "array.new_data")?;
+                let range = checked_segment_byte_range(s, n, width, segment_bytes.len()).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "out of bounds memory access: array.new_data data_idx={}, src={s}, count={n}, elem_width={width}, segment_size={}",
+                        op.field_idx,
+                        segment_bytes.len()
+                    ))
+                })?;
+                let bytes = segment_bytes[range].to_vec();
+                let mut elements = Vec::with_capacity(n);
+                for chunk in bytes.chunks_exact(width) {
+                    elements.push(decode_array_element_from_bytes(chunk, storage, ctx)?);
+                }
+                let handle = gc::alloc(ctx, GcObject::Array(GcArray { type_idx: op.type_idx, elements }))?;
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
+            }
+
+            // array.new_elem <type_idx> <elem_idx> (W38 slice 5: `code/
+            // specs/W38-wasm-gc-array-bulk-ops.md`): pop [i32 s, i32 n],
+            // allocate a NEW array of `n` elements read directly from elem
+            // segment `elem_idx`'s own pre-evaluated `element_values`
+            // (Correction 2) starting at entry `s` -- this is `array.new`
+            // + `array.init_elem` fused (no destination array exists yet,
+            // so there is no destination-side bounds check, only the
+            // segment-side one), mirroring `array.new_data` (`0x09`
+            // immediately above) exactly, just reading already-typed
+            // `WasmValue`s directly instead of raw bytes needing
+            // reinterpretation -- an elem segment's items are constant
+            // EXPRESSIONS, already evaluated to real values (possibly
+            // fresh `gc_heap` handles) at instantiation time, so no
+            // byte-width/storage-type decoding is needed or possible here.
+            //
+            // SECURITY: `n` is bounded by `MAX_ARRAY_ALLOC` via `pop_
+            // array_length` BEFORE any segment read or allocation happens
+            // -- same established convention as `array.new_data`
+            // immediately above and explicitly required by this spec's
+            // own "Execution / trap semantics" section: an attacker-
+            // controlled huge `n` must never reach a segment-bounds
+            // computation, let alone a real allocation, before this check
+            // runs. The segment-bounds check (`checked_add`) runs
+            // strictly AFTER, so a trap there never leaves a
+            // partially-allocated array behind (no array is allocated at
+            // all until every check has passed).
+            0x0A => {
+                let n = pop_array_length(vm, "array.new_elem")?;
+                let s = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let segment = resolve_array_elem_segment(ctx, op.field_idx as usize, "array.new_elem")?;
+                let end = s.checked_add(n).filter(|&e| e <= segment.len()).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "out of bounds table access: array.new_elem elem_idx={}, src={s}, count={n}, segment_size={}",
+                        op.field_idx,
+                        segment.len()
+                    ))
+                })?;
+                let elements = segment[s..end].to_vec();
+                let handle = gc::alloc(ctx, GcObject::Array(GcArray { type_idx: op.type_idx, elements }))?;
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
+            }
+
             // array.get / array.get_s / array.get_u <type_idx> (W33 fourth
             // slice): pop [arrayref, i32 index], push the element's --
             // possibly sign/zero-extended, see struct.get's own doc
@@ -6169,6 +6559,261 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     return Err(VMError::GenericError(format!("array.len: handle {handle} is not an array")));
                 };
                 push_wasm(vm, WasmValue::I32(a.elements.len() as i32));
+            }
+
+            // array.fill <type_idx> (W38 slice 2: `code/specs/
+            // W38-wasm-gc-array-bulk-ops.md`): pop [arrayref, i32 offset
+            // `d`, value `val`, i32 count `n`], write `val` to
+            // `elements[d..d+n]`. Mutability is a static, VALIDATOR-
+            // enforced property (checked in `wasm-validator`'s own `0x10`
+            // arm, mirroring `array.set`'s existing division of
+            // responsibility) -- this handler enforces the null-deref and
+            // bounds checks only.
+            //
+            // SECURITY: the bounds check is `d.checked_add(n) <=
+            // a.elements.len()`, using `checked_add` (never a bare `+`)
+            // and run BEFORE any write, so a trap leaves the array
+            // completely unmodified -- matching every other bulk
+            // operation in this codebase (`LinearMemory::fill`'s own
+            // `memory.fill` handler, `Table::fill`'s `table.fill`), and
+            // this campaign's own standing `feedback_verify_dos_guards_
+            // adversarially` lesson (an unchecked `d + n` on
+            // attacker-controlled `i32`-derived `usize` values is exactly
+            // the overflow class that lesson warns about). The real
+            // corpus's own `array_fill-null` case traps on a null array
+            // reference EVEN WHEN `n == 0` (confirmed by direct read of
+            // `array_fill.wast`'s own vendored `assert_trap` -- the real
+            // spec's null check is unconditional, not gated on `n > 0`
+            // despite this spec addendum's own paraphrase suggesting
+            // otherwise), which `pop_array_ref`'s own unconditional
+            // null-check below already gives for free, matching
+            // `array.get`/`array.set`/`array.len`'s identical behavior.
+            0x10 => {
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                // W35 slice 2 (security review): see struct.new's (0x00)
+                // identical comment -- `gc_heap` persists across calls,
+                // `func_ref_heap` doesn't.
+                let val = flatten_ref_for_durable_storage(ctx, pop_wasm(vm)?)?;
+                let d = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let handle = pop_array_ref(vm, "array.fill")?;
+                let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.fill: dangling handle {handle}"))
+                })?;
+                let GcObject::Array(a) = obj else {
+                    return Err(VMError::GenericError(format!("array.fill: handle {handle} is not an array")));
+                };
+                let end = d
+                    .checked_add(n)
+                    .filter(|&e| e <= a.elements.len())
+                    .ok_or_else(|| VMError::GenericError(format!("out of bounds array.fill: offset={d}, count={n}, array_length={}", a.elements.len())))?;
+                a.elements[d..end].fill(val);
+            }
+
+            // array.copy <dest_type_idx> <src_type_idx> (W38 slice 2): pop
+            // [dest_ref, i32 `d`, src_ref, i32 `s`, i32 `n`], copy `n`
+            // elements from `src[s..s+n]` to `dest[d..d+n]`. The storage-
+            // type-compatibility check (real spec's own `match-
+            // storagetype` relation) and the destination's mutability
+            // check are both static, VALIDATOR-enforced properties
+            // (`wasm-validator`'s own `0x11` arm, reusing
+            // `field_is_structural_subtype` -- W34 infrastructure, zero
+            // new subtyping logic) -- this handler enforces null-deref and
+            // bounds only, same division of responsibility as every other
+            // GC op here.
+            //
+            // OVERLAP-SAFETY (memmove semantics, SECURITY-relevant): reads
+            // the source range into an OWNED, temporary `Vec<WasmValue>`
+            // via one scoped immutable-then-dropped borrow of `ctx.
+            // gc_heap`, BEFORE taking a separate mutable borrow for the
+            // destination write -- the exact same "read fully out before
+            // writing" discipline `LinearMemory::copy_between`'s own doc
+            // comment documents (W35 slice 2's own precedent for `gc_heap`
+            // aliasing specifically) for the identical "two operands might
+            // be the SAME object" hazard. Unlike `LinearMemory::
+            // copy_between`'s raw-byte `copy_within`, a `GcArray`'s
+            // `elements: Vec<WasmValue>` lives inside `Vec<Option<
+            // GcObject>>` and can't be split-borrowed the same way even
+            // when `dest_handle == src_handle` -- cloning through an
+            // intermediate owned buffer sidesteps that aliasing hazard
+            // AND gives memmove-correct results unconditionally (no
+            // direction-aware forward/backward branch needed at all,
+            // since the buffer is a full, independent copy of the source
+            // range regardless of any overlap with the destination).
+            //
+            // SECURITY: both bounds checks use `checked_add` and run
+            // BEFORE any write -- a trap on either check leaves BOTH
+            // arrays completely unmodified (the source is only ever
+            // read, and the destination mutable borrow/write only
+            // happens after the source range is already proven in-bounds
+            // and fully copied out).
+            0x11 => {
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let s = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let src_handle = pop_array_ref(vm, "array.copy")?;
+                let d = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let dest_handle = pop_array_ref(vm, "array.copy")?;
+
+                let src_obj = ctx.gc_heap.get(src_handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.copy: dangling source handle {src_handle}"))
+                })?;
+                let GcObject::Array(src_arr) = src_obj else {
+                    return Err(VMError::GenericError(format!("array.copy: source handle {src_handle} is not an array")));
+                };
+                let src_end = s
+                    .checked_add(n)
+                    .filter(|&e| e <= src_arr.elements.len())
+                    .ok_or_else(|| VMError::GenericError(format!("out of bounds array.copy source: offset={s}, count={n}, array_length={}", src_arr.elements.len())))?;
+                // Scoped read -- this borrow of `ctx.gc_heap` (via `src_obj`/
+                // `src_arr`) ends here, before the destination's mutable
+                // borrow below begins. Safe even when `src_handle ==
+                // dest_handle` (a self-copy), the exact hazard this
+                // handler's own doc comment above explains.
+                let buf: Vec<WasmValue> = src_arr.elements[s..src_end].to_vec();
+
+                let dest_obj = ctx.gc_heap.get_mut(dest_handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.copy: dangling destination handle {dest_handle}"))
+                })?;
+                let GcObject::Array(dest_arr) = dest_obj else {
+                    return Err(VMError::GenericError(format!("array.copy: destination handle {dest_handle} is not an array")));
+                };
+                let dest_end = d
+                    .checked_add(n)
+                    .filter(|&e| e <= dest_arr.elements.len())
+                    .ok_or_else(|| VMError::GenericError(format!("out of bounds array.copy destination: offset={d}, count={n}, array_length={}", dest_arr.elements.len())))?;
+                dest_arr.elements[d..dest_end].clone_from_slice(&buf);
+            }
+
+            // array.init_data <type_idx> <data_idx> (W38 slice 3: `code/
+            // specs/W38-wasm-gc-array-bulk-ops.md`): pop [arrayref, i32
+            // dest_offset `d`, i32 data_offset `s`, i32 count `n`], copy
+            // `n` elements' worth of raw bytes from data segment `data_
+            // idx` (starting at byte `s`) into the array's storage
+            // starting at element `d`, decoding each element per the
+            // array's own declared STORAGE type -- a byte-REINTERPRETATION
+            // operation, analogous to `memory.load`, NOT an array-of-refs
+            // operation (data segments can never hold references; `wasm-
+            // validator`'s own `0x12` arm already enforces "numeric or
+            // vector" statically, `array_numeric_storage_width` re-checks
+            // it here defensively). Mutability is a static, VALIDATOR-
+            // enforced property (mirrors `array.fill`'s own division of
+            // responsibility) -- this handler enforces the null-deref,
+            // destination-bounds, and segment-bounds checks only.
+            //
+            // SECURITY: the destination-array bounds check runs FIRST,
+            // entirely via an IMMUTABLE peek at the array's current
+            // length (matching `array_init_data.wast`'s own corpus
+            // expectation that an out-of-range `d`/`n` traps even when
+            // `s`/`n` would ALSO be out of range against the segment) --
+            // no segment read, no allocation, and no write happen unless
+            // it passes. The segment-bounds check (`checked_segment_byte_
+            // range`, `checked_mul`/`checked_add` throughout, never a bare
+            // arithmetic op) runs second, entirely before the FINAL
+            // mutable borrow that actually writes `elements[d..d+n]` --
+            // so a trap on either check leaves the array completely
+            // unmodified, matching every other bulk operation in this
+            // codebase.
+            0x12 => {
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let s = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let d = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let handle = pop_array_ref(vm, "array.init_data")?;
+                let dest_end = {
+                    let obj = ctx.gc_heap.get(handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {
+                        VMError::GenericError(format!("array.init_data: dangling handle {handle}"))
+                    })?;
+                    let GcObject::Array(a) = obj else {
+                        return Err(VMError::GenericError(format!("array.init_data: handle {handle} is not an array")));
+                    };
+                    d.checked_add(n)
+                        .filter(|&e| e <= a.elements.len())
+                        .ok_or_else(|| VMError::GenericError(format!("out of bounds array.init_data: offset={d}, count={n}, array_length={}", a.elements.len())))?
+                };
+                let (storage, width) = array_numeric_storage_width(ctx, op.type_idx, "array.init_data")?;
+                let segment_bytes = resolve_array_data_segment(ctx, op.field_idx as usize, "array.init_data")?;
+                let range = checked_segment_byte_range(s, n, width, segment_bytes.len()).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "out of bounds memory access: array.init_data data_idx={}, src={s}, count={n}, elem_width={width}, segment_size={}",
+                        op.field_idx,
+                        segment_bytes.len()
+                    ))
+                })?;
+                let bytes = segment_bytes[range].to_vec();
+                let mut elements = Vec::with_capacity(n);
+                for chunk in bytes.chunks_exact(width) {
+                    elements.push(decode_array_element_from_bytes(chunk, storage, ctx)?);
+                }
+                let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.init_data: dangling handle {handle}"))
+                })?;
+                let GcObject::Array(a) = obj else {
+                    return Err(VMError::GenericError(format!("array.init_data: handle {handle} is not an array")));
+                };
+                a.elements[d..dest_end].clone_from_slice(&elements);
+            }
+
+            // array.init_elem <type_idx> <elem_idx> (W38 slice 5: `code/
+            // specs/W38-wasm-gc-array-bulk-ops.md`): pop [arrayref, i32
+            // dest_offset `d`, i32 elem_offset `s`, i32 count `n`], copy
+            // `n` values from elem segment `elem_idx`'s own pre-evaluated
+            // `element_values` (Correction 2, starting at entry `s`) into
+            // the array starting at element `d`. Unlike `array.init_data`,
+            // this copies REFERENCE values directly -- no byte-
+            // reinterpretation at all, since an elem segment's items are
+            // already real, typed `WasmValue`s (which may themselves be
+            // fresh `gc_heap` handles), evaluated ONCE at instantiation
+            // time (see `element_values`'s own doc comment for why this
+            // makes the corpus's own "not re-evaluated on every `array.
+            // init_elem`" requirement fall out automatically -- this
+            // handler never triggers evaluation itself, only ever reads
+            // an already-evaluated entry). Mutability is a static,
+            // VALIDATOR-enforced property (mirrors `array.init_data`'s
+            // own division of responsibility) -- this handler enforces
+            // the null-deref, destination-bounds, and segment-bounds
+            // checks only.
+            //
+            // SECURITY: same ordering discipline as `array.init_data`
+            // immediately above -- the destination-array bounds check
+            // runs FIRST, entirely via an IMMUTABLE peek at the array's
+            // current length (matching `array_init_elem.wast`'s own
+            // corpus expectation that an out-of-range `d`/`n` traps even
+            // when `s`/`n` would ALSO be out of range against the
+            // segment), before any segment read; the segment-bounds check
+            // (`checked_add`, never a bare `+`) runs second, entirely
+            // before the FINAL mutable borrow that actually writes
+            // `elements[d..d+n]` -- so a trap on either check leaves the
+            // array completely unmodified.
+            0x13 => {
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let s = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let d = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let handle = pop_array_ref(vm, "array.init_elem")?;
+                let dest_end = {
+                    let obj = ctx.gc_heap.get(handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {
+                        VMError::GenericError(format!("array.init_elem: dangling handle {handle}"))
+                    })?;
+                    let GcObject::Array(a) = obj else {
+                        return Err(VMError::GenericError(format!("array.init_elem: handle {handle} is not an array")));
+                    };
+                    d.checked_add(n)
+                        .filter(|&e| e <= a.elements.len())
+                        .ok_or_else(|| VMError::GenericError(format!("out of bounds array.init_elem: offset={d}, count={n}, array_length={}", a.elements.len())))?
+                };
+                let segment = resolve_array_elem_segment(ctx, op.field_idx as usize, "array.init_elem")?;
+                let src_end = s.checked_add(n).filter(|&e| e <= segment.len()).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "out of bounds table access: array.init_elem elem_idx={}, src={s}, count={n}, segment_size={}",
+                        op.field_idx,
+                        segment.len()
+                    ))
+                })?;
+                let values = segment[s..src_end].to_vec();
+                let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.init_elem: dangling handle {handle}"))
+                })?;
+                let GcObject::Array(a) = obj else {
+                    return Err(VMError::GenericError(format!("array.init_elem: handle {handle} is not an array")));
+                };
+                a.elements[d..dest_end].clone_from_slice(&values);
             }
 
             // ref.test (0x14) / ref.test null (0x15): pop a reference, push i32
@@ -13335,6 +13980,12 @@ pub struct WasmExecutionEngine {
     /// Persistent across calls, same `set`-before/writeback-after pattern
     /// as `dropped_data_segments`.
     dropped_elements: Vec<bool>,
+    /// Each element segment's real evaluated constant values (W38 slice
+    /// 4/5) -- see `WasmExecutionContext::element_values`'s own doc
+    /// comment. Immutable content once set (like `elements`/`data_
+    /// segments` above), so no writeback is needed; set once via
+    /// [`Self::set_element_values`].
+    element_values: Vec<Vec<WasmValue>>,
     /// Canonical, cross-instance-safe function identity per combined
     /// func-index-space entry (W35 third slice) — same optional-setter
     /// pattern as `tag_identities` above, for the identical reason. Empty
@@ -13389,6 +14040,7 @@ impl WasmExecutionEngine {
             dropped_data_segments: Vec::new(),
             elements: Vec::new(),
             dropped_elements: Vec::new(),
+            element_values: Vec::new(),
             func_identities: Vec::new(),
             instance_identity: 0,
             self_resolver: None,
@@ -13648,6 +14300,21 @@ impl WasmExecutionEngine {
         self
     }
 
+    /// Register each element segment's REAL evaluated constant values
+    /// (W38 slice 4/5, Correction 2: `code/specs/
+    /// W38-wasm-gc-array-bulk-ops.md`), same index space as
+    /// [`Self::set_elements`] above -- `array.init_elem`/`array.new_elem`'s
+    /// own source, computed ONCE at instantiation time from `wasm_types::
+    /// Element::item_exprs` via `evaluate_const_expr_gc` (see `wasm-
+    /// runtime::instantiate()`). Same optional-setter pattern as
+    /// [`Self::set_elements`]: left unset, `array.init_elem`/`array.
+    /// new_elem` see an empty `element_values`, so any real elem-segment
+    /// index is cleanly out-of-bounds (a trap, not a panic).
+    pub fn set_element_values(&mut self, values: Vec<Vec<WasmValue>>) -> &mut Self {
+        self.element_values = values;
+        self
+    }
+
     /// Live `gc_heap` object count as of the most recently completed
     /// [`Self::call_function`] (W04). `gc_heap` itself resets every call, so
     /// this reflects only that one call's allocation/collection activity,
@@ -13825,6 +14492,7 @@ impl WasmExecutionEngine {
             dropped_data_segments: self.dropped_data_segments.clone(),
             elements: self.elements.clone(),
             dropped_elements: self.dropped_elements.clone(),
+            element_values: self.element_values.clone(),
             tags: self.tags.clone(),
             tag_identities: self.tag_identities.clone(),
             try_table_infos: Vec::new(),
@@ -15991,6 +16659,852 @@ mod tests {
         assert!(engine.call_function(0, &[]).is_err());
     }
 
+    // ── W38 slice 2 (`code/specs/W38-wasm-gc-array-bulk-ops.md`):
+    // array.fill / array.copy ────────────────────────────────────────────
+
+    /// Helper: build a two-local (index 0 and 1, both `Anyref`) engine --
+    /// `array.fill`/`array.copy` both consume every arrayref operand they
+    /// touch (same "not left on the stack" shape `array.set` has), so
+    /// tests that read an array back after mutating it need somewhere to
+    /// stash the handle(s), mirroring `test_array_set_then_get_round_
+    /// trips_a_mutated_element`'s own reason for not using the
+    /// zero-locals `array_engine` helper.
+    fn array_engine_with_locals(code: Vec<u8>, results: Vec<ValueType>, locals: Vec<ValueType>, array_element_storage: Vec<Option<wasm_types::StorageType>>) -> WasmExecutionEngine {
+        let func_type = FuncType { params: vec![], results };
+        let body = FunctionBody { locals, code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_array_element_storage(array_element_storage);
+        engine
+    }
+
+    #[test]
+    fn test_array_fill_writes_the_value_across_the_requested_range_only() {
+        use wasm_types::StorageType;
+        // array.new_default 0 (length 5) -> local 0; array.fill 0 (local 0)
+        // (offset=1) (value=99) (count=2) -- fills indices [1, 3) only.
+        let code = vec![
+            0x41, 5, // length 5
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0 (arrayref)
+            0x41, 1, // offset 1
+            0x41, 0xE3, 0x00, // value 99 (sLEB128, 2 bytes)
+            0x41, 2, // count 2
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x20, 0x00, // local.get 0
+            0x41, 1, // index 1 (inside the filled range)
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(99)]);
+    }
+
+    #[test]
+    fn test_array_fill_leaves_indices_outside_the_range_untouched() {
+        use wasm_types::StorageType;
+        // Same fill as above ([1, 3) <- 99), but reads index 3 back
+        // (outside the filled range) -- must still be the array's own
+        // default zero value.
+        let code = vec![
+            0x41, 5, // length 5
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 1, // offset 1
+            0x41, 0xE3, 0x00, // value 99
+            0x41, 2, // count 2
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x20, 0x00, // local.get 0
+            0x41, 3, // index 3 (outside the filled range)
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_array_fill_out_of_bounds_range_traps() {
+        use wasm_types::StorageType;
+        // length 5, offset=4, count=2 -> 4+2=6 > 5, must trap
+        // (`checked_add` bounds check, run BEFORE any write -- see this
+        // op's own handler doc comment).
+        let code = vec![
+            0x41, 5, // length 5
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 4, // offset 4
+            0x41, 1, // value 1
+            0x41, 2, // count 2 (4 + 2 = 6 > length 5)
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert!(engine.call_function(0, &[]).is_err(), "offset+count past the array's length must trap, not silently truncate");
+    }
+
+    #[test]
+    fn test_array_fill_offset_plus_count_overflow_does_not_wrap_and_bypass_the_bounds_check() {
+        use wasm_types::StorageType;
+        // Adversarial: offset = i32::MAX, count = 10 -- `offset + count`
+        // would wrap past `usize` on a 32-bit build if computed with a
+        // bare `+` instead of `checked_add`. This op's own handler uses
+        // `checked_add` (see its doc comment's own DoS-guard citation),
+        // so this must trap cleanly, never panic or silently accept a
+        // wrapped-around in-bounds-looking offset.
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0xFF, 0xFF, 0xFF, 0xFF, 0x07, // offset = i32::MAX (0x7FFFFFFF)
+            0x41, 1, // value 1
+            0x41, 10, // count 10
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_fill_on_null_reference_traps_even_when_count_is_zero() {
+        // Real corpus precedent (`array_fill.wast`'s own "array_fill-null"
+        // case, confirmed by direct read): a null array reference traps
+        // UNCONDITIONALLY, even when `count == 0` -- not gated on `n > 0`
+        // despite this spec's own prose paraphrase suggesting otherwise
+        // (this handler's own doc comment documents the re-verification).
+        let code = vec![
+            0xD0, 0x0F, // ref.null
+            0x41, 0, // offset 0
+            0x41, 0, // value 0
+            0x41, 0, // count 0
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    /// Helper: build a two-array-local engine, pre-loading array-type 0's
+    /// AND array-type 1's element storage (`array.copy`'s own two type
+    /// immediates, W38 slice 2) -- the execution layer has no per-type
+    /// structural check of its own; that's `wasm-validator`'s job,
+    /// exercised separately in `wasm-validator/tests/type_check.rs`.
+    fn array_copy_engine(code: Vec<u8>, results: Vec<ValueType>) -> WasmExecutionEngine {
+        use wasm_types::StorageType;
+        array_engine_with_locals(
+            code,
+            results,
+            vec![ValueType::Anyref, ValueType::Anyref],
+            vec![Some(StorageType::Val(ValueType::I32)), Some(StorageType::Val(ValueType::I32))],
+        )
+    }
+
+    #[test]
+    fn test_array_copy_between_two_distinct_arrays_copies_the_requested_range() {
+        // local 0: array type 0, length 3, filled via array.fill with 7.
+        // local 1: array type 1, length 3, default zero.
+        // array.copy 1 0 (dest=local1, d=0) (src=local0, s=0, n=2) --
+        // copies indices [0,2) from local0 into local1.
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0, // offset 0
+            0x41, 7, // value 7
+            0x41, 3, // count 3
+            0xFB, 0x10, 0x00, // array.fill 0 (local0 = [7, 7, 7])
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x01, // array.new_default 1 (local1 = [0, 0, 0])
+            0x21, 0x01, // local.set 1
+            0x20, 0x01, // local.get 1 (dest ref)
+            0x41, 0, // d = 0
+            0x20, 0x00, // local.get 0 (src ref)
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x11, 0x01, 0x00, // array.copy dest_type=1 src_type=0
+            0x20, 0x01, // local.get 1
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x01, // array.get 1
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(7)], "index 0 must be copied from src");
+    }
+
+    #[test]
+    fn test_array_copy_leaves_indices_outside_the_copied_range_untouched() {
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0, // offset 0
+            0x41, 7, // value 7
+            0x41, 3, // count 3
+            0xFB, 0x10, 0x00, // array.fill 0 (local0 = [7, 7, 7])
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x01, // array.new_default 1 (local1 = [0, 0, 0])
+            0x21, 0x01, // local.set 1
+            0x20, 0x01, // local.get 1 (dest)
+            0x41, 0, // d = 0
+            0x20, 0x00, // local.get 0 (src)
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2 (copies index 0,1 only -- index 2 stays untouched)
+            0xFB, 0x11, 0x01, 0x00, // array.copy dest_type=1 src_type=0
+            0x20, 0x01, // local.get 1
+            0x41, 2, // index 2
+            0xFB, 0x0B, 0x01, // array.get 1
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "index 2 was outside the copied range and must stay the destination's own default");
+    }
+
+    #[test]
+    fn test_array_copy_out_of_bounds_source_range_traps() {
+        // src length 3, s=2, n=2 -> 2+2=4 > 3, must trap on the SOURCE
+        // bounds check.
+        let code = vec![
+            0x41, 3, 0xFB, 0x07, 0x00, // array.new_default 0 -> local 0 (src)
+            0x21, 0x00,
+            0x41, 3, 0xFB, 0x07, 0x01, // array.new_default 1 -> local 1 (dest)
+            0x21, 0x01,
+            0x20, 0x01, // dest ref
+            0x41, 0, // d = 0
+            0x20, 0x00, // src ref
+            0x41, 2, // s = 2
+            0x41, 2, // n = 2 (2+2=4 > src length 3)
+            0xFB, 0x11, 0x01, 0x00, // array.copy dest=1 src=0
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_copy_out_of_bounds_destination_range_traps() {
+        // dest length 3, d=2, n=2 -> 2+2=4 > 3, must trap on the
+        // DESTINATION bounds check -- the source range itself (s=0, n=2)
+        // is fully in-bounds, so this specifically exercises the second
+        // (destination) `checked_add` check, not the first.
+        let code = vec![
+            0x41, 3, 0xFB, 0x07, 0x00, // array.new_default 0 -> local 0 (src)
+            0x21, 0x00,
+            0x41, 3, 0xFB, 0x07, 0x01, // array.new_default 1 -> local 1 (dest)
+            0x21, 0x01,
+            0x20, 0x01, // dest ref
+            0x41, 2, // d = 2
+            0x20, 0x00, // src ref
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2 (2+2=4 > dest length 3)
+            0xFB, 0x11, 0x01, 0x00, // array.copy dest=1 src=0
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_copy_dest_ref_null_traps_even_when_count_is_zero() {
+        // Real corpus precedent (`array_copy.wast`'s own "array_copy-
+        // null-left" case): traps unconditionally, even with n=0.
+        let code = vec![
+            0x41, 3, 0xFB, 0x07, 0x00, // array.new_default 0 -> src
+            0x21, 0x00,
+            0xD0, 0x0F, // ref.null (dest)
+            0x41, 0, // d = 0
+            0x20, 0x00, // src ref
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x11, 0x00, 0x00, // array.copy dest=0 src=0
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_copy_src_ref_null_traps_even_when_count_is_zero() {
+        // Real corpus precedent (`array_copy.wast`'s own "array_copy-
+        // null-right" case): traps unconditionally, even with n=0.
+        let code = vec![
+            0x41, 3, 0xFB, 0x07, 0x00, // array.new_default 0 -> dest
+            0x21, 0x00,
+            0x20, 0x00, // dest ref
+            0x41, 0, // d = 0
+            0xD0, 0x0F, // ref.null (src)
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x11, 0x00, 0x00, // array.copy dest=0 src=0
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_copy_self_overlap_forward_shift_is_memmove_correct() {
+        // Mirrors `array_copy.wast`'s own "array_copy_overlap_test-1"
+        // shape: SAME array, `d=1 > s=0`, shifting every element one slot
+        // to the RIGHT. A naive forward byte-at-a-time copy would corrupt
+        // the tail by reading already-overwritten data; this handler's
+        // own "read the WHOLE source range into an owned buffer before
+        // any write" design sidesteps that hazard unconditionally (see
+        // its own doc comment), so this confirms that design, not a
+        // direction-aware branch.
+        //
+        // Seeds a real [0,1,2,3,4] array via `array.new_fixed` (whose own
+        // doc comment establishes "last-pushed value is the LOWEST
+        // index", so operands are pushed in ASCENDING order below --
+        // first-pushed (0) lands at index 0, per `array.new_fixed`'s own
+        // "first-pushed is deepest/lowest index" doc comment/test
+        // (`test_array_new_fixed_pops_exactly_n_elements_in_order`).
+        let code = vec![
+            0x41, 0, 0x41, 1, 0x41, 2, 0x41, 3, 0x41, 4, // pushed 0,1,2,3,4 -> index0=0 .. index4=4
+            0xFB, 0x08, 0x00, 0x05, // array.new_fixed 0, count=5
+            0x21, 0x00, // local.set 0
+            // array.copy 0 0 (self): dest=local0 d=1, src=local0 s=0, n=4
+            // -- shifts [0,1,2,3] into slots [1,2,3,4]: [0,0,1,2,3].
+            0x20, 0x00, // dest ref
+            0x41, 1, // d = 1
+            0x20, 0x00, // src ref
+            0x41, 0, // s = 0
+            0x41, 4, // n = 4
+            0xFB, 0x11, 0x00, 0x00, // array.copy dest=0 src=0
+            // index 4 must be 3 (the OLD value at index 3, shifted right
+            // by one) -- a byte-at-a-time forward copy without a buffer
+            // would have already overwritten index 3 with index 2's
+            // value by the time index 4 is written, corrupting this to 2.
+            0x20, 0x00,
+            0x41, 4,
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(3)]);
+    }
+
+    #[test]
+    fn test_array_copy_self_overlap_backward_shift_is_memmove_correct() {
+        // The mirror-image shift (`array_copy_overlap_test-2`'s own
+        // shape): `d=0 < s=1`, every element moves one slot to the LEFT.
+        // Array [0,1,2,3,4] -> copy src[1..5) into dest[0..4) ->
+        // [1,2,3,4,4].
+        let code = vec![
+            0x41, 0, 0x41, 1, 0x41, 2, 0x41, 3, 0x41, 4, // index0=0 .. index4=4
+            0xFB, 0x08, 0x00, 0x05, // array.new_fixed 0, count=5
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // dest ref
+            0x41, 0, // d = 0
+            0x20, 0x00, // src ref
+            0x41, 1, // s = 1
+            0x41, 4, // n = 4
+            0xFB, 0x11, 0x00, 0x00, // array.copy dest=0 src=0
+            // index 0 must be 1 (the OLD value at index 1) -- a
+            // backward-only copy loop that overwrites low indices before
+            // reading them would already have clobbered this.
+            0x20, 0x00,
+            0x41, 0,
+            0xFB, 0x0B, 0x00,
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]);
+    }
+
+    // ── array.init_data / array.new_data (W38 slice 3: `code/specs/
+    // W38-wasm-gc-array-bulk-ops.md`) ───────────────────────────────────────
+    //
+    // Both instructions read raw bytes from `ctx.data_segments`/`ctx.
+    // dropped_data_segments` -- the SAME fields `memory.init` already uses
+    // (see this module's own `resolve_array_data_segment`/`checked_segment_
+    // byte_range`/`decode_array_element_from_bytes` helpers) -- so every
+    // test here calls `set_data_segments`/`set_dropped_data_segments` on
+    // the engine before invoking, mirroring `memory.init`'s own existing
+    // test fixtures' setup shape.
+
+    #[test]
+    fn test_array_new_data_decodes_packed_i8_elements_at_a_byte_offset() {
+        use wasm_types::StorageType;
+        // data segment: [0x01, 0x02, 0x03, 0x04]. `s=1, n=2` reads bytes
+        // [1..3) = [0x02, 0x03] -- confirms `s` is a raw BYTE offset (not
+        // scaled by the packed width), the exact bug this slice's own
+        // `checked_segment_byte_range` doc comment documents having caught
+        // via `array_init_data.wast`'s own `array_init_data_i16` case.
+        let code = vec![
+            0x41, 1, // s = 1
+            0x41, 2, // n = 2
+            0xFB, 0x09, 0x00, 0x00, // array.new_data type=0 data=0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0, // index 0
+            0xFB, 0x0D, 0x00, // array.get_u 0
+            0x20, 0x00, // local.get 0
+            0x41, 1, // index 1
+            0xFB, 0x0D, 0x00, // array.get_u 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32, ValueType::I32], vec![ValueType::Anyref], vec![Some(StorageType::I8)]);
+        engine.set_data_segments(vec![vec![0x01, 0x02, 0x03, 0x04]]);
+        engine.set_dropped_data_segments(vec![false]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0x02), WasmValue::I32(0x03)]);
+    }
+
+    #[test]
+    fn test_array_new_data_decodes_full_width_i32_little_endian() {
+        use wasm_types::StorageType;
+        // Real corpus precedent (`array_new_data.wast`'s own "array-new-
+        // data-little-endian" case): a full-width (non-packed) storage
+        // type reads its 4 bytes little-endian, not byte-for-byte.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 1, // n = 1
+            0xFB, 0x09, 0x00, 0x00, // array.new_data type=0 data=0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        engine.set_data_segments(vec![vec![0xAA, 0xBB, 0xCC, 0xDD]]);
+        engine.set_dropped_data_segments(vec![false]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(i32::from_le_bytes([0xAA, 0xBB, 0xCC, 0xDD]))]);
+    }
+
+    #[test]
+    fn test_array_new_data_decodes_full_width_i64_little_endian() {
+        use wasm_types::StorageType;
+        // The 8-byte full-width analogue of the `i32` case above --
+        // confirms the width table's `i64`/`f64` arm, not just `i32`/`f32`.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 1, // n = 1
+            0xFB, 0x09, 0x00, 0x00, // array.new_data type=0 data=0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I64], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I64))]);
+        engine.set_data_segments(vec![vec![1, 2, 3, 4, 5, 6, 7, 8]]);
+        engine.set_dropped_data_segments(vec![false]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I64(i64::from_le_bytes([1, 2, 3, 4, 5, 6, 7, 8]))]);
+    }
+
+    #[test]
+    fn test_array_new_data_out_of_bounds_segment_content_traps() {
+        use wasm_types::StorageType;
+        // segment is 4 bytes; `s=0, n=2` on an `i32` (width 4) array needs
+        // 8 bytes -- out of bounds, must TRAP (not a validation error --
+        // this is the runtime content-bounds check, distinct from the
+        // compile-time data_idx-range check `wasm-validator` performs).
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x09, 0x00, 0x00, // array.new_data type=0 data=0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(StorageType::Val(ValueType::I32))]);
+        engine.set_data_segments(vec![vec![0xAA, 0xBB, 0xCC, 0xDD]]);
+        engine.set_dropped_data_segments(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_new_data_out_of_range_data_segment_index_is_a_defensive_runtime_error() {
+        // Bypasses `wasm-validator` entirely (this test hand-builds
+        // bytecode directly, same as every other test in this module) to
+        // confirm the RUNTIME's own defensive check (never trust a decoded
+        // index, regardless of what validation should have caught) also
+        // rejects cleanly -- `data_idx=5` but zero segments are registered.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x09, 0x00, 0x05, // array.new_data type=0 data=5 (out of range)
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::I32))]);
+        engine.set_data_segments(vec![]);
+        engine.set_dropped_data_segments(vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_init_data_writes_into_existing_array_leaving_other_elements_untouched() {
+        use wasm_types::StorageType;
+        // array [99, 99, 99, 99] (via array.fill), then array.init_data
+        // writes 2 elements (values 1, 2) starting at index 1 -- expect
+        // [99, 1, 2, 99]: indices 0 and 3 must stay the pre-fill sentinel.
+        let code = vec![
+            0x41, 4, // length 4
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0 (stash arrayref)
+            0x20, 0x00, // local.get 0
+            0x41, 0, // offset 0
+            0x41, 0xE3, 0x00, // i32.const 99 (sLEB128: 2 bytes, 99 is past the single-byte -64..63 range)
+            0x41, 4, // count 4
+            0xFB, 0x10, 0x00, // array.fill 0 -> [99, 99, 99, 99]
+            0x20, 0x00, // local.get 0 (arrayref)
+            0x41, 1, // d = 1
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x12, 0x00, 0x00, // array.init_data type=0 data=0
+            0x20, 0x00, // local.get 0
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x20, 0x00, // local.get 0
+            0x41, 1, // index 1
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x20, 0x00, // local.get 0
+            0x41, 2, // index 2
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x20, 0x00, // local.get 0
+            0x41, 3, // index 3
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(
+            code,
+            vec![ValueType::I32, ValueType::I32, ValueType::I32, ValueType::I32],
+            vec![ValueType::Anyref],
+            vec![Some(StorageType::Val(ValueType::I32))],
+        );
+        engine.set_data_segments(vec![vec![1, 0, 0, 0, 2, 0, 0, 0]]); // two little-endian i32s: 1, 2
+        engine.set_dropped_data_segments(vec![false]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(99), WasmValue::I32(1), WasmValue::I32(2), WasmValue::I32(99)],
+            "only indices [1, 3) were written; 0 and 3 must keep the pre-fill sentinel"
+        );
+    }
+
+    #[test]
+    fn test_array_init_data_out_of_bounds_segment_content_traps() {
+        use wasm_types::StorageType;
+        // segment is 4 bytes; `s=0, n=2` on an `i32` array needs 8 bytes --
+        // a runtime TRAP, distinct from a validation error.
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00,
+            0x20, 0x00, // arrayref
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x12, 0x00, 0x00, // array.init_data type=0 data=0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        engine.set_data_segments(vec![vec![0xAA, 0xBB, 0xCC, 0xDD]]);
+        engine.set_dropped_data_segments(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_init_data_out_of_bounds_destination_traps_before_reading_the_segment() {
+        // `d + n > array.len` must trap even when the segment itself has
+        // plenty of bytes -- confirms the destination-bounds check runs
+        // (and is enforced) independently of the segment-bounds check,
+        // matching `array_init_data.wast`'s own corpus expectation that an
+        // out-of-range destination traps regardless of segment size.
+        let code = vec![
+            0x41, 2, // length 2
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00,
+            0x20, 0x00, // arrayref
+            0x41, 1, // d = 1
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2 (1+2=3 > array length 2)
+            0xFB, 0x12, 0x00, 0x00, // array.init_data type=0 data=0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::I8)]);
+        engine.set_data_segments(vec![vec![0xAA, 0xBB, 0xCC, 0xDD]]);
+        engine.set_dropped_data_segments(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_init_data_null_array_reference_traps() {
+        // Mirrors `array.fill`/`array.copy`'s own identical null-check
+        // convention (`pop_array_ref`'s unconditional null check).
+        let code = vec![
+            0xD0, 0x0F, // ref.null (arrayref)
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x12, 0x00, 0x00, // array.init_data type=0 data=0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::I32))]);
+        engine.set_data_segments(vec![vec![]]);
+        engine.set_dropped_data_segments(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_init_data_dropped_segment_with_zero_count_succeeds() {
+        use wasm_types::StorageType;
+        // Real corpus precedent (`array_init_data.wast`'s own "init_data/
+        // elem with dropped segments traps for non-zero length" comment,
+        // and its own `(assert_return (invoke "array_init_data" (i32.const
+        // 0) (i32.const 0) (i32.const 0)))` case immediately after
+        // `drop_segs`): a dropped segment behaves as length-0, so `n=0`
+        // still succeeds regardless (any offset `<= 0` trivially fits).
+        let code = vec![
+            0x41, 2, // length 2
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00,
+            0x20, 0x00, // arrayref
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x12, 0x00, 0x00, // array.init_data type=0 data=0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        engine.set_data_segments(vec![vec![0xAA, 0xBB, 0xCC, 0xDD]]);
+        engine.set_dropped_data_segments(vec![true]);
+        assert!(engine.call_function(0, &[]).is_ok(), "a dropped segment degrades to length-0, but n=0 must still succeed");
+    }
+
+    #[test]
+    fn test_array_init_data_dropped_segment_with_nonzero_count_traps() {
+        use wasm_types::StorageType;
+        // The mirror-image of the case directly above: the SAME dropped
+        // segment, but `n=1` -- must TRAP, matching `memory.init`'s own
+        // already-established "dropped segment behaves as length-0" rule
+        // reused verbatim here.
+        let code = vec![
+            0x41, 2, // length 2
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00,
+            0x20, 0x00, // arrayref
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 1, // n = 1
+            0xFB, 0x12, 0x00, 0x00, // array.init_data type=0 data=0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        engine.set_data_segments(vec![vec![0xAA, 0xBB, 0xCC, 0xDD]]);
+        engine.set_dropped_data_segments(vec![true]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ── W38 slice 5 (`code/specs/W38-wasm-gc-array-bulk-ops.md`):
+    // array.new_elem / array.init_elem -- opcode-level coverage
+    // complementing `wasm-runtime/tests/array_init_elem_new_elem.rs`'s own
+    // end-to-end (text-parser + validator + real instantiation) tests for
+    // the happy path, the dropped-segment/OOB-segment traps, and the
+    // corpus's own "not re-evaluated" invariant. These focus on the two
+    // things only reachable by hand-building bytecode directly (mirroring
+    // `array.new_data`/`array.init_data`'s own test suite immediately
+    // above): the `MAX_ARRAY_ALLOC` DoS guard (checked BEFORE any segment
+    // read, per this spec's own explicit security requirement) and the
+    // runtime's own DEFENSIVE out-of-range `elem_idx` check (distinct from
+    // -- and never reached when -- `wasm-validator`'s compile-time one
+    // already rejects it; this is "never trust a decoded module at
+    // runtime regardless of what validation should have caught",
+    // `resolve_array_data_segment`'s own established convention, applied
+    // to `resolve_array_elem_segment`). ────────────────────────────────
+
+    #[test]
+    fn test_array_new_elem_reads_values_directly_from_element_values_no_byte_decoding() {
+        // Unlike `array.new_data`, an elem segment's items are already
+        // real, typed `WasmValue`s (evaluated once at instantiation time)
+        // -- `array.new_elem` copies them verbatim, no byte-width/storage-
+        // type reinterpretation involved at all.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x0A, 0x00, 0x00, // array.new_elem type=0 elem=0
+            0x21, 0x00, // local.set 0 (stash arrayref)
+            0x20, 0x00,
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x20, 0x00,
+            0x41, 1, // index 1
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::Anyref, ValueType::Anyref], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![vec![WasmValue::Ref(Some(7)), WasmValue::Ref(Some(9))]]);
+        engine.set_dropped_elements(vec![false]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(7)), WasmValue::Ref(Some(9))]);
+    }
+
+    #[test]
+    fn test_array_new_elem_out_of_bounds_segment_content_traps() {
+        // segment has 2 entries; `s=0, n=3` overruns it -- a runtime TRAP,
+        // distinct from the compile-time `elem_idx`-range check.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 3, // n = 3
+            0xFB, 0x0A, 0x00, 0x00, // array.new_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![vec![WasmValue::Ref(Some(1)), WasmValue::Ref(Some(2))]]);
+        engine.set_dropped_elements(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_new_elem_over_the_dos_guard_ceiling_traps_before_reading_the_segment() {
+        // A hand-crafted count past `MAX_ARRAY_ALLOC`, checked BEFORE any
+        // segment read or allocation -- same established convention as
+        // `array.new_data`'s own identical guard test above, and this
+        // spec's own explicit "n must be bounded before allocation"
+        // security requirement. The segment itself is EMPTY, so if the
+        // guard fired only after (or instead of) checking segment bounds,
+        // this would still trap either way -- what this test actually
+        // pins down is that the huge `n` itself is rejected, not merely
+        // that SOME trap happens to fire.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, // n = u32::MAX
+            0xFB, 0x0A, 0x00, 0x00, // array.new_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![vec![]]);
+        engine.set_dropped_elements(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_new_elem_out_of_range_elem_idx_is_a_defensive_runtime_error() {
+        // Bypasses `wasm-validator` entirely (hand-built bytecode, same
+        // shape as `array.new_data`'s own identical test above) to confirm
+        // the RUNTIME's own defensive check also rejects cleanly --
+        // `elem_idx=5` but zero segments are registered.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x0A, 0x00, 0x05, // array.new_elem type=0 elem=5 (out of range)
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![]);
+        engine.set_dropped_elements(vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_init_elem_writes_into_existing_array_leaving_other_elements_untouched() {
+        // array [null, null, null, null] (via array.new_default), then
+        // array.init_elem writes 2 elements starting at index 1 -- expect
+        // indices 0 and 3 to stay null, mirroring `array.init_data`'s own
+        // identical "leaving other elements untouched" test shape above.
+        let code = vec![
+            0x41, 4, // length 4
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0 (stash arrayref)
+            0x20, 0x00, // arrayref
+            0x41, 1, // d = 1
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x13, 0x00, 0x00, // array.init_elem type=0 elem=0
+            0x20, 0x00,
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x00,
+            0x20, 0x00,
+            0x41, 1, // index 1
+            0xFB, 0x0B, 0x00,
+            0x20, 0x00,
+            0x41, 2, // index 2
+            0xFB, 0x0B, 0x00,
+            0x20, 0x00,
+            0x41, 3, // index 3
+            0xFB, 0x0B, 0x00,
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(
+            code,
+            vec![ValueType::Anyref, ValueType::Anyref, ValueType::Anyref, ValueType::Anyref],
+            vec![ValueType::Anyref],
+            vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))],
+        );
+        engine.set_element_values(vec![vec![WasmValue::Ref(Some(11)), WasmValue::Ref(Some(22))]]);
+        engine.set_dropped_elements(vec![false]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::Ref(None), WasmValue::Ref(Some(11)), WasmValue::Ref(Some(22)), WasmValue::Ref(None)]
+        );
+    }
+
+    #[test]
+    fn test_array_init_elem_null_array_reference_traps() {
+        // Mirrors `array.init_data`'s own identical null-check convention
+        // (`pop_array_ref`'s unconditional null check).
+        let code = vec![
+            0xD0, 0x0F, // ref.null (arrayref)
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x13, 0x00, 0x00, // array.init_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![vec![]]);
+        engine.set_dropped_elements(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_init_elem_dropped_segment_with_zero_count_succeeds_but_nonzero_traps() {
+        // The elem-segment analogue of `array_init_data`'s own dropped-
+        // segment pair above -- a dropped segment behaves as length-0, so
+        // `n=0` still succeeds regardless, but `n>0` traps.
+        let zero_code = vec![
+            0x41, 2, // length 2
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00,
+            0x20, 0x00,
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x13, 0x00, 0x00, // array.init_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut zero_engine = array_engine_with_locals(zero_code, vec![], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        zero_engine.set_element_values(vec![vec![WasmValue::Ref(Some(1)), WasmValue::Ref(Some(2))]]);
+        zero_engine.set_dropped_elements(vec![true]);
+        assert!(zero_engine.call_function(0, &[]).is_ok(), "a dropped segment degrades to length-0, but n=0 must still succeed");
+
+        let nonzero_code = vec![
+            0x41, 2, // length 2
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00,
+            0x20, 0x00,
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 1, // n = 1
+            0xFB, 0x13, 0x00, 0x00, // array.init_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut nonzero_engine = array_engine_with_locals(nonzero_code, vec![], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        nonzero_engine.set_element_values(vec![vec![WasmValue::Ref(Some(1)), WasmValue::Ref(Some(2))]]);
+        nonzero_engine.set_dropped_elements(vec![true]);
+        assert!(nonzero_engine.call_function(0, &[]).is_err());
+    }
+
     // ── W04: real GC — end-to-end reclamation through real dispatch ────────
     //
     // These drive an actual loop through the real `execute_branch`/`br_if`
@@ -16646,6 +18160,7 @@ mod tests {
             dropped_data_segments: Vec::new(),
             elements: Vec::new(),
             dropped_elements: Vec::new(),
+            element_values: Vec::new(),
             tags: Vec::new(),
             tag_identities: Vec::new(),
             try_table_infos: Vec::new(),

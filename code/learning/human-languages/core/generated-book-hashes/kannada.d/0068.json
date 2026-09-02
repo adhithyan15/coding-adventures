@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:9409d65e0a50c878",
+  "lessonIds": [
+    "KA-S135-letter-a",
+    "KA-C68-is-not",
+    "KA-C68-neither",
+    "KA-C68-dont-know",
+    "KA-C68-me-neither"
+  ],
+  "tex": "kannada/book/chapters/ch68-not-that-and-neither.tex"
+}

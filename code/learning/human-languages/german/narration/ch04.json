@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:047d4761fe7b78e9",
+  "sourceHash": "fnv1a64:5d8c4e77a7032a8b",
   "lessons": [
     {
       "id": "GE-C04-sehen",
@@ -2326,7 +2326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32a759605e7db470",
+      "sourceHash": "fnv1a64:e0e9ff9aa0f1e5ac",
       "notice": null,
       "blocks": [
         {
@@ -2376,7 +2376,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Everything from chapter 1 to here, in one conversation:"
+              "text": "Everything from your first greeting to here, in one conversation:"
             },
             {
               "kind": "table",

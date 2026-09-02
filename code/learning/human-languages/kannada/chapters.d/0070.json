@@ -1,0 +1,24 @@
+{
+  "chapter": 70,
+  "title": "Saying So, and Saying Why",
+  "label": "ch:ka-saying-why",
+  "canDo": "I can report what was said, give a reason, and say what I think.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C70-i-think",
+    "kind": "production",
+    "summary": "Complete KA-C70-i-think and give an opinion with the quotative and a reason for it.",
+    "assesses": [
+      "KA-LEX-C70-TELL-01",
+      "KA-LEX-C70-TELL-02",
+      "KA-GRAMMAR-C70-TELL-03",
+      "KA-SCRIPT-RECOG-138",
+      "KA-LEX-C70-TELL-04",
+      "KA-GRAMMAR-C70-TELL-05",
+      "KA-LEX-C70-TELL-06",
+      "KA-PRAGMATICS-C70-TELL-07"
+    ]
+  }
+}

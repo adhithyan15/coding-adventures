@@ -1,5 +1,293 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.104 — 2026-09-02 — feat: elem-segment three-layer fix + `array.init_elem`/`array.new_elem` -- W38 slices 4/5, GC array bulk ops
+
+Slices 4/5 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan
+-- the riskiest, isolated elem-segment data-model fix (Correction 2),
+plus the two ELEMENT-segment-sourced bulk-ops instructions it exists to
+unblock.
+
+**Layer 1 (`build_elem`'s reftype-tag recognition, generalized)**: both
+of `build_elem`'s own "is this a reftype tag" call sites (`is_passive`
+detection, and the `use_exprs` disambiguation) now share one helper,
+`elem_reftype_tag`, which accepts ANY successfully-parsed, non-numeric
+`ValueType` via the existing `parse_value_type` -- not just the bare
+`funcref`/`externref` atoms it recognized before. Real corpus fix: an
+`(elem $e1 arrayref (item ...) ...)` segment (`array_init_elem.wast`/
+`array_new_elem.wast`) used to be misdetected as ACTIVE by `is_passive`
+(`"arrayref"` matched none of the old three atoms), then tried to parse
+the bare `arrayref` atom itself as an offset expression -- a confusing,
+wrong-layer parse error, caught by direct re-probing before landing this
+fix, not assumed from the spec's own prose alone.
+
+**Layer 2 (`resolve_elem_expr_entry`, rewritten)**: contract changed from
+"parse `(ref.func ...)` or `(ref.null ...)`, return `Option<u32>`, reject
+everything else" to "parse ANY constant instruction sequence legal in an
+elem-segment item -- `(item instr*)` or a bare single folded instruction,
+identical `encode_instr_list` machinery every other constant expression
+in this crate already uses -- return `(fast_path_func_idx, raw_bytes)`."
+No opcode-level allowlist is enforced here (matching a global's own
+`init_expr` parsing); illegal-in-a-constant-expression instructions are
+only rejected later, at evaluation time, by `wasm-execution::
+evaluate_const_expr_gc`'s own existing check.
+
+**Layer 3 (`Element::item_exprs`/`declared_type`, populated for real)**:
+every element segment this crate builds (`build_elem`'s two branches AND
+the `(table funcref (elem ...))` inline shorthand) now populates
+`item_exprs` with real per-item constant-expression bytes -- a plain
+funcidx-list entry re-encodes as `[0xD2, <idx>, 0x0B]`/`[0xD0, 0x70,
+0x0B]` (`ref.func`/`ref.null func`) via a new shared helper,
+`encode_ref_func_item_expr`, so `wasm-runtime`'s later evaluation of
+`item_exprs` matches `function_indices`' own reading exactly for this
+common case -- and `declared_type` (the segment's own reftype tag, or
+`ValueType::Funcref` for the implicit funcidx-list default).
+
+**Binary encoding** for `array.new_elem $t $elem <s> <n>` → `0xFB 0x0A
+<type_idx> <elem_idx>` and `array.init_elem $t $elem <arrayref> <d> <s>
+<n>` → `0xFB 0x13 <type_idx> <elem_idx>` (operand order confirmed against
+`array_init_elem.wast`'s own real corpus call sites).
+
+**CI-caught fix, before merge**: the first draft added these two as a
+SECOND combined dispatch branch alongside slice 3's own `array.new_data`/
+`array.init_data` branch in `encode_gc_struct_array_instr` (each
+`#[inline(never)]`, matching slice 3's own established pattern exactly)
+-- and reproduced the EXACT same real-OS-stack SIGABRT slice 3's own fix
+was written to prevent, caught by macOS CI running this crate's own
+`deeply_folded_struct_instructions_do_not_overflow_the_real_stack`
+regression test (confirmed to reproduce locally too, and confirmed via a
+direct A/B -- removing just the new branch made the test pass again).
+`#[inline(never)]` on the new callee did NOT help: a debug build still
+reserves stack space in the CALLER for each distinct branch's own `?`-
+propagated `Result`, regardless of whether the callee itself is inlined,
+so a 7th top-level branch of ANY shape was enough on its own. Fixed by
+merging BOTH pairs (`array.new_data`/`array.init_data` AND `array.
+new_elem`/`array.init_elem`) into ONE function, `encode_array_segment_
+sourced`, dispatched from a SINGLE combined branch -- keeping `encode_gc_
+struct_array_instr`'s own branch count at 6 (its pre-slice-5 count).
+Verified byte-for-byte behavior-preserving: the full 257-file conformance
+baseline is IDENTICAL before and after this refactor.
+
+**A real, corpus-caught regression fixed in the same PR, in a file this
+spec doesn't otherwise touch**: `elem.wast`'s own `(elem (table $t)
+(global.get $g3) funcref (global.get $gf))` -- an ACTIVE segment whose own
+item is `(global.get $gf)`, not a literal `ref.func`/`ref.null` --
+previously failed to even PARSE (Layer 2's old restriction), so `wasm-
+runtime`'s active-elem-application loop (which populates the TARGET
+TABLE, not an array) never had to represent anything richer than a plain
+funcidx. Once Layer 1/2 make this parse, `wasm-runtime::instantiate()`'s
+own active-application loop needed a matching fix -- see that crate's own
+CHANGELOG for the full trace (`function_indices` has no representation
+for a non-literal item; the loop now sources from the new
+`element_values` table instead).
+
+New unit test: `parse_value_type`/`elem_reftype_tag`'s own generalized
+recognition, and `resolve_elem_expr_entry`'s richer item shapes, are
+exercised end-to-end through `wasm-runtime`'s own new integration test
+file (`tests/array_init_elem_new_elem.rs`) rather than duplicated as
+parser-only unit tests here, since the real behavior of interest (does
+the resulting `Element` actually drive correct execution) only manifests
+once `wasm-runtime`/`wasm-execution` consume it.
+
+`cargo test -p wasm-wast-parser`: 415 passed, 0 failed.
+
+## 0.1.103 — 2026-09-02 — feat: `array.new_data`/`array.init_data` -- W38 slice 3, GC array bulk ops
+
+Slice 3 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan --
+the two DATA-segment-sourced bulk-ops instructions (the element-segment-
+sourced pair, `array.new_elem`/`array.init_elem`, remain deliberately
+unwired; they need the real three-layer elem-segment data-model fix a
+later, separate slice attempts).
+
+One new binary-encoder function, `encode_array_new_or_init_data`, wired
+into `encode_gc_struct_array_instr`'s dispatch via ONE combined `matches!`
+branch (not two separate branches, `array.fill`/`array.copy`'s own
+two-function/two-branch shape) --
+
+- `array.new_data $t $data <s> <n>` → `0xFB 0x09 <type_idx> <data_idx>`
+- `array.init_data $t $data <arrayref> <d> <s> <n>` → `0xFB 0x12
+  <type_idx> <data_idx>` (operand order confirmed against
+  `array_init_data.wast`'s own real corpus call sites)
+
+Both resolve their data-segment index via `resolve_idx(&icx.module.
+data_names, ..., "data")` -- the same table `memory.init`/`data.drop`
+already use. Both sub-opcode byte values (`0x09`/`0x12`) are real,
+spec-text-fetched values, cross-checked against the real GC proposal's own
+binary grammar page: `0x09` fills the one remaining gap in the `0x06`-
+`0x0F` array-allocation block (right after `array.new_fixed`); `0x12`
+sits right after `array.copy` (`0x11`) and before `ref.test`/`ref.test
+null` (`0x14`/`0x15`).
+
+**Stack-frame regression caught and fixed before landing**: an EARLIER
+version of this change added `array.new_data`/`array.init_data` as two
+separate dispatch branches directly inside `encode_gc_struct_array_instr`
+(mirroring `array.fill`/`array.copy`'s own two-function shape exactly).
+That function sits on this crate's hot recursive encoding path, guarded
+only by `MAX_INSTR_NESTING_DEPTH`'s software depth counter -- and, in a
+debug build, a function's own stack frame is sized for the union of every
+branch it directly contains. Two more branches there measurably grew
+`encode_gc_struct_array_instr`'s own frame enough to overflow the REAL OS
+stack at exactly `MAX_INSTR_NESTING_DEPTH` levels of recursion, BEFORE the
+depth counter itself ever fired -- caught by this crate's own pre-existing
+`deeply_folded_struct_instructions_do_not_overflow_the_real_stack`
+regression test going from a clean `TooDeeplyNested` parse error to a
+genuine SIGABRT. This is the exact same class of regression `encode_flat_
+instr`'s own `i32.load` arm doc comment already documents having hit once
+before (task #92/#110). Fixed by collapsing both instructions into ONE
+function (dispatching on `name` internally, the same pattern `encode_
+struct_new` already uses for `struct.new`/`struct.new_default`) and ONE
+combined `matches!` branch in the caller -- confirmed the regression test
+passes again, and the fix changes zero externally-observable behavior
+(same bytes emitted either way).
+
+New unit tests: `array_new_data_and_init_data_encode_correctly`
+(byte-for-byte, mirroring `array_fill_and_copy_encode_correctly`'s own
+shape).
+
+**Corpus impact** (regenerated baseline, diffed programmatically against
+the pre-slice baseline across all 257 files -- see the PR description for
+the full accounting): `array_init_data.wast` and `array_new_data.wast`
+both go from entirely `not_yet_supported` to 100% real `Pass`.
+`array_copy.wast` ALSO resolves fully now that its own `array.new_data`
+dependency (confirmed, not assumed, by `wasm-conformance`'s own prior
+0.1.125 CHANGELOG entry) is implemented -- see `wasm-validator`'s own
+CHANGELOG for a real, corpus-caught `array.copy` validation bug this
+unblocking exposed and fixed in the same PR. `array.wast` gains 14 more
+real `Pass` directives (its own `array.new_data`-attributable subset); its
+remaining `not_yet_supported` directives are exclusively the elem-segment-
+sourced instruction family, out of scope for this slice.
+
+## 0.1.102 — 2026-09-02 — feat: `arrayref` keyword + `array.fill`/`array.copy` -- W38 slices 1-2, GC array bulk ops
+
+Slices 1-2 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan.
+
+**Slice 1**: `parse_value_type`'s bare-atom dispatch gains `"arrayref" =>
+Ok(ValueType::ArrayRefAny)` (Correction 3), one new arm in the same match
+W37 already extended for `structref`. Previously a hard parse error
+("expected a value type, found \"arrayref\""); real corpus need:
+`array_init_elem.wast:118`/`array_new_elem.wast:107` both declare
+`(array (mut arrayref))` storage types. New unit test:
+`array_element_naming_bare_arrayref_keyword_is_array_ref_any`.
+
+**Slice 2**: two new binary-encoder functions, `encode_array_fill`/
+`encode_array_copy`, wired into `encode_gc_struct_array_instr`'s dispatch
+alongside the other five array instruction groups (each its own
+minimally-sized function, matching this file's established
+one-function-per-shape convention) --
+
+- `array.fill $t <arrayref> <offset> <value> <count>` → `0xFB 0x10
+  <type_idx>`
+- `array.copy $dest $src <destref> <d> <srcref> <s> <n>` → `0xFB 0x11
+  <dest_type_idx> <src_type_idx>` (operand order confirmed against
+  `array_copy.wast`'s own real corpus call sites: dest type first)
+
+Both sub-opcode byte values (`0x10`/`0x11`) are real, spec-text-fetched
+values, cross-checked against the real GC proposal's own binary grammar
+page and against this repo's own pre-existing, already-verified `0x06`-
+`0x0F` array block (they fill the one gap immediately after `array.len`).
+`array.init_data`/`array.init_elem`/`array.new_data`/`array.new_elem`
+remain deliberately unwired (later W38 slices, real data-/elem-segment
+integration not attempted here).
+
+New unit test: `array_fill_and_copy_encode_correctly` (byte-for-byte,
+mirroring `array_get_get_s_get_u_set_len_encode_correctly`'s own shape).
+
+## 0.1.101 — 2026-09-02 — fix: reject malformed numeric-literal grammar instead of silently accepting it
+
+`simd_const.wast` was the single largest "not yet supported" file in the
+conformance report (109 `assert_malformed` directives, all a `v128.const`
+text literal this crate wrongly *accepted* instead of rejecting). Root
+cause, confirmed via a throwaway probe against
+`wasm_conformance::run_wast_source` (byte-offset-annotated `NotYetSupported`
+dump, then read against the actual `.wast` source): `numeric.rs`'s shared
+magnitude parsers — used by `i32.const`/`i64.const`/`f32.const`/
+`f64.const`/plain integer literals AND every `v128.const` lane, not just
+SIMD's own — had three real gaps, none of them SIMD-specific:
+
+1. **`_` digit separators were stripped from the whole literal before
+   anything else looked at it.** `parse_int_magnitude` and both float
+   magnitude parsers called `strip_underscores` first, then checked for an
+   `0x`/`0X` prefix on the ALREADY-STRIPPED text. That order can change
+   what a literal even means: `0_x100` (a decimal literal starting with
+   digit `0`, not a hex prefix at all) stripped to `0x100` and was then
+   parsed as hex 256 — the separator retroactively manufactured a prefix
+   that was never really there. It also meant placement was never checked
+   at all: leading/trailing/doubled `_` (`_100`, `100_`, `1__000`,
+   `0x_100`, `0x00_`, `0xff__ffff`, and the same beside a float's `.`/`e`/
+   `p`) all silently parsed as if the `_` were never there, instead of
+   being rejected. Fixed by checking for the prefix on the RAW text first,
+   then validating placement (new `valid_underscore_run`) on the exact
+   raw digit run before ever stripping anything.
+2. **An out-of-range float magnitude silently rounded to infinity.**
+   `0x1p128`/`1e39`/a huge decimal literal for `f32x4` (or the `f64`
+   equivalents) are all mathematically too large to represent — WAT's
+   "constant out of range" malformed rule. `round_hex_mantissa` already
+   saturates to the infinity bit pattern on hex overflow (by design — see
+   its own doc comment, that's correct FOR THAT FUNCTION), and
+   `str::parse::<f32>`/`str::parse::<f64>` do the identical silent
+   saturation for decimal overflow; neither magnitude parser used to check
+   for that afterward, so a magnitude literal that was never the `inf`
+   keyword ended up indistinguishable from one that was. Fixed with one
+   post-parse check per magnitude function (after both the hex and decimal
+   branches join): a result equal to the raw infinity bit pattern is now
+   `InvalidNumericLiteralForType`, not `Ok`.
+3. **`.0`/`.0e0`-style leading-dot literals parsed successfully.** WAT
+   requires at least one digit before an optional `.`; Rust's own
+   `str::parse::<f32>`/`str::parse::<f64>` are more permissive and accept
+   a leading `.` with no digit before it. New `valid_float_grammar` checks
+   this (and reuses the same underscore-placement check for the
+   mantissa/exponent digit runs) before delegating to Rust's parser.
+4. **`parse_v128_const`'s folded form silently accepted extra trailing
+   lane literals** (`(v128.const i32x4 1 2 3 4 5)`, one too many for a
+   4-lane shape) — it only ever checked for TOO FEW (`lanes.len() <
+   lane_count`), and simply ignored anything past `lane_count` rather than
+   erroring. The two FOLDED call sites (`module.rs`'s instruction encoder,
+   `script.rs`'s `assert_return`/`invoke` const-expression parser) now
+   both check that the whole bounded operand list was consumed; the
+   STREAM/flat call site is intentionally unchanged (its trailing tokens
+   are legitimately the rest of the instruction stream, not extra lanes).
+
+**Changes:**
+
+- `numeric.rs`: new `valid_underscore_run` (one digit run's `_` placement)
+  and `valid_float_grammar` (a float literal's overall mantissa/exponent
+  shape, including the leading-dot rule) helpers. `parse_int_magnitude`,
+  `parse_float_magnitude_f64_bits`, and `parse_float_magnitude_f32_bits`
+  all now check the prefix/validate placement on the RAW text before
+  stripping underscores, instead of stripping first and inspecting after.
+  Both float magnitude functions also now reject a result equal to the
+  raw infinity bit pattern.
+- `module.rs`: the folded `v128.const` instruction-encoder arm now checks
+  `parse_v128_const`'s `consumed` count against the operand list length,
+  rejecting extra lane literals.
+- `script.rs`: the `v128.const` const-expression arm (used by
+  `assert_return`/`invoke` arguments and expected values) gets the
+  identical extra-lane-literal check, for the same reason at the sibling
+  call site.
+- 6 new tests in `module.rs`'s `v128_const_*` cluster (one per bug class
+  above, through the full instruction-literal grammar) and 8 in
+  `numeric.rs` (the same bugs at the shared-function layer, plus explicit
+  regression coverage that `inf`/valid `_`-separated literals are
+  unaffected). 2 pre-existing `numeric.rs` tests
+  (`hex_float_above_largest_finite_value_*`,
+  `hex_float_extreme_positive_exponent_*`) had their assertions updated:
+  they were security-review regression tests for "must not panic on an
+  attacker-controlled extreme exponent," and their asserted VALUE
+  (silently-saturated infinity) was the old, now-fixed, incorrect
+  behavior — the invariant they actually guard (no panic) is unchanged and
+  still holds; a rejected-with-Err result satisfies it too.
+
+**Corpus impact** (`wasm-conformance`'s conformance report, before/after
+diff over all 257 files' `tests/fixtures/testsuite-status.json`, restricted
+to files whose tally moved at all — zero others changed): `simd_const.wast`
+`assert_malformed` 72/181 (100%) NYS 109→0 (the target file, now fully
+resolved — no other category in that file had any NYS to begin with);
+`const.wast` 56/76 (100%) NYS 20→0; `float_literals.wast` 2/78 (100%) NYS
+76→0; `int_literals.wast` 0/20 (100%) NYS 20→0 — all four files now sit at
+literal 100% pass, 0 not-yet-supported, in EVERY directive category, not
+just `assert_malformed`. Every other file's tally is byte-for-byte
+unchanged. Aggregate `assert_malformed`: 1489/1940 (451 NYS) → 1714/1940
+(226 NYS).
+
 ## 0.1.100 — 2026-09-02 — feat: accept GC reftypes in table declarations (W37)
 
 Per `code/specs/W37-wasm-gc-reftype-tables.md`. Before this release, a
