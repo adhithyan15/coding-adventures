@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1M16-closing-block",
     "language": "marathi",
-    "chapter": 20,
-    "sequence": 855,
+    "chapter": 24,
+    "sequence": 1055,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:c5e47a3a38c06a58",
+    "sourceHash": "fnv1a64:e225120ee9defd2b",
     "detachableSegments": [
       "Writing — controlled composition"
     ],

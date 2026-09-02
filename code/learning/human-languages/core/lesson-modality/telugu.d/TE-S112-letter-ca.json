@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S112-letter-ca",
     "language": "telugu",
-    "chapter": 9,
-    "sequence": 366,
+    "chapter": 8,
+    "sequence": 355,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d5ae3090072853bf",
+    "sourceHash": "fnv1a64:727ab8109e35952f",
     "detachableSegments": [
       "Script you'll notice: చ",
       "Writing: చ — copy what you see"

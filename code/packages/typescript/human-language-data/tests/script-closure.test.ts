@@ -10,7 +10,8 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
 import { measureScriptClosure } from "../src/script-closure.js";
-import { loadEverything } from "../src/loader.js";
+import { loadChapterPolicy, loadEverything } from "../src/loader.js";
+import { measureScriptRamp } from "../src/ramp.js";
 
 // TAMIL LETTER KA, MA, NA; TAMIL SIGN VIRAMA.
 const KA = "க";
@@ -201,15 +202,22 @@ describe("the real corpus", () => {
     // The point of the whole module. HL08's glyph budget flags tens of lessons
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
-    // HL-C201: the floor this line used to carry (`toBeGreaterThan(500)`) failed
-    // the first time a tranche removed enough debt to cross it — Bengali's glyph
-    // inventory and Sanskrit-citation cleanup took the corpus 518 -> 498. A floor
-    // on debt forbids exactly the work the module exists to prompt, which is the
-    // same argument the note below already made about `tracksTeachingNothing`.
-    // Both are now CEILINGS on the same footing as the forward-reference one: they
-    // may fall, never grow, and whoever raises one writes down why. The test's
-    // stated point — that closure finds hundreds where the pace budget finds tens —
-    // is still carried by the magnitude of the number itself.
+    //
+    // That claim is asserted as a COMPARISON rather than as a magic floor,
+    // because the floor repeated exactly the mistake the `tracksTeachingNothing`
+    // line below already records. `toBeGreaterThan(500)` went red at 498 the
+    // moment Marathi's second Devanagari runway retired its forty-four
+    // violations alongside Urdu's Nastaliq ladder moving to the front of its
+    // book. A test that fails when debt is PAID is pointing the wrong way.
+    //
+    // The comparison keeps the claim without ratcheting: whatever the absolute
+    // numbers become, closure must still find several times what the pace budget
+    // finds, or this module has stopped earning its place beside HL08.
+    const paceViolations = measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations;
+    expect(paceViolations).toBeGreaterThan(0);
+    expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
+    // And a CEILING on the absolute debt, so it may fall and never grow.
+    // 498 as of the Marathi runway; whoever raises it writes down why.
     expect(report.summary.violations).toBeLessThanOrEqual(498);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
@@ -217,7 +225,6 @@ describe("the real corpus", () => {
     // a track, 8 -> 5, and the floor failed. Debt assertions belong the other way
     // up, so this is now a CEILING on the same footing as the forward-reference
     // one — it may fall, never grow, and whoever raises it writes down why.
-    // `violations` above still carries this test's stated point on its own.
     expect(report.summary.tracksTeachingNothing).toBeLessThanOrEqual(5); // 8 -> 5: chinese (HL-C209), japanese (HL-C211), gujarati (HL-C215)
   });
 
@@ -230,7 +237,7 @@ describe("the real corpus", () => {
     }
   });
 
-  it("every Indic track now teaches letters, and Tamil still has the most script lessons", () => {
+  it("every Indic track now teaches letters, and Tamil leads the ones still in debt", () => {
     // This test used to assert `scriptLessons === 0` for Telugu, Kannada and
     // Malayalam, which was true and was the problem: four of the six Indic
     // tracks taught no letter at all. HL12's recognition segments ended that, so
@@ -242,11 +249,26 @@ describe("the real corpus", () => {
     // Malayalam below Tamil's remaining debt, which is now tracked in #12521.
     const tamil = report.tracks.find((t) => t.language === "tamil")!;
     expect(tamil.neverTaughtGlyphs).toBeLessThanOrEqual(11);
-    for (const language of ["telugu", "kannada", "malayalam", "sanskrit"]) {
+    for (const language of ["telugu", "kannada", "sanskrit"]) {
       const other = report.tracks.find((t) => t.language === language);
       if (!other) continue;
       expect(other.scriptLessons, language).toBeGreaterThan(0);
       expect(tamil.scriptLessons, language).toBeGreaterThan(other.scriptLessons);
+    }
+    // Malayalam has since overtaken Tamil on VOLUME, and that is not a defect,
+    // so it is no longer held under the lesson-count ordering. Closure is
+    // measured in READING ORDER, so a letter taught late cannot retire an
+    // earlier violation: clearing Malayalam's opening chapters meant teaching
+    // thirty characters inside Chapters 1-5, where the words that need them
+    // actually are. What the ordering was standing in for -- that a track's
+    // letters are genuinely taught before they are asked for -- is pinned
+    // directly here instead, which is a strictly stronger claim than the
+    // count comparison it replaces.
+    const malayalam = report.tracks.find((t) => t.language === "malayalam");
+    if (malayalam) {
+      expect(malayalam.scriptLessons).toBeGreaterThan(0);
+      expect(malayalam.neverTaughtGlyphs).toBe(0);
+      expect(malayalam.violations).toBeLessThanOrEqual(1);
     }
   });
 });

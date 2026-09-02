@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R25-recognition-script",
     "language": "marathi",
-    "chapter": 25,
-    "sequence": 1040,
+    "chapter": 29,
+    "sequence": 1240,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bdba9a4b8ab27145"
+    "sourceHash": "fnv1a64:66b85c0e953561cb"
   },
   "findings": []
 }

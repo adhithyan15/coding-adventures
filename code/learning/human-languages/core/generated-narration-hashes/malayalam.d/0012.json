@@ -1,17 +1,15 @@
 {
   "language": "malayalam",
   "chapter": 12,
-  "sourceHash": "fnv1a64:5ab1da165a0311c2",
+  "sourceHash": "fnv1a64:4f537984278eb3b6",
   "lessonIds": [
-    "ML-C12-kudumbam",
-    "ML-S07-vowel-sign-u",
-    "ML-S115-letter-nya"
+    "ML-C12-kudumbam"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch12.txt",
   "json": "malayalam/narration/ch12.json",
-  "textHash": "fnv1a64:4e8043478d0ea97a",
-  "jsonHash": "fnv1a64:67aa87d404e1ef10",
+  "textHash": "fnv1a64:31a77874ef682e35",
+  "jsonHash": "fnv1a64:ffffa661647db711",
   "findings": []
 }

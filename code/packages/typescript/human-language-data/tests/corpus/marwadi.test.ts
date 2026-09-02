@@ -13,7 +13,7 @@ it("pins Marwadi continuity", () => expectLanguageContinuity("marwadi"));
 it("pins Marwadi modality", () => expectLanguageModality("marwadi"));
 it("pins Marwadi lesson-content budgets", () =>
   expectLanguageLessonBudgets("marwadi", {
-    lessons: 197,
+    lessons: 257,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,
@@ -108,38 +108,55 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "delayed-copy",
     "delayed-copy",
     "dictation-transcription",
-    // Chapter 23 -- three food words, no new sign: three delayed copies and one
-    // dictation close.
     "delayed-copy",
     "delayed-copy",
     "delayed-copy",
     "dictation-transcription",
-    // Chapter 24 -- the curled ta is observed and traced before the two bread
-    // words are copied from memory, then dictated.
     "observe-trace",
     "delayed-copy",
     "delayed-copy",
     "dictation-transcription",
-    // Chapter 25 -- the sweet is written from known signs, then ya is observed
-    // and traced before tea is copied from memory and dictated.
     "delayed-copy",
     "observe-trace",
     "delayed-copy",
+    "dictation-transcription",
+    "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "dictation-transcription",
     "dictation-transcription",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(197);
+  expect(lessons).toHaveLength(257);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      25,
-    ]),
+    new Set(Array.from({ length: 31 }, (unused, index) => index + 1)),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(197);
+  expect(activities).toHaveLength(257);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
   expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
@@ -269,6 +286,48 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C20-food-seven-payoff",
     "MW-C20-hear-chaay-meaning",
     "MW-C20-hear-churma-meaning",
+    "MW-C21-dikhavo-delayed",
+    "MW-C21-hear-dikhavo-meaning",
+    "MW-C21-hear-show-request-meaning",
+    "MW-C21-hear-ye-meaning",
+    "MW-C21-show-request-write",
+    "MW-C21-show-three-payoff",
+    "MW-C21-ye-delayed",
+    "MW-C22-hear-kitno-meaning",
+    "MW-C22-hear-price-question-meaning",
+    "MW-C22-hear-total-question-meaning",
+    "MW-C22-kitno-delayed",
+    "MW-C22-price-question-write",
+    "MW-C22-price-three-payoff",
+    "MW-C22-total-question-write",
+    "MW-C23-bargain-request-write",
+    "MW-C23-counter-four-payoff",
+    "MW-C23-ghano-delayed",
+    "MW-C23-hear-bargain-request-meaning",
+    "MW-C23-hear-ghano-meaning",
+    "MW-C23-hear-karo-meaning",
+    "MW-C23-hear-price-answer-meaning",
+    "MW-C23-hear-thodu-meaning",
+    "MW-C23-karo-delayed",
+    "MW-C23-price-answer-write",
+    "MW-C23-thodu-delayed",
+    "MW-C24-aakhri-delayed",
+    "MW-C24-do-delayed",
+    "MW-C24-final-four-payoff",
+    "MW-C24-final-price-write",
+    "MW-C24-hear-aakhri-meaning",
+    "MW-C24-hear-do-meaning",
+    "MW-C24-hear-final-price-meaning",
+    "MW-C24-hear-lo-meaning",
+    "MW-C24-hear-pay-meaning",
+    "MW-C24-lo-delayed",
+    "MW-C24-pay-write",
+    "MW-C25-bring-request-write",
+    "MW-C25-hear-bring-request-meaning",
+    "MW-C25-hear-lavo-meaning",
+    "MW-C25-lavo-delayed",
+    "MW-C25-request-five-payoff",
+    "MW-C26-counter-exchange-payoff",
     "MW-R08-family-foundation-three",
     "MW-R08-family-map-four",
     "MW-R08-script-close-three",
@@ -299,6 +358,23 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-R19-script-close-recall",
     "MW-R20-food-new-two-recall",
     "MW-R20-script-close-recall",
+    "MW-R21-script-close-recall",
+    "MW-R21-show-two-recall",
+    "MW-R22-price-two-recall",
+    "MW-R22-script-close-recall",
+    "MW-R23-answer-two-recall",
+    "MW-R23-bargain-two-recall",
+    "MW-R23-script-close-recall",
+    "MW-R24-final-two-recall",
+    "MW-R24-pay-two-recall",
+    "MW-R24-script-close-recall",
+    "MW-R25-bring-two-recall",
+    "MW-R25-script-close-recall",
+    "MW-R26-food-counter-recall",
+    "MW-R26-letters-close-recall",
+    "MW-R26-script-close-recall",
+    "MW-R26-shopping-counter-recall",
+    "MW-R26-transport-counter-recall",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -339,12 +415,13 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W17-sha-write",
     "MW-W19-tta-write",
     "MW-W20-ya-write",
+    "MW-W21-kha-write",
   ]);
 
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 197,
+    lessonCount: 257,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

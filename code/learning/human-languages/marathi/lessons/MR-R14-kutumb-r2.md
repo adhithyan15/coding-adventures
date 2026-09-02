@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R14-kutumb-r2
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 660
-chapter: 17
+sequence: 860
+chapter: 21
 type: review
 headword: कुटुंब
 romanization: kutumb

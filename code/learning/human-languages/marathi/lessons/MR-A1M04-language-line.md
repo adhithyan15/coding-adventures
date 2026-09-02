@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M04-language-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 843
+sequence: 1043
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "मला मराठी येते."
 gloss: retrieve the known Marathi-language sentence as the first purpose line

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R25-bring-two",
+    "language": "marwadi",
+    "chapter": 30,
+    "sequence": 2490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84cbd1d8f0309ae0"
+  },
+  "findings": []
+}

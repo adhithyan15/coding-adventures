@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C23-thodu",
+    "language": "marwadi",
+    "chapter": 28,
+    "sequence": 2230,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b4def7748217272d"
+  },
+  "findings": []
+}

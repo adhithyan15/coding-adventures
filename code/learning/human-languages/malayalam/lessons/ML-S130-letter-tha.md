@@ -9,31 +9,31 @@ type: writing
 headword: "ഥ"
 gloss: the single character ഥ — recognised inside words you already say
 romanization: "tha"
-prerequisites: [ML-S129-letter-bha]
+prerequisites: [ML-S128-vowel-sign-r]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-129]
+  knowledge: [ML-SCRIPT-RECOG-128]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-130]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-129, ML-SCRIPT-RECOG-130]
+  knowledge: [ML-SCRIPT-RECOG-128, ML-SCRIPT-RECOG-130]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S129-letter-bha]
+reviews_of: [ML-S128-vowel-sign-r]
 ---
 
 # ഥ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-129] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-128] -->
 
-[PAUSE 1s] Before the new one: ഭ — what does it do?
+[PAUSE 1s] Before the new one: ◌ൃ — what does it do?
 
 [PAUSE 2s] One character this time. One only — and it has been sitting in
 front of you on pages you have already read.

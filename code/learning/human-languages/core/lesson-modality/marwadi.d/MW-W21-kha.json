@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W21-kha",
+    "language": "marwadi",
+    "chapter": 26,
+    "sequence": 2010,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5f62654c04a1b0f3",
+    "detachableSegments": [
+      "Script — one sign"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C25-lavo",
+    "language": "marwadi",
+    "chapter": 30,
+    "sequence": 2460,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6ea10b0379143128"
+  },
+  "findings": []
+}

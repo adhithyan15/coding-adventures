@@ -1,0 +1,1149 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 30,
+  "title": "Fifth Return: The Core Verbs",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:59018154ec6e9cfa",
+  "lessons": [
+    {
+      "id": "GU-R26-numbers-r4",
+      "sequence": 1380,
+      "title": "ek be traṇ chār pā̃ch returns at R4",
+      "headword": "એક બે ત્રણ ચાર પાંચ",
+      "romanization": "ek be traṇ chār pā̃ch",
+      "gloss": "retrieve one to five, and the two histories under them, at the fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e543444fc84d79c8",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered: count from one to five in Gujarati."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson sits 104 positions after the material it asks for, which is inside the fourth spacing window rather than near it. Nothing new is taught here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-numbers-r4-listening",
+              "prompt": "Hear this shuffled row and give the five digits: chār — be — pā̃ch — ek — traṇ.",
+              "assesses": [
+                "GU-LEX-NUMBERS-ONE-TO-FIVE",
+                "GU-FORM-BE-INITIAL-B",
+                "GU-FORM-TRAN-R",
+                "GU-SCRIPT-HEADLESS-CLUE",
+                "GU-ETYMON-BE-DVE-SELECTION",
+                "GU-ETYMON-TRAN-R-RESTORATION",
+                "GU-SOUND-DV-BB-B",
+                "GU-HISTORY-LEARNED-RESTORATION"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "4 — 2 — 5 — 1 — 3",
+                "4 2 5 1 3",
+                "four two five one three"
+              ],
+              "feedback": {
+                "correct": "Recognition came back at distance.",
+                "incorrect": "Hear the missed item once with its meaning, cover the help, and answer again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score recognition and writing separately; each needs full marks on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-numbers-r4-writing",
+              "prompt": "Cover every model. Write the Gujarati for two and for three from sound.",
+              "assesses": [
+                "GU-LEX-NUMBERS-ONE-TO-FIVE",
+                "GU-FORM-BE-INITIAL-B",
+                "GU-FORM-TRAN-R",
+                "GU-SCRIPT-HEADLESS-CLUE",
+                "GU-ETYMON-BE-DVE-SELECTION",
+                "GU-ETYMON-TRAN-R-RESTORATION",
+                "GU-SOUND-DV-BB-B",
+                "GU-HISTORY-LEARNED-RESTORATION"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "બે — ત્રણ"
+              ],
+              "feedback": {
+                "correct": "You retrieved it independently in Gujarati script.",
+                "incorrect": "Check the missed word once, cover it, and rewrite only that word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does Gujarati be start with a b where Sanskrit had dve, and what happened to the r of traṇ? (The dv- cluster collapsed to bb- and then b-; the r was restored later by learned borrowing, not inherited.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R26-hovun-javun-r4",
+      "sequence": 1390,
+      "title": "hovũ — javũ returns at R4",
+      "headword": "હોવું — જવું",
+      "romanization": "hovũ — javũ",
+      "gloss": "retrieve to be and to go, with the neuter infinitive and the present-stem pattern, at R4",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:57eeea891778b098",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered: say the Gujarati for to be and for to go."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson sits 103 positions after the material it asks for, which is inside the fourth spacing window rather than near it. Nothing new is taught here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-hovun-javun-r4-listening",
+              "prompt": "Hear this row and say which is to go and which is to be: hovũ — javũ.",
+              "assesses": [
+                "GU-LEX-HOVU",
+                "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
+                "GU-ETYMON-CHHE-DWELL",
+                "GU-LEX-JAVU",
+                "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA",
+                "GU-SOUND-PRAKRIT-Y-TO-J"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "hovũ is to be; javũ is to go",
+                "hovu to be javu to go",
+                "hovun is to be javun is to go"
+              ],
+              "feedback": {
+                "correct": "Recognition came back at distance.",
+                "incorrect": "Hear the missed item once with its meaning, cover the help, and answer again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score recognition and writing separately; each needs full marks on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-hovun-javun-r4-writing",
+              "prompt": "Cover every model. Write to go from sound.",
+              "assesses": [
+                "GU-LEX-HOVU",
+                "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
+                "GU-ETYMON-CHHE-DWELL",
+                "GU-LEX-JAVU",
+                "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA",
+                "GU-SOUND-PRAKRIT-Y-TO-J"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "જવું"
+              ],
+              "feedback": {
+                "correct": "You retrieved it independently in Gujarati script.",
+                "incorrect": "Check the missed word once, cover it, and rewrite only that word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every Gujarati verb name ends the same way. Which ending, and what gender is it? (-વું, and it is neuter — the same nasalized -ũ you hear on moḍhũ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R26-aavvun-khaavun-r4",
+      "sequence": 1400,
+      "title": "āvvũ — khāvũ returns at R4",
+      "headword": "આવવું — ખાવું",
+      "romanization": "āvvũ — khāvũ",
+      "gloss": "retrieve to come and to eat, and the two histories under them, at R4",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0a48d2f1b984bde5",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered: say the Gujarati for to come and for to eat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson sits 103 positions after the material it asks for, which is inside the fourth spacing window rather than near it. Nothing new is taught here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-aavvun-khaavun-r4-listening",
+              "prompt": "Hear this row and give the two English meanings in order: khāvũ — āvvũ.",
+              "assesses": [
+                "GU-LEX-AAVVU",
+                "GU-ETYMON-AAVVU-REACH",
+                "GU-SOUND-PRAKRIT-P-TO-V",
+                "GU-LEX-KHAAVU",
+                "GU-ETYMON-KHAAVU-NO-ENGLISH-COUSIN"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "to eat — to come",
+                "to eat to come",
+                "eat come"
+              ],
+              "feedback": {
+                "correct": "Recognition came back at distance.",
+                "incorrect": "Hear the missed item once with its meaning, cover the help, and answer again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score recognition and writing separately; each needs full marks on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-aavvun-khaavun-r4-writing",
+              "prompt": "Cover every model. Write to come from sound.",
+              "assesses": [
+                "GU-LEX-AAVVU",
+                "GU-ETYMON-AAVVU-REACH",
+                "GU-SOUND-PRAKRIT-P-TO-V",
+                "GU-LEX-KHAAVU",
+                "GU-ETYMON-KHAAVU-NO-ENGLISH-COUSIN"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "આવવું"
+              ],
+              "feedback": {
+                "correct": "You retrieved it independently in Gujarati script.",
+                "incorrect": "Check the missed word once, cover it, and rewrite only that word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One of these two verbs has no English cousin at all. Which, and how far does its family reach? (khāvũ — the family reaches its Indian sisters and stops there.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R26-jovun-jaanvun-r4",
+      "sequence": 1410,
+      "title": "jovũ — jāṇvũ returns at R4",
+      "headword": "જોવું — જાણવું",
+      "romanization": "jovũ — jāṇvũ",
+      "gloss": "retrieve to see and to know, and the one-sign contrast with to go, at R4",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:1101e7ed80642578",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered: say the Gujarati for to see, then for to go, and notice how little separates them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson sits 102 positions after the material it asks for, which is inside the fourth spacing window rather than near it. Nothing new is taught here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-jovun-jaanvun-r4-listening",
+              "prompt": "Hear this row and give the three English meanings: jāṇvũ — javũ — jovũ.",
+              "assesses": [
+                "GU-LEX-JOVU",
+                "GU-ETYMON-JOVU-UNSETTLED",
+                "GU-FORM-JAVU-JOVU-CONTRAST",
+                "GU-LEX-JAANVU",
+                "GU-ETYMON-JAANVU-KNOW"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "to know — to go — to see",
+                "to know to go to see",
+                "know go see"
+              ],
+              "feedback": {
+                "correct": "Recognition came back at distance.",
+                "incorrect": "Hear the missed item once with its meaning, cover the help, and answer again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score recognition and writing separately; each needs full marks on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-jovun-jaanvun-r4-writing",
+              "prompt": "Cover every model. Write to see from sound.",
+              "assesses": [
+                "GU-LEX-JOVU",
+                "GU-ETYMON-JOVU-UNSETTLED",
+                "GU-FORM-JAVU-JOVU-CONTRAST",
+                "GU-LEX-JAANVU",
+                "GU-ETYMON-JAANVU-KNOW"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "જોવું"
+              ],
+              "feedback": {
+                "correct": "You retrieved it independently in Gujarati script.",
+                "incorrect": "Check the missed word once, cover it, and rewrite only that word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Exactly what separates javũ from jovũ on the page? (One vowel sign — the ો that jovũ carries and javũ does not.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R26-vicharvun-samajvun-r4",
+      "sequence": 1420,
+      "title": "vichārvũ — samajvũ returns at R4",
+      "headword": "વિચારવું — સમજવું",
+      "romanization": "vichārvũ — samajvũ",
+      "gloss": "retrieve to think and to understand, and the roots that meant wander and wake, at R4",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3e03f4fd096bd476",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered: say the Gujarati for to think and for to understand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson sits 101 positions after the material it asks for, which is inside the fourth spacing window rather than near it. Nothing new is taught here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-vicharvun-samajvun-r4-listening",
+              "prompt": "Hear this row and give the two English meanings in order: samajvũ — vichārvũ.",
+              "assesses": [
+                "GU-LEX-VICHARVU",
+                "GU-ETYMON-VICHAR-TURN",
+                "GU-LEX-SAMAJVU",
+                "GU-ETYMON-BUDH-AWAKE",
+                "GU-SOUND-DHY-JJH-J"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "to understand — to think",
+                "to understand to think",
+                "understand think"
+              ],
+              "feedback": {
+                "correct": "Recognition came back at distance.",
+                "incorrect": "Hear the missed item once with its meaning, cover the help, and answer again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score recognition and writing separately; each needs full marks on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-vicharvun-samajvun-r4-writing",
+              "prompt": "Cover every model. Write to understand from sound.",
+              "assesses": [
+                "GU-LEX-VICHARVU",
+                "GU-ETYMON-VICHAR-TURN",
+                "GU-LEX-SAMAJVU",
+                "GU-ETYMON-BUDH-AWAKE",
+                "GU-SOUND-DHY-JJH-J"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "સમજવું"
+              ],
+              "feedback": {
+                "correct": "You retrieved it independently in Gujarati script.",
+                "incorrect": "Check the missed word once, cover it, and rewrite only that word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of these two verbs is built on a root that meant to wake up? (samajvũ — understanding as waking.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R26-vanchvun-lakhvun-r4",
+      "sequence": 1430,
+      "title": "vā̃chvũ — lakhvũ returns at R4",
+      "headword": "વાંચવું — લખવું",
+      "romanization": "vā̃chvũ — lakhvũ",
+      "gloss": "retrieve to read and to write, the voice root, the scratch root, and the medial nasal, at R4",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:b75bbf54c110787d",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered: say the Gujarati for to read and for to write."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson sits 100 positions after the material it asks for, which is inside the fourth spacing window rather than near it. Nothing new is taught here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-vanchvun-lakhvun-r4-listening",
+              "prompt": "Hear this row and give the two English meanings in order: lakhvũ — vā̃chvũ.",
+              "assesses": [
+                "GU-LEX-VANCHVU",
+                "GU-ETYMON-VAC-VOICE",
+                "GU-SCRIPT-ANUSVARA-MEDIAL",
+                "GU-LEX-LAKHVU",
+                "GU-ETYMON-LIKH-SCRATCH"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "to write — to read",
+                "to write to read",
+                "write read"
+              ],
+              "feedback": {
+                "correct": "Recognition came back at distance.",
+                "incorrect": "Hear the missed item once with its meaning, cover the help, and answer again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score recognition and writing separately; each needs full marks on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-vanchvun-lakhvun-r4-writing",
+              "prompt": "Cover every model. Write to read from sound, nasal mark included.",
+              "assesses": [
+                "GU-LEX-VANCHVU",
+                "GU-ETYMON-VAC-VOICE",
+                "GU-SCRIPT-ANUSVARA-MEDIAL",
+                "GU-LEX-LAKHVU",
+                "GU-ETYMON-LIKH-SCRATCH"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "વાંચવું"
+              ],
+              "feedback": {
+                "correct": "You retrieved it independently in Gujarati script.",
+                "incorrect": "Check the missed word once, cover it, and rewrite only that word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the nasal mark sit in vā̃chvũ, and what did the root once mean? (In the middle, on the ā; the root meant to make something speak.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R26-levun-puchhvun-r4",
+      "sequence": 1440,
+      "title": "levũ — pūchhvũ returns at R4",
+      "headword": "લેવું — પૂછવું",
+      "romanization": "levũ — pūchhvũ",
+      "gloss": "retrieve to take and to ask, and their disputed and preserved families, at R4",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ae5edf2112b5bfad",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered: say the Gujarati for to take and for to ask."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson sits 99 positions after the material it asks for, which is inside the fourth spacing window rather than near it. Nothing new is taught here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-levun-puchhvun-r4-listening",
+              "prompt": "Hear this row and give the two English meanings in order: pūchhvũ — levũ.",
+              "assesses": [
+                "GU-LEX-LEVU",
+                "GU-ETYMON-LABH-GAIN",
+                "GU-LEX-PUCHHVU",
+                "GU-ETYMON-PRACH-ASK"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "to ask — to take",
+                "to ask to take",
+                "ask take"
+              ],
+              "feedback": {
+                "correct": "Recognition came back at distance.",
+                "incorrect": "Hear the missed item once with its meaning, cover the help, and answer again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score recognition and writing separately; each needs full marks on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-levun-puchhvun-r4-writing",
+              "prompt": "Cover every model. Write to take from sound.",
+              "assesses": [
+                "GU-LEX-LEVU",
+                "GU-ETYMON-LABH-GAIN",
+                "GU-LEX-PUCHHVU",
+                "GU-ETYMON-PRACH-ASK"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "લેવું"
+              ],
+              "feedback": {
+                "correct": "You retrieved it independently in Gujarati script.",
+                "incorrect": "Check the missed word once, cover it, and rewrite only that word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the cousin of pūchhvũ for one narrow use. Which? (Praying — asking, but only of a god.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R26-time-written-r2",
+      "sequence": 1445,
+      "title": "Two windows close at once",
+      "headword": "સવાર — બપોર — સાંજ — દિવસ — મહિનો — અત્યારે",
+      "romanization": "savār — bapor — sānj — divas — mahino — atyāre",
+      "gloss": "the six newly written time words at their second window, and the village and shop at their third",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e41054bd83a81556",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here. Say the Gujarati for village and for shop, then say how many time words you can now write."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The village and the shop were introduced around position 160 and have not been asked for since; this is more than thirty positions later, which is the third spacing window."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-time-written-r2-listening",
+              "prompt": "Hear this row and give the two English meanings: dukān — gām.",
+              "assesses": [
+                "GU-LEX-GAAM-01",
+                "GU-LEX-DUKAAN-01",
+                "GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "shop — village",
+                "shop village"
+              ],
+              "feedback": {
+                "correct": "The map words came back at their third window.",
+                "incorrect": "Replay only the missed sound, then answer that one again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All six time words were written for the first time ten lessons ago. This is their second window, and every model stays covered."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-time-written-r2-writing",
+              "prompt": "Cover every model. Write morning, midday, evening, day, month, and now.",
+              "assesses": [
+                "GU-SCRIPT-SAVAAR-01",
+                "GU-SCRIPT-BAPOR-01",
+                "GU-SCRIPT-SAANJ-01",
+                "GU-SCRIPT-DIVAS-01",
+                "GU-SCRIPT-MAHINO-01",
+                "GU-SCRIPT-ATYAARE-01",
+                "GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01"
+              ],
+              "responseSeconds": 50,
+              "acceptedResponses": [
+                "સવાર — બપોર — સાંજ — દિવસ — મહિનો — અત્યારે"
+              ],
+              "feedback": {
+                "correct": "All six came back from sound with no model in view.",
+                "incorrect": "Uncover only a missed word, cover it again, and rewrite that one."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-time-written-r2-map-writing",
+              "prompt": "Still covered: write village, then shop.",
+              "assesses": [
+                "GU-SCRIPT-GAAM-01",
+                "GU-SCRIPT-DUKAAN-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ગામ — દુકાન"
+              ],
+              "feedback": {
+                "correct": "Both map words came back in script.",
+                "incorrect": "Check only the missed word, cover it again, and rewrite that one."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the six needed a conjunct join? (અત્યારે — the ત્ય.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R26-madad-gamvun-paani-r4",
+      "sequence": 1450,
+      "title": "madad karvī — gamvũ — pāṇī returns at R4",
+      "headword": "મદદ કરવી — ગમવું — પાણી",
+      "romanization": "madad karvī — gamvũ — pāṇī",
+      "gloss": "retrieve to help, to like, and water, with the gender and dative rules under them, at R4",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:89a642eaf7ee37d7",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered: say the Gujarati for to help, for to like, and for water."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson sits 98 positions after the material it asks for, which is inside the fourth spacing window rather than near it. Nothing new is taught here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-madad-gamvun-paani-r4-listening",
+              "prompt": "Hear this row and give the three English meanings: pāṇī — gamvũ — madad karvī.",
+              "assesses": [
+                "GU-LEX-MADAD-KARVI",
+                "GU-ETYMON-MADAD-ARABIC",
+                "GU-GRAMMAR-INFINITIVE-OBJECT-GENDER",
+                "GU-LEX-GAMVU",
+                "GU-ETYMON-GAM-GO",
+                "GU-GRAMMAR-DATIVE-LIKING",
+                "GU-LEX-PAANI",
+                "GU-ETYMON-PAANI-DRINK",
+                "GU-PHRASE-MEHERBANI-KARINE"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "water — to like — to help",
+                "water to like to help",
+                "water like help"
+              ],
+              "feedback": {
+                "correct": "Recognition came back at distance.",
+                "incorrect": "Hear the missed item once with its meaning, cover the help, and answer again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score recognition and writing separately; each needs full marks on its own."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R26-madad-gamvun-paani-r4-writing",
+              "prompt": "Cover every model. Write water, then the polite word that goes in front of a request.",
+              "assesses": [
+                "GU-LEX-MADAD-KARVI",
+                "GU-ETYMON-MADAD-ARABIC",
+                "GU-GRAMMAR-INFINITIVE-OBJECT-GENDER",
+                "GU-LEX-GAMVU",
+                "GU-ETYMON-GAM-GO",
+                "GU-GRAMMAR-DATIVE-LIKING",
+                "GU-LEX-PAANI",
+                "GU-ETYMON-PAANI-DRINK",
+                "GU-PHRASE-MEHERBANI-KARINE"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "પાણી — મહેરબાની કરીને"
+              ],
+              "feedback": {
+                "correct": "You retrieved it independently in Gujarati script.",
+                "incorrect": "Check the missed word once, cover it, and rewrite only that word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two rules hide in this row. Why is karvī not karvũ, and who is the subject of gamvũ? (The ending agrees with the feminine madad; and gamvũ will not take you as its subject — the thing liked is.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

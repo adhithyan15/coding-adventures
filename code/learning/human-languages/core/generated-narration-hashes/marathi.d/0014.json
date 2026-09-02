@@ -1,20 +1,20 @@
 {
   "language": "marathi",
   "chapter": 14,
-  "sourceHash": "fnv1a64:b5bfc6a19d6e3cbf",
+  "sourceHash": "fnv1a64:be9d78aa065ec6bb",
   "lessonIds": [
-    "MR-C11-mitra",
-    "MR-R11-mitra-r1",
-    "MR-C11-kutumb",
-    "MR-R11-kutumb-r1",
-    "MR-C11-bhau",
-    "MR-C11-bahin"
+    "MR-C07-asne",
+    "MR-C07-jane",
+    "MR-C07-yene",
+    "MR-C07-khane",
+    "MR-C07-pahne",
+    "MR-C07-mahit-asne"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "marathi/narration/ch14.txt",
   "json": "marathi/narration/ch14.json",
-  "textHash": "fnv1a64:0ed4cb7aed04f003",
-  "jsonHash": "fnv1a64:699dec754880a5e6",
+  "textHash": "fnv1a64:bf844c92384b0a37",
+  "jsonHash": "fnv1a64:01260c71e8524bb3",
   "findings": []
 }

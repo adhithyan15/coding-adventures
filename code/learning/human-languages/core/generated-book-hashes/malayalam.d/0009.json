@@ -1,11 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 9,
-  "sourceHash": "fnv1a64:b1fd55b26e8634f0",
+  "sourceHash": "fnv1a64:eeef953fd0d42d86",
   "lessonIds": [
     "ML-C09-kshamikkanam",
-    "ML-S04-vowel-sign-aa",
-    "ML-S112-letter-pa"
+    "ML-S04-vowel-sign-aa"
   ],
   "tex": "malayalam/book/chapters/ch09-sorry.tex"
 }

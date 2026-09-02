@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C11-mitra",
     "language": "marathi",
-    "chapter": 14,
-    "sequence": 560,
+    "chapter": 18,
+    "sequence": 760,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8ba351322bbf8618",
+    "sourceHash": "fnv1a64:d1b540997324e232",
     "detachableSegments": [
       "The letters in this word"
     ]

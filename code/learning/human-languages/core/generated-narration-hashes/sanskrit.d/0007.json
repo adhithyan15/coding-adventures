@@ -1,20 +1,23 @@
 {
   "language": "sanskrit",
   "chapter": 7,
-  "sourceHash": "fnv1a64:2d5bb32f430668b7",
+  "sourceHash": "fnv1a64:44bf7ec0c2b393fc",
   "lessonIds": [
     "SA-C07-asti",
+    "SA-S207-letter-ca",
     "SA-C07-gacchati",
     "SA-C07-agacchati",
+    "SA-S111-letter-ka",
     "SA-C07-khadati",
     "SA-C07-pashyati",
+    "SA-S119-letter-kha",
     "SA-C07-janati"
   ],
   "voiceLessons": 6,
-  "drivablePrefix": 6,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch07.txt",
   "json": "sanskrit/narration/ch07.json",
-  "textHash": "fnv1a64:47301ded2c9a4c1a",
-  "jsonHash": "fnv1a64:1f8b1fb2213dac99",
+  "textHash": "fnv1a64:8d0f7becc21baae9",
+  "jsonHash": "fnv1a64:e5bc6ddb17160028",
   "findings": []
 }

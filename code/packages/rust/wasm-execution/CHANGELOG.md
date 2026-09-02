@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.91] - 2026-09-01 (gap 2 doc fixup: `Table::new_with_is64`'s per-table cap is no longer a redundant no-op for 32-bit tables)
+
+Companion doc-only fixup to `wasm-validator` 0.2.85 / `wasm-runtime`
+0.6.28 (see either crate's own CHANGELOG for the full investigation): now
+that `wasm-validator`'s old Check 2b (rejecting an oversized 32-bit
+table's declared `min` at STRUCTURAL VALIDATION time) has been removed —
+`table.wast`'s own real corpus case proved it wasn't a real spec
+requirement — `Table::new_with_is64`'s existing, already-unconditional
+`MAX_TABLE_ELEMENTS` cap is the ONLY place a 32-bit table's `min` is
+capped at all, not a defense-in-depth duplicate of a validator-side check
+in a different crate. No code change (the check was already
+unconditional, `is64` or not, from a prior security review) — updated
+this constructor's own doc comment, plus two other stale "`wasm-
+validator`'s Check 2b" references elsewhere in this crate (`table.grow`'s
+runtime aggregate guard and its own test), so a future reader doesn't
+chase a check that no longer exists.
+
 ## [0.9.90] - 2026-09-01 (W35 fourth slice, epic closed — `owner_instance_identity` correctness fix for imports)
 
 Slice 4 of 4 for `code/specs/W35-wasm-cross-instance-function-identity.md`

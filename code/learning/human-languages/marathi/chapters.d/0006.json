@@ -1,18 +1,24 @@
 {
   "chapter": 6,
-  "title": "How Are You?",
-  "label": "ch:responding",
-  "canDo": "I can ask how someone is in Marathi, answer naturally, and return the question.",
+  "title": "The Throat Row and the Palate Row",
+  "label": "ch:two-rows-runway",
+  "canDo": "I can write seven more consonants and say, for any of them, whether the voice is on and whether the breath is released.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING",
-    "SPINE-EXCHANGE-NAMES",
-    "SPINE-COURTESY-THANK"
+    "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "MR-C03-practice",
+    "lesson": "MR-R06-two-rows-recall",
     "kind": "task",
-    "summary": "Complete MR-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Marathi, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Say both four-step rows in order from the two switches that generate them, with no model on the page.",
+    "assesses": [
+      "MR-SCRIPT-KHA-01",
+      "MR-SCRIPT-GA-01",
+      "MR-SCRIPT-GHA-01",
+      "MR-SCRIPT-CA-01",
+      "MR-SCRIPT-CHA-01",
+      "MR-SCRIPT-JA-01",
+      "MR-SCRIPT-JHA-01"
+    ],
+    "note": "The payoff adds no sign. It asks for the PATTERN that produces the row, so a reader who holds the rule can rebuild any letter they drop."
   }
 }

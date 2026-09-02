@@ -11,7 +11,8 @@
     "kind": "task",
     "summary": "Line up the three sister languages' everyday afternoon words and show where all three converge on śubha + madhyāhna.",
     "assesses": [
-      "ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01"
+      "ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01",
+      "ML-SCRIPT-RECOG-125"
     ]
   }
 }

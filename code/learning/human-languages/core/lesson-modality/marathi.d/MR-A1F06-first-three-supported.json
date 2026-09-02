@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1F06-first-three-supported",
     "language": "marathi",
-    "chapter": 21,
-    "sequence": 862,
+    "chapter": 25,
+    "sequence": 1062,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:a06edd11ecd4ee56",
+    "sourceHash": "fnv1a64:d6b81c12a5f13047",
     "detachableSegments": [
       "Writing — supported controlled composition"
     ],

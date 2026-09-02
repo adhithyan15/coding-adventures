@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 17,
-  "sourceHash": "fnv1a64:dad3fd41250097f3",
+  "sourceHash": "fnv1a64:b31a3e0dbbbc6842",
   "lessonIds": [
     "TA-C17-nanpakal-nalliravu",
     "TA-C17-transparent-middle-synonyms",
@@ -12,6 +12,6 @@
   "text": "tamil/narration/ch17.txt",
   "json": "tamil/narration/ch17.json",
   "textHash": "fnv1a64:a96510c5f3cffa9d",
-  "jsonHash": "fnv1a64:4d0de3aea215cb2a",
+  "jsonHash": "fnv1a64:9f462ceb7f663c47",
   "findings": []
 }

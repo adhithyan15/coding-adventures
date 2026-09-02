@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C22-anne
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 890
-chapter: 22
+sequence: 1090
+chapter: 26
 type: word
 headword: आणणे
 romanization: āṇṇe

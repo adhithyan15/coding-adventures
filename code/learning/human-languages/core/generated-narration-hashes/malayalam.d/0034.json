@@ -1,19 +1,18 @@
 {
   "language": "malayalam",
   "chapter": 34,
-  "sourceHash": "fnv1a64:de93933b77c3d2de",
+  "sourceHash": "fnv1a64:5c2e3b9af0c67ac5",
   "lessonIds": [
     "ML-C34-edukkuka",
     "ML-C34-codikkuka",
     "ML-C34-sahaayikkuka",
-    "ML-S127-letter-ha",
     "ML-C34-ishtam"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch34.txt",
   "json": "malayalam/narration/ch34.json",
-  "textHash": "fnv1a64:b8f4b3371c6d2dfb",
-  "jsonHash": "fnv1a64:f32d3d0eec31bd1a",
+  "textHash": "fnv1a64:da024c026dbf6135",
+  "jsonHash": "fnv1a64:40062f5e2e8f25af",
   "findings": []
 }

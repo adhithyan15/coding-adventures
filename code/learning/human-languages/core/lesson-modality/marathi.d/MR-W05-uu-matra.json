@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MR-W05-uu-matra",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 62,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3e4a6212a4258e35",
+    "detachableSegments": [
+      "Script",
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

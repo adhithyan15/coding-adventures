@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 11,
-  "sourceHash": "fnv1a64:6385c983c32aee61",
+  "sourceHash": "fnv1a64:08c38461c318ba4b",
   "lessonIds": [
     "TA-C11-nirangal",
     "TA-S115-letter-llla"
@@ -11,6 +11,6 @@
   "text": "tamil/narration/ch11.txt",
   "json": "tamil/narration/ch11.json",
   "textHash": "fnv1a64:cce34ee88d3153ec",
-  "jsonHash": "fnv1a64:5d35101b52f60420",
+  "jsonHash": "fnv1a64:5b027507625ff106",
   "findings": []
 }

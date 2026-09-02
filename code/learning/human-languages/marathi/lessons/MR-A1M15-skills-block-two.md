@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M15-skills-block-two
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 854
+sequence: 1054
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: second skills block
 gloss: order the known speak-think-understand lines and preserve their frames

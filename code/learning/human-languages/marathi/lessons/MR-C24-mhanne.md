@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C24-mhanne
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 980
-chapter: 24
+sequence: 1180
+chapter: 28
 type: word
 headword: म्हणणे
 romanization: mhaṇṇe

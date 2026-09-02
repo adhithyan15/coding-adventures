@@ -2,6 +2,71 @@
 
 ## [Unreleased]
 
+### Added — twenty new pre-A1 headwords, and the fifth-return slab that pays for them (HL-C286)
+
+- Add chapters 31-34 — "The Table Is Set", "Inside the House", "Sun, Sky, and
+  River", and "People, Paper, and a Book" — as four eight-lesson vocabulary
+  chapters. Twenty new pre-A1 headwords arrive at **one new headword per
+  lesson**: *bhāt*, *dāḷ*, *shāk*, *tel*, *kerī*; *bārṇũ*, *bārī*, *khurshī*,
+  *chāvī*, *dīvo*; *sūraj*, *chandra*, *ākāsh*, *varsād*, *nadī*; *chhokro*,
+  *chhokrī*, *māṇas*, *pustak*, *kāgaḷ*. Pre-A1 headwords move **52 -> 72**
+  against the 300-word floor; the whole-track figure moves 71 -> 91.
+- Keep every one of those twenty ear-first. Each arrives glossed and romanized in
+  a pure-voice lesson before it is ever shown, each chapter closes on an oral
+  checkpoint that scores listening and speaking separately, and exactly **one**
+  word per chapter reaches the page — spelled entirely from signs taught before
+  the first name exchange, so no new glyph lesson was needed or added.
+- Add chapter 29, "The Time Words Reach the Page". This closes the second item
+  HL-C271 left open: *savār*, *bapor*, *sānj*, *divas*, *mahino*, and *atyāre*
+  were glossed and drivable but never written. All six now reach the page, one
+  per lesson, on signs the reader has had since before chapter 8, then a payoff
+  scores reading, speaking, and model-free writing apart and an R1 return writes
+  the three the payoff did not ask for. It adds no headword and no glyph.
+- Add chapter 30, "Fifth Return: The Core Verbs" — the slab HL-C271 filed rather
+  than smuggled into a vocabulary chapter. Nine zero-new-atom lessons return the
+  first five numbers and the fifteen core verbs of chapters 12-16 at distances of
+  98 to 104 positions, each scoring recognition and model-free writing
+  separately, and one of them closes the newly written time words at R2 and the
+  village and shop at R3.
+
+### Changed — measured continuity debt FELL while the track grew by half again
+
+- Whole-track reinforcement misses move **339 -> 283** on a track that went 179
+  -> 228 lessons. The previous tranche's rise was eligibility rather than
+  neglect; this one pays that eligibility off. R4 misses alone move **101 -> 43**,
+  and atoms never revisited at all move **5 -> 1**.
+- Every new vocabulary chapter carries a *named distant band* of older material,
+  chosen for the window a 228-lesson track has just made measurable and for
+  whether the material actually belongs beside the new words: the food chapter
+  returns *chā*, *dūdh* and *roṭlī* at R4, the house chapter the friend and
+  family words, the sky chapter the eye/ear/mouth/nose words, and the people
+  chapter the first three-place map plus hand and money. None of it is filler —
+  a person walks to a market, a house holds a family, an eye looks at a sky.
+- R3 misses rose 115 -> 117. The cause is stated rather than hidden: the last two
+  chapters' own atoms sit too close to the end of the book for their third window
+  to be serviced inside it. That residue is filed in `BACKLOG.d`.
+- Pre-A1 atoms revisited fewer than twice move **24 -> 11**.
+
+### Kept — the three script zeros, re-measured after the change
+
+- Script-closure findings **0 -> 0**, never-taught glyphs **0 -> 0**, headwords
+  without romanization **0 -> 0**. Every new headword was chosen so that its
+  spelling uses only the 43 forms the book already teaches, which is why a
+  twenty-word tranche cost no script debt at all.
+- Duration violations stay at 0. Every new lesson is under the computed
+  five-minute ceiling, and one that was not (`GU-R30-people-five-r1`, 349s) was
+  split rather than re-declared.
+
+### Changed — the ear-drivable share again
+
+- Voice lessons move **34 -> 58** and the ear-drivable share **56% -> 65%**.
+  Lessons reachable in chapter-prefix order without ever looking at anything move
+  **88 -> 136**. Every lesson that needs a hand confines the handwriting to a
+  single detachable `Writing —` block, so all 228 have a voice core; 91 are
+  rescued for the hands-free view, up from 67.
+- Register `ka` as a Gujarati sound tag. The allowlist carried `kha` but not the
+  unaspirated `ka` that *shāk*, *kerī*, *pustak* and *kāgaḷ* all need.
+
 ### Added — Gujarati chapter 28 acquires eight time words by ear (HL-C271)
 
 - Add chapter 28, "The Day and Its Times": fourteen lessons that teach eight new

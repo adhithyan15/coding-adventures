@@ -1,7 +1,7 @@
 ---
 id: MR-C02-tumche-naav-kaay-aahe
-sequence: 90
-chapter: 5
+sequence: 290
+chapter: 9
 type: phrase
 headword: तुमचं नाव काय आहे?
 romanization: "tumchaṁ nāv kāy āhe?"

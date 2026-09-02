@@ -1,8 +1,8 @@
 Sanskrit, chapter 7: The Core Verbs.
-6 lessons. All 6 can be done entirely by ear.
+9 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 9.
 अस्ति and भवति — Sanskrit's two words for "is".
 
 Warm-up.
@@ -44,7 +44,50 @@ Wrap-up Recall.
 Which two roots stand behind asti and bhavati? (अस् as and भू bhū.) What does a गण class do? (Turns a root into a present stem — nothing added for as, a vowel added for bhū.) Which English words descend from each? (Is from as; be and been from bhū.) Next: a root whose present stem you could never have guessed.
 
 
-Lesson 2 of 6.
+Lesson 2 of 9.
+च (ca) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: च and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: ◌ृ, अ, ञ. Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: च.
+च — ca.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not c, it is ca.
+What it is made of:
+a short upper bar joined to a rounded body opening right.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say these, and every one of them has च (ca) somewhere inside it:
+पञ्च pañca — five inside Punjab, pentagon, and the debated history of punch.
+
+Writing: च.
+1. draw the short upper bar left-to-right, turn down and left through the shoulder, then curve around the rounded body to its open right junction without lifting.
+2. lift and draw the right stem top-to-bottom.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+verified three-stroke teaching form; everyday handwriting may join or simplify the body differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-च (ca)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find च (ca) in it]
+[pause 8 seconds for the answer]
+पञ्च.
+[once you have stopped driving — trace: च three times, saying ca as you finish each one]
+[your turn — look: back at any page of this chapter and find च (ca) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — च? What sound does it carry? (ca.) Name one word you already say that contains it.
+
+
+Lesson 3 of 9.
 गच्छति (gacchati) — "goes," and why dictionaries file it elsewhere.
 
 Warm-up.
@@ -84,7 +127,7 @@ Wrap-up Recall.
 What is the root of gacchati? (गम् gam.) Could you have predicted the stem from it? (No — which is why the root is what gets learned.) Which ending makes it "I go"? (-ामि -āmi.) Which English verb is the same root? (Come.) Next: the same stem, aimed the other way.
 
 
-Lesson 3 of 6.
+Lesson 4 of 9.
 आगच्छति (āgacchati) — "comes," or "goes" reversed.
 
 Warm-up.
@@ -126,7 +169,52 @@ Wrap-up Recall.
 How does Sanskrit say "comes"? (आगच्छति (āgacchati) — ā "toward" on "goes.") What is such a prefix called? (An उपसर्ग, upasarga.) Which Sanskrit word you already knew is built the same way? (संस्कृत — sam plus kṛ.) Next: a verb whose everyday form is not the one related to English.
 
 
-Lesson 4 of 6.
+Lesson 5 of 9.
+क (ka) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: क and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: अ, ञ, च (ca). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: क.
+क — ka.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not k, it is ka.
+What it is made of:
+a counterclockwise left bowl.
+a top-to-bottom central stem.
+a separate right-hand arch.
+the top shirorekhā.
+You already say these, and every one of them has क (ka) somewhere inside it:
+किम् kim — what.
+
+Writing: क.
+1. start at the bowl's upper-right junction and sweep left over the top, down around the left side, and back to the lower-right junction.
+2. lift and draw the central stem top-to-bottom.
+3. lift at the upper junction and sweep the right-hand arch clockwise down to its open lower tip.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+verified four-stroke teaching form; everyday handwriting may join or simplify the body differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-क (ka)-order.gif’, strokes 1–4, Wikimedia Commons, 8 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find क (ka) in it]
+[pause 8 seconds for the answer]
+किम्.
+[once you have stopped driving — trace: क three times, saying ka as you finish each one]
+[your turn — look: back at any page of this chapter and find क (ka) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — क? What sound does it carry? (ka.) Name one word you already say that contains it.
+
+
+Lesson 6 of 9.
 खादति (khādati) — "eats," and the cousin it is not.
 
 Warm-up.
@@ -165,7 +253,7 @@ Wrap-up Recall.
 What is the ordinary Sanskrit verb for eating? (खादति, khādati, root खाद्.) Which Sanskrit root is the actual cousin of English eat? (अद् ad, giving atti.) Which class does ad belong to, and how do you know? (Class 2 — the ending goes straight onto the root, as in asti.) Next: a verb built out of two different roots.
 
 
-Lesson 5 of 6.
+Lesson 7 of 9.
 पश्यति (paśyati) — "sees," a verb with two roots.
 
 Warm-up.
@@ -203,7 +291,52 @@ Wrap-up Recall.
 Which root gives the present paśyati? (पश् paś.) Which root supplies the rest of the verb? (दृश् dṛś — the one behind darśana.) What PIE root is paś from? (Spek-.) Name two English words from it. (Inspect, species, telescope — any two.) Next: the verb that means "know," and the class that plants a syllable in the middle.
 
 
-Lesson 6 of 6.
+Lesson 8 of 9.
+ख (kha) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ख and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: ञ, च (ca), क (ka). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ख.
+ख — kha.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not kh, it is kha.
+What it is made of:
+a descending left stem curling around a small loop and continuing through the broad lower bowl.
+an open clockwise upper-right loop.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say this word, and ख (kha) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:
+khādati — he, she, or it eats — the everyday eat-verb, which is not the one English is related to.
+
+Writing: ख.
+1. descend the left stem, curl clockwise around the small left opening, then continue down and right around the broad lower bowl to the lower-right junction without lifting.
+2. lift at the upper-left of the right opening and sweep clockwise around its oval to the open lower-left tip.
+3. lift and draw the right stem top-to-bottom.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+verified four-stroke teaching form fitted to the bundled printed outline.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ख (kha)-order.gif’, strokes 1–4, Wikimedia Commons, 9 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find ख (kha) in it]
+[pause 8 seconds for the answer]
+ख (kha).
+[once you have stopped driving — trace: ख three times, saying kha as you finish each one]
+[your turn — look: back at any page of this chapter and find ख (kha) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ख? What sound does it carry? (kha.) Name one word you already say that contains it.
+
+
+Lesson 9 of 9.
 जानाति (jānāti) — "knows," and English know is the same word.
 
 Warm-up.

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5866d8b4beb183f3",
+  "sourceHash": "fnv1a64:cf571c650aef2b40",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -177,9 +177,9 @@
     {
       "id": "TA-W00-va-guided-copy",
       "sequence": 15,
-      "title": "வ — copy one visible shape with help",
+      "title": "வ (va) — copy one visible shape with help",
       "headword": "வ",
-      "romanization": "",
+      "romanization": "va",
       "gloss": "copy the first visible shape of the greeting once with the model present",
       "script": "tamil",
       "modality": "pen",
@@ -188,7 +188,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3fd7da2bd03a3964",
+      "sourceHash": "fnv1a64:60854861e0859f6c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -205,7 +205,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to வணக்கம் and say vaṇakkam once. Keep the model on the page. Find the first shape, வ, which your finger just followed."
+              "text": "Point to வணக்கம் and say vaṇakkam once. Keep the model on the page. Find the first shape, வ (va), which your finger just followed."
             }
           ]
         },
@@ -216,7 +216,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy வ once beside the model. Look back as often as you need. Your copy can be large and slow; it does not need to look like a font."
+              "text": "Copy வ (va) once beside the model. Look back as often as you need. Your copy can be large and slow; it does not need to look like a font."
             },
             {
               "kind": "speech",
@@ -231,7 +231,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Compare your one copy with வ while both remain visible. Repair one curve if you want, then stop. Say vaṇakkam once more: one known greeting, one tiny hand movement."
+              "text": "Compare your one copy with வ (va) while both remain visible. Repair one curve if you want, then stop. Say vaṇakkam once more: one known greeting, one tiny hand movement."
             }
           ]
         }
@@ -374,7 +374,7 @@
       "sequence": 30,
       "title": "ஆம் (ām) — \"yes\"",
       "headword": "ஆம்",
-      "romanization": "",
+      "romanization": "ām",
       "gloss": "yes (ām)",
       "script": "tamil",
       "modality": "voice",
@@ -382,7 +382,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d57ca2cbb43325a",
+      "sourceHash": "fnv1a64:89e7a1b21edb4f63",
       "notice": null,
       "blocks": [
         {
@@ -511,7 +511,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say ஆம். What does ஆமாம் add? (Emphasis — \"yes, indeed.\") Next: the word for no."
+              "text": "Say ஆம் (ām). What does ஆமாம் add? (Emphasis — \"yes, indeed.\") Next: the word for no."
             }
           ]
         }
@@ -818,7 +818,7 @@
       "sequence": 60,
       "title": "நன்றி (naṉṟi) — a native family word with a register edge",
       "headword": "நன்றி / നന്ദി",
-      "romanization": "",
+      "romanization": "naṉṟi / nandi",
       "gloss": "Tamil and Malayalam kept the native goodness-word while explicit thanks can sound marked among intimates",
       "script": "tamil",
       "modality": "voice",
@@ -826,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60338f1932bc98d3",
+      "sourceHash": "fnv1a64:f8f96ca690bf1dd3",
       "notice": null,
       "blocks": [
         {
@@ -1140,7 +1140,7 @@
             },
             {
               "kind": "speech",
-              "text": "— வணக்கம் (vaṇakkam). — வணக்கம் (vaṇakkam). — சரி (sari)? — ஆம். — நன்றி (naṉṟi). — சரி (sari). — Hello. — Hello. — Alright? — Yes. — Thank you. — Alright."
+              "text": "— வணக்கம் (vaṇakkam). — வணக்கம் (vaṇakkam). — சரி (sari)? — ஆம் (ām). — நன்றி (naṉṟi). — சரி (sari). — Hello. — Hello. — Alright? — Yes. — Thank you. — Alright."
             },
             {
               "kind": "speech",
@@ -1346,7 +1346,7 @@
             {
               "kind": "prompt",
               "action": "COPY",
-              "instruction": "வ once beside the visible model, large and slowly",
+              "instruction": "வ (va) once beside the visible model, large and slowly",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

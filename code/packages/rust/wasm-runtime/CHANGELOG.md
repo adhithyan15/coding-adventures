@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.28] — 2026-09-01 (gap 2 of the `elem.wast`/`table.wast` investigation pass: 32-bit table aggregate cap moves here from `wasm-validator`)
+
+Companion fix to `wasm-validator` 0.2.85 (see that crate's own CHANGELOG
+for the full investigation and spec-conformance reasoning): a 32-bit
+table's declared `min` past `MAX_TABLE_ELEMENTS` no longer fails
+`validate()` — `table.wast`'s own real corpus case proved that was a
+genuine conformance bug (the real spec allows declaring, though not
+necessarily allocating, a 32-bit table `min` up to `2^32 - 1`). The
+practical resource-limit heuristic moved here, to `instantiate()`, the
+pipeline stage where real allocation actually happens.
+
+The per-table half of the cap needed no new code: `Table::new_with_is64`
+(`wasm-execution`) already applies `MAX_TABLE_ELEMENTS` UNCONDITIONALLY,
+`is64` or not (see that crate's own CHANGELOG) — `wasm-validator`'s old
+check was already redundant with it for a single table. The AGGREGATE
+half (many individually-under-cap tables summing past the cap) is the one
+real gap this move had to close: `instantiate()`'s pre-existing
+`total_is64_table_elements` running total — previously scoped to `is64`
+tables only, because `wasm-validator`'s own 32-bit aggregate covered
+32-bit tables at validation time — is now `total_table_elements`,
+covering every declared table regardless of `is64`, closing the aggregate
+gap for 32-bit tables the same way it already did for `is64` ones.
+
+New tests: `test_instantiate_traps_gracefully_for_a_32bit_table_past_the_
+practical_cap` (the exact `table.wast` shape — validates, then traps
+gracefully at instantiation, never panics), `test_instantiate_traps_when_
+32bit_tables_combined_exceed_the_aggregate_cap` (the 32-bit counterpart to
+the existing `is64` aggregate test), and `test_instantiate_traps_when_
+mixed_is64_and_32bit_tables_combined_exceed_the_aggregate_cap` (confirms
+the two kinds now genuinely share ONE running total, not two independent
+budgets). Also updated `instantiate_is_unreachable_for_a_module_that_
+fails_validation` (its own example module — an oversized 32-bit table —
+no longer fails validation, so it was swapped for a `min > max` table,
+which still genuinely does and still demonstrates the same point).
+
 ## [0.6.27] — 2026-09-01 (W35 fourth slice, epic closed — `resolve_all_table_funcrefs`, `owner_instance_identity` fix, ephemeral-instance trap-path fixup)
 
 Slice 4 of 4 for `code/specs/W35-wasm-cross-instance-function-identity.md`

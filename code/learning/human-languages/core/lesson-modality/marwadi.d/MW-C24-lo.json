@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C24-lo",
+    "language": "marwadi",
+    "chapter": 29,
+    "sequence": 2320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3ab55d420c5061ca"
+  },
+  "findings": []
+}

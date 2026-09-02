@@ -1,23 +1,21 @@
 {
   "language": "marathi",
   "chapter": 5,
-  "sourceHash": "fnv1a64:282a074d89905a32",
+  "sourceHash": "fnv1a64:3cc8fdea3f353e7e",
   "lessonIds": [
-    "MR-C02-naav",
-    "MR-C02-majhe",
-    "MR-C02-aahe",
-    "MR-C02-majhe-naav-aahe",
-    "MR-C02-tu-tumhi",
-    "MR-C02-kaay",
-    "MR-C02-tumche-naav-kaay-aahe",
-    "MR-C02-anand",
-    "MR-C02-practice"
+    "MR-W05-i-matra",
+    "MR-W05-u-matra",
+    "MR-W05-uu-matra",
+    "MR-W05-ru-matra",
+    "MR-W05-candrabindu",
+    "MR-W05-a-independent",
+    "MR-R05-marks-recall"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch05.txt",
   "json": "marathi/narration/ch05.json",
-  "textHash": "fnv1a64:7bcbcae991405ca3",
-  "jsonHash": "fnv1a64:a4279333f487c2a9",
+  "textHash": "fnv1a64:d251c415d2d05041",
+  "jsonHash": "fnv1a64:89cdaef5f36f045a",
   "findings": []
 }

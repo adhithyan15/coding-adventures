@@ -1,10 +1,9 @@
 {
   "language": "malayalam",
   "chapter": 11,
-  "sourceHash": "fnv1a64:5d089df64fec1771",
+  "sourceHash": "fnv1a64:903a8f7166a0aeb6",
   "lessonIds": [
     "ML-C11-nirangal",
-    "ML-S06-letter-chillu-ll",
     "ML-S114-letter-ma"
   ],
   "tex": "malayalam/book/chapters/ch11-colours.tex"

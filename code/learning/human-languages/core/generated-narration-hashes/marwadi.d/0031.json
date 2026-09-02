@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:8e98f87dbbebcbf0",
+  "lessonIds": [
+    "MW-R26-shopping-counter",
+    "MW-R26-transport-counter",
+    "MW-R26-food-counter",
+    "MW-R26-letters-close",
+    "MW-C26-counter-exchange",
+    "MW-R26-script-close"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch31.txt",
+  "json": "marwadi/narration/ch31.json",
+  "textHash": "fnv1a64:a29acf1758b0969f",
+  "jsonHash": "fnv1a64:1ae69d38e72207b8",
+  "findings": []
+}

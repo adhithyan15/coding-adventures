@@ -1,22 +1,24 @@
 {
   "language": "sanskrit",
   "chapter": 15,
-  "sourceHash": "fnv1a64:1ef8fd360dce4c59",
+  "sourceHash": "fnv1a64:53d5ea912404fe06",
   "lessonIds": [
     "SA-C15-big",
     "SA-C15-small",
+    "SA-S216-letter-ba",
     "SA-C15-good",
     "SA-C15-new",
+    "SA-S121-letter-u",
     "SA-C15-old",
     "SA-C15-adjective-system",
-    "SA-S114-letter-ha",
+    "SA-S118-letter-ssa",
     "SA-S115-vowel-sign-au"
   ],
   "voiceLessons": 6,
-  "drivablePrefix": 6,
+  "drivablePrefix": 2,
   "text": "sanskrit/narration/ch15.txt",
   "json": "sanskrit/narration/ch15.json",
-  "textHash": "fnv1a64:a0f856b271ad383c",
-  "jsonHash": "fnv1a64:3b0a133b6aa800bf",
+  "textHash": "fnv1a64:1ccaf11aa49ea546",
+  "jsonHash": "fnv1a64:6637d64a7338889a",
   "findings": []
 }

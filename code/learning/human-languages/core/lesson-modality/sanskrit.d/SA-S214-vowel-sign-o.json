@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S214-vowel-sign-o",
+    "language": "sanskrit",
+    "chapter": 14,
+    "sequence": 641,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:88d33216e9e128bb",
+    "detachableSegments": [
+      "Script you'll notice: ◌ो",
+      "Writing: ◌ो — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

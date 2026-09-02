@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S203-vowel-sign-u",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 201,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4f2b8be3c2759e1e",
+    "detachableSegments": [
+      "Script you'll notice: ◌ु",
+      "Writing: ◌ु — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

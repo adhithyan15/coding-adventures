@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C05-bolne",
     "language": "marathi",
-    "chapter": 8,
-    "sequence": 165,
+    "chapter": 12,
+    "sequence": 365,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:500a2ac6b70bac51",
+    "sourceHash": "fnv1a64:f223696de6a5a16e",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -24,15 +24,19 @@ complete, re-readable database, which is what lets the Engram export drop
 
 Only what Engram's collections use:
 
-- **Table** b-trees (leaf `0x0D` + interior `0x05`) — no index b-trees.
+- **Table** b-trees (leaf `0x0D` + interior `0x05`).
+- **Index** b-trees (leaf `0x0A` + interior `0x02`), which is also how SQLite
+  stores `WITHOUT ROWID` tables — see `walk_index` and
+  `read_without_rowid_table`.
 - **Overflow chains** for records too large for one page.
 - Standard page sizes and **UTF-8** text (encoding = 1).
 - **Writing** a whole database in one call (`page_writer::write_multi_table_db`):
   several tables, overflow chains, and multi-level b-trees. Whole-database emit
   only — there is no incremental update.
 
-Out of scope: WAL, index b-trees, encryption, non-UTF-8 encodings, and
-in-place modification of an existing file.
+Out of scope: WAL, encryption, non-UTF-8 encodings, and in-place modification
+of an existing file. **Writing** emits table b-trees only, so a database this
+crate writes cannot yet represent a `WITHOUT ROWID` table it can read.
 
 ## Status
 
@@ -45,7 +49,9 @@ Built leaf-to-root; this is the foundation:
 | DB header + in-memory pager | `header`, `pager` | ✅ header fields (incl. `user_version`) + zero-copy 1-based pages |
 | table b-tree walk (leaf + interior) | `btree` | ✅ `walk_table(root)` → `(rowid, record)` |
 | overflow chains (records spanning pages) | `btree` | ✅ reassembled inline + overflow; cycle/size guarded |
+| index b-tree walk (`WITHOUT ROWID` tables) | `btree` | ✅ `walk_index(root)` → record bytes; interior divider keys emitted |
 | `sqlite_schema` + `read_table(bytes, name)` | `schema` | ✅ read API |
+| `read_without_rowid_table(bytes, name)` | `schema` | ✅ read API |
 
 ## Usage
 

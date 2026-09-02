@@ -1,7 +1,7 @@
 ---
 id: MR-C03-mi-bara-aahe
-sequence: 120
-chapter: 6
+sequence: 320
+chapter: 10
 type: phrase
 headword: मी बरा आहे
 romanization: "mī barā āhe"

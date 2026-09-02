@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 16,
-  "output": "marathi/book/chapters/ch16-heart.tex",
+  "output": "marathi/book/chapters/ch16-doing-verbs.tex",
   "unicodeScript": "Devanagari",
   "scriptCommand": "mr"
 }

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d7977acf76cbb666",
+  "sourceHash": "fnv1a64:b275c497628e07e7",
   "lessons": [
     {
       "id": "ML-C05-samsaarikkuka",
@@ -176,6 +176,495 @@
       ]
     },
     {
+      "id": "ML-S115-letter-nya",
+      "sequence": 272,
+      "title": "ഞ (ña) — one character, met inside words you already say",
+      "headword": "ഞ",
+      "romanization": "ña",
+      "gloss": "the single character ഞ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:491b4a8c1f19998f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഞ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഞ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ◌ൂ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഞ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഞ — ña."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ñ, it is ña."
+            },
+            {
+              "kind": "speech",
+              "text": "You have said the word for \"I\" since the how-are-you chapter, and it starts with this letter."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ ñān — I."
+            },
+            {
+              "kind": "speech",
+              "text": "It is one sound, not two: the ny of \"canyon,\" made in one movement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഞ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഞ (ña) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ഞ (ña) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ഞ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ, ഞ (ña), നന്ദി."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഞ three times, saying ña as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഞ three times, saying *ña* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ഞ (ña) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ഞ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഞ? What sound does it carry? (ña.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S142-chillu-n",
+      "sequence": 274,
+      "title": "ൻ — one character, met inside words you already say",
+      "headword": "ൻ",
+      "romanization": "n",
+      "gloss": "the single character ൻ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:94abdb3467911d11",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ൻ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ൻ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ഞ (ña) — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ൻ — n."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a chillu — a consonant with its vowel stripped away and given a shape of its own, so that it can end a word without a dangling mark."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word ends with a chillu — the third one you have met."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ ñān — I."
+            },
+            {
+              "kind": "speech",
+              "text": "നിങ്ങൾ niṅṅaḷ — you, respectful, ending in ൾ."
+            },
+            {
+              "kind": "speech",
+              "text": "അരുൺ aruṇ — the name, ending in ൺ."
+            },
+            {
+              "kind": "speech",
+              "text": "ൻ is ന with its a handed back. Line the three up — ൻ ൺ ൾ — and say what each one used to be."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ൻ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ൻ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ൻ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ൻ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ, അരുൺ, നിങ്ങൾ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ൻ three times, saying n as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ൻ three times, saying *n* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ൻ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ൻ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ൻ? What sound does it carry? (n.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S122-letter-ya",
+      "sequence": 276,
+      "title": "യ (ya) — one character, met inside words you already say",
+      "headword": "യ",
+      "romanization": "ya",
+      "gloss": "the single character യ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c145cefd70dfb548",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: യ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: യ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ൻ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: യ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യ — ya."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not y, it is ya."
+            },
+            {
+              "kind": "speech",
+              "text": "പോയി വരാം pōyi varāṁ — goodbye, from the chapter behind you."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the middle of പോയി: യ (ya) carrying the small i hook."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: യ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on യ (ya) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find യ (ya) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find യ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "പോയി വരാം, യ (ya), ഞാൻ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "യ three times, saying ya as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: യ three times, saying *ya* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find യ (ya) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find യ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — യ? What sound does it carry? (ya.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C05-njaan-malayalam-samsaarikkunnu",
       "sequence": 280,
       "title": "ഞാൻ മലയാളം സംസാരിക്കുന്നു (ñān malayāḷaṁ saṁsārikkunnu) — \"I speak Malayalam\"",
@@ -310,6 +799,481 @@
       ]
     },
     {
+      "id": "ML-S143-vowel-sign-o",
+      "sequence": 282,
+      "title": "◌ൊ — one character, met inside words you already say",
+      "headword": "ൊ",
+      "romanization": "o",
+      "gloss": "the single character ◌ൊ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6d0cf2eb76cb0c6a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ൊ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ൊ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: യ (ya) — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has not been on a page yet: it arrives with the word on the next one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ൊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ൊ — o."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with o. Replaces, not adds — the a is gone."
+            },
+            {
+              "kind": "speech",
+              "text": "കൊച്ചി kocci — Kochi, the city that arrives on the next page."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the short partner of ◌ോ, the long ō sign you copied in സന്തോഷം. Both wrap around their consonant, one arm in front and one behind; the long one carries an extra upright stroke on the right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ൊ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ൊ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ◌ൊ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ◌ൊ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "കൊച്ചി, സന്തോഷം, ◌ൊ (o)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ൊ three times, saying o as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ൊ three times, saying *o* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ◌ൊ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ◌ൊ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌ൊ? What sound does it carry? (o.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S111-letter-ca",
+      "sequence": 284,
+      "title": "ച (ca) — one character, met inside words you already say",
+      "headword": "ച",
+      "romanization": "ca",
+      "gloss": "the single character ച — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f38b40469f70fdbd",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ച",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ച and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ◌ൊ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has not been on a page yet: it arrives with the word on the next one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ച",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ച — ca."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not c, it is ca."
+            },
+            {
+              "kind": "speech",
+              "text": "കൊച്ചി kocci — Kochi, where it is doubled into ച്ച in the middle of the name."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound is the ch of \"church,\" and doubling it holds it longer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ച — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ച and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ച (ca) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ച in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "കൊച്ചി, ച (ca), ക."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ച three times, saying ca as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ച three times, saying *ca* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ച (ca) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ച once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ച? What sound does it carry? (ca.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S144-chillu-l",
+      "sequence": 286,
+      "title": "ൽ — one character, met inside words you already say",
+      "headword": "ൽ",
+      "romanization": "l",
+      "gloss": "the single character ൽ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e9cd3cf75ffca464",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ൽ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ൽ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ച (ca) — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has not been on a page yet: it arrives with the word on the next one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ൽ — l."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a chillu — a consonant with its vowel stripped away and given a shape of its own, so that it can end a word without a dangling mark."
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth chillu, and the one that does the most work in Malayalam grammar: it closes the little ending that says where."
+            },
+            {
+              "kind": "speech",
+              "text": "കൊച്ചിയിൽ kocciyil — in Kochi."
+            },
+            {
+              "kind": "speech",
+              "text": "ൽ is ല — the la doubled inside ഇല്ല — with its a handed back. That makes four end-of-word shapes you can now read: ൻ ൺ ൾ ൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ൽ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ൽ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ൽ (l) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ൽ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "കൊച്ചിയിൽ, ഇല്ല, ൽ (l)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ൽ three times, saying l as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ൽ three times, saying *l* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ൽ (l) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ൽ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ൽ? What sound does it carry? (l.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C05-taamasikkuka",
       "sequence": 290,
       "title": "താമസിക്കുക (tāmasikkuka) — \"to live, to stay\"",
@@ -438,6 +1402,167 @@
             {
               "kind": "speech",
               "text": "What does tāmasikkuka mean, and where does \"in\" go? (\"To live / stay / reside\"; -il \"in\" attaches to the end of the noun.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S127-letter-ha",
+      "sequence": 296,
+      "title": "ഹ — one character, met inside words you already say",
+      "headword": "ഹ",
+      "romanization": "ha",
+      "gloss": "the single character ഹ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fc7a3e40406e52b3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഹ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഹ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ൽ (l) — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has not been on a page yet: it arrives with the word on the next one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹ — ha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not h, it is ha."
+            },
+            {
+              "kind": "speech",
+              "text": "The next page names a second verb beside the one it teaches — the verb for helping — and this letter sits in the middle of it, inside the noun that verb is built on."
+            },
+            {
+              "kind": "speech",
+              "text": "സഹായം sahāyaṁ — help."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a Sanskrit-layer word, which is where most of this letter's work is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഹ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഹ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ഹ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ഹ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "സഹായം, ഹ (ha), നന്ദി."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഹ three times, saying ha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഹ three times, saying *ha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ഹ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ഹ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഹ? What sound does it carry? (ha.) Name one word you already say that contains it."
             }
           ]
         }
@@ -590,6 +1715,330 @@
       ]
     },
     {
+      "id": "ML-S145-letter-ja",
+      "sequence": 302,
+      "title": "ജ (ja) — one character, met inside words you already say",
+      "headword": "ജ",
+      "romanization": "ja",
+      "gloss": "the single character ജ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:4af34b0c25c82945",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ജ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ജ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ഹ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ജ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ജ — ja."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not j, it is ja."
+            },
+            {
+              "kind": "speech",
+              "text": "You have already said a word that starts with it."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി ചെയ്യുക jōli ceyyuka — to work (literally \"work-do\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the first pair: ജ (ja) with the long ◌ോ wrapped around it — jō. Two shapes you now read separately, working together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ജ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ജ (ja) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ജ (ja) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ജ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി ചെയ്യുക (jōli ceyyuka), ജ (ja), ◌ോ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ജ three times, saying ja as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ജ three times, saying *ja* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ജ (ja) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ജ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ജ? What sound does it carry? (ja.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S146-letter-la",
+      "sequence": 304,
+      "title": "ല (la) — one character, met inside words you already say",
+      "headword": "ല",
+      "romanization": "la",
+      "gloss": "the single character ല — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6ef14de3b8d749a8",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ല",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ല and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ജ (ja) — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ല",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ല — la."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not l, it is la."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി jōli — work, the word you said on the page before."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇല്ല illa — no, from the very first chapter, where it is doubled into ല്ല."
+            },
+            {
+              "kind": "speech",
+              "text": "You met its chillu, ൽ, a few pages ago. This is the same consonant with its a still on board."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ല — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ല and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ല (la) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ല in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി, ഇല്ല, ൽ (l)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ല three times, saying la as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ല three times, saying *la* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ല (la) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ല once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ല? What sound does it carry? (la.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C05-practice",
       "sequence": 310,
       "title": "Chapter 5 — The first verbs",
@@ -597,13 +2046,22 @@
       "romanization": "",
       "gloss": "Chapter 5 recap — the first verbs",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:a15f78d01049ad15",
-      "notice": null,
+      "sourceHash": "fnv1a64:2ac7a26e94c90c76",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script check — the letters of this chapter"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script check — the letters of this chapter until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -742,6 +2200,52 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script check — the letters of this chapter",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the romanizations. Find each letter once in the Malayalam above, then say the word it sits in."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ — ഞ ña, ൻ n."
+            },
+            {
+              "kind": "speech",
+              "text": "പോയി — യ ya."
+            },
+            {
+              "kind": "speech",
+              "text": "കൊച്ചിയിൽ — ◌ൊ o, ച ca, ൽ l."
+            },
+            {
+              "kind": "speech",
+              "text": "സഹായം — ഹ ha."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി — ജ ja, ല la."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at each letter, then find it in the word beside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at each letter, then find it in the word beside it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

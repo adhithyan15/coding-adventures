@@ -23,12 +23,20 @@ steps; later-level labels are not readiness evidence by themselves.
 - **Chapters 24-27:** a first concrete place/hand/money/map vocabulary runway.
 - **Chapter 28:** eight everyday time words acquired ear-first, with only two of
   them written, plus a distant return of the map words.
+- **Chapter 29:** the six time words chapter 28 left oral reach the page, each
+  spelled entirely from signs taught before the first name exchange.
+- **Chapter 30:** the fifth-return slab. Nine zero-new-atom lessons return the
+  first five numbers and the fifteen core verbs at R4 distance.
+- **Chapters 31-34:** twenty more ear-first headwords — food, the house, the sky
+  and the river, and people — at one new word per lesson, one written word per
+  chapter, and a named distant band inside every return.
 
-The authored boundary is **28 chapters / 179 lessons**. It has zero duration
+The authored boundary is **34 chapters / 228 lessons**. It has zero duration
 violations, zero never-taught Gujarati glyphs, zero script-closure findings, and
 zero headwords without a romanization, but it remains pre-A1 work in progress.
-The current gentle-ramp snapshot records 339 missed retrieval windows, five
-atoms never revisited, three atom spikes, and one measurement-blind lesson.
+The current gentle-ramp snapshot records 283 missed retrieval windows (down from
+339 on a track half again as long), one atom never revisited, three atom spikes,
+and four measurement-blind lessons.
 
 ## Dependency-ordered backlog
 
@@ -37,10 +45,11 @@ atoms never revisited, three atom spikes, and one measurement-blind lesson.
 1. Service the earliest R1-R4 misses without creating chapter atom spikes.
 2. Revisit the six orphan atoms and migrate the measurement-blind lesson.
 3. Split the two lesson spikes and one chapter spike into smaller lessons.
-4. Service the core-verb chapters (13-16) at R4. Thirty-six of their atoms
-   became R4-measurable when the track passed 165 lessons and none of them is
-   retrieved at that distance; this is the next fifth-return slab, and it is the
-   single largest item in the reinforcement figure.
+4. ~~Service the core-verb chapters (13-16) at R4.~~ **Done** in chapter 30:
+   nine zero-new-atom lessons place the numbers and the fifteen core verbs 98 to
+   104 positions after their introductions. R4 misses fell 101 to 43. What is
+   left at R4 is the opening greeting-and-courtesy material and the twenty-odd
+   script forms of chapters 1-7, which needs its own slab.
 
 These items unblock trustworthy expansion because new chapters should not pile
 onto known continuity debt.

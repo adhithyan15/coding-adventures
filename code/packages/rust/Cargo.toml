@@ -469,6 +469,7 @@ members = [
     "wordprocessingml",
     "presentationml",
     "docx-writer",
+    "pdf",
     "arm1-gatelevel",
     "arm1-simulator",
     "immutable-list",

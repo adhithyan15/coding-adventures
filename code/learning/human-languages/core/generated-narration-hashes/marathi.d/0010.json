@@ -1,20 +1,20 @@
 {
   "language": "marathi",
   "chapter": 10,
-  "sourceHash": "fnv1a64:e81f4a6ad01aee44",
+  "sourceHash": "fnv1a64:b2d186f8d9f20460",
   "lessonIds": [
-    "MR-C07-asne",
-    "MR-C07-jane",
-    "MR-C07-yene",
-    "MR-C07-khane",
-    "MR-C07-pahne",
-    "MR-C07-mahit-asne"
+    "MR-C03-kasa",
+    "MR-C03-tumhi-kase-aahat",
+    "MR-C03-mi",
+    "MR-C03-mi-bara-aahe",
+    "MR-C03-kaahi-harkat-nahi",
+    "MR-C03-practice"
   ],
-  "voiceLessons": 6,
-  "drivablePrefix": 6,
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
   "text": "marathi/narration/ch10.txt",
   "json": "marathi/narration/ch10.json",
-  "textHash": "fnv1a64:96c4ed7320c2e03b",
-  "jsonHash": "fnv1a64:4060f95c13810896",
+  "textHash": "fnv1a64:392d43d9520e9cdb",
+  "jsonHash": "fnv1a64:5332069268829257",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R24-pay-two",
+    "language": "marwadi",
+    "chapter": 29,
+    "sequence": 2350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc4883d382e85f70"
+  },
+  "findings": []
+}

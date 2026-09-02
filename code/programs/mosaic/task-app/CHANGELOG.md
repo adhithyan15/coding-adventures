@@ -2,7 +2,89 @@
 
 All notable changes to the `task-app` web program are documented here.
 
-## [0.1.0] - Unreleased
+## [Unreleased]
+
+Entries below ship in the next product release. `task-app-v0.1.0` published on
+2026-08-31; everything added after that tag accumulates here until the next
+version is cut and this heading is replaced with it.
+
+### Fixed - startup no longer fails to a blank page (#13695)
+
+Trestle waited for the WASM fetch, the compile, the storage open, and the
+workspace restore before rendering anything, and the boot promise was floated —
+so a failed fetch, a failed compile, or a browser without WebAssembly left an
+empty page permanently, with the error visible only in the console.
+
+The host now paints a concise loading state before the first `await`, and
+replaces it with a failure state carrying the underlying detail and a **Try
+again** button that re-runs initialization in place. The failure state says
+explicitly that saved tasks are unchanged, because at that point nothing has
+been written and a transient network error must not read as data loss. Error
+detail is rendered as text, never as markup.
+
+A 404 previously became a `CompileError`: `fetch` resolves for a 404, so the
+error page's bytes reached `WebAssembly.compile` and a missing engine reported
+itself as a corrupt one. The response status is now checked explicitly.
+
+Startup states cannot be authored in Mosaic — the emitted component is
+presentational and its slots need a live engine — so they are host chrome, and
+this is the one deliberate exception to styling outside mosstyle. It is kept to
+four values read verbatim from `app-shell` and `storage-warning` in the .msl so
+the states stay visually continuous with the app that replaces them.
+
+The host-neutral contract is `code/specs/task-app-startup-states-v1.md`.
+Generated native hosts still surface startup failure only through process and
+log evidence; that needs a distinct surface in five backends and is tracked in
+#13984 rather than bundled here.
+
+### Documented - platform completion plan across all nine Mosaic backends (#13517)
+
+The backlog's "next up" section had emptied its own queue and deferred the next
+choice to a fresh pass over the super-app roadmap. That pass is now written down
+in `code/specs/task-app-platform-completion-v1.md`, and it asks a different
+question than the roadmap does: not which features Trestle should have, but
+which of Mosaic's nine backends it is actually finished on.
+
+Six backends are gated and shipped (`react`, `qt`, `flutter`, `compose`,
+`swiftui`, `xaml`). Three contain zero TaskApp references — no test, no CI step,
+no artifact: `html`, `webcomponent`, and `paint`. The portable-input-label work
+in #13717 exercised the html and webcomponent emitters from emitter-local
+fixtures, never from TaskApp's own sources, so those backends were never covered
+despite reading as though they were. iOS compiles the generated SwiftUI sources
+but nothing runs them, and Android has no Mosaic backend at all.
+
+The resulting queue is ordered in three tiers: finish the platforms TaskApp
+already claims (#13695, #13692, #13526, #13625), close the three unexercised
+backends, then state the reach items — iOS execution, Android, and
+signing/notarization/installers — as decisions rather than silent gaps.
+
+Writing the spec also turned up a stale pointer: the README told readers that
+"Signing and installation lifecycle work remains tracked under #13522", but
+#13522 closed on 2026-08-31 once its four packaging children shipped. Signing
+was never in that issue's acceptance criteria, so the limitation was recorded
+against a closed issue and tracked nowhere. It is now #13977, and the README,
+backlog, and spec all point there. Historical changelog entries keep their
+original references.
+
+### Fixed - changelog rolled forward past the published v0.1.0 (#13625)
+
+`task-app-v0.1.0` published on 2026-08-31, but this file still headed its top
+section `[0.1.0] - Unreleased`, so 16 entries that landed *after* the tag were
+filed under a version that had already shipped. The section is now split at the
+real tag boundary — established by reading this file as it existed at
+`task-app-v0.1.0`, not inferred from dates: `[Unreleased]` holds the 16
+post-release entries, and `[0.1.0] - 2026-08-31` holds the 45 present at the tag.
+
+Splitting it surfaced a second, older defect — the file carried **two**
+`## [0.1.0] - Unreleased` headings, one at line 5 and one 940 lines below. Both
+are present at the v0.1.0 tag and on current main, so this predates the release
+rather than coming from it. The duplicate is removed and v0.1.0 is now one
+contiguous section. Entry counts were checked either side of both edits
+(16 + 45 = 61, matching the 61 present before), so the restructure dropped
+nothing.
+
+The CI gate that keeps a published version from sitting marked `Unreleased`
+remains #13625's own work; this is the data correction that gate would catch.
 
 ### Fixed - visible local-storage and recovery status (#13690)
 
@@ -147,6 +229,8 @@ row and places the Rust-owned completion percentage beyond the default desktop
 viewport; the real-runtime lifecycle again requires `100%` to be displayed
 after completing a task. Shared TaskApp styles remain unchanged for web,
 Flutter, and SwiftUI.
+
+## [0.1.0] - 2026-08-31
 
 ### Fixed - self-contained browser storage entrypoint (#13543)
 
@@ -940,8 +1024,6 @@ Without them nothing in this layout would have been vertically centred, and the 
   JavaScript's range renders as `—` instead of throwing from `toISOString`, and the
   min/max use `reduce` rather than spreading a large array into an argument list.
 - A zero-duration milestone is floored at a sliver so it stays visible.
-
-## [0.1.0] - Unreleased
 
 ### Added - light/dark theme switching in the web host
 

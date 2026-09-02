@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R25-dative-frame
 spine_node: SPINE-RESPOND-BASIC
-sequence: 1030
-chapter: 25
+sequence: 1230
+chapter: 29
 type: review
 headword: मला …
 romanization: malā …

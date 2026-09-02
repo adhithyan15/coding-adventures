@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R05-marks-recall",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 66,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:421cda882d151647"
+  },
+  "findings": []
+}

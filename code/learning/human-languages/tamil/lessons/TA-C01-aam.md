@@ -4,6 +4,7 @@ sequence: 30
 chapter: 1
 type: word
 headword: ஆம்
+romanization: "ām"
 gloss: yes (ām)
 concept_tag: RESPONSE-YES
 prerequisites: [TA-C01-vanakkam]

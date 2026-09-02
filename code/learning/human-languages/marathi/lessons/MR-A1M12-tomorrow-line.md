@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M12-tomorrow-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 851
+sequence: 1051
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "उद्या भेटू."
 gloss: retrieve the familiar dated farewell as the final message line

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C09-madat-karne",
     "language": "marathi",
-    "chapter": 12,
-    "sequence": 500,
+    "chapter": 16,
+    "sequence": 700,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a1c458b9eaa6f6f3",
+    "sourceHash": "fnv1a64:0b9a9dbb7e8e5e15",
     "detachableSegments": [
       "The letters in this word"
     ]

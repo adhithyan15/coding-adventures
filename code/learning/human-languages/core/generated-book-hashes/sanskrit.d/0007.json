@@ -1,13 +1,16 @@
 {
   "language": "sanskrit",
   "chapter": 7,
-  "sourceHash": "fnv1a64:133ffcb45aaa0019",
+  "sourceHash": "fnv1a64:e9742c1bb28af31f",
   "lessonIds": [
     "SA-C07-asti",
+    "SA-S207-letter-ca",
     "SA-C07-gacchati",
     "SA-C07-agacchati",
+    "SA-S111-letter-ka",
     "SA-C07-khadati",
     "SA-C07-pashyati",
+    "SA-S119-letter-kha",
     "SA-C07-janati"
   ],
   "tex": "sanskrit/book/chapters/ch07-core-verbs.tex"

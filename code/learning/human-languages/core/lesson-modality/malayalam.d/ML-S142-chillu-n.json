@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S142-chillu-n",
+    "language": "malayalam",
+    "chapter": 5,
+    "sequence": 274,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:94abdb3467911d11",
+    "detachableSegments": [
+      "Script you'll notice: ൻ",
+      "Writing: ൻ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
