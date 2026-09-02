@@ -3,23 +3,23 @@
   "language": "french",
   "chapter": 16,
   "title": "Colours",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2cb6d7e1d2229883",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:df70fba0a5ea3e83",
   "lessons": [
     {
-      "id": "FR-C13-noir-blanc",
-      "sequence": 455,
-      "title": "noir, blanc — one inherited, one borrowed",
-      "headword": "noir, blanc",
-      "romanization": "noir, blanc",
-      "gloss": "black and white — one word inherited from Latin, one borrowed from the Germanic neighbours",
+      "id": "FR-C13-noir",
+      "sequence": 447,
+      "title": "noir — black",
+      "headword": "noir",
+      "romanization": "noir",
+      "gloss": "black — the straightforward one, straight down from Latin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b408965111080074",
+      "sourceHash": "fnv1a64:9ce242fec2839681",
       "notice": null,
       "blocks": [
         {
@@ -35,69 +35,50 @@
             },
             {
               "kind": "speech",
-              "text": "Two colours, two completely different life stories. One walked straight down from Latin. The other was borrowed from the Germanic neighbours — and that direction, Germanic into Romance, is the opposite of what usually happens."
+              "text": "Four colours in this chapter, and they do not have four similar stories. Start with the one that behaves exactly as you would expect, so the surprises stand out later."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "noir — the expected one",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "noir (\"black\") from Latin niger. No surprises: niger becomes negro/nero in the sister languages, and into English in denigrate (\"to blacken someone's name\")."
+              "text": "vowel-oi — the oi is wa, one gliding vowel. It is the same oi you have in trois and soir."
+            },
+            {
+              "kind": "speech",
+              "text": "r-uvular — the final r is sounded here, made in the throat."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: noir = NWAR, one syllable."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "blanc — the imported one",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "You'd expect Latin albus (\"white\"). It's not there. French says blanc, from Frankish blank — a Germanic word meaning \"shining, gleaming.\" The Franks who gave France its name gave it its word for white too."
+              "text": "noir is Latin niger, \"black.\" Nothing was borrowed and nothing is hiding: the word walked straight down from Rome into French, and did the same into its sisters — Spanish negro, Italian nero."
             },
             {
               "kind": "speech",
-              "text": "Why did albus lose? Probably because blank was vivid: not just \"white\" but \"bright, flashing.\" Colour words often get replaced by the more dramatic option."
+              "text": "English took niger too, but only as a metaphor. To denigrate someone is, literally, to blacken them — to darken a name rather than a thing. The colour stayed in the Romance languages; the insult is what crossed into English."
+            },
+            {
+              "kind": "speech",
+              "text": "So noir is the plain case. Hold on to that, because the next colour is not plain at all."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Where albus went",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "It didn't die — it stopped being a colour:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "word",
-                "meaning",
-                "the white inside"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "word: aube. meaning: dawn. the white inside: the sky going white.",
-                "word: aubépine. meaning: hawthorn. the white inside: the \"white thorn\".",
-                "word: album (Eng.) meaning: album. the white inside: a blank white tablet.",
-                "word: albinos (Eng.) meaning: albino. the white inside: white-skinned."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So Latin's white is still all around you — just never where you'd look for it."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,43 +91,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"noir, blanc\"",
+              "instruction": "\"noir\" — NWAR, the oi a single gliding vowel",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"noir, blanc\"]"
+              "source": "[YOU SAY: \"noir\" — *NWAR*, the *oi* a single gliding vowel]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le vin blanc, le vin rouge\" — wine you already know from Ch.11",
+              "instruction": "the family — \"niger, noir, negro, nero\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le vin blanc, le vin rouge\" — wine you already know from Ch.11]"
+              "source": "[YOU SAY: the family — \"niger, noir, negro, nero\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pairing — \"noir from Latin, blanc from the Franks\"",
+              "instruction": "the English one — \"denigrate: to blacken a name\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pairing — \"*noir* from Latin, *blanc* from the Franks\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"l'aube\" — and hear the old Latin white in it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"l'**aube**\" — and hear the old Latin white in it]"
+              "source": "[YOU SAY: the English one — \"denigrate: to blacken a name\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -158,26 +130,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two is inherited from Latin? (Noir from niger.) Where does blanc come from? (Frankish blank, \"shining\" — a Germanic word borrowed into French.) Why is that direction surprising? (Latin usually lends to Germanic, not the other way.) Where did Latin albus end up? (In aube, \"dawn,\" and album — no longer a colour.) Next: red and blue, and one more borrowing."
+              "text": "How do you say black? (noir, NWAR.) What Latin word is it from? (niger.) What does denigrate literally mean? (To blacken — to darken someone's name.) Next: white, which did not come from Latin at all."
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C13-rouge-bleu",
-      "sequence": 460,
-      "title": "rouge, bleu — an ancient word and a borrowed one",
-      "headword": "rouge, bleu",
-      "romanization": "rouge, bleu",
-      "gloss": "red and blue — one ancient inherited root, and a second Germanic loan",
+      "id": "FR-C13-blanc",
+      "sequence": 450,
+      "title": "blanc — white",
+      "headword": "blanc",
+      "romanization": "blanc",
+      "gloss": "white — a Germanic word in a Latin language, running against the traffic",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c6f980f20107915",
+      "sourceHash": "fnv1a64:5d1a07b7b98ce56e",
       "notice": null,
       "blocks": [
         {
@@ -193,82 +165,54 @@
             },
             {
               "kind": "speech",
-              "text": "Last lesson: one inherited colour, one borrowed. This lesson repeats the pattern — and shows that French's borrowing from Germanic wasn't a one-off."
+              "text": "Every word in this book so far has come down from Latin. This one did not, and the direction it came from is the opposite of what usually happens."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "rouge — very, very old",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "rouge from Latin rubeus (\"reddish\"). But rubeus itself descends from a root so old it predates Latin: PIE h₁rewdʰ-. Its children are everywhere:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "word"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "language: Latin. word: ruber, rubeus becomes rouge, ruby, rubric.",
-                "language: English. word: red, rust, ruddy.",
-                "language: German. word: rot."
-              ]
+              "text": "nasal-an — the an is the nasal vowel you have in janvier."
             },
             {
               "kind": "speech",
-              "text": "So rouge and red are not lookalikes — they are actual cousins, separated for maybe five thousand years. Red is one of humanity's oldest named colours."
+              "text": "silent-final — the c at the end is not pronounced."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: blanc = BLA(N), one syllable, nothing after the nose."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "bleu — borrowed, then lent onward",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "bleu from Frankish blāo. Another Germanic word, borrowed exactly like blanc. And then something neat happened: English took bleu from French — so English blue is a Germanic word that went to France, changed clothes, and came back. German kept the original at home: blau."
+              "text": "Latin had a perfectly good word for white: albus. French does not use it."
             },
             {
               "kind": "speech",
-              "text": "French also has azur (from the same source as Spanish azul, ultimately Arabic lāzaward, \"lapis lazuli\") — the poetic blue of the sky, and the Côte d'Azur."
+              "text": "blanc is Frankish — a Germanic word, from blank, meaning not \"white\" exactly but \"shining, gleaming, flashing.\" The Franks are the people who gave France its name, and they gave it its word for white as well."
+            },
+            {
+              "kind": "speech",
+              "text": "That direction is the surprising part. Latin words pour into Germanic languages constantly; English is more than half built of them. Traffic the other way, a Germanic word displacing a Latin one inside a Romance language, is much rarer."
+            },
+            {
+              "kind": "speech",
+              "text": "Why did albus lose? Most likely because blank was more vivid. Albus is a flat, plain white; blank is a white that shines. Colour words are replaced by the more dramatic option surprisingly often — the exciting word wins and then calms down into the ordinary one."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The pattern of the chapter",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "colour",
-                "source"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "colour: noir. source: Latin niger.",
-                "colour: blanc. source: Germanic blank.",
-                "colour: rouge. source: Latin rubeus (ancient PIE root).",
-                "colour: bleu. source: Germanic blāo."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Half of French's basic colour vocabulary walked in from the north."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -281,38 +225,993 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"rouge, bleu\"",
+              "instruction": "\"blanc\" — BLA(N), the c silent",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"rouge, bleu\"]"
+              "source": "[YOU SAY: \"blanc\" — *BLA(N)*, the *c* silent]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le vin rouge\" — Ch.11's wine, now with its colour",
+              "instruction": "the pair — \"noir, blanc\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le vin rouge\" — Ch.11's wine, now with its colour]"
+              "source": "[YOU SAY: the pair — \"noir, blanc\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bleu, blanc, rouge\" — the flag, all three learned",
+              "instruction": "the origin — \"Frankish blank: shining\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bleu, blanc, rouge\" — the flag, all three learned]"
+              "source": "[YOU SAY: the origin — \"Frankish blank: shining\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins — \"rouge, red, rot\"",
+              "instruction": "the two stories — \"noir walked down from Rome, blanc walked in from the north\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rouge · red · rot\"]"
+              "source": "[YOU SAY: the two stories — \"noir walked down from Rome, blanc walked in from the north\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say white? (blanc, BLA(N).) Is the final c sounded? (No.) Which language did it come from? (Frankish — Germanic, not Latin.) What did blank actually mean? (\"Shining, gleaming.\") What was the Latin word it displaced? (albus.) Next: where albus went instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C13-aube",
+      "sequence": 453,
+      "title": "l'aube — the white that stopped being a colour",
+      "headword": "l'aube",
+      "romanization": "l'aube",
+      "gloss": "where Latin's white went when it stopped being a colour",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06b96352b5b028a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Blanc took the job. That does not mean albus was thrown away — words that lose an argument usually go and do something else."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin albus is still all around you. It simply stopped being the word for the colour, and survives inside words for things that are white:"
+            },
+            {
+              "kind": "speech",
+              "text": "l'aube — the dawn: the sky going white. French, and pronounced lohb."
+            },
+            {
+              "kind": "speech",
+              "text": "l'aubépine — the hawthorn, literally the \"white thorn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "album — English, from a blank white tablet you wrote on."
+            },
+            {
+              "kind": "speech",
+              "text": "albino — English, someone white-skinned."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a pattern worth naming, because it will keep happening. When a newer word takes over a plain everyday meaning, the older one does not vanish. It gets pushed into the specific — a time of day, a particular tree, a technical term — and stays there for centuries, unnoticed."
+            },
+            {
+              "kind": "speech",
+              "text": "So French has two whites after all. One you say when you mean the colour, and one you say without knowing you are saying it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"l'aube\" — lohb, the dawn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"l'aube\" — *lohb*, the dawn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the white inside it — \"albus: the sky going white\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the white inside it — \"albus: the sky going white\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English survivors — \"album, albino\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English survivors — \"album, albino\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two whites — \"blanc for the colour, aube for the hour\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two whites — \"blanc for the colour, aube for the hour\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'aube mean, and what is white about it? (The dawn — the sky going white.) Which Latin word is inside it? (albus.) Name two English words that kept the same albus. (album, albino.) What happens to a word when a newer one takes its everyday job? (It survives in the specific — a time, a tree, a technical term.) Next: red, which is older than Latin."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C13-rouge",
+      "sequence": 456,
+      "title": "rouge — red",
+      "headword": "rouge",
+      "romanization": "rouge",
+      "gloss": "red — and English red is not a lookalike but an actual cousin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94139f2c69677ebe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Noir came from Latin and blanc from the Franks. This one goes back further than either — further than Latin itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-ou — the ou is the pure oo you have in douze."
+            },
+            {
+              "kind": "speech",
+              "text": "soft-j — the g here is the soft zh of measure, the same sound as the j in janvier."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: rouge = ROOZH, one syllable. English borrowed the word whole for makeup and kept the French sound with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rouge is Latin rubeus, \"reddish.\" But rubeus is itself inherited, from a Proto-Indo-European root h₁rewdʰ- so old that its children are scattered across the whole family:"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ruber, rubeus becomes French rouge, and English ruby, rubric."
+            },
+            {
+              "kind": "speech",
+              "text": "English red, rust, ruddy."
+            },
+            {
+              "kind": "speech",
+              "text": "German rot."
+            },
+            {
+              "kind": "speech",
+              "text": "So rouge and red are not lookalikes that happen to mean the same thing. They are actual cousins, separated for something like five thousand years and still saying the same colour."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not an accident of this one word. Red is one of the oldest colours any language names — after black and white, it is almost always the third colour a language gets a word for, and often the only other one for a long time. A word that old survives everywhere because it was never not needed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"rouge\" — ROOZH, the soft g",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"rouge\" — *ROOZH*, the soft *g*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins in a row — \"rouge, red, rot\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins in a row — \"rouge, red, rot\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin ones — \"ruber, ruby, rubric\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin ones — \"ruber, ruby, rubric\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three you have — \"noir, blanc, rouge\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three you have — \"noir, blanc, rouge\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say red? (rouge, ROOZH.) How is the g pronounced? (Soft — the zh of measure.) Are rouge and English red borrowed from each other? (No — they are cousins from the same Proto-Indo-European root.) Name two more of that root's children. (rust, ruddy, ruby, rubric, German rot — any two.) Next: blue, which went abroad and came home."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C13-bleu",
+      "sequence": 459,
+      "title": "bleu — blue",
+      "headword": "bleu",
+      "romanization": "bleu",
+      "gloss": "blue — a Germanic word that went to France, changed clothes, and came back",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46c32758d1627b18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth colour, and the second one that is not Latin. Once is a curiosity; twice is a pattern about who was actually living in France."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-eu — the eu is the rounded front vowel you made in sœur: lips rounded, tongue forward."
+            },
+            {
+              "kind": "speech",
+              "text": "silent-final — there is no consonant after it to say."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: bleu = BLUH, one syllable, and shorter than English speakers expect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bleu is Frankish blāo — Germanic again, borrowed exactly the way blanc was."
+            },
+            {
+              "kind": "speech",
+              "text": "Then something neat happened. English took bleu from French. So English blue is a Germanic word that walked into France, spent centuries there changing its shape, and was then borrowed back into a Germanic language. It went abroad and came home wearing different clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Meanwhile German never sent its copy anywhere: it still says blau, which is what blāo sounded like all along. Say blau, bleu, blue in a row and you are hearing one word at three stages of one journey."
+            },
+            {
+              "kind": "speech",
+              "text": "(French has a second, more poetic blue as well — azur, ultimately from Arabic lāzaward, \"lapis lazuli.\" You have almost certainly seen it already, on the map: the Côte d'Azur.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bleu\" — BLUH, lips rounded, and keep it short",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bleu\" — *BLUH*, lips rounded, and keep it short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the round trip — \"blau, bleu, blue\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the round trip — \"blau, bleu, blue\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two Frankish ones — \"blanc, bleu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two Frankish ones — \"blanc, bleu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"noir, blanc, rouge, bleu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"noir, blanc, rouge, bleu\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say blue? (bleu, BLUH.) Which language did it come from? (Frankish — Germanic, like blanc.) What is odd about English blue? (It is a Germanic word that English borrowed from French — it went abroad and came back.) What did German keep? (blau.) Next: where the colour goes in the sentence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C13-vin-rouge",
+      "sequence": 462,
+      "title": "le vin rouge — where the colour goes",
+      "headword": "le vin rouge",
+      "romanization": "le vin rouge",
+      "gloss": "where a colour goes — after the noun, not before it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1322b2e29046bd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have four colours and a table full of nouns. Putting them together takes one rule, and English gets it the other way round."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the colour comes second",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English puts the colour in front of the noun: red wine, white bread. French puts it behind:"
+            },
+            {
+              "kind": "speech",
+              "text": "le vin rouge — the wine red."
+            },
+            {
+              "kind": "speech",
+              "text": "le pain blanc — the bread white."
+            },
+            {
+              "kind": "speech",
+              "text": "The order feels backwards for about a week and then stops feeling like anything. What makes it stick faster is noticing that you already say the exception."
+            },
+            {
+              "kind": "speech",
+              "text": "bonjour is bon + jour — a good day, with the adjective in front. So French does both, and the split is not random: a small handful of very common, very short adjectives go before the noun — bon, bonne, and a few others you will meet — while nearly everything else, colours included, goes after."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the useful form of the rule. Not \"French adjectives follow the noun,\" which the word bonjour would immediately contradict, but: the short common ones lead, and everything else follows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two wines — \"le vin rouge, le vin blanc\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two wines — \"le vin rouge, le vin blanc\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with bread — \"le pain blanc\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with bread — \"le pain blanc\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exception you already own — \"bonjour: bon comes first\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exception you already own — \"bonjour: bon comes first\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rule as one line — \"short and common in front, everything else behind\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rule as one line — \"short and common in front, everything else behind\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"le vin rouge, le vin blanc\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"red wine\"? (le vin rouge — the colour second.) White bread? (le pain blanc.) Which everyday word puts its adjective first? (bonjour — bon + jour.) State the rule in one line. (Short, common adjectives go in front; everything else, colours included, goes after.) Next: the three colours on the flag."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C13-tricolore",
+      "sequence": 465,
+      "title": "bleu, blanc, rouge — the flag",
+      "headword": "bleu, blanc, rouge",
+      "romanization": "bleu, blanc, rouge",
+      "gloss": "the flag, in order — and two of its three colours are loanwords",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41af8a0f0c688e8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three of your four colours are the flag, and saying them in its order is the easiest way to keep them. There is also a joke buried in them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The French flag is named by its colours, left to right:"
+            },
+            {
+              "kind": "speech",
+              "text": "bleu, blanc, rouge."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it in that order and it comes as one unit rather than three words. French speakers say it that way constantly — le drapeau bleu-blanc-rouge — and it is by far the most common context in which all three appear together."
+            },
+            {
+              "kind": "speech",
+              "text": "Now count where they came from:"
+            },
+            {
+              "kind": "speech",
+              "text": "bleu — Frankish, Germanic."
+            },
+            {
+              "kind": "speech",
+              "text": "blanc — Frankish, Germanic."
+            },
+            {
+              "kind": "speech",
+              "text": "rouge — Latin, from a root older than Latin."
+            },
+            {
+              "kind": "speech",
+              "text": "So the tricolour is two-thirds Germanic. The flag of the most self-consciously Latin nation in Europe names itself with two borrowed Germanic words and one inherited one, and no one notices, because a word stops being foreign the moment everybody uses it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the honest summary of this chapter: of four basic colours, half came from the north. Half of French's most everyday vocabulary is not doing what the label \"Romance language\" would lead you to expect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the flag — \"bleu, blanc, rouge\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the flag — \"bleu, blanc, rouge\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four colours — \"noir, blanc, rouge, bleu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four colours — \"noir, blanc, rouge, bleu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sources — \"Latin, Frankish, Latin, Frankish\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sources — \"Latin, Frankish, Latin, Frankish\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the finding — \"the tricolour is two-thirds Germanic\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the finding — \"the tricolour is two-thirds Germanic\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"bleu, blanc, rouge\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the flag's colours in order. (bleu, blanc, rouge.) Which two of them are Germanic borrowings? (bleu and blanc.) So what fraction of the tricolour is Germanic? (Two-thirds.) And of the chapter's four colours? (Half.) Next: all four, put to work."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C13-practice",
+      "sequence": 468,
+      "title": "Practice — four colours and where they came from",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "four colours, two homelands, and the word order that carries them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c164124debbf55f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, and then the thing that makes them worth more than four words: each one has a passport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the four",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"noir, blanc, rouge, bleu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"noir, blanc, rouge, bleu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the flag order — \"bleu, blanc, rouge\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the flag order — \"bleu, blanc, rouge\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two nasal ones — \"blanc\"; and the two that end in a vowel sound — \"bleu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two nasal ones — \"blanc\"; and the two that end in a vowel sound — \"bleu\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"noir, blanc, rouge, bleu\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: put them on nouns",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le vin rouge, le vin blanc\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le vin rouge, le vin blanc\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le pain blanc\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le pain blanc\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the order out loud — \"the noun, then the colour\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the order out loud — \"the noun, then the colour\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exception — \"bonjour\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exception — \"bonjour\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: where each one came from",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"noir — Latin niger; denigrate\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"noir — Latin niger; denigrate\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"blanc — Frankish blank, shining\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"blanc — Frankish blank, shining\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"rouge — Latin rubeus; red, rot, ruby\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"rouge — Latin rubeus; red, rot, ruby\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bleu — Frankish blao; blau, bleu, blue\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bleu — Frankish blao; blau, bleu, blue\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that changed jobs — \"albus became l'aube, the dawn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that changed jobs — \"albus became l'aube, the dawn\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "four colours, and the flag as a set."
+            },
+            {
+              "kind": "speech",
+              "text": "word order — the colour goes after the noun, and bonjour is the exception you already said before you knew it was one."
+            },
+            {
+              "kind": "speech",
+              "text": "half of them are not Latin. blanc and bleu are Frankish, which runs against the usual direction of traffic: Latin words flood into Germanic languages, not the reverse."
+            },
+            {
+              "kind": "speech",
+              "text": "a word that lost and survived anyway — albus gave up the colour and kept the dawn. That is what usually happens to a displaced word, and it is worth looking for."
             }
           ]
         },
@@ -329,7 +1228,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are rouge and English red to each other? (Cousins — both from PIE h₁rewdʰ-.) Where does bleu come from? (Germanic blāo — the second Germanic colour loan.) What did English do with it? (Borrowed it back from French as blue.) What are the three flag colours? (Bleu, blanc, rouge — and two of the three are loanwords.) Next chapter: describing what you see."
+              "text": "Give the four colours. (noir, blanc, rouge, bleu.) Which two are Germanic? (blanc and bleu.) Say \"red wine.\" (le vin rouge — the colour second.) Which Latin word for white did French drop, and where did it end up? (albus — in l'aube, the dawn, and in English album and albino.) Are rouge and red borrowed from each other? (No — cousins, from one Proto-Indo-European root.)"
             }
           ]
         }

@@ -2,15 +2,26 @@
   "chapter": 16,
   "title": "Colours",
   "label": "ch:colours",
-  "canDo": "I can name basic colours in French and use them to describe something.",
+  "canDo": "I can name four basic colours in French, put a colour after the noun it describes, and say which of them are not Latin.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C13-rouge-bleu",
+    "lesson": "FR-C13-practice",
     "kind": "task",
-    "summary": "Complete FR-C13-rouge-bleu, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in French and use them to describe something.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Four colours with two different homelands. noir walked down from Latin niger and rouge from a root older than Latin — the same one behind English red, rust and German rot. But blanc and bleu are Frankish, Germanic words that displaced Latin ones inside a Romance language, which is the opposite of the usual traffic. albus did not die when blanc took its job; it stopped being a colour and became l'aube, the dawn. And the colour goes after its noun — le vin rouge — with bonjour as the exception the reader already says every day.",
+    "assesses": [
+      "FR-LEX-NOIR-01",
+      "FR-ETYMON-NIGER-DENIGRER-02",
+      "FR-LEX-BLANC-03",
+      "FR-ETYMON-BLANC-FRANCIQUE-04",
+      "FR-ETYMON-ALBUS-AUBE-05",
+      "FR-LEX-ROUGE-06",
+      "FR-ETYMON-RUBEUS-ROUGE-07",
+      "FR-LEX-BLEU-08",
+      "FR-ETYMON-BLEU-FRANCIQUE-09",
+      "FR-GRAM-ADJ-APRES-NOM-10"
+    ],
+    "note": "Authored when chapter 16 left the hand-written set: two schema-v1 lessons held four colours, and the .tex taught adjective POSITION (le vin rouge) inside a grammarlens that no lesson owned. Eight lessons now own one thing each. The payoff is atom-scored -- it assesses every knowledge atom its chapter introduces; the chapter's one culture claim is assessed by FR-C13-tricolore."
   }
 }

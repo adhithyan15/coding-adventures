@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FR-C13-rouge-bleu",
+    "id": "FR-C13-noir",
     "language": "french",
     "chapter": 16,
-    "sequence": 460,
+    "sequence": 447,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9c6f980f20107915"
+    "sourceHash": "fnv1a64:9ce242fec2839681"
   },
   "findings": []
 }

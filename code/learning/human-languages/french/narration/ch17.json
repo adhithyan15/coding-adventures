@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "To Have, and How Old You Are",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:64968b9eda538792",
+  "sourceHash": "fnv1a64:33c4891e6f97d32d",
   "lessons": [
     {
       "id": "FR-C14-avoir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:102fae1bc773bec1",
+      "sourceHash": "fnv1a64:41ca4768abde9c11",
       "notice": {
         "modality": "sight",
         "needs": [

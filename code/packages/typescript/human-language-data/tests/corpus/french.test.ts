@@ -98,12 +98,21 @@ it("pins French modality", () => expectLanguageModality("french"));
 // deltas: composing this line by arithmetic has been wrong before. Measured:
 // 167 lessons, and 22 culture claims -- chapter 9's Februa and its two emperors,
 // plus chapter 1's three register claims, on a base of 17.
+// 167 -> 175 lessons, and 22 -> 23 culture claims: retiring handwritten chapter
+// 16, Colours. Two schema-v1 lessons held FOUR colours, and the .tex taught
+// adjective POSITION inside a `grammarlens` -- `le vin blanc, le vin rouge`,
+// with the colour AFTER the noun, which is the opposite of English and which no
+// lesson owned. Eight lessons now own one thing each: a lesson per colour, one
+// for where Latin's `albus` went when `blanc` displaced it, one for adjective
+// position, and one for the flag. The culture claim is that one: the tricolour
+// is two-thirds Germanic, because `bleu` and `blanc` are Frankish borrowings
+// inside a Romance language. It was a `culture` block owned by nobody.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 167,
+    lessons: 175,
     idioms: 3,
     senses: 7,
-    cultureClaims: 22,
+    cultureClaims: 23,
     unitPrefix: "FR",
   }));
 
