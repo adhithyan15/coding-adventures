@@ -19,10 +19,11 @@ of Chapter 1's ten were v1 — the only v1 lessons left in the track. They are
 migrated with **hand-authored knowledge atoms**, one per teaching section,
 rather than the single per-lesson atom `migrate_schema_v2.py` assigns; that
 script is explicit about being an under-count, and an under-count would make
-this chapter look gentler than it is. The real figure is 19 atoms across 10
-lessons: at most 3 in any one lesson, which is the per-lesson ramp budget, and
-over the 12-atom chapter budget — which was previously invisible because the
-chapter was measurement-blind rather than gentle.
+this chapter look gentler than it is. The real figure is **18 atoms across 10
+lessons** — counted from the corpus, after an earlier hand-count of 19 was
+checked and found wrong — at most 3 in any one lesson, which is the per-lesson
+ramp budget, and over the 12-atom chapter budget, which was previously
+invisible because the chapter was measurement-blind rather than gentle.
 
 Two headings were renamed onto ones the renderer already classifies, because
 `## The phrase, assembled` and `## The greetings` both produced `unknown`
