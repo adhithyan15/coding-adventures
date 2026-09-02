@@ -31,8 +31,10 @@
 %     penumbral_eclipse         the_moon_travels_through_earths_penumbra_the_faint_outer_part_of_its_shadow         "The Moon travels through Earth’s penumbra, or the faint outer part of its shadow."
 %
 % APOSTROPHES ABOVE ARE MIXED ON PURPOSE -- DO NOT NORMALIZE THEM. The NASA
-% page renders the total and penumbral sentences with U+2019 (') and the
-% partial sentence with an ASCII apostrophe ('). Each quote above was checked
+% page renders the total and penumbral sentences with U+2019 (’) and the
+% partial sentence with an ASCII apostrophe (').  <- those two exemplars
+% are DIFFERENT characters; if your editor shows them as the same, it is
+% doing the very normalization this note exists to prevent. Each quote above was checked
 % against a rendered block on the page individually; a blanket curl would make
 % the partial quote stop appearing on its own page. See #14070.
 %
