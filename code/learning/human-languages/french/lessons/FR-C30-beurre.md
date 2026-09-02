@@ -63,7 +63,7 @@ it's **one loanword, arriving twice**.
 ## Why it's said this way: désolé, when there's none left
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-DESOLE-02, FR-PRAGMATICS-SORRY-04] -->
 
-Chapter 20's courtesy words fit right here:
+The courtesy words you already have fit right here:
 
 > **Désolé, il n'y a plus de beurre.** — "Sorry, there's no more butter."
 

@@ -53,12 +53,21 @@
 %   neutron  → neutral    from "electrically neutral neutrons"
 %   electron → negative   from "negatively charged electrons"
 %
-% Two verbatim sentences on that one page fix all three rows in text:
+% ONE contiguous passage on that page fixes all three rows in text:
 %
 %   "Atomic nuclei consist of electrically positive protons and electrically
-%    neutral neutrons."
-%   "The chemical properties of a substance are determined by the negatively
-%    charged electrons enshrouding the nucleus."
+%    neutral neutrons. These are held together by the strongest known
+%    fundamental force, called the strong force. The nucleus makes up much
+%    less than .01% of the volume of the atom, but typically contains more
+%    than 99.9% of the mass of the atom. The chemical properties of a
+%    substance are determined by the negatively charged electrons
+%    enshrouding the nucleus."
+%
+%   (the envelope previously joined the first and last sentences with an
+%    ellipsis. The material between them -- the strong force, and the
+%    mass/volume figures -- is substantive rather than filler, and the page
+%    carries the whole thing as one block, so the join was unnecessary as
+%    well as unfaithful.)
 %
 % The DOE is a PRIMARY U.S. government science agency, so `trust authoritative` —
 % the honest tier for an official standards/education source, per the standard-
@@ -76,7 +85,7 @@ table particle_charge {
     row (neutron, neutral)
     row (electron, negative)
 
-    source "Atomic nuclei consist of electrically positive protons and electrically neutral neutrons. … The chemical properties of a substance are determined by the negatively charged electrons enshrouding the nucleus."
+    source "Atomic nuclei consist of electrically positive protons and electrically neutral neutrons. These are held together by the strongest known fundamental force, called the strong force. The nucleus makes up much less than .01% of the volume of the atom, but typically contains more than 99.9% of the mass of the atom. The chemical properties of a substance are determined by the negatively charged electrons enshrouding the nucleus."
     locator "https://www.energy.gov/science/doe-explainsnuclei"
     trust authoritative
 }

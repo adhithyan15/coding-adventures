@@ -2,13 +2,29 @@
   "id": "GE-PATH-013",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
+    "GE-C04-sehen",
+    "GE-C04-wieder",
+    "GE-C04-auf",
     "GE-C04-auf-wiedersehen",
     "GE-C04-tschuss",
+    "GE-C04-bis",
+    "GE-C04-bald",
     "GE-C04-bis-bald",
+    "GE-C04-spaet",
+    "GE-C04-bis-spater",
+    "GE-C04-morgen-tomorrow",
     "GE-C04-bis-morgen",
-    "GE-C04-bis-spater"
+    "GE-W01-eszett",
+    "GE-W02-umlauts",
+    "GE-W03-capitalization",
+    "GE-C04-practice"
   ],
-  "before": [],
+  "before": [
+    "GE-EXT-013-LANGUAGE-SPECIFIC"
+  ],
   "inline": [],
-  "after": []
+  "after": [
+    "GE-EXT-013-WRITING-KIT",
+    "GE-EXT-013-CONSOLIDATION"
+  ]
 }

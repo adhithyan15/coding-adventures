@@ -36,7 +36,7 @@ reviews_of: [FR-C27-se-lever, FR-C27-sasseoir, FR-C26-marcher, FR-C17-main]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-ASSEOIR-01, FR-LEX-LEVER-04] -->
 
-[PAUSE 2s] You can sit and rise. Now the hand from Chapter 17. This verb is
+[PAUSE 2s] You can sit and rise. Now something for the hand. This verb is
 French conjugation's small trap: spelled like one family, behaving like
 another.
 

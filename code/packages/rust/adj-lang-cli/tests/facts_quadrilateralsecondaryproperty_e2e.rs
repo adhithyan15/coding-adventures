@@ -106,3 +106,36 @@ fn quadrilateral_secondary_property_abstains_honestly_on_square() {
         "square has no second property in the cited spans -- honest abstention: {out}"
     );
 }
+
+const QSP_PIN: &str = r#""bindings":{"Property":"opposite_sides_equal_length"},"citations":[{"source":"A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles.","locator":"https://mathworld.wolfram.com/Rectangle.html","trust":"authoritative""#;
+
+#[test]
+fn quadrilateral_secondary_property_source_names_its_own_subject() {
+    let dir = scratch("cite_qsp");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"quadrilateral-secondary-property.adj\"\n\
+         ? quadrilateral_secondary_property(rectangle, $Property)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // THIS VALUE WAS INHERITED DAMAGED. quadrilateral-types' header quote
+    // DROPPED ITS SUBJECT -- "A closed planar quadrilateral..." where the page
+    // reads "A RECTANGLE IS a closed planar quadrilateral..." -- and this
+    // library was derived from that header. Correcting the header (#14066)
+    // did nothing for this copy, which kept shipping a citation absent from
+    // its own page.
+    //
+    // It carries NO ELLIPSIS, so the #14070 screen could never see it; it was
+    // found only by screening shipped values against known-damaged header
+    // forms. The "lengths a and b" come from MathWorld's inline `<img alt>`
+    // formulas and were independently confirmed against the page's authored
+    // <meta description>, which writes them out in prose.
+    assert!(
+        out.contains(QSP_PIN),
+        "rectangle's citation names its own subject: {out}"
+    );
+}

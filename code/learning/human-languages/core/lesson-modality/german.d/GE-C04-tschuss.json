@@ -3,7 +3,7 @@
     "id": "GE-C04-tschuss",
     "language": "german",
     "chapter": 4,
-    "sequence": 150,
+    "sequence": 153,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f7b3dd7cb55a59f7"
+    "sourceHash": "fnv1a64:205f8551b4468221"
   },
   "findings": []
 }

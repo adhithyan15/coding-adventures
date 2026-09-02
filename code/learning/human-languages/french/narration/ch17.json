@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a17d3639e3b5c5b7",
+  "sourceHash": "fnv1a64:c6ff20dadd4a9448",
   "lessons": [
     {
       "id": "FR-C17-tete",
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5379491197d468f5",
+      "sourceHash": "fnv1a64:df3ac09eef11c7f7",
       "notice": null,
       "blocks": [
         {
@@ -245,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "The -ain is the nasal vowel from Chapter 11's pain — say them together: pain, main."
+              "text": "The -ain is the nasal vowel of pain, the bread — say them together: pain, main."
             }
           ]
         },

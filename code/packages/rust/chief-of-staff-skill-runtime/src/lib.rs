@@ -445,8 +445,8 @@ mod tests {
     use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
 
-    const SKILL: &str = "# Weather Reporter\n\nYou are a friendly weather reporting agent.\n\n## Capabilities needed\n- none\n\n## Output format\nKeep the forecast brief.\n";
-    const WIRED_SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nYou are a friendly weather reporting agent.\n\n## Capabilities needed\n- none\n";
+    const SKILL: &str = "# Weather Reporter\n\nYou are a friendly weather reporting agent.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n\n## Output format\nKeep the forecast brief.\n";
+    const WIRED_SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nYou are a friendly weather reporting agent.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
     const MODEL: &str = "test-model";
 
     fn message_id(byte: u8) -> MessageId {

@@ -36,7 +36,7 @@ reviews_of: [FR-C30-oeuf, FR-C17-tete, FR-C17-main]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-OEUF-07] -->
 
-[PAUSE 2s] Chapter 17 gave you the head and the hand. This chapter fills in
+[PAUSE 2s] You have the head and the hand. This chapter fills in
 the rest of the body it left for later — starting above the mouth.
 
 ## You'll want to know: the word

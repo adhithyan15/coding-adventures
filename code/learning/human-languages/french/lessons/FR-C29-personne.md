@@ -102,6 +102,6 @@ them the "normal" case. Each is its own rule, learned with the word.
 always feminine**, grammatically.) Why doesn't *personne* nasalize like
 *non*? (**Double -nn-** blocks it.) What does *ne … personne* mean, and
 what does that use share with *ne … pas*? (**"Nobody"** — the same negation
-frame Chapter 18 built around *ne*.) Is *persona* really built on "sounding
+frame built around *ne*.) Is *persona* really built on "sounding
 through"? (**Probably not** — a folk etymology; the real root is likely
 Etruscan *phersu*, "**mask**.")

@@ -8,9 +8,12 @@
   ],
   "payoff": {
     "lesson": "KA-C05-practice",
-    "kind": "task",
-    "summary": "Complete KA-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Kannada sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "production",
+    "summary": "Say your language, your city and your work in one breath — nānu kannaḍa mātanāḍuttēne, nānu …alli iddēne, nānu kelasa māḍuttēne — and name the three pieces every Kannada verb is stacked from.",
+    "assesses": [
+      "KA-LEX-C05-KANNADA-01",
+      "KA-LEX-C05-IRU-01",
+      "KA-LEX-C05-MAADU-01"
+    ]
   }
 }

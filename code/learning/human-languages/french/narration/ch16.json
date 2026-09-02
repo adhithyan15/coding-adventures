@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "To Be, and the Past That Takes It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7b90e63b031ff511",
+  "sourceHash": "fnv1a64:7624ec792357c233",
   "lessons": [
     {
       "id": "FR-C16-etre",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75e4c67122a22fda",
+      "sourceHash": "fnv1a64:e792d992c72f3868",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 14 gave you avoir, “to have.” Meet its partner être, the auxiliary and everyday verb “to be.”"
+              "text": "You have avoir, “to have.” Meet its partner être, the auxiliary and everyday verb “to be.”"
             }
           ]
         },
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d944cf1ddb8c4165",
+      "sourceHash": "fnv1a64:0cabb480d4d9559d",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 15 built j’ai parlé with avoir. A smaller family uses être, and its participle agrees with the subject."
+              "text": "The compound past built j’ai parlé with avoir. A smaller family uses être, and its participle agrees with the subject."
             }
           ]
         },

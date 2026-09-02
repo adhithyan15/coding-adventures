@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4839275941aa321a",
+  "sourceHash": "fnv1a64:20401f59edddb996",
   "lessons": [
     {
       "id": "KA-C03-hege",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b7d2f301f5b43090",
+      "sourceHash": "fnv1a64:bc17f4a8d514cc89",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,23 +66,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹೇಗೆ (hēge, \"how\") is native Dravidian, on the interrogative base ē-/yā- you met in ēnu. Kannada gathers its questions here: ēnu (what), hēge (how), yāru (who), elli (where), yāvāga (when), yāke (why). It is the same Dravidian question-root heading Tamil's eppaḍi and Telugu's elā — a family far older than the Sanskrit words Kannada, like its sisters, borrows so readily."
+              "text": "ಹೇಗೆ (hēge, \"how\") is native Dravidian, on the interrogative base ē-/yā- you met in ēnu. Kannada gathers its questions here: ēnu (what), hēge (how), yāru (who), elli (where), yāvāga (when), yāke (why). It is the same Dravidian question-root heading Tamil's eppaṭi and Telugu's elā — a family far older than the Sanskrit words Kannada, like its sisters, borrows so readily."
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಹೇ (hē) + ಗೆ (ge) becomes ಹೇಗೆ (hēge) (hēge)."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,7 +102,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -125,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What base do Kannada's question-words share, and which cousins head their own? (The interrogative ē-/yā-; Tamil's eppaḍi, Telugu's elā.)"
+              "text": "What base do Kannada's question-words share, and which cousins head their own? (The interrogative ē-/yā-; Tamil's eppaṭi, Telugu's elā.)"
             }
           ]
         }
@@ -313,7 +302,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:afb0cd5376b8c018",
+      "sourceHash": "fnv1a64:809da424a186378c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -447,7 +436,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:032a992bf4587e4a",
+      "sourceHash": "fnv1a64:417f940b7dbc21e6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -511,17 +500,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ನಾ (nā) + ನು (nu) becomes ನಾನು (nānu) (nānu)."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -561,7 +539,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -592,7 +570,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:59222ac64a876c13",
+      "sourceHash": "fnv1a64:a6581e194e82ec3e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -645,8 +623,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The reply",
+          "type": "input",
+          "title": "You'll want to know: The reply",
           "segments": [
             {
               "kind": "speech",
@@ -660,17 +638,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಚೆ (ce — the letter ಚ is “ch as in cheese”) + ನ್ನಾ (nnā) + ಗಿ (gi) becomes ಚೆನ್ನಾಗಿ (cennāgi)."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -710,7 +677,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -906,7 +873,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:48c56a038ffecc8b",
+      "sourceHash": "fnv1a64:62a8386e61c2148a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1040,7 +1007,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fecb2f556191bd3",
+      "sourceHash": "fnv1a64:0b768d3c7b130abb",
       "notice": null,
       "blocks": [
         {
@@ -1111,8 +1078,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "input",
+          "title": "You'll want to know: The atoms",
           "segments": [
             {
               "kind": "pause",
@@ -1151,8 +1118,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The word, taken apart: Roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -1162,7 +1129,7 @@
             },
             {
               "kind": "speech",
-              "text": "hēge from the interrogative ē-/yā- (native Dravidian, like Tamil eppaḍi)."
+              "text": "hēge from the interrogative ē-/yā- (native Dravidian, like Tamil eppaṭi)."
             },
             {
               "kind": "speech",

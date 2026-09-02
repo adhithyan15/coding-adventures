@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2ec359cc59c0c2e9",
+  "sourceHash": "fnv1a64:818af4511fcbe5a9",
   "lessons": [
     {
       "id": "FR-C03-merci",
@@ -625,7 +625,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad369e69dbe44d52",
+      "sourceHash": "fnv1a64:f98a0a5289f4be66",
       "notice": null,
       "blocks": [
         {
@@ -641,7 +641,7 @@
             },
             {
               "kind": "speech",
-              "text": "Comment ça va? avoids naming the listener. Now use the tu / vous choice you learned in Chapter 2."
+              "text": "Comment ça va? avoids naming the listener. Now use the tu / vous choice you learned when you gave your name."
             }
           ]
         },
@@ -779,7 +779,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:109b94ec4d81a121",
+      "sourceHash": "fnv1a64:cf66bf5b130a7c33",
       "notice": null,
       "blocks": [
         {
@@ -799,7 +799,7 @@
             },
             {
               "kind": "speech",
-              "text": "First, twenty seconds of review. From Chapter 1: bien — \"well\" ( from Latin bene). So Ça va bien = \"It's going well.\" Now the answer for when it's only going."
+              "text": "First, twenty seconds of review. From your first greetings: bien — \"well\" ( from Latin bene). So Ça va bien = \"It's going well.\" Now the answer for when it's only going."
             }
           ]
         },
@@ -935,7 +935,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:802b88896cce4849",
+      "sourceHash": "fnv1a64:87ec839a34489de9",
       "notice": null,
       "blocks": [
         {
@@ -951,7 +951,7 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. This chapter's atoms — merci, de rien, aller, ça va, comme ci comme ça — assemble into a real exchange, run formally and informally. It picks up right where the Chapter 2 introduction left off."
+              "text": "No new words. This chapter's atoms — merci, de rien, aller, ça va, comme ci comme ça — assemble into a real exchange, run formally and informally. It picks up right where the introduction exchange left off."
             }
           ]
         },
@@ -1041,11 +1041,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chain Chapter 2 + 3 — \"Je m'appelle … Comment allez-vous?\"",
+              "instruction": "chain the introduction onto this one — \"Je m'appelle … Comment allez-vous?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: chain Chapter 2 + 3 — \"Je m'appelle … Comment allez-vous ?\"]"
+              "source": "[YOU SAY: chain the introduction onto this one — \"Je m'appelle … Comment allez-vous ?\"]"
             },
             {
               "kind": "repeat",

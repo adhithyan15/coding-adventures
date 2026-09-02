@@ -100,3 +100,27 @@ fn space_rock_alt_name_abstains_on_meteoroid() {
         "meteoroid's cited span names no alternate everyday term -- honest abstention expected: {out}"
     );
 }
+
+const SRA_PIN: &str = r#""bindings":{"AltName":"fireball"},"citations":[{"source":"When meteoroids enter Earth’s atmosphere (or that of another planet, like Mars) at high speed and burn up, the fireballs or “shooting stars” are called meteors.","locator":"https://science.nasa.gov/solar-system/meteors-meteorites/","trust":"authoritative""#;
+
+#[test]
+fn space_rock_alt_name_source_keeps_its_parenthetical_and_curly_quotes() {
+    let dir = scratch("cite_sra");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"space-rock-alt-name.adj\"\n? space_rock_alt_name(meteor, $AltName)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // TWO defects in one value. The ellipsis hid "(or that of another planet,
+    // like Mars)", and the page's curly quotes had been flattened to ASCII.
+    // The pin holds both: the restored parenthetical and the real U+201C/D
+    // glyphs, plus the curly apostrophe in "Earth's".
+    assert!(
+        out.contains(SRA_PIN),
+        "meteor's citation keeps its parenthetical and curly quotes: {out}"
+    );
+}

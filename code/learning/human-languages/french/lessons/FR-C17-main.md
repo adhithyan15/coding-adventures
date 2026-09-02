@@ -46,7 +46,7 @@ lent it to English several dozen times over.
 > consonant and still takes *la*. French gender is not predictable from the
 > ending, which is why this book always gives you the article.
 
-The *-ain* is the nasal vowel from Chapter 11's *pain* — say them together:
+The *-ain* is the nasal vowel of *pain*, the bread — say them together:
 *pain*, *main*.
 
 ## The word, taken apart: manus in English

@@ -3,7 +3,7 @@
     "id": "GE-C04-auf-wiedersehen",
     "language": "german",
     "chapter": 4,
-    "sequence": 145,
+    "sequence": 151,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:fca729a124df09d6"
+    "sourceHash": "fnv1a64:ed99bef4a016cc5d"
   },
   "findings": []
 }
