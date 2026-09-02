@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:68ca56191cf5cec9",
+  "lessonIds": [
+    "FA-C01-salam",
+    "FA-W00-alef-guided-copy",
+    "FA-C01-mamnoon",
+    "FA-C01-bale",
+    "FA-C01-na",
+    "FA-C01-practice"
+  ],
+  "tex": "persian/book/chapters/ch01-greetings-and-responses.tex"
+}

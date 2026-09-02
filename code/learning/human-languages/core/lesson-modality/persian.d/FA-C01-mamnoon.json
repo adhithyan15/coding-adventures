@@ -4,18 +4,21 @@
     "language": "persian",
     "chapter": 1,
     "sequence": 20,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e31a8de76d621fee"
+    "sourceHash": "fnv1a64:5655bdff672464e3",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
   },
   "findings": []
 }
