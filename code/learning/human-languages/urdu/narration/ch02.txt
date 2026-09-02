@@ -1,8 +1,8 @@
 Urdu, chapter 2: Give your name.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 میرا نام... ہے — my name is...
 
 Warm-up.
@@ -17,7 +17,7 @@ Read the line right to left, but keep its spoken order:
 your name goes in the open slot.
 ہے hai = is.
 The word nām is an old Indo-Aryan relative of Sanskrit nāman and distant English name. merā and hai show Urdu's inherited grammatical core, shared closely with Hindi even though the two languages use different scripts.
-Nearly every shape here is one you have already met. میرا opens with م, the letter that begins salām, then reuses ی, ر and ا. نام is ن plus that same ا and م. Only the final ے in ہے is new — it is called baṛī ye, the "big ye", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere.
+Nearly every shape here is one you have already met. میرا opens with م, the letter that begins salām, then reuses ی, ر and ا (alif). نام is ن plus that same ا (alif) and م. Only the final ے in ہے is new — it is called baṛī ye, the "big ye", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere.
 
 Grammar Lens: the verb waits.
 Urdu puts hai at the end. That is the only sentence-pattern fact to learn now: my + name + NAME + is. Keep this one frame; broader word-order and agreement rules can wait.
@@ -30,3 +30,33 @@ Wrap-up Recall.
 Where does “is” go in this Urdu sentence? At the end. Say the four slots, then say the full sentence with your name.
 [question — say your answer, then pause 10 seconds]
 Type the Urdu sentence 'My name is Sara.'
+
+
+Lesson 2 of 2.
+ا (alif) — one stroke, and a page that runs the other way.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — first, which way the page runs, Script — the letter itself and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write س. Three teeth from the right, flowing straight on into the bowl, no lift. That is one letter drawn from memory; here is the easiest one in the alphabet to put beside it.
+
+Script — first, which way the page runs.
+You met this in your first week, told rather than explained. Here is the whole rule, and it governs every shape from now on.
+English marches left to right. Urdu marches right to left. Your pen starts at the right edge of a word and travels towards the left, so the letter you meet first is the rightmost one.
+There is a second direction, and it belongs to Urdu in a way it does not belong to Arabic. Urdu is written in a style called Nastaliq, and Nastaliq does not sit flat on the line. A word cascades downward as it moves left, each letter hanging a little below the one before it, so a word reads like a short diagonal staircase running down to the left.
+That is why Urdu looks different from Arabic even where the letters are the same. It is not decoration and it is not optional: it is how Urdu is set.
+
+Script — the letter itself.
+ا (alif).
+One tall downstroke. Draw it from the top down and lift. Nothing else.
+Its name is alif, and one thing about it matters more than its shape: alif does not join to the letter that follows it. Hold that; the next few lessons will make it pay.
+
+Guided Practice.
+[once you have stopped driving — write: ا (alif) — one stroke, top to bottom]
+[once you have stopped driving — point: at the right edge of an Urdu word, where your pen would begin]
+
+Wrap-up Recall.
+How many strokes in alif? (One.)
+[question — say your answer, then pause 12 seconds]
+Besides running right to left, what else does an Urdu word do as it moves across the page?

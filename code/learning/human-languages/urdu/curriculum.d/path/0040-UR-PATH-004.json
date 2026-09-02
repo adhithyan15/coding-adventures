@@ -3,10 +3,13 @@
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
     "UR-C02-mera-naam",
+    "UR-W02-alef",
     "UR-C03-aap-tum-tu",
     "UR-C03-kya",
+    "UR-W03-lam",
     "UR-C03-aap-ka-naam-kya-hai",
     "UR-C03-khushi-hui",
+    "UR-W03-mim",
     "UR-C03-practice"
   ],
   "before": [],
@@ -17,5 +20,7 @@
     "UR-EXT-005-CULTURE",
     "UR-EXT-006-CONSOLIDATION"
   ],
-  "after": []
+  "after": [
+    "UR-EXT-003B-SCRIPT-ALIF-LAM-MIM"
+  ]
 }

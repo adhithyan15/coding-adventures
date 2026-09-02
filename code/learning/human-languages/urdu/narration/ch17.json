@@ -3,8 +3,8 @@
   "language": "urdu",
   "chapter": 17,
   "title": "The Sentence Learns to End",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:156774201820667a",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:665dffab75bdc10e",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -347,186 +347,6 @@
       ]
     },
     {
-      "id": "UR-W17-he",
-      "sequence": 840,
-      "title": "ہ (gol he) — the round he, and its four faces",
-      "headword": "ہ",
-      "romanization": "gol he",
-      "gloss": "the round he — one small loop alone, two small loops in the middle of a word",
-      "script": "urdu-nastaliq",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block",
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:25916c7517664407",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write کام (kām) and say it. Three letters, right to left, the line falling as it goes."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ہ (gol he)."
-            },
-            {
-              "kind": "speech",
-              "text": "Standing on its own it is one small closed loop with a short curved tail falling away to the left. Draw the loop clockwise from the top, then let the tail drop. Its name is ہ gol he — \"round he\" — and it says h."
-            },
-            {
-              "kind": "speech",
-              "text": "Joining trims a letter, you were told. Gol he is where that promise gets tested, because it changes more than any letter you have written. Four positions, four faces:"
-            },
-            {
-              "kind": "speech",
-              "text": "standing alone, and at the end of a word after a non-joining letter: the small loop with its tail."
-            },
-            {
-              "kind": "speech",
-              "text": "opening a word: the loop stays, the tail is cut short so the next letter can begin."
-            },
-            {
-              "kind": "speech",
-              "text": "in the middle: the loop splits into two small loops side by side, low on the line."
-            },
-            {
-              "kind": "speech",
-              "text": "closing a joined word: the loop flattens into a single round curl hanging off the letter before it."
-            },
-            {
-              "kind": "speech",
-              "text": "The middle form is the one to look at twice. It does not resemble the standing loop at all, and a reader who knows only the standing form meets it mid-word and thinks a new letter has arrived. Same letter, doing its middle job."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three words, one letter, three positions. Read each from the right, then copy it while the model is still in front of you."
-            },
-            {
-              "kind": "speech",
-              "text": "ہم کہانی یہ (yih)."
-            },
-            {
-              "kind": "speech",
-              "text": "ہم ham \"we\" — gol he opens it, tail trimmed, running into م. کہانی kahānī \"story\" — gol he sits in the middle, wearing the two-loop face. یہ yih \"this\" — gol he closes it, and the word you were owed two lessons ago is now one you can write rather than take on trust."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ہ (gol he) standing alone — the loop, then the falling tail",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ہ standing alone — the loop, then the falling tail]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "یہ — and say yih",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: یہ — and say **yih**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "کہانی — name its five letters, and say which face its he wears",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: کہانی — name its five letters, and say which face its he wears]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which word can you now write that you could not before? (یہ (yih).) What sound does gol he carry? (h.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "UR-W17-he-middle",
-              "prompt": "What does gol he look like in the MIDDLE of a word?",
-              "assesses": [
-                "UR-SCRIPT-HE-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "two small loops side by side",
-                "two loops",
-                "two small loops",
-                "a pair of loops",
-                "two little bowls side by side"
-              ],
-              "feedback": {
-                "correct": "Two small loops side by side, low on the line -- nothing like its standing form.",
-                "incorrect": "TWO SMALL LOOPS side by side. The standing single loop splits in the middle of a word."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C17-kahan",
       "sequence": 850,
       "title": "کہاں (kahāṅ) — \"where,\" and the family it belongs to",
@@ -539,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:654a1f007b6c1622",
+      "sourceHash": "fnv1a64:831938622498e3e2",
       "notice": null,
       "blocks": [
         {
@@ -570,7 +390,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four letters. Three of them are yours: ک, then ہ (gol he) wearing its middle face, then ا. The fourth is new, and it carries the nasal hum you can hear at the end of kahāṅ — the same hum that ends maiṅ, hūṅ and nahīṅ. Say the word; the letter arrives before this chapter closes."
+              "text": "Four letters. Three of them are yours: ک, then ہ wearing its middle face, then ا. The fourth is new, and it carries the nasal hum you can hear at the end of kahāṅ — the same hum that ends maiṅ, hūṅ and nahīṅ. You wrote it back in chapter six: it is nūn with the dot taken off."
             },
             {
               "kind": "speech",
@@ -723,7 +543,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d3daa9c135922da0",
+      "sourceHash": "fnv1a64:b6a7186cc13979c9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -909,226 +729,6 @@
       ]
     },
     {
-      "id": "UR-W17-bari-ye",
-      "sequence": 870,
-      "title": "ے (baṛī ye) — the big ye, and the end of the sentence",
-      "headword": "ے",
-      "romanization": "baṛī ye",
-      "gloss": "the big ye — a wide flat sweep that only ever ends a word, and the letter that finishes hai",
-      "script": "urdu-nastaliq",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block",
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:74acdb6144d5e70a",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write ی, then ہ (gol he). One is an S-curve that hooks up at the tip; the other is a small loop with a falling tail."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ے (baṛī ye)."
-            },
-            {
-              "kind": "speech",
-              "text": "A wide, flat sweep. Start high on the right, drop through a long shallow curve that goes well below the baseline, and carry it a long way to the left, finishing flat — with no hook, no lift at the tip, and no dots."
-            },
-            {
-              "kind": "speech",
-              "text": "Its name is ے baṛī ye, \"big ye,\" and the letter you already know, ی, is choṭī ye, \"small ye.\" Two names, one family, and one test that separates them at a glance:"
-            },
-            {
-              "kind": "speech",
-              "text": "ی choṭī ye is narrow and curls back up at its tip."
-            },
-            {
-              "kind": "speech",
-              "text": "ے baṛī ye is broad and runs out flat."
-            },
-            {
-              "kind": "speech",
-              "text": "There is a second difference, and it is about where each one lives. Small ye turns up anywhere in a word — opening it, in the middle, closing it. Big ye belongs to the end of a word and turns up nowhere else, which means you will never have to work out its middle face. It has none."
-            },
-            {
-              "kind": "speech",
-              "text": "Big ye carries a final e or ai sound."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two letters, and the smallest word in Urdu that does real work:"
-            },
-            {
-              "kind": "speech",
-              "text": "ہے."
-            },
-            {
-              "kind": "speech",
-              "text": "From the right: ہ (gol he), then ے (baṛī ye). Say it: hai — \"is.\""
-            },
-            {
-              "kind": "speech",
-              "text": "That is the word you have been putting at the end of your sentences since you first said your name, and it has been sitting on the page unreadable for sixteen chapters. Read it now."
-            },
-            {
-              "kind": "speech",
-              "text": "Two more, both already in your ear:"
-            },
-            {
-              "kind": "speech",
-              "text": "کیسے کالے."
-            },
-            {
-              "kind": "speech",
-              "text": "کیسے kaise — \"how,\" with small ye in the middle and big ye at the end, so the pair sit in one word and you can see the difference for yourself. کالے kāle — the masculine plural of \"black.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Nine letters. Now read the first sentence this book ever gave you, whole, with nothing taken on trust:"
-            },
-            {
-              "kind": "speech",
-              "text": "میرا نام... ہے."
-            },
-            {
-              "kind": "speech",
-              "text": "merā nām... hai — \"my name is...\". Every letter in it is one you can form: م، ی، ر، ا — ن، ا، م — ہ (gol he)، ے (baṛī ye)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ے (baṛī ye) — wide, flat, below the line, no hook at the tip",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ے — wide, flat, below the line, no hook at the tip]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ہے — and say hai",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ہے — and say **hai**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "کیسے — and point at the small ye and the big ye in turn",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: کیسے — and point at the small ye and the big ye in turn]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "میرا نام... ہے — and say it with your own name in the gap",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: میرا نام ... ہے — and say it with your own name in the gap]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which ye curls up at the tip? (Small ye, ی.) Which runs out flat? (Big ye, ے (baṛī ye).) Write \"is.\" (ہے.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "UR-W17-bari-ye-position",
-              "prompt": "Where in a word does baṛī ye appear?",
-              "assesses": [
-                "UR-SCRIPT-BARI-YE-01"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "at the end",
-                "end",
-                "word-finally",
-                "only at the end",
-                "the last letter"
-              ],
-              "feedback": {
-                "correct": "At the end, and nowhere else -- so it has no middle form to learn.",
-                "incorrect": "AT THE END of a word only. That is why it has no middle form."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C17-maan",
       "sequence": 880,
       "title": "ماں (māṅ) — \"mother,\" and a sentence you can read whole",
@@ -1141,7 +741,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b8569adb5378c5a",
+      "sourceHash": "fnv1a64:1f85080f67bc210b",
       "notice": null,
       "blocks": [
         {
@@ -1312,7 +912,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:400b28570bae1cd2",
+      "sourceHash": "fnv1a64:3db93dd951321520",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1477,7 +1077,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write \"this is work.\" (یہ (yih) کام (kām) ہے۔) Which two letters make ہے? (ہ (gol he) and ے (baṛī ye).) Which of them can end a word and nothing else? (ے (baṛī ye).)"
+              "text": "Write \"this is work.\" (یہ (yih) کام (kām) ہے۔) Which two letters make ہے? (ہ and ے.) Which of them can end a word and nothing else? (ے.)"
             },
             {
               "kind": "activity",
@@ -1505,202 +1105,6 @@
       ]
     },
     {
-      "id": "UR-W17-nun-ghunna",
-      "sequence": 900,
-      "title": "ں (nūn ghunna) — nūn with the dot taken off",
-      "headword": "ں",
-      "romanization": "nūn ghunna",
-      "gloss": "nūn with its dot taken away — the hum at the end of maiṅ, haiṅ and nahīṅ",
-      "script": "urdu-nastaliq",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:e7b0b65378096007",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write ن. The deep bowl, a lift, and one dot placed low inside the curve."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ں (nūn ghunna)."
-            },
-            {
-              "kind": "speech",
-              "text": "The same deep bowl you drew a chapter ago, swept right to left below the baseline — and then you stop. No lift. No dot."
-            },
-            {
-              "kind": "speech",
-              "text": "Every other letter so far was identified by what was added to it: nūn's dot, kāf's slash, the three teeth of sīn. This one is identified by what was taken away, and the taking away is the meaning. Its name is ں nūn ghunna, and ghunna is the Urdu word for a nasal hum."
-            },
-            {
-              "kind": "speech",
-              "text": "Here is the difference it makes. A dotted ن is a full consonant: your tongue touches the roof of your mouth and you say n. A dotless ں (nūn ghunna) asks for no consonant at all. It tells you to send the vowel before it through your nose and then stop. In maiṅ the tongue never lands."
-            },
-            {
-              "kind": "speech",
-              "text": "Two more facts and the letter is yours:"
-            },
-            {
-              "kind": "speech",
-              "text": "ں (nūn ghunna) closes a word and appears nowhere else. Inside a word, that same nasal hum is carried by the ordinary dotted ن — which is why منہ muṅh is spelled with a dot even though nothing in it sounds like a plain n."
-            },
-            {
-              "kind": "speech",
-              "text": "Because it ends the word, ں (nūn ghunna) has one shape to learn and no joined faces."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Five words, all of them already in your mouth, none of them readable until now. From the right:"
-            },
-            {
-              "kind": "speech",
-              "text": "میں ہیں نہیں کہاں (kahāṅ) ماں (māṅ)."
-            },
-            {
-              "kind": "speech",
-              "text": "maiṅ \"I\" — haiṅ \"are\" — nahīṅ \"no\" — kahāṅ \"where\" — māṅ \"mother.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The one to dwell on is نہیں. It is the word you learned for saying no, in the very first handful of words this book gave you, and it is four letters you can now name one by one: ن، ہ (gol he)، ی، ں (nūn ghunna) — with a dotted nūn opening it and a dotless one closing it, doing two entirely different jobs in a single short word."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ں (nūn ghunna) — the deep bowl, and then nothing",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ں — the deep bowl, and then nothing]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "میں, then ہیں, then نہیں",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: میں, then ہیں, then نہیں]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "maiṅ, letting the vowel hum and keeping your tongue down",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **maiṅ**, letting the vowel hum and keeping your tongue down]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "at the two nūns in نہیں and say what each one does",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: at the two nūns in نہیں and say what each one does]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "یہ (yih) میری ماں (māṅ) ہیں۔ — and say it",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: یہ میری ماں ہیں۔ — and say it]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write \"no.\" (نہیں.) Write \"I.\" (میں.) Does your tongue touch the roof of your mouth at the end of maiṅ? (No — the hum goes through the nose.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "UR-W17-nun-ghunna-dot",
-              "prompt": "What is the difference between ن and ں (nūn ghunna)?",
-              "assesses": [
-                "UR-SCRIPT-NUN-GHUNNA-WRITE-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "the dot",
-                "one has a dot",
-                "ں has no dot",
-                "the missing dot",
-                "nun ghunna has no dot"
-              ],
-              "feedback": {
-                "correct": "The dot. Dotted nūn is a consonant; dotless nūn ghunna is a hum on the vowel before it.",
-                "incorrect": "THE DOT. With it you say n; without it you nasalize the vowel before it and stop."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C17-practice",
       "sequence": 910,
       "title": "Practice — ten letters, and a sentence that comes off the page",
@@ -1713,7 +1117,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:47159efe997f68f0",
+      "sourceHash": "fnv1a64:7ef15b3c65cb4cb6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1739,7 +1143,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write the three letters this chapter gave you and name each one: ہ (gol he)، ے (baṛī ye)، ں (nūn ghunna)."
+              "text": "Write the three letters this chapter has been cashing in, and name each one: ہ، ے، ں. You learned all three in chapters five and six."
             }
           ]
         },
