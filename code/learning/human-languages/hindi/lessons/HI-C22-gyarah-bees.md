@@ -10,6 +10,7 @@ chapter: 22
 type: word
 headword: ग्यारह — बीस
 gloss: 11-20 — genuinely irregular, must be memorized individually; but उन्नीस (19) most likely preserves Sanskrit's OWN subtractive naming, the same logic as Latin's ūndēvīgintī
+romanization: "gyārah — bīs"
 concept_tag: HI-NUMBERS-11-20
 prerequisites: [HI-C21-six-nine-ten-history]
 sounds: [conjunct-gya, vowel-sign-ii]

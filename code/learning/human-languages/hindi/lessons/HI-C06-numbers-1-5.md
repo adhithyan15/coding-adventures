@@ -10,6 +10,7 @@ chapter: 6
 type: word
 headword: एक दो तीन चार पाँच
 gloss: one to five, with familiar Devanagari pieces and the chandrabindu in पाँच
+romanization: "ek do tīn chār pāṁch"
 concept_tag: HI-NUMBERS-1-5
 prerequisites: [HI-C01-namaste]
 sounds: [matra-aa, matra-i, chandrabindu]

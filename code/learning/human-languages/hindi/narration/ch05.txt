@@ -122,7 +122,7 @@ Warm-up.
 You have the stem bol-. This lesson is the machine that turns any stem into a sentence about what someone does — and it is the single biggest piece of leverage in this book so far, because it fits every verb you will ever meet.
 
 You'll want to know first.
-बोलना — the infinitive, and how to strip -nā to get the stem.
+बोलना (bolnā) — the infinitive, and how to strip -nā to get the stem.
 हूँ — "I am," the verb this template leans on.
 
 Grammar Lens: stem + -tā/-tī/-te + honā.
@@ -167,12 +167,12 @@ The letters in this word.
 हिंदी (hindī): ह (ha) + ि becomes हि + the anusvāra ं + दी (dī). And बोलता (boltā) = the stem bol- + -ता (-tā), the present-habitual, masculine.
 
 The sentence, taken apart.
-मैं हिंदी बोलता हूँ = मैं (maiṁ, "I") + हिंदी (hindī, "Hindi," the object) + बोलता (boltā, "speak," m.) + हूँ (hūṁ, "am") becomes literally "I Hindi speaking am." Verb-frame last, exactly as always.
+मैं हिंदी बोलता हूँ (maiṁ hindī boltā hūṁ) = मैं (maiṁ, "I") + हिंदी (hindī, "Hindi," the object) + बोलता (boltā, "speak," m.) + हूँ (hūṁ, "am") becomes literally "I Hindi speaking am." Verb-frame last, exactly as always.
 The name हिंदी itself is a traveller: from सिन्धु (sindhu, the river Indus) becomes Persian hind (the land past that river) becomes hindī ("of Hind"). The same sindhu gave Greek Indos becomes English India, Indus, Hindu. The language is named, at two removes, after a river.
 
 Grammar Lens: the frame you already have.
 The verb here is the present habitual — stem + -tā/-tī/-te + honā — which बोलता हूँ built one lesson ago. Nothing about it is new; this sentence is the first place you get to use it on a real object.
-What is new is the word order: मैं हिंदी बोलता हूँ puts the object before the verb frame, so the sentence ends on hūṁ. Hindi's verb goes last, always.
+What is new is the word order: मैं हिंदी बोलता हूँ (maiṁ hindī boltā hūṁ) puts the object before the verb frame, so the sentence ends on hūṁ. Hindi's verb goes last, always.
 
 Guided Practice.
 [pause 1 second]

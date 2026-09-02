@@ -10,6 +10,7 @@ chapter: 32
 type: phrase
 headword: शुभ संध्या / साँझ
 gloss: "good evening" — sandhyā is the Sanskrit junction of day and night, with the register-crossing doublet sāñjh
+romanization: "shubh sandhyā / sāñjh"
 concept_tag: GREETING-EVENING
 prerequisites: [HI-C29-shaam, HI-C31-suprabhat, HI-C27-shubh-raatri]
 sounds: [devanagari-anusvara, devanagari-conjunct-dhya]

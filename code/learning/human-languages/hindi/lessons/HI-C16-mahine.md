@@ -10,6 +10,7 @@ chapter: 16
 type: word
 headword: जनवरी फ़रवरी मार्च अप्रैल मई जून जुलाई अगस्त सितंबर अक्टूबर नवंबर दिसंबर
 gloss: the Gregorian months — borrowed English/international names, running ALONGSIDE the traditional Vikram Samvat calendar's own six-ritu-linked months
+romanization: "janvarī farvarī mārc aprail maī jūn julāī agast sitambar aktūbar navambar disambar"
 concept_tag: HI-MONTHS
 prerequisites: [HI-C15-paani-roti]
 sounds: [nukta-f, devanagari-long-ii]

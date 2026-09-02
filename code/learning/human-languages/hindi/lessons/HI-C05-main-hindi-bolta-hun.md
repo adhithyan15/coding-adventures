@@ -10,6 +10,7 @@ chapter: 5
 type: phrase
 headword: मैं हिंदी बोलता हूँ
 gloss: I speak Hindi (gendered)
+romanization: "maiṁ hindī boltā hūṁ"
 concept_tag: HI-WORD-HINDI
 prerequisites: [HI-C05-bolta-hun, HI-C03-main, HI-C03-hun]
 sounds: [anusvara, matra-i]

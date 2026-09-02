@@ -4,14 +4,14 @@
   "chapter": 27,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:02f28621c23df320",
+  "sourceHash": "fnv1a64:ce7fb636d4fcf9d7",
   "lessons": [
     {
       "id": "HI-C27-shubh-raatri",
       "sequence": 780,
       "title": "शुभ रात्रि (śubh rātri) — \"good night,\" the formal doublet in action",
       "headword": "शुभ रात्रि",
-      "romanization": "",
+      "romanization": "śubh rātri",
       "gloss": "good night\" — literally \"auspicious night,\" using the formal literary raatri, not the everyday raat just taught, plus shubh, an \"auspicious\" word that started life meaning \"shining",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e4b21296b6d377a",
+      "sourceHash": "fnv1a64:c7b6f8251de3925c",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does शुभ रात्रि use the everyday raat or the formal rātri? (The formal rātri — Hindi keeps both versions, one for everyday speech, one for set phrases.) What does शुभ literally trace back to? (A root meaning \"to be beautiful, splendid,\" PIE ḱewbʰ- — auspiciousness as a kind of radiance.) Is that root itself uncertain, or is a further proposed connection the shakier part? (The root ḱewbʰ- itself is well-sourced — it's the deeper proposed link, to \"to shine\" or \"to perceive,\" that's genuinely speculative.)"
+              "text": "Does शुभ रात्रि (śubh rātri) use the everyday raat or the formal rātri? (The formal rātri — Hindi keeps both versions, one for everyday speech, one for set phrases.) What does शुभ literally trace back to? (A root meaning \"to be beautiful, splendid,\" PIE ḱewbʰ- — auspiciousness as a kind of radiance.) Is that root itself uncertain, or is a further proposed connection the shakier part? (The root ḱewbʰ- itself is well-sourced — it's the deeper proposed link, to \"to shine\" or \"to perceive,\" that's genuinely speculative.)"
             }
           ]
         }

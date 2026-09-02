@@ -4,14 +4,14 @@
   "chapter": 37,
   "title": "One Tea, Please",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c5ab96ccffd4a293",
+  "sourceHash": "fnv1a64:91d7209f531bdac4",
   "lessons": [
     {
       "id": "HI-C37-chai",
       "sequence": 980,
       "title": "चाय (chāy) — tea, and how to actually ask for one",
       "headword": "एक चाय दीजिए",
-      "romanization": "",
+      "romanization": "ek chāy dījie",
       "gloss": "tea — feminine, and one of the two names the world uses for the same leaf",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13d04027087aa667",
+      "sourceHash": "fnv1a64:a3759955e0a90336",
       "notice": null,
       "blocks": [
         {
@@ -173,7 +173,7 @@
       "sequence": 990,
       "title": "दूध (dūdh) — \"milk,\" which is really a verb wearing a noun's coat",
       "headword": "दूध",
-      "romanization": "",
+      "romanization": "dūdh",
       "gloss": "milk — masculine, and literally \"the milked thing\", a past participle that hardened into a noun",
       "script": "devanagari",
       "modality": "voice",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ca4c6421b78d72a",
+      "sourceHash": "fnv1a64:6beb858f4730d785",
       "notice": null,
       "blocks": [
         {
@@ -212,11 +212,11 @@
             },
             {
               "kind": "speech",
-              "text": "Which makes these two a useful pair, because they sit side by side in every cup and disagree: चाय feminine — the leaf that came by way of a Chinese port — and दूध masculine. Both end in consonants. Neither ending tells you anything. This is the ordinary state of a Hindi noun, and it is why the gender is part of the word, not an afterthought."
+              "text": "Which makes these two a useful pair, because they sit side by side in every cup and disagree: चाय feminine — the leaf that came by way of a Chinese port — and दूध (dūdh) masculine. Both end in consonants. Neither ending tells you anything. This is the ordinary state of a Hindi noun, and it is why the gender is part of the word, not an afterthought."
             },
             {
               "kind": "speech",
-              "text": "एक दूध दीजिए — same request, new noun."
+              "text": "एक दूध (dūdh) दीजिए — same request, new noun."
             }
           ]
         },
@@ -227,7 +227,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दूध comes from Sanskrit दुग्ध (dugdha) — and dugdha is not a noun at all. It is a past participle of the verb दुह् (duh-), \"to milk.\" It means \"milked.\""
+              "text": "दूध (dūdh) comes from Sanskrit दुग्ध (dugdha) — and dugdha is not a noun at all. It is a past participle of the verb दुह् (duh-), \"to milk.\" It means \"milked.\""
             },
             {
               "kind": "speech",
@@ -379,7 +379,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "खाना (khānā) = \"food,\" and it is masculine — long -ā, and this time the lean holds. Unlike दूध, whose name is a participle, this one is plainly a thing."
+              "text": "खाना (khānā) = \"food,\" and it is masculine — long -ā, and this time the lean holds. Unlike दूध (dūdh), whose name is a participle, this one is plainly a thing."
             },
             {
               "kind": "speech",
@@ -483,7 +483,7 @@
       "sequence": 1010,
       "title": "किताब (kitāb) — a book, and the root it is cut from",
       "headword": "किताब / पुस्तक / पोथा",
-      "romanization": "",
+      "romanization": "kitāb / pustak / pothā",
       "gloss": "book — ordinary किताब, formal पुस्तक, and old or homely पोथा form a three-register set",
       "script": "devanagari",
       "modality": "sight",
@@ -491,7 +491,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e3099103d95ed47c",
+      "sourceHash": "fnv1a64:59eb773af1a0f2a0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -616,7 +616,7 @@
             },
             {
               "kind": "speech",
-              "text": "And that is the chapter — चाय from a Chinese port, दूध named for what was done to it, खाना (khānā) shadowed by a Persian house, किताब cut from an Arabic root."
+              "text": "And that is the chapter — चाय from a Chinese port, दूध (dūdh) named for what was done to it, खाना (khānā) shadowed by a Persian house, किताब cut from an Arabic root."
             }
           ]
         },

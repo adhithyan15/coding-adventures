@@ -18,11 +18,11 @@ So the word is a nasalised ā followed by kh: āṁkh, humming at the start.
 
 Grammar Lens: feminine, and one you will use daily.
 आँख (āṁkh) = "eye," and it is feminine — मेरी आँख.
-Third feminine noun, third consonant ending: चाय, किताब, आँख. If you were still hoping the spelling would rescue you, let this settle it.
-And it is worth the effort, because these are the words a doctor asks about. मेरी आँख ठीक नहीं है — "my eye is not well."
+Third feminine noun, third consonant ending: चाय, किताब, आँख (āṁkh). If you were still hoping the spelling would rescue you, let this settle it.
+And it is worth the effort, because these are the words a doctor asks about. मेरी आँख (āṁkh) ठीक नहीं है — "my eye is not well."
 
 The word, taken apart: आँख.
-आँख comes from Sanskrit अक्षि (akṣi), "eye" — and akṣi comes from the root h₃ekʷ-, which is one of the securest words in the whole family.
+आँख (āṁkh) comes from Sanskrit अक्षि (akṣi), "eye" — and akṣi comes from the root h₃ekʷ-, which is one of the securest words in the whole family.
 Its descendants:
 Latin oculus — inside English ocular, monocle, binoculars.
 Old English ēage, which is English eye itself.
@@ -62,8 +62,8 @@ Both द and त are made at the teeth — which is the whole point of Devanagar
 
 Grammar Lens: the trap.
 दाँत (danta) (dāṁt) = "tooth," and it is masculine — मेरा दाँत (danta).
-Now put the two side by side. आँख and दाँत (danta): same long ā, same chandrabindu, same single final consonant, both parts of the body, both everyday. आँख is feminine. दाँत (danta) is masculine.
-There is no rule underneath that. There is no reasoning that gets you from one to the other. This is the pair to hold up whenever you are tempted to guess: मेरी आँख, मेरा दाँत (danta).
+Now put the two side by side. आँख (āṁkh) and दाँत (danta): same long ā, same chandrabindu, same single final consonant, both parts of the body, both everyday. आँख (āṁkh) is feminine. दाँत (danta) is masculine.
+There is no rule underneath that. There is no reasoning that gets you from one to the other. This is the pair to hold up whenever you are tempted to guess: मेरी आँख (āṁkh), मेरा दाँत (danta).
 
 The word, taken apart: दाँत.
 दाँत is Sanskrit दन्त (danta), from h₃dónts — and like akṣi this is one of the family's best-attested words.
@@ -146,12 +146,12 @@ Then ट: a retroflex ṭ, tongue-tip curled back, not the त of दाँत (
 Grammar Lens: masculine, and the whole set together.
 पेट (peṭ) = "stomach, belly," and it is masculine — मेरा पेट.
 Now you can answer a doctor, and exactly one of the six takes मेरी: merā sir, merā hāth, merī āṁkh, merā dāṁt, merā pair, merā peṭ — feminine company for कुर्सी and किताब.
-The sentence, with नहीं in its usual place just before है: मेरा पेट ठीक नहीं है — which, said in India, means what it says and rather more.
+The sentence, with नहीं in its usual place just before है: मेरा पेट (peṭ) ठीक नहीं है — which, said in India, means what it says and rather more.
 
 The word, taken apart: पेट.
 पेट goes back to Prakrit पेट्ट (peṭṭa) — and there the clean line ends.
 The mainstream account treats it as a Dravidian word taken into Indo-Aryan; compare reconstructed Dravidian poṭṭ-. Turner's comparative dictionary does not name Dravidian, but neither does he derive peṭṭa from any Sanskrit word: he only remarks that it sits close to Indo-Aryan words for "basket." That resemblance is a note, not a derivation, and it is often quoted as one.
-So: the origin of पेट is unsettled, with Dravidian leading — the honesty रोटी needed, one lesson away from पानी, whose story is exact. A language is made of what people said, and some of that came from neighbours speaking something else.
+So: the origin of पेट (peṭ) is unsettled, with Dravidian leading — the honesty रोटी needed, one lesson away from पानी, whose story is exact. A language is made of what people said, and some of that came from neighbours speaking something else.
 There is even a fingerprint: the retroflex consonants, the ट you just curled your tongue for, are the feature of Indian Indo-Aryan most often credited to long contact with Dravidian.
 
 Guided Practice.
@@ -167,4 +167,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does पेट come from? (Unsettled — Prakrit peṭṭa, most likely a Dravidian loan; the "basket" link is a resemblance.) Of your six body words, which takes मेरी? (आँख.) Which earlier word had the same honest dead end? (रोटी, beside पानी.)
+Where does पेट come from? (Unsettled — Prakrit peṭṭa, most likely a Dravidian loan; the "basket" link is a resemblance.) Of your six body words, which takes मेरी? (आँख (āṁkh).) Which earlier word had the same honest dead end? (रोटी, beside पानी.)

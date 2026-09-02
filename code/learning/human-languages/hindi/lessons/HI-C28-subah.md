@@ -10,6 +10,7 @@ chapter: 28
 type: word
 headword: सुबह
 gloss: "morning" (subah) — a Persian/Arabic loanword, NOT Sanskrit tatsama like din/raat; shares the Arabic root ص-ب-ح with ṣabāḥ ("morning") and with the tuṣbiḥ inside the Arabic "good night" phrase
+romanization: "subah"
 concept_tag: TIME-MORNING
 prerequisites: [HI-C25-din, HI-C26-raat]
 sounds: [hindi-ba, hindi-ha]

@@ -10,6 +10,7 @@ chapter: 10
 type: word
 headword: शनिवार रविवार
 gloss: Saturday and Sunday — completing Hindi's planet-week
+romanization: "śanivār ravivār"
 concept_tag: HI-DAYS-WEEKEND
 prerequisites: [HI-C10-somavaar-shukravaar]
 sounds: [devanagari-long-aa, sha-vs-sa]

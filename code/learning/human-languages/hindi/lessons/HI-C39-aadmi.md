@@ -10,6 +10,7 @@ chapter: 39
 type: word
 headword: आदमी
 gloss: man, person — masculine despite its -ī ending, and literally "of Adam"
+romanization: "ādmī"
 concept_tag: HI-PERSON-MAN
 prerequisites: [HI-C39-baccha, HI-C36-kursi]
 sounds: [devanagari-long-ii, dental-ma]

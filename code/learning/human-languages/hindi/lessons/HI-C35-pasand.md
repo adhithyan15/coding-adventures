@@ -10,6 +10,7 @@ chapter: 35
 type: phrase
 headword: मुझे … पसंद है
 gloss: liked, pleasing — a Persian noun, not a verb, in a sentence where the thing you like is the subject and you are only the person it happens to
+romanization: "mujhe … pasand hai"
 concept_tag: VERB-LIKE-LOVE
 prerequisites: [HI-C35-madad, HI-C23-kutta-billi, HI-C29-shaam]
 sounds: [anusvara, dental-da]

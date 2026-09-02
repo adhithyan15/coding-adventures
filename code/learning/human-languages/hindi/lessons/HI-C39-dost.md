@@ -10,6 +10,7 @@ chapter: 39
 type: word
 headword: दोस्त
 gloss: friend — a Persian word for "the one chosen", masculine by default but taking either possessive depending on who the friend is
+romanization: "dost"
 concept_tag: HI-PERSON-FRIEND
 prerequisites: [HI-C38-pet, HI-W05-conjuncts, HI-C12-bhaai-bahin]
 sounds: [conjunct-sta, devanagari-o]

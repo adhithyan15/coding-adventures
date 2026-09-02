@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:22f0827f18a4f9bb",
+  "sourceHash": "fnv1a64:a33c5ac73c8594b0",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -180,7 +180,7 @@
       "sequence": 20,
       "title": "नमस्कार (namaskār) — the more formal bow",
       "headword": "नमस्कार",
-      "romanization": "",
+      "romanization": "namaskār",
       "gloss": "hello (namaskār — more formal)",
       "script": "devanagari",
       "modality": "sight",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9922664faeae471e",
+      "sourceHash": "fnv1a64:83a0c9d50f5099a5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -306,7 +306,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read \"नमस्कार\" — na, ma, s, kā, r",
+              "instruction": "read \"नमस्कार (namaskār)\" — na, ma, s, kā, r",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -356,7 +356,7 @@
       "sequence": 30,
       "title": "धन्यवाद (dhanyavād) — \"thank you,\" the Sanskrit way",
       "headword": "धन्यवाद",
-      "romanization": "",
+      "romanization": "dhanyavād",
       "gloss": "thank you (dhanyavād — formal, Sanskritic)",
       "script": "devanagari",
       "modality": "sight",
@@ -364,7 +364,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dea5b70de8bccdec",
+      "sourceHash": "fnv1a64:db65b27bc55c2d33",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -400,7 +400,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्कार — you know the halant/conjunct idea and the ा (\"ā\") sign."
+              "text": "नमस्कार (namaskār) — you know the halant/conjunct idea and the ा (\"ā\") sign."
             }
           ]
         },
@@ -478,7 +478,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read \"धन्यवाद\" — dha, n, ya, vā, d",
+              "instruction": "read \"धन्यवाद (dhanyavād)\" — dha, n, ya, vā, d",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -517,7 +517,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read धन्यवाद. What are its two parts? (dhanya \"worthy\" + vāda \"saying.\") Is it the formal or casual \"thanks\"? (Formal, Sanskritic — the casual one is Persian-derived, next.)"
+              "text": "Read धन्यवाद (dhanyavād). What are its two parts? (dhanya \"worthy\" + vāda \"saying.\") Is it the formal or casual \"thanks\"? (Formal, Sanskritic — the casual one is Persian-derived, next.)"
             }
           ]
         }
@@ -528,7 +528,7 @@
       "sequence": 40,
       "title": "शुक्रिया (shukriyā) — \"thanks,\" Hindi's other heritage",
       "headword": "शुक्रिया",
-      "romanization": "",
+      "romanization": "shukriyā",
       "gloss": "thanks (shukriyā — everyday, Persian/Arabic-derived)",
       "script": "devanagari",
       "modality": "sight",
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7b73f86c1e11b22d",
+      "sourceHash": "fnv1a64:d2707a52114f5bc8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -572,7 +572,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "धन्यवाद — the formal, Sanskrit \"thanks\"; this is its casual counterpart."
+              "text": "धन्यवाद (dhanyavād) — the formal, Sanskrit \"thanks\"; this is its casual counterpart."
             }
           ]
         },
@@ -610,7 +610,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शुक्रिया comes, through Persian (shukriya), from Arabic shukr ( \"gratitude, thanks\") — root sh-k-r. It is the same word as the Arabic shukran (\"thank you\"): Hindi and Arabic, two utterly different languages and scripts, saying thanks with one Semitic root. No Sanskrit here at all."
+              "text": "शुक्रिया (shukriyā) comes, through Persian (shukriya), from Arabic shukr ( \"gratitude, thanks\") — root sh-k-r. It is the same word as the Arabic shukran (\"thank you\"): Hindi and Arabic, two utterly different languages and scripts, saying thanks with one Semitic root. No Sanskrit here at all."
             },
             {
               "kind": "speech",
@@ -654,7 +654,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read \"शुक्रिया\" — shu, k, ri, yā",
+              "instruction": "read \"शुक्रिया (shukriyā)\" — shu, k, ri, yā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -704,7 +704,7 @@
       "sequence": 50,
       "title": "अलविदा (alvidā) — \"farewell,\" and the Arabic al- again",
       "headword": "अलविदा",
-      "romanization": "",
+      "romanization": "alvidā",
       "gloss": "goodbye (alvidā — a final farewell, Persian/Arabic-derived)",
       "script": "devanagari",
       "modality": "sight",
@@ -712,7 +712,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0881849899b37e15",
+      "sourceHash": "fnv1a64:69d65d45ee148527",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -748,7 +748,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शुक्रिया — Hindi's Persian/Arabic layer; here's another word from it."
+              "text": "शुक्रिया (shukriyā) — Hindi's Persian/Arabic layer; here's another word from it."
             }
           ]
         },
@@ -822,7 +822,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read \"अलविदा\" — a, l, vi, dā",
+              "instruction": "read \"अलविदा (alvidā)\" — a, l, vi, dā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

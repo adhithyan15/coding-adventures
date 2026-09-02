@@ -4,14 +4,14 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4ec5585614562f3c",
+  "sourceHash": "fnv1a64:0b4d34f0feca4b54",
   "lessons": [
     {
       "id": "HI-C10-somavaar-shukravaar",
       "sequence": 530,
       "title": "सोमवार to शुक्रवार — Hindi's own planet-week",
       "headword": "सोमवार मंगलवार बुधवार गुरुवार शुक्रवार / वार",
-      "romanization": "",
+      "romanization": "somavār maṅgalvār budhvār guruvār śukravār",
       "gloss": "Monday–Friday — Hindi's own planet-week, independent of Rome's",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:16bc51024e5b7caa",
+      "sourceHash": "fnv1a64:aa932b14df4aa6e4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -147,7 +147,7 @@
       "sequence": 540,
       "title": "शनिवार and रविवार — Saturday and Sunday, no rewrite needed",
       "headword": "शनिवार रविवार",
-      "romanization": "",
+      "romanization": "śanivār ravivār",
       "gloss": "Saturday and Sunday — completing Hindi's planet-week",
       "script": "devanagari",
       "modality": "voice",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca349a9efef9e48f",
+      "sourceHash": "fnv1a64:335828d52556bf5c",
       "notice": null,
       "blocks": [
         {

@@ -75,6 +75,23 @@ fn long_vowel_team_sound_recall_binds_the_sound_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle in this file
+    // matched only part of the sentence, so the citation could be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once.
+    //
+    // Several tests load this library, because siblings import it as a
+    // dependency. The pin belongs in its OWN test: the others are not
+    // responsible for its provenance. That is also why the assertion has
+    // to be unique -- where a co-loaded sibling carries a byte-identical
+    // citation, an assertion either one satisfies pins neither.
+    // See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent the sound of the first vowel (e.g., team, rain). Long Vowel Teams Unit Resources (Lessons 84-88): 84 ai /ā/, ay /ā/, 85 ee /ē/, ea /ē/, ey /ē/, 86 oa /ō/, ow /ō/, oe /ō/, 87 ie /ī/, igh /ī/.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"Sound\":\"long_a_sound\""),
