@@ -43,7 +43,7 @@ Warm-up.
 [pause 2 seconds]
 The full courteous "how are you?" — assembled from words you already hold.
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 तुम्ही (tumhī, respectful "you") + कसे (kase, "how," plural-agreeing).
 आहात (āhāt, "are," respectful) becomes तुम्ही कसे आहात? (tumhī kase āhāt?) — "you how are?", verb last.
 Two agreements are at work:
@@ -102,7 +102,7 @@ Warm-up.
 [pause 2 seconds]
 The answer to "how are you?" — and it reuses a word you already banked in Chapter 4.
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 मी (mī, I) + बरा (barā, "well/fine") + आहे (āhe, am) becomes मी बरा आहे — "I am well." Add thanks: मी बरा आहे, धन्यवाद (mī barā āhe, dhanyavād).
 Back in Chapter 4 you met बरं (baraṁ) standing alone as "okay/fine" — its neuter form. When it describes you, it takes your gender:
 बरा (barā) — a man is well.
@@ -121,7 +121,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Why does the Chapter-1 baraṁ become barā here? (It now describes a person, so it takes that person's gender.)
+Why does the bare baraṁ you banked earlier become barā here? (It now describes a person, so it takes that person's gender.)
 
 
 Lesson 5 of 6.
@@ -131,13 +131,13 @@ Warm-up.
 [pause 2 seconds]
 When someone thanks you, Marathi's easy reply is not "you're welcome" but "there's no objection at all."
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 काही (kāhī, "any") + हरकत (harkat, "objection, trouble") + नाही (nāhī, "not/none") becomes "any objection there-is-not" ≈ "no problem at all."
 
 The word, taken apart.
 Two threads meet here:
 नाही (nāhī, "not") is Chapter 4's "no," on the ancient negative na- — PIE ne, the root of English no, not, none and Latin nōn.
-हरकत (harkat, "objection, hindrance") is a Perso-Arabic loan (from Arabic ḥarakah), one of the many words Marathi absorbed over centuries of contact with Persian-speaking rulers and traders — the same trade-and-court layer that colours all the languages of the Deccan.
+हरकत (harkat, "objection, hindrance") is a Perso-Arabic loan (from Arabic ḥarakah), one of the many words Marathi absorbed over centuries of contact with Persian-speaking rulers and traders — above all under the Deccan sultanates — the same trade-and-court layer that colours all the languages of the Deccan.
 So the reply blends an Indo-European negative with an Arabic noun — a small map of Marathi's history in three words.
 
 Why it's said this way.
@@ -162,13 +162,13 @@ Warm-up.
 [pause 2 seconds]
 The whole everyday exchange, start to finish.
 
-The whole exchange.
+The exchange.
 [a table of 3 rows, read aloud]
 Marathi: तुम्ही कसे आहात? Say it: tumhī kase āhāt? English: How are you?
 Marathi: मी बरा आहे, धन्यवाद. Say it: mī barā āhe, dhanyavād. English: I'm well, thank you.
 Marathi: काही हरकत नाही. Say it: kāhī harkat nāhī. English: No problem / you're welcome.
 
-Atoms banked this chapter.
+What you've built — atoms banked this chapter.
 कसा / कशी / कसं (kasā / kaśī / kasaṁ) (kasā/kaśī/kasaṁ) — how; the k- question family, gender-agreeing.
 मी (mī) — I; Sanskrit aham becomes Latin ego, English I.
 बरा / बरी / बरं (barā/barī/baraṁ) — well/fine, now gendered.

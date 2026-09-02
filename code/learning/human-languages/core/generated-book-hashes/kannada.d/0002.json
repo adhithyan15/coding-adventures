@@ -1,0 +1,18 @@
+{
+  "language": "kannada",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:2d4a78481e4aa051",
+  "lessonIds": [
+    "KA-C02-hesaru",
+    "KA-C02-nanna",
+    "KA-C02-nanna-hesaru",
+    "KA-C02-niinu-niivu",
+    "KA-C02-enu",
+    "KA-C02-nimma-hesaru-enu",
+    "KA-S111-vowel-sign-e",
+    "KA-C02-santosha",
+    "KA-S02-vowel-sign-u",
+    "KA-C02-practice"
+  ],
+  "tex": "kannada/book/chapters/ch02-introductions.tex"
+}

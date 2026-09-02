@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FR-C08-midi-minuit",
+    "id": "FR-C08-minuit",
     "language": "french",
     "chapter": 8,
-    "sequence": 230,
+    "sequence": 227,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:93e7c746f8b90512"
+    "sourceHash": "fnv1a64:f5f17aa44ecd5427"
   },
   "findings": []
 }

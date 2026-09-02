@@ -567,7 +567,21 @@ fn parse_const_value(e: &SExpr) -> Result<ConstValue, WastParseError> {
         // operand list `parse_v128_const` expects), so all 6 shapes are
         // supported here for free, same as in real instruction bodies.
         "v128.const" => {
-            let (bytes, _consumed) = crate::module::parse_v128_const(&items[1..], pos)?;
+            let operands = &items[1..];
+            let (bytes, consumed) = crate::module::parse_v128_const(operands, pos)?;
+            // Same "folded form's operand list IS the whole literal, so
+            // anything left over is a real error" reasoning as the
+            // matching check in `module.rs`'s own folded `v128.const`
+            // handling -- this is the const-expression-syntax sibling of
+            // that same call site (`assert_return`/`invoke` arguments and
+            // expected values), reusing the identical parser.
+            if consumed != operands.len() {
+                return Err(WastParseError::UnexpectedToken {
+                    pos,
+                    found: operands.get(consumed).and_then(|e| e.as_atom()).unwrap_or("").to_string(),
+                    expected: "no extra v128.const lane literals",
+                });
+            }
             Ok(ConstValue::V128(bytes))
         }
         // `(ref.null func)` / `(ref.null extern)` (WASM17) -- an EXACT null

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b2d186f8d9f20460",
+  "sourceHash": "fnv1a64:7cc95ee2f0bfb43b",
   "lessons": [
     {
       "id": "MR-C03-kasa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b2669233903bd0d7",
+      "sourceHash": "fnv1a64:a3b3bb482e7d71e0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:329feb621ae84827",
+      "sourceHash": "fnv1a64:1c90e0c514b2615e",
       "notice": null,
       "blocks": [
         {
@@ -182,8 +182,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c98589e3f88c7e5c",
+      "sourceHash": "fnv1a64:3102882eb92ca54e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e87343a23bb7c1ca",
+      "sourceHash": "fnv1a64:45966de2477c019c",
       "notice": null,
       "blocks": [
         {
@@ -428,8 +428,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -508,7 +508,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does the Chapter-1 baraṁ become barā here? (It now describes a person, so it takes that person's gender.)"
+              "text": "Why does the bare baraṁ you banked earlier become barā here? (It now describes a person, so it takes that person's gender.)"
             }
           ]
         }
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd986ba6ab1b4a0d",
+      "sourceHash": "fnv1a64:e87d54a9037fed6e",
       "notice": null,
       "blocks": [
         {
@@ -549,8 +549,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -573,7 +573,7 @@
             },
             {
               "kind": "speech",
-              "text": "हरकत (harkat, \"objection, hindrance\") is a Perso-Arabic loan (from Arabic ḥarakah), one of the many words Marathi absorbed over centuries of contact with Persian-speaking rulers and traders — the same trade-and-court layer that colours all the languages of the Deccan."
+              "text": "हरकत (harkat, \"objection, hindrance\") is a Perso-Arabic loan (from Arabic ḥarakah), one of the many words Marathi absorbed over centuries of contact with Persian-speaking rulers and traders — above all under the Deccan sultanates — the same trade-and-court layer that colours all the languages of the Deccan."
             },
             {
               "kind": "speech",
@@ -655,7 +655,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:635765fb521a9248",
+      "sourceHash": "fnv1a64:a96f11d15bd5890a",
       "notice": null,
       "blocks": [
         {
@@ -677,8 +677,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The whole exchange",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "table",
@@ -699,8 +699,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Atoms banked this chapter",
+          "type": "notice",
+          "title": "What you've built — atoms banked this chapter",
           "segments": [
             {
               "kind": "speech",

@@ -43,7 +43,7 @@ Warm-up.
 [pause 2 seconds]
 Your first full action-sentence — and it names the language itself.
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 मी (mī, I) + मराठी (marāṭhī, Marathi, the object) + बोलतो (bolto, speak) becomes "I Marathi speak," verb last.
 A woman says मी मराठी बोलते (mī marāṭhī bolte).
 
@@ -132,18 +132,18 @@ Warm-up.
 [pause 2 seconds]
 Three verbs, one engine — sentences about yourself.
 
-Sentences about yourself.
+You'll want to know — sentences about yourself.
 [a table of 3 rows, read aloud]
 Marathi: मी मराठी बोलतो / बोलते. Say it: mī marāṭhī bolto / bolte. English: I speak Marathi.
 Marathi: मी पुण्यात राहतो / राहते. Say it: mī puṇyāt rāhto / rāhte. English: I live in Pune.
 Marathi: मी काम करतो / करते. Say it: mī kām karto / karte. English: I work.
 
-The engine, in one look.
+What you've built — the engine, in one look.
 Infinitive ends in -णे (-ṇe): bolṇe, rāhṇe, karṇe.
 Present = stem + a gendered ending — -to (m.) / -te (f.): bolto/ bolte, rāhto/rāhte, karto/karte. No separate "am" — the ending carries it.
 Verb goes last; "in" attaches to the noun's end (puṇyāt).
 
-Roots banked.
+What you've built — roots banked.
 बोलणे (bolṇe) — to speak (native bol-).
 मराठी (marāṭhī) — from Mahārāṣṭra, "great realm."
 राहणे (rāhṇe) — to live (Sanskrit rah-).

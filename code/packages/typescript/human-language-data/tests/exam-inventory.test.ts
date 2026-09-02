@@ -631,7 +631,15 @@ describe("the committed French A1 inventory", () => {
     // f-to-v in passing inside two `sounds` blocks; the generated chapter teaches
     // liaison as a named rule with its own atom, which is what a probe can
     // resolve against. Same rule here: the corpus changed, not the target.
-    expect(coverage.covered).toBe(26);
+    //
+    // 26 -> 27: retiring hand-written chapter 8 closed A1-LEX-07, telling the
+    // time. The hand-written chapter stopped at whole hours and named et quart,
+    // et demie and moins le quart in one sentence while deferring them, so the
+    // corpus could not have satisfied the point however the probe was written.
+    // The chapter now teaches all three, and the probe lists all seven atoms
+    // rather than a sample: a candidate asked for half past does not get partial
+    // credit for o'clock.
+    expect(coverage.covered).toBe(27);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
     // The shape, not the score: vocabulary is still a strong column and the
     // sentence-level categories are still empty. No quantity of headwords moves

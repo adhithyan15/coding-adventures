@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bb0daa9a9c7b3f4b",
+  "sourceHash": "fnv1a64:2f5cee2e44a107d6",
   "lessons": [
     {
       "id": "MR-C04-punha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:58d565da9b4ad135",
+      "sourceHash": "fnv1a64:cf47e128ec6c17e0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b5ce8b00d613bcc3",
+      "sourceHash": "fnv1a64:d462f59856ddb0bd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ef95c1089a74908",
+      "sourceHash": "fnv1a64:39a4aea2eb2dea71",
       "notice": null,
       "blocks": [
         {
@@ -291,8 +291,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -378,7 +378,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3a8aa32b90ffe042",
+      "sourceHash": "fnv1a64:8d868c70ec291aa4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -420,8 +420,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:493c83fa9a7fea01",
+      "sourceHash": "fnv1a64:f6a891c0412e9568",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -549,8 +549,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -632,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85298277a7c61f76",
+      "sourceHash": "fnv1a64:3091ddc8fddf7d36",
       "notice": null,
       "blocks": [
         {
@@ -654,8 +654,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
+          "type": "input",
+          "title": "You'll want to know — the farewells",
           "segments": [
             {
               "kind": "table",
@@ -677,8 +677,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Atoms banked this chapter",
+          "type": "notice",
+          "title": "What you've built — atoms banked this chapter",
           "segments": [
             {
               "kind": "speech",
@@ -746,7 +746,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do every Marathi goodbye have in common? (None says \"farewell\" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto."
+              "text": "What does every Marathi goodbye have in common? (None says \"farewell\" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto."
             }
           ]
         }

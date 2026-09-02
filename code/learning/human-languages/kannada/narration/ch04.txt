@@ -17,9 +17,6 @@ The letters in this word.
 The word, taken apart.
 ಹೋಗು (hōgu, "to go") and ಬಾ (bā, "come") are native Dravidian verbs. As commands they are whole words: hōgu! ("go!"), bā! ("come!"). You need both, because Kannada — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
 
-Sounds you'll need.
-ಹೋ (hō) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner ಬಾ (bā, “come”).
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "hōgu" (go) and "bā" (come)]
@@ -88,6 +85,15 @@ The word, taken apart.
 Grammar Lens: the "having …d" participle.
 Hōgi chains actions: "having gone, (then) I come." Kannada, like its sisters, strings verbs with one in the participle form and the last one fully conjugated.
 
+Across the family — the same idea, five ways.
+[a table of 5 rows, read aloud]
+Language: Kannada. "go and come back" (goodbye): hōgi baruttēne.
+Language: Tamil. "go and come back" (goodbye): pōy varugiṟēṉ.
+Language: Telugu. "go and come back" (goodbye): veḷḷi vastānu.
+Language: Malayalam. "go and come back" (goodbye): pōyi varāṃ.
+Language: Bengali (Indo-Aryan). "go and come back" (goodbye): āshi ("I come").
+The whole south, and beyond, prefers a promise of return to a blunt farewell.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: the goodbye — hōgi baruttēne]
@@ -116,9 +122,6 @@ The letters in this word.
 
 The word, taken apart.
 ನಾಳೆ (nāḷe, "tomorrow") is native Dravidian, from ನಾಳ್ (nāḷ, "day") — the very same nāḷ behind Tamil's nāḷai. ಸಿಗೋಣ (sigōṇa, "let's meet") is from ಸಿಗು (sigu, "to meet, to be found") — so the phrase is "tomorrow, let's meet." The -ಓಣ (-ōṇa) ending is Kannada's warm "let's ___": hōgōṇa ("let's go"), tinnōṇa ("let's eat").
-
-Sounds you'll need.
-ನಾಳೆ (nāḷe): ನಾ (nā) + ಳೆ (ḷe, retroflex ಳ (ḷa) ḷ). ಸಿಗೋಣ (sigōṇa) = sigu (“meet”) + -ōṇa (“let's”).
 
 Guided Practice.
 [pause 1 second]
@@ -238,7 +241,7 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three ways to part — none of them a blunt "goodbye."
 
-The farewells.
+You'll want to know: The farewells.
 [pause 1 second after each]
 [your turn — say: the everyday goodbye — hōgi baruttēne ("I'll go and come back")]
 [pause 8 seconds for the answer]
@@ -249,7 +252,7 @@ The farewells.
 [your turn — say: "we'll meet again" — matte sigōṇa]
 [pause 8 seconds for the answer]
 
-The atoms.
+You'll want to know: The atoms.
 [pause 2 seconds]
 [your turn — say: the two verbs (hōgu go, bā come)]
 [pause 8 seconds for the answer]
@@ -258,7 +261,7 @@ The atoms.
 [your turn — say: the "let's ___" ending (-ōṇa)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+The word, taken apart: Roots you now carry.
 [pause 2 seconds]
 hōgi baruttēne — "having gone, I come"; the Dravidian promise-of-return goodbye.
 nāḷe from nāḷ "day" (shared with Tamil nāḷai); sigu "to meet" (native).
