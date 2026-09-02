@@ -59,14 +59,22 @@
 %      sleep could be broken into /sl/ and /eep/."
 %     — https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words
 %   blast -> bl / ast:
-%     "Here are two ways to break up the word blast: Onset (bl) – Rime (ast)"
+%     "Here are two ways to break up the word blast:"  <p>, and separately
+%     "Onset (bl) – Rime (ast)"                        <li>
+%     (TWO blocks, never one rendered run -- so no single span names the word
+%      AND gives its split, and `blast` carries no `cites` for that reason)
 %     — https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words
 %   map -> m / ap (added this cycle):
-%     "So in the word 'map,' /m/ is the onset and /ap/ is the rime."
+%     "So in the word “map,” /m/ is the onset and /ap/ is the rime."
+%     (the page uses CURLY quotes here; the previous ASCII form was a
+%      silently altered glyph, not the rendered text)
 %     — https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice
 %   tape -> t / ape (added this cycle):
-%     "The word is 'tape'. The first part is /t/ ... What's the rest of the
-%      word? /Ape/."
+%     "The word is ‘tape’. The first part is /t/ [we put right fist on the
+%      table]. What’s the rest of the word? /Ape/ [we put left fist on table]."
+%     (quoted WITH its bracketed stage directions: the page's own contiguous
+%      block, where the previous "..." elision was a constructed span, and
+%      with the page's CURLY quotes restored)
 %     — https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice
 %
 % An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
@@ -92,4 +100,6 @@ table onset_rime {
     source "For example, sleep could be broken into /sl/ and /eep/."
     locator "https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words"
     trust consensus
+    cites "So in the word “map,” /m/ is the onset and /ap/ is the rime." locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    cites "The word is ‘tape’. The first part is /t/ [we put right fist on the table]. What’s the rest of the word? /Ape/ [we put left fist on table]." locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
 }
