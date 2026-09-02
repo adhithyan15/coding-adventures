@@ -9,27 +9,27 @@ headword: ਸਮਝਣਾ
 romanization: samajhṇā
 gloss: to understand — from a root meaning “to wake up,” and the word carries a tone
 concept_tag: VERB-UNDERSTAND
-prerequisites: [PA-C08-sochna]
+prerequisites: [PA-C08-sochna, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin, PA-S02-mamma-rara-lava]
 sounds: [tone-falling, breathy-jh, retroflex-na]
 roots: [sanskrit-sambudhyate, sanskrit-budh, pie-bhewdh]
 etymology_hook: samajhṇā continues Sanskrit sambudhyate, sam- “together” on budh- “to wake” — the root that named the Buddha, “the awakened one,” from PIE *bʰewdʰ-, English bode, forebode and forbid; and the very ਝ that came out of that old breathy dh is what gives the word its falling tone.
 duration:
   max_seconds: 285
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-SOCHNA, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-LEX-KHANA, PA-ETYMON-HONA-BHU]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-SOCHNA, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-LEX-KHANA, PA-ETYMON-HONA-BHU, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-JHA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01, PA-SCRIPT-RECOG-MA-01]
 introduces:
   knowledge: [PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-ETYMON-HONA-BHU]
+  knowledge: [PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-ETYMON-HONA-BHU, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-JHA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01, PA-SCRIPT-RECOG-MA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C08-sochna, PA-C07-khana, PA-C07-hona]
+reviews_of: [PA-C08-sochna, PA-C07-khana, PA-C07-hona, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin, PA-S02-mamma-rara-lava]
 ---
 
 # ਸਮਝਣਾ — “to understand,” and the tone you can hear in it
@@ -50,7 +50,7 @@ Strip the **-ਣਾ** and the stem is **samajh-**. Like *soch*, it is also a nou
 **ਸਮਝ** *samajh*, “**understanding, sense**.”
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-JHA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01] -->
 
 **ਸ** *s*, **ਮ** *m*, then **ਝ**, then **ਣਾ** — *sa-majh-ṇā*. **ਝ** is new, and
 it is what this lesson is about.
@@ -101,7 +101,7 @@ The root is Indo-European, \**bʰewdʰ-*, which English keeps in **bode** — as
 - [YOU SAY: *budh-* → **Buddha**, “the awakened”]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-SCRIPT-RECOG-MA-01] -->
 <!-- hl-activity: {"id":"PA-C08-samajhna-tone","kind":"text","assesses":["PA-SOUND-TONE-FALLING"],"prompt":"In samajhna the jh is not heard as breath. What is heard instead?","answer":"a falling tone","accepted":["falling tone","a falling pitch","the pitch falls","high falling tone","tone"],"feedback":{"correct":"Right: the breath is gone and the vowel before it goes high and falls.","incorrect":"A falling tone. The breath moved onto the vowel before it, which goes high and drops."},"response_seconds":8} -->
 
 [PAUSE 3s] Where does the pitch fall in *samajhṇā*, and why? (On the vowel

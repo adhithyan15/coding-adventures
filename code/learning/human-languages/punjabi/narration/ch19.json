@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "The Third Form Line: Residence",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b65dc632d05991d5",
+  "sourceHash": "fnv1a64:675cf6e08f9ae5b1",
   "lessons": [
     {
       "id": "PA-W04-residence-select",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:602cb9d93e896d6f",
+      "sourceHash": "fnv1a64:7273c86e573342b3",
       "notice": {
         "modality": "pen",
         "needs": [

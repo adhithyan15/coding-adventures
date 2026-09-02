@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:d68c643c1e396a58",
+  "sourceHash": "fnv1a64:135cfb431dda72e5",
   "lessonIds": [
     "PA-C02-naam",
     "PA-C02-mera",
@@ -9,8 +9,10 @@
     "PA-C02-mera-naam-hai",
     "PA-C02-tu-tusi",
     "PA-C02-ki",
+    "PA-S02-mamma-rara-lava",
     "PA-C02-tuhada-naam-ki-hai",
     "PA-C02-khushi",
+    "PA-S02-sassa-tatta-sihari",
     "PA-C02-practice"
   ],
   "tex": "punjabi/book/chapters/ch02-introductions.tex"

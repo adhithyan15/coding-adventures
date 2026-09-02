@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 34,
-  "sourceHash": "fnv1a64:1ccfe8bea183f51c",
+  "sourceHash": "fnv1a64:605ecfefb4af78ed",
   "lessonIds": [
     "PA-C34-salaam",
     "PA-W09-lalla",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch34.txt",
   "json": "punjabi/narration/ch34.json",
   "textHash": "fnv1a64:3d4f9e0c80848c93",
-  "jsonHash": "fnv1a64:aff08b2ac835ab94",
+  "jsonHash": "fnv1a64:12ceb2c3184fa29d",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-054-PREA1-SCRIPT-RUNWAY-C11",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read bharā, and name the four letters whose breath turned into pitch.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S11-bhabbha"
+  ]
+}

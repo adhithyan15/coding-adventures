@@ -9,32 +9,32 @@ type: writing
 headword: "ਭ"
 romanization: "bha"
 gloss: "trace the Gurmukhi letter bha"
-prerequisites: [PA-W02-name-no-model]
+prerequisites: [PA-W02-name-no-model, PA-S11-bhabbha]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-AA-MATRA-01]
+  knowledge: [PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-RECOG-BHA-01]
 introduces:
   knowledge: [PA-SCRIPT-BHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BHA-01]
+  knowledge: [PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BHA-01, PA-SCRIPT-RECOG-BHA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W02-name-no-model]
+reviews_of: [PA-W02-name-no-model, PA-S11-bhabbha]
 ---
 
 # ਭ — one new base for the next label
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-AA-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-RECOG-BHA-01] -->
 
 Keep only the familiar long-vowel mark **ਾ** in view. Today adds one base letter.
 

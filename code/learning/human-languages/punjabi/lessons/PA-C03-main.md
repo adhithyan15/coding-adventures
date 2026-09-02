@@ -9,26 +9,26 @@ headword: ਮੈਂ
 romanization: "maiṁ"
 gloss: "I"
 concept_tag: PRONOUN-I
-prerequisites: [PA-C02-mera]
+prerequisites: [PA-C02-mera, PA-S02-mamma-rara-lava, PA-S03-nanna-bihari-dulava]
 sounds: [dulankar-ai, bindi-nasal]
 roots: [ma-first-person]
 duration:
   max_seconds: 200
 requires:
-  knowledge: [PA-LEX-MERA-02]
+  knowledge: [PA-LEX-MERA-02, PA-SCRIPT-RECOG-DULAVA-01, PA-SCRIPT-RECOG-MA-01]
 introduces:
   knowledge: [PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-ETYMON-FIRST-PERSON-M-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-MERA-02, PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-ETYMON-FIRST-PERSON-M-03]
+  knowledge: [PA-LEX-MERA-02, PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-ETYMON-FIRST-PERSON-M-03, PA-SCRIPT-RECOG-DULAVA-01, PA-SCRIPT-RECOG-MA-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C02-mera]
+reviews_of: [PA-C02-mera, PA-S02-mamma-rara-lava, PA-S03-nanna-bihari-dulava]
 ---
 
 # ਮੈਂ (maiṁ) — "I," the m- of the first person
@@ -40,7 +40,7 @@ reviews_of: [PA-C02-mera]
 *merā* ("my"); here is its owner.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-DULAVA-01, PA-SCRIPT-RECOG-MA-01] -->
 
 **ਮ** (*ma*) + **ੈ** (*ai*-sign) + **ਂ** (nasal *bindi*) → **ਮੈਂ** (*maiṁ*). One
 nasal syllable.

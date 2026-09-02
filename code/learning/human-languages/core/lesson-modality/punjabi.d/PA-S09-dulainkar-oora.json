@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S09-dulainkar-oora",
+    "language": "punjabi",
+    "chapter": 9,
+    "sequence": 485,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:56f31397e283390b",
+    "detachableSegments": [
+      "Script you'll notice: ੂ · ਉ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

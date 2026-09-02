@@ -9,27 +9,27 @@ headword: ਆਉਣਾ
 romanization: āuṇā
 gloss: to come — “go” with “toward” glued on the front, and the “go” half is English come
 concept_tag: VERB-COME
-prerequisites: [PA-C07-jana]
+prerequisites: [PA-C07-jana, PA-S06-kakka-aira-aara, PA-S07-naana-jajja-vavva]
 sounds: [vowel-carrier, aunkar-u, retroflex-na]
 roots: [sanskrit-agacchati, sanskrit-gam, pie-gwem]
 etymology_hook: āuṇā is Sanskrit ā- “toward” on gam- “go”; gam- is PIE *gʷem-, the root English wore down into come.
 duration:
   max_seconds: 225
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANA]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANA, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-NAANA-01]
 introduces:
   knowledge: [PA-LEX-AUNA, PA-GRAMMAR-A-PREFIX-TOWARD, PA-ETYMON-AUNA-GAM]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANA, PA-LEX-AUNA, PA-GRAMMAR-A-PREFIX-TOWARD, PA-ETYMON-AUNA-GAM]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANA, PA-LEX-AUNA, PA-GRAMMAR-A-PREFIX-TOWARD, PA-ETYMON-AUNA-GAM, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-NAANA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C07-jana, PA-C07-hona]
+reviews_of: [PA-C07-jana, PA-C07-hona, PA-S06-kakka-aira-aara, PA-S07-naana-jajja-vavva]
 ---
 
 # ਆਉਣਾ — “to come,” which is “go” pointed back at you
@@ -79,7 +79,7 @@ same ancient step as your own *come*.
 - [YOU CONNECT: *gam-* ← \**gʷem-* → English **come**, **advent**, **acrobat**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-AUNA, PA-GRAMMAR-A-PREFIX-TOWARD, PA-ETYMON-AUNA-GAM, PA-LEX-JANA, PA-GRAMMAR-NA-INFINITIVE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-AUNA, PA-GRAMMAR-A-PREFIX-TOWARD, PA-ETYMON-AUNA-GAM, PA-LEX-JANA, PA-GRAMMAR-NA-INFINITIVE, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-NAANA-01] -->
 
 [PAUSE 3s] What two pieces are inside *āuṇā*? (The prefix *ā-*, “toward,” and
 the old verb *gam-*, “go.”) Which everyday English verb is that second piece?

@@ -1,19 +1,22 @@
 {
   "language": "punjabi",
   "chapter": 5,
-  "sourceHash": "fnv1a64:b15c6b4a9c21a457",
+  "sourceHash": "fnv1a64:b7da7fb1c7fff8af",
   "lessonIds": [
     "PA-C05-bolna",
+    "PA-C05-panjabi",
     "PA-C05-main-punjabi-bolda-han",
     "PA-C05-rahna",
+    "PA-C05-karna",
     "PA-C05-kamm-karna",
+    "PA-S05-babba-lalla-hora",
     "PA-C05-practice"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 2,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch05.txt",
   "json": "punjabi/narration/ch05.json",
-  "textHash": "fnv1a64:13ead793841e4d4b",
-  "jsonHash": "fnv1a64:6d09aed8e899f015",
+  "textHash": "fnv1a64:3a290cbc8d8063ee",
+  "jsonHash": "fnv1a64:fd29d755399ab57b",
   "findings": []
 }

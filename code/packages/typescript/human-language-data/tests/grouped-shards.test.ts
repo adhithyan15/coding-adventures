@@ -138,12 +138,17 @@ function sandbox(): string {
 // So this literal stays. A number that only moves when a person deliberately
 // changes the thing it measures is a tripwire, not a maintenance tax.
 //
-// 69 -> 67: German chapters 1 and 2 were retired from `handwritten.d` and are
-// now generated from schema-v2 lessons. Their prose was carried into the
-// lesson markdown first -- `handwritten_parity.py german` fell from 78 blocks
-// at risk to 77, and the two retired chapters were read against their
-// hand-written originals side by side -- so this move is the deliberate
-// change the tripwire exists to record, not a regression it failed to catch.
+// 69 -> 67: the tripwire firing as designed. Punjabi's Chapters 4 and 5 were the
+// track's last hand-written .tex, and they are now generated from their lessons.
+// Nothing was silently dropped in the flip: `handwritten_parity.py` reported
+// Punjabi under NOTHING WOULD BE LOST before it, and now reports the track as
+// having nothing hand-written left at all.
+//
+// 67 -> 65: the same move for German chapters 1 and 2, the track the corpus-wide
+// measurement named as worst-blocked. German did NOT report clean beforehand, so
+// the prose was carried into the lesson markdown first -- `handwritten_parity.py
+// german` fell from 78 blocks at risk to 77 -- and both chapters were read
+// against their hand-written originals side by side before the flip.
 
 /**
  * Authored-chapter identities according to each track's own `chapters.d` — the
@@ -208,7 +213,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
     // The handwritten count STAYS PINNED, and deliberately so — see the note
     // above on why this particular literal is not part of the write-lock.
-    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(67);
+    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(65);
     // The total is chapter-scaled, so it is proved against the independently
     // authored `chapters.d` instead.
     expect(
@@ -246,7 +251,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    expect(identities.handwritten.size).toBe(67);
+    expect(identities.handwritten.size).toBe(65);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
     );

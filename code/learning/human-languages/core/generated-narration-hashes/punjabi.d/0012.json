@@ -1,18 +1,19 @@
 {
   "language": "punjabi",
   "chapter": 12,
-  "sourceHash": "fnv1a64:39b537dd0b563990",
+  "sourceHash": "fnv1a64:537d1bf3391cdc1f",
   "lessonIds": [
     "PA-C12-akkh",
     "PA-C12-kann",
     "PA-C12-munh",
-    "PA-C12-nakk"
+    "PA-C12-nakk",
+    "PA-S12-eeri"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch12.txt",
   "json": "punjabi/narration/ch12.json",
-  "textHash": "fnv1a64:40e044872fb5ea99",
-  "jsonHash": "fnv1a64:afafb3abe53114b8",
+  "textHash": "fnv1a64:37d836436ce1e8b8",
+  "jsonHash": "fnv1a64:9de719ad1deb564b",
   "findings": []
 }
