@@ -11,9 +11,17 @@
     "kind": "dialogue",
     "summary": "Run the whole introduction: give your name, ask for theirs, and close with santōṣa — then name the one Sanskrit word in it.",
     "assesses": [
+      "KA-LEX-C02-HESARU-01",
+      "KA-ETYMON-C02-HESARU-02",
+      "KA-LEX-C02-NANNA-01",
       "KA-LEX-C02-NANNA-HESARU-01",
+      "KA-GRAMMAR-C02-NANNA-HESARU-02",
+      "KA-LEX-C02-NIINU-NIIVU-01",
+      "KA-LEX-C02-ENU-01",
+      "KA-ETYMON-C02-ENU-02",
       "KA-LEX-C02-NIMMA-HESARU-ENU-01",
-      "KA-LEX-C02-SANTOSHA-01"
+      "KA-LEX-C02-SANTOSHA-01",
+      "KA-ETYMON-C02-SANTOSHA-02"
     ]
   }
 }

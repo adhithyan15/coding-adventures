@@ -11,8 +11,15 @@
     "kind": "production",
     "summary": "Part three ways without ever saying a blunt goodbye, and say what hōgi baruttēne promises instead.",
     "assesses": [
+      "KA-LEX-C04-HOOGU-01",
+      "KA-ETYMON-C04-HOOGU-02",
       "KA-LEX-C04-HOOGI-BARUTTENE-01",
-      "KA-ETYMON-C04-HOOGI-BARUTTENE-03"
+      "KA-GRAMMAR-C04-HOOGI-BARUTTENE-02",
+      "KA-ETYMON-C04-HOOGI-BARUTTENE-03",
+      "KA-LEX-C04-NAALE-SIGONA-01",
+      "KA-ETYMON-C04-NAALE-SIGONA-02",
+      "KA-LEX-C04-MATTE-SIGONA-01",
+      "KA-ETYMON-C04-MATTE-SIGONA-02"
     ]
   }
 }

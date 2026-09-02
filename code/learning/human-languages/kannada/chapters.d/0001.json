@@ -14,9 +14,12 @@
     "summary": "Read all five words straight off the page, then say which two are Sanskrit loans and which three are native Dravidian.",
     "assesses": [
       "KA-LEX-C01-NAMASKARA-01",
+      "KA-ETYMON-C01-NAMASKARA-02",
       "KA-LEX-C01-DHANYAVADA-01",
+      "KA-ETYMON-C01-DHANYAVADA-02",
       "KA-LEX-C01-HAUDU-01",
       "KA-LEX-C01-ILLA-01",
+      "KA-GRAMMAR-C01-ILLA-02",
       "KA-LEX-C01-SARI-01"
     ]
   }

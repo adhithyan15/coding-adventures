@@ -13,8 +13,17 @@
     "kind": "dialogue",
     "summary": "Run the whole exchange: nīvu hēgiddīrā? — nānu cennāgiddēne, dhanyavāda — and wave away the thanks with paravāgilla.",
     "assesses": [
+      "KA-LEX-C03-HEGE-01",
+      "KA-ETYMON-C03-HEGE-02",
+      "KA-LEX-C03-HEGIDDIIRA-01",
+      "KA-GRAMMAR-C03-HEGIDDIIRA-02",
+      "KA-LEX-C03-NAANU-01",
+      "KA-ETYMON-C03-NAANU-02",
+      "KA-LEX-C03-CENNAAGI-01",
+      "KA-ETYMON-C03-CENNAAGI-02",
       "KA-LEX-C03-CENNAAGI-03",
-      "KA-LEX-C03-PARAVAAGILLA-01"
+      "KA-LEX-C03-PARAVAAGILLA-01",
+      "KA-ETYMON-C03-PARAVAAGILLA-02"
     ]
   }
 }

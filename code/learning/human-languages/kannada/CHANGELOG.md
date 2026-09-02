@@ -87,6 +87,30 @@ so the Hindi book has been **printing `long =\i` to readers**. Found by grepping
 the corpus for the same leak after `KA-C02-niinu-niivu` turned out to have one;
 those two files were the only cases in 22 tracks.
 
+### All five payoffs were below the representativeness floor
+
+`chapter-policy.json` sets `payoffRepresentativeness: 0.5` — a chapter's payoff
+should assess at least half of what the chapter introduced. Every one of the five
+newly generated chapters failed it, because each payoff had been anchored to a
+hand-picked highlight from the practice lesson rather than to what that lesson
+actually does:
+
+| chapter | was | now |
+|---|---|---|
+| 1 | 5/14 = 0.36 | 8/14 = **0.57** |
+| 2 | 3/17 = 0.18 | 11/17 = **0.65** |
+| 3 | 2/15 = 0.13 | 11/15 = **0.73** |
+| 4 | 2/12 = 0.17 | 9/12 = **0.75** |
+| 5 | 3/9 = 0.33 | 8/9 = **0.89** |
+
+The payoff *is* the practice lesson, so `assesses` is now everything that lesson
+practises which this chapter introduced — no widening of what is taught, just an
+honest reading of what the closing checkpoint already covers. The corpus-wide
+count of payoffs below the floor moves **91 → 86**, measured before and after.
+
+This was invisible while the chapters were v1: a schema-v1 lesson declares no
+atoms, so the denominator was empty and the floor could not be computed at all.
+
 Counted from the directory of the merged tree, never derived: `handwritten.d`
 holds **31** entries on `origin/main` and **28** on this branch. **Kannada's
 count is 0.** The corpus-wide figure has moved 38 → 31 while this work was in
