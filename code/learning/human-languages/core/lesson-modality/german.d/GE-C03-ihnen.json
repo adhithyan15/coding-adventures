@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C03-ihnen",
+    "language": "german",
+    "chapter": 3,
+    "sequence": 122,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b8ca04839f34389"
+  },
+  "findings": []
+}

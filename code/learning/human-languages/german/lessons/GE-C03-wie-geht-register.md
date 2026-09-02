@@ -1,54 +1,82 @@
 ---
+schema_version: 2
 id: GE-C03-wie-geht-register
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 125
 chapter: 3
 type: grammar
 headword: Wie geht es Ihnen?
-gloss: formal how are you?
+gloss: the formal "how are you?" — one word changes, the metaphor does not
 concept_tag: GE-STATE-FORMAL
-prerequisites: [GE-C03-wie-geht-es, GE-C02-du-sie]
-sounds: [w-is-v, ie-long-ee]
+prerequisites: [GE-C02-du-sie, GE-C03-dir, GE-C03-wie-geht-es, GE-C03-ihnen]
+sounds: [w-as-v, ie-long-ee]
 roots: [gehen-german]
-etymology_hook: "the question keeps its go metaphor and changes only dative dir to formal Ihnen"
-est_minutes: 4
-reviews_of: [GE-C03-wie-geht-es, GE-C02-du-sie]
+etymology_hook: "the formal question keeps every word and swaps only the listener, which is where German has put politeness all along"
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-DIR-01, GE-LEX-IHNEN-01, GE-LEX-DU-SIE-02, GE-LEX-WIE-GEHTS-02]
+introduces:
+  knowledge: [GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-PRAGMATICS-WELLBEING-REGISTER-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-PRAGMATICS-WELLBEING-REGISTER-02, GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-DIR-01, GE-LEX-IHNEN-01, GE-LEX-DU-SIE-02, GE-LEX-WIE-GEHTS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-output, language-focus]
+register: formal
+variety: standard-contemporary
+reviews_of: [GE-C03-wie-geht-es, GE-C03-ihnen, GE-C02-du-sie]
 ---
 
-# Wie geht es Ihnen? — formal “how are you?”
+# Wie geht es Ihnen? — the same question, at a distance
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-DIR-01, GE-LEX-IHNEN-01] -->
 
-[PAUSE 2s] The informal question ends in **dir**, “to you.” For a stranger or
-elder, keep the whole sentence and change only that listener word.
+[PAUSE 2s] You have the question for a friend, and you have the formal to-whom
+word. Putting them together needs no new grammar at all — just a swap.
 
-| listener | question |
+## You'll want to know: Wie geht es Ihnen?
+<!-- hl-knowledge: introduces=[GE-LEX-WIE-GEHT-ES-IHNEN-01]; assesses=[GE-LEX-IHNEN-01, GE-LEX-WIE-GEHT-ES-DIR-01] -->
+
+> **Wie geht es Ihnen?** — "How are you?", to a stranger or an elder.
+
+| Listener | Question |
 |---|---|
-| friend or family | **Wie geht es dir?** |
-| stranger or elder | **Wie geht es Ihnen?** |
+| friend, family | *Wie geht es dir?* |
+| stranger, elder | *Wie geht es Ihnen?* |
 
-Capitalised **Ihnen** is the dative form that belongs with formal **Sie**. The
-question still means “How goes it **to you**?”; German changes register inside
-the dative pronoun rather than changing the metaphor.
+Three of the four words never move. Only the last one changes.
 
-Bounce the question back with the same contrast:
+## Grammar Lens: politeness lives in the pronoun
+<!-- hl-knowledge: introduces=[GE-PRAGMATICS-WELLBEING-REGISTER-02]; assesses=[GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-LEX-DU-SIE-02, GE-LEX-WIE-GEHTS-02] -->
 
-- informal: **Und dir?** — and you?
-- formal: **Und Ihnen?** — and you?
+This is a rule worth generalising: **German carries politeness in the pronoun,
+not in the sentence.** English reaches for extra words to be polite — "I was
+wondering whether you might…" — and stacks them in front. German usually leaves
+the sentence exactly as it is and changes *who you are calling the person*.
 
-The short **Wie geht’s?** avoids the final pronoun and can be useful when the
-relationship is already clear.
+You saw the same move with *du* and *Sie*. Here it reaches the dative: *dir*
+becomes *Ihnen*, and the politeness is done.
+
+And when you would rather not choose at all, the contraction sidesteps it:
+**Wie geht's?** names no listener, so it commits to nothing.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-PRAGMATICS-WELLBEING-REGISTER-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: to a friend — “Wie geht es dir?”]
-- [YOU SAY: to a stranger — “Wie geht es Ihnen?”]
-- [YOU SAY: “Danke, gut. Und Ihnen?”]
-
-[REPEAT x2] “Dir — informal. Ihnen — formal.”
+- [YOU SAY: to a friend — "Wie geht es dir?"]
+- [YOU SAY: to a stranger — "Wie geht es Ihnen?"]
+- [YOU SAY: the pair back to back, hearing only the last word change]
+- [YOU SAY: the neutral escape — "Wie geht's?"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-PRAGMATICS-WELLBEING-REGISTER-02] -->
 
-[PAUSE 3s] Which word means informal “to you”? (**Dir**.) Which is formal?
-(**Ihnen**, capitalised.) What stays the same? (**Wie geht es** and the “go”
-metaphor.) Next: practise the casual exchange before the formal one.
+[PAUSE 3s] What is the formal "how are you?" (*Wie geht es Ihnen?*) How many
+words change from the informal? (One — *dir* to *Ihnen*.) Where does German keep
+its politeness? (In the pronoun, not in extra words.)

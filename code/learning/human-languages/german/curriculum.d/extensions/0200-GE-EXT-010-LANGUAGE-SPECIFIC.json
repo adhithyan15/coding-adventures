@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-010-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can upgrade a German thank-you — danke schön and vielen Dank — and say why schön and viel are the English words sheen and full.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C03-schoen",
+    "GE-C03-vielen-dank"
+  ]
+}
