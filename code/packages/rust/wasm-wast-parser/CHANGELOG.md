@@ -42,15 +42,30 @@ funcidx-list entry re-encodes as `[0xD2, <idx>, 0x0B]`/`[0xD0, 0x70,
 common case -- and `declared_type` (the segment's own reftype tag, or
 `ValueType::Funcref` for the implicit funcidx-list default).
 
-**Two new binary-encoder functions**, `encode_array_new_or_init_elem`
-(mirroring `encode_array_new_or_init_data`'s own "one combined function,
-not two separate branches" shape, for the identical stack-frame-size
-reason) --
+**Binary encoding** for `array.new_elem $t $elem <s> <n>` → `0xFB 0x0A
+<type_idx> <elem_idx>` and `array.init_elem $t $elem <arrayref> <d> <s>
+<n>` → `0xFB 0x13 <type_idx> <elem_idx>` (operand order confirmed against
+`array_init_elem.wast`'s own real corpus call sites).
 
-- `array.new_elem $t $elem <s> <n>` → `0xFB 0x0A <type_idx> <elem_idx>`
-- `array.init_elem $t $elem <arrayref> <d> <s> <n>` → `0xFB 0x13
-  <type_idx> <elem_idx>` (operand order confirmed against
-  `array_init_elem.wast`'s own real corpus call sites)
+**CI-caught fix, before merge**: the first draft added these two as a
+SECOND combined dispatch branch alongside slice 3's own `array.new_data`/
+`array.init_data` branch in `encode_gc_struct_array_instr` (each
+`#[inline(never)]`, matching slice 3's own established pattern exactly)
+-- and reproduced the EXACT same real-OS-stack SIGABRT slice 3's own fix
+was written to prevent, caught by macOS CI running this crate's own
+`deeply_folded_struct_instructions_do_not_overflow_the_real_stack`
+regression test (confirmed to reproduce locally too, and confirmed via a
+direct A/B -- removing just the new branch made the test pass again).
+`#[inline(never)]` on the new callee did NOT help: a debug build still
+reserves stack space in the CALLER for each distinct branch's own `?`-
+propagated `Result`, regardless of whether the callee itself is inlined,
+so a 7th top-level branch of ANY shape was enough on its own. Fixed by
+merging BOTH pairs (`array.new_data`/`array.init_data` AND `array.
+new_elem`/`array.init_elem`) into ONE function, `encode_array_segment_
+sourced`, dispatched from a SINGLE combined branch -- keeping `encode_gc_
+struct_array_instr`'s own branch count at 6 (its pre-slice-5 count).
+Verified byte-for-byte behavior-preserving: the full 257-file conformance
+baseline is IDENTICAL before and after this refactor.
 
 **A real, corpus-caught regression fixed in the same PR, in a file this
 spec doesn't otherwise touch**: `elem.wast`'s own `(elem (table $t)

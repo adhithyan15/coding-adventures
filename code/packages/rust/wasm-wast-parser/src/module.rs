@@ -4392,32 +4392,32 @@ fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, 
         encode_array_copy(args, icx, out)?;
         return Ok(true);
     }
-    // W38 slice 3 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): the two
-    // DATA-segment-sourced bulk-ops instructions -- `wasm-execution`'s own
-    // `0x09`/`0x12` handlers reuse `ctx.data_segments`/`ctx.dropped_data_
-    // segments` verbatim (the same fields `memory.init` already reads),
-    // exactly the spec's own explicit design choice.
+    // W38 slices 3 and 5 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): all
+    // four segment-sourced bulk-ops instructions -- two DATA-segment-sourced
+    // (`array.new_data`/`array.init_data`, reusing `ctx.data_segments`/
+    // `ctx.dropped_data_segments` verbatim, the same fields `memory.init`
+    // already reads) and two ELEMENT-segment-sourced (`array.new_elem`/
+    // `array.init_elem`, the pair slice 4's `Element::item_exprs`/
+    // `WasmExecutionContext::element_values` three-layer fix exists
+    // specifically to make possible).
     //
-    // ONE combined branch for both (not two, `array.fill`/`array.copy`'s
-    // own two-branch shape) -- see `encode_array_new_or_init_data`'s own
-    // doc comment for why: this function sits on the hot recursive
-    // encoding path, and two separate branches here once measurably grew
-    // ITS OWN debug-build stack frame enough to overflow the real OS stack
-    // before `MAX_INSTR_NESTING_DEPTH`'s software counter ever fired.
-    if matches!(name, "array.new_data" | "array.init_data") {
-        encode_array_new_or_init_data(name, args, icx, out)?;
-        return Ok(true);
-    }
-    // W38 slice 5 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): the two
-    // ELEMENT-segment-sourced bulk-ops instructions -- the pair slice 4's
-    // `Element::item_exprs`/`WasmExecutionContext::element_values` three-
-    // layer fix (Correction 2) exists specifically to make possible.
-    // Otherwise identical in shape to `array.new_data`/`array.init_data`
-    // above (one combined branch, same stack-frame-size reasoning), just
-    // resolving an elem index via `icx.module.elem_names` instead of a
-    // data index via `icx.module.data_names`.
-    if matches!(name, "array.new_elem" | "array.init_elem") {
-        encode_array_new_or_init_elem(name, args, icx, out)?;
+    // ONE combined branch for all four (not two branches of two each) --
+    // this function sits on the hot recursive encoding path, and a debug
+    // build sizes its own stack frame for the union of every branch it
+    // directly contains, REGARDLESS of whether each branch's own callee is
+    // `#[inline(never)]` (confirmed empirically: splitting slice 3's pair
+    // and slice 5's pair into two separate combined-but-still-two branches
+    // reintroduced the exact same real-OS-stack overflow slice 3's own
+    // "two branches vs one" fix first found and fixed -- adding a 7th
+    // top-level branch here, of ANY shape, was enough on its own to tip
+    // `deeply_folded_struct_instructions_do_not_overflow_the_real_stack`
+    // from a clean `TooDeeplyNested` error into a genuine SIGABRT, even
+    // with `#[inline(never)]` on the new callee). Keeping this dispatch
+    // function's own branch count at 6 (its pre-slice-5 count) by merging
+    // BOTH pairs into the ONE function below recovers the exact margin
+    // slice 3 already established.
+    if matches!(name, "array.new_data" | "array.init_data" | "array.new_elem" | "array.init_elem") {
+        encode_array_segment_sourced(name, args, icx, out)?;
         return Ok(true);
     }
     Ok(false)
@@ -4561,6 +4561,7 @@ fn encode_array_len(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Re
 /// operand after the leading type immediate) encodes in written order via
 /// `encode_instr_list`, identical to every other folded GC instruction in
 /// this file.
+#[inline(never)]
 fn encode_array_fill(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
     let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
     let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
@@ -4585,6 +4586,7 @@ fn encode_array_fill(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> R
 /// decode block must read them in the SAME order (see that crate's
 /// `GcOp::field_idx` doc comment for why it's repurposed to carry this
 /// second type index, not a new struct field).
+#[inline(never)]
 fn encode_array_copy(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
     let dest_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
     let dest_idx = resolve_idx(&icx.module.type_names, dest_expr, "type")?;
@@ -4621,67 +4623,75 @@ fn encode_array_copy(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> R
 /// $g_arr8_mut) (local.get $1) (local.get $2) (local.get $3))`: type, data
 /// segment, then arrayref, dest offset, src offset, count in written order).
 ///
-/// Both instructions share ONE function here (dispatching on `name`
-/// internally for the one-byte opcode difference), the same pattern
-/// [`encode_struct_new`] already uses for `struct.new`/`struct.new_default`
-/// -- **not** merely a style preference: `encode_gc_struct_array_instr`
-/// sits on this crate's hot recursive encoding path (guarded only by
-/// `MAX_INSTR_NESTING_DEPTH`'s software counter), and a debug build sizes a
-/// function's own stack frame for the union of every branch it directly
-/// contains. An EARLIER version of this fix added `array.new_data`/`array.
-/// init_data` as two SEPARATE dispatch branches (mirroring `array.fill`/
-/// `array.copy`'s own two-function shape) -- that measurably grew `encode_
-/// gc_struct_array_instr`'s own frame enough to overflow the REAL OS stack
-/// at exactly `MAX_INSTR_NESTING_DEPTH` levels of recursion, before the
-/// depth counter itself ever fired, caught by this file's own `deeply_
-/// folded_struct_instructions_do_not_overflow_the_real_stack` regression
-/// test going from a clean `TooDeeplyNested` error to a genuine SIGABRT --
-/// exactly the class of regression `encode_flat_instr`'s own `i32.load` arm
-/// doc comment already documents having hit once before. Collapsing to ONE
-/// dispatch branch (matching `name` inside this function instead of
-/// `encode_gc_struct_array_instr` itself) keeps that caller's own frame
-/// at its pre-W38-slice-3 size.
-fn encode_array_new_or_init_data(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
-    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
-    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
-    let data_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
-    let data_idx = resolve_idx(&icx.module.data_names, data_expr, "data")?;
-    encode_instr_list(&args[2..], icx, out)?;
-    out.push(0xFB);
-    out.push(if name == "array.new_data" { 0x09 } else { 0x12 });
-    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
-    out.extend(wasm_leb128::encode_unsigned(data_idx as u64));
-    Ok(())
-}
-
-/// `array.new_elem $t $elem <i32 s> <i32 n>` / `array.init_elem $t $elem
-/// <arrayref> <i32 d> <i32 s> <i32 n>` (W38 slice 5: `code/specs/
-/// W38-wasm-gc-array-bulk-ops.md`) -- the ELEMENT-segment-sourced mirror
-/// of [`encode_array_new_or_init_data`] immediately above, same shape,
-/// same "one combined function for both, not two" reasoning (this
-/// function's own doc comment). Real spec text-format grammar:
-/// `"array.new_elem" x:typeidx_I y:elemidx_I => array.new_elem x y`/
-/// `"array.init_elem" x:typeidx_I y:elemidx_I => array.init_elem x y`,
-/// stacks `[i32 i32] -> [(ref x)]` / `[(ref null x) i32 i32 i32] -> []` --
-/// confirmed against the real vendored corpus's own argument order
+/// All FOUR segment-sourced bulk-ops instructions share ONE function here
+/// (dispatching on `name` internally both for the source-segment namespace
+/// -- `data_names` vs `elem_names` -- and the one-byte opcode), the same
+/// pattern [`encode_struct_new`] already uses for `struct.new`/`struct.
+/// new_default` -- **not** merely a style preference: `encode_gc_struct_
+/// array_instr` sits on this crate's hot recursive encoding path (guarded
+/// only by `MAX_INSTR_NESTING_DEPTH`'s software counter), and a debug build
+/// sizes a function's own stack frame for the union of every branch it
+/// directly contains, REGARDLESS of whether each branch's own callee is
+/// `#[inline(never)]`. An EARLIER version of the data-segment half of this
+/// fix (slice 3) added `array.new_data`/`array.init_data` as two SEPARATE
+/// dispatch branches (mirroring `array.fill`/`array.copy`'s own two-function
+/// shape) -- that alone measurably grew `encode_gc_struct_array_instr`'s own
+/// frame enough to overflow the REAL OS stack at exactly `MAX_INSTR_NESTING_
+/// DEPTH` levels of recursion, before the depth counter itself ever fired,
+/// caught by this file's own `deeply_folded_struct_instructions_do_not_
+/// overflow_the_real_stack` regression test going from a clean
+/// `TooDeeplyNested` error to a genuine SIGABRT. Collapsing that pair to ONE
+/// dispatch branch fixed it (slice 3) -- but a LATER attempt at slice 5 that
+/// added a SECOND combined branch for `array.new_elem`/`array.init_elem`
+/// (structured identically, `#[inline(never)]` included) reproduced the
+/// exact same SIGABRT: even `#[inline(never)]` doesn't stop a debug build
+/// from reserving frame space per DISTINCT top-level branch in the caller
+/// (for each branch's own `Result<(), WastParseError>` propagated via `?`),
+/// so a 7th branch of ANY shape was enough on its own. Merging BOTH pairs
+/// into this ONE function keeps `encode_gc_struct_array_instr`'s own branch
+/// count at 6 (its pre-slice-5 count), recovering the exact margin slice 3
+/// already established -- confirmed empirically (not just reasoned about)
+/// by reverting to two combined branches, reproducing the SIGABRT, then
+/// reverting back to this one-function shape and confirming it passes again.
+///
+/// Real spec text-format grammar for all four, confirmed against the real
+/// vendored corpus's own argument order:
+/// `"array.new_data" x:typeidx_I y:dataidx_I => array.new_data x y`,
+/// `"array.init_data" x:typeidx_I y:dataidx_I => array.init_data x y`
+/// (`array_init_data.wast`'s own `(array.init_data $arr8_mut $d1 (global.get
+/// $g_arr8_mut) (local.get $1) (local.get $2) (local.get $3))`: type, data
+/// segment, then arrayref, dest offset, src offset, count in written order);
+/// `"array.new_elem" x:typeidx_I y:elemidx_I => array.new_elem x y`,
+/// `"array.init_elem" x:typeidx_I y:elemidx_I => array.init_elem x y`
 /// (`array.wast`'s own `(array.new_elem $vec $e (i32.const 0) (i32.const
 /// 2))`; `array_init_elem.wast`'s own `(array.init_elem $arrref_mut $e1
 /// (global.get $g_arrref_mut) (local.get $1) (local.get $2) (local.get
-/// $3))`: type, elem segment, then the arrayref/offset operands in
-/// written order). `elem_idx` resolves via `resolve_idx(&icx.module.
-/// elem_names, ..., "elem")` -- the same table `elem.drop`/`table.init`'s
-/// own existing parsing already uses (confirmed present at this file's
-/// own `encode_elem_drop_flat`/`encode_table_init_flat`).
-fn encode_array_new_or_init_elem(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+/// $3))`: type, elem segment, then the arrayref/offset operands in written
+/// order). `elem_idx` resolves via `resolve_idx(&icx.module.elem_names, ...,
+/// "elem")` -- the same table `elem.drop`/`table.init`'s own existing
+/// parsing already uses (confirmed present at this file's own `encode_elem_
+/// drop_flat`/`encode_table_init_flat`).
+#[inline(never)]
+fn encode_array_segment_sourced(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
     let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
     let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
-    let elem_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
-    let elem_idx = resolve_idx(&icx.module.elem_names, elem_expr, "elem")?;
+    let segment_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+    let is_data_sourced = matches!(name, "array.new_data" | "array.init_data");
+    let segment_idx = if is_data_sourced {
+        resolve_idx(&icx.module.data_names, segment_expr, "data")?
+    } else {
+        resolve_idx(&icx.module.elem_names, segment_expr, "elem")?
+    };
     encode_instr_list(&args[2..], icx, out)?;
     out.push(0xFB);
-    out.push(if name == "array.new_elem" { 0x0A } else { 0x13 });
+    out.push(match name {
+        "array.new_data" => 0x09,
+        "array.new_elem" => 0x0A,
+        "array.init_elem" => 0x13,
+        _ => 0x12, // "array.init_data"
+    });
     out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
-    out.extend(wasm_leb128::encode_unsigned(elem_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(segment_idx as u64));
     Ok(())
 }
 
