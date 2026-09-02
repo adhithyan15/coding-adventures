@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S209-sign-anusvara",
+    "language": "sanskrit",
+    "chapter": 9,
+    "sequence": 461,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4f6ef4622d24084e",
+    "detachableSegments": [
+      "Script you'll notice: ◌ं",
+      "Writing: ◌ं — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
