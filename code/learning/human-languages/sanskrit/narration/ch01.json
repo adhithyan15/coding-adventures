@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8df3e3619774df21",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3d4d42fdf42cebe6",
   "lessons": [
     {
       "id": "SA-C01-namaste",
@@ -14,22 +14,13 @@
       "romanization": "namaste",
       "gloss": "hello (lit. \"a bow to you\") (namaste)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:230c1999511e7459",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:c17ffcff81a25c2a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -50,12 +41,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Devanagari runs left to right under a top line; every consonant carries a built-in \"a.\" न na, म ma, ते te (त + the e-sign े). A halant under स् strips its vowel so it joins the next: स् + त becomes स्त. Read न, म, स्, ते, namaste."
+              "text": "Four even beats: na, ma, s, te. The s closes its own beat and leans straight into te with no vowel between them. Nothing here is strange to an English mouth — say it at conversational speed and it is yours."
             }
           ]
         },
@@ -66,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्ते = namas (\"a bow, obeisance\") + te (\"to you\") — literally \"a bow to you.\" This is the source: the word every Indo-Aryan namaste descends from. Namas is from the root √nam \"to bend, bow\" (PIE nem-). And te \"to you\" is a family heirloom — the same Indo-European pronoun behind Latin tē, Greek se, and archaic English thee. Say namas-te and you speak a word Cicero and Chaucer would each half-recognise."
+              "text": "namaste = namas (\"a bow, obeisance\") + te (\"to you\") — literally \"a bow to you.\" This is the source: the word every Indo-Aryan namaste descends from. Namas is from the root √nam \"to bend, bow\" (PIE nem-). And te \"to you\" is a family heirloom — the same Indo-European pronoun behind Latin tē, Greek se, and archaic English thee. Say namas-te and you speak a word Cicero and Chaucer would each half-recognise."
             }
           ]
         },
@@ -83,21 +74,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Devanagari runs left to right under a top line; every consonant carries a built-in “a.” न na, म ma, ते te (त."
-            },
-            {
-              "kind": "speech",
-              "text": "the e-sign े). A hasanta under स् strips its vowel so it joins the next: स् + त becomes स्त. Read नमस्ते (namaste) as na,,,ma,,,s,,,te."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -137,7 +113,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -166,20 +142,16 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e839452682b7fb0f",
+      "sourceHash": "fnv1a64:84b72c0ab5520b20",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page",
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -201,12 +173,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed \"ḥ\" at a word's end, written as two dots. नमस्कारः (namaskāraḥ) = namas-kā-raḥ."
+              "text": "na, mas, kā, raḥ. The ā is the long vowel, held about twice as long as a short a. The final -ḥ is a soft breath after the vowel, almost an echo of it: the word ends on a whispered ha, not a stop."
             }
           ]
         },
@@ -217,7 +189,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्कारः (namaskāraḥ) = namas (\"a bow\") + kāra (\"the making, the doing,\" from the root √kṛ \"to do/make\"). So namaskāra is \"the making of a bow\" — an act, where namaste is an address. That root √kṛ \"to do\" is among Sanskrit's most productive (it gives karma, \"a thing done\"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending."
+              "text": "namaskāraḥ = namas (\"a bow\") + kāra (\"the making, the doing,\" from the root √kṛ \"to do/make\"). So namaskāra is \"the making of a bow\" — an act, where namaste is an address. That root √kṛ \"to do\" is among Sanskrit's most productive (it gives karma, \"a thing done\"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending."
             }
           ]
         },
@@ -234,17 +206,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed “ḥ” at a word's end, written as two dots. नमस्कारः (namaskāraḥ) = namas-kā-raḥ."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -284,7 +245,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -503,22 +464,13 @@
       "romanization": "dhanyavādaḥ",
       "gloss": "thank you (dhanyavādaḥ)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a8262b72b728989",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:52b2c7a3cd2f06cc",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -539,16 +491,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "New: ध dha (breathy d), व va, द da, and the conjunct न्य (न (na)."
-            },
-            {
-              "kind": "speech",
-              "text": "य ya). With the visarga again, read ध, न्य, वा, दः, dhanyavādaḥ."
+              "text": "dha, nya, vā, daḥ. The opening dh is one sound, not two — a d released with a puff of breath behind it. nya is likewise a single run. It closes on the same soft breathed -ḥ as namaskāraḥ."
             }
           ]
         },
@@ -559,7 +507,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "धन्यवादः (dhanyavādaḥ) = dhanya (\"worthy, deserving,\" from dhana \"wealth\") + vāda (\"a speaking, a statement,\" from the root √vad \"to speak\"). Literally \"a saying of 'you are worthy.'\" This is the source of the thanks you met to the east — Hindi dhanyavād, Marathi and Punjabi likewise, Bengali dhônyobad — here in its full Sanskrit shape, visarga and all."
+              "text": "dhanyavādaḥ = dhanya (\"worthy, deserving,\" from dhana \"wealth\") + vāda (\"a speaking, a statement,\" from the root √vad \"to speak\"). Literally \"a saying of 'you are worthy.'\" This is the source of the thanks you met to the east — Hindi dhanyavād, Marathi and Punjabi likewise, Bengali dhônyobad — here in its full Sanskrit shape, visarga and all."
             }
           ]
         },
@@ -576,17 +524,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: ध dha (breathy d), व va, द da, and the conjunct न्य (न (na) + य ya). With the visarga again, read धन्यवादः (dhanyavādaḥ) as dha,,,nya,,,vā,,,daḥ."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -626,7 +563,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -652,22 +589,13 @@
       "romanization": "svāgatam",
       "gloss": "welcome (lit. \"well come\") (svāgatam)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d92e56c9e2145744",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:557a273f42daf9fb",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -688,12 +616,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "New: the conjunct स्व (स् + व va) = sva, ग ga, and the halant म् m closing the word with no vowel. Read स्वा, ग, तम्, svā-ga-tam."
+              "text": "svā, ga, tam. It opens on sv- said as one push, carries the long ā in that first beat, and ends on a bare m with no vowel after it — the mouth simply closes."
             }
           ]
         },
@@ -704,7 +632,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "स्वागतम् (svāgatam) = su (\"well, good\") + āgata (\"come,\" from ā \"toward\" + the root √gam \"to go/come\") — \"well come,\" which is exactly what English welcome means too. Two deep Indo-European threads surface:"
+              "text": "svāgatam = su (\"well, good\") + āgata (\"come,\" from ā \"toward\" + the root √gam \"to go/come\") — \"well come,\" which is exactly what English welcome means too. Two deep Indo-European threads surface:"
             },
             {
               "kind": "speech",
@@ -733,17 +661,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: the conjunct स्व (स् + व va) = sva, ग ga, and the halant म् m closing the word with no vowel. Read स्वागतम् (svāgatam) as svā,,,ga,,,tam."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -792,7 +709,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1000,29 +917,20 @@
       ]
     },
     {
-      "id": "SA-C01-am-na",
+      "id": "SA-C01-am",
       "sequence": 50,
-      "title": "आम् / न (ām / na) — \"yes\" and \"no\"",
-      "headword": "आम् / न",
-      "romanization": "ām / na",
-      "gloss": "yes / no (ām / na)",
+      "title": "आम् (ām) — \"yes\"",
+      "headword": "आम्",
+      "romanization": "ām",
+      "gloss": "yes (ām)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a9824e38ca63b11",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:f0dd9549f749e57a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1037,56 +945,34 @@
             },
             {
               "kind": "speech",
-              "text": "Two tiny words — and one of them may be the oldest thing in this whole book."
+              "text": "You can greet, thank, and welcome. Now the smallest reply of all."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: आ — the independent vowel ā (the shape for a word-initial vowel) — closed by the halant म् m: आम् ām. And न na, a single consonant with its built-in \"a.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "आम् (ām, \"yes\") and न (na, \"no, not\"). That na you have already met wearing other clothes: it is Proto-Indo-European ne \"not,\" the same negative as the Latin nōn of the last track, as English no, not, none, as German nein, and as Hindi nahīṇ. Of every word in this book, na may reach furthest unchanged — one syllable spoken, in some form, from Iceland to India for five thousand years."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Classical Sanskrit, like Latin, leans on more than a bare \"yes\": one answers by echoing the verb, or with ām, evam (\"so it is\"), or bāḍham (\"certainly\"). The blunt yes/no habit of English is not universal — these old languages preferred to say what they meant."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "New: आ — the independent vowel ā (the shape for a word-initial vowel) — closed by the halant म् m: आम् ām. And न na, a single consonant with its built-in “a.”"
+              "text": "ām — one beat. A long ā, then the lips close on m with no vowel after it. Say it and stop."
             }
           ]
         },
         {
-          "index": 5,
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Classical Sanskrit, like Latin, leans on more than a bare \"yes\": one answers by echoing the verb, or with ām, evam (\"so it is\"), or bāḍham (\"certainly\"). The blunt yes/no habit of English is not universal — these old languages preferred to say what they meant. Ām is the plain agreement, and the one to reach for first."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1099,11 +985,125 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read them — ām / na",
+              "instruction": "yes — ām",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read them — ām / na]"
+              "source": "[YOU SAY: yes — *ām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two other ways to agree (evam \"so it is\", bāḍham \"certainly\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two other ways to agree (*evam* \"so it is\", *bāḍham* \"certainly\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Sanskrit prefers to a bare yes (echoing the verb)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Sanskrit prefers to a bare yes (echoing the verb)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say yes, and what does Sanskrit often do instead of saying it? (Ām; echo the verb, or answer with evam or bāḍham.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C01-na",
+      "sequence": 55,
+      "title": "न (na) — \"no, not\"",
+      "headword": "न",
+      "romanization": "na",
+      "gloss": "no, not (na)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fc892002b28f685",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have ām. Here is its opposite — and it may be the oldest thing in this whole book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "na — one short beat, the a closer to English cup than to car."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Na (\"no, not\") you have already met wearing other clothes: it is Proto-Indo-European ne \"not,\" the same negative as the Latin nōn of the last track, as English no, not, none, as German nein, and as Hindi nahīṇ. Of every word in this book, na may reach furthest unchanged — one syllable spoken, in some form, from Iceland to India for five thousand years."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yes and no — ām / na",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: yes and no — *ām* / *na*]"
             },
             {
               "kind": "prompt",
@@ -1117,16 +1117,16 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Latin cousin you just learned (nōn)",
+              "instruction": "the Latin cousin you already know (nōn)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Latin cousin you just learned (*nōn*)]"
+              "source": "[YOU SAY: the Latin cousin you already know (*nōn*)]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1138,7 +1138,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the ancient root of na, and name three of its living cousins. (PIE ne \"not\"; English no/not/none, Latin nōn, Hindi nahīṇ — any three.)"
+              "text": "What is the ancient root of na, and name three of its living cousins. (PIE ne \"not\"; English no/not/none, Latin nōn, German nein, Hindi nahīṇ — any three.)"
             }
           ]
         }
@@ -1157,7 +1157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d2400947c830b29",
+      "sourceHash": "fnv1a64:6348ba8a4bfca720",
       "notice": null,
       "blocks": [
         {
@@ -1179,8 +1179,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Rapid recall",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1237,8 +1237,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The taproot both ways",
+          "type": "guided-production",
+          "title": "How to answer: the taproot both ways",
           "segments": [
             {
               "kind": "pause",
@@ -1290,8 +1290,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "notice",
+          "title": "What you've built: the roots you now carry",
           "segments": [
             {
               "kind": "pause",

@@ -108,4 +108,8 @@ table precip_form {
     source "Precipitation that falls to earth in drops more than 0.5 mm in diameter."
     locator "https://forecast.weather.gov/glossary.php?word=RAIN"
     trust authoritative
+    cites "Precipitation in the form of ice crystals, mainly of intricately branched, hexagonal form and often agglomerated into snowflakes, formed directly from the freezing [deposition] of the water vapor in the air." locator "https://forecast.weather.gov/glossary.php?word=SNOW"
+    cites "Sleet is defined as pellets of ice composed of frozen or mostly frozen raindrops or refrozen partially melted snowflakes." locator "https://forecast.weather.gov/glossary.php?word=SLEET"
+    cites "Showery precipitation in the form of irregular pellets or balls of ice more than 5 mm in diameter, falling from a cumulonimbus cloud." locator "https://forecast.weather.gov/glossary.php?word=HAIL"
+    cites "Rain that falls as a liquid but freezes into glaze upon contact with the ground." locator "https://forecast.weather.gov/glossary.php?word=RAIN"
 }

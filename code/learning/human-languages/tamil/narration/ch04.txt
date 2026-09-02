@@ -3,14 +3,14 @@ Tamil, chapter 4: Farewells.
 
 
 Lesson 1 of 6.
-போ (pō) — "go," and வா (come).
+போ (pō) — "go," and vā (come).
 
 Warm-up.
 [pause 2 seconds]
 Two of the shortest, oldest verbs in Tamil — and together they make the Tamil goodbye.
 
 The word, taken apart.
-போ (pō, "to go") and வா (vā, "to come") are native Dravidian verbs of the deepest layer — single syllables, unchanged for millennia. As bare commands they are already whole words: pō! ("go!"), vā! ("come!"). You need both for the next lesson, because Tamil does not say a plain "goodbye" — it says "I go, and I come back."
+போ (pō, "to go") and vā ("to come") are native Dravidian verbs of the deepest layer — single syllables, unchanged for millennia. As bare commands they are already whole words: pō! ("go!"), vā! ("come!"). You need both for the next lesson, because Tamil does not say a plain "goodbye" — it says "I go, and I come back."
 
 Guided Practice.
 [pause 1 second]
@@ -32,7 +32,16 @@ Warm-up.
 The everyday Tamil goodbye — and it is, quite literally, a promise to return.
 
 The phrase, taken apart.
-போய் வருகிறேன் (pōy varugiṟēṉ) = போய் (pōy, "having gone") + வருகிறேன் (varugiṟēṉ, "I come") — literally "having gone, I come," i.e. "I'll go and come back." A Tamil speaker never signs off with a bare "I'm leaving" — that sounds final, even ill-omened. Instead they promise return. It is the exact "promise of return" farewell you meet, in its own words, across the Dravidian south (Kannada hōgi baruttēne, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ) — and it echoes the Indo-Aryan tracks too (Bengali āshi, Marathi yeto, Hindi phir milenge). The reply is warm: போய் வா (pōy vā, "go and come [back]").
+போய் வருகிறேன் (pōy varugiṟēṉ) = போய் (pōy, "having gone") + வருகிறேன் (varugiṟēṉ, "I come") — literally "having gone, I come," i.e. "I'll go and come back." A Tamil speaker never signs off with a bare "I'm leaving" — that sounds final, even ill-omened. Instead they promise return. The reply is warm: pōy vā ("go and come [back]").
+The same promise, in each language's own words:
+[a table of 6 rows, read aloud]
+Language: Tamil. "go and come back" (goodbye): pōy varugiṟēṉ.
+Language: Kannada. "go and come back" (goodbye): hōgi baruttēne.
+Language: Telugu. "go and come back" (goodbye): veḷḷi vastānu.
+Language: Malayalam. "go and come back" (goodbye): pōyi varāṁ.
+Language: Bengali (Indo-Aryan). "go and come back" (goodbye): āshi ("I come").
+Language: Hindi (Indo-Aryan). "go and come back" (goodbye): phir milenge ("we'll meet again").
+The whole subcontinent, Dravidian and Indo-Aryan alike, prefers a promise of return to a blunt farewell.
 Varugiṟēṉ itself is built in three parts: varu ("come") + a present-tense marker + -ēṉ ("I"). Chapter 5 makes that stem-tense-person pattern explicit; here it is enough to hear the three pieces.
 
 Grammar Lens: the "having …d" participle.
@@ -140,7 +149,7 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three ways to part — none of them a blunt "goodbye."
 
-The farewells.
+Guided Practice — the farewells.
 [pause 1 second after each]
 [your turn — say: the everyday goodbye — pōy varugiṟēṉ ("I'll go and come back")]
 [pause 8 seconds for the answer]
@@ -151,7 +160,7 @@ The farewells.
 [your turn — say: "we'll meet again" — mīṇḍum sandippōm]
 [pause 8 seconds for the answer]
 
-The atoms.
+Guided Practice — the atoms.
 [pause 2 seconds]
 [your turn — say: the two oldest verbs (pō go, vā come)]
 [pause 8 seconds for the answer]
@@ -160,7 +169,7 @@ The atoms.
 [your turn — say: which farewell-word is a Sanskrit loan (sandi from sandhi)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+What you've built — roots you now carry.
 [pause 2 seconds]
 pōy varugiṟēṉ — "having gone, I come"; the Dravidian promise-of-return goodbye.
 nāḷai from nāḷ "day"; pār "to see".

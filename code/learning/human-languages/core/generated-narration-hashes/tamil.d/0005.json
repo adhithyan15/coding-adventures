@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 5,
-  "sourceHash": "fnv1a64:597d17b2e7927ba5",
+  "sourceHash": "fnv1a64:71f494dbecd5fd6d",
   "lessonIds": [
     "TA-C05-pesu",
     "TA-C05-naan-tamizh-pesugiren",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch05.txt",
   "json": "tamil/narration/ch05.json",
-  "textHash": "fnv1a64:024c77620084e291",
-  "jsonHash": "fnv1a64:094e0e5b9cf82070",
+  "textHash": "fnv1a64:7bc0fecb636b0d8f",
+  "jsonHash": "fnv1a64:b71317548495d8db",
   "findings": []
 }

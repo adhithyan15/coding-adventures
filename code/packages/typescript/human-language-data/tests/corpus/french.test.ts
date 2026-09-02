@@ -10,12 +10,17 @@ import {
 
 it("pins French continuity", () => expectLanguageContinuity("french"));
 it("pins French modality", () => expectLanguageModality("french"));
+// 58 -> 78 lessons: retiring the handwritten chapters 3, 4 and 5 migrated their
+// twenty lessons to schema v2, which is what makes a lesson measurable at all.
+// 10 -> 13 culture claims: the three `culture` blocks those chapters carried only
+// in LaTeX (merci's three metaphors for gratitude, the comme ci comme ça shrug,
+// and travailler's Spanish twin) are now typed claims owned by a lesson.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 58,
+    lessons: 78,
     idioms: 3,
     senses: 7,
-    cultureClaims: 10,
+    cultureClaims: 13,
     unitPrefix: "FR",
   }));
 

@@ -10,7 +10,14 @@
     "lesson": "SA-C05-practice",
     "kind": "task",
     "summary": "Complete SA-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Sanskrit sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "SA-LEX-VADAMI",
+      "SA-PATTERN-I-SPEAK-SANSKRIT",
+      "SA-LEX-VASAMI",
+      "SA-LEX-KAROMI",
+      "SA-GRAMMAR-SINGULAR-DUAL-PLURAL",
+      "SA-GRAMMAR-LOCATIVE-CASE",
+      "SA-HISTORY-VERB-ROOTS-BOTH-WAYS"
+    ]
   }
 }

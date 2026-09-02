@@ -1,9 +1,0 @@
-{
-  "language": "sanskrit",
-  "chapter": 4,
-  "output": "sanskrit/book/chapters/ch04-farewells.tex",
-  "embeddedLessonIds": [
-    "SA-S110-letter-ra",
-    "SA-S113-letter-pa"
-  ]
-}

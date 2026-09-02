@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Source-verified Devanagari ऋ stroke order
+
+- Read the four buildup panels of the Commons file `data/scripts/devanagari.json`
+  already cited for ऋ and derived a four-stroke, three-lift pen path from them,
+  fitted to Noto Sans Devanagari so every stroke is checkable against the glyph's
+  own ink.
+- Corrected the letter's `strokeOrder` prose: panel 2 loops the little ball
+  anticlockwise, not clockwise.
+
+### Hindi independent ऋ writing runway
+
+- Added a sourced, sub-five-minute recognition-to-no-model writing lesson for
+  independent **ऋ**, then promoted **ऋतु** into the declared seasons headword
+  after script closure became teach-first.
+
 ### Venture intrinsic replaced sizing
 
 - Added reusable intrinsic/default sizing, preferred aspect ratios, min/max

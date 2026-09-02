@@ -9,8 +9,16 @@
   "payoff": {
     "lesson": "TA-C02-practice",
     "kind": "task",
-    "summary": "Complete TA-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Tamil, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Hold the whole introduction out loud — give your name, ask for theirs, and answer that you are pleased to meet them — using only the possession forms this chapter built.",
+    "assesses": [
+      "TA-LEX-C02-PEYAR-01",
+      "TA-LEX-C02-EN-01",
+      "TA-LEX-C02-EN-PEYAR-01",
+      "TA-LEX-C02-NII-NIINGAL-01",
+      "TA-LEX-C02-ENNA-01",
+      "TA-LEX-C02-UNGAL-PEYAR-ENNA-01",
+      "TA-LEX-C02-MAGIZHCCI-01",
+      "TA-LEX-C02-PRACTICE-01"
+    ]
   }
 }

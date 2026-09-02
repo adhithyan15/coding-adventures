@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6a9877657a0b02cb",
+  "sourceHash": "fnv1a64:83e5f2b0fec6192b",
   "lessons": [
     {
       "id": "PT-C01-ola",
@@ -218,7 +218,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31d095b961daee22",
+      "sourceHash": "fnv1a64:9bbf70971b2d8452",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e659a8b5c24427ea",
+      "sourceHash": "fnv1a64:28c9e359abb8c28f",
       "notice": null,
       "blocks": [
         {
@@ -447,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07f32b79b9ab1dec",
+      "sourceHash": "fnv1a64:87e00631960fdf21",
       "notice": null,
       "blocks": [
         {
@@ -552,7 +552,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e12b7a714e5bbda",
+      "sourceHash": "fnv1a64:ab09717e2d52c514",
       "notice": null,
       "blocks": [
         {
@@ -574,8 +574,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -661,7 +661,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:399c70790727c9a2",
+      "sourceHash": "fnv1a64:821b5bca3dc1ee7f",
       "notice": null,
       "blocks": [
         {
@@ -750,22 +750,13 @@
       "romanization": "noite / boa noite",
       "gloss": "night / good night",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd07fefea56d02f3",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The word, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:f379be66cac94944",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -794,18 +785,16 @@
               "text": "a noite (fem.) from Latin noctem (noct-) becomes English nocturnal, equinox. Portuguese turned Latin -ct- into -it- (noite) — the same change French made (nuit), while Spanish went -ch- (noche) and Italian -tt- (notte):"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 5,
-              "rowCount": 2,
-              "headers": [
-                "Latin",
-                "Portuguese",
-                "Spanish",
-                "French",
-                "Italian"
-              ],
-              "text": "There is a table here I cannot read to you — 5 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Latin, Portuguese, Spanish, French, Italian. Come back and look at it when you have stopped."
+              "kind": "speech",
+              "text": "The same change, twice over:"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin noctem becomes Portuguese noite, French nuit; Spanish noche, Italian notte."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin factum becomes Portuguese feito, French fait; Spanish hecho, Italian fatto."
             },
             {
               "kind": "speech",
@@ -876,7 +865,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bda5ac3335e039ce",
+      "sourceHash": "fnv1a64:2fed12964a9c23ed",
       "notice": null,
       "blocks": [
         {
@@ -1001,13 +990,30 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a79f2bb524a8d270",
+      "sourceHash": "fnv1a64:6cba1eb28c1719d1",
       "notice": null,
       "blocks": [
         {
           "index": 0,
-          "type": "unknown",
-          "title": "The greetings",
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words today. Everything below is something you have already met, said once, and can now put in one place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — the day of greetings",
           "segments": [
             {
               "kind": "table",
@@ -1056,7 +1062,7 @@
           ]
         },
         {
-          "index": 1,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1096,7 +1102,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

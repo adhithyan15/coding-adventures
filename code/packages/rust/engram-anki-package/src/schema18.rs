@@ -208,11 +208,11 @@ pub(crate) fn read_note_types(db: &[u8]) -> Result<Vec<AnkiV11NoteType>, ApkgErr
             css,
             fields: note_fields,
             templates: note_templates,
-            // The V11 path carries the note type's original JSON here so
-            // nothing is silently dropped on re-export. There is no equivalent
-            // JSON in schema 18, so this records what was actually read rather
-            // than fabricating a V11-shaped object that was never in the file.
-            raw: json!({ "schema": 18, "id": *id }),
+            // Empty rather than a marker object. An earlier version put
+            // `{"schema": 18, "id": …}` here for traceability, and it leaked
+            // into the exported V11 JSON as a stray `schema` key -- provenance
+            // notes do not belong in a payload another program parses.
+            raw: json!({}),
         });
     }
     out.sort_by_key(|note_type| note_type.id);
@@ -238,7 +238,7 @@ pub(crate) fn read_decks(db: &[u8]) -> Result<Vec<AnkiV11Deck>, ApkgError> {
             id: *id,
             name: raw_name.replace('\u{1f}', "::"),
             description: String::new(),
-            raw: json!({ "schema": 18, "id": *id }),
+            raw: json!({}),
         });
     }
     out.sort_by_key(|deck| deck.id);

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 8,
-  "sourceHash": "fnv1a64:871fc739ac465cb3",
+  "sourceHash": "fnv1a64:d02686d3e5deb228",
   "lessonIds": [
     "TA-C08-tayavuseytu",
     "TA-C08-sollungal",
@@ -12,7 +12,8 @@
     "TA-C08-please-register",
     "TA-S04-na",
     "TA-W03-write-vanakkam",
-    "TA-S112-letter-e"
+    "TA-S112-letter-e",
+    "TA-S125-letter-u"
   ],
   "tex": "tamil/book/chapters/ch08-please.tex"
 }

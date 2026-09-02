@@ -5,6 +5,314 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#13934 batch 5b: nine `cites` across two libraries, two header quotes corrected, and one
+  pre-existing assertion repaired.** `money/us-coins` (+6 — penny, nickel, dime, quarter,
+  half_dollar, dollar) and `chemistry/element-groups` (+3 — alkaline_earth_metal, halogen,
+  noble_gas).
+
+  *** THE HALOGEN HEADER QUOTE TRUNCATED A CAVEAT ABOUT ITS OWN ROW. *** It read "…consisting of
+  six chemically related elements**:** fluorine (F), … tennessine (Ts)." The page reads
+  "…elements**,** fluorine (F), … tennessine (Ts), **though some authors would exclude tennessine
+  as its chemistry is unknown and is theoretically expected to be more like that of gallium.**"
+
+  A colon replaced a comma, and the quote stopped immediately before the clause saying some authors
+  exclude tennessine — while the table ships `row (tennessine, halogen)`. That is the same defect as
+  `brain-parts`' hippocampus quote: truncating right before the qualification that bears on the
+  claim. The sentence is now cited whole. **Where the page qualifies its own claim, the
+  qualification is part of the evidence, not noise to trim.** `noble_gas`' quote elided its
+  parenthetical with "…" — a constructed span — and is likewise cited whole; the `[1]` footnote
+  marker is real rendered text and stays.
+
+  *** A PRE-EXISTING TEST ASSERTED A SUBSTRING WHERE IT MEANT A STRUCTURE, AND ENCODING REAL
+  EVIDENCE TRIPPED IT. *** `assert!(!out.contains("oganesson"))` was standing in for "oganesson is
+  not a row". Encoding the noble-gas sentence puts "oganesson (Og)" into the output as quoted
+  *evidence*; no row was added and the reverse recall still returns exactly six gases, but the
+  assertion failed anyway.
+
+  The sentence that tripped it is the same one the test's own comment cites as its justification
+  ("its source sentence hedges it 'in some cases'") — the check forbade the output from carrying the
+  evidence for its own reasoning. Replaced with structural assertions: no `element_group_family(
+  oganesson, noble_gas)` governing term and no `"E":"oganesson"` binding. A sweep found six
+  `!out.contains("…")` assertions in the suite and **oganesson was the only single bare word**; the
+  rest are atom-shaped (`cave_ceiling`, `search_limit_exceeded`), a form prose never produces. A
+  lone case, not the tip of a class.
+
+  ON `us-coins`: **four of the six are present-tense definitions and two are not.** `nickel`, `dime`,
+  `half_dollar` and `dollar` each get "The nickel is the United States' five-cent coin". `penny` and
+  `quarter` do not, because their pages are written historically — penny's sentence is about the coin
+  ceasing to circulate and never uses the word *penny*, quarter's is about an 1804 marking. Both
+  still state their row's value and both locators resolve to exactly one coin, so both are cited, but
+  they are oblique where the other four are direct. `money/coin-penny-discontinued.adj` already
+  carries the penny sentence as its own envelope — not a duplication, but it is why that sentence
+  reads as being about discontinuation, and grepping the stdlib first is what surfaced it.
+
+  `transition_metal` is LEFT UNCITED: its header sentence is not on the live page under any extractor
+  fix, and the nearest candidate ("Metallic iron and the alloy alnico are examples of ferromagnetic
+  materials involving transition metals") names only iron, indirectly, for a row set of
+  iron/cobalt/nickel. Category, not value.
+
+  A NARROWED BLOCKER, twice over. The "Wikipedia evidence + `cites` has no trust field" problem is
+  **not** a class-level block. `element-groups`, `muscle-groups` and `animal-homes` all declare
+  `trust consensus` — the right tier for an encyclopedia — so nothing is overstated. Only
+  `kidney-parts` declares `trust authoritative`, and the gap is **directional**: a cite *weaker* than
+  its envelope overstates the evidence, while a cite *stronger* than its envelope merely understates
+  it and is harmless. That unblocks `muscle-groups` and `animal-homes` for a later batch.
+
+  Each library gets a prefix pin and a **whole-list** pin, all four cut from real CLI output and read
+  from a saved file rather than retyped. Five directional mutations pass, including the two that
+  justify the whole-list form: a pure **reorder** of two middle entries reddens it while the prefix
+  pin stays green, and **dropping the tennessine caveat** — the exact truncation the shipped header
+  had made — reddens it too.
+
+  Both `.query.adj` companions parse, run, and abstain correctly. 533 test binaries / 1604 tests
+  green, clippy `-D warnings` clean.
+
+- **#13934 batch 5a: eight `cites` across two libraries, one header quote corrected.**
+  `geometry/quadrilateral-types` (+4 — rectangle, rhombus, parallelogram, trapezoid) and
+  `astronomy/celestial-objects` (+4 — planet, moon, comet, asteroid).
+
+  **Every sentence was re-verified under a different extractor than the one that first checked it.**
+  Two more extractor bugs surfaced after the initial pass, which made those earlier "VERBATIM"
+  results stale — they had been checked against a haystack that no longer existed. All twenty
+  sentences accepted this session (the four already shipped in batch 4 included) were re-run against
+  the corrected extractor and all twenty reproduce.
+
+  *** BUG 8, AND THE FIRST ONE THAT ADDS TEXT RATHER THAN REMOVING IT. *** `<[^>]+>` assumes a tag
+  ends at the first `>`, but attribute *values* contain them, and Wikipedia emits
+  `data-mw='{"parts":[…]}'`. The regex terminated inside that JSON and spilled the remainder into
+  what was being treated as page prose. Every earlier bug DELETED or FUSED text; this one injects
+  markup, so a quote could "verify" against something no reader has ever seen. Fixed by scanning
+  tags with quote awareness.
+
+  Fixing it immediately **re-broke bug 3** (the adjacent-tag join), because the preceding character
+  was derived from the output buffer rather than the raw text, and `aerogens[1])` came out as
+  `aerogens [1] )`. That is the fourth time a fix created a new failure mode this session and the
+  first to undo an existing fix. Both cases now carry regression probes in the extractor itself.
+
+  *** BUG 9: `figure`/`figcaption` were not block boundaries, so image captions fused into the
+  paragraph after them. *** On one page this buried a lead sentence 431 characters inside a block
+  beginning "Astatine is here represented by Uraninite…", which made the sentence look **absent**
+  when it was merely buried — and it had already been reported here as "genuinely not on the page".
+  It affects any page carrying figures.
+
+  ON `rectangle` AND THE `<img alt>` RULE. MathWorld renders inline variables as
+  `<img class="inlineformula" alt="a">` — 9px images *of the letters* a and b. Recovering the alt
+  reproduces what the page displays. That is **not** true of `circle-parts`' diameter, whose
+  `<img alt="pi">` renders a π glyph: there the alt *names* the glyph rather than being it. So alt
+  recovery is faithful in one case and a substitution in the other, checkable per page — which
+  converts what was recorded last cycle as a blanket MathJax blocker into a per-row question, and
+  makes `rectangle` citable while `diameter` stays correctly refused.
+
+  A FIFTH DEFECTIVE HEADER QUOTE: `rectangle`'s read "A closed planar quadrilateral with opposite
+  sides…" where the page reads "**A rectangle is** a closed planar quadrilateral…" — it dropped its
+  own subject, violating precisely the rule a citation exists to satisfy. Corrected here.
+
+  **But the blanket claim needed qualifying, and `celestial-objects` is why:** all four of its header
+  quotes verified CLEAN, as-is, first try. The defect tracks *editorial intervention* — joining
+  blocks, eliding with "…", flattening curly quotes, trimming a subject — not header quotes as such.
+
+  `celestial-objects` also **cleared** a host rather than blocking one: `science.nasa.gov` is a
+  modern CMS of the kind that is often JS-rendered, and all three of its pages returned 9000+
+  characters of body text. The check that separates "the sentence is not there" from "nothing is
+  there" earned its keep on the positive side.
+
+  The four new tests are anchored joint-binding pins cut from real CLI output. Two of them span the
+  **whole corroboration list**, and the mutation check shows why that is worth doing: a pure
+  **reorder** of two middle entries — nothing removed, every sentence still present — reddens the
+  whole-list pin while leaving the prefix pin green. No per-sentence `contains` check could catch
+  that. All four mutations behave directionally (truncating trapezoid's cite reddens trapezoid and
+  leaves rectangle green; truncating asteroid's reddens asteroid and leaves moon green).
+
+  Both `.query.adj` companions parse, run, and abstain correctly. 533 test binaries / 1600 tests
+  green, clippy `-D warnings` clean.
+
+- **#13934 batch 4: four `cites` across two libraries, two CONSTRUCTED header quotes corrected, and
+  one row left uncited.** `language/onset-rime` (+2 — map, tape) and `geometry/circle-parts` (+2 —
+  chord, circumference). Each sentence was verified as a **single rendered block of body text**: not
+  fused across block tags, and not read out of `<meta>` content.
+
+  *** THE PLAN THIS BATCH STARTED FROM WAS WRONG IN BOTH DIRECTIONS, AND BOTH ERRORS WERE MINE
+  RATHER THAN THE PAGES'. *** I was about to record "`blast` is SITE CHROME" — a finding from the
+  *In Practice* module, when `onset-rime`'s header cites blast from the *Tuning In to the Sounds in
+  Words* article, which is also the table's encoded locator. On **that** page blast is real body
+  text. And I was about to leave `tape` uncited as "names the word but not its onset or rime" —
+  false; the passage gives both parts, `/t/` and `/Ape/`, in one contiguous block. My earlier verdict
+  came from reading only the second of its two occurrences.
+
+  **That `tape` correction is the first this session that GREW the work.** The running tally was six
+  verdicts overturned, every one shrinking the claimed defect count — which was quietly hardening
+  into an expectation. It is not a law.
+
+  `blast` still ends up uncited, but for a reason that survives checking. Its markup is
+  `<p>…the word <i>blast</i>:</p>` followed by `<ul><li>Onset (bl) – Rime (ast)</li>`. The lead-in
+  names the word without the split; the list item gives the split without naming the word. Neither
+  alone supports the row, and joining them constructs text the page never displays as one run —
+  exactly the NOAA `<dt>Hail</dt><dd>Showery…</dd>` case from batch 3, resolved the same way.
+
+  *** WHICH MEANS THE SHIPPED HEADER ALREADY CARRIED A CONSTRUCTED QUOTE *** — it presented that
+  join as a verbatim span. `tape`'s header quote elided a bracketed stage direction with "…", and
+  both `map`'s and `tape`'s flattened the page's **curly quotes to ASCII**. All are corrected to what
+  the page renders. **That is the third and fourth header quote examined this session and the third
+  and fourth found defective**, after `brain-parts`' hippocampus and `neuron-parts`' cell-body, which
+  both altered glyphs and truncated. Header quotes are damaged as a RULE, not as an anecdote.
+
+  `circle-parts`' **diameter row stays uncited, with the mechanism now identified rather than merely
+  observed**: MathWorld renders math as `<img class="inlineformula" alt="pi">`, so dropping the tag
+  DELETES THE SYMBOL and leaves "to a point radians away" — fluent, grammatical, and missing its
+  term. Recovering the `alt` restores the sentence exactly as the header records it, so the evidence
+  is real and reachable; what is unavailable is a span matching what a sighted reader *sees*, which
+  is a π glyph. Reading the page in full confirms there is no second definition sentence — the only
+  other candidate, "If is the radius of a circle or sphere, then .", is math-stripped to nonsense.
+  This is not "the page is blocked": the page is fine and the fact is fine.
+
+  **Two more bugs in my own harness, both found by reading output rather than by verifying against
+  it.** `&quot;` was never decoded, so MathWorld's `the term &quot;circumference&quot;` came back NOT
+  FOUND — trusting that negative would have been a false blocker, and trusting the extractor's
+  *output* would have written `&quot;circumference&quot;` into a citation as verbatim. Then the fix
+  that stops `<p>`/`<li>` fusion split blocks on `\n`, and raw HTML is full of newlines: MathWorld
+  wraps mid-sentence (`describe a <a …>line\n segment</a> whose ends`), so the chord sentence was
+  torn in half and reported NOT FOUND *by my own fix*. **That is the third time this session a fix of
+  mine created a new failure mode**, after the adjacent-tag fix and the `HailShowery` fusion.
+  Verbatim-verification cannot catch any of them, because it compares against the same broken
+  extraction.
+
+  `circumference` is the **first string in the stdlib to use the lexer's `\"` escape** (`STRING` is
+  `"([^"\\]|\\.)*"`; zero prior uses). The whole round trip was validated end-to-end before being
+  written: escaped in the `.adj`, a real quote in the value, re-escaped in the JSON.
+
+  The four new tests are **anchored joint-binding pins** cut from real CLI output — bindings plus the
+  full envelope plus the corroboration as one contiguous span ending on a closing quote. The prior
+  assertions were `contains("readingrockets.org")` and a separate `contains("\"trust\":\"consensus\"")`:
+  two independent scans over one blob, which cannot tell which answer a citation belongs to. The pins
+  deliberately **do not claim row-scoped provenance** — `cites` is table-scoped, so every answer
+  carries the same corroboration list; they assert that a given answer carries its evidence intact.
+
+  All four were **directionally mutation-checked**: truncating `map`'s cite reddens map and tape;
+  truncating `tape`'s reddens tape but leaves map green; corrupting only `circumference`'s escaped
+  quotes reddens circumference and leaves chord green. The first run reported the onset-rime
+  mutations GREEN and I nearly read that as weak pins — the pins were fine, but correcting the header
+  quotes had made the *comment* byte-identical to the cite, so the harness's replace-first was
+  mutating a comment. The harness was wrong while the subject was fine: the same shape as the HTTP
+  308 false blocker, and the reason a negative result gets the same scrutiny as a positive one.
+
+  Both `.query.adj` companions parse, run, and abstain correctly. 533 test binaries / 1596 tests
+  green, clippy `-D warnings` clean.
+
+- **#13934 batch 3: six `cites` across two libraries, and one library REMOVED from the batch after
+  extraction.** `meteorology/precipitation-types` (+4 — snow, sleet, hail, freezing rain) and
+  `biology/animal-habitat` (+2 — bactrian camel, giraffe).
+
+  *** `anatomy/tooth-types` WAS PLANNED INTO THIS BATCH AND TAKEN OUT: its unencoded NCBI page does
+  not support the row VALUES. *** The rows are `canines -> tearing` and `premolars`/`molars ->
+  grinding`, and the page offers only "the canine teeth are sharp at the tip", "The back teeth just
+  behind the canine teeth are called premolars", and "The molars look different: They have wide
+  chewing surfaces". Sharp-at-the-tip is not TEARING; positional naming is not GRINDING;
+  wide-chewing-surfaces is *close* to grinding and does not say it. "Close to" is exactly what the
+  match-the-value rule exists to reject — the same rule that stopped `macronutrients` taking "high in
+  calories" for "7 calories per gram".
+
+  `precipitation-types`' SNOW row was expected to be sourceless — three header URLs for five rows. It
+  is not: NOAA's glossary answers `word=SNOW` directly. Two of the four new locators (SNOW, SLEET) are
+  therefore **not header-documented**; I found them. That is a slightly different activity from
+  "encode what the header recorded" and is named rather than blurred. Its freezing-rain evidence, by
+  contrast, was on the **already-encoded** page all along: `glossary.php?word=RAIN` returns every entry
+  matching "rain", so the library was sitting on evidence it had already fetched.
+
+  ON THE GLOSSARY HEADWORDS. Each quote is a definition BODY, and the locator is a query returning
+  **eighty-five entries** — so the locator alone does not identify which entry a body came from. The
+  headword matters. It became visible only because the extractor's `dt`/`dd` fix this session stopped
+  `<dt><b>Hail</b></dt><dd>Showery...` fusing into "HailShowery" — but there is no contiguous RENDERED
+  span joining a headword to its body, so joining them would CONSTRUCT text the page does not display.
+  The bodies are quoted as they stand and the ambiguity is recorded.
+
+  *** A FIFTH EXTRACTOR LIMITATION, AND THE MOST MISLEADING ONE. *** The giraffe page returns HTTP
+  308, which Python 3.10's urllib does not follow. It raised `HTTPError` and looked **identical to a
+  dead source** until the exception text was read. Without following it, `giraffe -> grassland` would
+  have been recorded as a FALSE BLOCKER on a page that is perfectly fine — and the row's evidence is
+  right there: "Grassland, for example, is the habitat of the giraffe...".
+
+  NOAA's glossary declares UTF-8 and serves a mojibake `Â½` in the SLEET entry (UTF-8 bytes for ½ read
+  as Latin-1). The corruption is in the SOURCE, not the decoder; every span quoted here excludes it.
+
+  `language/onset-rime` is DEFERRED, not refused — its evidence is simply not yet extracted.
+
+  Both `.query.adj` companions parse and run. 533 test binaries / 1592 tests green, clippy -D warnings
+  clean. Every sentence verified verbatim against a fresh raw-HTML normalisation.
+
+- **#13934 batch 2: five `cites` across three libraries, and ONE ROW DELIBERATELY LEFT UNCITED.**
+  `geometry/triangle-types` (+2, isosceles and scalene each from their own MathWorld page),
+  `biology/macronutrients` (+1, alcohol), `physics/lens-types` (+2, concave lens and convex mirror).
+
+  *** `lens-types`' concave_mirror ROW IS NOT CITED, AND THAT IS THE RESULT, NOT A GAP IN IT. *** The
+  only sentence on the page linking a concave mirror to converging is "The focal length \(f\) of a
+  concave mirror is positive, since it is a converging mirror." — and `\(f\)` is a **MathJax
+  delimiter in the raw HTML**, rendered client-side as an italic *f*. The page's SOURCE text and its
+  DISPLAYED text differ, so there is no reading of "verbatim" that is not a choice: quote the raw form
+  and the citation embeds markup no reader ever sees; quote the rendered form and I have EDITED the
+  source, which is precisely the edit that damaged the two header quotes this effort keeps finding.
+  A definitional problem rather than a fetch problem, and not one to settle by preference.
+
+  `macronutrients` is partial in the unusual direction — 3 of 4 rows were already covered and only
+  ALCOHOL needed evidence. The figure appears **exactly once** on the page, parenthetically, inside a
+  sentence whose subject is the pronoun "it", so the quote is widened to name alcohol. The page is
+  titled "Weight loss and alcohol" and says alcohol is "high in calories" and has "empty calories" —
+  phrases that *sound* supporting while never stating 7 per gram. Matching on "alcohol near calories"
+  would have encoded prose that does not carry the row's value.
+
+  Two quotes end in a figure reference ("such as those illustrated above", "as shown in part (b)")
+  which the page's own sentence includes. WHERE THE PAGE'S SENTENCE BOUNDARY IS AWKWARD, THE PAGE WINS.
+
+  SIX BLOCKER CLASSES ARE NOW KNOWN across this issue's members, every one found by attempting the
+  work rather than planning it: JS-rendered pages, PDF-only evidence, evidence on a weaker-tier host
+  than the table's `trust` (and `cites` has no trust field), SSL certificate failures on three NIH
+  subdomains while ncbi.nlm.nih.gov works, HTTP 403, and now MathJax source/rendered ambiguity.
+
+  All three `.query.adj` companions parse and run. 533 test binaries / 1592 tests green, clippy
+  -D warnings clean. Every sentence re-extracted from its own page and verified verbatim against raw
+  HTML.
+
+- **#13934 batch 1: the evidence the headers documented and the tables dropped is now encoded.**
+  `anatomy/tooth-parts` (+5 `cites`) and `biology/neuron-parts` (+3), across **six distinct source
+  pages**. That page count is the point: each header recorded a per-row evidence table naming several
+  pages, and each table encoded exactly ONE. The evidence was found, read and quoted — then left in a
+  comment where nothing can check it and no learner ever sees it.
+
+  `tooth-parts` had 6 rows and a `source` covering crown+enamel only; dentin, pulp, cementum and root
+  were unsupported. **Cementum is not on the encoded page at all** — it comes from an NCBI page the
+  header named and the table never carried. `neuron-parts` had 4 rows drawing on THREE NCBI pages,
+  of which only the dendrites page was encoded; it now returns three distinct locators.
+
+  *** BOTH HEADER QUOTES WERE DAMAGED, THE SAME WAY, AND THAT IS NOW THE EXPECTED CONDITION. ***
+  `neuron-parts` quoted its cell-body sentence with STRAIGHT quotes around "read out" where the page
+  has CURLY ones, and ended at "...synaptic interaction." while the page continues "(see Figures 1." —
+  inventing a terminal period the source does not have there. `anatomy/brain-parts`, fixed earlier
+  under #13931, had the identical pair: altered quote marks plus a truncation that dropped the clause
+  WITHDRAWING the metaphor it quoted. Two of two header quotes checked against source were wrong in
+  the same two ways. Re-extraction is not ceremony.
+
+  WHERE THE PAGE'S SENTENCE BOUNDARY IS AWKWARD, THE PAGE WINS. The cell-body sentence runs into a
+  figure reference. Trimming to "...synaptic interaction." would read better — and would be exactly
+  the edit that produced the two damaged headers above — so the citation is quoted to the source's own
+  period, figure reference included.
+
+  Two quotes are WIDENED past a dependent opening: "This area is known as the \"pulp\" of the tooth"
+  names an *area*, not the pulp, so it carries the preceding sentence. A citation is read DETACHED
+  from its page and must name its own subject.
+
+  *** FIVE MEMBERS OF THE 33 ARE BLOCKED, EACH FOR A DIFFERENT REASON, AND EVERY ONE WAS FOUND BY
+  ATTEMPTING THE WORK RATHER THAN BY PLANNING IT: *** `nutrition/food-groups` (myplate.gov is
+  JS-rendered — two pages extract to byte-identical site chrome), `money/us-bills` (all seven evidence
+  pages are PDFs, and its citation names the DENOMINATION column while the table answers PORTRAITS —
+  zero value coverage across all seven rows), `anatomy/kidney-parts` (its unencoded evidence is on
+  Wikipedia while the table declares `trust authoritative`, and `cites` has NO trust field, so encoding
+  it would misrepresent the tier — a real format gap, measured to affect exactly one library),
+  `biology/cell-division-daughter-cells` (both URLs are genome.gov, which fails certificate
+  verification here), and `biology/vitamins` (ods.od.nih.gov returns 403). Three NIH subdomains fail
+  SSL while ncbi.nlm.nih.gov works, so this is environmental, not a `.gov` policy.
+
+  533 test binaries / 1592 tests green, clippy -D warnings clean. Both `.query.adj` companions parse
+  and run. Every sentence re-extracted from its own page and verified verbatim against raw HTML.
+
 - **#13931 batch 2: six libraries, 11 `cites` added and 4 `source` envelopes replaced.** Completes the
   partial-coverage and anaphora work in `meteorology/cloud-type`, `biology/tissue-types`,
   `astronomy/comet-tail-type`, `language/end-punctuation-mark`, `physics/friction-types` and

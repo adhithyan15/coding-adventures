@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C05-je-parle-francais
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 195
 chapter: 5
 type: phrase
@@ -10,42 +12,66 @@ prerequisites: [FR-C05-parler]
 sounds: [nasal-an, soft-c-s]
 roots: [francia-latin]
 etymology_hook: "français ← Francia, 'land of the Franks'; the Franks' name meant 'free' → English frank"
-est_minutes: 4
 reviews_of: [FR-C05-parler, FR-C02-je]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FR-LEX-PARLER-01, FR-GRAM-ER-PRESENT-02, FR-GRAM-PRONOUN-REQUIRED-03]
+introduces:
+  knowledge: [FR-LEX-FRANCAIS-09, FR-ETYMON-FRANCAIS-10]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-FRANCAIS-09, FR-ETYMON-FRANCAIS-10]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 ---
 
 # Je parle français — your first real sentence
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The moment it all pays off: you take a **verb** you conjugated and a
 **noun**, and build a sentence **no one handed you pre-made** — *Je parle
 français*, "I speak French."
 
-## The new word: français
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[FR-LEX-FRANCAIS-09]; assesses=[] -->
 
-**français** = "French" (the language, and a French person), from **Francia**,
-"land of the **Franks**" — the Germanic people who settled Roman Gaul and gave
-France its name. And here's the twist: the Franks' own name meant **"free"** —
-which is why English **frank** / **frankly** means open and unguarded, and why
-the coin was a *franc*. Say it *frahn-SEH* (`soft-c-s`: the *ç*-less *c* before
-nothing here is soft *s*; the *ai* is a nasal-ish *eh*).
+- `soft-c-s` — **français** = *frahn-SEH*. The cedilla under the **ç** forces a
+  soft *s* where a plain *c* would have been hard.
+- The opening *fran-* is nasal, and the final *-ais* is a plain *eh*.
 
-## The sentence, assembled
+## The word, taken apart
+<!-- hl-knowledge: introduces=[FR-ETYMON-FRANCAIS-10]; assesses=[] -->
+
+**français** = "French" — both the language and a French person — from
+**Francia**, "land of the **Franks**": the Germanic people who settled Roman
+Gaul and gave France its name. And here is the twist: the Franks' own name
+meant **"free."** That is why English **frank** and **frankly** mean open and
+unguarded, and why the old French coin was called a *franc*.
+
+## Grammar Lens: two rules hiding in four words
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Snap together two things you own:
 
 > **Je** (I, ← *ego*) + **parle** (speak, from *parler*) = **Je parle français.**
 
-A complete, grammatical French sentence. Now note the contrast that defines
-French:
+A complete, grammatical French sentence. Two rules are hiding in it:
 
-- **You keep the *je*.** Spanish drops it (*hablo español*), because the Spanish
-  ending *-o* says "I". But French *parle / parles / parlent* all sound the same
-  (*parl*) — the ear can't tell who — so **the pronoun must stay** to carry the
-  person. **This is the single biggest structural difference** between French and
-  its Iberian cousins.
-- **No article on the language**: *je parle français*, not "*le* français" (here).
+- **You keep the *je*.** Spanish drops its pronoun — *hablo español* says "I
+  speak Spanish" with no word for "I," because the ending *-o* carries the
+  person. French cannot do that: *parle*, *parles* and *parlent* all sound
+  alike, so **the pronoun must stay**. This is the single biggest structural
+  difference between French and its Iberian cousins.
+- **No article on the language** here: *je parle français*, not *je parle le
+  français*.
 
 Swap the pieces and it generates:
 
@@ -53,6 +79,7 @@ Swap the pieces and it generates:
 - **Tu parles français ?** — "Do you speak French?" (just raise the tone).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-FRANCAIS-09] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Je parle français" — *zhuh parl frahn-SEH*]
@@ -60,6 +87,7 @@ Swap the pieces and it generates:
 - [YOU SAY: swap — "Tu parles français ?", "J'habite à Paris"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-FRANCAIS-09, FR-ETYMON-FRANCAIS-10] -->
 
 [PAUSE 3s] Where does *français* come from, and what did the Franks' name mean?
 (*Francia*, "land of the Franks"; the name meant "free" — English *frank*.) Why

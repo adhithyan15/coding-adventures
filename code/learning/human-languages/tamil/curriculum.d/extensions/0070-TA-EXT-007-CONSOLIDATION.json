@@ -1,0 +1,11 @@
+{
+  "id": "TA-EXT-007-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the Chapter 2 introduction forms in a short spoken exchange.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C02-practice"
+  ]
+}

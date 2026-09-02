@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3cb700373dd342e3",
+  "sourceHash": "fnv1a64:39d4a15371d772bc",
   "lessons": [
     {
       "id": "HI-C13-sir",
@@ -612,6 +612,197 @@
             {
               "kind": "speech",
               "text": "Which character is this — च? What sound does it carry? (ca.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S125-letter-vocalic-r",
+      "sequence": 608,
+      "title": "ऋ (ṛ (Hindi ri)) — the independent vowel waiting inside ऋतु",
+      "headword": "ऋ",
+      "romanization": "ṛ (Hindi ri)",
+      "gloss": "the independent vowel ऋ — recognised, sounded, and written before ऋतु",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cb573a6863ee2e3c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ऋ and its Hindi value",
+          "Writing: ऋ — supported formation"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ऋ and its Hindi value and Writing: ऋ — supported formation until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Find च in चार. Say ca. Then put the word away."
+            },
+            {
+              "kind": "speech",
+              "text": "One new character comes next. It gets its own short lesson before the seasons lesson asks you to read or write it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ऋ and its Hindi value",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऋ (ṛ (Hindi ri)) is an independent vowel. The careful transliteration is ṛ. In modern Hindi words such as ऋतु, you will normally hear it as ri, so ऋतु is said ritu. Keep both labels honest: ṛ tells you which inherited Devanagari vowel this is; ri tells you what ordinary Hindi speech does with it."
+            },
+            {
+              "kind": "speech",
+              "text": "Look for the right stem and headline, then the hooked and rounded body hanging to their left. Do not confuse ऋ (ṛ (Hindi ri)) with र: र is the consonant ra; ऋ (ṛ (Hindi ri)) stands on its own as a vowel letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ऋ — supported formation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ऋ (ṛ (Hindi ri)) visible for this first pass."
+            },
+            {
+              "kind": "speech",
+              "text": "1. sweep the short upper-left shoulder right, then turn down-left through its hook."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and curve around the rounded middle body, continuing into the lower rightward tail."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the right stem from top to bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the headline from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. This is one sourced learner order, not a claim that every school joins the strokes identically. Source: Saurmandal, “Devanagari ऋ (ṛ (Hindi ri)) stroke order.svg,” panels 1–4, Wikimedia Commons, 5 August 2023."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ऋ (ṛ (Hindi ri)) twice while saying ri",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ऋ twice while saying *ri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "ऋ (ṛ (Hindi ri)) once beside the visible model",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: ऋ once beside the visible model]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "to the letter, then say “independent vowel — not र”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: to the letter, then say “independent vowel — not र”]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — delayed recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model."
+            },
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which independent vowel did you learn? Say ri, then write it once. Reopen the model only after the attempt and repair only the first differing stroke."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall — no-model checkpoint",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the model again. The next chapter will use the word ritu, “season.” Write its first Devanagari character from memory."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the careful transliteration of ऋ (ṛ (Hindi ri))? (ṛ.) How is it normally pronounced in Hindi ऋतु? (ri.) Write ऋ (ṛ (Hindi ri)) once more without looking."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-S125-letter-vocalic-r-no-model",
+              "prompt": "With no model or character bank, write the independent vowel at the start of ritu.",
+              "assesses": [
+                "HI-SCRIPT-RECOG-125",
+                "HI-SCRIPT-WRITE-125"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ऋ"
+              ],
+              "feedback": {
+                "correct": "The independent vowel is ready before ऋतु becomes scored vocabulary.",
+                "incorrect": "Finish the attempt, reopen ऋ, repair only the first differing stroke, then close the model again."
+              }
             }
           ]
         }

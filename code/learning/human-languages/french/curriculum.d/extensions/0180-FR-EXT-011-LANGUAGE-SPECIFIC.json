@@ -1,0 +1,11 @@
+{
+  "id": "FR-EXT-011-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can choose between the informal, formal and neutral ways of asking how someone is.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C03-comment-registers"
+  ]
+}

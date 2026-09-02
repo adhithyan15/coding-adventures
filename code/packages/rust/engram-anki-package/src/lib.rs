@@ -1192,7 +1192,14 @@ fn v11_external_sources(
         "schemaModifiedAt",
         collection.metadata.schema_modified_at,
     );
-    insert_i64(&mut collection_data, "version", collection.metadata.version);
+    // The V11 writer emits V11 tables, so it must declare V11 -- not whatever
+    // version the SOURCE collection had. Carrying a modern collection's
+    // `ver = 18` through made Anki look for schema-18 tables in a V11 file:
+    //
+    //     DbError { info: "SqliteFailure(...): no such table: config" }
+    //
+    // The version field describes the bytes being written, not their origin.
+    insert_i64(&mut collection_data, "version", ANKI_V11_SCHEMA_VERSION);
     insert_i64(&mut collection_data, "dirty", collection.metadata.dirty);
     insert_i64(
         &mut collection_data,
@@ -1368,6 +1375,13 @@ fn source_record(
         data,
     }
 }
+
+/// The schema version the legacy writer emits.
+///
+/// `write_legacy_apkg` produces the V11 table layout, so the collection must
+/// say so. Anki dispatches on this field, and a mismatch is not a warning: it
+/// looks for tables that are not there and fails the import outright.
+const ANKI_V11_SCHEMA_VERSION: i64 = 11;
 
 fn insert_i64(data: &mut BTreeMap<String, String>, key: &str, value: i64) {
     data.insert(key.to_string(), value.to_string());
@@ -1968,7 +1982,7 @@ fn v11_export_rows(
                     review
                         .resulting_progress
                         .as_ref()
-                        .map(progress_factor_to_anki)
+                        .map(|progress| progress_factor_to_anki(progress, source))
                         .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64)
                 })),
                 SqlValue::Int(
@@ -2039,6 +2053,24 @@ fn export_decks_json(export: &ExportModel) -> Value {
         deck_object
             .entry("extendRev".to_string())
             .or_insert_with(|| Value::Number(50_i64.into()));
+        // Anki deserialises a deck into a typed struct, so these are not
+        // optional decoration -- an absent one fails the whole import with
+        // `decoding decks: JsonError`, naming no field. A legacy source carries
+        // them in its preserved `rawJson`; a MODERN source has no legacy deck
+        // JSON at all, so without these an export of a `.colpkg` was refused.
+        //
+        // The `*Today` pairs are [day-number, count]; zero on an unknown day is
+        // the same thing Anki writes for a deck studied on no day yet.
+        for (key, value) in [
+            ("collapsed", Value::Bool(false)),
+            ("browserCollapsed", Value::Bool(false)),
+            ("newToday", serde_json::json!([0, 0])),
+            ("revToday", serde_json::json!([0, 0])),
+            ("lrnToday", serde_json::json!([0, 0])),
+            ("timeToday", serde_json::json!([0, 0])),
+        ] {
+            deck_object.entry(key.to_string()).or_insert(value);
+        }
         merge_dynamic_deck_source_json(deck_object, source);
         object.insert(id.to_string(), deck_json);
     }
@@ -2147,17 +2179,86 @@ fn export_collection_config_json(export: &ExportModel) -> Value {
     config
 }
 
+/// The default deck configuration, in the shape Anki's deserialiser requires.
+///
+/// A legacy source carries its own `col.dconf`, so this is only reached when
+/// there is none to preserve -- which is every **modern** source, because at
+/// schema 18 deck configuration lives in a protobuf `deck_config` table that
+/// this importer does not decode yet.
+///
+/// It used to be `{ "id": 1, "name": "Default" }`. Anki refused the resulting
+/// export outright:
+///
+/// ```text
+/// JsonError { info: "decoding deck config: missing field `mod`" }
+/// ```
+///
+/// Required fields are Anki's to define, so the safe move is to emit the
+/// classic V11 shape in full rather than the subset Engram happens to model.
+/// The nested `new`/`rev`/`lapse` objects are not optional: Anki deserialises
+/// them into typed structs, so an absent one fails the same way a missing
+/// scalar does.
+fn default_anki_deck_config() -> Value {
+    serde_json::json!({
+        "id": 1,
+        "mod": 0,
+        "name": "Default",
+        "usn": -1,
+        "maxTaken": 60,
+        "autoplay": true,
+        "timer": 0,
+        "replayq": true,
+        "dyn": false,
+        "new": {
+            "delays": [1.0, 10.0],
+            "ints": [1, 4, 0],
+            "initialFactor": 2500,
+            "separate": true,
+            "order": 1,
+            "perDay": 20,
+            "bury": false,
+        },
+        "rev": {
+            "perDay": 200,
+            "ease4": 1.3,
+            "fuzz": 0.05,
+            "minSpace": 1,
+            "ivlFct": 1.0,
+            "maxIvl": 36500,
+            "bury": false,
+            "hardFactor": 1.2,
+        },
+        "lapse": {
+            "delays": [10.0],
+            "mult": 0.0,
+            "minInt": 1,
+            "leechFails": 8,
+            "leechAction": 0,
+        },
+    })
+}
+
 fn export_collection_deck_config_json(export: &ExportModel) -> Value {
     let mut deck_config = export_collection_json(export, "deckConfigJson")
-        .unwrap_or_else(|| serde_json::json!({ "1": { "id": 1, "name": "Default" } }));
+        .unwrap_or_else(|| serde_json::json!({ "1": default_anki_deck_config() }));
     let object = ensure_json_object(&mut deck_config);
-    object.entry("1".to_string()).or_insert_with(|| {
-        serde_json::json!({
-            "id": 1,
-            "name": "Default",
-        })
-    });
+    object
+        .entry("1".to_string())
+        .or_insert_with(default_anki_deck_config);
 
+    // A config Engram synthesises for a deck-options preset must carry every
+    // field Anki's deserialiser requires, not just the ones Engram models.
+    // Building from `{}` produced an 11-key object missing `mod` and `usn`, and
+    // Anki refused the whole import:
+    //
+    //     JsonError { info: "decoding deck config: missing field `mod`" }
+    //
+    // Seeding from the default config rather than listing the missing fields is
+    // deliberate: the required set is Anki's to define and has grown before
+    // (`fsrsParams6`, `desiredRetention`, `easyDaysPercentages` are all recent).
+    // Inheriting it means a future addition arrives for free instead of
+    // becoming the next rejected export.
+    let default_config = object.get("1").cloned();
     for preset in &export.deck_options {
         let Some(config_id) = export_deck_option_config_id(export, &preset.deck_id) else {
             continue;
@@ -2165,6 +2266,7 @@ fn export_collection_deck_config_json(export: &ExportModel) -> Value {
         let mut config = object
             .get(&config_id.to_string())
             .cloned()
+            .or_else(|| default_config.clone())
             .unwrap_or_else(|| serde_json::json!({}));
         let deck_name = export
             .decks
@@ -2726,7 +2828,7 @@ fn export_card_scheduling(
             queue: source_i64(source, "queue").unwrap_or(0),
             due: source_i64(source, "due").unwrap_or(index.saturating_add(1) as i64),
             interval: 0,
-            factor: progress_factor_to_anki(progress),
+            factor: progress_factor_to_anki(progress, source),
             repetitions: 0,
             lapses: 0,
             left: source_i64(source, "left").unwrap_or(0),
@@ -2769,7 +2871,7 @@ fn export_card_scheduling(
         queue,
         due,
         interval: i64::from(progress.interval),
-        factor: progress_factor_to_anki(progress),
+        factor: progress_factor_to_anki(progress, source),
         repetitions: i64::from(progress.times_seen),
         lapses: i64::from(progress.times_incorrect),
         left: learning_step_index_to_anki_left(progress, source, deck_options),
@@ -2866,7 +2968,28 @@ fn is_export_metadata_overlay(progress: &CardProgress) -> bool {
         && progress.times_incorrect == 0
 }
 
-fn progress_factor_to_anki(progress: &CardProgress) -> i64 {
+/// Convert our ease factor to Anki's, preserving "no ease yet".
+///
+/// Anki writes `factor = 0` for a card that has never graduated to review: a
+/// new or learning card has not earned an ease. Our model gives every card a
+/// default ease of 2.5 from the moment it exists, so converting unconditionally
+/// writes 2500 where Anki wrote 0.
+///
+/// That is not cosmetic. Round-tripping a learning card through Engram handed
+/// it back to Anki with an ease factor it never had, which changes how it will
+/// be scheduled after it graduates. Anki itself rejected nothing -- it accepted
+/// the file and the card came back subtly different, which is the failure mode
+/// worth caring about.
+///
+/// So when the card has no completed reviews of its own, the value Anki
+/// originally wrote is preserved. Our 2.5 is a placeholder, not a measurement,
+/// and a placeholder should not overwrite a fact.
+fn progress_factor_to_anki(progress: &CardProgress, source: Option<&ExternalSourceRecord>) -> i64 {
+    if progress.times_seen == 0 {
+        if let Some(original) = source_i64(source, "factor") {
+            return original;
+        }
+    }
     (progress.ease_factor * 1000.0)
         .round()
         .clamp(0.0, i64::MAX as f64) as i64

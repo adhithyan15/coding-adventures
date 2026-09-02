@@ -96,16 +96,26 @@
 %
 %   halogen (fluorine, chlorine, bromine, iodine, astatine, tennessine)
 %     "The halogens are a group in the periodic table consisting of six
-%      chemically related elements: fluorine (F), chlorine (Cl), bromine (Br),
+%      chemically related elements, fluorine (F), chlorine (Cl), bromine (Br),
 %      iodine (I), and the radioactive elements astatine (At) and tennessine
-%      (Ts)."
+%      (Ts), though some authors[1] would exclude tennessine as its chemistry
+%      is unknown and is theoretically expected to be more like that of
+%      gallium."
+%     (the previous form put a COLON where the page has a COMMA, and TRUNCATED
+%      immediately before the clause saying some authors EXCLUDE TENNESSINE --
+%      while this table ships `row (tennessine, halogen)`. Where the page
+%      qualifies its own claim, the qualification is part of the evidence.)
 %     — https://en.wikipedia.org/wiki/Halogen
 %
 %   noble_gas (helium, neon, argon, krypton, xenon, radon)
-%     "The noble gases ... are the members of group 18 of the periodic table:
-%      helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn)
-%      and, in some cases, oganesson (Og)." — oganesson excluded; see the
+%     "The noble gases (historically the inert gases, sometimes referred to as
+%      aerogens[1]) are the members of group 18 of the periodic table: helium
+%      (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and,
+%      in some cases, oganesson (Og)." — oganesson excluded; see the
 %      considered-exclusion note above.
+%     (the previous form ELIDED the parenthetical with "..." -- a constructed
+%      span, text the page never displays as one run. The `[1]` is a real
+%      rendered footnote marker and stays.)
 %     — https://en.wikipedia.org/wiki/Noble_gas
 %
 %   transition_metal (iron, nickel, cobalt)
@@ -158,4 +168,7 @@ table element_group_family {
     source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr)."
     locator "https://en.wikipedia.org/wiki/Alkali_metal"
     trust consensus
+    cites "They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra)." locator "https://en.wikipedia.org/wiki/Alkaline_earth_metal"
+    cites "The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium." locator "https://en.wikipedia.org/wiki/Halogen"
+    cites "The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og)." locator "https://en.wikipedia.org/wiki/Noble_gas"
 }

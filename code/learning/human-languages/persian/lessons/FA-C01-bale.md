@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FA-C01-bale
+spine_node: SPINE-RESPOND-BASIC
 sequence: 30
 chapter: 1
 type: word
@@ -11,32 +13,60 @@ prerequisites: [FA-C01-mamnoon]
 sounds: [rtl, short-vowels-unwritten]
 roots: []
 etymology_hook: Bale is the standard polite Persian affirmative; learn its three-letter shape as a whole.
-est_minutes: 3
 reviews_of: []
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [FA-LEX-MAMNUN-01, FA-ETYMON-MAMNUN-MNN-02, FA-SCRIPT-SHORT-VOWELS-01]
+introduces:
+  knowledge: [FA-LEX-BALE-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FA-LEX-BALE-01, FA-SCRIPT-SHORT-VOWELS-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral-friendly
+variety: contemporary-iranian-persian
 ---
 
 # بله — yes
 
-## Three letters, two hidden vowels
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Read **بله** from right to left: **ب** *b*, **ل** *l*, **ه** *h*. Persian does
-not normally print the short vowels, but speakers supply them:
+[PAUSE 2s] A greeting and a thank-you need an answer. Here is the polite one.
 
-> ب · ل · ه → **bale** → yes
+## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-SHORT-VOWELS-01] -->
 
-The last **ه** is written even though careful speech ends with a light vowel
-sound rather than a strong English *h*. Listen for the whole word; do not force
-every letter to sound identical in every position.
+> **بله** — *bale* — yes
 
-## Use it
+Three letters, and **both** of its vowels are among the short ones Persian
+leaves out — so the written word carries no vowel at all and the reader supplies
+*a* and *e*. That is the same habit you just met in *mamnun*, met twice in one
+short word. Read the romanization and take the shape as a whole; no letter is
+being asked of you yet.
 
-**bale** is a standard, polite “yes.” A more casual *âre* exists, but one clear
-affirmative is enough for this lesson.
+## Why it's said this way
+<!-- hl-knowledge: introduces=[FA-LEX-BALE-01]; assesses=[] -->
 
-- “Is this Persian?” — **Bale.**
-- “Are you ready?” — **Bale, mamnun.** — Yes, thank you.
+*bale* is the standard, polite “yes.” A more casual *âre* exists, but one clear
+affirmative is plenty for now.
 
-## Quick recall
+- “Is this Persian?” — ***Bale.***
+- “Are you ready?” — ***Bale, mamnun.*** — Yes, thank you.
 
-Cover the romanization. Read **بله**. Which sounds are not written as separate
-letters? The short *a* and *e*. Answer once: **bale**.
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BALE-01, FA-SCRIPT-SHORT-VOWELS-01] -->
+
+- [YOU SAY: *bale*, once on its own]
+- [YOU SAY: *bale, mamnun* — yes, thank you]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BALE-01, FA-SCRIPT-SHORT-VOWELS-01] -->
+
+Answer “yes” in Persian once. (***Bale.***) Which sounds does the writing leave
+for you to supply? (**The short vowels — here both of them.**)

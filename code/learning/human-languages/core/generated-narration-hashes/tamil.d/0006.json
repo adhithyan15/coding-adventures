@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 6,
-  "sourceHash": "fnv1a64:51f51964a94c56b4",
+  "sourceHash": "fnv1a64:bfa1250ec5a2b2db",
   "lessonIds": [
     "TA-C06-dative-ukku",
     "TA-S01-va",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch06.txt",
   "json": "tamil/narration/ch06.json",
-  "textHash": "fnv1a64:e7f22c26911ed9f3",
-  "jsonHash": "fnv1a64:67a9ad7fdf495f98",
+  "textHash": "fnv1a64:e22c478d1e6633f4",
+  "jsonHash": "fnv1a64:5cbc7b423903debd",
   "findings": []
 }

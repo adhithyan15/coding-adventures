@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:6ac3fe7427d5137b",
+  "lessonIds": [
+    "TA-C03-eppadi",
+    "TA-C03-eppadi-irukkirirgal",
+    "TA-C03-naan",
+    "TA-C03-nalam",
+    "TA-C03-paravayillai",
+    "TA-C03-practice"
+  ],
+  "tex": "tamil/book/chapters/ch03-responding.tex"
+}

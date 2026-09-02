@@ -126,7 +126,7 @@ fn review_history_layout_binds_summary_slots() {
         ("history-last", "last-label", "last-value"),
     ] {
         assert!(
-            source.contains(&format!("Box [ {part} ]")),
+            source.contains(&format!("Column [ {part} ]")),
             "ReviewHistoryPanel.mll must expose {part}"
         );
         assert!(

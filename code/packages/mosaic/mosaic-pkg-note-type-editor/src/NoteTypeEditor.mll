@@ -21,7 +21,7 @@ layout NoteTypeEditor {
       }
       Column [ note-type-detail-column ] {
         Row [ note-type-metadata ] {
-          Box [ note-type-id-meta ] {
+          Column [ note-type-id-meta ] {
             Text [ note-type-id-label ] (
               content : slot: note-type-id-label
             )

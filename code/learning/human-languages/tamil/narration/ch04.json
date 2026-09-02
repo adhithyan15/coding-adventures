@@ -4,22 +4,22 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7b2539288a4238cb",
+  "sourceHash": "fnv1a64:b6eedc611f6dc4e3",
   "lessons": [
     {
       "id": "TA-C04-po",
       "sequence": 240,
-      "title": "போ (pō) — \"go,\" and வா (come)",
+      "title": "போ (pō) — \"go,\" and vā (come)",
       "headword": "போ",
       "romanization": "pō",
-      "gloss": "to go (and வா, to come)",
+      "gloss": "to go (and vā, to come)",
       "script": "tamil",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e25cd027a196bbec",
+      "sourceHash": "fnv1a64:0137acadcdb3661b",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "போ (pō, \"to go\") and வா (vā, \"to come\") are native Dravidian verbs of the deepest layer — single syllables, unchanged for millennia. As bare commands they are already whole words: pō! (\"go!\"), vā! (\"come!\"). You need both for the next lesson, because Tamil does not say a plain \"goodbye\" — it says \"I go, and I come back.\""
+              "text": "போ (pō, \"to go\") and vā (\"to come\") are native Dravidian verbs of the deepest layer — single syllables, unchanged for millennia. As bare commands they are already whole words: pō! (\"go!\"), vā! (\"come!\"). You need both for the next lesson, because Tamil does not say a plain \"goodbye\" — it says \"I go, and I come back.\""
             }
           ]
         },
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa80fb4061e562bd",
+      "sourceHash": "fnv1a64:bbf9adc9cb362553",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,32 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "போய் வருகிறேன் (pōy varugiṟēṉ) = போய் (pōy, \"having gone\") + வருகிறேன் (varugiṟēṉ, \"I come\") — literally \"having gone, I come,\" i.e. \"I'll go and come back.\" A Tamil speaker never signs off with a bare \"I'm leaving\" — that sounds final, even ill-omened. Instead they promise return. It is the exact \"promise of return\" farewell you meet, in its own words, across the Dravidian south (Kannada hōgi baruttēne, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ) — and it echoes the Indo-Aryan tracks too (Bengali āshi, Marathi yeto, Hindi phir milenge). The reply is warm: போய் வா (pōy vā, \"go and come [back]\")."
+              "text": "போய் வருகிறேன் (pōy varugiṟēṉ) = போய் (pōy, \"having gone\") + வருகிறேன் (varugiṟēṉ, \"I come\") — literally \"having gone, I come,\" i.e. \"I'll go and come back.\" A Tamil speaker never signs off with a bare \"I'm leaving\" — that sounds final, even ill-omened. Instead they promise return. The reply is warm: pōy vā (\"go and come [back]\")."
+            },
+            {
+              "kind": "speech",
+              "text": "The same promise, in each language's own words:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"go and come back\" (goodbye)"
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Tamil. \"go and come back\" (goodbye): pōy varugiṟēṉ.",
+                "Language: Kannada. \"go and come back\" (goodbye): hōgi baruttēne.",
+                "Language: Telugu. \"go and come back\" (goodbye): veḷḷi vastānu.",
+                "Language: Malayalam. \"go and come back\" (goodbye): pōyi varāṁ.",
+                "Language: Bengali (Indo-Aryan). \"go and come back\" (goodbye): āshi (\"I come\").",
+                "Language: Hindi (Indo-Aryan). \"go and come back\" (goodbye): phir milenge (\"we'll meet again\")."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The whole subcontinent, Dravidian and Indo-Aryan alike, prefers a promise of return to a blunt farewell."
             },
             {
               "kind": "speech",
@@ -231,7 +256,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0ddfaffb73c6c16",
+      "sourceHash": "fnv1a64:4ac3e72f620d5447",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f127eeb921f458c",
+      "sourceHash": "fnv1a64:45a1c48f51627ef5",
       "notice": null,
       "blocks": [
         {
@@ -596,7 +621,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:849cf4a2e960db6a",
+      "sourceHash": "fnv1a64:71a3211fb731462b",
       "notice": null,
       "blocks": [
         {
@@ -618,8 +643,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
+          "type": "guided-production",
+          "title": "Guided Practice — the farewells",
           "segments": [
             {
               "kind": "pause",
@@ -667,8 +692,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "guided-production",
+          "title": "Guided Practice — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -707,8 +732,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",
