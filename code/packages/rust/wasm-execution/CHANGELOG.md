@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.93] - 2026-09-02 - `WasmValue::default_for` covers the two new W37 `ValueType` variants
+
+Mechanical exhaustiveness update only, per `code/specs/
+W37-wasm-gc-reftype-tables.md`: `wasm-types` 0.1.25 adds `ValueType::Eqref`/
+`ValueType::StructRefAny`, and `default_for`'s match is exhaustive over
+`ValueType`. Both join the existing `Anyref`/`StructRef(_)`/... group that
+defaults to the null reference (`WasmValue::Ref(None)`) -- the correct
+WasmGC zero value for any nullable reference type, exactly like every
+other GC/funcref/externref reference type already in that arm. No new
+runtime behavior: `Table`/`TableStorage`/`TableElement` were already
+reference-type-agnostic by design (W35), needing no changes for this spec
+at all -- this is the one place `ValueType`'s own exhaustiveness required
+a one-line touch.
+
 ## [0.9.92] - 2026-09-02 - runtime support for typed `select` (0x1C)
 
 Companion fix to `wasm-wast-parser` 0.1.99 (parses `select`'s typed

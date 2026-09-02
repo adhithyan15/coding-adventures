@@ -9,7 +9,7 @@ layout ReviewHistoryPanel {
       content : slot: window-label
     )
     Row [ history-summary-grid ] {
-      Box [ history-total ] {
+      Column [ history-total ] {
         Text [ history-total-value ] (
           content : slot: total-value
         )
@@ -17,7 +17,7 @@ layout ReviewHistoryPanel {
           content : slot: total-label
         )
       }
-      Box [ history-correct ] {
+      Column [ history-correct ] {
         Text [ history-correct-value ] (
           content : slot: correct-value
         )
@@ -25,7 +25,7 @@ layout ReviewHistoryPanel {
           content : slot: correct-label
         )
       }
-      Box [ history-unique ] {
+      Column [ history-unique ] {
         Text [ history-unique-value ] (
           content : slot: unique-value
         )
@@ -33,7 +33,7 @@ layout ReviewHistoryPanel {
           content : slot: unique-label
         )
       }
-      Box [ history-accuracy ] {
+      Column [ history-accuracy ] {
         Text [ history-accuracy-value ] (
           content : slot: accuracy-value
         )
@@ -43,7 +43,7 @@ layout ReviewHistoryPanel {
       }
     }
     Row [ rating-summary-grid ] {
-      Box [ history-rating-again ] {
+      Column [ history-rating-again ] {
         Text [ history-again-value ] (
           content : slot: again-value
         )
@@ -51,7 +51,7 @@ layout ReviewHistoryPanel {
           content : slot: again-label
         )
       }
-      Box [ history-rating-hard ] {
+      Column [ history-rating-hard ] {
         Text [ history-hard-value ] (
           content : slot: hard-value
         )
@@ -59,7 +59,7 @@ layout ReviewHistoryPanel {
           content : slot: hard-label
         )
       }
-      Box [ history-rating-good ] {
+      Column [ history-rating-good ] {
         Text [ history-good-value ] (
           content : slot: good-value
         )
@@ -67,7 +67,7 @@ layout ReviewHistoryPanel {
           content : slot: good-label
         )
       }
-      Box [ history-rating-easy ] {
+      Column [ history-rating-easy ] {
         Text [ history-easy-value ] (
           content : slot: easy-value
         )
@@ -77,7 +77,7 @@ layout ReviewHistoryPanel {
       }
     }
     Row [ history-time-range ] {
-      Box [ history-first ] {
+      Column [ history-first ] {
         Text [ history-first-label ] (
           content : slot: first-label
         )
@@ -85,7 +85,7 @@ layout ReviewHistoryPanel {
           content : slot: first-value
         )
       }
-      Box [ history-last ] {
+      Column [ history-last ] {
         Text [ history-last-label ] (
           content : slot: last-label
         )

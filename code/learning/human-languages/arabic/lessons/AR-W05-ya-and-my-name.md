@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: AR-W05-ya-and-my-name
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 240
 chapter: 2
 type: writing
@@ -9,20 +11,37 @@ romanization: "yāʾ"
 prerequisites: [AR-W04-dots-family-nun-ta]
 sounds: [arabic-ya, long-i]
 roots: [phoenician-yod]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-W05-YA-01, AR-CONCEPT-W05-YA-02, AR-CONCEPT-W05-YA-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [AR-CONCEPT-W05-YA-01, AR-CONCEPT-W05-YA-02, AR-CONCEPT-W05-YA-03]
+skills: [speaking, reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-W04-dots-family-nun-ta, AR-C02-ism, AR-C02-ii-my]
 ---
 
 # ي (yāʾ) — the last dot-letter, and "my name"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] One more member of the bowl family, and it is a **triple threat**:
 **ي** (*yāʾ*) is a consonant *y*, **and** the long vowel **ī**, **and** the little
 suffix **-ī** meaning "**my**." With it you can finally write a whole Chapter 2
 phrase in your own hand: **اسمي** ("my name").
 
-## ي (yāʾ) — two dots below
+## Script — ي (yāʾ) — two dots below
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W05-YA-01]; assesses=[] -->
 
 Break it apart:
 
@@ -35,14 +54,16 @@ So the full "below/above" set is now closed: **ب** one-below, **ي** two-below;
 **yod**, "hand" — the ancestor of Greek *iota* and Latin **I / J** (and the reason
 we say "not one **iota**," the smallest letter).
 
-## Its three jobs
+## You'll want to know — Its three jobs
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W05-YA-02]; assesses=[] -->
 
 - **consonant y** — as in *yawm* ("day").
 - **long vowel ī** — a *seat* for the "ee" sound.
 - **the suffix ـي "my"** — the Chapter 2 possessive. Glue *-ī* onto a noun and it
   becomes "my ___," exactly as *ism* ("name") + *-ī* → *ismī* ("my name").
 
-## Assemble — first اسم, then اسمي
+## Script — Assemble — first اسم, then اسمي
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W05-YA-03]; assesses=[] -->
 
 You already know every letter of **اسم** (*ism*, "name") from Lessons 1–3:
 **ا** (alif) · **س** (sīn) · **م** (mīm). Write it right-to-left:
@@ -59,6 +80,7 @@ Read it back, right to left, and you have written a phrase you will say every ti
 you introduce yourself.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W05-YA-01, AR-CONCEPT-W05-YA-03] -->
 
 [PAUSE 1s]
 - [YOU WRITE: **ي** — body + **two dots below**]
@@ -66,6 +88,7 @@ you introduce yourself.
 - [YOU WRITE: **اسم** (ism), then extend to **اسمي** (ismī, "my name")]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W05-YA-01, AR-CONCEPT-W05-YA-02, AR-CONCEPT-W05-YA-03] -->
 
 [PAUSE 3s] Where do *yāʾ*'s dots sit, and how many? (**Two, below.**) Name *yāʾ*'s
 **three** jobs. (Consonant *y*; long vowel *ī*; the suffix *-ī* "**my**.") Spell

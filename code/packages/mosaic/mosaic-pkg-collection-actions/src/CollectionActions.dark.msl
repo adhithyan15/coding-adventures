@@ -24,27 +24,51 @@ style CollectionActions {
   }
 
   part note-count {
-    padding : 8 ;
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    padding       : 8 ;
   }
 
   part note-type-count {
-    padding : 8 ;
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    padding       : 8 ;
   }
 
   part media-count {
-    padding : 8 ;
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    padding       : 8 ;
   }
 
   part referenced-media-count {
-    padding : 8 ;
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    padding       : 8 ;
   }
 
   part missing-media-count {
-    padding : 8 ;
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    padding       : 8 ;
   }
 
   part unused-media-count {
-    padding : 8 ;
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    padding       : 8 ;
   }
 
   part note-count-value {
@@ -72,7 +96,7 @@ style CollectionActions {
   }
 
   part missing-media-value {
-    color : "#fca5a5" ;
+    color : "#f87171" ;
     font-size : 18 ;
     font-weight : 700 ;
   }
@@ -84,32 +108,32 @@ style CollectionActions {
   }
 
   part note-count-label {
-    color : "#cbd5e1" ;
+    color : "#94a3b8" ;
     font-size : 12 ;
   }
 
   part note-type-count-label {
-    color : "#cbd5e1" ;
+    color : "#94a3b8" ;
     font-size : 12 ;
   }
 
   part media-count-label {
-    color : "#cbd5e1" ;
+    color : "#94a3b8" ;
     font-size : 12 ;
   }
 
   part referenced-media-label {
-    color : "#cbd5e1" ;
+    color : "#94a3b8" ;
     font-size : 12 ;
   }
 
   part missing-media-label {
-    color : "#cbd5e1" ;
+    color : "#94a3b8" ;
     font-size : 12 ;
   }
 
   part unused-media-label {
-    color : "#cbd5e1" ;
+    color : "#94a3b8" ;
     font-size : 12 ;
   }
 
@@ -148,9 +172,9 @@ style CollectionActions {
   }
 
   part import-button {
-    background    : "#0e7490" ;
+    background    : "#2563eb" ;
     border-width  : 1 ;
-    border-color  : "#155e75" ;
+    border-color  : "#1d4ed8" ;
     border-radius : 6 ;
     color         : "#ecfeff" ;
     font-weight   : 700 ;
@@ -160,7 +184,7 @@ style CollectionActions {
   part export-button {
     background    : "#334155" ;
     border-width  : 1 ;
-    border-color  : "#64748b" ;
+    border-color  : "#475569" ;
     border-radius : 6 ;
     color         : "#f8fafc" ;
     font-weight   : 700 ;
@@ -168,9 +192,9 @@ style CollectionActions {
   }
 
   part prune-unused-media-button {
-    background    : "#b45309" ;
+    background    : "#334155" ;
     border-width  : 1 ;
-    border-color  : "#92400e" ;
+    border-color  : "#475569" ;
     border-radius : 6 ;
     color         : "#fffbeb" ;
     font-weight   : 700 ;
@@ -178,9 +202,9 @@ style CollectionActions {
   }
 
   part add-note-button {
-    background    : "#0f766e" ;
+    background    : "#2563eb" ;
     border-width  : 1 ;
-    border-color  : "#134e4a" ;
+    border-color  : "#1d4ed8" ;
     border-radius : 6 ;
     color         : "#ecfdf5" ;
     font-weight   : 700 ;
@@ -188,9 +212,9 @@ style CollectionActions {
   }
 
   part add-note-type-button {
-    background    : "#0f766e" ;
+    background    : "#334155" ;
     border-width  : 1 ;
-    border-color  : "#134e4a" ;
+    border-color  : "#475569" ;
     border-radius : 6 ;
     color         : "#ecfdf5" ;
     font-weight   : 700 ;
@@ -198,7 +222,7 @@ style CollectionActions {
   }
 
   part delete-note-button {
-    background    : "#be123c" ;
+    background    : "#9f1239" ;
     border-width  : 1 ;
     border-color  : "#881337" ;
     border-radius : 6 ;
@@ -208,7 +232,7 @@ style CollectionActions {
   }
 
   part delete-note-type-button {
-    background    : "#be123c" ;
+    background    : "#9f1239" ;
     border-width  : 1 ;
     border-color  : "#881337" ;
     border-radius : 6 ;

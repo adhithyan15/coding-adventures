@@ -291,6 +291,39 @@ fn is_assignable(actual: ValueType, expected: ValueType, module: TypeContext) ->
         || matches!((actual, expected), (ValueType::ArrayRef(i), ValueType::ArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
         || matches!((actual, expected), (ValueType::NonNullArrayRef(i), ValueType::NonNullArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
         || matches!((actual, expected), (ValueType::NonNullArrayRef(i), ValueType::ArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        // W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): the two new
+        // abstract hierarchy tops' own subtyping edges. The real GC
+        // proposal's own hierarchy is `struct <: eq <: any` (and
+        // symmetrically `array <: eq <: any`, `i31 <: eq <: any` --
+        // `I31ref`'s own missing `<: Anyref`/`<: Eqref` edges are a
+        // separate, PRE-EXISTING gap this spec's own research flagged but
+        // did not fix, since no table declaration in this spec's corpus
+        // cluster needs it -- see `code/specs/
+        // W37-wasm-gc-reftype-tables.md`'s design section 1). Each hop is
+        // listed directly, matching every other chain in this function's
+        // own "no transitive closure" convention (`NonNullStructRef(_) <:
+        // StructRef(_) <: Anyref` above is the same shape one hierarchy
+        // over): a concrete struct reference (nullable OR non-null) is
+        // assignable to the new abstract STRUCT top (not just the
+        // pre-existing `Anyref` arm), and `structref <: eqref <: anyref`.
+        //
+        // Corpus-verified need: `ref_cast.wast`'s own `(table 20 (ref null
+        // struct))` + `(table.set ... (struct.new_default $t))` requires
+        // exactly the `NonNullStructRef(_), StructRefAny` arm below for
+        // that module to type-check at all. The remaining arms complete
+        // the hierarchy per the real spec's own subtyping rules but are
+        // not yet exercised by any vendored corpus fixture -- included for
+        // correctness (a `structref`/`eqref`-typed table, global, or
+        // struct field must type-check per the real rules regardless of
+        // which specific fixture happens to probe it first), not because
+        // today's corpus demands each one individually.
+        || matches!((actual, expected), (ValueType::StructRef(_), ValueType::StructRefAny))
+        || matches!((actual, expected), (ValueType::NonNullStructRef(_), ValueType::StructRefAny))
+        || matches!((actual, expected), (ValueType::StructRef(_), ValueType::Eqref))
+        || matches!((actual, expected), (ValueType::NonNullStructRef(_), ValueType::Eqref))
+        || matches!((actual, expected), (ValueType::Eqref, ValueType::Anyref))
+        || matches!((actual, expected), (ValueType::StructRefAny, ValueType::Eqref))
+        || matches!((actual, expected), (ValueType::StructRefAny, ValueType::Anyref))
 }
 
 /// Require an already-popped [`StackType`] to be assignable to `expected`
@@ -2775,6 +2808,35 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if table_idx >= ctx.table_count {
                     err!("call_indirect references table index {table_idx}, but only {} tables exist", ctx.table_count);
                 }
+                // W37 security review finding: `call_indirect`/
+                // `return_call_indirect` must target a FUNCREF-family
+                // table only -- `wasm-execution`'s own dispatch handler
+                // (`0x11`'s doc comment) explicitly relies on this as a
+                // safety invariant ("`wasm-validator` already guarantees
+                // `call_indirect` only ever targets an actual funcref-typed
+                // table"), resolving a table slot's raw `u32` payload via
+                // `resolve_function_ref_for_dispatch` -- which treats that
+                // `u32` as a FUNCTION INDEX unconditionally. Before this
+                // check existed, a table declared with any non-funcref
+                // reftype (previously only `externref` was reachable here;
+                // W37's own generalization of table-declaration parsing
+                // newly makes `eqref`/`anyref`/`i31ref`/`structref`/a
+                // concrete struct or array type reachable too) could stash
+                // an opaque GC-heap handle in a table slot and then
+                // `call_indirect` on it -- if that handle's raw `u32` value
+                // happened to coincide with a valid function index, this
+                // would dispatch an ARBITRARY function using a value that
+                // was never a function reference (a real, if bounded --
+                // `resolve_function_ref_for_dispatch` still bounds-checks
+                // against `func_types`, so this is a type-confusion/logic
+                // bug, not memory-unsafety -- validator-soundness bypass).
+                // `table.get`/`table.set`/`table.fill`/`table.copy` already
+                // consult `ctx.table_element_types` for the identical
+                // reason; this instruction never did.
+                let elem_type = ctx.table_element_types[table_idx as usize];
+                if !matches!(elem_type, ValueType::Funcref | ValueType::ConcreteFuncRef(_) | ValueType::NonNullConcreteFuncRef(_)) {
+                    err!("call_indirect requires a funcref-family table, but table {table_idx} has element type {elem_type:?}");
+                }
                 let callee_type = ctx
                     .module
                     .types
@@ -2825,6 +2887,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // Task #107: same bounds-check as call_indirect (0x11) above.
                 if table_idx >= ctx.table_count {
                     err!("return_call_indirect references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                }
+                // W37 security review finding: same funcref-family-only
+                // requirement as `call_indirect` (0x11) above -- see that
+                // arm's own doc comment for the full writeup.
+                let elem_type = ctx.table_element_types[table_idx as usize];
+                if !matches!(elem_type, ValueType::Funcref | ValueType::ConcreteFuncRef(_) | ValueType::NonNullConcreteFuncRef(_)) {
+                    err!("return_call_indirect requires a funcref-family table, but table {table_idx} has element type {elem_type:?}");
                 }
                 let callee_type = ctx
                     .module

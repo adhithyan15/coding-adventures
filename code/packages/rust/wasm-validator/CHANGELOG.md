@@ -2,6 +2,85 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.88] - 2026-09-02 - GC reftype tables (W37): one new `is_assignable` gap found and closed
+
+Per `code/specs/W37-wasm-gc-reftype-tables.md`. `table_element_types`
+(`build_module_context`) already consulted `wasm_types::WasmModule::
+table_concrete_element_types` fully generically before this release --
+whatever `ValueType` is stored there, `table.get`/`table.set`/
+`table.fill`/`table.copy`/`call_indirect`'s type-checking type-checks
+against it with **no changes needed in this crate** for the two new
+`wasm-types` 0.1.25 variants (`Eqref`/`StructRefAny`) to become real,
+checkable table element types. This is the single biggest reason W37's fix
+is smaller than its motivating framing suggested.
+
+**One real, genuinely missing `is_assignable` arm found and closed**,
+however: a concrete struct reference (`NonNullStructRef`/`StructRef`, e.g.
+`struct.new_default $t0`'s own result) was previously assignable only to
+`Anyref` -- never to the new abstract `structref` top (`StructRefAny`),
+because that type didn't exist yet. `ref_cast.wast`'s own "Concrete Types"
+module (`(table 20 (ref null struct)) ... (table.set ... (struct.new_
+default $t0))`) needs exactly this. Added, alongside the rest of the two
+new types' own subtyping edges per the real GC proposal's hierarchy
+(`struct <: eq <: any`) for completeness -- each hop listed directly,
+matching this function's own established "no transitive closure" style
+(`NonNullStructRef(_) <: StructRef(_) <: Anyref` one hierarchy over is the
+same shape). Only the `NonNullStructRef(_)`/`StructRef(_) -> StructRefAny`
+edge is corpus-verified today; the rest (`Eqref <: Anyref`, `StructRefAny
+<: Eqref`, `StructRefAny <: Anyref`, and the two concrete-struct-to-`Eqref`
+hops) complete the hierarchy per the spec text but are not yet exercised
+by any vendored fixture.
+
+**A note on scope, and a real pre-existing gap this correction did NOT
+extend to**: `I31ref`'s own `<: Anyref`/`<: Eqref` edges are ALSO missing
+from `is_assignable` -- a separate, pre-existing gap this slice's own
+research found but did not fix, since no table declaration in this
+spec's corpus cluster needs it, and the W37 spec document itself only
+asks for the two NEW types' edges. Currently masked in the real corpus by
+`i31.wast`'s own `ref.cast i31ref`-hits-a-different-restriction failure
+(see that file's own probe trace) -- flagged for whoever eventually
+revisits `ref.test`/`ref.cast`'s concrete-only type-immediate restriction
+(`module.rs:4397-4406`, already flagged out of scope by this same W37
+spec document).
+
+New integration tests (`tests/type_check.rs`):
+`valid_table_declared_with_each_bare_gc_reftype_atom`,
+`valid_table_declared_with_compound_null_eq_and_null_struct_reftypes`,
+`valid_table_set_a_concrete_struct_reference_into_a_structref_table`
+(the one exercising the new `is_assignable` arm directly),
+`valid_funcref_and_externref_tables_are_unaffected_by_the_generalized_
+dispatch`.
+
+**Security-review finding, fixed in this same release**: `call_indirect`
+(`0x11`) and `return_call_indirect` (`0x13`) never checked that their
+target table is funcref-family before this fix -- only its index bounds.
+`wasm-execution`'s own dispatch handler documents relying on exactly this
+as a safety invariant ("`wasm-validator` already guarantees `call_indirect`
+only ever targets an actual funcref-typed table"), resolving a table
+slot's raw `u32` payload via `resolve_function_ref_for_dispatch`, which
+treats that `u32` unconditionally as a FUNCTION INDEX. Before W37, only an
+`externref` table could reach this gap; W37's own table-declaration
+generalization newly makes `eqref`/`anyref`/`i31ref`/`structref`/a
+concrete struct or array type reachable too -- substantially widening a
+real, if bounded (no memory unsafety: `resolve_function_ref_for_dispatch`
+still bounds-checks against the real function index space, so this is a
+type-confusion/logic bug, not memory corruption), validator-soundness
+bypass. Fixed by adding the same `ctx.table_element_types[table_idx]`
+check `table.get`/`table.set`/`table.fill`/`table.copy` already use to
+both opcodes. **Corpus impact**: this fix alone closes 2 additional real
+`assert_invalid` cases the pinned corpus already carried --
+`call_indirect.wast`'s own "call_indirect expects funcref type but
+receives externref" case (11 -> 10 NYS, +1 real `Pass`) and
+`return_call_indirect.wast`'s analogous case (64 -> 63 NYS, +1 real
+`Pass`) -- both were previously misclassified `NotYetSupported`
+("structurally validates") rather than the `Fail` their content should
+have produced, since nothing checked this property at all. New regression
+tests: `invalid_call_indirect_rejects_a_non_funcref_table`,
+`invalid_return_call_indirect_rejects_a_non_funcref_table`,
+`valid_call_indirect_against_a_concrete_funcref_family_table` (the
+positive counterpart, confirming the check looks at funcref-FAMILY-ness,
+not bare equality to `Funcref`).
+
 ## [0.2.87] - 2026-09-02 - type-check typed `select` (0x1C)
 
 Adds an instruction-level type-check rule for `0x1C`, the reference-
