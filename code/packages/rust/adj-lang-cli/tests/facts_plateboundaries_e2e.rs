@@ -57,7 +57,7 @@ fn earth_science_plate_boundaries_recall_binds_motion_with_citation() {
     // closing on the terminating quote pins head, tail, punctuation and
     // length at once. See issues #13916 and #13918.
     assert!(
-        out.contains("\"source\":\"Plates rip apart at a divergent plate boundary, causing volcanic activity and shallow earthquakes.\""),
+        out.contains("\"source\":\"Plates rip apart at a divergent plate boundary, causing volcanic activity and shallow earthquakes;\""),
         "the citation is the whole source sentence, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
@@ -91,4 +91,34 @@ fn earth_science_plate_boundaries_recall_binds_motion_with_citation() {
     // The equator is a line of latitude, not one of the three plate-boundary
     // types — honest abstention, never a fabricated motion.
     assert!(out.contains("\"abstained\":true"), "equator abstains: {out}");
+}
+
+const PLATE_BOUNDARIES_PIN: &str = r#""bindings":{"Motion":"rip_apart"},"citations":[{"source":"Plates rip apart at a divergent plate boundary, causing volcanic activity and shallow earthquakes;","locator":"https://www.nps.gov/subjects/geology/plate-tectonics-types-of-plate-boundaries.htm","trust":"authoritative""#;
+
+#[test]
+fn plate_boundary_citation_keeps_the_pages_semicolon() {
+    let dir = scratch("reground");
+    std::fs::copy(
+        facts_stdlib().join("earth-science/plate-boundaries.adj"),
+        dir.join("plate-boundaries.adj"),
+    )
+    .expect("copy shipped plate-boundaries.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"plate-boundaries.adj\"
+? boundary_motion(divergent, $Motion)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped value was a FRAGMENT PUNCTUATED INTO A SENTENCE: the page's
+    // wording, with one character changed so it would read as standalone. It
+    // therefore appeared on no page. Every quote-keyed screen passed it,
+    // because the quotes were all correct.
+    assert!(
+        out.contains(PLATE_BOUNDARIES_PIN),
+        "the divergent citation ends as the page does: {out}"
+    );
 }
