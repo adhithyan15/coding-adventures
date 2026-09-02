@@ -104,7 +104,7 @@ fn session_progress_layout_binds_all_counter_slots() {
         ("metric-total", "total-label", "total-value"),
     ] {
         assert!(
-            source.contains(&format!("Box [ {metric} ]")),
+            source.contains(&format!("Column [ {metric} ]")),
             "SessionProgress.mll must expose {metric}"
         );
         assert!(
@@ -131,7 +131,12 @@ fn session_progress_pipeline_emitters_all_accept_the_same_sources() {
     assert!(html
         .output
         .contains("data-mosaic-component=\"SessionProgress\""));
-    assert!(html.output.contains("#0f766e"));
+    // The chips share one surface now; colour lives on the value and only
+    // where the number is a call to action. Asserting both keeps the emitter
+    // honest AND pins the design decision -- a future change that repaints
+    // every chip a different hue again would fail here.
+    assert!(html.output.contains("#1e293b"), "shared chip surface");
+    assert!(html.output.contains("#fbbf24"), "amber marks the remaining count");
 
     let swift = mosaic_emit_swiftui::from_pipeline(&component, &layout, &style)
         .expect("SwiftUI emitter should compile SessionProgress");
