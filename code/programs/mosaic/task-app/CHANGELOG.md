@@ -2,7 +2,11 @@
 
 All notable changes to the `task-app` web program are documented here.
 
-## [0.1.0] - Unreleased
+## [Unreleased]
+
+Entries below ship in the next product release. `task-app-v0.1.0` published on
+2026-08-31; everything added after that tag accumulates here until the next
+version is cut and this heading is replaced with it.
 
 ### Documented - platform completion plan across all nine Mosaic backends (#13517)
 
@@ -176,6 +180,8 @@ row and places the Rust-owned completion percentage beyond the default desktop
 viewport; the real-runtime lifecycle again requires `100%` to be displayed
 after completing a task. Shared TaskApp styles remain unchanged for web,
 Flutter, and SwiftUI.
+
+## [0.1.0] - 2026-08-31
 
 ### Fixed - self-contained browser storage entrypoint (#13543)
 
@@ -969,8 +975,6 @@ Without them nothing in this layout would have been vertically centred, and the 
   JavaScript's range renders as `—` instead of throwing from `toISOString`, and the
   min/max use `reduce` rather than spreading a large array into an argument list.
 - A zero-duration milestone is floored at a sliver so it stays visible.
-
-## [0.1.0] - Unreleased
 
 ### Added - light/dark theme switching in the web host
 
