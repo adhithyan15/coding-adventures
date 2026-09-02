@@ -240,8 +240,12 @@ The environment passed to an agent is therefore a **closed set defined by the
 supervisor**: anything not enumerated is dropped. It is not a manifest-extensible
 allowlist with a deny-list overlay, because a deny-list is an enumeration and
 this spec claims language-agnosticism by construction — a new runtime would
-need a new deny-list entry before it was safe. Grantable names are a fixed set
-containing no loader, interpreter, profiler, locale, or module-search variable.
+need a new deny-list entry before it was safe. Grantable names are **enumerated in this spec**, carried in the plan as a
+first-class term alongside the base policy (S-I1a), and applied at both the
+supervisor's `exec` of the wrapper and the `envp` handed to the agent exec.
+Additions require a spec amendment. Defining the set negatively — "containing no
+loader or interpreter variable" — would be a category deny-list, the construct
+this rule rejects.
 
 A deny-list is retained only as a redundant second check. It must name at least
 `LD_*`, `GLIBC_TUNABLES` (the CVE-2023-4911 vector), `DYLD_*`, `PYTHON*`,
@@ -272,8 +276,9 @@ and no Landlock domain, while the install reported success.
 
 The shim installs the sandbox before the runtime creates any thread, or the
 launch fails. It verifies this by reading `/proc/self/task` and requiring
-exactly one thread. Where seccomp must be installed later, it uses TSYNC and
-aborts on TSYNC failure. **A Landlock domain installed after runtime boot on a
+exactly one thread. Under S-I4d there is no case in which seccomp is
+installed after threads exist, and no such case is admissible; TSYNC is retained
+only as belt-and-braces on a provably single-threaded wrapper. **A Landlock domain installed after runtime boot on a
 multithreaded runtime is not an admissible resolution.**
 
 **S-I4c — nothing acquired before the sandbox may survive it.** `cap_enter()`,
@@ -309,10 +314,46 @@ The mechanism is therefore stated, not left open. The supervisor `exec`s a
 descriptor. The wrapper, in its own process, in this order:
 
 1. sets `PR_SET_NO_NEW_PRIVS` (aborting on failure, per S-P1),
-2. runs `close_range` over everything but the channel (S-I4c),
+2. runs `close_range` over the complement of an **exactly enumerated** survivor
+   set — stdin, stdout, the fd-2 sink (S-I2), and the agent binary descriptor —
+   asserting afterwards that the surviving table is precisely those four. "All
+   but the channel" taken literally closes the binary descriptor step 5 needs
+   and the fd-2 sink S-I2 forbids leaving closed; the implementer then invents a
+   wider retained range or re-opens after the policy is installed, reopening the
+   S-I4c property this step exists to enforce. The binary descriptor is
+   `O_CLOEXEC` so it does not survive into the agent,
 3. installs the base deny policy (S-I1a) while single-threaded (S-I4b),
 4. runs the S-P4 self-test,
-5. `fexecve`s the agent descriptor.
+5. `execveat`s the agent descriptor.
+
+**The wrapper's own mechanism grants the agent `exec`, and this must be
+constrained or S-I1 is false.** The wrapper installs the base policy at step 3
+and execs at step 5, so the exec syscall must be in the base allowlist — and
+seccomp filters are inherited unchanged across `execve`, as the table below
+says. The agent therefore holds `execveat` permanently unless something stops
+it. For a compiled agent with an empty Landlock ruleset the damage is bounded,
+because no path carries EXECUTE. For an **interpreted** agent, which must be
+granted read+execute over the supervisor-owned runtime image, it is a full
+bypass: re-exec the interpreter with attacker-chosen argv, or any helper binary
+in that tree, defeating S-K6's digest-pinned target set. Silently — the plan
+reports success.
+
+Either constraint is admissible, and one is required:
+
+- `execveat` is permitted only with argument-matched `AT_EMPTY_PATH` on the
+  single pre-opened binary descriptor number, **and**
+  `LANDLOCK_ACCESS_FS_EXECUTE` is withheld from every path rule including the
+  runtime image; or
+- `SECCOMP_FILTER_FLAG_NEW_LISTENER`, with the supervisor permitting exactly
+  one exec and denying thereafter.
+
+A base allowlist containing unconstrained `execve`/`execveat` is not an
+admissible plan. "Filters survive `execve`" cuts both ways.
+
+OpenBSD is safe here by construction — `pledge` `execpromises` applies the
+strict set *after* exec — and FreeBSD is safe because capability mode has no
+path-based exec and the agent holds no directory descriptor. **Linux is the
+hole, and Linux is Tier A.**
 
 This works because sandbox state survives `execve`:
 
@@ -321,7 +362,17 @@ This works because sandbox state survives `execve`:
 | seccomp filter (with `NO_NEW_PRIVS`) | yes |
 | Landlock domain | yes |
 | `pledge`/`unveil` (with `execpromises`) | yes |
-| Capsicum capability mode | yes — and `execve` **by path** is then unavailable, so `fexecve` is mandatory, not preferred |
+| Capsicum capability mode | yes — and `execve` **by path** is then unavailable, so descriptor-based exec is mandatory; the descriptor needs `CAP_FEXECVE` via `cap_rights_limit` *before* `cap_enter` |
+
+The exec is issued as `execveat(fd, "", ..., AT_EMPTY_PATH)` on a descriptor
+opened `O_RDONLY`, **never** `O_PATH` and never through a `/proc/self/fd`
+fallback — glibc's `fexecve` resolves that way, and S-I1 makes `/proc`
+unreachable, so the launch would fail opaquely *after* the sandbox is installed
+and the convenient fix is to grant `/proc/self`, reopening the introspection
+S-I5 depends on being closed. A `/proc`-dependent exec path is inadmissible.
+
+S-K1's same-object rule extends to the agent binary: the wrapper execs only a
+descriptor whose digest the supervisor verified against the signed manifest.
 
 "Sandboxed at `exec`" in S-I4c therefore means: **the first agent-supplied
 instruction executes with the plan already installed.** That is achievable on
@@ -368,9 +419,19 @@ available only by asking. A capability may be promoted to a **direct grant**
 only where the OS can enforce it narrowly and a measurement justifies it —
 brokering per-read over a large data directory is the motivating case.
 
-**Never grantable, direct or brokered:** any `fs:write` whose target
-intersects the runtime image, the shim, the broker binary, the agent package
-directory, or the manifest. A manifest declaring one is rejected at sign time
+**Never grantable, direct or brokered, for read *or* write:** any `fs:*` whose
+target intersects the runtime image, the wrapper binary, the shim, the broker
+binary, the supervisor binary, the agent package directory, the manifest, the
+**vault backing store and its directory**, the **audit log and its directory**,
+the **sandbox plan and policy files**, or the **principal/subuid mapping**.
+
+The vault and audit entries are not optional extras. VLT06's per-secret
+`allowed_agents` is enforced by the vault, not by the filesystem, so reading the
+backing store directly reads every secret regardless of policy — and under
+brokering it is the *supervisor-privileged broker* that performs the read.
+Writing the audit log destroys the record S-P4 and S-I5 depend on. **A
+policy-mediated resource is never reachable as a raw path**: the vault is
+reachable only through the vault capability. A manifest declaring one is rejected at sign time
 and again at launch.
 
 This is a bar on the *capability*, not on promotion, and the distinction is the
@@ -499,15 +560,33 @@ inverts the boundary completely.
 are never executed in the broker's address space, under any circumstances.**
 Calling an agent-chosen native function with agent-chosen arguments inside a
 supervisor-privileged process is a complete Layer 7 defeat reachable through a
-declared, reviewed, hardware-key-approved capability. Where supported at all,
-such a call runs in a fresh helper launched under a plan at least as strict as
-the requesting agent's, as the **agent's** principal.
+declared, reviewed, hardware-key-approved capability. There is no supported path for it in this spec.
+
+That is stated flatly because the obvious escape hatch is unsatisfiable by
+construction: a helper that performs the call must hold `dlopen` plus
+read+execute on the target library — authority the requesting agent cannot hold,
+since `ffi:*` is never direct. A rule permitting such a helper would contradict
+this rule's own title. Enabling `ffi:*` requires a named amendment to this
+document, not an implementer's judgement.
 
 **Brokered `proc:exec` spawns only through the same `spawn_verified` path used
-for agents**: supervisor-owned wrapper, the agent's principal, a sandbox plan
-that is a subset of the requester's, and targets restricted to a
-manifest-declared digest-pinned set. Never `PATH`-resolved. A broker-spawned
-child must not inherit the broker's principal or its unsandboxed state.
+for agents**: supervisor-owned wrapper, the agent's principal, and targets
+restricted to a manifest-declared digest-pinned set. Never `PATH`-resolved. The
+child must not inherit the broker's principal or its state.
+
+**The broker never execs.** A brokered exec is a *request to the supervisor*,
+which performs `spawn_verified`; the broker's own plan therefore contains no
+exec authority at all. Without this the broker needs exec to satisfy S-K6, and
+S-K7's containment becomes unsatisfiable.
+
+**"A plan that is a subset of the requester's" is a computed predicate, not a
+adjective.** Plans are per-platform and heterogeneous, so the comparison is
+defined per platform — seccomp allowlist subset; Landlock rights subset over
+identical path sets; `pledge` promise-set subset; AppContainer capability-SID
+subset — evaluated at helper launch. If it cannot be decided, the launch fails
+under S-P3. Left undefined, an implementer compares declared capability *lists*
+rather than lowered plans, or reuses "the same plan plus what the helper needs",
+and either reintroduces the inversion this rule closes.
 
 ### S-K7 — the broker is itself contained
 
@@ -515,14 +594,21 @@ S-I3's descriptor discipline applies to **every** supervisor-launched process,
 the broker included: it does not inherit the supervisor's descriptor table —
 vault handles, audit-log descriptors, other agents' channels.
 
-The broker runs under its own sandbox plan, holding no authority beyond the
-union of the capabilities its agents declare.
+The broker runs under its own sandbox plan, holding **its own minimum — the
+channel keys, its audit descriptor, its pre-opened roots — plus the union of its
+agents' declared capabilities, and nothing else**, enumerated in the plan as a
+first-class term. Stating the bound as "no more than its agents declare" alone
+is unsatisfiable, since no agent declares the channel keys; an unsatisfiable
+bound gets ignored.
 
 Whether there is one broker per agent or one per supervisor is therefore a
 **blast-radius** decision before it is a capacity one: it determines whether an
 S-K5 parsing defect compromises one agent or all of them. Per-supervisor is
-admissible only if the broker is internally compartmented per agent; otherwise
-per-agent is required.
+admissible only if the broker is compartmented per agent by **a separate OS
+principal and a separate address space** — which is to say, multiplexing many
+agents through one broker process is inadmissible. "Separate structs, or a
+thread each" satisfies the words and is not a boundary; that is the S-B1 error
+this spec exists to prevent. In practice: one broker per agent.
 
 ---
 
@@ -635,7 +721,13 @@ launch-time and CI halves are separated rather than conflated:
 
 - **At launch**, the wrapper probes only a narrow set of classes deliberately
   mapped to `SECCOMP_RET_ERRNO` and named in the plan, and requires the
-  expected `EPERM`/`EACCES`. Any success aborts the launch.
+  expected errno. Any success aborts the launch. **Each probe class is chosen so
+  that its outcome *without* the sandbox is success** — verified in the Layer 6
+  harness — and the filter-mapped errno is distinct from the ambient one, so the
+  probe distinguishes enforcement from an ambient DAC denial. A probe that would
+  return `EPERM` anyway under the agent's unprivileged UID passes identically
+  whether or not the filter installed, which is the exact failure S-P4 exists to
+  catch.
 - **In CI**, the full-coverage negative test runs in the Layer 6 harness, where
   dynamic verification already lives and a killed process is an expected
   outcome.
