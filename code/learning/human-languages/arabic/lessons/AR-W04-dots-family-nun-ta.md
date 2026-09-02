@@ -6,11 +6,11 @@ type: writing
 headword: "ن، ت، ث"
 gloss: the bowl skeleton finished — nūn, tāʾ, thāʾ, where only the dots differ
 romanization: "nūn, tāʾ, thāʾ"
-prerequisites: [AR-W03-write-salam]
+prerequisites: [AR-W00-full-greeting-recall]
 sounds: [arabic-nun, arabic-ta, arabic-tha]
 roots: [phoenician-nun, phoenician-taw]
 est_minutes: 4
-reviews_of: [AR-W03-write-salam, AR-W03-dots-mim-ba-salam, AR-C02-anta-anti, AR-C02-ism]
+reviews_of: [AR-W00-alif-mim-salam, AR-W00-ba-family-marhaba, AR-C02-anta-anti, AR-C02-ism]
 ---
 
 # ن، ت، ث — one bowl, four dot-patterns

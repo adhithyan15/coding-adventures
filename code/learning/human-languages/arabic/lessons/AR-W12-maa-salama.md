@@ -27,7 +27,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: modern-standard-arabic
-reviews_of: [AR-W11-ha-and-ta-marbuta, AR-W10-ayn, AR-W03-write-salam, AR-W03-dots-mim-ba-salam]
+reviews_of: [AR-W11-ha-and-ta-marbuta, AR-W10-ayn, AR-W00-alif-mim-salam, AR-W00-ba-family-marhaba]
 ---
 
 # مع السلامة — the goodbye, and a word you already know

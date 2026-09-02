@@ -27,7 +27,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: modern-standard-arabic
-reviews_of: [AR-W07-hook-family-ha-kha, AR-W01-direction-and-alif]
+reviews_of: [AR-W07-hook-family-ha-kha, AR-W00-alif-mim-salam]
 ---
 
 # ك and ر — an angular k, and an r that won't hold hands

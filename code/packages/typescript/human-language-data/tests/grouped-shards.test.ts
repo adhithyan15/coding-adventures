@@ -138,11 +138,21 @@ function sandbox(): string {
 // So this literal stays. A number that only moves when a person deliberately
 // changes the thing it measures is a tripwire, not a maintenance tax.
 //
-// 69 -> 67: the tripwire firing as designed. Punjabi's Chapters 4 and 5 were the
-// track's last hand-written .tex, and they are now generated from their lessons.
-// Nothing was silently dropped in the flip: `handwritten_parity.py` reported
-// Punjabi under NOTHING WOULD BE LOST before it, and now reports the track as
-// having nothing hand-written left at all.
+// It has now moved three times in quick succession, every time as designed.
+//
+// 69 -> 67: Punjabi's Chapters 4 and 5 were that track's last hand-written
+// .tex, and they are now generated from their lessons. Nothing was silently
+// dropped in the flip: `handwritten_parity.py` reported Punjabi under NOTHING
+// WOULD BE LOST before it, and now reports the track as having nothing
+// hand-written left at all.
+//
+// 67 -> 66: Italian's chapter one, the same move again.
+//
+// 66 -> 61: Telugu chapters 1-5, the largest of the three. Made only
+// after `handwritten_parity.py --check telugu` exited 0 with those five
+// chapters STILL hand-written — i.e. after the seven blocks of prose they held
+// had been carried into the lessons. Lowering the number without that evidence
+// is the exact move the tripwire exists to catch.
 
 /**
  * Authored-chapter identities according to each track's own `chapters.d` — the

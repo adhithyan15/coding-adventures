@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:46a5732370f05a49",
+  "sourceHash": "fnv1a64:fc15f86b3302d6c6",
   "lessons": [
     {
       "id": "TE-S01-letter-ta",
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c0c834c7ba1fb553",
+      "sourceHash": "fnv1a64:e894bbccf25ab924",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -490,7 +490,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b7482c4562fad79c",
+      "sourceHash": "fnv1a64:79a5a543687f9796",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -793,7 +793,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:043e0ccd43de7364",
+      "sourceHash": "fnv1a64:464718962afe7af7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -840,7 +840,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఉండు (uṇḍu, \"to be, to exist, to stay, to live\") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru (\"you are\") and bāgunnānu (\"I'm well\") — and it also means \"to reside\": నేను హైదరాబాద్‌లో ఉంటాను (nēnu Hyderābādlō uṇṭānu, \"I live in Hyderabad\"). One verb covers \"be,\" \"stay,\" and \"live.\""
+              "text": "ఉండు (uṇḍu, \"to be, to exist, to stay, to live\") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru (\"you are\") and bāgunnānu (\"I'm well\") — and it also means \"to reside\": నేను హైదరాబాద్లో ఉంటాను (nēnu Hyderābādlō uṇṭānu, \"I live in Hyderabad\"). One verb covers \"be,\" \"stay,\" and \"live.\""
             }
           ]
         },
@@ -851,7 +851,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "హైదరాబాద్‌లో (Hyderābādlō) = Hyderabad + -లో (-lō, \"in\"). The little word for \"in\" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. \"Hyderabad-in I stay,\" the verb last."
+              "text": "హైదరాబాద్లో (Hyderābādlō) = Hyderabad + -లో (-lō, \"in\"). The little word for \"in\" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. \"Hyderabad-in I stay,\" the verb last."
             }
           ]
         },
@@ -1092,7 +1092,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:497dcf5cb0a967b8",
+      "sourceHash": "fnv1a64:8f539e417056a4c0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1395,7 +1395,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ed7623432987e94",
+      "sourceHash": "fnv1a64:0c71b9c5468c407b",
       "notice": null,
       "blocks": [
         {
@@ -1417,9 +1417,32 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
+          "type": "guided-production",
+          "title": "Guided Practice: build the sentences",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Three sentences about yourself, read off the page before you say them:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Telugu",
+                "",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Telugu: నేను తెలుగు మాట్లాడతాను., nēnu telugu māṭlāḍatānu. English: I speak Telugu.",
+                "Telugu: నేను హైదరాబాద్లో ఉంటాను., nēnu Hyderābādlō uṇṭānu. English: I live in Hyderabad.",
+                "Telugu: నేను పని చేస్తాను., nēnu pani cēstānu. English: I work."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead."
+            },
             {
               "kind": "pause",
               "seconds": 1,
@@ -1466,8 +1489,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine",
+          "type": "notice",
+          "title": "What you've built — the engine",
           "segments": [
             {
               "kind": "pause",
@@ -1506,14 +1529,18 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The words, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
               "seconds": 2,
               "perItem": false,
               "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Roots you now carry:"
             },
             {
               "kind": "speech",

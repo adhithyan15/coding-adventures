@@ -5,6 +5,7 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
+    "postinstall": "node ./local-deps.mjs",
     "build": "tsc",
     "generate:books": "node dist/book-cli.js --write",
     "check:books": "node dist/book-cli.js --check",

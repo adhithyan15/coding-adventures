@@ -1,0 +1,11 @@
+{
+  "id": "TE-EXT-004-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the five Telugu words of chapter 1.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C01-practice"
+  ]
+}

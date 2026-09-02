@@ -40,7 +40,7 @@ eyes off the script. Put the sound and meaning in your ear first; the next two
 tiny lessons will reveal its written pieces without asking you to swallow four
 new shapes at once.
 
-## You'll want to know — Hear the word
+## Sounds you'll need — Hear the word
 <!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01] -->
 
 Say it in two easy beats: *sa* — *lām*. Hold the second *a* a little longer:
