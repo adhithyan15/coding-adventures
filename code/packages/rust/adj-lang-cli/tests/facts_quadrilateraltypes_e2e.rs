@@ -92,3 +92,64 @@ fn geometry_quadrilateral_types_recall_binds_property_with_citation() {
     // recall abstains honestly, never a fabricated property.
     assert!(out.contains("\"abstained\":true"), "triangle abstains: {out}");
 }
+
+const RECT_PIN: &str = r#""bindings":{"Shape":"rectangle"},"citations":[{"source":"The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above.","locator":"https://mathworld.wolfram.com/Square.html","trust":"authoritative","corroborations":[{"source":"A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles.","locator":"https://mathworld.wolfram.com/Rectangle.html""#;
+
+const TRAP_PIN: &str = r#""bindings":{"Property":"two_sides_parallel"},"citations":[{"source":"The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above.","locator":"https://mathworld.wolfram.com/Square.html","trust":"authoritative","corroborations":[{"source":"A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles.","locator":"https://mathworld.wolfram.com/Rectangle.html"},{"source":"A rhombus is a quadrilateral with both pairs of opposite sides parallel and all sides the same length, i.e., an equilateral parallelogram.","locator":"https://mathworld.wolfram.com/Rhombus.html"},{"source":"A parallelogram is a quadrilateral with opposite sides parallel (and therefore opposite angles equal).","locator":"https://mathworld.wolfram.com/Parallelogram.html"},{"source":"A trapezoid is a quadrilateral with two sides parallel.","locator":"https://mathworld.wolfram.com/Trapezoid.html""#;
+
+#[test]
+fn quadrilateral_rectangle_answer_carries_its_mathworld_corroboration_intact() {
+    let dir = scratch("cite_rect");
+    std::fs::copy(
+        facts_stdlib().join("geometry/quadrilateral-types.adj"),
+        dir.join("quadrilateral-types.adj"),
+    )
+    .expect("copy shipped quadrilateral-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"quadrilateral-types.adj\"\n? quadrilateral_property($Shape, four_right_angles)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // ANCHORED and JOINT: bindings + envelope + corroboration in ONE span,
+    // ending on a closing quote.
+    //
+    // The "lengths a and b" here come from MathWorld's inline formulas, which
+    // are `<img class="inlineformula" alt="a">` -- 9px images OF THOSE
+    // LETTERS. Recovering the alt reproduces what the page displays. That is
+    // NOT true of circle-parts' diameter, whose `<img alt="pi">` renders a pi
+    // SYMBOL: there the alt NAMES the glyph rather than being it, so that row
+    // is deliberately left uncited. Pinning the recovered form here is what
+    // keeps the two cases from being collapsed back together.
+    assert!(
+        out.contains(RECT_PIN),
+        "rectangle's answer carries the MathWorld Rectangle sentence verbatim: {out}"
+    );
+}
+
+#[test]
+fn quadrilateral_trapezoid_answer_carries_all_four_corroborations_in_order() {
+    let dir = scratch("cite_trap");
+    std::fs::copy(
+        facts_stdlib().join("geometry/quadrilateral-types.adj"),
+        dir.join("quadrilateral-types.adj"),
+    )
+    .expect("copy shipped quadrilateral-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"quadrilateral-types.adj\"\n? quadrilateral_property(trapezoid, $Property)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Spans the WHOLE corroboration list, so a reordering or a dropped middle
+    // entry fails here even though each individual sentence would still be
+    // present somewhere in the blob.
+    assert!(
+        out.contains(TRAP_PIN),
+        "trapezoid's answer carries all four MathWorld sentences in order: {out}"
+    );
+}
