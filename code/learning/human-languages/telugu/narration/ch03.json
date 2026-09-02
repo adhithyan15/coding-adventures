@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:759bb38e8d2f77b9",
+  "sourceHash": "fnv1a64:57775900574265a3",
   "lessons": [
     {
       "id": "TE-S142-digit-3",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b24dc62106a7888e",
+      "sourceHash": "fnv1a64:ba211cffd0a780df",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8fdc940083ffdf58",
+      "sourceHash": "fnv1a64:3c34e531fc96a95e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -584,7 +584,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d8385a84b986be76",
+      "sourceHash": "fnv1a64:0d9e41a5a396bd05",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -882,7 +882,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20732f1fd21978a4",
+      "sourceHash": "fnv1a64:4a56d54338eafe07",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1201,7 +1201,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:59e80057d845f2ea",
+      "sourceHash": "fnv1a64:089118f3327c4de6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1488,7 +1488,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d917a6b65d8a951",
+      "sourceHash": "fnv1a64:dacb7766d93c23c5",
       "notice": null,
       "blocks": [
         {
@@ -1513,6 +1513,29 @@
           "type": "input",
           "title": "The exchange",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the whole cycle off the page first — Telugu, then the sound, then the sense:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Telugu",
+                "",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Telugu: మీరు ఎలా ఉన్నారు? (mīru elā unnāru?), mīru elā unnāru. English: How are you?",
+                "Telugu: నేను బాగున్నాను, ధన్యవాదములు., nēnu bāgunnānu, dhanyavādamulu. English: I'm well, thank you.",
+                "Telugu: పరవాలేదు., paravālēdu. English: No problem / you're welcome."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead."
+            },
             {
               "kind": "pause",
               "seconds": 1,
@@ -1559,8 +1582,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "notice",
+          "title": "What you've built — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -1599,14 +1622,18 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The words, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
               "seconds": 2,
               "perItem": false,
               "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Roots you now carry:"
             },
             {
               "kind": "speech",

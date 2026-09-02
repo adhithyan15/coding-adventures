@@ -8,9 +8,12 @@
     "TE-C02-nuvvu-miiru",
     "TE-C02-emiti",
     "TE-C02-mii-peru-emiti",
-    "TE-C02-santosham"
+    "TE-C02-santosham",
+    "TE-C02-practice"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "TE-EXT-005-CONSOLIDATION"
+  ],
   "after": []
 }

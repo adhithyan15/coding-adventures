@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 2,
-  "sourceHash": "fnv1a64:c242b01293a7a121",
+  "sourceHash": "fnv1a64:dc61358d8714356d",
   "lessonIds": [
     "TE-C02-peru",
     "TE-S109-letter-na",
@@ -23,7 +23,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch02.txt",
   "json": "telugu/narration/ch02.json",
-  "textHash": "fnv1a64:bcff923bc09c31c8",
-  "jsonHash": "fnv1a64:b934cb584f1e0dca",
+  "textHash": "fnv1a64:a81068aa0c27a566",
+  "jsonHash": "fnv1a64:711d9598a311dc45",
   "findings": []
 }

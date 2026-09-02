@@ -16,8 +16,7 @@ The letters in this word.
 
 The word, taken apart.
 పేరు (pēru, "name") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for "name."
-
-Across the family — the same idea, six ways.
+Across the family — the same idea, six ways:
 [a table of 6 rows, read aloud]
 Language: Telugu. "Name": పేరు pēru. Source: native Dravidian (pēr).
 Language: Tamil. "Name": peyar. Source: the same Dravidian root.
@@ -154,7 +153,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the two atoms — and note, as in Tamil and Kannada, no word for "is."
 
-The phrase, assembled.
+The phrase, taken apart.
 nā (my) + pēru (name) + your name.
 నా పేరు … (nā pēru …) = "my name …" becomes "my name is…"
 Nā pēru Arun. becomes "My name is Arun."
@@ -347,7 +346,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the question — your + name + what — still no "is."
 
-The phrase, assembled.
+The phrase, taken apart.
 మీ (mī, "your") = the possessive of mīru ("you," respectful).
 మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) = literally "your name what?" = "what's your name?"
 Three words, no verb — the zero copula holds for questions too.
@@ -410,7 +409,7 @@ Warm-up.
 [pause 2 seconds]
 The warm close — and, as in Kannada, a Sanskrit word.
 
-The phrase.
+You'll want to know: the full phrase.
 The full form is మిమ్మల్ని కలిసినందుకు సంతోషం (mimmalni kalisinanduku santōṣam) — "joy at having met you."
 
 The word, taken apart.
@@ -467,7 +466,11 @@ Which character is this — ◌ం (anusvara)? What does it add to the syllable 
 Lesson 15 of 15.
 Chapter 2 — the introduction, whole.
 
-The dialogue.
+Warm-up.
+[pause 2 seconds]
+No new words. Everything you have met in this chapter, said once through as the exchange it was always for.
+
+The exchange — the dialogue.
 [a table of 4 rows, read aloud]
 నా పేరు మీరా. (nā pēru Mira) means My name is Mira.
 మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) (mī pēru ēmiṭi) means What's your name?

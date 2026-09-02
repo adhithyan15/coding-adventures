@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TE-C03-miiru-elaa-unnaaru
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 160
 chapter: 3
 type: phrase
@@ -10,23 +12,38 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [TE-C03-elaa, TE-C02-nuvvu-miiru]
 sounds: [double-nn, retroflex]
 roots: [undu-be-dravidian]
-est_minutes: 4
+duration:
+  max_seconds: 250
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-ETYMON-C03-MIIRU-ELAA-UNNAARU-02, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03]
+practises:
+  knowledge: [TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-ETYMON-C03-MIIRU-ELAA-UNNAARU-02, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: polite
+variety: standard-colloquial
 reviews_of: [TE-C02-nuvvu-miiru, TE-C03-elaa]
 ---
 
 # మీరు ఎలా ఉన్నారు? (mīru elā unnāru?)
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The everyday "how are you?" — and the verb "to be" that carries it.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[TE-LEX-C03-MIIRU-ELAA-UNNAARU-01]; assesses=[] -->
 
 The new word is **ఉన్నారు** (*unnāru*, "you are/exist"): from the verb **ఉండు**
 (*uṇḍu*, "to be, to exist, to stay") + the respectful-you ending **-ారు**
 (*-āru*). Note the doubled **న్న** (*nn*).
 
 ## The phrase, taken apart
+<!-- hl-knowledge: introduces=[TE-ETYMON-C03-MIIRU-ELAA-UNNAARU-02]; assesses=[] -->
 
 **మీరు ఎలా ఉన్నారు?** = **మీరు** (*mīru*, "you," respectful) + **ఎలా** (*elā*,
 "how") + **ఉన్నారు** (*unnāru*, "are") — "you how are?", the verb **last**, as in
@@ -35,6 +52,7 @@ stay" — native Dravidian, and the workhorse behind "how are you," "I'm well," 
 (you'll see in Chapter 5) "I live."
 
 ## Grammar Lens: the verb carries "you"
+<!-- hl-knowledge: introduces=[TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03]; assesses=[] -->
 
 The ending **-ారు** (*-āru*) already means "you (respectful)," so *mīru* can be
 dropped: *elā unnāru?* is a complete "how are you?" To a friend (*nuvvu*), the
@@ -42,6 +60,7 @@ ending changes: **నువ్వు ఎలా ఉన్నావు?** (*nuvvu 
 familiar "you"). Match the "you" to the verb-ending, as Telugu always does.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-ETYMON-C03-MIIRU-ELAA-UNNAARU-02, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: the respectful question — *mīru elā unnāru?*]
@@ -49,6 +68,7 @@ familiar "you"). Match the "you" to the verb-ending, as Telugu always does.
 - [YOU SAY: the verb and its meaning (*uṇḍu* — "to be / exist / stay")]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-ETYMON-C03-MIIRU-ELAA-UNNAARU-02, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03] -->
 
 [PAUSE 3s] What verb powers "how are you?", and how does the ending change for a
 friend? (*Uṇḍu*, "to be"; *-āru* → *-āvu* for the familiar *nuvvu*.)

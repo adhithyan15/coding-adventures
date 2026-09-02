@@ -22,8 +22,7 @@ Left to right: న, మ, స్, కా, ర, ం = na-ma-s-kā-raṁ, which giv
 
 The word, taken apart.
 నమస్కారం (namaskāram) came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Telugu added its own final sound. Tamil instead kept its native greeting, vaṇakkam.
-
-Across the family — the same idea, six ways.
+Across the family — the same idea, six ways:
 [a table of 6 rows, read aloud]
 Language: Telugu. "Hello": నమస్కారం namaskāram. Source: Sanskrit.
 Language: Kannada. "Hello": namaskāra. Source: Sanskrit — the same word.
@@ -73,11 +72,7 @@ Left to right: ధ, న్య, వా, ద, ము, లు = dha-nya-vā-da-mu-l
 
 The word, taken apart.
 The core is Sanskrit: dhanya ("worthy, blessed," from dhana, "wealth") + vāda ("a saying," root vad, "to speak") = "an utterance of '[you are] worthy.'" Telugu then adds its own plural ending -mulu, so dhanyavāda-mulu is literally "worthy-sayings," thanks in the plural of courtesy. (You'll also hear the shorter dhanyavādālu.) The Sanskrit stem is the same one inside Hindi dhanyavād and Kannada dhanyavāda.
-
-Grammar Lens: Telugu builds words by gluing endings on.
--mulu is your first taste of how Telugu (like all Dravidian languages) works: it is agglutinative — it stacks meaning by gluing endings onto a stem, one after another, rather than using separate little words. Here a plural rides on a borrowed Sanskrit noun. Later endings will mark case ("to," "from," "with") the same way. Bank the idea: in Telugu, grammar is mostly suffixes.
-
-Across the family — the same idea, five ways.
+Across the family — the same idea, five ways:
 [a table of 5 rows, read aloud]
 Language: Telugu. "Thanks": dhanyavādamulu (ధన్యవాదములు). Note: Sanskrit stem + Telugu plural.
 Language: Kannada. "Thanks": dhanyavāda (ಧನ್ಯವಾದ). Note: Sanskrit — same stem.
@@ -85,6 +80,9 @@ Language: Hindi. "Thanks": dhanyavād (धन्यवाद). Note: Sanskrit �
 Language: Tamil. "Thanks": naṉṟi (நன்றி). Note: native ("goodness").
 Language: Malayalam. "Thanks": nandi (നന്ദി). Note: native — Tamil's cousin.
 Telugu, Kannada, and Hindi share the Sanskrit stem; Tamil and Malayalam keep the native naṉṟi / nandi.
+
+Grammar Lens: Telugu builds words by gluing endings on.
+-mulu is your first taste of how Telugu (like all Dravidian languages) works: it is agglutinative — it stacks meaning by gluing endings onto a stem, one after another, rather than using separate little words. Here a plural rides on a borrowed Sanskrit noun. Later endings will mark case ("to," "from," "with") the same way. Bank the idea: in Telugu, grammar is mostly suffixes.
 
 Sounds you'll need.
 New: ధ dha (aspirated d), the conjunct న్య (na stacked with ya), then వా, ద, ము, లు. Read ధ, న్య, వా, ద, ము, లు becomes dhanyavādamulu.
@@ -234,11 +232,7 @@ The word, taken apart.
 లేదు (lēdu) means "there is not, it is absent." It is native Dravidian, but built on a different root (lē-, absence) from the il- of Tamil and Kannada. Telugu also has కాదు (kādu), "it is not [that]" — so Telugu splits "no" into two:
 lēdu — denies existence ("there isn't"): pustakam lēdu, "there is no book."
 kādu — denies identity ("it isn't [that]"): idi pustakam kādu, "this is not a book."
-
-Grammar Lens: two "no"s, existence vs. identity.
-English leans on one flat "no." Telugu — carefully — keeps two negatives: lēdu for "there isn't / doesn't exist," kādu for "is not [the thing you said]." Choosing between them is choosing what you're denying. (This two-way negative is a Dravidian trait; Tamil has an echo of it too, but Telugu draws the line most sharply — and with a different root-word from its sisters.)
-
-Across the family — the same idea, five ways.
+Across the family — the same idea, five ways:
 [a table of 5 rows, read aloud]
 Language: Telugu. "No / isn't": lēdu / kādu (లేదు / కాదు). Note: native, but a different root (lē-, kā-).
 Language: Tamil. "No / isn't": illai (இல்லை). Note: native, root il-.
@@ -246,6 +240,9 @@ Language: Kannada. "No / isn't": illa (ಇಲ್ಲ). Note: native, root il-.
 Language: Malayalam. "No / isn't": illa (ഇല്ല). Note: native, root il-.
 Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European (unrelated).
 Three sisters share il-; Telugu alone picked lē- / kā-. Same family, not a uniform one — a reminder that Dravidian has real internal branches.
+
+Grammar Lens: two "no"s, existence vs. identity.
+English leans on one flat "no." Telugu — carefully — keeps two negatives: lēdu for "there isn't / doesn't exist," kādu for "is not [the thing you said]." Choosing between them is choosing what you're denying. (This two-way negative is a Dravidian trait; Tamil has an echo of it too, but Telugu draws the line most sharply — and with a different root-word from its sisters.)
 
 Sounds you'll need.
 లే is lē (ల la with the long-“ē” sign); దు is du. Read లే, దు becomes lēdu.
@@ -342,19 +339,19 @@ Which character is this — ◌ే? What vowel does it put on the consonant it a
 Lesson 9 of 9.
 Chapter 1 — a five-word recap.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Read them back until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The exchange — read them back until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 Five words, and a first handful of Telugu letters read straight off the page. Let's gather only what you have already learned and make it feel easy.
 
-Read them back.
+The exchange — read them back.
 Sound each out, left to right, before checking:
 There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Read, one with no heading, Meaning, Origin. Come back and look at it when you have stopped.
 The letters that did it: consonants carry a built-in "a" (many under the little talakaṭṭu hat); a vowel sign swaps that vowel (ా ā, ు u, ే ē); a virama lets a consonant stack below the next as a conjunct (స్క); a dot anusvāra (ం) adds a final nasal; and a word-initial vowel gets a full letter (అ).
 The now-familiar pattern: the two greeting/politeness words are Sanskrit; the three everyday grammar words are native — though Telugu's "no" (lēdu) takes a different native root from its sisters' il-.
 
-A promise for later.
+Why it's said this way — a promise for later.
 Telugu has a warm departure exchange built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part.
 
 Guided Practice.

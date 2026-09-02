@@ -137,6 +137,14 @@ function sandbox(): string {
 //
 // So this literal stays. A number that only moves when a person deliberately
 // changes the thing it measures is a tripwire, not a maintenance tax.
+//
+// It has now moved once, as designed: 69 -> 64, when Telugu chapters 1-5 were
+// retired into the generator. That flip is the ONE edit this literal is here to
+// force somebody to make consciously, and it was made only after
+// `handwritten_parity.py --check telugu` exited 0 with those five chapters
+// still hand-written — i.e. after the prose they held had been carried into the
+// lessons. Lowering the number without that evidence is the exact move the
+// tripwire exists to catch.
 
 /**
  * Authored-chapter identities according to each track's own `chapters.d` — the
@@ -201,7 +209,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
     // The handwritten count STAYS PINNED, and deliberately so — see the note
     // above on why this particular literal is not part of the write-lock.
-    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(69);
+    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(64);
     // The total is chapter-scaled, so it is proved against the independently
     // authored `chapters.d` instead.
     expect(
@@ -239,7 +247,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    expect(identities.handwritten.size).toBe(69);
+    expect(identities.handwritten.size).toBe(64);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
     );
