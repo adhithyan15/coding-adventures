@@ -2,6 +2,121 @@
 
 ## [Unreleased]
 
+### Added - 33 more pre-A1 words, chosen against the A1 exam inventory: 176/282 -> 192/282
+
+Seven chapters (**75-81**), one new headword per lesson. Thirty-five words were
+authored against chapters 68-74; #14113's joining tranche merged into those same
+seven numbers first, so this tranche moved to 75-81 and two of its words were cut
+rather than taught twice. A1 exam coverage moves **176/282 (62%) ->
+192/282 (68%)**, measured with `measureExamCoverage` on the MERGED tree, before
+and after, never composed from the two branches' separate claims.
+
+TWO WORDS CUT, NOT RENUMBERED
+
+Both tranches were chosen against the same list of uncovered inventory points,
+and both closed HI-A1-Q-07 (`kab`) and HI-A1-Q-08 (`kyon`/`kyonki`). Introducing
+a headword twice is a hard error, so `HI-C71-when` (कब) and `HI-C71-why` (क्यों)
+are deleted and those two points stay #14113's:
+
+  - it teaches `kab` inside the ka-/ja-/ta- deixis system beside `jab...tab`
+  - it gives `kyonki` a grammar lesson of its own rather than a paragraph
+
+Chapter 78 therefore teaches three words, not five, and its payoff is
+`HI-C71-very`. `HI-C72-money` and `HI-C72-rupee` reviewed the two cut lessons;
+they now reach back to आज, भी and बहुत, which is where the tranche's own
+cross-chapter rule points anyway and makes "two words back" true again.
+
+There is no atom-id collision between the two tranches. The clash was at the
+headword, which is the one that matters.
+
+LESSON IDS DID NOT MOVE
+
+`HI-C68-*` through `HI-C74-*` keep their ids in chapters 75-81, the way
+`ES-C03-*` lives across Spanish chapters 4-6 and `GE-C15-*` across three German
+chapters. What moved: the chapter assignment, the sequences (2610-2950 ->
+2830-3150, after #14113's 2820) and the curriculum shard prefixes. Every derived
+artifact -- chapter `.tex`, narration, both hash ledgers, the modality shards and
+the gentle-ramp snapshots -- was REGENERATED, none hand-merged.
+
+WHAT IS TAUGHT
+
+    75  MEET-GREET              desh, Bharat, shahar, bhasha, angrezi
+    76  POLITE-REQUEST-REPAIR   gari, rel, steshan, tikat, jana
+    77  EXCHANGE-NAMES          khel, khelna, kriket, gana, aram
+    78  CHECK-WELLBEING         aaj, bhi, bahut
+    79  RESPOND-BASIC           paisa, rupaya, dam, mahanga, kharidna
+    80  COURTESY-THANK          hotal, nashta, bil, vetar, pina
+    81  TAKE-LEAVE              khula, band, pravesh, nikas, der
+
+SIXTEEN EXAM POINTS CLOSED, NOT EIGHTEEN
+
+The pre-merge branch claimed eighteen. Two of them are now #14113's, and the
+honest figure is sixteen. Core lexis 35/65 -> 43/65, adverbs 7/10 -> 9/10, the
+verb 14/27 -> 16/27, communicative functions 49/65 -> 51/65, the noun 6/9 -> 7/9,
+the adjective 5/9 -> 6/9. The denominator did not move.
+
+Still closed, and named in an earlier entry as the track's worst holes: **`jana`
+is taught** (HI-A1-V-25, "the single highest-traffic missing verb in the level"),
+**`aaj` is taught** (HI-A1-ADV-03), and **the public-sign vocabulary exists** --
+`khula`, `band`, `pravesh`, `nikas` are items 1 to 4 of BOTH mocks' reading
+papers (HI-A1-F-60, HI-A1-LEX-62).
+
+The verb criterion closed. Hindi taught **2** distinct verb headwords at or below
+pre-A1 against a target of 5; `jana`, `khelna`, `kharidna` and `pina` bring it to
+**6**, and `verb-vocabulary/hindi/pre-A1` has left the completion plan. Those four
+are canonical `VERB-GO`, `VERB-PLAY`, `VERB-BUY` and `VERB-DRINK`, so the
+cross-language verb join sees Hindi go 13 -> 17 of 40 covered and the corpus mean
+39% -> 40%.
+
+REINFORCEMENT WENT DOWN WHILE 33 LESSONS WENT IN
+
+Measured against `origin/main`'s data with the same CLI, not derived:
+
+    hindi pre-A1, completion plan       main    now
+      exam-point (uncovered)             106     90
+      vocabulary (shortfall)             145    112
+      verb-vocabulary                      3   closed
+      reinforcement (thin atoms)          54     51
+      script-closure                      11     11
+
+Whole-track atoms revisited fewer than twice: **132 -> 129**. Not one is ours;
+three pre-existing atoms were rescued, and the two of #14113's that a longer book
+made judgeable for the first time -- `HI-JOIN-TAG-NA-01` and
+`HI-SOUND-QUESTION-RISE-01`, the last two lessons before this tranche -- are
+closed by chapter 75's opening two lessons reaching back across the boundary, the
+same rule this tranche applies at every other chapter boundary. `atomsTaught`
+376 -> 409, `atomsNeverRevisited` 79 -> **78**.
+
+`reinforcementWindowMisses` rises 1071 -> 1155, and the +84 splits **41 this
+tranche's own atoms, 43 pre-existing atoms newly judgeable** -- a longer track
+makes windows fit that the end of the book had previously cut off. All 41 are R2
+and R3; **R1 does not move at all (145 -> 145)**, because a one-word-per-lesson
+chapter retrieves at distances 1-4 and never at 5-15. That is a property of the
+chapter shape rather than of these lessons, it applies equally to the Tamil,
+Kannada and Marathi tranches, and HL-C313 records it with the fix and the reason
+it was not made here.
+
+ONE FORWARD REFERENCE FOUND AND CUT
+
+Teaching `dam` made `HI-A1F01-name-label` a forward reference: its shape drill
+"find नाम among काम · नाम · दाम" used a word no lesson taught, and this tranche
+teaches it 48 lessons later. The distractor is now **शाम**, taught in chapter 29,
+which is a better drill -- the reader discriminates among three words they hold
+rather than two and a stranger. Forward references stay at **11**, unchanged from
+main.
+
+Script closure, never-taught glyphs, writing-practice lessons, the atom and glyph
+step findings and the payoff-surprise finding are all byte-identical to main.
+
+PINS MOVED
+
+    tests/corpus/hindi.test.ts   lessons 310 -> 343
+    tests/verbs.test.ts          meanCoveredPercent 39 -> 40
+
+The Hindi book compiles under XeLaTeX at **545 pages** with errors, overfull,
+underfull and missing-character counts all zero, and the changed pages were read
+as rendered PDF.
+
 ### Added - the joining column: 155 -> 176 of 282 A1 points
 
 **Chapters 68-74 teach Hindi's joining words, and A1 exam coverage moves

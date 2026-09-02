@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C70-play",
     "language": "hindi",
-    "chapter": 70,
-    "sequence": 2720,
+    "chapter": 77,
+    "sequence": 2940,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c1e4e780c0071fde"
+    "sourceHash": "fnv1a64:13d3606b20217cf9"
   },
   "findings": []
 }

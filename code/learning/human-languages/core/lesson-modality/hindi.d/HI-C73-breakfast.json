@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C73-breakfast",
     "language": "hindi",
-    "chapter": 73,
-    "sequence": 2870,
+    "chapter": 80,
+    "sequence": 3070,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:90fd68eb08949acc"
+    "sourceHash": "fnv1a64:b9666ea9f7425e37"
   },
   "findings": []
 }

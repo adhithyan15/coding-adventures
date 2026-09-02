@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "hindi",
-  "chapter": 69,
+  "chapter": 76,
   "title": "Ways of Going",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9772495c041a01ab",
+  "sourceHash": "fnv1a64:93892c605bb1103c",
   "lessons": [
     {
       "id": "HI-C69-vehicle",
-      "sequence": 2660,
+      "sequence": 2880,
       "title": "गाड़ी (gāṛī) — a vehicle; a train",
       "headword": "गाड़ी",
       "romanization": "gāṛī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44fa67ad78667cbe",
+      "sourceHash": "fnv1a64:e6d94b18c6547fbe",
       "notice": null,
       "blocks": [
         {
@@ -143,7 +143,7 @@
     },
     {
       "id": "HI-C69-railway",
-      "sequence": 2670,
+      "sequence": 2890,
       "title": "रेल (rel) — the railway",
       "headword": "रेल",
       "romanization": "rel",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0dcdee183662a41",
+      "sourceHash": "fnv1a64:9f5b7a9604c3f795",
       "notice": null,
       "blocks": [
         {
@@ -274,7 +274,7 @@
     },
     {
       "id": "HI-C69-station",
-      "sequence": 2680,
+      "sequence": 2900,
       "title": "स्टेशन (sṭeshan) — a station",
       "headword": "स्टेशन",
       "romanization": "sṭeshan",
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd9980bc54b1097a",
+      "sourceHash": "fnv1a64:9cd0607abb0af225",
       "notice": null,
       "blocks": [
         {
@@ -400,7 +400,7 @@
     },
     {
       "id": "HI-C69-ticket",
-      "sequence": 2690,
+      "sequence": 2910,
       "title": "टिकट (ṭikaṭ) — a ticket",
       "headword": "टिकट",
       "romanization": "ṭikaṭ",
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38de6e5fb24c6b1c",
+      "sourceHash": "fnv1a64:4793865a32183c47",
       "notice": null,
       "blocks": [
         {
@@ -522,7 +522,7 @@
     },
     {
       "id": "HI-C69-go",
-      "sequence": 2700,
+      "sequence": 2920,
       "title": "जाना (jānā) — to go",
       "headword": "जाना",
       "romanization": "jānā",
@@ -533,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf0b9199e9c60e30",
+      "sourceHash": "fnv1a64:460dd0ee88cbbd10",
       "notice": null,
       "blocks": [
         {

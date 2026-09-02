@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C74-entrance",
     "language": "hindi",
-    "chapter": 74,
-    "sequence": 2930,
+    "chapter": 81,
+    "sequence": 3130,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:eac81838773683b5"
+    "sourceHash": "fnv1a64:9d40038bdbbeb93c"
   },
   "findings": []
 }

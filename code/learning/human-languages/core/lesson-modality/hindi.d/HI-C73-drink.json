@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C73-drink",
     "language": "hindi",
-    "chapter": 73,
-    "sequence": 2900,
+    "chapter": 80,
+    "sequence": 3100,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d3680e7b255b0377"
+    "sourceHash": "fnv1a64:c5f2decd8b765748"
   },
   "findings": []
 }

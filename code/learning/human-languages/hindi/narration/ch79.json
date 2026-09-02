@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "hindi",
-  "chapter": 72,
+  "chapter": 79,
   "title": "What It Costs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:93e239d7ee24d5c2",
+  "sourceHash": "fnv1a64:234b1ada7c238df9",
   "lessons": [
     {
       "id": "HI-C72-money",
-      "sequence": 2810,
+      "sequence": 3010,
       "title": "पैसा (paisā) — money",
       "headword": "पैसा",
       "romanization": "paisā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:081238389a0576d1",
+      "sourceHash": "fnv1a64:56c6695090b11a8f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two words back: what does kab mean, and what is क्यों? The next five words are what you need at a counter."
+              "text": "Two words back: what does bhī mean, and what is बहुत? The next five words are what you need at a counter."
             }
           ]
         },
@@ -87,11 +87,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kab, then read क्यों and say what it means",
+              "instruction": "say bhī, then read बहुत and say what it means",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kab*, then read **क्यों** and say what it means]"
+              "source": "[YOU RECALL: say *bhī*, then read **बहुत** and say what it means]"
             },
             {
               "kind": "prompt",
@@ -143,7 +143,7 @@
     },
     {
       "id": "HI-C72-rupee",
-      "sequence": 2820,
+      "sequence": 3020,
       "title": "रुपया (rupayā) — a rupee",
       "headword": "रुपया",
       "romanization": "rupayā",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8374d1145801727d",
+      "sourceHash": "fnv1a64:77409fa634b44515",
       "notice": null,
       "blocks": [
         {
@@ -226,11 +226,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read क्यों, then say it without looking",
+              "instruction": "read बहुत, then say it without looking",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **क्यों**, then say it without looking]"
+              "source": "[YOU RECALL: read **बहुत**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -282,7 +282,7 @@
     },
     {
       "id": "HI-C72-price",
-      "sequence": 2830,
+      "sequence": 3030,
       "title": "दाम (dām) — a price",
       "headword": "दाम",
       "romanization": "dām",
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76139aa89c5444bc",
+      "sourceHash": "fnv1a64:7b918fe46fedc9ba",
       "notice": null,
       "blocks": [
         {
@@ -416,7 +416,7 @@
     },
     {
       "id": "HI-C72-expensive",
-      "sequence": 2840,
+      "sequence": 3040,
       "title": "महँगा (mahãgā) — expensive",
       "headword": "महँगा",
       "romanization": "mahãgā",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:101a11b00f1bde6e",
+      "sourceHash": "fnv1a64:9d3b0feb971ef750",
       "notice": null,
       "blocks": [
         {
@@ -546,7 +546,7 @@
     },
     {
       "id": "HI-C72-buy",
-      "sequence": 2850,
+      "sequence": 3050,
       "title": "ख़रीदना (kharīdnā) — to buy",
       "headword": "ख़रीदना",
       "romanization": "kharīdnā",
@@ -557,7 +557,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad199d178307801b",
+      "sourceHash": "fnv1a64:ec698e81f72e555f",
       "notice": null,
       "blocks": [
         {

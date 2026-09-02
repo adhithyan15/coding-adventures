@@ -1,7 +1,7 @@
 {
   "language": "hindi",
-  "chapter": 72,
-  "sourceHash": "fnv1a64:93e239d7ee24d5c2",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:234b1ada7c238df9",
   "lessonIds": [
     "HI-C72-money",
     "HI-C72-rupee",
@@ -11,9 +11,9 @@
   ],
   "voiceLessons": 5,
   "drivablePrefix": 5,
-  "text": "hindi/narration/ch72.txt",
-  "json": "hindi/narration/ch72.json",
-  "textHash": "fnv1a64:6b6a6d328a78f6e2",
-  "jsonHash": "fnv1a64:369b188d07ba78bd",
+  "text": "hindi/narration/ch79.txt",
+  "json": "hindi/narration/ch79.json",
+  "textHash": "fnv1a64:28dcbf13ecaf9468",
+  "jsonHash": "fnv1a64:ccff5a2f3af793ff",
   "findings": []
 }

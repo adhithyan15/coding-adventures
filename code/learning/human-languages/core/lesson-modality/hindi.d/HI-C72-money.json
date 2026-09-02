@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C72-money",
     "language": "hindi",
-    "chapter": 72,
-    "sequence": 2810,
+    "chapter": 79,
+    "sequence": 3010,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:081238389a0576d1"
+    "sourceHash": "fnv1a64:56c6695090b11a8f"
   },
   "findings": []
 }

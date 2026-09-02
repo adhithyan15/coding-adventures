@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C71-also",
     "language": "hindi",
-    "chapter": 71,
-    "sequence": 2770,
+    "chapter": 78,
+    "sequence": 2990,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5f301897a72ba546"
+    "sourceHash": "fnv1a64:f3ce3eabb9c87f2f"
   },
   "findings": []
 }

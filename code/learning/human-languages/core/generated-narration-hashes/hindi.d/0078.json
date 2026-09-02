@@ -1,19 +1,17 @@
 {
   "language": "hindi",
-  "chapter": 71,
-  "sourceHash": "fnv1a64:a647836b5f5e7faf",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:e02ad5ca302828e2",
   "lessonIds": [
     "HI-C71-today",
     "HI-C71-also",
-    "HI-C71-very",
-    "HI-C71-when",
-    "HI-C71-why"
+    "HI-C71-very"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 3,
   "drivablePrefix": 3,
-  "text": "hindi/narration/ch71.txt",
-  "json": "hindi/narration/ch71.json",
-  "textHash": "fnv1a64:ee18616e7a4cb865",
-  "jsonHash": "fnv1a64:3178c230fb605669",
+  "text": "hindi/narration/ch78.txt",
+  "json": "hindi/narration/ch78.json",
+  "textHash": "fnv1a64:d660fa77fc137012",
+  "jsonHash": "fnv1a64:f390781cd94db208",
   "findings": []
 }

@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "hindi",
-  "chapter": 73,
+  "chapter": 80,
   "title": "The Eating House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b2b948fd67e3767e",
+  "sourceHash": "fnv1a64:edc4b34ea388d99c",
   "lessons": [
     {
       "id": "HI-C73-eating-house",
-      "sequence": 2860,
+      "sequence": 3060,
       "title": "होटल (hoṭal) — an eating house",
       "headword": "होटल",
       "romanization": "hoṭal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e94057031c7a63e",
+      "sourceHash": "fnv1a64:62758dcb10811647",
       "notice": null,
       "blocks": [
         {
@@ -147,7 +147,7 @@
     },
     {
       "id": "HI-C73-breakfast",
-      "sequence": 2870,
+      "sequence": 3070,
       "title": "नाश्ता (nāshtā) — breakfast",
       "headword": "नाश्ता",
       "romanization": "nāshtā",
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90fd68eb08949acc",
+      "sourceHash": "fnv1a64:b9666ea9f7425e37",
       "notice": null,
       "blocks": [
         {
@@ -286,7 +286,7 @@
     },
     {
       "id": "HI-C73-bill",
-      "sequence": 2880,
+      "sequence": 3080,
       "title": "बिल (bil) — the bill",
       "headword": "बिल",
       "romanization": "bil",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31e6b200e80cb804",
+      "sourceHash": "fnv1a64:bbd95b24e159f7bb",
       "notice": null,
       "blocks": [
         {
@@ -412,7 +412,7 @@
     },
     {
       "id": "HI-C73-waiter",
-      "sequence": 2890,
+      "sequence": 3090,
       "title": "वेटर (veṭar) — a waiter",
       "headword": "वेटर",
       "romanization": "veṭar",
@@ -423,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfa76455f2046f56",
+      "sourceHash": "fnv1a64:2adfd5b450ccef83",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +538,7 @@
     },
     {
       "id": "HI-C73-drink",
-      "sequence": 2900,
+      "sequence": 3100,
       "title": "पीना (pīnā) — to drink",
       "headword": "पीना",
       "romanization": "pīnā",
@@ -549,7 +549,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3680e7b255b0377",
+      "sourceHash": "fnv1a64:c5f2decd8b765748",
       "notice": null,
       "blocks": [
         {

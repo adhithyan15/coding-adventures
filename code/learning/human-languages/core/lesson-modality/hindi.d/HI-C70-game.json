@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C70-game",
     "language": "hindi",
-    "chapter": 70,
-    "sequence": 2710,
+    "chapter": 77,
+    "sequence": 2930,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:651c188cfee3bdc0"
+    "sourceHash": "fnv1a64:0f8a081dbda17263"
   },
   "findings": []
 }

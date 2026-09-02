@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C69-go",
     "language": "hindi",
-    "chapter": 69,
-    "sequence": 2700,
+    "chapter": 76,
+    "sequence": 2920,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bf0b9199e9c60e30"
+    "sourceHash": "fnv1a64:460dd0ee88cbbd10"
   },
   "findings": []
 }

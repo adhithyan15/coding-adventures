@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "hindi",
-  "chapter": 71,
+  "chapter": 78,
   "title": "Today, and How Much",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a647836b5f5e7faf",
+  "sourceHash": "fnv1a64:e02ad5ca302828e2",
   "lessons": [
     {
       "id": "HI-C71-today",
-      "sequence": 2760,
+      "sequence": 2980,
       "title": "आज (āj) — today",
       "headword": "आज",
       "romanization": "āj",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84b9080bd88d02b9",
+      "sourceHash": "fnv1a64:7947c9fd7a694d20",
       "notice": null,
       "blocks": [
         {
@@ -143,7 +143,7 @@
     },
     {
       "id": "HI-C71-also",
-      "sequence": 2770,
+      "sequence": 2990,
       "title": "भी (bhī) — also, too",
       "headword": "भी",
       "romanization": "bhī",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f301897a72ba546",
+      "sourceHash": "fnv1a64:f3ce3eabb9c87f2f",
       "notice": null,
       "blocks": [
         {
@@ -278,7 +278,7 @@
     },
     {
       "id": "HI-C71-very",
-      "sequence": 2780,
+      "sequence": 3000,
       "title": "बहुत (bahut) — very, a lot",
       "headword": "बहुत",
       "romanization": "bahut",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52094452b5bd68e2",
+      "sourceHash": "fnv1a64:d4bf06a75e970115",
       "notice": null,
       "blocks": [
         {
@@ -401,284 +401,6 @@
             {
               "kind": "speech",
               "text": "What does बहुत (bahut) mean? (\"very\".) Say that something is very big."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C71-when",
-      "sequence": 2790,
-      "title": "कब (kab) — when",
-      "headword": "कब",
-      "romanization": "kab",
-      "gloss": "when",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:4e64216e62bab250",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write बहुत (bahut) from memory: ब, ह, ु underneath the ह, then त."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: कब",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "कब (kab) — \"when\"."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit कदा (kadā), \"when\". Look at the first letter and you have the whole point of this lesson: every Hindi asking word starts with क."
-            },
-            {
-              "kind": "speech",
-              "text": "You have been collecting them without being told they were a set: kyā, kaun, kahā̃, kaise — what, who, where, how — and now कब (kab), when. Five of them, every one written with a क at the front, all doing the same job."
-            },
-            {
-              "kind": "speech",
-              "text": "That letter is the signal. Hear a क at the front of a short word at the head of somebody's sentence and you are being asked something, before you have worked out what."
-            },
-            {
-              "kind": "speech",
-              "text": "कब (kab) sits where the answer would sit, not at the front of the sentence the way an English question word does: गाड़ी कब (kab) है?"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Four, and the fifth member of a family you already had."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "kyā, kaun, kahā̃, kaise, kab",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *kyā, kaun, kahā̃, kaise, kab*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "gāṛī kab hai?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *gāṛī kab hai?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "कब (kab), two letters and nothing else",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: कब, two letters and nothing else]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does कब (kab) mean? (\"when\".) What letter do the asking words share?"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C71-why",
-      "sequence": 2800,
-      "title": "क्यों (kyoṁ) — why, and क्योंकि, because",
-      "headword": "क्यों",
-      "romanization": "kyoṁ",
-      "gloss": "why (and क्योंकि, because)",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:33ac504e14b09aba",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name the four words of this chapter so far."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: क्यों",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "क्यों (kyoṁ) — \"why\"."
-            },
-            {
-              "kind": "speech",
-              "text": "The sixth of the asking words, and it opens on the same क as the other five. The spelling stacks क on य with the vowel-killer, then puts ों on the end: the ो matra and the dot that sends the vowel through the nose."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the piece that makes it useful twice over. Add कि and you get क्योंकि (kyoṁki) — \"because\". कि on its own is the little word that means \"that\", and क्योंकि is literally \"why-that\": the question turned round to face the answer."
-            },
-            {
-              "kind": "speech",
-              "text": "So one shape gives you both halves of a reason."
-            },
-            {
-              "kind": "speech",
-              "text": "आप क्यों (kyoṁ) नहीं आए? asks it, and any answer that opens on क्योंकि is giving the reason back. You will fill in what follows as your words grow."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Five: आज (āj), भी (bhī), बहुत (bahut), कब (kab), क्यों (kyoṁ). Six asking words in all, and the way to answer the last of them."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "kyoṁ, then kyoṁki",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *kyoṁ*, then *kyoṁki*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "kyā, kaun, kahā̃, kaise, kab, kyoṁ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *kyā, kaun, kahā̃, kaise, kab, kyoṁ*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "कब (kab), then क्यों (kyoṁ) beside the printed model",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: कब, then क्यों beside the printed model]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all five of this chapter in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all five of this chapter in order]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does क्यों (kyoṁ) mean? (\"why\".) And क्योंकि? (\"because\".)"
             }
           ]
         }

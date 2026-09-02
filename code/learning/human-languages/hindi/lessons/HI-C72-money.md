@@ -12,32 +12,32 @@ headword: "पैसा"
 gloss: "money"
 romanization: "paisā"
 concept_tag: HI-NOUN-MONEY
-prerequisites: [HI-C71-very, HI-C71-kyon, HI-C72-kab]
+prerequisites: [HI-C71-very, HI-C71-also]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-JOIN-KYON-01, HI-JOIN-KAB-01]
+  knowledge: [HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03]
 introduces:
   knowledge: [HI-LEX-C72-COST-01]
 practises:
-  knowledge: [HI-JOIN-KYON-01, HI-LEX-C72-COST-01, HI-JOIN-KAB-01]
+  knowledge: [HI-LEX-C71-TODAY-02, HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C71-very, HI-C71-kyon, HI-C72-kab]
+reviews_of: [HI-C71-very, HI-C71-also]
 ---
 
 # पैसा (paisā) — money
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-KYON-01, HI-JOIN-KAB-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03] -->
 
-[PAUSE 2s] From the joining chapters: what does *kab* mean, and what is
-**क्यों**? The next five words are what you need at a counter.
+[PAUSE 2s] Two words back: what does *bhī* mean, and what is **बहुत**? The
+next five words are what you need at a counter.
 
 ## You'll want to know: पैसा
 <!-- hl-knowledge: introduces=[HI-LEX-C72-COST-01]; assesses=[] -->
@@ -61,10 +61,10 @@ same one inside **कैसे**.
 The first of five words for buying something.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-JOIN-KAB-01, HI-JOIN-KYON-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *kab*, then read **क्यों** and say what it means]
+- [YOU RECALL: say *bhī*, then read **बहुत** and say what it means]
 - [YOU HEAR: *paisā*]
 - [YOU SAY: *paisā*]
 - [YOU READ: पैसा, and find the ै it shares with कैसे]

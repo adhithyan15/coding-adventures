@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "hindi",
-  "chapter": 74,
+  "chapter": 81,
   "title": "Words on the Door",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2985ec3db007726c",
+  "sourceHash": "fnv1a64:5681a8acd05ac501",
   "lessons": [
     {
       "id": "HI-C74-open",
-      "sequence": 2910,
+      "sequence": 3110,
       "title": "खुला (khulā) — open",
       "headword": "खुला",
       "romanization": "khulā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3c3a63128673850",
+      "sourceHash": "fnv1a64:969fdea1f4f2521b",
       "notice": null,
       "blocks": [
         {
@@ -143,7 +143,7 @@
     },
     {
       "id": "HI-C74-closed",
-      "sequence": 2920,
+      "sequence": 3120,
       "title": "बंद (band) — closed",
       "headword": "बंद",
       "romanization": "band",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc222a81150df76c",
+      "sourceHash": "fnv1a64:da28b991efad7889",
       "notice": null,
       "blocks": [
         {
@@ -274,7 +274,7 @@
     },
     {
       "id": "HI-C74-entrance",
-      "sequence": 2930,
+      "sequence": 3130,
       "title": "प्रवेश (pravesh) — entrance",
       "headword": "प्रवेश",
       "romanization": "pravesh",
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eac81838773683b5",
+      "sourceHash": "fnv1a64:9d40038bdbbeb93c",
       "notice": null,
       "blocks": [
         {
@@ -404,7 +404,7 @@
     },
     {
       "id": "HI-C74-exit",
-      "sequence": 2940,
+      "sequence": 3140,
       "title": "निकास (nikās) — exit",
       "headword": "निकास",
       "romanization": "nikās",
@@ -415,7 +415,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7d141b64bdc09ce",
+      "sourceHash": "fnv1a64:e6d66a645ab6364b",
       "notice": null,
       "blocks": [
         {
@@ -530,7 +530,7 @@
     },
     {
       "id": "HI-C74-late",
-      "sequence": 2950,
+      "sequence": 3150,
       "title": "देर (der) — lateness, a delay",
       "headword": "देर",
       "romanization": "der",
@@ -541,7 +541,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3af0a68f07945420",
+      "sourceHash": "fnv1a64:7b661b46d1fa5f6b",
       "notice": null,
       "blocks": [
         {

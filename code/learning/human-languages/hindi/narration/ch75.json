@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "hindi",
-  "chapter": 68,
+  "chapter": 75,
   "title": "Where You Come From",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:699bc08d28194867",
+  "sourceHash": "fnv1a64:663bddac3f375ffe",
   "lessons": [
     {
       "id": "HI-C68-country",
-      "sequence": 2610,
+      "sequence": 2830,
       "title": "देश (desh) — a country",
       "headword": "देश",
       "romanization": "desh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b41697e08a0f2018",
+      "sourceHash": "fnv1a64:819bd4923f485466",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two words back, from the last run of five: what does ghās mean, and what is कुआँ? You have since filled in a नाम line without a model, and a form asks for more than a name. The next five words are what it asks for."
+              "text": "Two lessons back you learnt to ask with nothing but your voice, and one lesson back to hang a check on the end: say चाय ठीक है flat, then with the end lifted, then say चाय ठीक है ना? and name what each one does. You have also filled in a नाम line without a model, and a form asks for more than a name. The next five words are what it asks for."
             }
           ]
         },
@@ -113,6 +113,15 @@
             },
             {
               "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yah ek desh hai nā? — last chapter's tag, on your new word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yah ek desh hai nā?* — last chapter's tag, on your new word]"
+            },
+            {
+              "kind": "prompt",
               "action": "READ",
               "instruction": "देश (desh), then say what it means",
               "spoken": true,
@@ -143,7 +152,7 @@
     },
     {
       "id": "HI-C68-india",
-      "sequence": 2620,
+      "sequence": 2840,
       "title": "भारत (Bhārat) — India",
       "headword": "भारत",
       "romanization": "Bhārat",
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa4da7418440ec68",
+      "sourceHash": "fnv1a64:0c75361b5168b552",
       "notice": null,
       "blocks": [
         {
@@ -244,6 +253,15 @@
             },
             {
               "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence twice — flat, then with the end lifted — and then Bhārat ek desh hai nā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence twice — flat, then with the end lifted — and then *Bhārat ek desh hai nā?*]"
+            },
+            {
+              "kind": "prompt",
               "action": "WRITE",
               "instruction": "a नाम line with no model, then देश (desh) on the line under it",
               "spoken": false,
@@ -283,7 +301,7 @@
     },
     {
       "id": "HI-C68-city",
-      "sequence": 2630,
+      "sequence": 2850,
       "title": "शहर (shahar) — a city, a town",
       "headword": "शहर",
       "romanization": "shahar",
@@ -294,7 +312,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ceea1ec2ea2229c0",
+      "sourceHash": "fnv1a64:3c7f4b8d27a06e22",
       "notice": null,
       "blocks": [
         {
@@ -409,7 +427,7 @@
     },
     {
       "id": "HI-C68-language",
-      "sequence": 2640,
+      "sequence": 2860,
       "title": "भाषा (bhāshā) — a language",
       "headword": "भाषा",
       "romanization": "bhāshā",
@@ -420,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63ed2135d6307f84",
+      "sourceHash": "fnv1a64:a24999fd474b136a",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +549,7 @@
     },
     {
       "id": "HI-C68-english",
-      "sequence": 2650,
+      "sequence": 2870,
       "title": "अंग्रेज़ी (angrezī) — English, the language",
       "headword": "अंग्रेज़ी",
       "romanization": "angrezī",
@@ -542,7 +560,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1142896deb8f4c89",
+      "sourceHash": "fnv1a64:241c224e0de9a687",
       "notice": null,
       "blocks": [
         {

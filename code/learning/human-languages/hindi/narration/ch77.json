@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "hindi",
-  "chapter": 70,
+  "chapter": 77,
   "title": "After the Work Is Done",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:752647519ecedf3f",
+  "sourceHash": "fnv1a64:cd9e186e73b3c78c",
   "lessons": [
     {
       "id": "HI-C70-game",
-      "sequence": 2710,
+      "sequence": 2930,
       "title": "खेल (khel) — a game",
       "headword": "खेल",
       "romanization": "khel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:651c188cfee3bdc0",
+      "sourceHash": "fnv1a64:0f8a081dbda17263",
       "notice": null,
       "blocks": [
         {
@@ -143,7 +143,7 @@
     },
     {
       "id": "HI-C70-play",
-      "sequence": 2720,
+      "sequence": 2940,
       "title": "खेलना (khelnā) — to play",
       "headword": "खेलना",
       "romanization": "khelnā",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1e4e780c0071fde",
+      "sourceHash": "fnv1a64:13d3606b20217cf9",
       "notice": null,
       "blocks": [
         {
@@ -278,7 +278,7 @@
     },
     {
       "id": "HI-C70-cricket",
-      "sequence": 2730,
+      "sequence": 2950,
       "title": "क्रिकेट (krikeṭ) — cricket, the game",
       "headword": "क्रिकेट",
       "romanization": "krikeṭ",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0428a69e8399124e",
+      "sourceHash": "fnv1a64:5fa9336e2278a1ed",
       "notice": null,
       "blocks": [
         {
@@ -404,7 +404,7 @@
     },
     {
       "id": "HI-C70-song",
-      "sequence": 2740,
+      "sequence": 2960,
       "title": "गाना (gānā) — a song",
       "headword": "गाना",
       "romanization": "gānā",
@@ -415,7 +415,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:338992b6589e6b8d",
+      "sourceHash": "fnv1a64:5041a8a2e393bfca",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -539,7 +539,7 @@
     },
     {
       "id": "HI-C70-rest",
-      "sequence": 2750,
+      "sequence": 2970,
       "title": "आराम (ārām) — rest, ease",
       "headword": "आराम",
       "romanization": "ārām",
@@ -550,7 +550,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b58442000c6a64f6",
+      "sourceHash": "fnv1a64:5b5e2bb2b735df57",
       "notice": null,
       "blocks": [
         {

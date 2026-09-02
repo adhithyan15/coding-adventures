@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C69-vehicle",
     "language": "hindi",
-    "chapter": 69,
-    "sequence": 2660,
+    "chapter": 76,
+    "sequence": 2880,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:44fa67ad78667cbe"
+    "sourceHash": "fnv1a64:e6d94b18c6547fbe"
   },
   "findings": []
 }

@@ -136,9 +136,11 @@ atoms nothing had revisited.
 | aurat | Arabic *ʿawra*; the "woman" sense is **Persian** | भाई/बहन and पिता/माता (Ch. 12), किताब's register ladder |
 
 **All thirty-nine** pre-A1 atoms the corpus reported as revisited fewer than
-twice before this branch are rescued here. What is left is four atoms, all
-introduced by these chapters' own last lessons, which nothing later exists to
-revisit — a structural tail, not an oversight.
+twice before this branch are rescued here. What was left was four atoms
+introduced by these chapters' own last lessons, with nothing later to revisit
+them — a structural tail rather than an oversight. Chapters 75-81 now follow,
+and the two of those four that a longer book made judgeable, `HI-JOIN-TAG-NA-01`
+and `HI-SOUND-QUESTION-RISE-01`, are retrieved by chapter 75's opening pair.
 
 ## Chapters 68-74 - the joining column
 
@@ -157,6 +159,29 @@ name** and closes on a review. That is not decoration: a naive append raises the
 reinforcement-miss count because items late in a chapter have nowhere left to be
 revisited, and the fix belongs at the chapter boundary. This tranche's own
 reinforcement debt is zero and `atomsNeverRevisited` fell by two.
+
+## Chapters 75-81 - thirty-three more pre-A1 words
+
+| Chapter | Lessons | Job |
+|---|---|---|
+| 75 | C68-country, C68-india, C68-city, C68-language, C68-english | the country, its name, the city, the language, English |
+| 76 | C69-vehicle, C69-railway, C69-station, C69-ticket, C69-go | what carries you, and the verb for going |
+| 77 | C70-game, C70-play, C70-cricket, C70-song, C70-rest | what you do when the work is done |
+| 78 | C71-today, C71-also, C71-very | place the day, add to it, raise it |
+| 79 | C72-money, C72-rupee, C72-price, C72-expensive, C72-buy | the counter, and what a thing costs |
+| 80 | C73-eating-house, C73-breakfast, C73-bill, C73-waiter, C73-drink | the eating house, end to end |
+| 81 | C74-open, C74-closed, C74-entrance, C74-exit, C74-late | the words on a door and a board |
+
+The lesson **ids** say C68-C74 and the **chapters** say 75-81, which is
+deliberate. The joining column merged into 68-74 while this tranche was open;
+ids stay put when chapters renumber, as `ES-C03-*` does across Spanish chapters
+4-6. Two authored words, **कब** and **क्यों**, are cut rather than moved,
+because the joining column teaches both.
+
+Every chapter opens by retrieving the two preceding words by name, and chapter
+75 reaches back across the tranche boundary into C74-question-rise and
+C74-na-tag. This tranche's own thin-atom debt is zero: whole-track atoms
+revisited fewer than twice fell 132 -> 129.
 
 ## Next
 

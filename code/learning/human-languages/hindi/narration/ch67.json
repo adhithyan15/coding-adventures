@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The First Form Line: Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5fa9de6630a0ba4a",
+  "sourceHash": "fnv1a64:ce485597183af95a",
   "lessons": [
     {
       "id": "HI-A1F01-name-label",
@@ -20,7 +20,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:8fe010e384530217",
+      "sourceHash": "fnv1a64:b9ba565144af50b7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -74,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Find नाम (nām) among काम, नाम (nām), दाम without writing the other words."
+              "text": "Find नाम (nām) among काम, नाम (nām), शाम without writing the other words."
             },
             {
               "kind": "activity",

@@ -12,23 +12,23 @@ headword: "भारत"
 gloss: "India"
 romanization: "Bhārat"
 concept_tag: HI-NAME-INDIA
-prerequisites: [HI-C68-country, HI-C66-well, HI-A1F01-name-no-model]
+prerequisites: [HI-C68-country, HI-C74-question-rise, HI-C74-na-tag, HI-C66-well, HI-A1F01-name-no-model]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C68-ORIGIN-01, HI-LEX-C66-FIELD-05, HI-FORM-NAME-NO-MODEL-01]
+  knowledge: [HI-LEX-C68-ORIGIN-01, HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-LEX-C66-FIELD-05, HI-FORM-NAME-NO-MODEL-01]
 introduces:
   knowledge: [HI-LEX-C68-ORIGIN-02]
 practises:
-  knowledge: [HI-LEX-C68-ORIGIN-01, HI-LEX-C68-ORIGIN-02, HI-LEX-C66-FIELD-05, HI-FORM-NAME-NO-MODEL-01]
+  knowledge: [HI-LEX-C68-ORIGIN-01, HI-LEX-C68-ORIGIN-02, HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-LEX-C66-FIELD-05, HI-FORM-NAME-NO-MODEL-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C68-country, HI-C66-well, HI-A1F01-name-no-model]
+reviews_of: [HI-C68-country, HI-C74-question-rise, HI-C74-na-tag, HI-C66-well, HI-A1F01-name-no-model]
 ---
 
 # भारत (Bhārat) — India
@@ -59,12 +59,13 @@ street, and both mean the same place.
 A देश and the name of one: भारत एक देश है.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01, HI-LEX-C68-ORIGIN-02, HI-LEX-C66-FIELD-05, HI-FORM-NAME-NO-MODEL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01, HI-LEX-C68-ORIGIN-02, HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-LEX-C66-FIELD-05, HI-FORM-NAME-NO-MODEL-01] -->
 
 [PAUSE 1s]
 - [YOU RECALL: read **कुआँ**, then say it without looking]
 - [YOU SAY: *Bhārat*]
 - [YOU SAY: *Bhārat ek desh hai*]
+- [YOU SAY: the same sentence twice — flat, then with the end lifted — and then *Bhārat ek desh hai nā?*]
 - [YOU WRITE: a नाम line with no model, then देश on the line under it]
 - [YOU WRITE: देश once more, without looking]
 

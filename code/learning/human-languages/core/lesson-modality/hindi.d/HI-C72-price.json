@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C72-price",
     "language": "hindi",
-    "chapter": 72,
-    "sequence": 2830,
+    "chapter": 79,
+    "sequence": 3030,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:76139aa89c5444bc"
+    "sourceHash": "fnv1a64:7b918fe46fedc9ba"
   },
   "findings": []
 }

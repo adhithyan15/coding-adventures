@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C69-station",
     "language": "hindi",
-    "chapter": 69,
-    "sequence": 2680,
+    "chapter": 76,
+    "sequence": 2900,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:cd9980bc54b1097a"
+    "sourceHash": "fnv1a64:9cd0607abb0af225"
   },
   "findings": []
 }

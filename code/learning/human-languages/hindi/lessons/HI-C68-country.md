@@ -12,33 +12,35 @@ headword: "देश"
 gloss: "a country"
 romanization: "desh"
 concept_tag: HI-NOUN-COUNTRY
-prerequisites: [HI-A1F01-name-no-model, HI-C66-grass, HI-C66-well]
+prerequisites: [HI-C74-question-rise, HI-C74-na-tag, HI-A1F01-name-no-model, HI-C66-grass, HI-C66-well]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-FORM-NAME-NO-MODEL-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05]
+  knowledge: [HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-FORM-NAME-NO-MODEL-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05]
 introduces:
   knowledge: [HI-LEX-C68-ORIGIN-01]
 practises:
-  knowledge: [HI-FORM-NAME-NO-MODEL-01, HI-LEX-C68-ORIGIN-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05]
+  knowledge: [HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-FORM-NAME-NO-MODEL-01, HI-LEX-C68-ORIGIN-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-A1F01-name-no-model, HI-C66-grass, HI-C66-well]
+reviews_of: [HI-C74-question-rise, HI-C74-na-tag, HI-A1F01-name-no-model, HI-C66-grass, HI-C66-well]
 ---
 
 # देश (desh) — a country
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-FORM-NAME-NO-MODEL-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-FORM-NAME-NO-MODEL-01] -->
 
-[PAUSE 2s] Two words back, from the last run of five: what does *ghās* mean,
-and what is **कुआँ**? You have since filled in a नाम line without a model, and a
-form asks for more than a name. The next five words are what it asks for.
+[PAUSE 2s] Two lessons back you learnt to ask with nothing but your voice, and
+one lesson back to hang a check on the end: say **चाय ठीक है** flat, then with
+the end lifted, then say **चाय ठीक है ना?** and name what each one does. You
+have also filled in a नाम line without a model, and a form asks for more than a
+name. The next five words are what it asks for.
 
 ## You'll want to know: देश
 <!-- hl-knowledge: introduces=[HI-LEX-C68-ORIGIN-01]; assesses=[] -->
@@ -62,12 +64,13 @@ conversation that starts with a greeting reaches it within a minute.
 The first of five words for saying where you are from.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01, HI-JOIN-TAG-NA-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05] -->
 
 [PAUSE 1s]
 - [YOU RECALL: say *ghās*, then read **कुआँ** and say what it means]
 - [YOU HEAR: *desh*, said once slowly and once at speed]
 - [YOU SAY: *desh*]
+- [YOU SAY: *yah ek desh hai nā?* — last chapter's tag, on your new word]
 - [YOU READ: देश, then say what it means]
 
 ## Wrap-up Recall

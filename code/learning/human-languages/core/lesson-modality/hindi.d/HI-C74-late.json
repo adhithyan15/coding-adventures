@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-C74-late",
     "language": "hindi",
-    "chapter": 74,
-    "sequence": 2950,
+    "chapter": 81,
+    "sequence": 3150,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3af0a68f07945420"
+    "sourceHash": "fnv1a64:7b661b46d1fa5f6b"
   },
   "findings": []
 }
