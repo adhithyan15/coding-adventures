@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-014-SENTENCE-PIECES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask what someone is doing and name the language I am learning.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C05-was",
+    "GE-C05-deutsch"
+  ]
+}
