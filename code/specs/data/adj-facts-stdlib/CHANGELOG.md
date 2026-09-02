@@ -5,7 +5,8 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
-- **#14070 installment 3a: four glyph-flattened `source` values repaired, two headers synced.**
+- **#14070 installment 3a: four glyph-flattened `source` values repaired, five header quote lines
+  synced across all four files.**
   `astronomy/lunar-eclipse-type`, `civics/electoral-college-count`,
   `earth-science/seismic-wave-arrival-order`, `geography/map-type-classification`.
 
