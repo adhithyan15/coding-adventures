@@ -6,6 +6,8 @@
   "canDo": "I can use the additional German material required at this point in the path.",
   "prerequisites": [],
   "lessons": [
-    "GE-C02-heissen"
+    "GE-C02-heissen",
+    "GE-C02-heissen-endungen",
+    "GE-C02-mich"
   ]
 }
