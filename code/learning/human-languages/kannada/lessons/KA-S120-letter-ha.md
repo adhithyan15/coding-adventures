@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S120-letter-ha
 spine_node: SPINE-MEET-GREET
-sequence: 441
+sequence: 395
 delivery: script
-chapter: 16
+chapter: 11
 type: writing
 headword: "ಹ"
 gloss: the single character ಹ — recognised inside words you already say

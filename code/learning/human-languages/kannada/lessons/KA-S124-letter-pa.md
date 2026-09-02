@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S124-letter-pa
 spine_node: SPINE-MEET-GREET
-sequence: 491
+sequence: 435
 delivery: script
-chapter: 20
+chapter: 15
 type: writing
 headword: "ಪ"
 gloss: the single character ಪ — recognised inside words you already say
@@ -50,7 +50,6 @@ You already say these, and every one of them has ಪ somewhere inside it:
 - **ಪರವಾಗಿಲ್ಲ** *paravāgilla* — it's okay / no problem / you're welcome
 - **ಕಪ್ಪು ಬಿಳಿ ಕೆಂಪು ನೀಲಿ** — black, white, red, blue
 - **ಅಪ್ಪ ಅಮ್ಮ ಅಣ್ಣ ತಮ್ಮ ಅಕ್ಕ ತಂಗಿ** — father, mother, and four age-graded sibling words
-- **ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತೀಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ** — the twelve lunisolar months
 
 ## Writing: ಪ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-124] -->

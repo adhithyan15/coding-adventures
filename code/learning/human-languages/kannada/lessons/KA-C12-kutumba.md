@@ -7,6 +7,7 @@ chapter: 12
 type: word
 headword: ಅಪ್ಪ ಅಮ್ಮ ಅಣ್ಣ ತಮ್ಮ ಅಕ್ಕ ತಂಗಿ
 gloss: father, mother, and four age-graded sibling words — nearly identical to Tamil's own set
+romanization: "appa amma aṇṇa tamma akka taṅgi"
 concept_tag: KA-FAMILY-BASIC
 prerequisites: [KA-C11-bannagalu]
 sounds: [kannada-retroflex-nna, kannada-anusvara]

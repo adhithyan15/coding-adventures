@@ -1,18 +1,17 @@
 {
   "language": "kannada",
   "chapter": 36,
-  "sourceHash": "fnv1a64:c2d47202cfe41dc3",
+  "sourceHash": "fnv1a64:a9f129f06c399190",
   "lessonIds": [
     "KA-C36-magu",
     "KA-C36-maga",
-    "KA-C36-magalu",
-    "KA-S131-vowel-sign-vocalic-r"
+    "KA-C36-magalu"
   ],
   "voiceLessons": 3,
   "drivablePrefix": 3,
   "text": "kannada/narration/ch36.txt",
   "json": "kannada/narration/ch36.json",
-  "textHash": "fnv1a64:9b281580a6dcaed5",
-  "jsonHash": "fnv1a64:d067b0bcab49aca0",
+  "textHash": "fnv1a64:f6409a1a9af81048",
+  "jsonHash": "fnv1a64:5ca4a96f0d8d5df0",
   "findings": []
 }

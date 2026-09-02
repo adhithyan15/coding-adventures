@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S142-digit-three",
+    "language": "kannada",
+    "chapter": 11,
+    "sequence": 397,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:75da3de77b4caf26",
+    "detachableSegments": [
+      "Script you'll notice: ೩",
+      "Writing: ೩ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -2,38 +2,38 @@
 schema_version: 2
 id: KA-S110-letter-ba
 spine_node: SPINE-MEET-GREET
-sequence: 336
+sequence: 246
 delivery: script
-chapter: 6
+chapter: 4
 type: writing
 headword: "ಬ"
 gloss: the single character ಬ — recognised inside words you already say
 romanization: "ba"
-prerequisites: []
+prerequisites: [KA-S113-letter-lla]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: []
+  knowledge: [KA-SCRIPT-RECOG-113]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-110]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-110]
+  knowledge: [KA-SCRIPT-RECOG-113, KA-SCRIPT-RECOG-110]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [KA-S113-letter-lla]
 ---
 
 # ಬ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-113] -->
 
-[PAUSE 1s] Rounded and looping like Telugu (its sister script), most letters topped by a small curved headstroke; no continuous top line.
+[PAUSE 1s] Before the new one: ಳ — what does it do?
 
 [PAUSE 2s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.

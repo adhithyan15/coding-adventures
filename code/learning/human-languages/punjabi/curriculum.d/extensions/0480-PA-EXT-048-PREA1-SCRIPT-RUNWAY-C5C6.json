@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-048-PREA1-SCRIPT-RUNWAY-C5C6",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read the stem bol, and I can tell the bare vowel carrier from the one wearing a kannā.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S05-babba-lalla-hora",
+    "PA-S06-kakka-aira-aara"
+  ]
+}

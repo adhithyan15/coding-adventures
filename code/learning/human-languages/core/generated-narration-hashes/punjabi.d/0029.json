@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 29,
-  "sourceHash": "fnv1a64:d689beae5ce264c9",
+  "sourceHash": "fnv1a64:ff33063e3ad3261a",
   "lessonIds": [
     "PA-W07-independent-u",
     "PA-W07-age-label",
@@ -23,6 +23,6 @@
   "text": "punjabi/narration/ch29.txt",
   "json": "punjabi/narration/ch29.json",
   "textHash": "fnv1a64:aa0b8f5be428bd30",
-  "jsonHash": "fnv1a64:68ce1324768ef6ee",
+  "jsonHash": "fnv1a64:a97e18fb24c2bbbf",
   "findings": []
 }

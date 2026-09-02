@@ -397,6 +397,11 @@ in the same pass (a `wasm-validator` funcref-assignability bug wiping out
    lack real cross-instance resolution (not needed by any current corpus
    case) — see W35's own closing addendum for the concrete blocker
    (a `return_call_ref.wast` regression) and what a future fix needs.
+   **`elem.wast`'s own remaining failure since CLOSED (2026-09-01)** — see
+   item 3's own updated entry below (found and fixed alongside the
+   `table.wast` investigation): a `wasm-wast-parser` restriction, not a
+   table-identity bug, was the real cause — `elem.wast` now passes
+   19/19, and the whole corpus's `assert_return` category is at 100%.
 
 2. **Malformed-binary LEB128 under-strictness.** `binary-leb128.wast`
    (7 real failures) and `binary.wast` (2 real failures) each contain
@@ -407,20 +412,40 @@ in the same pass (a `wasm-validator` funcref-assignability bug wiping out
    `wasm-module-parser`'s LEB128 decoding, no representation questions —
    a clean, self-contained next PR. Sized **S**.
 
-3. **`table.wast`'s oversized-declared-minimum case (unconfirmed as a
-   real bug — needs spec-text verification before fixing).** One `module`
-   directive declares a table with minimum `4294967295` (`u32::MAX`)
-   elements; `wasm-validator` rejects it for exceeding this interpreter's
-   10,000,000-element resource-limit heuristic. It's genuinely unclear
-   without re-reading the exact `.wast` directive and the spec's own
-   implementation-limits language whether the real spec expects this to
-   validate (deferring the actual failure to instantiation/allocation
-   time, since a numeric minimum alone doesn't have to eagerly allocate)
-   or whether rejecting at validation time is an acceptable
-   implementation-defined limit. Lowest priority of the three (affects
-   exactly one `module` directive in the whole corpus) — investigate the
-   actual assertion type in `table.wast` around this case before deciding
-   whether it's a bug.
+3. **`table.wast`'s oversized-declared-minimum case — investigated and
+   FIXED (2026-09-01).** `table.wast` line 9, `(module definition (table
+   0xffff_ffff funcref))` (`u32::MAX`, no declared `max`), is a bare,
+   UNWRAPPED directive — no `assert_invalid` around it — so the official
+   testsuite itself asserts this declaration must VALIDATE.
+   `wasm-validator` was rejecting it for exceeding this interpreter's
+   10,000,000-element resource-limit heuristic (`ValidationError: table
+   #0: declared minimum 4294967295 elements exceeds this interpreter's
+   resource limit of 10000000`).
+
+   Confirmed against the real spec's own implementation-limits reasoning:
+   a 32-bit table's `min` has no spec ceiling below `2^32 - 1` — an
+   implementation MAY refuse to actually ALLOCATE an oversized table, but
+   may NOT refuse to let a module merely DECLARE one. This is exactly the
+   same "declare freely, cap only at real allocation time" treatment
+   `is64` tables and 64-bit memories already received elsewhere in
+   `wasm-validator`; the 32-bit table case was the one remaining
+   inconsistency, confirmed as a genuine conformance bug, not a
+   defensible implementation choice.
+
+   **Fix**: removed the structural-validation-time rejection (`wasm-
+   validator` 0.2.85's old Check 2b, both the per-table and cross-table-
+   aggregate halves) entirely; the practical resource-limit heuristic
+   moved to `wasm-runtime::instantiate` (0.6.28) — the pipeline stage
+   where real allocation actually happens — generalizing that crate's
+   pre-existing `is64`-only aggregate cap to cover every table. Verified
+   not a DoS regression: `wasm-execution::Table::new_with_is64` already
+   applied its own per-table cap unconditionally regardless of `is64`
+   (0.9.91's doc-only fixup), so only the aggregate half needed a new
+   home, not new protection. See `wasm-validator`/`wasm-runtime`/
+   `wasm-execution`/`wasm-conformance`'s own CHANGELOGs for the full
+   writeup and corpus-wide verification (exactly 3 files changed in the
+   whole 257-file corpus across both this fix and the `elem.wast` one
+   above, every other file byte-identical).
 
 ---
 
@@ -459,6 +484,24 @@ yourself before trusting the count below, it moves with every merge).
 Every 100.0% figure above still has a nonzero NYS count hiding inside
 it — "100%" here means "100% of what was actually GRADED," never "100%
 of the file."
+
+### Correction (2026-09-02, see `W36-wasm-element-segment-exprs-list.md`)
+
+The table below's headline attribution — that the exprs-list element-
+segment form causes the 2130-directive `table_copy*`/`table_init*.wast`
+bucket — turned out to be WRONG, caught by `W36`'s own spec-writing pass
+before any implementation work was wasted chasing it. The real root
+cause there is unrelated to element segments at all: `wasm-wast-parser`
+doesn't implement the spec's own `table.init y ≡ table.init 0 y` /
+`table.copy ≡ table.copy 0 0` table-index-elision abbreviation, so every
+module using that shorthand (which is all four of these files) fails to
+parse for a completely different reason. The genuine exprs-list gap is
+real but much smaller (~15-20 directives, confined to `elem.wast`/
+`global.wast`/`ref_func.wast`) — see `W36` for the corrected, spec-text-
+grounded picture and the actual slice plan. The table and "Recommended
+sequencing" list below are left AS ORIGINALLY WRITTEN (not retroactively
+fixed) so this addendum stays an honest record of what was believed at
+the time — read them as history, not as the current plan.
 
 ### Per-file NYS breakdown, sorted by weight (the actual backlog)
 

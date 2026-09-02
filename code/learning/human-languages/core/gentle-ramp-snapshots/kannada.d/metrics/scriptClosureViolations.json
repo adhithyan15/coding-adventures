@@ -1,5 +1,5 @@
 {
   "language": "kannada",
   "metric": "scriptClosureViolations",
-  "value": 30
+  "value": 10
 }

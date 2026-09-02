@@ -5,6 +5,7 @@ chapter: 2
 type: phrase
 headword: ನಿಮ್ಮ ಹೆಸರು ಏನು?
 gloss: what's your name?
+romanization: "nimma hesaru ēnu?"
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [KA-C02-enu, KA-C02-niinu-niivu, KA-C02-hesaru]
 sounds: []

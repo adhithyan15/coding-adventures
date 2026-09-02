@@ -1,9 +1,10 @@
 {
   "language": "kannada",
   "chapter": 5,
-  "sourceHash": "fnv1a64:ad2edddfabf3d7a8",
+  "sourceHash": "fnv1a64:982164e4b1a0a6d0",
   "lessonIds": [
     "KA-C05-maatanaadu",
+    "KA-S05-letter-ta",
     "KA-C05-naanu-kannada-maatanaaduttene",
     "KA-C05-iru",
     "KA-C05-kelasa-maadu",
@@ -13,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch05.txt",
   "json": "kannada/narration/ch05.json",
-  "textHash": "fnv1a64:deb6c20d888297ac",
-  "jsonHash": "fnv1a64:22ffef9706ff4e3c",
+  "textHash": "fnv1a64:6795e9e776bf905b",
+  "jsonHash": "fnv1a64:2075315a54a15f91",
   "findings": []
 }

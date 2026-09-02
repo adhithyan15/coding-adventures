@@ -137,7 +137,7 @@ be impossible, it must be impossible at Layer 7.
 
 The corollary is the part most easily missed: because S-I6 brokers capabilities
 by default, **the broker mediates most operations in the running system**. It
-acts with supervisor privilege on agent-supplied arguments and is therefore a
+acts on agent-supplied arguments and is therefore a
 classic confused deputy. It is reviewed as a boundary, and S-K5 governs it.
 
 ### S-B2 — sign-time analysis states its own confidence, per language
@@ -194,6 +194,13 @@ surface. Every agent filter denies, at minimum:
 - `bpf`, `perf_event_open`, `userfaultfd`, `keyctl`, `add_key`
 - `mount`, `pivot_root`, `unshare`, `setns`, `personality`
 - `socketcall` and every other syscall multiplexer
+- `socket(AF_UNIX, ...)` — denied wholesale when no declared capability needs
+  it. seccomp cannot distinguish abstract-namespace from pathname unix sockets
+  (the name lives in the `sockaddr`, not a register), so the family is denied or
+  it is not.
+- the `pidfd` family — `pidfd_open`, `pidfd_send_signal`, `pidfd_getfd` (which
+  steals descriptors from another process), and `prlimit64` against a foreign
+  pid, `process_madvise`, `sched_setaffinity`, `setpriority`, `ioprio_set`
 
 `/proc`, `/sys`, `/dev/shm`, and `/dev` (except `/dev/null` and
 `/dev/urandom`) are unreachable in every agent's filesystem domain.
@@ -213,6 +220,15 @@ for seccomp, for the environment block, and for descriptor handling.
 
 The plan type carries the base policy as a first-class term, and an enforcer
 refuses to launch when the base policy is absent.
+
+**Two further terms are recorded in the plan and in the launch audit record
+(S-P4): `principal_model` (`shared_uid` | `distinct_uid` | `appcontainer_sid`)
+and `broker_topology` (`per_agent` | `per_supervisor`).** A relaxation is
+defensible only when the weaker outcome is *visible*: without these a deployment
+cannot tell from its own records which model it actually got, and "the launch
+proceeds and the audit record says sandboxed" is the exact failure S-P3 and S-P4
+exist to prevent. `broker_topology: per_supervisor` is a launch failure under
+S-K7. Observing and refusing costs no privilege.
 
 ### S-I2 — the agent's channel reaches the broker, not the supervisor
 
@@ -422,7 +438,7 @@ instruction executes with the plan already installed.** That is achievable on
 every platform here, including the BSDs where S-I4c forbids an in-process
 initialization window.
 
-### S-I5 — the agent never holds channel keys, and principals are separated
+### S-I5 — the agent never holds channel keys
 
 Secure-channel keys live in the broker, which the supervisor launched. They are
 never present in the agent's address space.
@@ -432,24 +448,38 @@ Under a shared UID an agent reaches broker memory via `ptrace(PTRACE_ATTACH)`,
 `process_vm_readv`, or `/proc/<pid>/mem`, and can signal the broker, the
 supervisor, and sibling agents.
 
-Agent, broker, and supervisor are therefore distinct OS principals: distinct
-UID on Unix, distinct AppContainer SID on Windows.
+**Three things carry that claim, and none of them requires a privileged
+supervisor:**
 
-**The privilege to allocate them must be provisioned, and its absence is a
-launch failure — not a downgrade.** Allocating a distinct UID needs
-`CAP_SETUID` or a delegated subuid/subgid range, which sits awkwardly beside
-S-P1's "Privilege: none" column for the sandbox primitives themselves. Those
-are different privileges at different times and the spec must say so: the
-**supervisor** runs privileged, or is given a delegated subuid/subgid range at
-install time; the **agent** needs no privilege for any S-P1 primitive. The
-allocated principal is carried in the plan as a first-class term, exactly as
-S-I1a requires of the base policy, and inability to allocate distinct
-principals for agent, broker, and supervisor fails the launch under S-P3.
+1. **One broker per agent** (S-K7). A broker holds only the keys of the agent
+   it serves, so even a total compromise yields the agent nothing it did not
+   already hold. This is what makes the remaining measures defence in depth
+   rather than the sole line.
+2. **The base filter denies process introspection** (S-I1): `ptrace`,
+   `process_vm_readv`, `process_vm_writev`, `kcmp`, with `/proc` and `/sys`
+   unreachable. An agent cannot read its broker's memory because the syscalls
+   are gone, not because the UID differs.
+3. **The sandbox scopes process access on every target platform**, and does so
+   unprivileged:
 
-Without this the natural unprivileged implementation runs every agent and the
-broker under one UID, S-I5's confidentiality claim is void **by its own terms**,
-S-I7 fails wholesale, and nothing in S-P3 catches it — the launch proceeds and
-the audit record says "sandboxed". Broker and supervisor set
+| Platform | How agent-to-broker inspection is denied | Privilege |
+|---|---|---|
+| Linux | Landlock restricts ptracing outside the domain (ABI v1), and seccomp denies the syscalls outright. **Each agent must call `landlock_restrict_self()` in its own process after fork** — a domain shared across agents does not separate them. At negotiated **ABI 0 the seccomp filter is the sole mechanism, and distinct UIDs become required rather than recommended.** | none |
+| OpenBSD | `pledge` lacking `ptrace`, `proc`, and `ps`; procfs has not existed since 5.7 | none |
+| FreeBSD | capability mode returns `ECAPMODE` for every global-namespace call; the only process handles are `procdesc` descriptors, and the agent holds none | none |
+| Windows | each agent gets its own AppContainer SID; `CreateAppContainerProfile` needs no administrator. **Container names derive from the attested `agent_id`; `ERROR_ALREADY_EXISTS` without a verified matching SID is a launch failure** — otherwise two agents silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
+| macOS | Seatbelt `(deny mach-priv-task-port)`, `(deny mach-lookup)`, `(deny process-info*)`. `process-info*` alone gates enumeration, **not Mach task-port acquisition, which is the actual memory-read vector.** The broker and supervisor are built with the Hardened Runtime and without `com.apple.security.get-task-allow`; absent that, a same-UID caller can take their task ports regardless of the agent's own profile. | none |
+
+Distinct UIDs on Unix remain **recommended** as defence in depth against a gap
+in the base filter — four review rounds established that filters are easy to get
+wrong — and where a delegated subuid/subgid range is provisioned at install the
+supervisor uses it. Except at Landlock ABI 0 (above), it is not required, its
+absence is not a launch failure, and **the supervisor does not run privileged.**
+
+Broker and supervisor suppress core dumps on every platform, not only Linux:
+`PR_SET_DUMPABLE=0` on Linux, `PT_DENY_ATTACH` or the Hardened Runtime on macOS,
+and a restrictive process DACL on Windows. A core dump is a key-disclosure path
+and two of the five platforms had no rule. Broker and supervisor set
 `PR_SET_DUMPABLE=0`. `ptrace`, `process_vm_readv`, `process_vm_writev`, and
 `kill` are denied in every agent filter (S-I1), and `/proc` and `/sys` are
 unreachable in the agent's domain. S-I5's confidentiality claim is not restated
@@ -466,12 +496,12 @@ brokering per-read over a large data directory is the motivating case.
 target intersects the runtime image, the wrapper binary, the shim, the broker
 binary, the supervisor binary, the agent package directory, the manifest, the
 **vault backing store and its directory**, the **audit log and its directory**,
-the **sandbox plan and policy files**, or the **principal/subuid mapping**.
+the **sandbox plan and policy files**, or the **principal or subuid mapping, where one exists**.
 
 The vault and audit entries are not optional extras. VLT06's per-secret
 `allowed_agents` is enforced by the vault, not by the filesystem, so reading the
 backing store directly reads every secret regardless of policy — and under
-brokering it is the *supervisor-privileged broker* that performs the read.
+brokering it is the *authority-bearing broker* that performs the read.
 Writing the audit log destroys the record S-P4 and S-I5 depend on. **A
 policy-mediated resource is never reachable as a raw path**: the vault is
 reachable only through the vault capability. A manifest declaring one is rejected at sign time
@@ -479,7 +509,7 @@ and again at launch.
 
 This is a bar on the *capability*, not on promotion, and the distinction is the
 whole point. Barring these from promotion alone would pin them to **brokered** —
-and brokered means the supervisor-privileged broker performs the write on the
+and brokered means the authority-bearing broker performs the write on the
 agent's behalf. The agent asks the broker to rewrite the shim, the broker
 consults the signed manifest, sees the capability declared, and complies. The
 harm S-I4 exists to prevent is target-dependent and mechanism-independent, so
@@ -489,21 +519,165 @@ the bar must be too.
 (see S-K6, which governs what brokering them may mean). Promotion requires an
 OS-level target-exact grant; wildcard targets are never promotable.
 
+**Overlapping *writable* direct grants across agents are recorded and reviewed
+as an inter-agent channel.** Two agents granted the same writable directory have
+a fully sanctioned, unmediated bidirectional path, including `flock`-based
+signalling. That is a manifest-review gap rather than an OS defect, and it is
+exactly what S-I7's narrower wording is meant to keep reviewers looking for.
+
+Per-agent memory bounds are set pre-exec with `RLIMIT_AS`/`RLIMIT_DATA`, which
+needs no privilege. cgroup delegation would be stronger but sits in the
+privileged row, and the Capacity section names memory as the first thing that
+fails — without a bound an agent can drive the broker into the OOM killer.
+
 Every promotion is recorded in the manifest and visible in review. The default
 direction matters: brokered-by-default fails closed, and a direct-by-default
 system silently grants whatever the OS happened to allow.
 
-### S-I7 — agents are mutually isolated
+### S-I7 — there is no agent-to-agent surface to isolate
 
-Every rule above is written agent-versus-outside; this one states the
-horizontal property. An agent may not read, write, signal, or ptrace another
-agent. This is enforced by principal separation — distinct UID, distinct
-AppContainer profile and SID, distinct jail — and not by the sandbox plan.
+This rule states a property of the paradigm, not a mediation requirement.
 
-An AppContainer profile *is* a SID: sharing one profile across agents gives
-them a common security principal, so they share ACL identity and can open each
-other's files and named objects. Profiles are never shared; the creation cost
-is paid per agent.
+**In V1, agents do not know about other agents.** An agent reaches anything
+outside itself through its secure channel to the supervisor, and nothing else.
+
+The rule is stated as a property of the agent's *view*, because that is what can
+be checked:
+
+> **The agent's view contains no agent identity — not a peer's, not its own —
+> and the agent cannot supply one.** An agent addresses a `channel_id`, never an
+> agent. Routing is the supervisor's concern, expressed in `D18P`
+> `ChannelDefinition` records the agent never sees.
+
+**Conformance.** A V1 agent-facing tool, wire field, or host import that carries
+or accepts an agent identity is non-conforming.
+
+The Level 4 transport already conforms: `chief-agent-stdio-v1`'s `AgentInput`
+carries `channel_id`, `message_id`, `sequence`, `timestamp_ns`, `content_type`,
+and `payload_b64` — no agent identity
+(`chief-of-staff-agent-stdio-protocol/src/lib.rs`). `D18P`'s `originator
+.agent_id` and 1..1024 `receivers[].agent_id` are the **supervisor's** wiring
+view and are correctly absent from the agent's.
+
+Two surfaces do **not** conform and are not exposed to agents in V1:
+
+| Surface | Where | V1 status |
+|---|---|---|
+| `agent.spawn`, `agent.send`, `agent.await` | `D18D` §delegation | not exposed in V1 — each names a peer |
+| `vault.request_direct`'s caller-supplied `consumer_agent_id` | `D18-chief-of-staff.md:1996` | not agent-supplied in V1 |
+
+The vault is already sound underneath: it authorizes on the **attested**
+`requesting_agent_id` (`chief-of-staff-vault-runtime/src/lib.rs:331`), never on
+the asserted field, and `D18D` already calls a binding that treats
+`consumer_agent_id` as proof of authorization non-conforming. V1 removes the
+field from the agent's reach rather than relying on that discipline.
+
+The OS-level discovery path is closed by S-I1 rather than by principal
+separation: `/proc` and `/sys` are unreachable, and the process, IPC and
+message-queue interfaces are denied. An agent cannot enumerate a sibling it was
+never told about, because the interfaces that would enumerate it are gone.
+
+**The mechanism is S-P1's strict allowlist, not S-I1's enumeration.** S-I1 lists
+denied classes so a review can check them; the allowlist is what actually holds,
+and anything not allowlisted is denied whether or not it appears in that list.
+
+Earlier drafts of this rule required distinct OS principals as *the* enforcement
+mechanism for mutual isolation. That imported a generic multi-tenant threat
+model in which mutually distrusting workloads share a namespace and must be kept
+apart. This design has no such namespace. Principal separation remains
+**recommended defence in depth** (S-I5), not the mechanism, and its absence is
+not a launch failure.
+
+Where an OS supplies per-agent principals for free it is still used: an
+AppContainer profile *is* a SID and `CreateAppContainerProfile` needs no
+administrator, so each Windows agent gets its own and profiles are never
+shared.
+
+### S-I8 — an optional in-runtime layer, which may only ever subtract
+
+Where a language runtime has its own capability enforcement, an agent may be
+launched under it **in addition to** the OS sandbox. Compromising the agent then
+takes two independent steps instead of one.
+
+Three rules keep this defence in depth rather than defence instead of:
+
+1. **It is derived from the same signed manifest.** Two capability sources that
+   can disagree is a worse position than one. `chief-of-staff-skill-parser`
+   already does this — `deno_permissions()` lowers the same
+   `Capability{category, action, ...}` values into `--allow-read`,
+   `--allow-net`, `--allow-run`, `--allow-ffi`.
+2. **It may only subtract.** The in-runtime layer is never wider than the OS
+   plan, and its presence **never** justifies relaxing the OS plan. A Deno agent
+   does not get a looser Layer 7 because Deno is watching. That inversion is how
+   defence in depth becomes a single point of failure wearing two names.
+3. **It is not a boundary under S-B1.** It is enforced by code sharing an
+   address space with the code it constrains. Deno's is strong — V8 isolates JS
+   from the host and `--deny-ffi` closes the obvious escape — but strong is not
+   the same as being the thing the design rests on.
+
+**Availability is poor outside JavaScript, and the industry is moving away from
+in-process sandboxing rather than toward it.** This is recorded so nobody plans
+around a facility that no longer exists:
+
+| Runtime | In-runtime enforcement | Status |
+|---|---|---|
+| **Deno** | `--deny-net`, `--deny-read`, `--deny-write`, `--deny-env`, `--deny-sys`, `--deny-run`, `--deny-ffi` | Supported, first-class. Already used here. |
+| **Node.js** | `--permission` with `--allow-fs-read`, `--allow-child-process` | Real, but young (experimental in v20) and has had bypasses. Usable with the caveat recorded. |
+| **Lua** | restricted environments | Supported; sandboxing is a design goal of the language. |
+| **wasm / WASI** | capability-based by construction | Supported, and the only **language-agnostic** option here — see below. |
+| **Java / JVM** | `SecurityManager` | **Gone.** Deprecated for removal by JEP 411, permanently disabled by JEP 486. No replacement is planned. |
+| **.NET** | Code Access Security | **Removed** in .NET Core. |
+| **Ruby** | `$SAFE` taint mode | **Removed** in Ruby 3.0 (deprecated 2.7). Nothing replaces it. |
+| **Python** | none | `rexec`/`Bastion` were withdrawn in 2003 as unfixable. PEP 578 audit hooks are *observability*, not enforcement, and native extensions bypass them. RestrictedPython is a subset compiler its own authors decline to call a security boundary. |
+| **Go, Rust** | none | Compiled; no runtime to enforce anything. |
+
+So for the two languages most likely to be asked for after JavaScript — Python
+and Ruby — **there is no inner layer to add, and there will not be one.** Their
+agents run with Layer 7 alone, which is precisely why Layer 7 had to be the
+boundary and not this.
+
+### S-I8a — wasm is the intended destination; the table above is transitional
+
+The per-runtime patchwork is a transitional state, not the target. The target is
+that **agents are wasm modules and nothing else.** This repo is already building
+toward it: W01 specifies a full WASM 1.0 runtime (~182 instructions, pluggable
+host interface), W02 specifies the complete `wasi_snapshot_preview1` ABI, and
+`wasm-runtime` implementations exist in Go, Python, Dart, Perl, and TypeScript.
+The runtimes currently ship minimal WASI stubs, so the destination is real but
+not yet reachable.
+
+Recording it here because it changes what the layers are *for*, and an
+implementer should know which way this is heading:
+
+**Today** — Layer 7 contains the agent, because the agent is a native process
+that can attempt syscalls. S-I8's inner layer is a bonus available only to
+JavaScript.
+
+**In the wasm end state** — the agent has **no syscalls at all**. A wasm module
+can only call the host functions it was given, so capability enforcement moves
+into the host interface and becomes total by construction rather than by
+enumeration. Layer 7 does not go away: it contains the **engine**, which is
+itself attack surface (wasm engines have had escape CVEs). Its role changes from
+*the* boundary to the containment around a boundary that now holds by
+construction.
+
+Two consequences worth fixing now, while the choice is still cheap:
+
+1. **An agent module must not be given `wasi_snapshot_preview1`'s file and
+   socket surface.** WASI is a *syscall* interface; handing an agent
+   `path_open` and `sock_connect` rebuilds the entire problem inside the
+   sandbox, with a less mature enforcement layer. What agents get is the
+   **broker's capability interface as the host imports** — S-K5's rules apply
+   unchanged, because the broker is still the thing on the other side. WASI's
+   value here is its module-isolation model, not its syscall surface.
+2. **The invariants in this spec are runtime-independent, and were written to
+   survive this transition.** S-B1, S-I1a, S-I2, S-I6, S-K6, S-K2 and S-P3 hold
+   whether the agent is a native process or a module; only the mechanism moves.
+   That is the payoff of separating them (see Normative Status).
+
+The cost of the end state is a compilation constraint on agent authors, which
+cuts against "any language you like" — though less each year, and it buys Python
+and Ruby the isolation they can never get natively.
 
 ---
 
@@ -551,14 +725,14 @@ it.
 
 ### S-K5 — the broker treats every field of every request as hostile
 
-The broker acts with supervisor privilege on agent-supplied arguments. It is
+The broker acts on agent-supplied arguments. It is
 the confused deputy in this design and is reviewed as one.
 
 - **Path arguments** are resolved beneath a pre-opened root descriptor, by the
   platform's own primitive. A validated path is never re-resolved from a string
   afterwards. `openat2` is Linux-only and this spec implements BSD first, so the
   rule is stated per platform rather than left to the implementer — the default
-  reach is `realpath()` + `open()`, which is a TOCTOU on a supervisor-privileged
+  reach is `realpath()` + `open()`, which is a TOCTOU on a authority-bearing
   process taking agent-supplied paths, i.e. the confused deputy S-K5 exists to
   prevent, and it fails silently.
 
@@ -602,7 +776,7 @@ inverts the boundary completely.
 **`ffi:*` and every `dlopen`-shaped capability are `Unsupported` by default and
 are never executed in the broker's address space, under any circumstances.**
 Calling an agent-chosen native function with agent-chosen arguments inside a
-supervisor-privileged process is a complete Layer 7 defeat reachable through a
+process holding authority the agent does not is a complete Layer 7 defeat reachable through a
 declared, reviewed, hardware-key-approved capability. There is no supported path for it in this spec.
 
 That is stated flatly because the obvious escape hatch is unsatisfiable by
@@ -613,9 +787,13 @@ this rule's own title. Enabling `ffi:*` requires a named amendment to this
 document, not an implementer's judgement.
 
 **Brokered `proc:exec` spawns only through the same `spawn_verified` path used
-for agents**: supervisor-owned wrapper, the agent's principal, and targets
-restricted to a manifest-declared digest-pinned set. Never `PATH`-resolved. The
-child must not inherit the broker's principal or its state.
+for agents**: supervisor-owned wrapper, and targets restricted to a
+manifest-declared digest-pinned set. Never `PATH`-resolved.
+
+The child receives **its own sandbox plan, computed as a subset of the
+requesting agent's**, and inherits none of the broker's descriptors (S-I3) and
+none of its plan. Stating this as "runs under the agent's principal, not the
+broker's" would be vacuous wherever the two share a UID, which S-I5 now permits.
 
 **The broker never execs.** A brokered exec is a *request to the supervisor*,
 which performs `spawn_verified`; the broker's own plan therefore contains no
@@ -646,12 +824,15 @@ bound gets ignored.
 
 Whether there is one broker per agent or one per supervisor is therefore a
 **blast-radius** decision before it is a capacity one: it determines whether an
-S-K5 parsing defect compromises one agent or all of them. Per-supervisor is
-admissible only if the broker is compartmented per agent by **a separate OS
-principal and a separate address space** — which is to say, multiplexing many
-agents through one broker process is inadmissible. "Separate structs, or a
-thread each" satisfies the words and is not a boundary; that is the S-B1 error
-this spec exists to prevent. In practice: one broker per agent.
+S-K5 parsing defect compromises one agent or all of them. **The broker is one process per agent.** This is normative, because S-I5 cites
+it as the pillar that demotes principal separation to defence in depth, and a
+pillar may not rest on something this spec declines to decide.
+
+A per-supervisor broker multiplexing many agents through one process is
+inadmissible: it would hold every agent's channel keys, so an S-K5 parsing
+defect becomes a cross-agent compromise. Compartmenting it "per agent" inside
+one address space — separate structs, or a thread each — satisfies the words and
+is not a boundary; that is the S-B1 error this spec exists to prevent.
 
 ---
 
@@ -713,9 +894,26 @@ brokered, or the launch fails. **No filesystem capability may be granted
 
 **Network denial is seccomp's job**, not Landlock's, given those floors.
 
+**A direct `net:*` grant reopens the abstract unix namespace below Landlock ABI
+v6 (6.12).** Landlock v4 network rules mediate TCP bind/connect only. Once
+`socket`/`bind`/`connect` are allowlisted for a direct grant, two agents on a
+6.7-6.11 kernel can bind and connect abstract-namespace unix sockets to each
+other with no mediation at all — exchanging bytes, `SCM_CREDENTIALS`, and
+`SCM_RIGHTS` descriptors, which is an S-I3-class escape. Abstract sockets carry
+no filesystem path and no DAC check, so **distinct UIDs would not stop this
+either**; only a network namespace or Landlock v6 does, and namespaces are
+excluded from the required path. Below ABI v6, a direct network grant therefore
+requires AF_UNIX to be separately denied by argument-filtered seccomp, or the
+capability stays brokered.
+
 **Unprivileged user namespaces are restricted by default** on Ubuntu 23.10+ via
 AppArmor and historically on Debian. Nothing in the required path depends on
 namespaces.
+
+**The "Privilege: none" column is now true of the whole required path**,
+including principal handling — see S-I5. An earlier draft required a privileged
+supervisor for per-agent UID allocation and contradicted this column; that
+requirement is withdrawn.
 
 **macOS `sandbox_init` is formally deprecated** (since 10.8) and remains what
 production browsers use. There is no supported alternative for spawning
@@ -834,13 +1032,11 @@ and the relaxation is recorded in the manifest and visible in review.
   class outright, and requires a measurement; it pre-approves nothing.
 - **The sign-time analyzer for languages other than Go.** S-B2 requires
   confidence be stated per language. It does not specify the analyzers.
-- **Whether the broker is one process per agent or one per supervisor.** Per
-  agent is simpler to reason about and matches S-K2; per supervisor amortizes
-  the channel. It interacts with the capacity numbers above.
-- **Whether `DENO_FLAGS` is deleted or retained.** The spec calls it a real
-  boundary. Deleting a working in-process boundary once the OS boundary lands
-  is a net reduction, not a cleanup; retaining it as defence in depth for Deno
-  agents costs nothing. Decide with a measurement, not on tidiness.
+(Broker topology was listed here as undecided. It is decided: **one broker per
+agent**, normatively, in S-K7 — S-I5 rests on it.)
+(`DENO_FLAGS` was listed here as undecided. It is decided: **retained**, as the
+Deno case of S-I8. Deleting a working in-process layer once the OS layer lands
+is a net reduction, not a cleanup.)
 
 Decided, and recorded here because earlier drafts left it open: the launcher
 shim is **supervisor-owned and injected** (S-I4d), never a library the agent
@@ -876,7 +1072,8 @@ through S-I3 before two weeks are spent on Windows.
 7. **macOS Seatbelt** (Tier A).
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
-   than the enforcement mechanism.
+   than the enforcement mechanism — its flags are retained beneath the OS plan
+   as the S-I8 inner layer, not deleted.
 
 Steps 1-4 are the smallest useful increment: they give compiled agents a real
 OS boundary on Linux, which is where CI runs.

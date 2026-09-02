@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S112-letter-ga
 spine_node: SPINE-MEET-GREET
-sequence: 366
+sequence: 185
 delivery: script
-chapter: 8
+chapter: 3
 type: writing
 headword: "ಗ"
 gloss: the single character ಗ — recognised inside words you already say
@@ -49,8 +49,7 @@ You already say these, and every one of them has ಗ somewhere inside it:
 
 - **ಹೇಗೆ** *hēge* — how
 - **ನೀವು ಹೇಗಿದ್ದೀರಾ?** *nīvu hēgiddīrā* — how are you? (respectful)
-- **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ
-- **ಪರವಾಗಿಲ್ಲ** *paravāgilla* — it's okay / no problem / you're welcome
+- **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ"
 
 ## Writing: ಗ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-112] -->

@@ -9,27 +9,27 @@ headword: ਭਰਾ · ਭੈਣ · ਅੱਖ
 romanization: bharā · bhaiṇ · akkh
 gloss: retrieve brother, sister, and eye with tone and doubling contrasts at R4
 concept_tag: REVIEW
-prerequisites: [PA-R25-friend-family-r4, PA-C12-akkh]
+prerequisites: [PA-R25-friend-family-r4, PA-C12-akkh, PA-S07-naana-jajja-vavva]
 sounds: [tone-low, addak-doubling]
 roots: []
 etymology_hook: Brother remains the old cognate, sister the Indo-Aryan replacement, and eye the doubled consonant that survived instead of becoming tone.
 duration:
   max_seconds: 220
 requires:
-  knowledge: [PA-LEX-BHARA, PA-ETYMON-BHARA-BROTHER, PA-SOUND-TONE-LOW, PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-LEX-AKKH, PA-ETYMON-AKKH-EYE]
+  knowledge: [PA-LEX-BHARA, PA-ETYMON-BHARA-BROTHER, PA-SOUND-TONE-LOW, PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-LEX-AKKH, PA-ETYMON-AKKH-EYE, PA-SCRIPT-RECOG-NAANA-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-BHARA, PA-ETYMON-BHARA-BROTHER, PA-SOUND-TONE-LOW, PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-LEX-AKKH, PA-ETYMON-AKKH-EYE]
+  knowledge: [PA-LEX-BHARA, PA-ETYMON-BHARA-BROTHER, PA-SOUND-TONE-LOW, PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-LEX-AKKH, PA-ETYMON-AKKH-EYE, PA-SCRIPT-RECOG-NAANA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C11-bhara, PA-C11-bhain, PA-C12-akkh]
+reviews_of: [PA-C11-bhara, PA-C11-bhain, PA-C12-akkh, PA-S07-naana-jajja-vavva]
 ---
 
 # Brother, sister, and eye return at R4
@@ -49,6 +49,6 @@ reviews_of: [PA-C11-bhara, PA-C11-bhain, PA-C12-akkh]
 Read **ਭਰਾ · ਭੈਣ · ਅੱਖ** once. This lesson deliberately stops at reading and speech; it does not award independent Gurmukhi writing evidence.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-BHARA, PA-LEX-BHAIN, PA-LEX-AKKH] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-BHARA, PA-LEX-BHAIN, PA-LEX-AKKH, PA-SCRIPT-RECOG-NAANA-01] -->
 
 [PAUSE 4s] Say the three meanings once more, then stop. No new item follows.

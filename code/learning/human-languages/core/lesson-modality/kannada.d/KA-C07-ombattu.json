@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C07-ombattu",
+    "language": "kannada",
+    "chapter": 7,
+    "sequence": 345,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e79742b400e8e91"
+  },
+  "findings": []
+}
