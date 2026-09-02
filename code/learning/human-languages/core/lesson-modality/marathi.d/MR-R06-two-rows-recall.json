@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R06-two-rows-recall",
+    "language": "marathi",
+    "chapter": 6,
+    "sequence": 77,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c195b029e9d975d"
+  },
+  "findings": []
+}

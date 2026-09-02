@@ -1,25 +1,20 @@
 {
   "chapter": 22,
-  "title": "Give, Bring, Put",
-  "label": "ch:mr-request-verbs",
-  "canDo": "I can ask for four everyday actions in Marathi -- give, drink, bring, put -- and name the Indo-European root under each.",
+  "title": "The Doorway Signs at Long Distance",
+  "label": "ch:doorway-script-distance",
+  "canDo": "I can write dhanyavad and retrieve all twelve doorway signs after more than eighty later lessons.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-COURTESY-THANK"
   ],
   "payoff": {
-    "lesson": "MR-R22-request-verbs",
-    "kind": "production",
-    "summary": "Complete MR-R22-request-verbs and ask, unaided, for water to be given, tea to be brought, and milk to be put down, each with the polite kripaya frame.",
+    "lesson": "MR-R18-script-d-r4",
+    "kind": "task",
+    "summary": "Retrieve the final sign batch from sound after every new doorway sign has crossed the long-distance window.",
     "assesses": [
-      "MR-LEX-DENE",
-      "MR-LEX-PINE",
-      "MR-LEX-ANNE",
-      "MR-LEX-THEVNE",
-      "MR-PHRASE-KRUPAYA",
-      "MR-ETYMON-DENE-DEH3",
-      "MR-ETYMON-PINE-SAME-ROOT",
-      "MR-ETYMON-ANNE-AA-NI",
-      "MR-ETYMON-THEVNE-STEH2"
-    ]
+      "MR-SCRIPT-YA-01",
+      "MR-SCRIPT-LLA-01",
+      "MR-SCRIPT-VA-01"
+    ],
+    "note": "The chapter introduces nothing; it supplies observable R4 writing evidence."
   }
 }

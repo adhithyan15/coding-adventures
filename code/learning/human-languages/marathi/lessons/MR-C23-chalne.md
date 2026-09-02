@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C23-chalne
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 950
-chapter: 23
+sequence: 1150
+chapter: 27
 type: word
 headword: चालणे
 romanization: chālṇe

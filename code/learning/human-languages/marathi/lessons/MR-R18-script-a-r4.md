@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R18-script-a-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 780
-chapter: 18
+sequence: 980
+chapter: 22
 type: review
 headword: ः / आ / भ
 romanization: "visarga / aa / bha"

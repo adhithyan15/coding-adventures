@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F02-last-three-copy
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 827
+sequence: 1027
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "आवडते पेय · आवडती कृती · मित्राचे नाव"
 gloss: guided copy of the last three form labels with one agreement contrast and one possessive

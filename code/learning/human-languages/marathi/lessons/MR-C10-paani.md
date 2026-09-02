@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C10-paani
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 520
-chapter: 13
+sequence: 720
+chapter: 17
 type: word
 headword: पाणी
 romanization: pāṇī

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W06-cha",
+    "language": "marathi",
+    "chapter": 6,
+    "sequence": 74,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:270ee683fd5fc394",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

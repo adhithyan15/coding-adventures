@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C23-jhopne
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 940
-chapter: 23
+sequence: 1140
+chapter: 27
 type: word
 headword: झोपणे
 romanization: jhopṇe

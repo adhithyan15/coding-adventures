@@ -1,14 +1,14 @@
 {
   "language": "marathi",
   "chapter": 14,
-  "sourceHash": "fnv1a64:cff7519cb0459b22",
+  "sourceHash": "fnv1a64:f0afd31d2743df65",
   "lessonIds": [
-    "MR-C11-mitra",
-    "MR-R11-mitra-r1",
-    "MR-C11-kutumb",
-    "MR-R11-kutumb-r1",
-    "MR-C11-bhau",
-    "MR-C11-bahin"
+    "MR-C07-asne",
+    "MR-C07-jane",
+    "MR-C07-yene",
+    "MR-C07-khane",
+    "MR-C07-pahne",
+    "MR-C07-mahit-asne"
   ],
-  "tex": "marathi/book/chapters/ch14-friend-and-family.tex"
+  "tex": "marathi/book/chapters/ch14-core-verbs.tex"
 }

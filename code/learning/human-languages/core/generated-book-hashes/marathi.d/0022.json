@@ -1,13 +1,17 @@
 {
   "language": "marathi",
   "chapter": 22,
-  "sourceHash": "fnv1a64:bacb269731720008",
+  "sourceHash": "fnv1a64:d089d3b2347cec6d",
   "lessonIds": [
-    "MR-C22-dene",
-    "MR-C22-pine",
-    "MR-C22-anne",
-    "MR-C22-thevne",
-    "MR-R22-request-verbs"
+    "MR-R18-script-warmup",
+    "MR-R18-script-a-r4",
+    "MR-R18-script-b-r4",
+    "MR-R18-script-c-r4",
+    "MR-R18-script-d-r4",
+    "MR-R22-marks-r4",
+    "MR-R22-two-rows-r4",
+    "MR-R22-curled-r4",
+    "MR-R22-sibilants-r4"
   ],
-  "tex": "marathi/book/chapters/ch22-request-verbs.tex"
+  "tex": "marathi/book/chapters/ch22-doorway-script-distance.tex"
 }

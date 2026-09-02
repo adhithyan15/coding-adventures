@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1M18-independent-message",
     "language": "marathi",
-    "chapter": 20,
-    "sequence": 857,
+    "chapter": 24,
+    "sequence": 1057,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:514711ccbfeda27a",
+    "sourceHash": "fnv1a64:148752bcaefa811b",
     "detachableSegments": [
       "Writing — connected composition, no model"
     ],

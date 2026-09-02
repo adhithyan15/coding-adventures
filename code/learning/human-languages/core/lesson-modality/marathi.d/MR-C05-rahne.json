@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C05-rahne",
     "language": "marathi",
-    "chapter": 8,
-    "sequence": 175,
+    "chapter": 12,
+    "sequence": 375,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -16,7 +16,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:4df2cf5f3c0d1019",
+    "sourceHash": "fnv1a64:2d0b51bcfd5ed010",
     "detachableSegments": [
       "The letters in this word"
     ]

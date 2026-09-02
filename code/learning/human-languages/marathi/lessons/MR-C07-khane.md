@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C07-khane
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 410
-chapter: 10
+sequence: 610
+chapter: 14
 type: word
 headword: खाणे
 romanization: khāṇe

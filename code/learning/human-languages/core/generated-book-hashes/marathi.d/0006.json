@@ -1,0 +1,16 @@
+{
+  "language": "marathi",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:edea67b3718cc7e8",
+  "lessonIds": [
+    "MR-W06-kha",
+    "MR-W06-ga",
+    "MR-W06-gha",
+    "MR-W06-ca",
+    "MR-W06-cha",
+    "MR-W06-ja",
+    "MR-W06-jha",
+    "MR-R06-two-rows-recall"
+  ],
+  "tex": "marathi/book/chapters/ch06-two-rows-runway.tex"
+}

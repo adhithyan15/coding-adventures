@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:564e0d3f0540d666",
+  "lessonIds": [
+    "MR-W08-la",
+    "MR-W08-sha",
+    "MR-W08-ssa",
+    "MR-W08-u-independent",
+    "MR-W08-uu-independent",
+    "MR-W08-e-independent",
+    "MR-R08-runway-recall"
+  ],
+  "tex": "marathi/book/chapters/ch08-sibilant-runway.tex"
+}

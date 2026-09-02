@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C10-chaha",
     "language": "marathi",
-    "chapter": 13,
-    "sequence": 530,
+    "chapter": 17,
+    "sequence": 730,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4b62329795f37700",
+    "sourceHash": "fnv1a64:91c3650f5e9425f8",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:3c56c23ad8322c95",
+  "lessonIds": [
+    "MR-W07-tta",
+    "MR-W07-ttha",
+    "MR-W07-dda",
+    "MR-W07-nna",
+    "MR-W07-pa",
+    "MR-R07-retroflex-recall"
+  ],
+  "tex": "marathi/book/chapters/ch07-retroflex-runway.tex"
+}
