@@ -115,11 +115,96 @@ rm -rf "$OUTPUT"
 APP="$OUTPUT/$BACKEND"
 
 echo "[3/4] Placing the engine where the emitted project expects it..."
-# This is the step whose absence makes an emitted native app inert. The
-# CMakeLists copies the library beside the binary post-build, but only if it
-# finds it here first.
-cp "$LIB_PATH" "$APP/$LIB_NAME"
-echo "  $APP/$LIB_NAME"
+if [[ "$BACKEND" == "swiftui" ]]; then
+  # SwiftUI is the one backend that LINKS the engine rather than dlopen-ing it,
+  # so it needs the static archive and a header, not a dynamic library dropped
+  # beside the binary.
+  #
+  # Engram's `MosaicHost.swift` opens with `import CEngram`, and the emitted
+  # Package.swift declares only `CMosaicRuntime` -- the standard runtime shim.
+  # Nothing tells the emitter that this package's host asset needs a different
+  # module, so the emitted project fails immediately with:
+  #
+  #     error: no such module 'CEngram'
+  #
+  # This is the same root cause as UI47 (#13645): Engram routes through
+  # `engram-capi` because the standard ABI cannot express its host intents yet.
+  # Once #13728 moves the adapters onto the standard runtime, CEngram stops
+  # being needed and this block should be deleted rather than generalised --
+  # building emitter infrastructure for a configuration we intend to retire
+  # would be the wrong investment.
+  ( cd "$RUST" && cargo build -q -p engram-capi --release )
+  STATIC="$RUST/target/release/libengram_capi.a"
+  if [[ ! -f "$STATIC" ]]; then
+    echo "error: expected the static archive at $STATIC" >&2
+    exit 1
+  fi
+  mkdir -p "$APP/Sources/CEngram/include" "$APP/Sources/CEngram/lib"
+  cp "$RUST/engram-capi/include/engram.h" "$APP/Sources/CEngram/include/engram.h"
+  cp "$STATIC" "$APP/Sources/CEngram/lib/libengram_capi.a"
+  cat > "$APP/Sources/CEngram/module.modulemap" <<'MODULEMAP'
+module CEngram {
+  header "include/engram.h"
+  export *
+}
+MODULEMAP
+
+  python3 - "$APP/Package.swift" <<'PYPKG'
+import sys
+
+path = sys.argv[1]
+source = open(path).read()
+
+if 'name: "CEngram"' in source:
+    print("  CEngram already declared")
+    sys.exit(0)
+
+# Plain string surgery rather than regex: the emitted Package.swift is
+# generated from a fixed template, so the anchors below are exact, and a
+# regex here would only add escaping hazards for no extra robustness.
+SYSTEM_LIBRARY = (
+    "  targets: [\n"
+    "    .systemLibrary(\n"
+    '      name: "CEngram",\n'
+    '      path: "Sources/CEngram"\n'
+    "    ),\n"
+)
+if "  targets: [\n" not in source:
+    sys.exit("Package.swift did not contain the expected targets list")
+source = source.replace("  targets: [\n", SYSTEM_LIBRARY, 1)
+
+APP_TARGET = (
+    "    .executableTarget(\n"
+    '      name: "App",\n'
+    '      dependencies: ["CMosaicRuntime"],\n'
+    '      path: "Sources/App"\n'
+    "    ),\n"
+)
+APP_TARGET_LINKED = (
+    "    .executableTarget(\n"
+    '      name: "App",\n'
+    '      dependencies: ["CMosaicRuntime", "CEngram"],\n'
+    '      path: "Sources/App",\n'
+    "      linkerSettings: [\n"
+    '        .unsafeFlags(["-L", "Sources/CEngram/lib", "-lengram_capi"])\n'
+    "      ]\n"
+    "    ),\n"
+)
+if APP_TARGET not in source:
+    sys.exit("Package.swift's App target did not match the expected shape")
+source = source.replace(APP_TARGET, APP_TARGET_LINKED, 1)
+
+open(path, "w").write(source)
+print("  declared the CEngram system library in Package.swift")
+PYPKG
+  echo "  $APP/Sources/CEngram/{include/engram.h,lib/libengram_capi.a}"
+else
+  # This is the step whose absence makes an emitted native app inert. The
+  # CMakeLists copies the library beside the binary post-build, but only if it
+  # finds it here first.
+  cp "$LIB_PATH" "$APP/$LIB_NAME"
+  echo "  $APP/$LIB_NAME"
+fi
 
 if [[ "$RUN_BUILD" -eq 0 ]]; then
   echo ""
@@ -151,6 +236,24 @@ case "$BACKEND" in
     echo "  engine verified beside the binary in $BIN_DIR"
     echo ""
     echo "Built: $BIN_DIR"
+    ;;
+  swiftui)
+    ( cd "$APP" && swift build -c release )
+    BIN="$APP/.build/release/App"
+    if [[ ! -x "$BIN" ]]; then
+      echo "error: swift build produced no executable at $BIN" >&2
+      exit 1
+    fi
+    # The engine is LINKED here rather than loaded at runtime, so the check is
+    # that its symbols actually made it into the binary -- the equivalent of
+    # Qt's "is the library beside the executable", one layer earlier.
+    if ! nm -u "$BIN" 2>/dev/null | grep -q "_eg_" && ! nm "$BIN" 2>/dev/null | grep -q " T _eg_"; then
+      echo "error: no eg_* symbols in $BIN; the engine did not link" >&2
+      exit 1
+    fi
+    echo "  engine symbols verified in the binary"
+    echo ""
+    echo "Built: $BIN"
     ;;
   *)
     echo "error: the $BACKEND compile step is not wired yet." >&2
