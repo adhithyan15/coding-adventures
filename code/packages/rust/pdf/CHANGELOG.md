@@ -3,6 +3,36 @@
 ## Unreleased
 
 
+
+### Added — PDF-3 Phase B: embedded TrueType with subsetting
+
+`EmbeddedFont` writes the object graph a reader needs for a script the base-14
+faces cannot draw: a `/Type0` font with `Identity-H` encoding, a
+`/CIDFontType2` descendant carrying `/W` and an identity `CIDToGIDMap`, a
+`/FontDescriptor` with `/FontFile2`, and a `/ToUnicode` CMap.
+`Content::show_glyphs` writes glyph ids as two-byte codes, which is what
+`Identity-H` means — passing a string would draw whatever glyphs sat at those
+code points.
+
+Widths are scaled into PDF's 1000-per-em text space and taken from the same
+`font-parser` metrics the font itself reports, so the two cannot drift; a
+disagreement there draws correct glyphs in the wrong places, which reads as bad
+kerning rather than a bug.
+
+### Verified by two oracles, because they see different failures
+
+`pdftotext` exercises the `/ToUnicode` CMap, which is **invisible to
+rendering**: a PDF without one draws perfectly and yields gibberish when
+selected, searched or read aloud. `pdftoppm` exercises the glyphs, since a
+correct CMap over a broken font extracts perfect text from a blank page.
+
+Both run against Latin, Tamil and Japanese — the scripts that force embedding
+in the first place, so a pipeline checked only on Latin is checked on the half
+that already worked.
+
+Mutation-checked: dropping `/ToUnicode` makes Tamil extract as `\u{6}\u{7}`,
+its raw glyph ids, while the page still renders perfectly.
+
 ### Added — PDF-2: page tree, content streams, graphics operators
 
 - `Document` / `Page` build the catalogue → `Pages` → `Page` tree, reserving

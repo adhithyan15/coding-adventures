@@ -83,13 +83,27 @@ impl StandardFont {
     }
 }
 
+/// A font a page can reference.
+///
+/// The two kinds are genuinely different objects in the file -- a base-14
+/// `/Type1` dictionary is four entries, while an embedded font is a graph of
+/// five -- so they are distinguished here rather than behind one trait.
+#[derive(Clone, Debug)]
+pub enum FontResource {
+    /// One of the fourteen fonts every reader already has.
+    Standard(StandardFont),
+    /// A TrueType font carried in the file, for scripts the base-14 cannot
+    /// draw.
+    Embedded(Box<crate::EmbeddedFont>),
+}
+
 /// A page, before it is written.
 #[derive(Clone, Debug)]
 pub struct Page {
     width: f64,
     height: f64,
     content: Vec<u8>,
-    fonts: Vec<(String, StandardFont)>,
+    fonts: Vec<(String, FontResource)>,
 }
 
 impl Page {
@@ -139,7 +153,24 @@ impl Page {
     /// are deliberately separate so a document can swap a face without
     /// rewriting its content streams.
     pub fn add_font(&mut self, name: impl Into<String>, font: StandardFont) -> &mut Self {
-        self.fonts.push((name.into(), font));
+        self.fonts.push((name.into(), FontResource::Standard(font)));
+        self
+    }
+
+    /// Embed a TrueType font under a resource name.
+    ///
+    /// Needed for anything the base-14 faces cannot draw, which is every
+    /// script outside Latin, Greek and Cyrillic. Show its text with
+    /// [`Content::show_glyphs`](crate::Content::show_glyphs) -- the encoding is
+    /// `Identity-H`, so the content stream carries glyph ids rather than
+    /// characters.
+    pub fn add_embedded_font(
+        &mut self,
+        name: impl Into<String>,
+        font: crate::EmbeddedFont,
+    ) -> &mut Self {
+        self.fonts
+            .push((name.into(), FontResource::Embedded(Box::new(font))));
         self
     }
 
@@ -186,7 +217,12 @@ impl Document {
         if !page.fonts.is_empty() {
             let mut fonts = Dict::new();
             for (name, font) in &page.fonts {
-                let id = self.writer.add(Object::Dict(font.dict()));
+                let id = match font {
+                    FontResource::Standard(standard) => {
+                        self.writer.add(Object::Dict(standard.dict()))
+                    }
+                    FontResource::Embedded(embedded) => embedded.write(&mut self.writer),
+                };
                 fonts.set(name.clone(), Object::Ref(id));
             }
             resources.set("Font", Object::Dict(fonts));

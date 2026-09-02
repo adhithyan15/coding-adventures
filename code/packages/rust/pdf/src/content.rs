@@ -346,6 +346,28 @@ impl Content {
         self.raw(" Tj")
     }
 
+    /// `Tj` — show glyphs **by id**, for a font with `Identity-H` encoding.
+    ///
+    /// Under `Identity-H` a character code IS a glyph id, written as two
+    /// big-endian bytes. So an embedded font must be shown this way and never
+    /// with [`Content::show_text`]: passing a string would draw whatever
+    /// glyphs happen to sit at those code points, which for a Tamil or CJK
+    /// font is arbitrary.
+    ///
+    /// Written as a hex string, because glyph ids routinely contain bytes that
+    /// a literal string would have to escape -- including the zero byte, which
+    /// half of every id below 256 begins with.
+    pub fn show_glyphs(&mut self, glyphs: &[u16]) -> &mut Self {
+        let mut hex = Vec::with_capacity(glyphs.len() * 2);
+        for glyph in glyphs {
+            hex.extend_from_slice(&glyph.to_be_bytes());
+        }
+        let mut out = Vec::new();
+        Object::HexStr(hex).write(&mut out);
+        self.ops.extend_from_slice(&out);
+        self.raw(" Tj")
+    }
+
     /// `TJ` — show strings with kerning adjustments between them.
     ///
     /// Each adjustment is in thousandths of an em and moves the pen **back**,
