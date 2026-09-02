@@ -4750,6 +4750,104 @@ fn invalid_array_copy_rejects_a_source_storage_type_that_does_not_match_the_dest
     );
 }
 
+// ── W38 slice 3 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): array.new_data
+// / array.init_data -- mirrors the `array.fill`/`array.copy` test pairs
+// directly above, one instruction group later. Real corpus shapes:
+// `array_init_data.wast`'s own "immutable"/"array type is not numeric or
+// vector" `assert_invalid` cases (confirmed by direct read); the
+// out-of-range data-segment-index case has no real corpus fixture (every
+// vendored module happens to only ever name an in-range segment) but is a
+// real, spec-mandated validation rule this crate enforces the same way
+// `memory.init`/`data.drop` already do -- covered directly here instead.
+
+#[test]
+fn valid_array_new_data_and_init_data() {
+    assert_valid(
+        r#"(module
+             (type $mvec (array (mut i32)))
+             (data $d "abcdefgh")
+             (func (export "new") (result (ref $mvec))
+               (array.new_data $mvec $d (i32.const 0) (i32.const 2)))
+             (func (param $dest (ref $mvec))
+               (array.init_data $mvec $d (local.get $dest) (i32.const 0) (i32.const 0) (i32.const 2))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_init_data_on_an_immutable_array_is_rejected() {
+    // Mirrors `array_init_data.wast`'s own "array.init_data-immutable" case
+    // exactly.
+    assert_invalid(
+        r#"(module
+             (type $a (array i8))
+             (data $d1 "a")
+             (func (export "array.init_data-immutable") (param $1 (ref $a))
+               (array.init_data $a $d1 (local.get $1) (i32.const 0) (i32.const 0) (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_init_data_rejects_a_reference_storage_type() {
+    // Mirrors `array_init_data.wast`'s own "array.init_data-invalid-1" case
+    // exactly ("array type is not numeric or vector" -- data segments can
+    // never hold references).
+    assert_invalid(
+        r#"(module
+             (type $a (array (mut funcref)))
+             (data $d1 "a")
+             (func (export "array.init_data-invalid-1") (param $1 (ref $a))
+               (array.init_data $a $d1 (local.get $1) (i32.const 0) (i32.const 0) (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_new_data_rejects_a_reference_storage_type() {
+    // The `array.new_data` analogue of the case directly above -- the real
+    // spec applies the identical "numeric or vector" element-type
+    // precondition to both instructions (no mutability requirement, since a
+    // freshly allocated array is always writable at construction).
+    assert_invalid(
+        r#"(module
+             (type $a (array funcref))
+             (data $d1 "a")
+             (func (export "array.new_data-invalid") (result (ref $a))
+               (array.new_data $a $d1 (i32.const 0) (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_init_data_rejects_an_out_of_range_data_segment_index() {
+    // A real, spec-mandated validation rule ("The data segment `C.datas[y]`
+    // must exist") this crate enforces the same way `memory.init`/`data.
+    // drop` already do (`decode_idx`/`ctx.module.data.len()` bounds check,
+    // W38 slice 3's own `0x12` arm) -- an out-of-range `$data_idx` is a
+    // compile-time validation error, distinct from the runtime TRAP an
+    // in-range-but-too-short segment produces. Only ONE data segment (index
+    // 0) is declared here; `1` is a bare numeric literal, so `wasm-wast-
+    // parser`'s own `resolve_idx` accepts it unchecked (no `$name` to look
+    // up) and defers the real bounds check to this validator, exactly the
+    // gap this test exercises.
+    assert_invalid(
+        r#"(module
+             (type $a (array (mut i8)))
+             (data $d0 "a")
+             (func (param $1 (ref $a))
+               (array.init_data $a 1 (local.get $1) (i32.const 0) (i32.const 0) (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_new_data_rejects_an_out_of_range_data_segment_index() {
+    // The `array.new_data` analogue of the case directly above.
+    assert_invalid(
+        r#"(module
+             (type $a (array (mut i8)))
+             (data $d0 "a")
+             (func (result (ref $a))
+               (array.new_data $a 1 (i32.const 0) (i32.const 0))))"#,
+    );
+}
+
 #[test]
 fn valid_struct_new_and_array_new_as_global_const_exprs() {
     // The real GC proposal extends constant expressions to allow these five

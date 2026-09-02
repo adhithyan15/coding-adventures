@@ -4179,8 +4179,10 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
 ///   0x0D  array.get_u          NEW                         0x0D (matches)
 ///   0x0E  array.set            NEW                         0x0E (matches)
 ///   0x0F  array.len            NEW                         0x0F (matches)
+///   0x09  array.new_data       NEW (W38 slice 3)           0x09 (matches)
 ///   0x10  array.fill           NEW (W38 slice 2)           0x10 (matches)
 ///   0x11  array.copy           NEW (W38 slice 2)           0x11 (matches)
+///   0x12  array.init_data      NEW (W38 slice 3)           0x12 (matches)
 /// ```
 ///
 /// `0x10`/`0x11` (W38 slice 2: `code/specs/
@@ -4188,7 +4190,12 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
 /// (`0x0F`) -- real, spec-text-fetched sub-opcode values, cross-checked
 /// against the real GC proposal's own binary grammar page independently
 /// of any single automated fetch (see that spec's own "Real spec text"
-/// section for the corroboration method).
+/// section for the corroboration method). `0x09` fills the one remaining
+/// gap in the `0x06`-`0x0F` array-allocation block (immediately after
+/// `array.new_fixed`, `0x08`); `0x12` (W38 slice 3) sits immediately after
+/// `array.copy` (`0x11`) and before `ref.test`/`ref.test null` (`0x14`/
+/// `0x15`) -- both real, spec-text-fetched values, same corroboration
+/// method as `0x10`/`0x11`.
 ///
 /// This is safe PURELY because this repo's `0xFB`-prefixed bytecode never
 /// round-trips through anything OUTSIDE this crate's own text parser +
@@ -4196,14 +4203,18 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
 /// encodes to real binary for a plain `(module ...)` script directive --
 /// see `wasm-conformance`'s own pipeline doc comment) -- there is no
 /// external tool this byte-level deviation could ever desync from.
-/// `array.new_data`/`array.new_elem`/`array.init_data`/`array.init_elem`
-/// are deliberately NOT wired here -- they need real data-/elem-segment
-/// integration this slice does not attempt (see the accompanying spec
-/// addendum) -- any module using them stays an honest parse error at this
-/// crate's boundary, `NotYetSupported` at the conformance-harness level,
-/// never a silent misencoding. `array.copy`/`array.fill` (W38 slice 2:
-/// `code/specs/W38-wasm-gc-array-bulk-ops.md`) ARE wired, below -- they
-/// touch no segment at all, operating purely on already-allocated arrays.
+/// `array.new_elem`/`array.init_elem` (the ELEMENT-segment-sourced pair)
+/// are deliberately NOT wired here -- they need the real three-layer
+/// elem-segment data-model fix a later, separate slice attempts (see the
+/// accompanying spec addendum) -- any module using them stays an honest
+/// parse error at this crate's boundary, `NotYetSupported` at the
+/// conformance-harness level, never a silent misencoding. `array.copy`/
+/// `array.fill` (W38 slice 2) and `array.new_data`/`array.init_data` (W38
+/// slice 3, below) ARE wired -- the DATA-segment-sourced pair reuses `ctx.
+/// data_segments`/`ctx.dropped_data_segments` verbatim, exactly the same
+/// fields `memory.init` already reads (per this spec's own explicit design
+/// choice), needing no new runtime plumbing beyond the handlers themselves.
+#[inline(never)]
 fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<bool, WastParseError> {
     if matches!(name, "struct.new" | "struct.new_default") {
         encode_struct_new(name, args, icx, out)?;
@@ -4243,6 +4254,27 @@ fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, 
     }
     if name == "array.copy" {
         encode_array_copy(args, icx, out)?;
+        return Ok(true);
+    }
+    // W38 slice 3 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): the two
+    // DATA-segment-sourced bulk-ops instructions -- `wasm-execution`'s own
+    // `0x09`/`0x12` handlers reuse `ctx.data_segments`/`ctx.dropped_data_
+    // segments` verbatim (the same fields `memory.init` already reads),
+    // exactly the spec's own explicit design choice. `array.init_elem`/
+    // `array.new_elem` (the ELEMENT-segment-sourced pair) remain
+    // deliberately unwired here -- see this function's own doc comment
+    // above for why: they need the real three-layer elem-segment data-model
+    // fix (`Element::item_exprs`/`element_values`) a later, separate slice
+    // attempts, not this one.
+    //
+    // ONE combined branch for both (not two, `array.fill`/`array.copy`'s
+    // own two-branch shape) -- see `encode_array_new_or_init_data`'s own
+    // doc comment for why: this function sits on the hot recursive
+    // encoding path, and two separate branches here once measurably grew
+    // ITS OWN debug-build stack frame enough to overflow the real OS stack
+    // before `MAX_INSTR_NESTING_DEPTH`'s software counter ever fired.
+    if matches!(name, "array.new_data" | "array.init_data") {
+        encode_array_new_or_init_data(name, args, icx, out)?;
         return Ok(true);
     }
     Ok(false)
@@ -4420,6 +4452,62 @@ fn encode_array_copy(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> R
     out.push(0x11);
     out.extend(wasm_leb128::encode_unsigned(dest_idx as u64));
     out.extend(wasm_leb128::encode_unsigned(src_idx as u64));
+    Ok(())
+}
+
+/// `array.new_data $t $data <i32 s> <i32 n>` (W38 slice 3: `code/specs/
+/// W38-wasm-gc-array-bulk-ops.md`) -- see [`encode_struct_new`]'s doc
+/// comment for why this is its own function. Real spec text-format
+/// grammar: `"array.new_data" x:typeidx_I y:dataidx_I => array.new_data x
+/// y`, stack `[i32 i32] -> [(ref x)]` -- confirmed against the real
+/// vendored corpus's own argument order (`array.wast`'s own `(array.
+/// new_data $vec $d (i32.const 1) (i32.const 3))`: type, data segment,
+/// then the two `i32` operands in written order). Mirrors `memory.init`'s
+/// own leading-index-then-operands shape (`resolve_idx` against `icx.
+/// module.data_names`, the SAME table `memory.init`/`data.drop`/`array.
+/// init_data` (below) all already use), except BOTH the type index AND the
+/// data index are REQUIRED leading atoms here (no optional leading memidx
+/// token to disambiguate, unlike `memory.init`'s own two-vs-one-atom
+/// counting logic).
+///
+/// `array.init_data $t $data <arrayref> <i32 d> <i32 s> <i32 n>`'s own real
+/// spec text-format grammar: `"array.init_data" x:typeidx_I y:dataidx_I =>
+/// array.init_data x y`, stack `[(ref null x) i32 i32 i32] -> []` --
+/// confirmed against the real vendored corpus's own argument order
+/// (`array_init_data.wast`'s own `(array.init_data $arr8_mut $d1 (global.get
+/// $g_arr8_mut) (local.get $1) (local.get $2) (local.get $3))`: type, data
+/// segment, then arrayref, dest offset, src offset, count in written order).
+///
+/// Both instructions share ONE function here (dispatching on `name`
+/// internally for the one-byte opcode difference), the same pattern
+/// [`encode_struct_new`] already uses for `struct.new`/`struct.new_default`
+/// -- **not** merely a style preference: `encode_gc_struct_array_instr`
+/// sits on this crate's hot recursive encoding path (guarded only by
+/// `MAX_INSTR_NESTING_DEPTH`'s software counter), and a debug build sizes a
+/// function's own stack frame for the union of every branch it directly
+/// contains. An EARLIER version of this fix added `array.new_data`/`array.
+/// init_data` as two SEPARATE dispatch branches (mirroring `array.fill`/
+/// `array.copy`'s own two-function shape) -- that measurably grew `encode_
+/// gc_struct_array_instr`'s own frame enough to overflow the REAL OS stack
+/// at exactly `MAX_INSTR_NESTING_DEPTH` levels of recursion, before the
+/// depth counter itself ever fired, caught by this file's own `deeply_
+/// folded_struct_instructions_do_not_overflow_the_real_stack` regression
+/// test going from a clean `TooDeeplyNested` error to a genuine SIGABRT --
+/// exactly the class of regression `encode_flat_instr`'s own `i32.load` arm
+/// doc comment already documents having hit once before. Collapsing to ONE
+/// dispatch branch (matching `name` inside this function instead of
+/// `encode_gc_struct_array_instr` itself) keeps that caller's own frame
+/// at its pre-W38-slice-3 size.
+fn encode_array_new_or_init_data(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    let data_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+    let data_idx = resolve_idx(&icx.module.data_names, data_expr, "data")?;
+    encode_instr_list(&args[2..], icx, out)?;
+    out.push(0xFB);
+    out.push(if name == "array.new_data" { 0x09 } else { 0x12 });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(data_idx as u64));
     Ok(())
 }
 
@@ -8263,6 +8351,33 @@ mod tests {
             code_of(&m, 1),
             &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x20, 0x03, 0x20, 0x04, 0xFB, 0x11, 0x00, 0x01, 0x0B],
             "array.copy: dest_ref, d, src_ref, s, n, then 0xFB 0x11 <dest_type_idx> <src_type_idx>"
+        );
+    }
+
+    #[test]
+    fn array_new_data_and_init_data_encode_correctly() {
+        // W38 slice 3: mirrors `array_fill_and_copy_encode_correctly`'s own
+        // shape one instruction group later.
+        let m = parse_module(
+            r#"(module
+                 (type $mvec (array (mut i32)))
+                 (data $d "abcd")
+                 (func (param $s i32) (param $n i32) (result (ref $mvec))
+                   (array.new_data $mvec $d (local.get $s) (local.get $n)))
+                 (func (param $dest (ref $mvec)) (param $d i32) (param $s i32) (param $n i32)
+                   (array.init_data $mvec $d (local.get $dest) (local.get $d) (local.get $s) (local.get $n)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x09, 0x00, 0x00, 0x0B],
+            "array.new_data: s, n, then 0xFB 0x09 <type_idx> <data_idx>"
+        );
+        assert_eq!(
+            code_of(&m, 1),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x20, 0x03, 0xFB, 0x12, 0x00, 0x00, 0x0B],
+            "array.init_data: arrayref, d, s, n, then 0xFB 0x12 <type_idx> <data_idx>"
         );
     }
 
