@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C05-practice",
+    "id": "GE-C05-wir",
     "language": "german",
     "chapter": 5,
-    "sequence": 210,
+    "sequence": 195,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:958f4519becf4d9a"
+    "sourceHash": "fnv1a64:fd70edbfd3711a1a"
   },
   "findings": []
 }

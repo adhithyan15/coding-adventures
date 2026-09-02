@@ -1,0 +1,13 @@
+{
+  "id": "GE-EXT-014-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can build German sentences from a pattern rather than reciting them, and say why German keeps the pronoun.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C05-ich-lerne-deutsch",
+    "GE-C05-pronomen-regel",
+    "GE-C05-practice"
+  ]
+}
