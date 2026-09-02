@@ -166,9 +166,10 @@ signed distribution packages. Each includes exact prerequisites and a launcher
 that takes one version-specific pre-upgrade snapshot of existing local state. The
 macOS app is neither Developer ID signed nor notarized, and its bundled dylib is
 not an iOS artifact. The Windows folder is self-contained but unsigned and is not
-an MSIX installer. Signing and installation lifecycle work remains tracked under
-[#13522](https://github.com/adhithyan15/coding-adventures/issues/13522), so release
-notes never imply broader coverage. To cut the next release, first move the relevant
+an MSIX installer. Signing and notarization are tracked under
+[#13977](https://github.com/adhithyan15/coding-adventures/issues/13977) — they need
+credentials this repository does not hold — so release notes never imply broader
+coverage. To cut the next release, first move the relevant
 entries into this changelog's version section, choose the SemVer bump from the policy
 above, and dispatch the workflow with a new matching version and tag.
 

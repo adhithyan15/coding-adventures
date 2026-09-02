@@ -25,6 +25,14 @@ already claims (#13695, #13692, #13526, #13625), close the three unexercised
 backends, then state the reach items — iOS execution, Android, and
 signing/notarization/installers — as decisions rather than silent gaps.
 
+Writing the spec also turned up a stale pointer: the README told readers that
+"Signing and installation lifecycle work remains tracked under #13522", but
+#13522 closed on 2026-08-31 once its four packaging children shipped. Signing
+was never in that issue's acceptance criteria, so the limitation was recorded
+against a closed issue and tracked nowhere. It is now #13977, and the README,
+backlog, and spec all point there. Historical changelog entries keep their
+original references.
+
 ### Fixed - visible local-storage and recovery status (#13690)
 
 Trestle now keeps its local-only persistence model and data location visible in

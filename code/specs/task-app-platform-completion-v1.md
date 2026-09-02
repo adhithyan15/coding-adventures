@@ -111,11 +111,13 @@ rather than letting them read as silent gaps.
    [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
    here. Recorded so its absence is a decision rather than an oversight.
 10. **Signing, notarization, and installers**
-    ([#13522](https://github.com/adhithyan15/coding-adventures/issues/13522)
-    residual). macOS is unsigned and un-notarized; Windows is an unsigned
-    portable folder, not MSIX; Linux ships tarballs, not packages. Each needs
-    credentials this repository does not hold, so these stay open and the
-    release notes keep saying so.
+    ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
+    macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
+    not MSIX; Linux ships tarballs, not packages. Writing this spec turned up
+    that the README pointed at #13522 for exactly this — and #13522 closed on
+    2026-08-31, so the limitation was recorded against a closed issue and
+    signing was tracked nowhere. #13977 now holds it. Credentials this
+    repository does not hold are the blocker, not engineering.
 
 ## Working method
 

@@ -41,7 +41,8 @@ links existing Mosaic work instead of duplicating it.
    enforce web/native presentation-contract parity. **Done in #13607.**
 10. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
    package installable local apps on supported platforms. Decomposed into the
-   independently verifiable platform and operations items below.
+   independently verifiable platform and operations items below. **Done — all
+   four children (#13616, #13627, #13652, #13679) shipped; closed 2026-08-31.**
 11. **P1 — [#13611](https://github.com/adhithyan15/coding-adventures/issues/13611):**
    ship verified portable Linux bundles for Qt, Flutter, and Compose Desktop.
    **Done in #13616.**
@@ -134,8 +135,9 @@ see the spec for the completion bar each one has to clear.
 
 **Tier C — reach, stated rather than silently missing.** iOS compiles but does
 not run; Android has no Mosaic backend and belongs to #12017; signing,
-notarization, and installers stay open under #13522 because they need
-credentials this repository does not hold.
+notarization, and installers are tracked under #13977 — filed because #13522
+closed on 2026-08-31 while the README still pointed readers at it, leaving the
+limitation recorded against a closed issue.
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
