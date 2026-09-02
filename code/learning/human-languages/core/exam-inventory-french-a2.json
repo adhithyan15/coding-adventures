@@ -1,0 +1,756 @@
+{
+  "version": 1,
+  "language": "french",
+  "level": "A2",
+  "about": "An enumeration of the grammar, phonology and core lexis a DELF A2 candidate is expected to hold, restated in our own words from the CECRL A2 descriptors and the structure the DELF A2 syllabus and the Alliance francaise referentials publish for the level. It is a working restatement for measuring this corpus, not a reproduction of any awarding body's document. It is deliberately built to be COMPARABLE with exam-inventory-french-a1.json: the same categories in the same order, so the two files read as one ladder and a point can be seen to move from the A1 column to the A2 one.",
+  "source": "https://www.france-education-international.fr/diplome/delf-tout-public",
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a2",
+      "note": "The sixteen Actes de parole points are drawn from the situations the four DELF A2 epreuves put a candidate in, but a sample paper is not a closed inventory of every A2 communicative function."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a2",
+      "note": "A2's grammatical construct is dominated by the past tenses and the object pronouns, both enumerated here. The list is a reviewable first tranche and is not source-closed against a complete official grammar syllabus."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a2",
+      "note": "The A2 tasks require intelligible speech and correct written accents, but the source does not publish a complete finite sound, spelling or punctuation inventory."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a2",
+      "note": "Fifteen domains are enumerated at the level of the DOMAIN, not the word. Unlike the Goethe A2 list there is no published finite French A2 word list to close against, so a covered lexical point here means the corpus holds a usable set for that domain, and every such point carries a note saying exactly which set and what is missing."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is a finding rather than a gap in the data -- so a null probe counts as UNCOVERED and is reported by name. A probe may only name atoms in `introduces.knowledge`; a culture claim declared in `introduces_culture_claims` is NOT in that namespace and cannot be probed, which is why the register points below probe the grammar atom and cite the culture claim in the note.",
+  "points": [
+    {
+      "id": "A2-F-01",
+      "category": "Actes de parole",
+      "label": "describe where you live and what the place is like",
+      "probe": null
+    },
+    {
+      "id": "A2-F-02",
+      "category": "Actes de parole",
+      "label": "tell someone about your day, your job or your studies in a few linked sentences",
+      "probe": null
+    },
+    {
+      "id": "A2-F-03",
+      "category": "Actes de parole",
+      "label": "narrate a past event: what happened, when, and in what order",
+      "probe": null
+    },
+    {
+      "id": "A2-F-04",
+      "category": "Actes de parole",
+      "label": "say what you used to do, and contrast it with what you do now",
+      "probe": null
+    },
+    {
+      "id": "A2-F-05",
+      "category": "Actes de parole",
+      "label": "make, change and cancel an appointment, and give a reason",
+      "probe": null
+    },
+    {
+      "id": "A2-F-06",
+      "category": "Actes de parole",
+      "label": "shop: ask the price, ask for a quantity, compare two items, and pay",
+      "probe": null
+    },
+    {
+      "id": "A2-F-07",
+      "category": "Actes de parole",
+      "label": "order a meal, ask what a dish is, and state a dietary restriction",
+      "probe": null
+    },
+    {
+      "id": "A2-F-08",
+      "category": "Actes de parole",
+      "label": "ask for and give directions in a town, including by public transport",
+      "probe": null
+    },
+    {
+      "id": "A2-F-09",
+      "category": "Actes de parole",
+      "label": "describe symptoms to a pharmacist or doctor and understand simple advice",
+      "probe": null
+    },
+    {
+      "id": "A2-F-10",
+      "category": "Actes de parole",
+      "label": "invite, accept, decline politely, and propose an alternative",
+      "probe": null
+    },
+    {
+      "id": "A2-F-11",
+      "category": "Actes de parole",
+      "label": "express an opinion and agree or disagree with someone else's",
+      "probe": [
+        "FR-PRAGMATICS-AIMER-BIEN-11"
+      ],
+      "note": "Chapter 24 grades an opinion: aimer against aimer bien, where adding bien makes the feeling WEAKER, which is the trap. That is the atom the point is claimed on. The agreeing half exists too but cannot be probed -- ca marche is declared in introduces_idioms, a namespace measureExamCoverage does not read, and naming it in a probe reports the whole point as uncovered. Still missing and still to author: disagreement and its softeners, je ne suis pas d'accord, oui mais, ca depend."
+    },
+    {
+      "id": "A2-F-12",
+      "category": "Actes de parole",
+      "label": "apologise for something that has happened and offer to put it right",
+      "probe": null
+    },
+    {
+      "id": "A2-F-13",
+      "category": "Actes de parole",
+      "label": "write a short personal message: postcard, note, e-mail to a friend",
+      "probe": null
+    },
+    {
+      "id": "A2-F-14",
+      "category": "Actes de parole",
+      "label": "fill in a form with personal, contact and residence details",
+      "probe": null
+    },
+    {
+      "id": "A2-F-15",
+      "category": "Actes de parole",
+      "label": "make a plan with someone: propose a time and place and confirm it",
+      "probe": null
+    },
+    {
+      "id": "A2-F-16",
+      "category": "Actes de parole",
+      "label": "ask someone to repeat, slow down, or spell a word",
+      "probe": null
+    },
+    {
+      "id": "A2-N-01",
+      "category": "Le nom",
+      "label": "irregular plurals: -al to -aux, -ail to -aux, and the invariables",
+      "probe": null
+    },
+    {
+      "id": "A2-N-02",
+      "category": "Le nom",
+      "label": "compound nouns and how they pluralise",
+      "probe": null
+    },
+    {
+      "id": "A2-N-03",
+      "category": "Le nom",
+      "label": "gender by suffix: -tion, -ment, -age, -eur, -ette as a usable signal",
+      "probe": null
+    },
+    {
+      "id": "A2-N-04",
+      "category": "Le nom",
+      "label": "professions and nationalities in both genders",
+      "probe": null
+    },
+    {
+      "id": "A2-D-01",
+      "category": "Les determinants",
+      "label": "partitive du / de la / de l' / des for an unmeasured quantity",
+      "probe": null
+    },
+    {
+      "id": "A2-D-02",
+      "category": "Les determinants",
+      "label": "de alone after a quantity word and after a negation",
+      "probe": null
+    },
+    {
+      "id": "A2-D-03",
+      "category": "Les determinants",
+      "label": "possessive adjectives across all persons, including notre / votre / leur",
+      "probe": null
+    },
+    {
+      "id": "A2-D-04",
+      "category": "Les determinants",
+      "label": "demonstrative ce / cet / cette / ces, and -ci / -la for contrast",
+      "probe": null
+    },
+    {
+      "id": "A2-D-05",
+      "category": "Les determinants",
+      "label": "tout / toute / tous / toutes as determiner and as pronoun",
+      "probe": null
+    },
+    {
+      "id": "A2-D-06",
+      "category": "Les determinants",
+      "label": "quantity expressions: beaucoup de, un peu de, assez de, trop de, un kilo de",
+      "probe": null
+    },
+    {
+      "id": "A2-D-07",
+      "category": "Les determinants",
+      "label": "numbers beyond 100, and dates, prices and quantities read aloud",
+      "probe": null
+    },
+    {
+      "id": "A2-A-01",
+      "category": "L'adjectif",
+      "label": "comparative plus / moins / aussi ... que, and the irregular meilleur",
+      "probe": null
+    },
+    {
+      "id": "A2-A-02",
+      "category": "L'adjectif",
+      "label": "superlative le plus / le moins, and its position around the noun",
+      "probe": null
+    },
+    {
+      "id": "A2-A-03",
+      "category": "L'adjectif",
+      "label": "adjectives whose meaning shifts with position: ancien, cher, propre, grand",
+      "probe": null
+    },
+    {
+      "id": "A2-A-04",
+      "category": "L'adjectif",
+      "label": "irregular feminines: -eux to -euse, -f to -ve, -er to -ere, beau / belle",
+      "probe": null
+    },
+    {
+      "id": "A2-A-05",
+      "category": "L'adjectif",
+      "label": "the feminine -e that makes a silent consonant audible (petit / petite)",
+      "probe": null
+    },
+    {
+      "id": "A2-P-01",
+      "category": "Les pronoms",
+      "label": "direct object pronouns me, te, le, la, nous, vous, les",
+      "probe": null
+    },
+    {
+      "id": "A2-P-02",
+      "category": "Les pronoms",
+      "label": "indirect object pronouns lui and leur, and the verbs that take them",
+      "probe": null
+    },
+    {
+      "id": "A2-P-03",
+      "category": "Les pronoms",
+      "label": "y for a place already named",
+      "probe": null
+    },
+    {
+      "id": "A2-P-04",
+      "category": "Les pronoms",
+      "label": "en for a quantity already named",
+      "probe": null
+    },
+    {
+      "id": "A2-P-05",
+      "category": "Les pronoms",
+      "label": "relative qui and que",
+      "probe": null
+    },
+    {
+      "id": "A2-P-06",
+      "category": "Les pronoms",
+      "label": "tonic pronouns moi, toi, lui, elle, nous, vous, eux, elles after a preposition",
+      "probe": null
+    },
+    {
+      "id": "A2-P-07",
+      "category": "Les pronoms",
+      "label": "on for people in general and, in speech, for nous",
+      "probe": null
+    },
+    {
+      "id": "A2-P-08",
+      "category": "Les pronoms",
+      "label": "reflexive pronouns across all persons, not only the singular",
+      "probe": [
+        "FR-GRAM-REFLEXIVE-SET-04",
+        "FR-GRAM-REFLEXIVE-VERB-06",
+        "FR-LEX-ASSEOIR-01",
+        "FR-LEX-LEVER-04"
+      ],
+      "note": "Chapter 2 names the set and the construction; chapter 27 runs s'asseoir and se lever through the whole present, nous nous asseyons and vous vous levez included. The A1 point asks for the construction in the present and this one asks for the full person range, so the same four atoms answer both -- which is the honest reading, not a duplicate."
+    },
+    {
+      "id": "A2-V-01",
+      "category": "Le verbe",
+      "label": "passe compose with avoir, and the past participles of common verbs",
+      "probe": null
+    },
+    {
+      "id": "A2-V-02",
+      "category": "Le verbe",
+      "label": "passe compose with etre, and the participle agreeing with the subject",
+      "probe": null
+    },
+    {
+      "id": "A2-V-03",
+      "category": "Le verbe",
+      "label": "passe compose of reflexive verbs, which always takes etre",
+      "probe": null
+    },
+    {
+      "id": "A2-V-04",
+      "category": "Le verbe",
+      "label": "imparfait: forms, and its use for description and habit",
+      "probe": null
+    },
+    {
+      "id": "A2-V-05",
+      "category": "Le verbe",
+      "label": "choosing between passe compose and imparfait in one narrative",
+      "probe": null
+    },
+    {
+      "id": "A2-V-06",
+      "category": "Le verbe",
+      "label": "futur proche aller + infinitive",
+      "probe": null
+    },
+    {
+      "id": "A2-V-07",
+      "category": "Le verbe",
+      "label": "futur simple of regular verbs and of avoir, etre, aller, faire",
+      "probe": null
+    },
+    {
+      "id": "A2-V-08",
+      "category": "Le verbe",
+      "label": "conditionnel of politeness: je voudrais, pourriez-vous, on pourrait",
+      "probe": [
+        "FR-GRAMMAR-MODAL-CHAIN-04",
+        "FR-LEX-VOULOIR-01"
+      ],
+      "note": "Chapter 33 teaches je voudrais explicitly as the form you say across a counter, against je veux, and chains a conjugated modal to a bare infinitive. That is the A2 politeness move. The rest of the conditional -- its endings, and pourriez-vous / on pourrait -- is not taught, so the point is probed on the two atoms that exist and the note says what is missing."
+    },
+    {
+      "id": "A2-V-09",
+      "category": "Le verbe",
+      "label": "imperative for instructions, requests and recipes, including its pronoun order",
+      "probe": null
+    },
+    {
+      "id": "A2-V-10",
+      "category": "Le verbe",
+      "label": "vouloir, pouvoir and devoir with an infinitive, in all three singular persons",
+      "probe": [
+        "FR-LEX-VOULOIR-01",
+        "FR-LEX-POUVOIR-02",
+        "FR-LEX-DEVOIR-03",
+        "FR-GRAMMAR-MODAL-CHAIN-04"
+      ],
+      "note": "Chapter 33 gives each of the three its own lesson with je / tu / il printed, and the chain atom is the rule that the second verb never changes: je veux partir, je peux partir, je dois partir."
+    },
+    {
+      "id": "A2-V-11",
+      "category": "Le verbe",
+      "label": "irregular present stems in the commonest verbs",
+      "probe": [
+        "FR-GRAMMAR-PRENDRE-STEM-03",
+        "FR-GRAMMAR-COMPRENDRE-STEM-03",
+        "FR-GRAMMAR-DORMIR-STEM-06",
+        "FR-GRAMMAR-ASSEOIR-TWO-STEMS-03",
+        "FR-GRAMMAR-OUVRIR-ER-ENDINGS-09"
+      ],
+      "note": "Five separate irregularities are typed, and they are five different KINDS: prendre drops a consonant in the plural, comprendre inherits that, dormir loses the -m- stem, s'asseoir carries two competing stems that are both correct, and ouvrir takes -er endings despite an -ir infinitive. A candidate meeting an unfamiliar irregular verb has seen the shapes."
+    },
+    {
+      "id": "A2-V-12",
+      "category": "Le verbe",
+      "label": "il faut and il faut que for obligation",
+      "probe": null
+    },
+    {
+      "id": "A2-V-13",
+      "category": "Le verbe",
+      "label": "present subjunctive after il faut que and after expressions of wish",
+      "probe": null
+    },
+    {
+      "id": "A2-V-14",
+      "category": "Le verbe",
+      "label": "gerondif en + -ant for two things at once",
+      "probe": null
+    },
+    {
+      "id": "A2-V-15",
+      "category": "Le verbe",
+      "label": "depuis, il y a, pendant and pour with a time expression",
+      "probe": null
+    },
+    {
+      "id": "A2-V-16",
+      "category": "Le verbe",
+      "label": "venir de + infinitive for the immediate past",
+      "probe": null
+    },
+    {
+      "id": "A2-V-17",
+      "category": "Le verbe",
+      "label": "verbs followed by a, by de, or by a bare infinitive",
+      "probe": null
+    },
+    {
+      "id": "A2-V-18",
+      "category": "Le verbe",
+      "label": "impersonal weather verbs and the il fait frame",
+      "probe": [
+        "FR-GRAMMAR-IL-FAIT-03",
+        "FR-LEX-IL-PLEUT-04",
+        "FR-LEX-TEMPS-02"
+      ],
+      "note": "Chapter 21 teaches il fait as the frame the weather runs on, the impersonal il pleut beside it, and le temps -- which is both the weather and the time, a polysemy the candidate meets in both roles."
+    },
+    {
+      "id": "A2-NEG-01",
+      "category": "La negation",
+      "label": "ne ... plus, ne ... jamais, ne ... rien, ne ... personne",
+      "probe": null
+    },
+    {
+      "id": "A2-NEG-02",
+      "category": "La negation",
+      "label": "ne ... que for a restriction, which is not a negation",
+      "probe": null
+    },
+    {
+      "id": "A2-NEG-03",
+      "category": "La negation",
+      "label": "negation around a compound tense and around an infinitive",
+      "probe": null
+    },
+    {
+      "id": "A2-NEG-04",
+      "category": "La negation",
+      "label": "dropping ne in speech, and hearing it dropped",
+      "probe": null
+    },
+    {
+      "id": "A2-INT-01",
+      "category": "L'interrogation",
+      "label": "choosing among intonation, est-ce que and inversion by register",
+      "probe": [
+        "FR-GRAMMAR-INTONATION-01",
+        "FR-GRAMMAR-ESTCEQUE-02",
+        "FR-GRAMMAR-INVERSION-08"
+      ],
+      "note": "Chapter 32 teaches all three forms of the same question and, in a culture claim on each, which situation each belongs to: intonation is the spoken default, est-ce que is neutral and safe in writing, inversion is formal and written. A1 asks whether the candidate can form each; this point asks whether they can CHOOSE, which is the A2 move."
+    },
+    {
+      "id": "A2-INT-02",
+      "category": "L'interrogation",
+      "label": "qui, que and quoi as question words, including after a preposition",
+      "probe": null
+    },
+    {
+      "id": "A2-INT-03",
+      "category": "L'interrogation",
+      "label": "quel agreeing with the noun it questions",
+      "probe": [
+        "FR-GRAMMAR-QUEL-09"
+      ],
+      "note": "Chapter 32 types quel / quelle as an agreeing interrogative adjective. The plural quels / quelles is shown but not separately atomised; the point is claimed on the agreement rule, which is what it names."
+    },
+    {
+      "id": "A2-INT-04",
+      "category": "L'interrogation",
+      "label": "indirect questions: je voudrais savoir si / ce que / quand",
+      "probe": null
+    },
+    {
+      "id": "A2-INT-05",
+      "category": "L'interrogation",
+      "label": "asking about quantity and price: combien, combien de, combien ca coute",
+      "probe": null
+    },
+    {
+      "id": "A2-PREP-01",
+      "category": "Les prepositions",
+      "label": "a and de contracting to au, aux, du, des",
+      "probe": null
+    },
+    {
+      "id": "A2-PREP-02",
+      "category": "Les prepositions",
+      "label": "place: dans, sur, sous, devant, derriere, entre, chez, a cote de",
+      "probe": null
+    },
+    {
+      "id": "A2-PREP-03",
+      "category": "Les prepositions",
+      "label": "countries, cities and regions: en, au, aux, a, de",
+      "probe": null
+    },
+    {
+      "id": "A2-PREP-04",
+      "category": "Les prepositions",
+      "label": "time: en, dans, depuis, pendant, jusqu'a, a partir de",
+      "probe": null
+    },
+    {
+      "id": "A2-PREP-05",
+      "category": "Les prepositions",
+      "label": "transport: en, a, par",
+      "probe": null
+    },
+    {
+      "id": "A2-ADV-01",
+      "category": "L'adverbe",
+      "label": "forming adverbs in -ment from an adjective",
+      "probe": null
+    },
+    {
+      "id": "A2-ADV-02",
+      "category": "L'adverbe",
+      "label": "frequency: toujours, souvent, quelquefois, rarement, jamais",
+      "probe": null
+    },
+    {
+      "id": "A2-ADV-03",
+      "category": "L'adverbe",
+      "label": "time and sequence: d'abord, ensuite, puis, enfin, deja, encore",
+      "probe": null
+    },
+    {
+      "id": "A2-ADV-04",
+      "category": "L'adverbe",
+      "label": "placing an adverb around a simple and around a compound tense",
+      "probe": null
+    },
+    {
+      "id": "A2-ADV-05",
+      "category": "L'adverbe",
+      "label": "intensity and degree: tres, trop, assez, plutot, vraiment",
+      "probe": null
+    },
+    {
+      "id": "A2-PH-01",
+      "category": "La phrase",
+      "label": "cause and consequence: parce que, comme, donc, alors, c'est pourquoi",
+      "probe": null
+    },
+    {
+      "id": "A2-PH-02",
+      "category": "La phrase",
+      "label": "purpose and opposition: pour + infinitive, mais, par contre",
+      "probe": null
+    },
+    {
+      "id": "A2-PH-03",
+      "category": "La phrase",
+      "label": "time clauses: quand, pendant que, avant de, apres",
+      "probe": null
+    },
+    {
+      "id": "A2-PH-04",
+      "category": "La phrase",
+      "label": "si + present for a real condition, with a present or future result",
+      "probe": null
+    },
+    {
+      "id": "A2-PH-05",
+      "category": "La phrase",
+      "label": "linking two or three sentences into a short paragraph that holds together",
+      "probe": null
+    },
+    {
+      "id": "A2-PH-06",
+      "category": "La phrase",
+      "label": "presenting and describing another person in the third person",
+      "probe": null
+    },
+    {
+      "id": "A2-PRON-01",
+      "category": "Prononciation et orthographe",
+      "label": "obligatory, forbidden and optional liaison",
+      "probe": null
+    },
+    {
+      "id": "A2-PRON-02",
+      "category": "Prononciation et orthographe",
+      "label": "the mute e, and the syllables that disappear in speech",
+      "probe": null
+    },
+    {
+      "id": "A2-PRON-03",
+      "category": "Prononciation et orthographe",
+      "label": "nasal vowels distinguished from each other, not only from oral vowels",
+      "probe": null
+    },
+    {
+      "id": "A2-PRON-04",
+      "category": "Prononciation et orthographe",
+      "label": "silent agreement: the -s, -e and -ent that are written and never heard",
+      "probe": null
+    },
+    {
+      "id": "A2-PRON-05",
+      "category": "Prononciation et orthographe",
+      "label": "homophones that spelling separates: a / a, ou / ou, et / est, ce / se",
+      "probe": null
+    },
+    {
+      "id": "A2-PRON-06",
+      "category": "Prononciation et orthographe",
+      "label": "the accents, the cedilla and the trema, used correctly in writing",
+      "probe": [
+        "FR-SCRIPT-ACCENTS-07",
+        "FR-SCRIPT-CIRCUMFLEX-08",
+        "FR-SCRIPT-CEDILLE-09",
+        "FR-SCRIPT-TREMA-10"
+      ],
+      "note": "Chapter 4 gives each diacritic its own lesson and its own atom: the three accents, the circumflex as the tombstone of a lost -s, the cedilla, and the trema. All four are needed because an A2 candidate writes them rather than only reading them."
+    },
+    {
+      "id": "A2-LEX-01",
+      "category": "Lexique",
+      "label": "housing: rooms, furniture, renting, the building and the neighbourhood",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-02",
+      "category": "Lexique",
+      "label": "work and study: jobs, workplaces, subjects, timetable",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-03",
+      "category": "Lexique",
+      "label": "health: the body, symptoms, the doctor, the pharmacy",
+      "probe": [
+        "FR-LEX-TETE-02",
+        "FR-LEX-MAIN-02",
+        "FR-LEX-OEIL-01",
+        "FR-LEX-NEZ-03",
+        "FR-LEX-BOUCHE-05",
+        "FR-LEX-VENTRE-07"
+      ],
+      "note": "Six body parts are typed across chapters 17 and 31, which is the naming half of the domain. Symptoms, the consultation and the pharmacy are not taught, so the point is probed on what exists and the gap is named here rather than in a null."
+    },
+    {
+      "id": "A2-LEX-04",
+      "category": "Lexique",
+      "label": "food and meals: shopping, cooking, ordering, quantities",
+      "probe": [
+        "FR-LEX-CAFE-01",
+        "FR-LEX-THE-03",
+        "FR-LEX-LAIT-05",
+        "FR-LEX-SUCRE-07",
+        "FR-LEX-FROMAGE-01",
+        "FR-LEX-BEURRE-03",
+        "FR-LEX-SEL-05",
+        "FR-LEX-OEUF-07"
+      ],
+      "note": "Eight food and drink words are typed across chapters 28 and 30. Ordering, quantities and the shop itself are not, which is the authoring brief this point exists to produce."
+    },
+    {
+      "id": "A2-LEX-05",
+      "category": "Lexique",
+      "label": "shopping: shops, prices, sizes, paying, exchanging",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-06",
+      "category": "Lexique",
+      "label": "travel and transport: tickets, timetables, the station, the airport",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-07",
+      "category": "Lexique",
+      "label": "town and directions: streets, buildings, left, right, straight on",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-08",
+      "category": "Lexique",
+      "label": "free time: sport, music, cinema, reading, going out",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-09",
+      "category": "Lexique",
+      "label": "weather and seasons, in enough detail to plan around them",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-10",
+      "category": "Lexique",
+      "label": "feelings and states: content, fatigue, inquietude, surprise",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-11",
+      "category": "Lexique",
+      "label": "people and relationships beyond the immediate family",
+      "probe": [
+        "FR-LEX-FAMILLE-04",
+        "FR-LEX-AMI-01",
+        "FR-LEX-ENFANT-06",
+        "FR-LEX-PERSONNE-08"
+      ],
+      "note": "Chapter 29 types the four general people-words. The extended family and the vocabulary of a relationship are not taught."
+    },
+    {
+      "id": "A2-LEX-12",
+      "category": "Lexique",
+      "label": "everyday actions: the verbs a day is described with",
+      "probe": [
+        "FR-LEX-PRENDRE-01",
+        "FR-LEX-DEMANDER-04",
+        "FR-LEX-AIDER-07",
+        "FR-LEX-AIMER-09",
+        "FR-LEX-COMPRENDRE-01",
+        "FR-LEX-PENSER-04",
+        "FR-LEX-LIRE-06",
+        "FR-LEX-ECRIRE-08",
+        "FR-LEX-ENTENDRE-01",
+        "FR-LEX-MARCHER-07",
+        "FR-LEX-COURIR-10",
+        "FR-LEX-DORMIR-04",
+        "FR-LEX-ASSEOIR-01",
+        "FR-LEX-LEVER-04",
+        "FR-LEX-OUVRIR-07",
+        "FR-LEX-FERMER-10"
+      ],
+      "note": "Sixteen everyday verbs are typed across chapters 24 to 27. This is the one A2 lexical domain the corpus genuinely holds, and it is listed in full rather than sampled: a candidate asked to describe a day needs the set, not a representative from it."
+    },
+    {
+      "id": "A2-LEX-13",
+      "category": "Lexique",
+      "label": "false friends a candidate will otherwise mis-hear",
+      "probe": [
+        "FR-FALSEFRIEND-DEMANDER-06"
+      ],
+      "note": "One is typed -- demander is 'to ask', never 'to demand' -- and it is typed as a false-friend atom rather than left inside the word's gloss, which is why it can be probed at all. The rest of the classic A2 set (actuellement, assister, rester, sensible, librairie) is not taught."
+    },
+    {
+      "id": "A2-LEX-14",
+      "category": "Lexique",
+      "label": "words whose second sense a candidate must know",
+      "probe": [
+        "FR-SEMANTICS-MARCHER-WORK-09",
+        "FR-SEMANTICS-ENTENDRE-SPREAD-03"
+      ],
+      "note": "Two polysemies are typed as their own atoms: marcher is 'to walk' and also 'to work, to function' (ca marche), and entendre spread from 'to hear' toward 'to understand', which is why s'entendre avec quelqu'un means to get on with them."
+    },
+    {
+      "id": "A2-LEX-15",
+      "category": "Lexique",
+      "label": "register: the same idea said to a friend and to a stranger",
+      "probe": [
+        "FR-GRAM-VOUVOIEMENT-09",
+        "FR-LEX-TU-VOUS-08",
+        "FR-GRAMMAR-PLEASE-REGISTER-04",
+        "FR-GRAM-REGISTER-09"
+      ],
+      "note": "Four atoms across chapters 2, 3 and 19: the tu/vous pair, the politeness mechanism (addressing one respected person in the plural), the two registers of the how-are-you question, and the register of s'il vous plait against s'il te plait. A2 asks the candidate to CHOOSE, and choosing needs both ends of each pair."
+    }
+  ]
+}
