@@ -1293,6 +1293,30 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev
 
+      # The `pdf` crate is verified against qpdf, an independent
+      # implementation: a PDF writer checked only by reading its own output
+      # back proves nothing, because a wrong idea of where the xref table goes
+      # would be shared by both halves.
+      #
+      # `tests/qpdf_gate.rs` FAILS when qpdf is absent rather than skipping --
+      # deliberately, since a suite that silently passes when its oracle is
+      # missing is not a suite. That makes installing it here a requirement
+      # rather than a convenience.
+      - name: Install qpdf for the PDF oracle tests
+        if: needs.detect.outputs.needs_rust == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y qpdf
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install qpdf
+          else
+            choco install qpdf -y --no-progress
+          fi
+          qpdf --version
+
       # VLT-PM51 slice 2 (vault-webauthn-ctap2-hid): ctap-hid-fido2's
       # `hidapi` dependency uses the `linux-static-hidraw` feature on
       # Linux, which links against `libudev` via pkg-config at build
