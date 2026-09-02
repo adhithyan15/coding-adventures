@@ -6,12 +6,12 @@ type: word
 headword: les mois
 gloss: the months — a parade of Roman gods and emperors
 concept_tag: FR-MONTHS
-prerequisites: [FR-C06-dix, FR-C07-jours-1]
+prerequisites: [FR-C06-dix, FR-C07-lundi]
 sounds: [nasal-an, silent-final]
 roots: [latin-months, roman-gods]
 etymology_hook: "the French months are Roman gods and emperors: janvier←Janus, mars←Mars (= mardi!); septembre–décembre still mean Latin 7–10 — not because Julius/Augustus added months, but because January/February were added centuries earlier"
 est_minutes: 4
-reviews_of: [FR-C06-dix, FR-C07-jours-1]
+reviews_of: [FR-C06-dix, FR-C07-lundi]
 ---
 
 # les mois — the calendar's gods and Caesars

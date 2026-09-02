@@ -14,7 +14,7 @@ layout CollectionActions {
           content : slot: note-count-label
         )
       }
-      Column [ note-type-count ] {
+      Box [ note-type-count ] {
         Text [ note-type-count-value ] (
           content : slot: note-type-count-value
         )
@@ -22,7 +22,7 @@ layout CollectionActions {
           content : slot: note-type-count-label
         )
       }
-      Column [ media-count ] {
+      Box [ media-count ] {
         Text [ media-count-value ] (
           content : slot: media-count-value
         )
@@ -32,7 +32,7 @@ layout CollectionActions {
       }
     }
     Row [ media-health-counts ] {
-      Column [ referenced-media-count ] {
+      Box [ referenced-media-count ] {
         Text [ referenced-media-value ] (
           content : slot: referenced-media-value
         )
@@ -40,7 +40,7 @@ layout CollectionActions {
           content : slot: referenced-media-label
         )
       }
-      Column [ missing-media-count ] {
+      Box [ missing-media-count ] {
         Text [ missing-media-value ] (
           content : slot: missing-media-value
         )
@@ -48,7 +48,7 @@ layout CollectionActions {
           content : slot: missing-media-label
         )
       }
-      Column [ unused-media-count ] {
+      Box [ unused-media-count ] {
         Text [ unused-media-value ] (
           content : slot: unused-media-value
         )

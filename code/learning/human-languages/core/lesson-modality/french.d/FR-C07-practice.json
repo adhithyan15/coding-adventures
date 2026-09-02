@@ -1,21 +1,21 @@
 {
   "lesson": {
-    "id": "FR-C07-jours-2",
+    "id": "FR-C07-practice",
     "language": "french",
     "chapter": 7,
-    "sequence": 220,
+    "sequence": 222,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "wide-table"
+      "sight-cue"
     ],
     "coreModality": "sight",
     "coreReasons": [
-      "wide-table"
+      "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d394398c03f2b56f"
+    "sourceHash": "fnv1a64:b344c4dd76b92e11"
   },
   "findings": []
 }

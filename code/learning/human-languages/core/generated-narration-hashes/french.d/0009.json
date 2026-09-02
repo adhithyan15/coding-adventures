@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 9,
-  "sourceHash": "fnv1a64:69a12e6db8e5f892",
+  "sourceHash": "fnv1a64:cf19a546bc695813",
   "lessonIds": [
     "FR-C09-mois",
     "FR-C09-saisons"
@@ -11,6 +11,6 @@
   "text": "french/narration/ch09.txt",
   "json": "french/narration/ch09.json",
   "textHash": "fnv1a64:554d3cc3486706e3",
-  "jsonHash": "fnv1a64:02c79471fa411729",
+  "jsonHash": "fnv1a64:8e89fd443b2bb121",
   "findings": []
 }
