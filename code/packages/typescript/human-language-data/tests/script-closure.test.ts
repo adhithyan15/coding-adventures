@@ -201,7 +201,24 @@ describe("the real corpus", () => {
     // The point of the whole module. HL08's glyph budget flags tens of lessons
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
-    expect(report.summary.violations).toBeGreaterThan(500);
+    //
+    // This was `toBeGreaterThan(500)` — an absolute FLOOR on the debt, which is
+    // the mistake the paragraph below already diagnoses for its neighbour and
+    // which duly failed the moment enough of the debt was paid down: the
+    // Kannada chapter-7 tranche and its siblings took the corpus from 556 to
+    // 457 and the floor went red for work that made the corpus better.
+    //
+    // So the claim is asserted STRUCTURALLY instead: the debt is not one bad
+    // track, it is spread across most of the non-Latin corpus — which is the
+    // thing a per-lesson pace budget cannot see and the sentence above actually
+    // means — under a ceiling that ratchets down. Both survive the debt being
+    // paid; both fail if the measurement collapses to zero, if the debt starts
+    // growing again, or if it retreats into one or two tracks. Neither is
+    // weaker than the floor they replace: a floor of 500 was satisfied by a
+    // corpus that had fixed nothing at all.
+    expect(report.summary.violations).toBeGreaterThan(0);
+    expect(report.summary.violations).toBeLessThanOrEqual(457); // 556 -> 457 as the Indic script tranches land; may fall, never grow
+    expect(report.tracks.filter((track) => track.violations > 0).length).toBeGreaterThanOrEqual(10);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
