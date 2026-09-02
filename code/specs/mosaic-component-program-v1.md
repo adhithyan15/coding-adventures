@@ -61,6 +61,33 @@ This program is largely reconciliation, not invention. Verified against `main`.
 | MosaicBook | **Implemented** — `code/programs/go/mosaicbook-server`, discovers three-file UI29 components, compiles on demand, hot-reloads |
 | Test-app precedent | `toolkit-multi-demo`, `toolkit-xaml-showcase`, `hello-dialog-xaml` — ad hoc, not one per component |
 
+### What the first careful look already found
+
+Studying MosaicBook and the toolkit before writing any code — rather than
+starting from the app — surfaced a chain that had been invisible:
+
+1. **Stories are structurally impossible** for three-file components, the only
+   form this repo uses ([#14031](https://github.com/adhithyan15/coding-adventures/issues/14031)). 63 components, 0 story files, and
+   a synthesized empty `Default` for every one.
+2. **So no component has ever been rendered across its own variants.**
+3. **So six components ship `variant`/`size` slots that do nothing**
+   ([#14036](https://github.com/adhithyan15/coding-adventures/issues/14036)) — `Button`, `Alert`, `Badge`, `Toast`, `Spinner`,
+   `Input`. `Button.light.msl` says so in its own header: "the variant slot is
+   accepted by the .mil and stays unused at the styling layer — every variant
+   renders with the base style." All eight Button variants are identical.
+4. **Because the mechanism to vary a part by a slot value was never designed**
+   ([#14037](https://github.com/adhithyan15/coding-adventures/issues/14037)). `mosaic-pkg-toolkit.md` §4.1 proposes `part alert/danger`
+   sub-parts and §10 leaves the syntax an open question; the components shipped
+   their API surface ahead of it.
+
+A story per variant renders eight identical buttons. It is unmissable in a
+MosaicBook grid and invisible in prose — which is the entire argument for this
+program, demonstrated on the first component examined under it.
+
+It also reorders Track A: #14037 (design) → #14036 (variants work) → #14031
+(stories possible) → #14012 (gate them). Gating first would have certified 63
+components on empty fixtures, and passed a story of eight identical buttons.
+
 ### Four gaps that block the method
 
 1. **MosaicBook cannot story the components this repo actually has, and is not
