@@ -5405,7 +5405,13 @@ fn array_numeric_storage_width(ctx: &WasmExecutionContext, type_idx: u32, op: &s
 /// but DROPPED segment (`data.drop` already ran) degrades to a real, empty
 /// (length-0) slice -- never a separate error path -- exactly `memory.
 /// init`'s own already-established, corpus-verified rule (a dropped
-/// segment behaves as length-0: `n=0` still succeeds, any `n>0` traps).
+/// segment behaves as length-0: an access succeeds only when its own
+/// `checked_segment_byte_range` fits inside that empty slice -- i.e.
+/// `s=0, n=0` -- while `s>0` or `n>0` traps against the now-empty
+/// segment, the identical "out of bounds" trap a too-short REAL segment
+/// would also produce; a security-review pass on this exact doc comment's
+/// earlier "`n=0` still succeeds" phrasing correctly flagged it as
+/// imprecise on its own -- `s`'s own value matters too).
 fn resolve_array_data_segment<'a>(ctx: &'a WasmExecutionContext, idx: usize, op: &str) -> Result<&'a [u8], VMError> {
     if idx >= ctx.data_segments.len() || idx >= ctx.dropped_data_segments.len() {
         return Err(VMError::GenericError(format!("{op}: data segment index {idx} out of bounds")));
