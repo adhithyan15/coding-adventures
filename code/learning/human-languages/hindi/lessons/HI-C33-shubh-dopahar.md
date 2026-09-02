@@ -10,6 +10,7 @@ chapter: 33
 type: phrase
 headword: शुभ दोपहर
 gloss: "good afternoon" (shubh dopahar) — uses दोपहर in its modern, widened "afternoon" sense (HI-C30), not the narrow etymological "noon"; the rarest of this arc's three शुभ+noun greetings in actual casual use, with नमस्ते/नमस्कार covering the afternoon in practice
+romanization: "shubh dopahar"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [HI-C30-dopahar-widened, HI-C32-evening-register]
 sounds: [devanagari-vowel-sign-o, devanagari-aspirated-pa]

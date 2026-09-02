@@ -10,6 +10,7 @@ chapter: 5
 type: word
 headword: बोलना
 gloss: to speak
+romanization: "bolnā"
 concept_tag: VERB-SPEAK
 prerequisites: [HI-C03-hun]
 sounds: [matra-o]

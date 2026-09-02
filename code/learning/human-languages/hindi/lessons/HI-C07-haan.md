@@ -10,6 +10,7 @@ chapter: 7
 type: word
 headword: हाँ
 gloss: yes (hāṃ)
+romanization: "hāṃ"
 concept_tag: RESPONSE-YES
 prerequisites: [HI-C01-namaste]
 sounds: [chandrabindu-nasal, vowel-aa]

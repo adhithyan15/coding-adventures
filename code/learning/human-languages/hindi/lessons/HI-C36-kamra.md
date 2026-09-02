@@ -10,6 +10,7 @@ chapter: 36
 type: word
 headword: कमरा
 gloss: room — masculine, and the same Latin word as English "camera", brought to India by Portuguese ships
+romanization: "kamrā"
 concept_tag: HI-HOME-ROOM
 prerequisites: [HI-C36-darvaaza, HI-W01-na-ma]
 sounds: [devanagari-long-aa, dental-ma]

@@ -4,14 +4,14 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fc4de337e0006eb8",
+  "sourceHash": "fnv1a64:496cdaf17336b118",
   "lessons": [
     {
       "id": "HI-C36-ghar",
       "sequence": 940,
       "title": "घर (ghar) — \"house,\" and the fence that came first",
       "headword": "घर",
-      "romanization": "",
+      "romanization": "ghar",
       "gloss": "house, home — masculine, and from a Sanskrit word that meant a fenced enclosure before it meant a building",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cbfb5d9b7bbf2840",
+      "sourceHash": "fnv1a64:cd7bdb5dce063207",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -167,7 +167,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is घर masculine or feminine, and how do you know from the sentence? (Masculine — merā, not merī.) What did the root behind gṛha mean before it meant a building? (An enclosure — the root behind yard and garden.) Which of घ and र hangs from the head-line without a spine of its own? (र.)"
+              "text": "Is घर (ghar) masculine or feminine, and how do you know from the sentence? (Masculine — merā, not merī.) What did the root behind gṛha mean before it meant a building? (An enclosure — the root behind yard and garden.) Which of घ and र hangs from the head-line without a spine of its own? (र.)"
             }
           ]
         }
@@ -178,7 +178,7 @@
       "sequence": 950,
       "title": "दरवाज़ा (darvāzā) — the door, and the oldest word you already know",
       "headword": "दरवाज़ा",
-      "romanization": "",
+      "romanization": "darvāzā",
       "gloss": "door — masculine, a Persian loan whose first syllable is the same ancient word as English \"door\"",
       "script": "devanagari",
       "modality": "sight",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:802e40cd4bcac2e1",
+      "sourceHash": "fnv1a64:5d77bbe4e6e6fb09",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -260,7 +260,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दरवाज़ा is Persian, دروازه (darvāza), and its first syllable is where this gets remarkable. Persian در (dar) means \"door,\" and it descends from the ancient root dʰwer- — as do English door, Latin forēs, Greek thúrā and Sanskrit द्वार (dvāra)."
+              "text": "दरवाज़ा (darvāzā) is Persian, دروازه (darvāza), and its first syllable is where this gets remarkable. Persian در (dar) means \"door,\" and it descends from the ancient root dʰwer- — as do English door, Latin forēs, Greek thúrā and Sanskrit द्वार (dvāra)."
             },
             {
               "kind": "speech",
@@ -345,7 +345,7 @@
       "sequence": 960,
       "title": "कमरा (kamrā) — the room that is also a camera",
       "headword": "कमरा",
-      "romanization": "",
+      "romanization": "kamrā",
       "gloss": "room — masculine, and the same Latin word as English \"camera\", brought to India by Portuguese ships",
       "script": "devanagari",
       "modality": "sight",
@@ -353,7 +353,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aacdd03b663a9c9e",
+      "sourceHash": "fnv1a64:ad28e8bffd804b9b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -423,7 +423,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कमरा is neither Sanskrit nor Persian. It is Portuguese — câmara, \"chamber, room\" — left behind on India's western coast by the traders who ran that shore from the sixteenth century, along with चाबी (chābī, \"key\") and अलमारी (almārī, \"cupboard\")."
+              "text": "कमरा (kamrā) is neither Sanskrit nor Persian. It is Portuguese — câmara, \"chamber, room\" — left behind on India's western coast by the traders who ran that shore from the sixteenth century, along with चाबी (chābī, \"key\") and अलमारी (almārī, \"cupboard\")."
             },
             {
               "kind": "speech",
@@ -435,7 +435,7 @@
             },
             {
               "kind": "speech",
-              "text": "So कमरा and कैमरा are the same Latin word, arrived twice by two different routes — the second time carrying a machine that did not exist when the first one landed."
+              "text": "So कमरा (kamrā) and कैमरा are the same Latin word, arrived twice by two different routes — the second time carrying a machine that did not exist when the first one landed."
             }
           ]
         },
@@ -617,7 +617,7 @@
             },
             {
               "kind": "speech",
-              "text": "And what this chapter has done: घर Sanskrit, दरवाज़ा Persian, कमरा Portuguese, कुर्सी (kursī) Arabic. One room, four languages — that is Hindi, not an accident of these four words."
+              "text": "And what this chapter has done: घर (ghar) Sanskrit, दरवाज़ा (darvāzā) Persian, कमरा (kamrā) Portuguese, कुर्सी (kursī) Arabic. One room, four languages — that is Hindi, not an accident of these four words."
             }
           ]
         },

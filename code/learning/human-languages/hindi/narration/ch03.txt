@@ -50,10 +50,10 @@ The letters in this word.
 हैं is है (hai, "is") + the anusvāra dot ं becomes हैं (haiṁ), the nasalised plural. Everything else — आप (āp), कैसे (kaise) — you have met.
 
 The phrase, taken apart.
-आप कैसे हैं? = आप (āp, respectful "you") + कैसे (kaise, "how") + हैं (haiṁ, "are") — literally "you how are?" Hindi keeps the verb last, exactly as in Chapter 2's merā nām … hai. And because āp is grammatically plural (that is how Hindi shows respect), its verb is the plural haiṁ, not the singular hai.
+आप कैसे हैं? (āp kaise haiṁ?) = आप (āp, respectful "you") + कैसे (kaise, "how") + हैं (haiṁ, "are") — literally "you how are?" Hindi keeps the verb last, exactly as in Chapter 2's merā nām … hai. And because āp is grammatically plural (that is how Hindi shows respect), its verb is the plural haiṁ, not the singular hai.
 
 Grammar Lens: respect is plural.
-To an elder or a stranger: आप कैसे हैं? To a friend (tum): तुम कैसे हो? (tum kaise ho? — ho is the familiar "are"). To no one in particular you would never drop to tū. Match the "you" to the verb: āp … haiṁ, tum … ho.
+To an elder or a stranger: आप कैसे हैं? (āp kaise haiṁ?) To a friend (tum): तुम कैसे हो? (tum kaise ho? — ho is the familiar "are"). To no one in particular you would never drop to tū. Match the "you" to the verb: āp … haiṁ, tum … ho.
 
 Guided Practice.
 [pause 1 second]
@@ -162,7 +162,7 @@ Put it together with Chapter 3's atoms: मैं ठीक हूँ (maiṁ �
 — āp kaise haiṁ? ("How are you?") — maiṁ ṭhīk hūṁ, dhanyavād. ("I'm fine, thank you.")
 
 Sounds you'll need.
-ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long =i) + क (ka) becomes ठीक. The retroflex ट-ठ-ड series is a hallmark of Indian sound.
+ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long =i) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian sound.
 
 Guided Practice.
 [pause 1 second]
@@ -191,7 +191,7 @@ The letters in this word.
 The key word is स्वागत (svāgat): the conjunct स्व (स् s + व va becomes sva) + ग (ga) + त (ta). Add आपका (āpkā, "your," from Chapter 2) and है (hai, "is").
 
 The phrase, taken apart.
-आपका स्वागत है = "your welcome is" becomes "you are welcome." The heart of it, स्वागत (svāgat, "welcome"), is Sanskrit सु (su-, "well, good") + आगत (āgata, "come") — literally "well come," exactly like English welcome. Two deep roots hide inside:
+आपका स्वागत है (āpkā svāgat hai) = "your welcome is" becomes "you are welcome." The heart of it, स्वागत (svāgat, "welcome"), is Sanskrit सु (su-, "well, good") + आगत (āgata, "come") — literally "well come," exactly like English welcome. Two deep roots hide inside:
 su- "good" is the twin of Greek eu- (euphoria, eulogy).
 āgata is from the root गम् (gam, "to go/come"), cousin of English come.
 Sanskrit's own svāgatam is this very word, unchanged — here it is again, worn into everyday Hindi.

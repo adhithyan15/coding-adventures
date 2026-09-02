@@ -10,6 +10,7 @@ chapter: 3
 type: phrase
 headword: आप कैसे हैं?
 gloss: how are you? (respectful)
+romanization: "āp kaise haiṁ?"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [HI-C03-kaise, HI-C02-aap-tum, HI-C02-hai]
 sounds: [anusvara, matra-ai]
