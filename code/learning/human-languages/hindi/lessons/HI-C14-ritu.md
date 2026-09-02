@@ -10,6 +10,7 @@ chapter: 14
 type: word
 headword: वसंत ग्रीष्म वर्षा शरद् हेमंत शिशिर
 gloss: SIX traditional seasons, not four — India's own ऋतु system, which the Western four-season frame doesn't map onto cleanly
+romanization: "vasant grīṣma varṣā śarad hemant śiśir"
 concept_tag: HI-SEASONS
 prerequisites: [HI-C13-haath]
 sounds: [devanagari-conjunct-shma, anusvara]

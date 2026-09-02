@@ -10,6 +10,7 @@ chapter: 9
 type: phrase
 headword: माफ़ कीजिए / क्षमा करें
 gloss: please forgive me / sorry (māf kījiye — "please do forgiveness")
+romanization: "māf kījiye"
 concept_tag: COURTESY-SORRY
 prerequisites: [HI-C08-kripaya]
 sounds: [nukta-f, vocalic-i-long]

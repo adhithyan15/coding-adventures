@@ -110,13 +110,43 @@ and every atom it names was taught by that chapter or earlier. Chapters 36–39
 also fire **no** findings, and each of their payoffs assesses **every** atom its
 own chapter introduces plus a reach-back list drawn from earlier chapters.
 
+## Romanization is declared, not just printed
+
+Every Hindi lesson but one now declares a `romanization` for its headword. The
+distinction matters because the field, not the prose, is what the tooling
+reads: `script-closure` uses it to decide whether a headword is *exposure* (the
+reader is told how to say it) or *load-bearing* (the reader must decode it
+unaided), and the narration exporter and the book's glossary and running heads
+all read the same field. Seventy lessons used to print their romanization in
+the title line or body while leaving the field empty, which made the tooling
+count words like **नमस्कार** as undecodable when the page beside them said
+*namaskār*.
+
+Each declared value is the romanization **that lesson's own prose teaches**,
+transcribed rather than normalised — Chapter 26 keeps *raat* and Chapter 29
+keeps *shaam* because those are the forms those lessons print. A house style
+imposed here would make the field contradict the page.
+
+**One lesson is deliberately left undeclared.** `HI-A1F01-name-no-model` is a
+no-model writing checkpoint whose prompt reads "With no bank, romanization, or
+copyable answer, complete the Hindi name field." Withholding the romanization
+*is* the assessment condition, so the metric's remaining 1 is intended. Do not
+close it.
+
+What this did **not** fix is the body text. The exposure rule exempts a
+lesson's headword and nothing else, so Hindi's remaining 40 script-closure
+violations are all glyphs met inside prose, tables, and etymology notes — 12
+distinct letters shown but never taught. That is real teaching debt, tracked
+as HL-C194, and it needs a writing step added before the lesson that shows
+each letter, not more headword metadata.
+
 ## Book / fonts
 
 The 39-chapter book compiles with XeLaTeX using **vendored** Noto Sans
 Devanagari, Noto Naskh Arabic, and Noto Sans Cyrillic fonts (`../../_fonts/`),
 loaded by relative path — so it builds identically locally and in CI, with no
 system-font dependency. Chapters 6–39 are generated from canonical lesson ASTs
-and checked against Language Ladder source hashes. A 164-page build reports
+and checked against Language Ladder source hashes. A 454-page build reports
 **zero** missing characters and zero errors. Build the isolated entrypoint with
 `code/scripts/check-book-compile.sh --strict hindi` from the repository root.
 

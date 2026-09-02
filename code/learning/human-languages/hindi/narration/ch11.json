@@ -4,14 +4,14 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:80257321d8480f15",
+  "sourceHash": "fnv1a64:29a714515e3319d4",
   "lessons": [
     {
       "id": "HI-C11-kaalaa-safed",
       "sequence": 550,
       "title": "काला, सफ़ेद (kālā, safed) — black and white",
       "headword": "काला सफ़ेद",
-      "romanization": "",
+      "romanization": "kālā safed",
       "gloss": "black and white — one Sanskrit word tangled up with time and death, one a Persian loan",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee870d2c7724d3b8",
+      "sourceHash": "fnv1a64:7e634f291d94c2a3",
       "notice": null,
       "blocks": [
         {
@@ -125,7 +125,7 @@
       "sequence": 560,
       "title": "लाल, नीला (lāl, nīlā) — a gemstone's name, and India's dye",
       "headword": "लाल नीला",
-      "romanization": "",
+      "romanization": "lāl nīlā",
       "gloss": "red and blue — a Persian gemstone-name, and the Sanskrit word behind the world's word for \"indigo\"",
       "script": "devanagari",
       "modality": "voice",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ca8e954a23b39f3",
+      "sourceHash": "fnv1a64:57f82357d514717f",
       "notice": null,
       "blocks": [
         {

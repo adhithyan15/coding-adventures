@@ -10,6 +10,7 @@ chapter: 34
 type: word
 headword: सोचना / सोच
 gloss: to think — a verb that began life meaning "to grieve," and still keeps the worry inside the noun सोच
+romanization: "sochnā / soch"
 concept_tag: VERB-THINK
 prerequisites: [HI-C05-bolta-hun, HI-C07-nahin]
 sounds: [matra-o, dental-na]

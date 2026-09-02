@@ -4,14 +4,14 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:62876831bc9ae2af",
+  "sourceHash": "fnv1a64:de55fea3802c1db2",
   "lessons": [
     {
       "id": "HI-C19-umr",
       "sequence": 660,
-      "title": "उम्र — the same word as Arabic",
+      "title": "उम्र (umr) — the same word as Arabic",
       "headword": "उम्र",
-      "romanization": "",
+      "romanization": "umr",
       "gloss": "age — the same word as Arabic's ʿumr, borrowed through Persian, beside formal Sanskrit āyu",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48eb30d4b433e120",
+      "sourceHash": "fnv1a64:30a39c956e81279d",
       "notice": null,
       "blocks": [
         {

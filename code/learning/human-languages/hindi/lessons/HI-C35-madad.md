@@ -10,6 +10,7 @@ chapter: 35
 type: word
 headword: मदद करना
 gloss: to help — a noun plus करना, which is how Hindi turns almost anything into a verb
+romanization: "madad karnā"
 concept_tag: VERB-HELP
 prerequisites: [HI-C35-puchna, HI-C09-maaf-kijiye, HI-C05-karna]
 sounds: [dental-da, dental-ma]

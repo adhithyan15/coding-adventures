@@ -39,7 +39,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is घर masculine or feminine, and how do you know from the sentence? (Masculine — merā, not merī.) What did the root behind gṛha mean before it meant a building? (An enclosure — the root behind yard and garden.) Which of घ and र hangs from the head-line without a spine of its own? (र.)
+Is घर (ghar) masculine or feminine, and how do you know from the sentence? (Masculine — merā, not merī.) What did the root behind gṛha mean before it meant a building? (An enclosure — the root behind yard and garden.) Which of घ and र hangs from the head-line without a spine of its own? (र.)
 
 
 Lesson 2 of 4.
@@ -62,7 +62,7 @@ Here is your first piece of help. A noun ending in long -ā is usually masculine
 घर (ghar) ends in a consonant and is masculine too — so a consonant ending tells you nothing at all. That one you simply learn.
 
 The word, taken apart: दरवाज़ा.
-दरवाज़ा is Persian, دروازه (darvāza), and its first syllable is where this gets remarkable. Persian در (dar) means "door," and it descends from the ancient root dʰwer- — as do English door, Latin forēs, Greek thúrā and Sanskrit द्वार (dvāra).
+दरवाज़ा (darvāzā) is Persian, دروازه (darvāza), and its first syllable is where this gets remarkable. Persian در (dar) means "door," and it descends from the ancient root dʰwer- — as do English door, Latin forēs, Greek thúrā and Sanskrit द्वार (dvāra).
 Now the twist. Hindi also has द्वार (dvār), taken straight out of Sanskrit for formal use. So the borrowed Persian word and the learned Sanskrit one are the same ancient word, arrived twice, by two roads, centuries apart.
 The -vāza part is less settled: usually connected to a Persian word for "open," but disputed, and worth leaving open.
 
@@ -101,10 +101,10 @@ Long -ā, masculine again, exactly as दरवाज़ा was. Three nouns in,
 Hold on to that flatness. It is about to break.
 
 The word, taken apart: कमरा.
-कमरा is neither Sanskrit nor Persian. It is Portuguese — câmara, "chamber, room" — left behind on India's western coast by the traders who ran that shore from the sixteenth century, along with चाबी (chābī, "key") and अलमारी (almārī, "cupboard").
+कमरा (kamrā) is neither Sanskrit nor Persian. It is Portuguese — câmara, "chamber, room" — left behind on India's western coast by the traders who ran that shore from the sixteenth century, along with चाबी (chābī, "key") and अलमारी (almārī, "cupboard").
 Portuguese câmara is Latin camera, "a vaulted chamber," and Latin took it from Greek kamára — where the trail honestly stops; the Greek word's own origin is unknown.
 Then the good part. English camera is that same Latin word: a camera obscura was literally a "dark room," and when the dark room shrank into a box the name went with it. And Hindi later borrowed it back through English as कैमरा (kaimrā) for the device.
-So कमरा and कैमरा are the same Latin word, arrived twice by two different routes — the second time carrying a machine that did not exist when the first one landed.
+So कमरा (kamrā) and कैमरा are the same Latin word, arrived twice by two different routes — the second time carrying a machine that did not exist when the first one landed.
 
 Guided Practice.
 [pause 1 second]
@@ -148,7 +148,7 @@ The word, taken apart: कुर्सी.
 कुर्सी is Arabic, كرسي (kursī), "seat, throne," reaching Hindi through Persian, the road most Arabic words took.
 Arabic did not invent it either. It has passed along the Near East for four thousand years: Sumerian guza, Akkadian kussû, then Ugaritic, Hebrew and Aramaic, Arabic most likely taking it from Aramaic. Not one family — the word crossed between unrelated families because the object did.
 English chair? Greek kathédra, through Latin and French. No relation at all.
-And what this chapter has done: घर Sanskrit, दरवाज़ा Persian, कमरा Portuguese, कुर्सी (kursī) Arabic. One room, four languages — that is Hindi, not an accident of these four words.
+And what this chapter has done: घर (ghar) Sanskrit, दरवाज़ा (darvāzā) Persian, कमरा (kamrā) Portuguese, कुर्सी (kursī) Arabic. One room, four languages — that is Hindi, not an accident of these four words.
 
 Guided Practice.
 [pause 1 second]
