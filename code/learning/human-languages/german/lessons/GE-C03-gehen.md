@@ -1,67 +1,92 @@
 ---
+schema_version: 2
 id: GE-C03-gehen
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 115
 chapter: 3
 type: word
 headword: gehen
 gloss: to go — and the verb German uses for "how are you?"
 concept_tag: VERB-GO
-prerequisites: []
-sounds: [h-pronounced]
+prerequisites: [GE-C01-gut, GE-C02-heissen-endungen]
+sounds: [h-silent-lengthening]
 roots: [gehen-german]
-etymology_hook: "gehen IS English 'go' (both from Germanic *gān); es geht mir gut = 'it goes well for me'"
-est_minutes: 4
-reviews_of: [GE-C03-danke]
+etymology_hook: "gehen IS English go, the same Germanic verb, and German makes wellbeing something that goes, not something you are"
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [GE-LEX-GUT-02, GE-GRAMMAR-VERB-ENDINGS-01]
+introduces:
+  knowledge: [GE-LEX-GEHEN-01, GE-SOUND-H-LENGTHEN-01, GE-ETYMON-GEHEN-GO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-GEHEN-01, GE-SOUND-H-LENGTHEN-01, GE-ETYMON-GEHEN-GO-03, GE-LEX-GUT-02, GE-GRAMMAR-VERB-ENDINGS-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C03-danke, GE-C02-heissen-endungen]
 ---
 
-# gehen — "to go," and it's just English *go*
+# gehen — "to go," and it is just English *go*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GUT-02] -->
 
-[PAUSE 2s] Spanish asks *how are you?* with **estar** ("to stand"). French and
-German both ask it with **"to go"** — *how does it go?* You already own the
-German verb without studying it, because it **is** English *go*.
+[PAUSE 2s] German asks "how are you?" with a verb of **motion**. You already own
+that verb without having studied it, because it *is* English *go*.
+
+## You'll want to know: gehen
+<!-- hl-knowledge: introduces=[GE-LEX-GEHEN-01]; assesses=[GE-GRAMMAR-VERB-ENDINGS-01] -->
+
+> **gehen** — "to go." The form you will need most is **geht**, "goes."
+
+That **-t** is the ending you already met on *heißt*: third person, one person,
+one *t*.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[GE-SOUND-H-LENGTHEN-01]; assesses=[GE-LEX-GEHEN-01] -->
 
-- `h-pronounced` — in **gehen** the *h* just **lengthens** the vowel (it isn't a
-  breathy English h): *GAY-en*. The form you need most is **geht** = *gayt*.
+- `h-silent-lengthening` — in *gehen* the **h** is **not** breathed. It is a
+  silent letter whose whole job is to **stretch the vowel before it**:
+  *GAY-en*, not *ge-HEN*. So **geht** is simply *gayt*.
+
+  This is worth banking now, because German uses the trick everywhere — *sehr*,
+  *Ihnen*, *Jahr* all hide a lengthening *h*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[GE-ETYMON-GEHEN-GO-03]; assesses=[GE-LEX-GEHEN-01] -->
 
-**gehen** = "to go." It and English **go** descend from the *same* Germanic verb
-(*gān / gehen*) — no Latin detour, no false friend, a straight cognate. When you
-say *geht*, you're saying *goes*.
+**gehen** and English **go** descend from the *same* Germanic verb — no Latin
+detour, no false friend, a straight cognate. When you say *geht*, you are
+saying *goes*.
 
-German states its wellbeing as **motion**, exactly like French *ça va*:
+And that is the whole idea behind German's "how are you?": wellbeing is not
+something you *are*, it is something that **goes**.
 
-> **Es geht mir gut.** = literally *"It goes for-me well."* → "I'm doing well."
+| Language | The verb it asks with | The picture |
+|---|---|---|
+| German | *gehen*, "to go" | how does it **go**? |
+| French | *aller*, "to go" | how does it **go**? |
+| Spanish | *estar*, "to stand" | how are you **standing**? |
 
-- **es** = "it" (cognate of English *it*).
-- **geht** = "goes."
-- **mir** = "to/for me" (the **dative** — the "to-whom" form; you'll meet its
-  partner *dir*, "to you," next lesson).
-- **gut** = "well" (Chapter 1 — cognate of English *good*).
-
-So German literally says **"it goes well *to me*."** Wellbeing is something that
-*goes*, and it goes *to* a person.
-
-## Grammar Lens: the dative, gently
-
-German marks *the person something happens to* with a special form: *ich* ("I")
-→ *mir* ("to me"); *du* ("you") → *dir* ("to you"). "How are you?" will use *dir*
-/ *Ihnen* — "how does it go **to you**?" Just recognize *mir* = "to me" for now.
+Two of the three put wellbeing in motion; Spanish puts it on its feet.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GEHEN-01, GE-SOUND-H-LENGTHEN-01, GE-ETYMON-GEHEN-GO-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "gehen" (*GAY-en*), then "geht" (*gayt*) = goes]
-- [YOU SAY: "Es geht mir gut" — *it goes well to me*]
-- [YOU SAY: German *gehen* = English *go*, same word]
+- [YOU SAY: "gehen" (*GAY-en*) — the *h* only stretches]
+- [YOU SAY: "geht" (*gayt*) — "goes"]
+- [YOU SAY: German *gehen* and English *go* — the same word]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GEHEN-01, GE-ETYMON-GEHEN-GO-03, GE-SOUND-H-LENGTHEN-01] -->
 
-[PAUSE 3s] What English word is *gehen*, at the root? (*Go* — a straight
-cognate.) *Es geht mir gut* literally says what? ("It goes well *to me*.") German
-and French use "to go" for wellbeing — which verb does Spanish use instead?
-(*estar*, "to stand.") Next: ask it — **Wie geht es dir?**
+[PAUSE 3s] What English word is *gehen*? (*Go* — a straight cognate.) What does
+the *h* do in *gehen*? (Nothing but lengthen the vowel.) Which two of the three
+languages ask "how are you?" with "to go"? (German and French; Spanish uses "to
+stand.")
