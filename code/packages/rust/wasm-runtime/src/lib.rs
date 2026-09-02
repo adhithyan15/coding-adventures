@@ -2427,6 +2427,26 @@ impl WasmRuntime {
         // just wrote.
         let mut active_elem_writes: Vec<(u32, u32, u32)> = Vec::new();
 
+        // Per-element-segment "already dropped" flags, computed as a
+        // byproduct of the very same loop that applies active segments
+        // below -- NOT the instance's own `dropped_elements` field yet
+        // (that's built further down, at this function's normal success
+        // return, from this exact `Vec`). Real spec text: "after an
+        // active or declarative element segment is initialized, it is
+        // dropped" -- so an ACTIVE segment (this loop's main branch, just
+        // below) is marked dropped the moment its own bounds check and
+        // writes succeed, and a DECLARATIVE segment (`elem.is_declarative`
+        // -- see that field's own doc comment in `wasm_types::Element` for
+        // why `is_passive` alone can't tell it apart from a genuinely
+        // passive one) is marked dropped immediately, with no content ever
+        // copied anywhere -- it was never live to begin with. A genuinely
+        // PASSIVE segment (`is_passive: true`, `is_declarative: false`)
+        // stays `false` here, completely unaffected: it remains resident
+        // and `table.init`-able until an explicit `elem.drop` or a
+        // consuming `table.init` call (see `wasm-execution`'s own opcode
+        // handlers) changes its dropped state, same as before this fix.
+        let mut dropped_elements: Vec<bool> = vec![false; module.elements.len()];
+
         // W35 fourth slice: the elem-segment and data-segment loops below
         // are wrapped in an IIFE returning `Result<(), TrapError>` --
         // their own bodies are BYTE-FOR-BYTE UNCHANGED from before this
@@ -2437,8 +2457,21 @@ impl WasmRuntime {
         // "ephemeral trap-discarded instance" handling immediately after
         // this closure's own call site for why.
         let elem_data_result: Result<(), TrapError> = (|| -> Result<(), TrapError> {
-        for elem in &module.elements {
+        for (elem_idx, elem) in module.elements.iter().enumerate() {
             if elem.is_passive {
+                // A declarative segment (`is_declarative`, folded into
+                // `is_passive: true` by `wasm_types::Element`'s own
+                // documented convention -- see its doc comment) is never
+                // applied to any table, same as a genuinely passive one --
+                // but unlike a genuinely passive segment, the real spec
+                // requires it be treated as already dropped from this
+                // point on, so mark it here, before the `continue`. A
+                // genuinely passive segment (`is_declarative: false`)
+                // leaves `dropped_elements[elem_idx]` at its initial
+                // `false` -- unaffected, exactly as before this fix.
+                if elem.is_declarative {
+                    dropped_elements[elem_idx] = true;
+                }
                 continue;
             }
             if let Some(table) = tables.get_mut(elem.table_index as usize) {
@@ -2528,6 +2561,19 @@ impl WasmRuntime {
                 if count > 0 {
                     active_elem_writes.push((elem.table_index, offset_num as u32, count as u32));
                 }
+                // Real spec text: "after an active or declarative element
+                // segment is initialized, it is dropped" -- this active
+                // segment's own bounds check and every `table.set` above
+                // just succeeded (an upfront trap on either would have
+                // propagated via `?`/`return Err` before reaching here),
+                // so mark it dropped now, unconditionally (even for a
+                // zero-length segment, `count == 0`, which is still a real
+                // active segment per spec, just an empty one) -- a LATER
+                // `table.init` naming this same segment index must find it
+                // already dropped and trap, matching `elem.wast`'s/
+                // `table_init.wast`'s own "Implicitly dropped elements"
+                // corpus cases exactly.
+                dropped_elements[elem_idx] = true;
             }
         }
 
@@ -2622,7 +2668,17 @@ impl WasmRuntime {
                 v128_heap: v128_heap.clone(),
                 gc_heap: gc_heap.clone(),
                 dropped_data_segments: vec![false; module.data.len()],
-                dropped_elements: vec![false; module.elements.len()],
+                // Whatever this call's own closure successfully computed
+                // before the trap that brought us here (active segments it
+                // already applied, declarative segments it already
+                // recognized) -- same "exactly the slots THIS instance
+                // itself wrote, nothing more" reasoning `active_elem_
+                // writes.clone()` below already documents. This temporary
+                // instance is about to be discarded (an `Err` follows
+                // immediately), so no `table.init` can ever read this
+                // field again regardless -- cloned purely so the value
+                // isn't silently wrong if that ever changes.
+                dropped_elements: dropped_elements.clone(),
                 func_identities: func_identities.clone(),
                 instance_identity: NEXT_INSTANCE_IDENTITY.fetch_add(1, Ordering::Relaxed),
                 // Whatever this call's own closure successfully recorded
@@ -2650,10 +2706,17 @@ impl WasmRuntime {
         // instantiation path drops anything itself.
         let dropped_data_segments = vec![false; module.data.len()];
 
-        // One dropped-flag per element segment, all initially false (task
-        // #97) -- `elem.drop` flips one to true; nothing in this
-        // instantiation path drops anything itself.
-        let dropped_elements = vec![false; module.elements.len()];
+        // One dropped-flag per element segment (task #97). Unlike
+        // `dropped_data_segments` above, NOT all-`false` here: `dropped_
+        // elements` was already computed by the elem/data closure just
+        // above, which marks an ACTIVE segment's entry `true` the moment
+        // it finishes applying, and a DECLARATIVE segment's entry `true`
+        // immediately (see that closure's own doc comments) -- real spec
+        // behavior, "after an active or declarative element segment is
+        // initialized, it is dropped". A genuinely passive segment's entry
+        // stays `false` here, exactly as before this fix; `elem.drop`/a
+        // consuming `table.init` are still the only things that can flip
+        // one of those to `true` from this point on.
 
         let mut instance = WasmInstance {
             module: module.clone(),
@@ -4579,6 +4642,131 @@ mod tests {
         let mut instance = runtime.instantiate(&validated).expect("instantiate() must succeed, not panic, for a self-referencing active elem segment");
         let results = runtime.call_typed(&mut instance, "call0", &[]).expect("call_indirect through the elem-populated table must succeed");
         assert_eq!(results, vec![WasmValue::I32(111)], "must dispatch to $one, the function the elem segment actually wrote at slot 0");
+    }
+
+    /// Regression test for the exact bug `elem.wast`'s own "Implicitly
+    /// dropped elements" corpus section and `table_init.wast`'s directive
+    /// at byte offset 21455 caught (see `wasm-conformance`'s CHANGELOG
+    /// 0.1.117 entry for the full corpus writeup): real spec text says
+    /// "after an active or declarative element segment is initialized, it
+    /// is dropped" -- so a `table.init` naming an ACTIVE segment, even one
+    /// this exact module itself just applied during its own instantiation,
+    /// must trap "out of bounds table access", never silently succeed.
+    /// Before this fix, `instantiate()` never flipped `dropped_elements`
+    /// for an active segment (only `elem.drop`/a consuming `table.init`
+    /// on a PASSIVE segment ever did), so this exact shape wrongly
+    /// succeeded.
+    #[test]
+    fn instantiate_marks_an_active_elem_segment_dropped_so_a_later_table_init_on_it_traps() {
+        let runtime = WasmRuntime::new();
+        let module = wasm_wast_parser::parse_module(
+            r#"(module
+                 (table 10 funcref)
+                 (elem $e (i32.const 0) func $f)
+                 (func $f)
+                 (func (export "init")
+                   (table.init $e (i32.const 0) (i32.const 0) (i32.const 1))))"#,
+        )
+        .expect("module should parse");
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime.instantiate(&validated).expect("instantiate() must succeed -- applying the active segment itself never traps");
+        let err = runtime
+            .call_typed(&mut instance, "init", &[])
+            .expect_err("table.init against an already-dropped (via instantiation) active segment must trap");
+        assert!(
+            err.message.contains("out of bounds table access"),
+            "trap message should name the real spec's own out-of-bounds-table-access rule, got: {}",
+            err.message
+        );
+    }
+
+    /// Companion to the active-segment regression above: a DECLARATIVE
+    /// segment (`(elem $e declare func $f)`, reference-types proposal --
+    /// this repo's `wasm-wast-parser` folds it into `is_passive: true`
+    /// plus the new `is_declarative: true` flag, see `wasm_types::
+    /// Element::is_declarative`'s own doc comment) is never applied to any
+    /// table at all, but per spec must ALSO be treated as already dropped
+    /// from the moment instantiation finishes -- it was never live to
+    /// begin with. `elem.wast`'s own byte offset 20815 is exactly this
+    /// shape. Before this fix, a declarative segment was indistinguishable
+    /// from a genuinely passive one at runtime (both `is_passive: true`,
+    /// `dropped_elements` initially `false`), so `table.init` against it
+    /// wrongly succeeded.
+    #[test]
+    fn instantiate_marks_a_declarative_elem_segment_dropped_so_table_init_on_it_traps() {
+        let runtime = WasmRuntime::new();
+        let module = wasm_wast_parser::parse_module(
+            r#"(module
+                 (table 10 funcref)
+                 (elem $e declare func $f)
+                 (func $f)
+                 (func (export "init")
+                   (table.init $e (i32.const 0) (i32.const 0) (i32.const 1))))"#,
+        )
+        .expect("module should parse");
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime
+            .instantiate(&validated)
+            .expect("instantiate() must succeed -- a declarative segment copies no content, so there is nothing to trap on during instantiation itself");
+        let err = runtime
+            .call_typed(&mut instance, "init", &[])
+            .expect_err("table.init against a declarative segment must trap: it is treated as already dropped, never live");
+        assert!(
+            err.message.contains("out of bounds table access"),
+            "trap message should name the real spec's own out-of-bounds-table-access rule, got: {}",
+            err.message
+        );
+    }
+
+    /// Confirms this fix (marking active/declarative segments dropped at
+    /// instantiation) does NOT accidentally touch a genuinely PASSIVE
+    /// segment's own, completely separate, pre-existing dropped-tracking:
+    /// a passive segment (`is_passive: true`, `is_declarative: false`)
+    /// must stay live and `table.init`-able immediately after
+    /// instantiation (unlike its active/declarative cousins above), a
+    /// first `table.init` against it must succeed, and only an EXPLICIT
+    /// `elem.drop` (never `table.init` itself, which does not auto-drop a
+    /// passive segment -- see `wasm-execution`'s own `0x0C` opcode handler
+    /// doc comment) may later make a SECOND `table.init` against the same
+    /// segment trap. This is the exact interaction
+    /// `table_init_after_elem_drop_traps_on_nonzero_length_but_succeeds_
+    /// at_zero_length` already covers at the raw-opcode (`wasm-execution`)
+    /// level; this test covers the same interaction through the real
+    /// `instantiate()` -> `call_typed()` path this fix actually touches,
+    /// so a bug that conflated "passive already-dropped" tracking with
+    /// "active/declarative newly-dropped" tracking would be caught here
+    /// even if it slipped past the opcode-level test.
+    #[test]
+    fn instantiate_leaves_a_genuinely_passive_elem_segment_undropped_first_table_init_succeeds_elem_drop_then_traps_the_next() {
+        let runtime = WasmRuntime::new();
+        let module = wasm_wast_parser::parse_module(
+            r#"(module
+                 (table 10 funcref)
+                 (elem $e func $f)
+                 (func $f)
+                 (func (export "init")
+                   (table.init $e (i32.const 0) (i32.const 0) (i32.const 1)))
+                 (func (export "drop")
+                   (elem.drop $e)))"#,
+        )
+        .expect("module should parse");
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime.instantiate(&validated).expect("instantiate() must succeed for a module with only a passive elem segment");
+
+        runtime
+            .call_typed(&mut instance, "init", &[])
+            .expect("a genuinely passive segment must stay live immediately after instantiation -- this fix must not mark it dropped");
+
+        runtime.call_typed(&mut instance, "drop", &[]).expect("elem.drop itself never traps");
+
+        let err = runtime
+            .call_typed(&mut instance, "init", &[])
+            .expect_err("table.init against a passive segment explicitly elem.drop'd must trap, same as before this fix");
+        assert!(
+            err.message.contains("out of bounds table access"),
+            "trap message should name the real spec's own out-of-bounds-table-access rule, got: {}",
+            err.message
+        );
     }
 
     #[test]

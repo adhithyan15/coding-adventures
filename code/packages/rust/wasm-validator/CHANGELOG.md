@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.86] - 2026-09-01 (mechanical fallout of `wasm_types::Element::is_declarative`)
+
+`wasm-types` 0.1.24 added `Element::is_declarative` (see that crate's own
+CHANGELOG for the full root-cause writeup: `wasm-runtime::instantiate()`
+had no way to tell a declarative elem segment apart from a genuinely
+passive one, so it could never mark a declarative segment "already
+dropped" without wrongly dropping every passive segment too). This
+crate's own `Element` construction sites are all test-only fixtures for
+`validate()`'s own element-segment checks (none of them declarative) —
+each now sets `is_declarative: false` to keep compiling against
+`Element`'s new field. No behavior change in this crate: `validate()`'s
+own per-element check already treats every `is_passive: true` segment
+identically (its own doc comment already notes this covers a declarative
+segment too, by this repo's "no dedicated third-variant" convention), and
+that logic doesn't consult `is_declarative` at all.
+
 ## [0.2.85] - 2026-09-01 (fix: a 32-bit table's declared minimum no longer rejected at structural validation time)
 
 Gap 2 of a two-gap `elem.wast`/`table.wast` investigation pass
