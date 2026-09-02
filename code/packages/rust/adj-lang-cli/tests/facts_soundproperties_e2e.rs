@@ -82,3 +82,41 @@ fn physics_sound_properties_recall_binds_physical_with_citation() {
     // `rhythm` is never mapped by the source — honest abstention.
     assert!(out.contains("\"abstained\":true"), "rhythm abstains: {out}");
 }
+
+const SP_PIN: &str = r#""bindings":{"P":"waveform"},"citations":[{"source":"The three subjective quantities of pitch, loudness and timbre are related to laboratory measurements of a sound wave's fundamental frequency, amplitude and waveform, respectively.","locator":"https://phys.libretexts.org/Courses/Joliet_Junior_College/Physics_110_-_by_Conceptual_Objective/12:_Conceptual_Objective_12/12.06:_Pitch_Loudness_and_Timbre","trust":"consensus","corroborations":[{"source":"For the human listener, the amplitude and frequency of a sound roughly correspond to loudness and pitch, respectively.","locator":"https://www.ncbi.nlm.nih.gov/books/NBK11126/""#;
+
+#[test]
+fn sound_properties_answer_carries_the_nih_corroboration() {
+    let dir = scratch("cite_sp");
+    std::fs::copy(
+        facts_stdlib().join("physics/sound-properties.adj"),
+        dir.join("sound-properties.adj"),
+    )
+    .expect("copy shipped sound-properties.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"sound-properties.adj\"\n? sound_property(timbre, $P)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // NOTE THE TRUST DIRECTION. The envelope is a LibreTexts span at `trust
+    // consensus`; this corroboration is NIH/Purves, which is authoritative.
+    // `cites` has no trust field, so a STRONGER source sits under a WEAKER
+    // envelope -- that UNDERSTATES the corroboration, which is harmless. The
+    // gap only bites the other way (a weaker cite under a stronger envelope
+    // would overstate the evidence).
+    //
+    // The library's header already reasoned this out: the NIH sentence grounds
+    // only pitch and loudness, which is exactly why the envelope uses the
+    // LibreTexts span that fixes all three rows and why `trust` is honestly
+    // `consensus`. The reasoning was right; the evidence just never reached
+    // the data. This query binds TIMBRE deliberately -- the one row the NIH
+    // sentence does NOT ground -- to show the corroboration rides the table,
+    // not the row.
+    assert!(
+        out.contains(SP_PIN),
+        "timbre's answer carries the NIH corroboration verbatim: {out}"
+    );
+}

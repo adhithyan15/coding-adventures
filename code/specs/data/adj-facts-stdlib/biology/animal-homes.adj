@@ -56,9 +56,16 @@
 %                     its eggs and raises its young."
 %                     https://en.wikipedia.org/wiki/Bird_nest
 %
-%   spider → web   — "A spider web ... is a structure created by a spider out of
-%                     proteinaceous spider silk extruded from its spinnerets,
-%                     generally meant to catch its prey."
+%   spider → web   — "A spider web, spiderweb, spider's web, cobweb or even just
+%                     web (from the Middle English coppeweb)[1] is a structure
+%                     created by a spider out of proteinaceous spider silk
+%                     extruded from its spinnerets, generally meant to catch its
+%                     prey."
+%                     (the previous form ELIDED the alias list with "..." -- a
+%                      constructed span. The full sentence names BOTH the subject
+%                      and the row value; "A spider web ... is a structure" is the
+%                      subject only if you supply the elided material yourself.
+%                      The [1] is a real rendered footnote marker.)
 %                     https://en.wikipedia.org/wiki/Spider_web
 %
 %   rabbit → burrow — "The European rabbit notably lives in extensive burrow
@@ -85,4 +92,8 @@ table animal_home {
     source "A beehive is an enclosed structure in which honey bees raise their young and produce honey as part of their seasonal cycle."
     locator "https://en.wikipedia.org/wiki/Beehive"
     trust consensus
+    cites "A bird nest is the spot in which a bird lays and incubates its eggs and raises its young." locator "https://en.wikipedia.org/wiki/Bird_nest"
+    cites "A spider web, spiderweb, spider's web, cobweb or even just web (from the Middle English coppeweb)[1] is a structure created by a spider out of proteinaceous spider silk extruded from its spinnerets, generally meant to catch its prey." locator "https://en.wikipedia.org/wiki/Spider_web"
+    cites "The European rabbit notably lives in extensive burrow networks called warrens." locator "https://en.wikipedia.org/wiki/Rabbit"
+    cites "Beavers make two types of lodges: bank lodges and open-water lodges." locator "https://en.wikipedia.org/wiki/Beaver"
 }

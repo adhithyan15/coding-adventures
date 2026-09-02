@@ -85,4 +85,5 @@ table light_primary {
     source "The commonly used additive primary colors are red, green and blue, and if you overlap all three in effectively equal mixture, you get white light as shown at the center."
     locator "http://hyperphysics.gsu.edu/hbase/vision/addcol.html"
     trust authoritative
+    cites "the standard additive primary colors are red, green and blue." locator "http://hyperphysics.gsu.edu/hbase/vision/pricol2.html"
 }
