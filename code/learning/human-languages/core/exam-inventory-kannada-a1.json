@@ -255,7 +255,9 @@
       "id": "KA-A1-ADJ-05",
       "category": "Gunavaacaka (the adjective)",
       "label": "degree: intensifying an adjective",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C73-ABLE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -266,7 +268,7 @@
         "A1-SADJ-01",
         "A1-NG2-03"
       ],
-      "note": "Untaught as a modifier of adjectives. tumba ('very') is not in the corpus. heccu ('more, a lot') and svalpa ('a little') are taught in chapter 58, but as quantity replies to an offer, never shown modifying an adjective -- so a learner can say 'more' about rice and cannot say 'very big'."
+      "note": "CLOSED by chapter 73. tumbaa is taught in front of an adjective, which is the job heccu and svalpa could not do."
     },
     {
       "id": "KA-A1-DET-01",
@@ -291,7 +293,9 @@
       "id": "KA-A1-DET-02",
       "category": "Nirdeshaka (determiners)",
       "label": "ondu ('one') pressed into service as an indefinite marker",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C73-ABLE-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -300,7 +304,7 @@
       "derivedFrom": [
         "A1-ART-03"
       ],
-      "note": "ondu is taught as the numeral in chapter 7, but its everyday use as 'a' -- ondu pustaka, 'a book' -- is never shown, so the learner has the word and not the function."
+      "note": "CLOSED by chapter 73. ondu huuvu teaches the numeral in its everyday indefinite use, and says what a bare noun does without it."
     },
     {
       "id": "KA-A1-DEM-01",
@@ -880,7 +884,9 @@
       "id": "KA-A1-ADV-09",
       "category": "Kriyaavisheshana (adverbs)",
       "label": "the negative counterpart: not also, neither",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C68-DENY-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -890,7 +896,7 @@
         "A1-ADV-06",
         "A1-CO-02"
       ],
-      "note": "Untaught. Kannada has no taught way to say 'me neither', which at A1 is a common turn in exactly the short exchanges this level is about."
+      "note": "CLOSED by chapter 68. nanaguu gottilla is the -uu suffix on the dative rather than on a noun, which is the form the track's dative sentences need."
     },
     {
       "id": "KA-A1-V-01",
@@ -1534,7 +1540,10 @@
       "id": "KA-A1-NEG-05",
       "category": "Nishedha (negation)",
       "label": "alla: negating an equation rather than an existence",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C68-DENY-01",
+        "KA-GRAMMAR-C68-DENY-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1544,7 +1553,7 @@
         "A1-OS-01",
         "A1-OS-05"
       ],
-      "note": "UNTAUGHT, and the pair is broken without it. Kannada splits negation two ways -- illa denies that something EXISTS, alla denies that something IS something else ('idu pustaka alla', 'this is not a book'). Only half the pair is in the corpus, so the learner can deny existence and cannot contradict a description."
+      "note": "CLOSED by chapter 68. alla is taught against the illa the track has had since chapter 1, with the test that decides between them: if you could point at the thing, it is alla."
     },
     {
       "id": "KA-A1-Q-01",
@@ -1563,7 +1572,7 @@
         "A1-OS-02",
         "A1-F1-04"
       ],
-      "note": "Partially structural. The -aa question particle is visible in heegiddiiraa and the echo-answer pattern is taught with haudu, but no lesson names -aa as the thing that turns any statement into a question -- which would be one atom for unlimited questions."
+      "note": "Structural, and now named. The -aa particle was visible in heegiddiiraa and the echo-answer pattern was taught with haudu, but no lesson named -aa as the thing that turns any statement into a question. Chapter 69 does, on the headword gottaa, and KA-A1-F-11 and KA-A1-F-20 both close behind it."
     },
     {
       "id": "KA-A1-Q-02",
@@ -1647,7 +1656,9 @@
       "id": "KA-A1-Q-06",
       "category": "Prashne (questions)",
       "label": "asking when",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C71-MORE-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1657,13 +1668,15 @@
         "A1-OS-03",
         "A1-NG4-01"
       ],
-      "note": "Untaught. yaavaaga is missing, and it is the one member of the e- question family the corpus never completes."
+      "note": "CLOSED by chapter 71. yaavaaga is taught, and answered with iiga and naadiddu, which the track already had."
     },
     {
       "id": "KA-A1-Q-07",
       "category": "Prashne (questions)",
       "label": "asking why",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C69-ASK-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1673,13 +1686,16 @@
         "A1-ADV-08",
         "A1-SUB-06"
       ],
-      "note": "Untaught. yaake is missing, which also means no reason can be asked for -- and, with KA-A1-CJ-05, none can be given."
+      "note": "CLOSED by chapter 69. yaake is taught with the written eeke named beside it, because the word for 'because' is built on the written one."
     },
     {
       "id": "KA-A1-Q-08",
       "category": "Prashne (questions)",
       "label": "asking which one out of several",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C71-MORE-05",
+        "KA-GRAMMAR-C71-MORE-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1688,7 +1704,7 @@
       "derivedFrom": [
         "A1-PRON-06"
       ],
-      "note": "Untaught. yaava is missing, so a choice cannot be put to somebody."
+      "note": "CLOSED by chapter 71. yaava is taught in front of a noun, and the yaa- question family is named as a family: yaaru, yaake, yaavaaga, yaava."
     },
     {
       "id": "KA-A1-Q-09",
@@ -1859,7 +1875,10 @@
       "id": "KA-A1-CJ-01",
       "category": "Samuccaya (joining and subordination)",
       "label": "joining two nouns: and",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C67-LINK-01",
+        "KA-GRAMMAR-C67-LINK-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1868,13 +1887,16 @@
       "derivedFrom": [
         "A1-CO-01"
       ],
-      "note": "UNTAUGHT. Kannada joins nouns by suffixing -uu to each (naanuu niivuu) or with mattu between them. NEITHER IS IN THE CORPUS -- mattu appears zero times in 268 lessons and zero times in the generated book. A learner who knows 130 nouns cannot name two of them in one breath."
+      "note": "CLOSED by chapter 67. mattu is taught as the word that stands between two nouns, and the -uu suffix that hangs on both is taught in the same chapter, so BOTH of the ways Kannada joins two nouns are now in the corpus rather than neither. The note this replaces recorded zero occurrences of mattu in 268 lessons and zero in the generated book."
     },
     {
       "id": "KA-A1-CJ-02",
       "category": "Samuccaya (joining and subordination)",
       "label": "joining with but",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C67-LINK-03",
+        "KA-GRAMMAR-C67-LINK-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1884,13 +1906,15 @@
         "A1-CO-04",
         "A1-F2-09"
       ],
-      "note": "UNTAUGHT. aadare appears zero times anywhere in the track. This also blocks A1-F2-09, offering a counter-argument, which is a function point in its own right."
+      "note": "CLOSED by chapter 67. aadare is taught, and taught as what it is: the conditional of aagu, 'if it becomes'. The learner had already read it inside haagaadare without being told, which is what the lesson opens on."
     },
     {
       "id": "KA-A1-CJ-03",
       "category": "Samuccaya (joining and subordination)",
       "label": "joining with or",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C67-LINK-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1900,13 +1924,15 @@
         "A1-CO-03",
         "A1-F3-02"
       ],
-      "note": "UNTAUGHT. athavaa appears zero times anywhere in the track. This also blocks A1-F3-02, asking about a preference by offering alternatives -- you cannot offer a choice without a word for 'or'."
+      "note": "CLOSED by chapter 67. athavaa is taught between two nouns the learner already has, which is also what unblocks KA-A1-F-23."
     },
     {
       "id": "KA-A1-CJ-04",
       "category": "Samuccaya (joining and subordination)",
       "label": "negative coordination: neither ... nor",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C68-DENY-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1915,13 +1941,16 @@
       "derivedFrom": [
         "A1-CO-02"
       ],
-      "note": "Untaught, and downstream of KA-A1-CJ-01: Kannada builds it on the same -uu suffix plus a negative."
+      "note": "CLOSED by chapter 68, and downstream of KA-A1-CJ-01 exactly as this note predicted: haaluu illa, niiruu illa is the -uu suffix on both nouns with illa after each."
     },
     {
       "id": "KA-A1-CJ-05",
       "category": "Samuccaya (joining and subordination)",
       "label": "causal clauses: because",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C70-TELL-04",
+        "KA-GRAMMAR-C70-TELL-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1931,13 +1960,16 @@
         "A1-SUB-06",
         "A1-ADV-08"
       ],
-      "note": "UNTAUGHT. eekendare appears zero times. With yaake also missing (KA-A1-Q-07), a reason can be neither asked for nor given anywhere in the course."
+      "note": "CLOSED by chapter 70. eekendare is taught after the quotative it is built from -- eeke plus endare, 'if one says why' -- so the learner meets the pieces before the word. With yaake now taught at KA-A1-Q-07, a reason can be both asked for and given."
     },
     {
       "id": "KA-A1-CJ-06",
       "category": "Samuccaya (joining and subordination)",
       "label": "purpose clauses: in order to",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C73-ABLE-02",
+        "KA-GRAMMAR-C73-ABLE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1946,13 +1978,16 @@
       "derivedFrom": [
         "A1-SUB-07"
       ],
-      "note": "Untaught. Kannada uses the -alu infinitive, which no lesson forms."
+      "note": "CLOSED by chapter 73. The -alu infinitive is formed on oodu, a verb the track already taught, and named beside the -i and -aaga endings as the third way Kannada hangs one verb off another."
     },
     {
       "id": "KA-A1-CJ-07",
       "category": "Samuccaya (joining and subordination)",
       "label": "simultaneity: when",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C72-WANT-01",
+        "KA-GRAMMAR-C72-WANT-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1961,13 +1996,16 @@
       "derivedFrom": [
         "A1-SUB-08"
       ],
-      "note": "Untaught. Kannada uses the -aaga participle, which no lesson forms; and yaavaaga is missing too (KA-A1-Q-06)."
+      "note": "CLOSED by chapter 72. The -aaga participle is formed on baru (bandaaga) and taught as the same aaga that sits inside yaavaaga, which chapter 71 teaches first."
     },
     {
       "id": "KA-A1-CJ-08",
       "category": "Samuccaya (joining and subordination)",
       "label": "a clause as the object of a verb of saying or thinking",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C70-TELL-02",
+        "KA-GRAMMAR-C70-TELL-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1978,7 +2016,7 @@
         "A1-SUB-03",
         "A1-F2-02"
       ],
-      "note": "UNTAUGHT, and it is the reason yoocisu ('to think', chapter 33) cannot yet take an opinion as its object. Kannada uses the quotative anta / endu, and both appear zero times in the corpus. Three Spanish points land here, including A1-F2-02, giving an opinion -- the single most-used A1 function there is."
+      "note": "CLOSED by chapter 70. The colloquial quotative anta is taught, with the literary endu named beside it, and the lesson teaches the ORDER a Kannada report uses: the quoted clause, then anta, then the verb of saying. This is what unblocks yoocisu, and KA-A1-F-12 with it."
     },
     {
       "id": "KA-A1-CJ-09",
@@ -1995,7 +2033,7 @@
       "derivedFrom": [
         "A1-SUB-01"
       ],
-      "note": "THE ONE COVERED POINT IN THIS COLUMN. hoogi baruttene chains two verbs with the -i participle, and chapter 4 teaches the joint itself. Kannada's real clause-chaining machinery is participial rather than conjunctional, so this is not a consolation prize -- it is the door the rest of the column opens through."
+      "note": "THE ONE POINT THIS COLUMN STARTED WITH. hoogi baruttene chains two verbs with the -i participle, and chapter 4 teaches the joint itself. Kannada's real clause-chaining machinery is participial rather than conjunctional, so this was not a consolation prize -- it is the door the rest of the column opened through, and chapter 73 names -i, -aaga and -alu together as three shapes of one habit."
     },
     {
       "id": "KA-A1-CJ-10",
@@ -2015,7 +2053,7 @@
         "A1-F6-01",
         "A1-F6-04"
       ],
-      "note": "haagaadare ('in that case'), aameele ('afterwards') and kuuda ('also') are taught in chapter 64. They connect TURNS, not clauses -- which is why chapter 64 is named JOIN and still leaves this column at two of ten. Recorded as covered because the A1 discourse function is real and met; recorded here rather than in the function column because it is what the corpus offers in place of conjunctions."
+      "note": "haagaadare, aameele and kuuda are taught in chapter 64. They connect TURNS, not clauses, which is why a chapter named JOIN left this column at two of eleven. Chapters 67 to 73 add the conjunctions and the quotative in NEW chapters rather than in chapter 64, because chapter 64's five words are a coherent set that does a different job and cramming clause-joiners in beside them would have broken both the chapter's promise and the one-new-item-per-lesson rate."
     },
     {
       "id": "KA-A1-F-01",
@@ -2143,7 +2181,10 @@
       "id": "KA-A1-F-08",
       "category": "Vyavahaara (communicative functions)",
       "label": "ask for confirmation with a tag",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C69-ASK-03",
+        "KA-PRAGMATICS-C69-ASK-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2152,7 +2193,7 @@
       "derivedFrom": [
         "A1-F1-04"
       ],
-      "note": "Untaught. Kannada tags with alva? -- built on alla, which is itself untaught (KA-A1-NEG-05)."
+      "note": "CLOSED by chapter 69, and no longer blocked: alva is taught two lessons after alla, and the lesson says what the tag is FOR -- it asks for agreement rather than information."
     },
     {
       "id": "KA-A1-F-09",
@@ -2176,7 +2217,9 @@
       "id": "KA-A1-F-10",
       "category": "Vyavahaara (communicative functions)",
       "label": "say you do not know something",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C68-DENY-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2186,13 +2229,16 @@
         "A1-F2-15",
         "A1-F2-08"
       ],
-      "note": "Untaught. It needs gottilla, the negative of gottu -- one lesson away, since both halves are taught."
+      "note": "CLOSED by chapter 68, and it was one lesson away as this note said: gottilla is gottu and illa pushed together, with the dative frame the track already teaches."
     },
     {
       "id": "KA-A1-F-11",
       "category": "Vyavahaara (communicative functions)",
       "label": "ask whether somebody knows something",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C69-ASK-01",
+        "KA-GRAMMAR-C69-ASK-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2201,13 +2247,16 @@
       "derivedFrom": [
         "A1-F2-13"
       ],
-      "note": "Untaught. Needs the -aa question particle on gottu (KA-A1-Q-01), which is never named."
+      "note": "CLOSED by chapter 69. The -aa question particle is NAMED, which is the one atom that turns every statement in the track into a question; gottaa is the headword it is taught on."
     },
     {
       "id": "KA-A1-F-12",
       "category": "Vyavahaara (communicative functions)",
       "label": "give an opinion",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C70-TELL-06",
+        "KA-PRAGMATICS-C70-TELL-07"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2217,7 +2266,7 @@
         "A1-F2-02",
         "A1-F2-11"
       ],
-      "note": "Untaught, and structurally blocked: it needs the quotative (KA-A1-CJ-08) so that yoocisu can take a clause."
+      "note": "CLOSED by chapter 70, and only because the quotative landed first: adu nija anta yoocisuttene is the frame, and only its first slot changes."
     },
     {
       "id": "KA-A1-F-13",
@@ -2246,7 +2295,9 @@
       "id": "KA-A1-F-14",
       "category": "Vyavahaara (communicative functions)",
       "label": "disagree",
-      "probe": null,
+      "probe": [
+        "KA-PRAGMATICS-C68-DENY-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2255,7 +2306,7 @@
       "derivedFrom": [
         "A1-F2-07"
       ],
-      "note": "Untaught. Needs alla or a negated verb; neither is available."
+      "note": "CLOSED by chapter 68. Kannada has no everyday sentence for 'I disagree', so what the lesson teaches is the move it does have: deny the description with alla -- adu nija alla."
     },
     {
       "id": "KA-A1-F-15",
@@ -2318,7 +2369,10 @@
       "id": "KA-A1-F-18",
       "category": "Vyavahaara (communicative functions)",
       "label": "say you can do something",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C73-ABLE-04",
+        "KA-GRAMMAR-C73-ABLE-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2329,7 +2383,7 @@
         "A1-F2-17",
         "A1-NG6-09"
       ],
-      "note": "Untaught. Kannada uses baruttade or -alu saadhya; neither is in the corpus."
+      "note": "CLOSED by chapter 73, with baruttade rather than -alu saadhya: nanage kannada baruttade, 'to me Kannada comes'. It is the fourth thing the dative frame carries, after knowing, liking and wanting."
     },
     {
       "id": "KA-A1-F-19",
@@ -2353,7 +2407,9 @@
       "id": "KA-A1-F-20",
       "category": "Vyavahaara (communicative functions)",
       "label": "ask what somebody likes",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C72-WANT-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2363,13 +2419,16 @@
         "A1-F3-01",
         "A1-F2-01"
       ],
-      "note": "Untaught. The frame exists; the question particle to turn it around does not."
+      "note": "CLOSED by chapter 72. The frame did exist, as this note said; what was missing was the -aa particle, taught at KA-A1-F-11, and the nimage that turns the sentence around."
     },
     {
       "id": "KA-A1-F-21",
       "category": "Vyavahaara (communicative functions)",
       "label": "say what you want",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C72-WANT-03",
+        "KA-GRAMMAR-C72-WANT-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2378,7 +2437,7 @@
       "derivedFrom": [
         "A1-F3-04"
       ],
-      "note": "Untaught in the affirmative. beeku ('want') is absent, though its negative beeda ('don't want') IS taught in chapter 58 -- the corpus teaches the refusal without the request."
+      "note": "CLOSED by chapter 72. The refusal beeda has been taught since chapter 58; its positive half now sits beside it in the dative frame."
     },
     {
       "id": "KA-A1-F-22",
@@ -2401,7 +2460,9 @@
       "id": "KA-A1-F-23",
       "category": "Vyavahaara (communicative functions)",
       "label": "express a preference between alternatives",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C72-WANT-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2411,7 +2472,7 @@
         "A1-F3-02",
         "A1-F3-03"
       ],
-      "note": "Untaught, and blocked by the missing 'or' (KA-A1-CJ-03)."
+      "note": "CLOSED by chapter 72, unblocked by athavaa exactly as this note predicted. Kannada has no word for 'prefer': the lesson teaches the move it uses instead -- say what you like, then deny the alternative with alla."
     },
     {
       "id": "KA-A1-F-24",
@@ -2877,7 +2938,9 @@
       "id": "KA-A1-F-50",
       "category": "Vyavahaara (communicative functions)",
       "label": "ask somebody to repeat or speak slowly",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C71-MORE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2887,7 +2950,7 @@
         "A1-F6-03",
         "A1-NE06-06"
       ],
-      "note": "UNTAUGHT, and it is the single most useful sentence an A1 speaker owns. Kannada needs innondu sala heeli ('say it once more'); nothing in the corpus builds it, though heelu ('to say') is itself absent too."
+      "note": "CLOSED by chapter 71. innondu sala heeli is built from innondu, sala and the polite heeli, and heelu -- absent when this note was written -- is taught in chapter 70."
     },
     {
       "id": "KA-A1-LEX-01",
@@ -4333,7 +4396,7 @@
       "derivedFrom": [
         "A1-O1-03"
       ],
-      "note": "MEASURED, AND THE LARGEST SINGLE FINDING IN THIS COLUMN. The corpus teaches 42 Kannada characters and USES 69 distinct ones in headwords -- 61% closure. The 27 untaught characters are not exotic: ma appears in 40 headwords, la in 37, va in 30, ta in 20, ja in 16. A learner who has done every script lesson still cannot read maatanaaDu, the verb chapter 5 is built on. Do not assume the Tamil shape here: Tamil's script column came back 52 of 52 taught, and Kannada's is the opposite case."
+      "note": "MEASURED AGAIN, AND STILL OPEN. The corpus now teaches 50 characters against the 69 it uses in headwords -- 72% closure, up from 42 of 69 (61%). Chapters 67 to 73 add the EIGHT most-used untaught characters, in order of the headwords that need them: ma (36 headwords), la, va, the vowel sign ee, tta, ja, a and the vowel sign uu. The worst case this note used to name is fixed: a learner who completes the script ladder can now read maatanaaDu, the verb chapter 5 is built on.\n\nNINETEEN CHARACTERS REMAIN, AND THEY SPLIT IN TWO. SIX are independent vowels -- aa, e, ee, o, ai and vocalic r -- whose stroke order IS sourced: data/scripts/kannada.json carries a cited Wikimedia Commons animation for each, and chapter 68 shows the shape a lesson built on one of them takes by teaching a with its attested four-movement order and the citation printed under it. THIRTEEN have no sourced ductus anywhere in this project: the vowel signs ii, ai and au, and kha, gha, ttha, ddha, nna, dha, pha, bha, sha and ssa. Those thirteen were NOT taught, because the honest fallback for an unsourced letter is the recognition lesson this ladder already writes -- and thirteen more of those is a separate tranche, not a footnote to this one. Nothing here invents a stroke path to make a count move."
     },
     {
       "id": "KA-A1-L-10",
@@ -4638,14 +4701,17 @@
         "ED-KANNADA"
       ],
       "derivedFrom": [],
-      "note": "UNTAUGHT AS A NAMED FACT, and this is the column core/exam-levels.json does not warn about. Kannada is as diglossic as Tamil -- a literary grandhika register and an everyday aaDubhaashe that differ in verb endings and pronouns -- but where Tamil's exam-levels entry carries an explicit diglossia caveat, Kannada's carries none. The corpus does in fact teach the spoken variety consistently: all 249 schema-v2 lessons declare variety: standard-colloquial, which is a real and uniform editorial choice. What no lesson does is TELL the learner that a different register exists, so a reader meeting written Kannada will not know why it looks unfamiliar. Recommended: one lesson, and a caveat added to exam-levels.json. NO SPANISH ORIGIN: The spoken/literary divide. Diglossia is not a dimension the Spanish inventory has any reason to enumerate.",
+      "note": "PARTIALLY ANSWERED, AND DELIBERATELY LEFT OPEN. Chapter 69's alva lesson now NAMES the divide in prose -- it says that alva is spoken Kannada, that written Kannada says allavee, and that this book teaches the everyday spoken variety throughout -- so a reader meeting written Kannada is no longer given no warning at all. What is still missing is what this point actually asks for: a lesson whose OWN atom is the fact of diglossia, and the caveat in core/exam-levels.json that tracks.tamil carries and tracks.kannada does not. Half a pair buys nothing, so the point keeps probe: null.",
       "kannadaSpecific": true
     },
     {
       "id": "KA-A1-CJ-11",
       "category": "Samuccaya (joining and subordination)",
       "label": "distributive: one ... the other",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C71-MORE-01",
+        "KA-GRAMMAR-C71-MORE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4654,7 +4720,7 @@
       "derivedFrom": [
         "A1-CO-05"
       ],
-      "note": "Untaught, and downstream of everything else in this column: Kannada builds it on ondu ... innondu, and innondu is absent. Recorded so the proxy's distributive point is attributed rather than quietly dropped."
+      "note": "CLOSED by chapter 71. innondu is taught as innuu plus ondu, and paired with plain ondu for the distributive: ondu illi, innondu alli."
     },
     {
       "id": "KA-A1-F-51",

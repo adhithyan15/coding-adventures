@@ -1165,36 +1165,41 @@ describe("the committed Kannada A1 inventory", () => {
     }
   });
 
-  it("reports an EMPTY joining column and an UNCLOSED script, which is not the Tamil shape", () => {
+  it("reports a CLOSED joining column and a script still 19 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(258);
-    expect(coverage.covered).toBe(167);
-    expect(coverage.unmapped).toBe(91);
+    expect(coverage.covered).toBe(193);
+    expect(coverage.unmapped).toBe(65);
     expect(coverage.partial).toBe(0);
-    // THE FINDING, and the same one Hindi, Telugu and Tamil report: Kannada
-    // teaches no conjunction at all. `mattu`, `athava`, `aadare`, `eekendare`
-    // and the quotative `anta`/`endu` occur ZERO times in 268 lessons and zero
-    // times in the generated book. The two covered points here are the -i
-    // participle, which is Kannada's real clause-chaining machinery, and the
-    // turn-level connectives of chapter 64 -- a chapter literally named JOIN
-    // that joins turns and not clauses.
+    // WHAT THIS ASSERTION USED TO SAY, and why it changed. The inventory landed
+    // reporting 167/258 and an EMPTY joining column: `mattu`, `athava`,
+    // `aadare`, `eekendare` and the quotative `anta`/`endu` occurred ZERO times
+    // in 268 lessons and zero times in the generated book, and the only two
+    // covered points were the -i participle and the turn-level connectives of
+    // chapter 64 -- a chapter literally named JOIN that joins turns and not
+    // clauses. Chapters 67 to 73 answer that finding directly: 27 headwords
+    // chosen off this file's OWN uncovered list closed 26 points, of which nine
+    // are this column. The denominator did not move and `partial` stayed at 0,
+    // so nothing was reworded to make the number rise.
     const joining = coverage.byCategory["Samuccaya (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 2 });
+    expect(joining).toEqual({ enumerated: 11, covered: 11 });
     // DO NOT CARRY THE TAMIL SHAPE HERE. Tamil's script column came back 52 of
-    // 52 characters taught. Kannada's is the opposite case and was measured:
-    // 42 characters taught against 69 used in headwords, so `ma` appears in 40
-    // headwords and is never taught. An inventory that assumed either the Hindi
-    // or the Tamil shape would have written false notes in this column.
+    // 52 characters taught. Kannada's is the opposite case and was measured
+    // twice: 42 characters taught against 69 used in headwords when this
+    // inventory was written, and 50 of 69 after chapters 67-73 taught the eight
+    // most-used untaught characters. `ma` alone appears in 36 headwords and was
+    // never taught. Nineteen characters remain, six of which have a sourced
+    // ductus this project has not spent and thirteen of which have none.
     expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBeLessThan(10);
     // The two columns that carry this track, and they are not the ones French
     // and German lead on.
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 167/258 points covered (65%)",
+      "kannada A1 (partial inventory): 193/258 points covered (75%)",
     );
   }, 60_000);
 });
