@@ -37,7 +37,7 @@ reviews_of: [FR-C31-bouche, FR-C31-nez, FR-C31-oeil, FR-C17-main, FR-C17-tete, F
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BOUCHE-05, FR-LEX-NEZ-03, FR-LEX-OEIL-01] -->
 
 [PAUSE 2s] Eye, nose, mouth — three words down. One more, and this book's
-body vocabulary reaches all the way from Chapter 17's head and hand to here.
+body vocabulary reaches all the way from the head and the hand to here.
 
 ## You'll want to know: the word
 <!-- hl-knowledge: introduces=[FR-LEX-VENTRE-07]; assesses=[FR-SOUND-MAIN-03] -->
@@ -66,11 +66,10 @@ rather than the mouth.
 Before you close the book on this run, three threads from earlier chapters,
 tied off here:
 
-- **la tête** is **feminine** (Chapter 17), was Roman soldiers' slang for a
+- **la tête** is **feminine**, was Roman soldiers' slang for a
   **pot**, and wears a circumflex that marks a **lost *s***.
-- **oui** once **split a country** into *langue d'oïl* and *langue d'oc*
-  (Chapter 18); its cousin **si** is the one you use to contradict a
-  negative.
+- **oui** once **split a country** into *langue d'oïl* and *langue d'oc*; its
+  cousin **si** is the one you use to contradict a negative.
 - and among this run's own new words — **le sel**, **la personne** — every
   one still carries the article that names its gender, exactly the promise
   this book made back at *la main*.
@@ -93,5 +92,5 @@ tied off here:
 word literally means "belly-speaker"? (**Ventriloquist** — *venter* +
 *loquī*.) Is *ventre*'s nasal the same vowel as *la main*'s? (**No** — a
 different nasal vowel, despite both being spelled with a nasal consonant.)
-Name the four body words this chapter added to Chapter 17's head and hand.
+Name the four body words this chapter added to the head and the hand.
 (***L'œil* (les yeux), *le nez*, *la bouche*, *le ventre***.)

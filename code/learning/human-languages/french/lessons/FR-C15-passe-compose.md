@@ -19,7 +19,7 @@ reviews_of: [FR-C14-avoir, FR-C05-parler, FR-C05-travailler]
 ## Warm-up
 
 [PAUSE 2s] French's everyday past tense. You already have both halves of it: the
-verb **avoir** from last chapter, and the verbs from Chapter 5.
+verb **avoir** from last chapter, and your first regular verbs.
 
 ## The recipe
 

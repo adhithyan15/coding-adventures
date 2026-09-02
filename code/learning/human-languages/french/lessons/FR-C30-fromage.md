@@ -36,7 +36,7 @@ reviews_of: [FR-C29-personne, FR-C19-sil-vous-plait]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-PERSONNE-08, FR-LEX-ENFANT-06] -->
 
-[PAUSE 2s] You can name *la personne* and *l'enfant* now. Chapter 28 asked
+[PAUSE 2s] You can name *la personne* and *l'enfant* now. The café chapter asked
 politely for a drink; this chapter asks for what goes with it — starting with
 a word every other Romance language names completely differently.
 

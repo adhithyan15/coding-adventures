@@ -40,7 +40,7 @@ variety: standard-contemporary
 gloriously French answer — a phrase English borrowed whole — is **comme ci,
 comme ça**: "like this, like that." A verbal shrug of the shoulders.
 
-First, twenty seconds of review. From Chapter 1: **bien** — "well" (← Latin
+First, twenty seconds of review. From your first greetings: **bien** — "well" (← Latin
 *bene*). So *Ça va bien* = "It's going well." Now the answer for when it's only
 *going*.
 

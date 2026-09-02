@@ -37,7 +37,7 @@ variety: standard-contemporary
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] **Comment ça va ?** avoids naming the listener. Now use the *tu /
-vous* choice you learned in Chapter 2.
+vous* choice you learned when you gave your name.
 
 ## Grammar Lens: a ladder of three registers
 <!-- hl-knowledge: introduces=[FR-GRAM-REGISTER-09]; assesses=[] -->

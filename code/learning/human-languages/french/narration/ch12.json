@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8b504d6740122b60",
+  "sourceHash": "fnv1a64:dfc2faa271f418ce",
   "lessons": [
     {
       "id": "FR-C12-nombres-11-16",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:a66705f8b2202582",
+      "sourceHash": "fnv1a64:39499961d8e8b20a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -70,11 +70,11 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the ending they all share: -ze. That is Latin decem (\"ten\"), worn down to almost nothing — the same ten you already know in dix (10) and décembre (the old 10th month, from Chapter 9). One root, three disguises."
+              "text": "Look at the ending they all share: -ze. That is Latin decem (\"ten\"), worn down to almost nothing — the same ten you already know in dix (10) and décembre (the old 10th month). One root, three disguises."
             },
             {
               "kind": "speech",
-              "text": "And the front of each word is the digit you learned in Chapter 6: un becomes on-, deux becomes dou-, trois becomes trei-, quatre becomes quator-, cinq becomes quin-, six becomes sei-. Say them slowly and the small number surfaces."
+              "text": "And the front of each word is the digit you already count with: un becomes on-, deux becomes dou-, trois becomes trei-, quatre becomes quator-, cinq becomes quin-, six becomes sei-. Say them slowly and the small number surfaces."
             }
           ]
         },
