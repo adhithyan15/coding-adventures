@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FA-C01-na
+spine_node: SPINE-RESPOND-BASIC
 sequence: 40
 chapter: 1
 type: word
@@ -11,36 +13,72 @@ prerequisites: [FA-C01-bale]
 sounds: [rtl, short-vowels-unwritten]
 roots: [indo-iranian-na]
 etymology_hook: Persian na continues an ancient Indo-Iranian negative found across related languages.
-est_minutes: 3
 reviews_of: []
+duration:
+  max_seconds: 186
+requires:
+  knowledge: [FA-LEX-BALE-01]
+introduces:
+  knowledge: [FA-LEX-NA-01, FA-ETYMON-NA-INDO-IRANIAN-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FA-LEX-NA-01, FA-ETYMON-NA-INDO-IRANIAN-02, FA-LEX-BALE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral-friendly
+variety: contemporary-iranian-persian
 ---
 
 # نه — no
 
-## One new letter
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-You know final **ه** from **بله**. Add **ن** *n* on its right:
+[PAUSE 2s] The other answer — and the smallest word in the chapter.
 
-> ن · ه → **na** → no
+## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The short *a* is understood rather than printed. The same **ن** appeared inside
-**ممنون**, so this is mostly recognition, not a fresh alphabet lesson.
+> **نه** — *na* — no
 
-## A very old negative
+Two letters and, once again, an unwritten short *a*. The second of the two is
+the shape that also ends *bale*, so part of this word is already familiar to
+your eye. Recognising a repeated shape is all that is asked; naming it is a
+later lesson's job.
 
-Persian **na** belongs to an old Indo-Iranian negative family. Related forms
-turn up across Iranian and Indo-Aryan languages. That bridge will be useful
-when you compare Persian with Hindi or Urdu, but for now the job is simple:
-**bale** affirms; **na** rejects.
+## The word, taken apart
+<!-- hl-knowledge: introduces=[FA-ETYMON-NA-INDO-IRANIAN-02]; assesses=[] -->
 
-## Contrast
+*salâm* and *mamnun* both arrived from Arabic. *na* did not. It continues a very
+old **Indo-Iranian** negative, and relatives of it turn up right across the
+Iranian and Indo-Aryan languages. That is the first bridge from Persian towards
+Hindi and Urdu — not something to study now, just a reason this tiny word may
+feel oddly familiar when you meet those languages later.
 
-- **بله** — *bale* — yes
+## Why it's said this way
+<!-- hl-knowledge: introduces=[FA-LEX-NA-01]; assesses=[] -->
+
+Change only the answer, and keep everything else the same:
+
+- *bale* — yes
 - **نه** — *na* — no
 
-Say the pair twice, changing only the answer: **bale — na**.
+Ask yourself a harmless yes/no question and answer it both ways. The two
+written forms stand side by side at the end of the chapter, where every
+model is on the page at once.
 
-## Quick recall
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NA-01, FA-ETYMON-NA-INDO-IRANIAN-02, FA-LEX-BALE-01] -->
 
-Read **نه** from right to left. Which first sound does **ن** make? *n*.
-Answer “no” in Persian: **na**.
+- [YOU SAY: the pair, twice — *bale* … *na*]
+- [YOU SAY: which of the chapter's four words is not a loan from Arabic — *na*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NA-01, FA-ETYMON-NA-INDO-IRANIAN-02, FA-LEX-BALE-01] -->
+
+Answer “no” in Persian. (***Na.***) Which of this chapter's words came from
+somewhere other than Arabic, and where from? (***na*** — **an old Indo-Iranian
+negative**.) Now say the whole chain once: **hello, thank you, yes, no.**

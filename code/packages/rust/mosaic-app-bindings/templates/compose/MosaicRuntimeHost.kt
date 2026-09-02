@@ -341,7 +341,23 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
             val api = Native.load(library, MosaicNativeApi::class.java)
             MosaicRuntimeHost(api)
         }.onFailure { error ->
-            System.err.println("Mosaic Rust runtime unavailable: " + error.message)
+            // `load()` is a PROBE. Its caller falls back to a package-supplied
+            // host when this returns null, so an absent library is an ordinary
+            // configuration -- the one every app using `[host_assets]` runs in --
+            // not a failure.
+            //
+            // Printing `error.message` here made that configuration look broken:
+            // JNA's UnsatisfiedLinkError message is a multi-line dump of every
+            // path it tried, so a working app emitted a stack-trace-shaped wall
+            // of text on every launch. That trains people to ignore startup
+            // output, and the next message will be a real one.
+            //
+            // The full detail is still reachable, because the caller that
+            // genuinely REQUIRES the runtime throws with it rather than relying
+            // on this line.
+            if (System.getProperty("mosaic.app.debug") != null) {
+                System.err.println("Mosaic Rust runtime unavailable: " + error.message)
+            }
         }.getOrNull()
     }
 }

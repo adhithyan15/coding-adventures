@@ -1,5 +1,13 @@
 # Changelog
 
+- 0.2.11 (mechanical fallout of `wasm_types::Element::is_declarative`,
+  see `wasm-types`'s own CHANGELOG for the full root-cause writeup on the
+  active/declarative-elem-segment-drop bug that field closes): this
+  crate's own `Element` construction sites are all test-only fixtures
+  exercising `encode_element` directly, none of them for a declarative
+  segment — each now sets `is_declarative: false` to keep compiling
+  against `Element`'s new field. No behavior change in this crate.
+
 - 0.2.10 (gap 1 of a two-gap `elem.wast`/`table.wast` investigation pass,
   `code/specs/W07-wasm-post-mvp-epics.md`'s addendum): `encode_element`'s
   active-segment branch used to unconditionally emit mode 0/2 (funcidx-

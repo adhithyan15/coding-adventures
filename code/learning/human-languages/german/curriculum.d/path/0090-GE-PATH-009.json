@@ -2,9 +2,12 @@
   "id": "GE-PATH-009",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "GE-C02-wie-heissen-sie"
+    "GE-C02-wie-heissen-sie",
+    "GE-C02-practice"
   ],
   "before": [],
   "inline": [],
-  "after": []
+  "after": [
+    "GE-EXT-009-CONSOLIDATION"
+  ]
 }

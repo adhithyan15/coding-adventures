@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:273309a4056f035c",
+  "lessonIds": [
+    "FR-C05-parler",
+    "FR-C05-habiter",
+    "FR-C05-travailler",
+    "FR-C05-je-parle-francais",
+    "FR-C05-practice"
+  ],
+  "tex": "french/book/chapters/ch05-first-verbs.tex"
+}

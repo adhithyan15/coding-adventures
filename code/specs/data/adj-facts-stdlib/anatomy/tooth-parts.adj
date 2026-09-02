@@ -114,4 +114,9 @@ table tooth_part_role {
     source "The outer surface of the crown is made of enamel."
     locator "https://medlineplus.gov/ency/article/002214.htm"
     trust authoritative
+    cites "The part of the tooth you can see is called the crown." locator "https://medlineplus.gov/ency/article/002214.htm"
+    cites "Just beneath the enamel is dentin, a substance harder than bone." locator "https://medlineplus.gov/ency/article/002214.htm"
+    cites "The root contains blood vessels and nerves, which supply blood and feeling to the whole tooth. This area is known as the \"pulp\" of the tooth." locator "https://medlineplus.gov/ency/article/002214.htm"
+    cites "The root of the tooth extends down into the jawbone." locator "https://medlineplus.gov/ency/article/002214.htm"
+    cites "Cementoblasts form the cementum (calcified material covering the roots of teeth), osteoblasts give rise to the alveolar bone around the roots of the teeth, and fibroblasts develop the periodontal ligaments, which connect teeth to the alveolar bone through the cementum." locator "https://www.ncbi.nlm.nih.gov/books/NBK538475/"
 }

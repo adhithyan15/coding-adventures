@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fafd283a5ffbad32",
+  "sourceHash": "fnv1a64:f29bfc0de8110554",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -524,7 +524,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb9237ecb5665816",
+      "sourceHash": "fnv1a64:4523e434dc5902ea",
       "notice": null,
       "blocks": [
         {
@@ -551,7 +551,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nasal-in — ien is a nasal byɛ̃: air through the nose, and the n itself is silent. Not \"bee-en.\" see reference."
+              "text": "nasal-in — ien is a nasal byan: air through the nose, and the n itself is silent. Not \"bee-en.\" see reference."
             }
           ]
         },
@@ -603,11 +603,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bien\" — nasal byɛ̃",
+              "instruction": "\"bien\" — nasal byan",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bien\" — nasal *byɛ̃*]"
+              "source": "[YOU SAY: \"bien\" — nasal *byan*]"
             },
             {
               "kind": "prompt",

@@ -54,7 +54,9 @@ table end_punctuation_mark {
     row (question_mark, communicates_that_a_sentence_is_a_question)
     row (exclamation_point, makes_sentences_exciting)
 
-    source "It has one job: to end a declarative sentence."
+    source "The period, also known as the full stop, looks like this: . It has one job: to end a declarative sentence."
     locator "https://www.grammarly.com/blog/punctuation-capitalization/punctuation/"
     trust consensus
+    cites "The question mark is another one-job punctuation mark. They look like ? and they’re used to communicate that a sentence is a question." locator "https://www.grammarly.com/blog/punctuation-capitalization/punctuation/"
+    cites "Much like the period, the exclamation point has one job: to make sentences exciting!" locator "https://www.grammarly.com/blog/punctuation-capitalization/punctuation/"
 }

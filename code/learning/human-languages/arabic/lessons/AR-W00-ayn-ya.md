@@ -14,14 +14,14 @@ roots: [phoenician-ayin, phoenician-yod]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [AR-C01-FULL-GREETING-07]
+  knowledge: [AR-C01-FULL-GREETING-11]
 introduces:
-  knowledge: [AR-SCRIPT-AYN-YA-08]
+  knowledge: [AR-SCRIPT-AYN-YA-12]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,13 +33,13 @@ reviews_of: [AR-C01-as-salamu-alaykum, AR-C01-salam]
 # ع and ي — open *ʿalaykum* gently
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11] -->
 
 [PAUSE 2s] Say *as-salāmu ʿalaykum*. Only after speaking the whole greeting do
 you meet two shapes from its second block.
 
 ## Script — observe ʿayn and yāʾ
-<!-- hl-knowledge: introduces=[AR-SCRIPT-AYN-YA-08]; assesses=[AR-C01-FULL-GREETING-07] -->
+<!-- hl-knowledge: introduces=[AR-SCRIPT-AYN-YA-12]; assesses=[AR-C01-FULL-GREETING-11] -->
 
 - **ع** is *ʿayn*, the deep opening sound in *ʿalaykum*. Notice its curved hook.
 - **ي** is *yāʾ*, the *y* sound. In isolation it carries two dots below.
@@ -47,7 +47,7 @@ you meet two shapes from its second block.
 Trace each once. Then point right to left at **ع ي** while saying *ʿ — y*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12] -->
 
 [PAUSE 1s]
 - [YOU TRACE: **ع**, and say *ʿayn*]
@@ -55,7 +55,7 @@ Trace each once. Then point right to left at **ع ي** while saying *ʿ — y*.
 - [YOU WRITE: both once from memory, then compare]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12] -->
 
 [PAUSE 3s] Which shape begins the throat sound? (**ع.**) Which has two dots
 below when isolated? (**ي.**) No whole phrase yet; two final shapes come next.

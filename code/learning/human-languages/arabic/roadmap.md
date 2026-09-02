@@ -59,14 +59,20 @@ word lessons — never as a gated reading course.
   **ق** *qāf* and **ى** *alif maqṣūra* are beyond the writing track's letter set,
   so they are read, not drawn.)
 
-- **Ch. 1 — Writing set** (`AR-W01-*`–`AR-W03-*`, six `writing` lessons): the
-  "break-it-apart-and-draw-it" companion to the greetings, rendered by the
-  language-ladder app (parallel to the Cyrillic `RU-W*` set). Right-to-
-  left and *alif* come first, followed by the *abjad*'s hidden short vowels; the
-  cursive four-coats rule comes before joined **سل/لا**; and dots-as-a-piece
-  comes before the assembly of a whole word — **سلام** — from
-  *sīn/lām/alif/mīm*. Ties the Arabic letters back to their Phoenician ancestors
+- **Ch. 1 — Writing set** (`AR-W00-*`, seven `writing` lessons, **interleaved**
+  with the word lessons rather than blocked after them): two or three shapes at
+  a time, each pair placed immediately after the word that needs it — **س ل**
+  then **ا م** to finish **سلام**, **ر ح** and the **ب ت ث** dot family inside
+  *marḥaban*, **ع ي** and **ك و** to complete *as-salāmu ʿalaykum*, then a
+  dictation-and-repair step that adds no new shape. The cursive four-coats rule
+  is taught where joining first happens, in `AR-W00-alif-mim-salam`, and the
+  Phoenician ancestors ride along with the letters that descend from them
   (*ʾālep/bēt/mem* = **A/B/M**).
+
+  The earlier `AR-W01-*`–`AR-W03-*` set was retired in HL-C285: it taught the
+  same five letters a second time, in a six-lesson block at the end of the
+  chapter, and wrote **سلام** again 126 sequence steps after `AR-W00` had
+  already written it.
 
 - **Ch. 2 — Writing set** (`AR-W04`–`AR-W06-*`, four `writing` lessons): the writing
   companion to the self-introduction words. Completes the **bowl-skeleton

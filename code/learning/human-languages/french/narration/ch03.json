@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:af7ee37600335d12",
+  "sourceHash": "fnv1a64:2ec359cc59c0c2e9",
   "lessons": [
     {
       "id": "FR-C03-merci",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ea7a9573ae566bb",
+      "sourceHash": "fnv1a64:180dd18af6c48976",
       "notice": null,
       "blocks": [
         {
@@ -83,8 +83,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Across the family — thanks, two different metaphors",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — three sisters, three pictures of gratitude",
           "segments": [
             {
               "kind": "speech",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1817ff4952831b7b",
+      "sourceHash": "fnv1a64:94bbd2117cb79757",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nasal-in — rien = ryɛ̃, a nasal ending (air through the nose, no hard n): duh RYAN becomes more like duh ryɛ̃."
+              "text": "nasal-in — rien is a nasal ending: the air goes out through the nose and there is no hard n to stop it. duh RYAN, with that final vowel humming rather than closing."
             },
             {
               "kind": "speech",
@@ -237,6 +237,17 @@
             },
             {
               "kind": "speech",
+              "text": "Latin rēs also gives English real, republic (rēs pūblica, \"the public thing\"), and rebus. So rien is, at the root, a real thing that learned to mean nothing at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the same move, twice",
+          "segments": [
+            {
+              "kind": "speech",
               "text": "If that sounds familiar, it should: Spanish did the identical thing with nada ( from Latin nāta, \"a born thing\" becomes \"nothing\"). Two sister languages, the same move — the word for thing collapses into the word for nothing:"
             },
             {
@@ -255,12 +266,12 @@
             },
             {
               "kind": "speech",
-              "text": "Latin rēs also gives English real, republic (rēs pūblica, \"the public thing\"), and rebus. So rien is, at the root, a real thing that learned to mean nothing at all."
+              "text": "Two sister languages, one instinct: wave the favour off as no thing at all."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -291,7 +302,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -322,7 +333,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:397ee7ec6d58cafe",
+      "sourceHash": "fnv1a64:4bbaada85d55c9ab",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -474,7 +485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d88a8309eb66884b",
+      "sourceHash": "fnv1a64:d05232d4705cdaac",
       "notice": null,
       "blocks": [
         {
@@ -508,8 +519,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The pieces",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -614,7 +625,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ce5c0c03f42226a",
+      "sourceHash": "fnv1a64:ad369e69dbe44d52",
       "notice": null,
       "blocks": [
         {
@@ -631,30 +642,43 @@
             {
               "kind": "speech",
               "text": "Comment ça va? avoids naming the listener. Now use the tu / vous choice you learned in Chapter 2."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "listener",
-                "question"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "listener: one friend, informal. question: Comment vas-tu?",
-                "listener: stranger, elder, or group. question: Comment allez-vous?"
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Vas and allez are forms of aller, “to go.” Formal writing and careful speech invert verb and pronoun: allez-vous, literally “go-you.”"
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Hear the liaison",
+          "type": "grammar",
+          "title": "Grammar Lens: a ladder of three registers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French offers a neat climb from casual to formal. tu is the familiar “you” (a friend, a peer); vous is the formal or plural “you” (a stranger, an elder, a group)."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "register",
+                "question",
+                "literally"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "register: casual, universal. question: Comment ça va? (or Ça va?) literally: “How does it go?”",
+                "register: informal, one friend. question: Comment vas-tu? literally: “How go you?”",
+                "register: formal or plural. question: Comment allez-vous? literally: “How go you (vous)?”"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Vas and allez are simply the tu and vous forms of aller, “to go.” Formal writing and careful speech invert verb and pronoun: allez-vous, literally “go-you.” For a stranger or a boss, reach for Comment allez-vous?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need — the liaison in Comment allez-vous",
           "segments": [
             {
               "kind": "speech",
@@ -675,7 +699,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -724,7 +748,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -755,7 +779,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:285aec582f5d83ef",
+      "sourceHash": "fnv1a64:109b94ec4d81a121",
       "notice": null,
       "blocks": [
         {
@@ -772,28 +796,15 @@
             {
               "kind": "speech",
               "text": "Someone asks Ça va? You're not great, not bad. The perfect, gloriously French answer — a phrase English borrowed whole — is comme ci, comme ça: \"like this, like that.\" A verbal shrug of the shoulders."
+            },
+            {
+              "kind": "speech",
+              "text": "First, twenty seconds of review. From Chapter 1: bien — \"well\" ( from Latin bene). So Ça va bien = \"It's going well.\" Now the answer for when it's only going."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Review first (20 seconds)",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "From Chapter 1: bien — \"well\" ( from Latin bene). So Ça va bien = \"It's going well.\" Now the answer for when it's only going."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The phrase, taken apart",
           "segments": [
@@ -820,7 +831,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: your answer set for Ça va?",
           "segments": [
@@ -838,10 +849,17 @@
                 "Comme ci, comme ça means so-so.",
                 "Pas mal means not bad."
               ]
-            },
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — every language has its shrug",
+          "segments": [
             {
               "kind": "speech",
-              "text": "Compare across the family — every language has its shrug: Spanish más o menos (\"more or less\") / regular, Italian così così (\"so so\"), and French comme ci, comme ça (\"like this, like that\"). Same shrug, different picture."
+              "text": "Every language has its shrug, and each paints it differently: Spanish says más o menos (\"more or less\") or regular, Italian says così così (\"so so\"), French says comme ci, comme ça (\"like this, like that\"). Same gesture, three pictures."
             }
           ]
         },
@@ -917,7 +935,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6312463456d34fe5",
+      "sourceHash": "fnv1a64:802b88896cce4849",
       "notice": null,
       "blocks": [
         {

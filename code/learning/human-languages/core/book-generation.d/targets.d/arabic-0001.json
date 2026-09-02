@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 1,
+  "output": "arabic/book/chapters/ch01-greetings.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

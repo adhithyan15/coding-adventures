@@ -600,6 +600,57 @@ fn decode_blocktype(module: TypeContext<'_>, code: &[u8], offset: usize) -> Resu
     }
 }
 
+/// Decode one plain `valtype` immediate byte -- e.g. one element of typed
+/// `select`'s (`0x1C`) `vec(valtype)` immediate. Shares `decode_blocktype`'s
+/// byte-tag table above for every single-byte numtype/vectype/reftype, and
+/// its bounds-checked `0x63`/`0x64` concrete-reference handling, but is NOT
+/// the same decode: a standalone `valtype` has no "lone byte OR a real
+/// type-section index" ambiguity the way a *blocktype* does (that shorthand
+/// only exists for blocktypes -- see `decode_blocktype`'s own doc comment),
+/// so any byte this table doesn't recognize is unconditionally a malformed
+/// immediate here, never "maybe a type index" the way `decode_blocktype`'s
+/// catch-all arm treats it.
+fn decode_valtype(module: TypeContext<'_>, code: &[u8], offset: usize) -> Result<(ValueType, usize), ValidationError> {
+    let byte = *code.get(offset).ok_or_else(|| ValidationError::Other("truncated valtype immediate".to_string()))?;
+    match byte {
+        0x7F => Ok((ValueType::I32, 1)),
+        0x7E => Ok((ValueType::I64, 1)),
+        0x7D => Ok((ValueType::F32, 1)),
+        0x7C => Ok((ValueType::F64, 1)),
+        0x7B => Ok((ValueType::V128, 1)),
+        0x70 => Ok((ValueType::Funcref, 1)),
+        0x6F => Ok((ValueType::Externref, 1)),
+        0x6E => Ok((ValueType::Anyref, 1)),
+        0x6C => Ok((ValueType::I31ref, 1)),
+        0x69 => Ok((ValueType::Exnref, 1)),
+        0x73 => Ok((ValueType::NullFuncref, 1)),
+        0x72 => Ok((ValueType::NullExternref, 1)),
+        0x74 => Ok((ValueType::NullExnref, 1)),
+        0x71 => Ok((ValueType::NullRef, 1)),
+        0x63 => {
+            let (idx, size) = decode_idx(code, offset + 1)?;
+            if idx as usize >= module.types.len() {
+                return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                    "select result type references type index {idx}, but only {} types exist",
+                    module.types.len()
+                )));
+            }
+            Ok((ValueType::ConcreteFuncRef(idx), 1 + size))
+        }
+        0x64 => {
+            let (idx, size) = decode_idx(code, offset + 1)?;
+            if idx as usize >= module.types.len() {
+                return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                    "select result type references type index {idx}, but only {} types exist",
+                    module.types.len()
+                )));
+            }
+            Ok((ValueType::NonNullConcreteFuncRef(idx), 1 + size))
+        }
+        other => Err(ValidationError::Other(format!("invalid valtype byte 0x{other:02X}"))),
+    }
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Immediate decoding helpers (index-only; values are never needed for typing)
 // ──────────────────────────────────────────────────────────────────────────────
@@ -2884,6 +2935,52 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     (StackType::Known(a), StackType::Known(b)) => err!("select operands have different types ({a:?} vs {b:?})"),
                 };
                 stack.push(result);
+            }
+            0x1C => {
+                // Typed select (reference-types proposal, W37): an
+                // explicit `vec(valtype)` immediate replaces `0x1B`'s
+                // "infer the type from the operands" rule -- required
+                // whenever the untyped form's restriction to numeric/
+                // vector operands (see `0x1B`'s own arm above) doesn't
+                // apply, e.g. selecting between two reference values.
+                //
+                // Real validation rule (`select.wast`'s own `arity-0`/
+                // `arity-2` `assert_invalid` cases): the immediate's
+                // `vec(valtype)` must have EXACTLY one entry. The binary
+                // format's `vec(valtype)` shape can technically encode
+                // any count -- `select` still only ever selects and
+                // produces ONE value, so 0 or 2+ is a validation error
+                // ("invalid result arity", matching the real spec
+                // interpreter's own wording), not a parse error --
+                // `wasm-wast-parser` deliberately parses every count
+                // permissively and leaves this arity check to the
+                // validator, the same "parse permissively, validate
+                // strictly" split this crate's own blocktype/signature
+                // parsing already uses elsewhere.
+                let (count, mut size) =
+                    decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad select result-type count: {e}")))?;
+                // `count.min(4096)` caps the up-front allocation the same
+                // way `br_table`'s own label-vec decode above does --
+                // an attacker-controlled LEB128 count can claim billions
+                // of entries, but each entry still costs at least one
+                // real byte of `code` to decode, so the loop below can
+                // never run more iterations than `code` has bytes left,
+                // regardless of what `count` claims.
+                let mut result_types: Vec<ValueType> = Vec::with_capacity(count.min(4096) as usize);
+                for _ in 0..count {
+                    let (ty, sz) = decode_valtype(ctx.module, code, offset + size)?;
+                    result_types.push(ty);
+                    size += sz;
+                }
+                offset += size;
+                if result_types.len() != 1 {
+                    err!("select: invalid result arity ({} types, expected exactly 1)", result_types.len());
+                }
+                let t = result_types[0];
+                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // condition
+                pop_expect(&mut stack, frame!(), t, ctx.module)?; // 2nd operand
+                pop_expect(&mut stack, frame!(), t, ctx.module)?; // 1st operand
+                push_val(&mut stack, t);
             }
 
             // ── Variable ─────────────────────────────────────────────────────
