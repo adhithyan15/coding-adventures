@@ -7,17 +7,22 @@ five-minute ceiling -- reads LESSONS. A `.tex` file that is not built from
 lessons is not measured by any of them, and it does not appear as an exception:
 it appears as a pass.
 
-That is worth stating plainly because the reports looked healthy. Persian sat at
-`0 lessons above 3 new glyphs` and one script-closure violation while its first
-chapter, in four `scriptstep` boxes, named:
+That is worth stating plainly because of the SIZE of the gap between what the
+reports saw and what the chapter did. The glyph budget flagged exactly one
+Persian lesson in the whole track -- `FA-C01-salam`, for showing the four glyphs
+of سلام against a budget of three -- and script closure flagged one more. Two
+findings, both about lessons. Meanwhile the same chapter, in four `scriptstep`
+boxes the budget never reads, named:
 
     س ل ا م   in salâm
     م ن و     in mamnun
     ب ه       in bale and na
 
 against exactly ONE letter taught anywhere in the chapter (`FA-W00`, alef). Nine
-against one, in the first six pages of the book. The owner found this by opening
-the book, which is the only instrument that was pointed at it.
+against one, in the first six pages of the book -- and the instrument that
+policed a four-glyph headword had nothing at all to say about it. The owner
+found this by opening the book, which is the only instrument that was pointed
+at it.
 
 **The general claim.** Retiring a handwritten chapter is not primarily a
 plumbing change. It is the act of putting a chapter under measurement for the
