@@ -62,6 +62,29 @@ fn green_signal_permitted_movement_recalls_straight_through_with_citation() {
         out.contains("mutcd.fhwa.dot.gov") && out.contains("\"trust\":\"authoritative\""),
         "carries the MUTCD citation: {out}"
     );
+    // THE WHOLE SENTENCE, ANCHORED ON THE JSON KEY AND CLOSED BY ITS QUOTE.
+    // This citation was truncated at "...or make a U-turn movement" until
+    // issue #13916 -- presenting every row as an unconditional permission
+    // while the manual states a device-modifiable one. Nothing asserted the
+    // sentence at all, so nothing noticed.
+    //
+    // A FIRST FIX PINNED ONLY THE TRAILING CLAUSE, WHICH NARROWED THE HOLE
+    // RATHER THAN CLOSING IT: review showed that appending fabricated text
+    // after the clause, or corrupting the sentence HEAD (swapping CIRCULAR
+    // GREEN for FLASHING RED and rewriting the enumeration), both still
+    // passed. `contains` on a tail cannot see what precedes or follows it.
+    // Anchoring on `"source":"` and closing on the terminating quote pins
+    // head, tail, punctuation, internal spacing and length at once.
+    assert!(
+        out.contains(
+            "\"source\":\"Vehicular traffic facing a CIRCULAR GREEN signal indication is \
+             permitted to proceed straight through or turn right or left or make a U-turn \
+             movement except as such movement is modified by lane-use signs, turn prohibition \
+             signs, lane markings, roadway design, separate turn signal indications, or other \
+             traffic control devices.\""
+        ),
+        "the citation is the WHOLE MUTCD sentence, exactly: {out}"
+    );
 }
 
 #[test]
@@ -83,6 +106,16 @@ fn green_signal_permitted_movement_recalls_all_four_movements() {
             "{movement} should be a recalled permitted movement: {out}"
         );
     }
+    // CARDINALITY, not just membership. Listing every row proves nothing is
+    // MISSING; it cannot prove nothing was INVENTED, and an invented row is
+    // the one failure a provenance-first library can least afford. Counted
+    // on the per-answer citations marker rather than a binding needle, which
+    // also appears in the governing section.
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        4,
+        "the MUTCD sentence names EXACTLY four movements -- no invented fifth: {out}"
+    );
 }
 
 #[test]
