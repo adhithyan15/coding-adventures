@@ -45,19 +45,38 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     super.init()
   }
 
+  /// Whether to report a failed runtime probe.
+  ///
+  /// `load()` is a PROBE: its caller falls back to a package-supplied host when
+  /// it returns nil, so an absent runtime library is an ordinary configuration
+  /// -- the one every app using `[host_assets]` runs in -- not a failure.
+  ///
+  /// The message interpolates the dynamic loader's error, which on macOS is a
+  /// multi-line dump of every path tried. Printing it unconditionally made a
+  /// working app emit a stack-trace-shaped wall of text on every launch, which
+  /// trains people to ignore startup output -- and the next message will be a
+  /// real one.
+  private static var reportProbeFailure: Bool {
+    ProcessInfo.processInfo.environment["MOSAIC_APP_DEBUG"] != nil
+  }
+
   static func load(libraryPath: String? = nil) -> MosaicRuntimeHost? {
     let override = ProcessInfo.processInfo.environment["MOSAIC_APP_LIBRARY"]?
       .trimmingCharacters(in: .whitespacesAndNewlines)
     let path = override.flatMap { $0.isEmpty ? nil : $0 } ?? libraryPath
     let runtime = path?.withCString { mosaic_binding_open($0) } ?? mosaic_binding_open(nil)
     guard let runtime else {
-      fputs("Mosaic Rust runtime unavailable: loader allocation failed\n", stderr)
+      if reportProbeFailure {
+        fputs("Mosaic Rust runtime unavailable: loader allocation failed\n", stderr)
+      }
       return nil
     }
     guard mosaic_binding_is_ready(runtime) != 0 else {
-      let message = mosaic_binding_error(runtime).map(String.init(cString:))
-        ?? "unknown dynamic-loader error"
-      fputs("Mosaic Rust runtime unavailable: \(message)\n", stderr)
+      if reportProbeFailure {
+        let message = mosaic_binding_error(runtime).map(String.init(cString:))
+          ?? "unknown dynamic-loader error"
+        fputs("Mosaic Rust runtime unavailable: \(message)\n", stderr)
+      }
       mosaic_binding_close(runtime)
       return nil
     }
