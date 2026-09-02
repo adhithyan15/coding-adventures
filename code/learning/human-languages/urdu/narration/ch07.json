@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6265316c6b3723a7",
+  "sourceHash": "fnv1a64:99d3d7e2599c5de4",
   "lessons": [
     {
       "id": "UR-W07-alif-madda",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:74f18b9fdb9647a5",
+      "sourceHash": "fnv1a64:796146538e120a61",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -257,7 +257,7 @@
             },
             {
               "kind": "speech",
-              "text": "چ is new, and you own the trick already. It is the body of ج j — from جی jī and جانا jānā — with three dots below instead of one. Second time this has happened: ب b has one dot below the low scoop, پ p has three. Counting dots stays a reading skill."
+              "text": "چ is new, and you own the trick already. It is the body of jīm, the j you say in jī and jānā, carrying three dots below instead of one. Second time this has happened: be has one dot below the low scoop, pe has three. Counting dots stays a reading skill — one you are given by ear here, a lesson before the shapes arrive."
             }
           ]
         },
@@ -268,7 +268,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں سوچتا ہوں — maiṅ sochtā hūṅ — I think (man speaking) میں سوچتی ہوں — maiṅ sochtī hūṅ — I think (woman speaking)."
+              "text": "maiṅ sochtā hūṅ — I think (man speaking) maiṅ sochtī hūṅ — I think (woman speaking)."
             },
             {
               "kind": "speech",
@@ -291,7 +291,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is worth noticing sits inside Urdu. Beside inherited soch, Urdu keeps Arabic فکر fikr, “thought, reflection,” on the root f-k-r — and fikr also means worry: koī fikr nahīṅ, “no worries.” Two words, two unrelated languages, opposite sides of Urdu's vocabulary, each sliding from thinking to fretting on its own."
+              "text": "What is worth noticing sits inside Urdu. Beside inherited soch, Urdu keeps Arabic fikr, “thought, reflection,” on the root f-k-r — and fikr also means worry: koī fikr nahīṅ, “no worries.” Two words, two unrelated languages, opposite sides of Urdu's vocabulary, each sliding from thinking to fretting on its own."
             }
           ]
         },
@@ -312,11 +312,11 @@
             {
               "kind": "prompt",
               "action": "COUNT",
-              "instruction": "ج one dot below, چ three dots below",
+              "instruction": "jīm one dot below, چ three dots below",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COUNT: **ج** one dot below, **چ** three dots below]"
+              "source": "[YOU COUNT: *jīm* one dot below, **چ** three dots below]"
             },
             {
               "kind": "prompt",
@@ -383,7 +383,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d6f4509b23c4cb10",
+      "sourceHash": "fnv1a64:7b1c05f031b5c86a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -408,7 +408,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can think — sochnā, three dots under the چ. You can know — jānnā. Between brooding and knowing sits the moment a thing clicks, and Urdu has a verb for exactly that."
+              "text": "You can think — sochnā, three dots under its che. You can know — jānnā. Between brooding and knowing sits the moment a thing clicks, and Urdu has a verb for exactly that."
             }
           ]
         },
@@ -442,11 +442,11 @@
             },
             {
               "kind": "speech",
-              "text": "You have used it once already. ٹھیک ṭhīk is ٹ plus this same ھ — retroflex ṭ, then the breath. One letter, one job."
+              "text": "You have used it once already. In ṭhīk, the retroflex ṭe takes this same ھ — retroflex ṭ, then the breath. One letter, one job."
             },
             {
               "kind": "speech",
-              "text": "Keep it apart from ہ, gol he, “round he,” which is a real h and which you write in ہوں hūṅ and ہونا honā. Round ہ speaks; two-eyed ھ only breathes on its right-hand neighbour."
+              "text": "Keep it apart from ہ, gol he, “round he,” which is a real h and which you write in hūṅ and honā. Round ہ speaks; two-eyed ھ only breathes on its right-hand neighbour."
             }
           ]
         },
@@ -457,7 +457,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں سمجھتا ہوں — maiṅ samajhtā hūṅ — I understand (man speaking) میں سمجھتی ہوں — maiṅ samajhtī hūṅ — I understand (woman speaking)."
+              "text": "maiṅ samajhtā hūṅ — I understand (man speaking) maiṅ samajhtī hūṅ — I understand (woman speaking)."
             }
           ]
         },
@@ -767,7 +767,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99b2b541ffe2862b",
+      "sourceHash": "fnv1a64:b2fa26405519f511",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -808,7 +808,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is also the ordinary word for “to study”: the noun پڑھائی paṛhāī is “studies, schooling.” Urdu does not keep reading and studying in separate boxes. Strip the -nā and the stem is paṛh-."
+              "text": "It is also the ordinary word for “to study”: the noun paṛhāī is “studies, schooling.” Urdu does not keep reading and studying in separate boxes. Strip the -nā and the stem is paṛh-."
             }
           ]
         },
@@ -823,11 +823,11 @@
             },
             {
               "kind": "speech",
-              "text": "Two are yours: پ (pe), the low scoop with three dots below, from آپ āp; and ھ, the two-eyed he from سمجھنا (samajhnā) — ڑ plus ھ gives ṛh."
+              "text": "Two are yours: پ (pe), the low scoop with three dots below, from آپ āp; and ھ, the two-eyed he from samajhnā — ڑ plus ھ gives ṛh."
             },
             {
               "kind": "speech",
-              "text": "ڑ is new, and built from two things you have met. Its body is ر r, from شکریہ shukriyā. On top sits the very mark that rides on ٹ in ٹھیک ṭhīk: Urdu's retroflex sign, meaning curl the tongue back. ٹ is a curled t; ڑ is a curled r, flicked rather than rolled."
+              "text": "ڑ is new, and built from two things you have met. Its body is ر r, from شکریہ shukriyā. On top sits the very mark that ṭe carries in ṭhīk: Urdu's retroflex sign, meaning curl the tongue back. Ṭe is a curled t; ڑ is a curled r, flicked rather than rolled. You meet the mark here, on the letter that is yours today, and meet its other bearer by ear until the shape is handed to you."
             }
           ]
         },
@@ -838,7 +838,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں پڑھتا ہوں — maiṅ paṛhtā hūṅ — I read (man speaking) میں پڑھتی ہوں — maiṅ paṛhtī hūṅ — I read (woman speaking)."
+              "text": "maiṅ paṛhtā hūṅ — I read (man speaking) maiṅ paṛhtī hūṅ — I read (woman speaking)."
             }
           ]
         },
@@ -857,7 +857,7 @@
             },
             {
               "kind": "speech",
-              "text": "The near end is better. The oldest sense — speaking a text you hold in memory — is everyday, not a fossil. To perform the Muslim ritual prayer is نماز پڑھنا namāz paṛhnā, literally “to read the prayer,” and nobody performing it holds a book. You already met the word for someone who does that with the whole Quran: a حافظ hāfiz, on the Arabic root ḥ-f-ẓ, “to guard, to preserve.” Guarding a text and reciting it are two halves of one practice — one word borrowed, one inherited."
+              "text": "The near end is better. The oldest sense — speaking a text you hold in memory — is everyday, not a fossil. To perform the Muslim ritual prayer is namāz paṛhnā, literally “to read the prayer,” and nobody performing it holds a book. You already met the word for someone who does that with the whole Quran: a hāfiz, on the Arabic root ḥ-f-ẓ, “to guard, to preserve.” Guarding a text and reciting it are two halves of one practice — one word borrowed, one inherited."
             }
           ]
         },
@@ -887,11 +887,11 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "the retroflex mark on ٹ, then the same mark on ڑ",
+              "instruction": "the retroflex mark on ڑ — the same mark ṭe carries",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: the retroflex mark on **ٹ**, then the same mark on **ڑ**]"
+              "source": "[YOU TRACE: the retroflex mark on **ڑ** — the same mark *ṭe* carries]"
             },
             {
               "kind": "prompt",
@@ -917,7 +917,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the two everyday meanings of paṛhnā. (To read; to study.) What does the mark on ڑ tell you to do, and which other letter carries it? (Curl the tongue back; ٹ.) Does paṭh- have an English cousin? (No.)"
+              "text": "Name the two everyday meanings of paṛhnā. (To read; to study.) What does the mark on ڑ tell you to do, and which other letter carries it? (Curl the tongue back; ṭe.) Does paṭh- have an English cousin? (No.)"
             },
             {
               "kind": "speech",
@@ -940,7 +940,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ac91ae3b6fe38f76",
+      "sourceHash": "fnv1a64:cf4fc8d0f93b4dc2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1007,11 +1007,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں لکھتا ہوں — maiṅ likhtā hūṅ — I write (man speaking) میں لکھتی ہوں — maiṅ likhtī hūṅ — I write (woman speaking)."
+              "text": "maiṅ likhtā hūṅ — I write (man speaking) maiṅ likhtī hūṅ — I write (woman speaking)."
             },
             {
               "kind": "speech",
-              "text": "Run the chapter through that frame without changing anything but the stem: maiṅ sochtā hūṅ, maiṅ samajhtā hūṅ, maiṅ paṛhtā hūṅ, maiṅ likhtā hūṅ. One machine, four verbs, and میں ہوں holding the ends of every sentence."
+              "text": "Run the chapter through that frame without changing anything but the stem: maiṅ sochtā hūṅ, maiṅ samajhtā hūṅ, maiṅ paṛhtā hūṅ, maiṅ likhtā hūṅ. One machine, four verbs, and maiṅ … hūṅ holding the ends of every sentence."
             }
           ]
         },
@@ -1026,7 +1026,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now the part only Urdu can show you. All four verbs of this chapter are inherited Indo-Aryan, the plain floor of the language — but the things writing needs are borrowed to a word: قلم qalam, the pen, Arabic from Greek kálamos, “a reed”; کتاب kitāb, the book, from the Arabic root k-t-b, “to write”; and نستعلیق nastaʿlīq, the Persian name of the flowing hand Urdu is set in. The deed is inherited; the equipment came by ship."
+              "text": "Now the part only Urdu can show you. All four verbs of this chapter are inherited Indo-Aryan, the plain floor of the language — but the things writing needs are borrowed to a word: qalam, the pen, Arabic from Greek kálamos, “a reed”; kitāb, the book, from the Arabic root k-t-b, “to write”; and nastaʿlīq, the Persian name of the flowing hand Urdu is set in. All three are printed the way you say them: each is spelled with letters still ahead of you. The deed is inherited; the equipment came by ship."
             }
           ]
         },
@@ -1065,11 +1065,11 @@
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "which letter is چ, which is ڑ, and what ھ does to a neighbour",
+              "instruction": "which letter is che, which is ṛe, and what ھ does to a neighbour",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: which letter is **چ**, which is **ڑ**, and what **ھ** does to a neighbour]"
+              "source": "[YOU NAME: which letter is *che*, which is *ṛe*, and what **ھ** does to a neighbour]"
             },
             {
               "kind": "prompt",
@@ -1108,7 +1108,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: لکھنا (likhnā); Wiktionary: قلم."
+              "text": "Sources: Wiktionary: لکھنا (likhnā); Wiktionary: qalam."
             },
             {
               "kind": "activity",

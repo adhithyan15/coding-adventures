@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:77d32880d58cc01d",
+  "sourceHash": "fnv1a64:e2248563cac4a3c0",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bac4450a27f1419",
+      "sourceHash": "fnv1a64:31f0ab268fb9ae19",
       "notice": null,
       "blocks": [
         {
@@ -297,7 +297,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read خدا and say khudā. Keep it separate while one second word is added."
+              "text": "Say khudā — a word you hold by ear, not yet by eye. Keep it separate while one second word is added."
             }
           ]
         },
@@ -756,7 +756,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4886a8486582c1be",
+      "sourceHash": "fnv1a64:0e74fbbfd20adfe6",
       "notice": null,
       "blocks": [
         {
@@ -783,11 +783,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A: سلام! آپ کیسے ہیں؟ Salām! Āp kaise haiṅ? B: میں ٹھیک ہوں، شکریہ۔ Maiṅ ṭhīk hūṅ, shukriyā. A: خدا حافظ (khudā hāfiz)۔ Khudā hāfiz. B: خدا حافظ (khudā hāfiz)۔ Khudā hāfiz."
+              "text": "A: Salām! Āp kaise haiṅ? B: Maiṅ ṭhīk hūṅ, shukriyā. A: خدا حافظ (khudā hāfiz)۔ — Khudā hāfiz. B: خدا حافظ (khudā hāfiz)۔ — Khudā hāfiz."
             },
             {
               "kind": "speech",
-              "text": "Every line is already learned. Salām opens; khudā hāfiz closes. The same farewell works for both speakers, so this practice adds no gender choice, pronoun, or copula form."
+              "text": "Every line is already learned by ear. Salām opens; khudā hāfiz closes. The same farewell works for both speakers, so this practice adds no gender choice, pronoun, or copula form."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the closing line is printed in script for both voices, because it is the only one whose letters you have all been given. Three pieces of the exchange sit inside your ladder right now — سلام, شکریہ, خدا حافظ (khudā hāfiz) — and the two middle lines wait on letters the next three chapters hand you. Nothing in them is new to say, only new to see."
             }
           ]
         },
@@ -817,11 +821,11 @@
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "both voices once with script, once without romanization",
+              "instruction": "both voices once from the romanization, then read the closing line off the script alone",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RUN: both voices once with script, once without romanization]"
+              "source": "[YOU RUN: both voices once from the romanization, then read the closing line off the script alone]"
             }
           ]
         },

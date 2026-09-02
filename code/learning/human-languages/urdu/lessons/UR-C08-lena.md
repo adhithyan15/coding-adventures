@@ -58,7 +58,7 @@ From the right edge: **ل** *l*, then **ی**, then **ن** *n*, then **ا** long
 
 **ی** here carries a long **e** — *le-*, rhyming with English *lay*. That is its
 **third** job: it supplied a consonantal *y* in **کیا** *kyā* and stood for long
-*ī* in **جی** *jī*.
+*ī* in *jī*.
 
 A fourth relative is yours too: broad final **ے**, which ends **کیسے** *kaise*
 and is not the shape that ends **کیسی** *kaisī*. One family of *ye* shapes
@@ -68,8 +68,8 @@ recording enough, not everything.
 ## Grammar Lens: a two-letter stem in the same frame
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-LENA] -->
 
-> **میں لیتا ہوں** — *maiṅ letā hūṅ* — **I take** (man speaking)
-> **میں لیتی ہوں** — *maiṅ letī hūṅ* — **I take** (woman speaking)
+> *maiṅ letā hūṅ* — **I take** (man speaking)
+> *maiṅ letī hūṅ* — **I take** (woman speaking)
 
 No stem is too small for the machine. **le-** plus **-tā/-tī** plus **hūṅ**.
 
@@ -82,7 +82,7 @@ single *le*. A three-consonant root worn down to one syllable — the erosion th
 makes a language's commonest words its shortest.
 
 Prakrit then did something tidy: it levelled *le-* “take” against *de-* “give” so
-the pair matched. That is why **لینا** *lenā* and **دینا** *denā* still rhyme.
+the pair matched. That is why **لینا** *lenā* and *denā* still rhyme.
 They are not related; they were made to sound like partners.
 
 On the standard comparison, *labh-* matches Greek *lambánein*, “to take, to

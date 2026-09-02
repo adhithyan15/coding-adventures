@@ -10,9 +10,24 @@
   ],
   "payoff": {
     "lesson": "TE-C03-practice",
-    "kind": "task",
-    "summary": "Complete TE-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Telugu, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "production",
+    "summary": "After the name comes the exchange everyone actually has — and, for the first time, a Telugu verb “to be.” మీరు ఎలా ఉన్నారు? / నేను బాగున్నాను, ధన్యవాదములు.",
+    "assesses": [
+      "TE-LEX-C03-BAAGAA-01",
+      "TE-ETYMON-C03-BAAGAA-02",
+      "TE-LEX-C03-ELAA-01",
+      "TE-ETYMON-C03-ELAA-02",
+      "TE-LEX-C03-MIIRU-ELAA-UNNAARU-01",
+      "TE-ETYMON-C03-MIIRU-ELAA-UNNAARU-02",
+      "TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03",
+      "TE-LEX-C03-NENU-01",
+      "TE-ETYMON-C03-NENU-02",
+      "TE-GRAMMAR-C03-NENU-03",
+      "TE-SCRIPT-RECOG-06",
+      "TE-SCRIPT-RECOG-122",
+      "TE-SCRIPT-RECOG-142",
+      "TE-SCRIPT-RECOG-143",
+      "TE-SCRIPT-RECOG-144"
+    ]
   }
 }

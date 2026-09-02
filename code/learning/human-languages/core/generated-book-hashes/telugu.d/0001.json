@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:ecad7ed674a1c313",
+  "lessonIds": [
+    "TE-C01-namaskaram",
+    "TE-C01-dhanyavadamulu",
+    "TE-S03-letter-ka",
+    "TE-C01-avunu",
+    "TE-S07-vowel-sign-aa",
+    "TE-C01-ledu",
+    "TE-C01-sare",
+    "TE-S120-vowel-sign-ee",
+    "TE-C01-practice"
+  ],
+  "tex": "telugu/book/chapters/ch01-greetings.tex"
+}
