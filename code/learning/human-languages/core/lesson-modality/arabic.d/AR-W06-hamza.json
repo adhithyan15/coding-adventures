@@ -8,14 +8,18 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-type"
+      "writing-type",
+      "script-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:2b2be3970ae44451"
+    "sourceHash": "fnv1a64:7030933d57baf47b",
+    "detachableSegments": [
+      "Script — The catch in “uh-oh”"
+    ]
   },
   "findings": []
 }

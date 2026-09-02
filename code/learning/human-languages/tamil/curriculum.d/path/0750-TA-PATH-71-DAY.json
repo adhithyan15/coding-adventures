@@ -1,0 +1,17 @@
+{
+  "id": "TA-PATH-71-DAY",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TA-C71-rise",
+    "TA-C71-sleep",
+    "TA-S126-letter-oo",
+    "TA-C71-run",
+    "TA-C71-wash",
+    "TA-C71-play"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-71-DAY"
+  ],
+  "after": []
+}

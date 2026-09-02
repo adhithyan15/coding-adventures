@@ -1,0 +1,17 @@
+{
+  "id": "TA-PATH-68-SHOP",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TA-C68-shop",
+    "TA-C68-price",
+    "TA-W24-read-kadai",
+    "TA-C68-money",
+    "TA-C68-buy",
+    "TA-C68-bag"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-68-SHOP"
+  ],
+  "after": []
+}

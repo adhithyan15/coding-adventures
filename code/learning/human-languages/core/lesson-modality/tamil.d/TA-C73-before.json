@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C73-before",
+    "language": "tamil",
+    "chapter": 73,
+    "sequence": 3000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02b4f08b2d1c383f"
+  },
+  "findings": []
+}

@@ -2,7 +2,6 @@
   "language": "arabic",
   "chapter": 2,
   "output": "arabic/book/chapters/ch02-introductions.tex",
-  "embeddedLessonIds": [
-    "AR-W06-sukun-shadda-tanwin"
-  ]
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
 }

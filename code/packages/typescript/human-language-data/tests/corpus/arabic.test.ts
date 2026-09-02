@@ -11,7 +11,14 @@ it("pins Arabic continuity", () => expectLanguageContinuity("arabic"));
 it("pins Arabic modality", () => expectLanguageModality("arabic"));
 it("pins Arabic lesson-content budgets", () =>
   expectLanguageLessonBudgets("arabic", {
-    lessons: 90,
+    // HL-C286: 90 -> 102. Chapter 2's twelve lessons were schema v1, which
+    // declares no atoms, so `book.ts` refused to generate the chapter and this
+    // budget could not see them. Migrating them to v2 is what retired Arabic's
+    // last hand-written chapter. RE-MEASURED against the tree, not derived: the
+    // idiom, sense and culture-claim totals are unchanged at 2 / 3 / 14, because
+    // the migration declared atoms and renamed headings without authoring new
+    // vocabulary.
+    lessons: 102,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

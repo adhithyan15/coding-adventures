@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-72-FEEL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how someone feels, and name what they are doing about it.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C72-anger",
+    "TA-C72-fear",
+    "TA-W27-read-payam",
+    "TA-C72-sorrow",
+    "TA-C72-laugh",
+    "TA-C72-cry"
+  ]
+}

@@ -8,14 +8,20 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-type"
+      "writing-type",
+      "script-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:96048c9999bdc9da"
+    "sourceHash": "fnv1a64:65ff7d2e2e51da52",
+    "detachableSegments": [
+      "Script — The bowl family — a truth-table",
+      "Script — Draw them",
+      "Script — Where you have seen them — أنت"
+    ]
   },
   "findings": []
 }

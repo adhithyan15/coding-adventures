@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W28-read-inru",
+    "language": "tamil",
+    "chapter": 73,
+    "sequence": 2990,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:44b4d631bebfc416",
+    "detachableSegments": [
+      "Script you'll notice: இன்று — a word that opens on a vowel"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

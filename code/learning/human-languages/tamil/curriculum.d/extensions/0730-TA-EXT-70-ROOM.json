@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-70-ROOM",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name what is in the room around me, from the floor to the roof.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C70-table",
+    "TA-C70-bed",
+    "TA-W26-read-mesai",
+    "TA-C70-wall",
+    "TA-C70-floor",
+    "TA-C70-roof"
+  ]
+}
