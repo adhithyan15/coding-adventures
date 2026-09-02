@@ -1,66 +1,318 @@
 French, chapter 8: Telling the Time.
-2 lessons. All 2 can be done entirely by ear.
+9 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
-heure — the hour, and telling the time.
+Lesson 1 of 9.
+heure — the hour.
 
 Warm-up.
 [pause 2 seconds]
-With your numbers in hand, you can tell the time. The key word is heure, "hour" — and it's the same word as English hour, both worn down from Latin hōra, which the Romans borrowed from Greek hṓrā, "a season, a time of day."
+With your numbers in hand you are one word away from telling the time. This is that word — and it turns out you have been saying it in English your whole life.
 
 Sounds you'll need.
-silent-h — the h of heure is silent (as in English hour): say eur.
-liaison-z — because it starts with a vowel-sound, the number links onto it: deux heures = deu-z-eur, trois heures = troi-z-eur.
+silent-h — the h of heure is silent, exactly as in English hour. Say eur.
+liaison-z — because the word begins with a vowel sound, the number in front links straight onto it. That is the liaison you met counting: deux heures = deu-z-eur, trois heures = troi-z-eur.
+The silent h is why the liaison happens at all. A written h that is never pronounced is not a consonant in the way; the number hears a vowel and reaches for it.
 
 The word, taken apart.
-heure from Latin hōra from Greek hṓrā. The Greek word meant "a period, a season, the right time" (the goddesses of the seasons were the Horae); Latin narrowed it to "hour," and French wore hōra down to heure. English took the same Latin hōra and made hour — so heure and hour are the same word, spelt apart. (The silent h in both is a fossil of the Latin spelling.)
-
-Grammar Lens: "il est … heure(s)".
-To tell the clock time, French says il est ("it is") + the number + heure(s):
-Il est une heure. — "It is one o'clock." (une heure — singular) Il est deux heures. — "It is two o'clock." (deux heures — plural) Il est dix heures. — "It is ten o'clock."
-Literally "it is two hours" — French counts the hours, where English says "o'clock" (itself a worn-down "of the clock"). Add et quart ("and a quarter"), et demie ("and a half"), moins le quart ("quarter to") later; the core is il est … heures.
+heure comes from Latin hōra, which came from Greek hōrā. The Greek word did not mean "hour." It meant a period, a season, the right time — the goddesses of the seasons were the Horae. Latin narrowed it to a fixed slice of the day, and French wore hōra down to heure.
+English took the same Latin hōra and made hour. So heure and hour are one word spelt two ways — and the silent h in both is a fossil of the Latin spelling that neither language ever said aloud.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "heure" — eur, silent h]
+[your turn — say: "heure" — eur, no h at all]
 [pause 8 seconds for the answer]
-[your turn — say: "il est une heure, il est deux heures, il est trois heures" — hear the liaison z]
+[your turn — say: "deux heures" — deu-z-eur, the number linking on]
 [pause 8 seconds for the answer]
-[your turn — say: "heure / hour" — the same Latin hōra]
+[your turn — say: "trois heures, six heures, dix heures" — hear the z each time]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin (and Greek) word is heure from, and its English twin? (hōra from Greek hṓrā; English hour.) How does French say "it is three o'clock"? (Il est trois heures — "it is three hours.") Why does deux heures sound like deu-z-eur? (Liaison — the x/s links onto the vowel of heure.) Next: midi and minuit — noon and midnight.
+How do you say hour? (heure, eur.) Why does a number link onto it with a z? (The h is silent, so the word starts with a vowel sound.) What did the Greek hōrā originally mean? (A season, the right time — the Horae were the season-goddesses.) Next: the frame that puts a number in front of it.
 
 
-Lesson 2 of 2.
-midi and minuit — noon and midnight.
+Lesson 2 of 9.
+il est … heures — telling the clock.
 
 Warm-up.
 [pause 2 seconds]
-Two hours don't get a number — they get a name. midi (noon) and minuit (midnight) are the pivots of the day, and both are literally "the middle" of the day and the night.
+One word for the hour, one small frame to hang it in, and the clock is yours. Take the frame whole for now — it never changes.
 
-The two words, taken apart.
-[a table of 2 rows, read aloud]
-French: midi. from Latin: medius diēs. literally: "the mid-day" (medius "middle" + diēs "day").
-French: minuit. from Latin: media nox. literally: "the mid-night" (media "middle" + nox/noct- "night").
-midi = medius diēs, "mid-day." You can still see both halves: mi- is "middle" (from medius, cousin of English medium, mid, middle), and -di is the diēs "day" you met in lundi/mardi. So midi is "the day's middle."
-minuit = media nox, "mid-night." Here mi- is again "middle," and -nuit is nox/noctem, "night" (cousin of English night, and the noct- of nocturnal). So minuit is "the night's middle" — exactly like English mid-night.
-To use them, drop the heures — they are the hour:
-Il est midi. — "It is noon." Il est minuit. — "It is midnight."
-(Fun aside: English noon comes from Latin nōna hōra, "the ninth hour" — once mid-afternoon, it drifted earlier to midday. French kept the tidier "mid-day.")
+Grammar Lens: French counts the hours.
+To say the time, French uses a fixed opening — il est — then the number, then heures:
+il est + number + heures.
+Il est deux heures. Read it literally and it says "it is two hours." French counts the hours. English does something stranger and then hides it: two o'clock is a worn-down two of the clock, which counted the hours too before it shrank.
+Learn il est as one unbreakable piece for now. It is the same it is that English uses for weather and time — a subject that stands for nothing in particular — and you will meet the verb inside it properly later.
+
+Sounds you'll need.
+il est = eel-eh. The final t of est is silent on its own.
+But before heures, with its silent h, that t wakes up and links: il est une heure = eel eh-t-ün-eur. Another liaison, the same instinct as deux heures.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "midi" (noon), "minuit" (midnight)]
+[your turn — say: "il est" — eel-eh, no t sounded]
 [pause 8 seconds for the answer]
-[your turn — say: break them — "midi = mi (middle) + di (day)", "minuit = mi + nuit (night)"]
+[your turn — say: "Il est deux heures." — eel eh deu-z-eur]
 [pause 8 seconds for the answer]
-[your turn — say: "Il est midi. Il est minuit." — no heures needed]
+[your turn — say: "Il est six heures. Il est dix heures."]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Il est deux heures."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What frame tells the time in French? (il est + number + heures.) What does Il est deux heures say literally? ("It is two hours.") What is English o'clock worn down from? (Of the clock — which counted hours too.) Next: the one hour that takes a different ending.
+
+
+Lesson 3 of 9.
+une heure — one o'clock.
+
+Warm-up.
+[pause 2 seconds]
+Eleven of the twelve hours behave identically. One does not, and the reason is a rule you already met on a different word.
+
+Grammar Lens: one hour, two hours.
+heure is a feminine noun, so "one" in front of it is une, not un — the same gendered "one" you learned counting. And because the noun counts, it takes a plural -s from two upwards:
+Il est une heure. — one o'clock. One hour, so no -s.
+Il est deux heures. — two o'clock. Two hours, so -s.
+Now listen rather than read. That -s is silent, like every plural -s in French. Une heure and deux heures end in the identical sound. The plural is visible on the page and inaudible in the air — what your ear actually uses to tell them apart is the number in front, which is why French never drops it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Il est une heure." — eel eh-t-ün-eur]
+[pause 8 seconds for the answer]
+[your turn — say: "Il est deux heures." — eel eh deu-z-eur]
+[pause 8 seconds for the answer]
+[your turn — say: both again and notice the ending never changes — only the number does]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do midi and minuit literally mean, and from what Latin? ("Mid-day" from medius diēs; "mid-night" from media nox.) What are the two halves of minuit? (mi "middle" + nuit "night" from noctem.) How do you say "it is noon"? (Il est midi.) Next chapter builds on this toward months and family.
+How do you say one o'clock? (Il est une heure — une, because heure is feminine.) When does heure take an -s? (From two upwards.) Can you hear that -s? (No — it is silent, so the number carries the count.) Next: the two hours that refuse a number altogether.
+
+
+Lesson 4 of 9.
+midi — noon.
+
+Warm-up.
+[pause 2 seconds]
+Two hours in the day do not get a number. They get a name, because they are the pivots the rest of the day turns on. Here is the first.
+
+Sounds you'll need.
+midi = mee-DEE, two clean syllables with the weight at the end.
+Both vowels are the tight French i of machine, never the i of sit.
+
+The word, taken apart.
+midi is Latin medius diēs, "the middle day," and both halves are still visible:
+mi- ("middle," from medius) + -di (diēs, "day") = the day's middle.
+You already own the second half. That -di is the same diēs that ends lundi and mardi — here it has come round to the front of a different word. And medius is the English medium, median, mid and middle, all one family.
+
+Grammar Lens: a name instead of a number.
+Because midi is the hour, it does not take heures. Drop the number and drop the noun:
+Il est midi. — "It is noon."
+Not il est douze heures. The frame stays; what goes into it is a name.
+
+Why it's said this way: English noon slid.
+English noon is Latin nōna hōra, "the ninth hour" — which in Roman reckoning was the middle of the afternoon. Over centuries the meal it named crept earlier, and the word came with it until it landed on midday and stopped. So English says noon and means "the ninth hour"; French says midi and means what it says.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "midi" — mee-DEE]
+[pause 8 seconds for the answer]
+[your turn — say: "Il est midi." — no number, no heures]
+[pause 8 seconds for the answer]
+[your turn — say: it split — "mi- plus -di: the day's middle"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say noon? (midi, mee-DEE.) What are its two halves? (mi-, "middle," and -di, diēs, "day.") Where have you met that -di before? (Ending lundi and mardi.) Why is there no heures after it? (Midi is the hour.) Next: its opposite number.
+
+
+Lesson 5 of 9.
+minuit — midnight.
+
+Warm-up.
+[pause 2 seconds]
+The second pivot, and it is built from a word you have had since the very first chapter.
+
+Sounds you'll need.
+minuit = mee-NWEE. The ui is a single gliding sound, wee, not two vowels taken in turn.
+The final t is silent, as it is in nuit itself.
+
+The word, taken apart.
+minuit is Latin media nox, "the middle night," and the two halves are as plain as they were in midi:
+mi- ("middle," medius again) + -nuit (nox, "night") = the night's middle.
+The second half is the nuit you learned in your first week. Latin nox has the stem noct-, which English carries in nocturnal and, straight through its Germanic side, in night itself.
+So the two pivots of the French day are one idea applied twice: the middle of the day, and the middle of the night. English builds midday and midnight out of exactly the same two pieces.
+
+Grammar Lens: the same rule as midi.
+minuit is the hour, so no number and no heures:
+Il est minuit. — "It is midnight."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "minuit" — mee-NWEE, the ui as one glide]
+[pause 8 seconds for the answer]
+[your turn — say: "Il est midi. Il est minuit." — the two pivots]
+[pause 8 seconds for the answer]
+[your turn — say: both split — "the day's middle, the night's middle"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say midnight? (minuit, mee-NWEE.) What are its two halves? (mi-, "middle," and nuit, "night," from Latin nox.) Which English word carries the noct- stem? (Nocturnal.) Say both pivots. (Il est midi. Il est minuit.) Next: the quarter hour.
+
+
+Lesson 6 of 9.
+et quart — quarter past.
+
+Warm-up.
+[pause 2 seconds]
+Whole hours are not enough to make an appointment. Three small additions finish the clock, and the first is already half-known to you from counting.
+
+Sounds you'll need.
+quart = kar. The qu- is a plain k, and the final t is silent.
+The r is the throat-r, as in quatre.
+
+The word, taken apart.
+quart is "a fourth part," and it comes from the same Latin quattuor that gave you quatre. English took the identical word and made quarter — a fourth of an hour, a fourth of a gallon, a fourth of a town.
+Once you see quatre inside quart, it stops being a new word and becomes a number you already have, doing a different job.
+
+Grammar Lens: adding to the hour.
+French adds the quarter with et ("and"), after the hour:
+Il est deux heures et quart. — "It is a quarter past two."
+Read literally: "it is two hours and a quarter." French does not say "past"; it adds.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "quart" — kar, no t]
+[pause 8 seconds for the answer]
+[your turn — say: "Il est deux heures et quart."]
+[pause 8 seconds for the answer]
+[your turn — say: "quatre, quart" — the number and the fourth part, one root]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say a quarter? (quart, kar.) Which number is it built on? (quatre — Latin quattuor.) How do you say quarter past two? (Il est deux heures et quart.) Next: the half hour.
+
+
+Lesson 7 of 9.
+et demie — half past.
+
+Warm-up.
+[pause 2 seconds]
+Same move as the quarter, a different fraction — and a spelling that tells you something about the word it leans on.
+
+Sounds you'll need.
+demie = duh-MEE. The first e is the light, almost-swallowed vowel you met in the middle of samedi.
+The final -e is silent, so demie and demi sound identical.
+
+The word, taken apart.
+demie comes from Latin dimidius, "halved" — literally di- ("apart") plus medius, the "middle" you have now met twice, in midi and minuit. To halve a thing is to cut it at its middle.
+English borrowed the French form as the prefix demi-: a demigod is half a god, a demitasse is half a cup.
+
+Grammar Lens: why it is demie and not demi.
+The -e on the end is agreement. It follows heure, which is feminine, so the half agrees with it and takes a feminine -e:
+Il est deux heures et demie. — "It is half past two."
+After midi and minuit, which are masculine, it drops the -e:
+Il est midi et demi. — "It is half past twelve."
+Your ear cannot tell them apart; the page can. That is the same silent-agreement pattern as the plural -s on heures.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "demie" — duh-MEE]
+[pause 8 seconds for the answer]
+[your turn — say: "Il est deux heures et demie."]
+[pause 8 seconds for the answer]
+[your turn — say: "Il est midi et demi." — masculine, so no -e on the page]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say half past two? (Il est deux heures et demie.) Why does demie carry an -e? (It agrees with heure, which is feminine.) What is inside Latin dimidius? (Medius — the same "middle" as in midi.) Next: the one that subtracts.
+
+
+Lesson 8 of 9.
+moins le quart — quarter to.
+
+Warm-up.
+[pause 2 seconds]
+Twice now you have added to the hour. The last piece of the clock does the opposite, and it does it with a word you can read on a calculator.
+
+Sounds you'll need.
+moins = mwa(n). The oi is wa, as in trois, and the in is nasal, as in cinq.
+The final s is silent. Two familiar sounds and one silent letter — nothing in this word is new.
+
+The word, taken apart.
+moins is Latin minus, and it means exactly what minus means: less, taken away. English uses the Latin form untouched for subtraction, and keeps the same root in minor, minimum and diminish.
+
+Grammar Lens: French subtracts from the next hour.
+To say "quarter to," French does not look back at the hour that has passed. It names the hour coming, and takes the quarter off it:
+Il est trois heures moins le quart. — "It is a quarter to three."
+Literally: "it is three hours minus the quarter." English does the same arithmetic and hides it behind the word to; French shows its working.
+So the three additions to the hour are one small system:
+et quart — the hour, plus a quarter.
+et demie — the hour, plus a half.
+moins le quart — the next hour, minus a quarter.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "moins" — mwa(n), no s]
+[pause 8 seconds for the answer]
+[your turn — say: "Il est trois heures moins le quart."]
+[pause 8 seconds for the answer]
+[your turn — say: the three in a row — "deux heures et quart, deux heures et demie, trois heures moins le quart"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say quarter to three? (Il est trois heures moins le quart.) Which hour does French name in that sentence, the one gone or the one coming? (The one coming — it subtracts from it.) What Latin word is moins? (Minus.) Next: the whole clock, put to use.
+
+
+Lesson 9 of 9.
+Practice — reading the clock.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+One frame, one noun and three small additions. Put them together and you can say any time on a clock face.
+
+Guided Practice: whole hours.
+[pause 1 second]
+Put each of these into the frame — Il est … — then cover the right column and read back from the left:
+[a table of 4 rows, read aloud]
+une heure means one o'clock.
+deux heures means two o'clock.
+six heures means six o'clock.
+dix heures means ten o'clock.
+[repeat that twice]
+the four whole hours, each inside Il est …
+Listen for the liaison each time: ün-eur, deu-z-eur, see-z-eur, dee-z-eur.
+
+Guided Practice: the two that take a name.
+Il est midi. — noon, "the day's middle".
+Il est minuit. — midnight, "the night's middle".
+No number and no heures: each of them is the hour.
+
+Guided Practice: the parts of the hour.
+[a table of 4 rows, read aloud]
+deux heures et quart means quarter past two.
+deux heures et demie means half past two.
+trois heures moins le quart means quarter to three.
+midi et demi means half past twelve.
+Say all four inside the frame and hear the clock move. The third names the hour ahead and subtracts from it.
+
+What you've built this chapter.
+heure — the same word as English hour, both Latin hōra, both keeping a silent h neither language ever pronounced.
+il est … heures — French counts the hours; English says o'clock.
+agreement you cannot hear — une heure against deux heures, et demie against et demi. The page shows it; the ear uses the number in front.
+midi and minuit — one idea twice: the middle of the day and of the night, with the -di of lundi and the nuit of your first chapter.
+adding and subtracting — et quart, et demie, moins le quart.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say one o'clock, then two. (Il est une heure. Il est deux heures.) Say noon and midnight, and what each means literally. (Midi, the day's middle; minuit, the night's middle.) Say quarter past two, half past two, quarter to three. Which of those names an hour that has not arrived? (Quarter to — moins le quart subtracts.) Why do heure and hour both carry a silent h? (Both are Latin hōra, where it was already silent.)

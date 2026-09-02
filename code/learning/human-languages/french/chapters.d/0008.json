@@ -7,10 +7,22 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C08-midi-minuit",
+    "lesson": "FR-C08-practice",
     "kind": "task",
-    "summary": "Complete FR-C08-midi-minuit, the canonical closing checkpoint, and demonstrate the chapter promise: ask for and tell the time in French.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "One noun, one frame and three small additions. heure is the same word as English hour, both from Latin hora and both keeping an h neither language ever said; il est ... heures counts the hours where English says o'clock; and midi and minuit are one idea used twice, the middle of the day and the middle of the night.",
+    "assesses": [
+      "FR-LEX-HEURE-01",
+      "FR-ETYMON-HEURE-HORA-02",
+      "FR-GRAM-IL-EST-HEURES-03",
+      "FR-GRAM-HEURE-AGREEMENT-04",
+      "FR-LEX-MIDI-05",
+      "FR-ETYMON-MIDI-MEDIUS-06",
+      "FR-LEX-MINUIT-07",
+      "FR-ETYMON-MINUIT-NOX-08",
+      "FR-LEX-QUART-09",
+      "FR-LEX-DEMIE-10",
+      "FR-LEX-MOINS-11"
+    ],
+    "note": "Chapter 8 is schema-v2 as of the handwritten-chapter retirement, so the payoff is atom-scored: FR-C08-practice assesses every atom the chapter introduces."
   }
 }

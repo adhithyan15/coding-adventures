@@ -34,12 +34,23 @@ it("pins French modality", () => expectLanguageModality("french"));
 // swap (French kept the Roman gods on the weekdays and took the Sabbath for the
 // weekend; English did the reverse) both lived only in hand-written cousinweb
 // blocks and are now owned by FR-C07-mardi and FR-C07-samedi.
+// 99 -> 108 lessons: retiring handwritten chapter 8. Its two schema-v1 lessons
+// owned three words between them (heure, midi, minuit) for a chapter whose .tex
+// also taught `il est ... heures`, the une heure / deux heures agreement, and
+// named `et quart`, `et demie` and `moins le quart` while deferring them. None
+// of those was owned by any lesson, and none of them cost a prose block -- which
+// is the shape the block-gap measure cannot see. Nine lessons now own all of it,
+// the deferred three included: a reader who cannot say "half past" cannot tell
+// the time. Net +8 (9 new, 1 retired).
+// 16 -> 17 culture claims: English `noon` is Latin nona hora, "the ninth hour",
+// which drifted from mid-afternoon to midday; it lived only in a hand-written
+// culture block and is now owned by FR-C08-midi.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 99,
+    lessons: 108,
     idioms: 3,
     senses: 7,
-    cultureClaims: 16,
+    cultureClaims: 17,
     unitPrefix: "FR",
   }));
 
