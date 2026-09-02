@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R14-core",
     "language": "marathi",
-    "chapter": 17,
-    "sequence": 730,
+    "chapter": 21,
+    "sequence": 930,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7f0eb2de7439761b"
+    "sourceHash": "fnv1a64:66fe9e2a0e3fab9a"
   },
   "findings": []
 }

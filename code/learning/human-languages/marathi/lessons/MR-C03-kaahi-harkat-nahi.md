@@ -1,7 +1,7 @@
 ---
 id: MR-C03-kaahi-harkat-nahi
-sequence: 125
-chapter: 6
+sequence: 325
+chapter: 10
 type: phrase
 headword: काही हरकत नाही
 romanization: "kāhī harkat nāhī"

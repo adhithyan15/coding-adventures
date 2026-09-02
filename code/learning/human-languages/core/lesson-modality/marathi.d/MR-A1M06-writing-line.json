@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1M06-writing-line",
     "language": "marathi",
-    "chapter": 20,
-    "sequence": 845,
+    "chapter": 24,
+    "sequence": 1045,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:881fc2a9b274daad",
+    "sourceHash": "fnv1a64:4e9cfaed1116c8e8",
     "detachableSegments": [
       "Writing — delayed copy"
     ],

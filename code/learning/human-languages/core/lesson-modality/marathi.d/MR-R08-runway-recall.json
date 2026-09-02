@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R08-runway-recall",
+    "language": "marathi",
+    "chapter": 8,
+    "sequence": 96,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b85397e84bcb105b"
+  },
+  "findings": []
+}

@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R18-script-warmup
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 770
-chapter: 18
+sequence: 970
+chapter: 22
 type: review
 headword: धन्यवाद
 romanization: "dhanyavād"

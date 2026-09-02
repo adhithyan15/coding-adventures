@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C23-basne
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 920
-chapter: 23
+sequence: 1120
+chapter: 27
 type: word
 headword: बसणे
 romanization: basṇe

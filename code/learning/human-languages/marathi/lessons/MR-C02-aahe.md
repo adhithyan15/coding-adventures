@@ -1,7 +1,7 @@
 ---
 id: MR-C02-aahe
-sequence: 70
-chapter: 5
+sequence: 270
+chapter: 9
 type: word
 headword: आहे
 romanization: "āhe"
@@ -38,7 +38,7 @@ in the family, worn down to *āhe* in Marathi.
 Marathi is a **subject–object–verb** language: "my name Mira **is**." The
 copula **आहे** sits at the **end**, where English puts it in the middle. It
 changes with the subject — you will meet **आहेस** (*āhes*, "you are") and
-**आहात** (*āhāt*, "you are," respectful) in Chapter 5.
+**आहात** (*āhāt*, "you are," respectful) in Chapter 9.
 
 ## Guided Practice
 

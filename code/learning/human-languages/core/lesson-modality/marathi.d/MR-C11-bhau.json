@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C11-bhau",
     "language": "marathi",
-    "chapter": 14,
-    "sequence": 580,
+    "chapter": 18,
+    "sequence": 780,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a161e10a34257edf",
+    "sourceHash": "fnv1a64:e15ad817c8ffbad9",
     "detachableSegments": [
       "The letters in this word"
     ]

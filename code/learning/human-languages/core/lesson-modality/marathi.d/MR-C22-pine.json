@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C22-pine",
     "language": "marathi",
-    "chapter": 22,
-    "sequence": 880,
+    "chapter": 26,
+    "sequence": 1080,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:704f04ad05132fc6",
+    "sourceHash": "fnv1a64:fca430acae9386e9",
     "detachableSegments": [
       "The letters in this word"
     ]

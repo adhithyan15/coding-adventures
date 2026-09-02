@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C09-ghene",
     "language": "marathi",
-    "chapter": 12,
-    "sequence": 480,
+    "chapter": 16,
+    "sequence": 680,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:47b2ec411ce7ce9e",
+    "sourceHash": "fnv1a64:98955bf87ac8a27e",
     "detachableSegments": [
       "The letters in this word"
     ]

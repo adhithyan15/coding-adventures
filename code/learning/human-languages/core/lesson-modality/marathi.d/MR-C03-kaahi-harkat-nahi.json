@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C03-kaahi-harkat-nahi",
     "language": "marathi",
-    "chapter": 6,
-    "sequence": 125,
+    "chapter": 10,
+    "sequence": 325,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f8535b2e56477b98"
+    "sourceHash": "fnv1a64:dd986ba6ab1b4a0d"
   },
   "findings": []
 }

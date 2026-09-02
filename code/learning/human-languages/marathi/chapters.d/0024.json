@@ -1,24 +1,29 @@
 {
   "chapter": 24,
-  "title": "What Passes Between Two People",
-  "label": "ch:mr-passing-verbs",
-  "canDo": "I can ask someone to tell me their name, quote what I said, say that I am learning Marathi, and ask whether a thing is to be had -- carrying one of the four by ear because its letter is still owed to me.",
+  "title": "A Message for Mira",
+  "label": "ch:mr-a1-named-reader-message",
+  "canDo": "I can independently write a 32-word Devanagari message to Mira for a familiar introduction and Marathi-study purpose.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-NAME-EVERYDAY-ACTIONS"
   ],
   "payoff": {
-    "lesson": "MR-R24-passing-verbs",
-    "kind": "production",
-    "summary": "Complete MR-R24-passing-verbs and run the exchange unaided: ask for a name with the by-ear verb, say you are learning Marathi, and ask whether water is to be had.",
+    "lesson": "MR-A1M18-independent-message",
+    "kind": "task",
+    "summary": "Without romanization, a line bank, or a visible answer model, write the 30-40-word message from the named reader and purpose alone.",
     "assesses": [
-      "MR-LEX-SANGNE",
-      "MR-LEX-MHANNE",
-      "MR-LEX-SHIKNE",
-      "MR-LEX-MILNE",
-      "MR-ETYMON-SANGNE-KENS",
-      "MR-ETYMON-MHANNE-BHAN",
-      "MR-ETYMON-SHIKNE-SHAK",
-      "MR-ETYMON-MILNE-MIL"
-    ]
+      "MR-A1-MESSAGE-LINE-GREETING",
+      "MR-A1-MESSAGE-LINE-NAME",
+      "MR-A1-MESSAGE-LINE-MEETING",
+      "MR-A1-MESSAGE-LINE-KNOW-MARATHI",
+      "MR-A1-MESSAGE-LINE-READ-MARATHI",
+      "MR-A1-MESSAGE-LINE-WRITE-NAME",
+      "MR-A1-MESSAGE-LINE-SPEAK",
+      "MR-A1-MESSAGE-LINE-THINK",
+      "MR-A1-MESSAGE-LINE-UNDERSTAND-MARATHI",
+      "MR-A1-MESSAGE-LINE-THANKS",
+      "MR-A1-MESSAGE-LINE-SEE-AGAIN",
+      "MR-A1-MESSAGE-LINE-SEE-TOMORROW"
+    ],
+    "note": "This is untimed named-reader message evidence, not form completion, timed integration, or full A1 exam readiness."
   }
 }

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F01-mitrache-naav
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 825
+sequence: 1025
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "मित्राचे नाव: अरुण"
 gloss: read and trace friend's name, with the possessive agreeing with neuter naav

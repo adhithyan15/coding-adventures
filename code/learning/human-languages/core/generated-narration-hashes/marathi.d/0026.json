@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:b2fa0d51a1fe546d",
+  "lessonIds": [
+    "MR-C22-dene",
+    "MR-C22-pine",
+    "MR-C22-anne",
+    "MR-C22-thevne",
+    "MR-R22-request-verbs"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch26.txt",
+  "json": "marathi/narration/ch26.json",
+  "textHash": "fnv1a64:392d79b949be1d63",
+  "jsonHash": "fnv1a64:cbc52cff72a29dde",
+  "findings": []
+}
