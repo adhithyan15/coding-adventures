@@ -1,0 +1,10 @@
+[package]
+name = "math-layout"
+version = "0.1.0"
+edition = "2021"
+description = "TEX-1: lower MathExpr to a TeX math list with atom classes and inter-atom spacing"
+
+[dependencies]
+math-frontend = { path = "../math-frontend" }
+
+[dev-dependencies]
