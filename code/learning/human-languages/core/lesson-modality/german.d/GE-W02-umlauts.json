@@ -8,14 +8,18 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-type"
+      "writing-type",
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:cff48016d9149243"
+    "sourceHash": "fnv1a64:01352a08cf69b219",
+    "detachableSegments": [
+      "Writing — the two dots"
+    ]
   },
   "findings": []
 }

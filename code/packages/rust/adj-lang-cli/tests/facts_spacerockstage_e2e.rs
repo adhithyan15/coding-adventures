@@ -95,3 +95,31 @@ fn space_rock_stage_abstains_honestly_on_an_untabled_term() {
         "asteroid is a real object the source mentions but never defines in a sentence of its own on this page -- honest abstention, never invented: {out}"
     );
 }
+
+const SRS_PIN: &str = r#""bindings":{"D":"called_a_fireball_or_shooting_star_when_it_burns_up_in_the_atmosphere"},"citations":[{"source":"When a meteoroid survives a trip through the atmosphere and hits the ground, it’s called a meteorite.","locator":"https://science.nasa.gov/solar-system/meteors-meteorites/","trust":"authoritative""#;
+
+#[test]
+fn space_rock_stage_source_keeps_the_pages_curly_apostrophe() {
+    let dir = scratch("cite_srs");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"space-rock-stage.adj\"\n? space_rock_stage(meteor, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // FOUND BY ACCIDENT, while checking a suspected propagation that did not
+    // exist -- the two space-rock libraries quote different sentences. This
+    // one shipped an ASCII apostrophe in "it's" where the page renders U+2019,
+    // so the citation did not appear on its own page.
+    //
+    // No ellipsis, so no text-only screen could see it. That is the second
+    // unmarked defect found by accident, and the concrete basis for treating
+    // #14070's list as a floor rather than an inventory.
+    assert!(
+        out.contains(SRS_PIN),
+        "meteorite's citation keeps the page's curly apostrophe: {out}"
+    );
+}

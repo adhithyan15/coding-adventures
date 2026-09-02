@@ -184,11 +184,15 @@ health, browser agents), CLI interface, mobile clients
 A Level 1 agent is a CommonMark document with one H1 title, a descriptive first
 paragraph, and a `## Capabilities needed` list. Each capability is written as
 `category:action:target`, optionally followed by ` | justification`; `- none`
-declares an explicit empty profile. The title and paragraph provide zero-config
+declares an explicit empty profile. A `## Tools needed` list is required
+alongside it and becomes manifest `allowed_tools`: one namespaced D18D tool
+identifier per bullet, with `- none` declaring an explicit empty tool surface.
+The section is required rather than optional for the same reason schema v3
+requires the field -- so that "calls no tools" is declared, not defaulted into. The title and paragraph provide zero-config
 identity defaults. Optional `---` frontmatter may override `agent`, `description`,
 `privilege_tier`, `reads`, `writes`, `message_schema_versions`, and
 `restart_policy`; unknown or duplicate keys fail closed. The parser emits the
-schema-v2 `agent_manifest.json` shape and
+schema-v3 `agent_manifest.json` shape and
 sorted, deduplicated Deno permission arguments. Time and standard-stream
 capabilities remain manifest declarations but do not widen Deno OS permissions.
 The shared manifest codec continues to accept installed schema-v1 packages and
@@ -211,8 +215,8 @@ and deduplicated, and bounded. A bare namespace is rejected because it names no
 tool and would invite prefix matching, which is how one declared tool becomes a
 whole namespace. Schema v1 and v2 manifests may not carry the field: a consumer
 that trusts `version` must never be told something false about what the signed
-bytes authorize. Level 1 `SKILL.md` has no way to express a tool surface yet, so
-its parser continues to emit v2 until it does.
+bytes authorize. Level 1 `SKILL.md` expresses a tool
+surface through its required `## Tools needed` section, so its parser emits v3.
 Discovery supports explicit inspection and stable immediate-child `.agent`
 scans. It parses only authenticated manifest bytes, enforces signing-key tier
 ceilings, and returns inert candidates for explicit control-plane registration.

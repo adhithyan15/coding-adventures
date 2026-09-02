@@ -10,9 +10,11 @@
   ],
   "payoff": {
     "lesson": "KA-C03-practice",
-    "kind": "task",
-    "summary": "Complete KA-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Kannada, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "dialogue",
+    "summary": "Run the whole exchange: nīvu hēgiddīrā? — nānu cennāgiddēne, dhanyavāda — and wave away the thanks with paravāgilla.",
+    "assesses": [
+      "KA-LEX-C03-CENNAAGI-03",
+      "KA-LEX-C03-PARAVAAGILLA-01"
+    ]
   }
 }

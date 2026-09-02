@@ -1,0 +1,13 @@
+{
+  "id": "GE-EXT-013-WRITING-KIT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the three things that make German text look German — the eszett, the umlaut dots, and a capital on every noun — and say what each one tells a reader.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-W01-eszett",
+    "GE-W02-umlauts",
+    "GE-W03-capitalization"
+  ]
+}

@@ -26,8 +26,13 @@
 %     stage       description                                                              quote (verbatim)
 %     ----------  -----------------------------------------------------------------------  --------------------------------------------------------------------------------
 %     meteoroid   still_a_rock_in_space                                                     "Meteoroids These rocks still are in space."
-%     meteor      called_a_fireball_or_shooting_star_when_it_burns_up_in_the_atmosphere      "When meteoroids enter Earth's atmosphere ... at high speed and burn up, the fireballs or "shooting stars" are called meteors."
-%     meteorite   survives_the_atmosphere_and_hits_the_ground                                "When a meteoroid survives a trip through the atmosphere and hits the ground, it's called a meteorite."
+%     meteor      called_a_fireball_or_shooting_star_when_it_burns_up_in_the_atmosphere      (this row is grounded by the SIBLING library space-rock-alt-name, not by this table's own envelope)
+%     meteorite   survives_the_atmosphere_and_hits_the_ground                                "When a meteoroid survives a trip through the atmosphere and hits the ground, it’s called a meteorite."
+%
+%     (the meteorite quote previously flattened the page's U+2019 apostrophe to ASCII, so it
+%      did not appear on its own page. The meteor row previously showed the ALT-NAME
+%      library's sentence, which reads as though the two tables share a source -- they do
+%      not; they quote different sentences from the same page.)
 %
 % Provenance: quoted verbatim from NASA Science's "Meteors & Meteorites"
 % page, section "What's the difference between a meteoroid, a meteor, and a
@@ -54,7 +59,7 @@ table space_rock_stage {
     row (meteor, called_a_fireball_or_shooting_star_when_it_burns_up_in_the_atmosphere)
     row (meteorite, survives_the_atmosphere_and_hits_the_ground)
 
-    source "When a meteoroid survives a trip through the atmosphere and hits the ground, it's called a meteorite."
+    source "When a meteoroid survives a trip through the atmosphere and hits the ground, it’s called a meteorite."
     locator "https://science.nasa.gov/solar-system/meteors-meteorites/"
     trust authoritative
 }

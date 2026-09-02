@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C04-spaet",
+    "language": "german",
+    "chapter": 4,
+    "sequence": 161,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ead201a253f3c55b"
+  },
+  "findings": []
+}

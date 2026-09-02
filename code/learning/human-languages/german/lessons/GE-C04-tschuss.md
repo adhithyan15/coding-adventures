@@ -1,69 +1,110 @@
 ---
+schema_version: 2
 id: GE-C04-tschuss
-sequence: 150
+spine_node: SPINE-TAKE-LEAVE
+sequence: 153
 chapter: 4
 type: word
 headword: tschüss
-gloss: bye (casual)
+gloss: bye, casually — and secretly the same blessing as adiós
 concept_tag: FAREWELL-CASUAL
-prerequisites: [GE-C04-auf-wiedersehen]
-sounds: [tsch-ch, u-umlaut]
+prerequisites: [GE-C02-du-sie, GE-C03-schoen, GE-C04-auf-wiedersehen]
+sounds: [tsch-ch, umlaut-ue]
 roots: [adieu-french]
-etymology_hook: "tschüss ← Low German atschüs ← Walloon adjûs ← French adieu — so tschüss is secretly 'to God', a cousin of adiós!"
-est_minutes: 3
-reviews_of: [GE-C04-auf-wiedersehen]
+etymology_hook: "tschuess came from French adieu via Walloon and Low German, so the breeziest goodbye is secretly the most solemn"
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [GE-LEX-AUF-WIEDERSEHEN-01, GE-SOUND-UMLAUT-OE-01, GE-LEX-DU-SIE-02]
+introduces:
+  knowledge: [GE-LEX-TSCHUESS-01, GE-SOUND-TSCHUESS-01, GE-ETYMON-TSCHUESS-ADIEU-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GE-CULTURE-TSCHAU-CIAO-01]
+practises:
+  knowledge: [GE-LEX-TSCHUESS-01, GE-SOUND-TSCHUESS-01, GE-ETYMON-TSCHUESS-ADIEU-02, GE-LEX-AUF-WIEDERSEHEN-01, GE-SOUND-UMLAUT-OE-01, GE-LEX-DU-SIE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, language-focus]
+register: informal
+variety: standard-contemporary
+reviews_of: [GE-C04-auf-wiedersehen, GE-C02-du-sie]
 ---
 
 # tschüss — the casual "bye" that used to say "to God"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUF-WIEDERSEHEN-01] -->
 
-[PAUSE 2s] Between friends, Germans rarely say the full *auf Wiedersehen* — they
-say **tschüss**, a breezy "bye." And it hides one of the best secrets in this
-whole chapter: **tschüss is, distantly, the same word as Spanish *adiós*.**
+[PAUSE 2s] Between friends, Germans almost never say the full *auf
+Wiedersehen*. They say one clipped syllable — which hides the best secret in
+this chapter.
+
+## You'll want to know: tschüss
+<!-- hl-knowledge: introduces=[GE-LEX-TSCHUESS-01]; assesses=[] -->
+
+> **tschüss** — "bye."
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[GE-SOUND-TSCHUESS-01]; assesses=[GE-LEX-TSCHUESS-01, GE-SOUND-UMLAUT-OE-01] -->
 
-- `tsch-ch` — **tschüss** starts with the *ch* of English "**ch**urch": *chüss*.
-- `u-umlaut` — **ü** is the front-rounded vowel (say *ee* with rounded lips);
-  *tschüss* ≈ *chuess*. Short and clipped.
+- `tsch-ch` — **tsch** is the *ch* of English **ch**urch. So the word starts
+  *chü-*, not *tsh-oo*.
+- `umlaut-ue` — **ü** is made the way you made **ö**, but starting from *ee*
+  instead of *ay*: say **ee**, then round your lips without moving your tongue.
 
-## The word, taken apart — a great migration
+Together: *chüss*, short and clipped, rhyming roughly with a rounded *chuess*.
 
-*tschüss* looks purely German, but trace it back and it leaves the country:
+## The word, taken apart
+<!-- hl-knowledge: introduces=[GE-ETYMON-TSCHUESS-ADIEU-02]; assesses=[GE-LEX-TSCHUESS-01] -->
 
-**French *adieu*** ("to God") → borrowed into **Walloon** (a language of southern
-Belgium) as **adjûs** → carried north into **Low German** dialects as **atschüs /
-atschüss** → clipped to modern **tschüss**.
+*tschüss* looks purely German. Trace it back and it leaves the country
+entirely:
 
-So the chain is **adieu → adjûs → atschüss → tschüss** — and since *adieu* is
-"**à Dieu**," *"to God,"* the casual German *tschüss* is a far-travelled cousin of:
+| Step | Form | Language |
+|---|---|---|
+| 1 | *adieu* — "to God" | French |
+| 2 | *adjûs* | Walloon (southern Belgium) |
+| 3 | *atschüs* | Low German |
+| 4 | *tschüss* | modern German |
 
-- French **adieu** — "to God,"
-- Spanish **adiós** — "to God,"
+And since French *adieu* is *à Dieu*, "to God," the breeziest German goodbye is
+a far-travelled cousin of French **adieu** and Spanish **adiós** — all three the
+same small blessing, just worn down further at each step.
 
-…all three the same little blessing, *"to God,"* just worn down more and more.
 The friendliest, most throwaway German goodbye is secretly the most solemn one.
-(You'll also hear **tschau** — that one is Italian **ciao** borrowed straight.)
 
-## Grammar Lens: register
+## Grammar Lens: which goodbye, to whom
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-TSCHUESS-01, GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-DU-SIE-02] -->
 
-- **tschüss** — friends, family, peers, casual shops. Never in a formal meeting.
-- **auf Wiedersehen** — strangers, elders, officials, the phone.
+This is **register** — the same split you have drilled since *du* and *Sie*.
+Pick the parting to match the relationship:
 
-Same split you've drilled all along (*du* vs *Sie*): pick the parting to match
-the relationship.
+| Say | To |
+|---|---|
+| *tschüss* | friends, family, peers, casual shops |
+| *auf Wiedersehen* | strangers, elders, officials, the telephone |
+
+If you would say *Sie* to them, say *auf Wiedersehen*.
+
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-TSCHUESS-01] -->
+
+You will also hear **tschau**. That one is Italian *ciao*, borrowed straight and
+respelt to German spelling rules — so German ended up with two casual goodbyes
+imported from two different Romance languages.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-TSCHUESS-01, GE-SOUND-TSCHUESS-01, GE-ETYMON-TSCHUESS-ADIEU-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "tschüss" — *chüss*, short and light]
-- [YOU SAY: the migration — adieu → adjûs → tschüss ("to God" all along)]
-- [YOU SAY: tschüss (casual) vs auf Wiedersehen (formal) — friend vs stranger]
+- [YOU SAY: "ee" then round your lips — "ü"]
+- [YOU SAY: "tschüss" — *chüss*, short and clipped]
+- [YOU SAY: the chain — "adieu", "adjûs", "atschüs", "tschüss"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-TSCHUESS-01, GE-ETYMON-TSCHUESS-ADIEU-02] -->
 
-[PAUSE 3s] What language did *tschüss* ultimately come from, and what did it
-originally mean? (French *adieu* — "to God".) What two other goodbyes are its
-cousins? (*adiós*, *adieu*.) When do you use *tschüss* vs *auf Wiedersehen*?
-(Casual vs formal.) Next: **bis bald**.
+[PAUSE 3s] What does *tschüss* secretly mean? ("To God" — it is *adieu*.) Which
+Spanish word is its cousin? (*Adiós*.) Whom do you say it to? (Anyone you would
+call *du*.)
