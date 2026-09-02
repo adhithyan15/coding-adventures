@@ -1,5 +1,76 @@
 # Changelog
 
+## Chapter 8 is generated, and the clock is finished rather than promised
+
+Chapter 8 was hand-written LaTeX built from two schema-v1 lessons that owned
+**three words between them** — *heure*, *midi*, *minuit* — for a chapter whose
+`.tex` taught considerably more than three things.
+
+It is now **nine** schema-v2 lessons.
+
+### What the block gap could not see
+
+`handwritten_parity.py` scored chapter 8 at a gap of **one block**. Counting the
+French the `.tex` actually teaches against the lessons that own it tells a
+different story. Owned by **no lesson at all**:
+
+- **`il est … heures`** — the frame the whole chapter runs on, taught in a
+  `grammarlens` and owned nowhere.
+- **`une heure` against `deux heures`** — the gender and number agreement, taught
+  in a table's `note` column.
+- **`et quart`, `et demie`, `moins le quart`** — named in one sentence of that
+  same lens and explicitly deferred: *"add … later."*
+
+None of those cost a prose block. Every one of them costs a lesson. A chapter
+called *Telling the Time* that stops at whole hours has not taught the reader to
+tell the time, so the deferred three are now taught here rather than promised.
+
+### One new word per lesson
+
+`heure`, `il est … heures`, `une heure`, `midi`, `minuit`, `et quart`,
+`et demie`, `moins le quart`, then the chapter practice. The etymology is
+carried whole and several strands now close on each other:
+
+- **`heure` and `hour` are one word** — Latin *hōra* from Greek *hōrā*, "a
+  season, the right time." Both languages keep a silent *h* neither ever said,
+  and that silent *h* is precisely **why** *deux heures* liaises to *deu-z-eur* —
+  which the reader met as a rule two chapters earlier.
+- **`midi` = `mi-` + `-di`** — the *diēs* of *lundi*, come round to the front of
+  a different word. **`minuit` = `mi-` + `nuit`**, the *nuit* of Chapter 1.
+  One idea used twice.
+- **agreement you cannot hear** — the plural *-s* of *heures* and the feminine
+  *-e* of *demie* are both silent, which is why the number in front is
+  load-bearing rather than decorative.
+- **`moins le quart` subtracts from the hour that is coming**, and *quart* is
+  *quatre* doing a different job.
+
+### Measured
+
+- Hand-written French chapters: **11 -> 10**.
+- Chapter atoms: **11**, inside `maxNewAtomsPerChapter`; `atomChapterSpikes` 0.
+- Forward references: **50 -> 48**. The chapter contributes none, and teaching
+  *midi*/*minuit* separately retired two that existed before.
+- Measurable French lessons: **99 -> 108**.
+- Culture claims: **16 -> 17** (English *noon* is *nōna hōra*, "the ninth hour,"
+  which drifted from mid-afternoon to midday).
+- The book compiles under XeLaTeX with `missing_character = 0`, and the rendered
+  pages were read.
+
+### It closes an exam point, because it finishes the job
+
+**A1-LEX-07 (telling the time)** moves from unmapped to covered. It could not
+have been claimed before at any wording of the probe: the hand-written chapter
+stopped at whole hours. The probe lists **all seven** atoms rather than a
+sample, because a candidate asked for half past does not get partial credit for
+o'clock. French A1 exam coverage: **26/74 -> 27/74**.
+
+One gate finding worth recording. `info-dump` flagged the practice tables as
+**verb paradigms**, because every row began *Il est …* and its French person
+list contains *il*. The tables are clock times, not a paradigm — but the fix
+improves them anyway: the repeated *Il est* is now a one-line instruction above
+the table (*"put each of these into the frame"*), and the rows carry only what
+differs.
+
 ## French joins Spanish at zero cross-chapter number references, before the split
 
 Three of the remaining hand-written French chapters cannot be authored inside

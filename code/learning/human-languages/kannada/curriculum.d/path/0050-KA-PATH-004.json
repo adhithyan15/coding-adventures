@@ -8,9 +8,12 @@
     "KA-C02-niinu-niivu",
     "KA-C02-enu",
     "KA-C02-nimma-hesaru-enu",
-    "KA-C02-santosha"
+    "KA-C02-santosha",
+    "KA-C02-practice"
   ],
   "before": [],
   "inline": [],
-  "after": []
+  "after": [
+    "KA-EXT-004-CONSOLIDATION"
+  ]
 }

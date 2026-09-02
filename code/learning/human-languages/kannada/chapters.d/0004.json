@@ -8,9 +8,18 @@
   ],
   "payoff": {
     "lesson": "KA-C04-practice",
-    "kind": "task",
-    "summary": "Complete KA-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Kannada conversation politely and choose a farewell that fits the situation.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "production",
+    "summary": "Part three ways without ever saying a blunt goodbye, and say what hōgi baruttēne promises instead.",
+    "assesses": [
+      "KA-LEX-C04-HOOGU-01",
+      "KA-ETYMON-C04-HOOGU-02",
+      "KA-LEX-C04-HOOGI-BARUTTENE-01",
+      "KA-GRAMMAR-C04-HOOGI-BARUTTENE-02",
+      "KA-ETYMON-C04-HOOGI-BARUTTENE-03",
+      "KA-LEX-C04-NAALE-SIGONA-01",
+      "KA-ETYMON-C04-NAALE-SIGONA-02",
+      "KA-LEX-C04-MATTE-SIGONA-01",
+      "KA-ETYMON-C04-MATTE-SIGONA-02"
+    ]
   }
 }

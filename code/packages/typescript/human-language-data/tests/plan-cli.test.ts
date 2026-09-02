@@ -191,8 +191,16 @@ describe("the plan CLI", () => {
     //   +157  `core/exam-inventory-telugu-a1.json`: 326 A1 points, 169 covered.
     //   +107  `core/exam-inventory-tamil-a1.json`:  262 A1 points, 155 covered.
     // Composing these by arithmetic gives 793 or 668 depending which side you
-    // start from. Both are wrong; the merged tree measures 775.
-    expect(out).toMatch(/775 uncovered point\(s\) across 8 written/);
+    // start from. Both are wrong. The merged tree measured 775, then 774 when
+    // French chapter 8 landed and closed A1-LEX-07.
+    //
+    // THIS LINE IS THE HOTTEST COUNTER IN THE REPO -- every landing tranche and
+    // every new inventory touches it, and it has gone 529 -> 686 -> 793 -> 792
+    // -> 775 -> 774 in a single day across four branches. Do not compose it.
+    // Re-run `npm run plan` after your rebase, every time. Filed as a de-pin
+    // candidate: an absolute corpus total is the wrong shape for an assertion
+    // that many parallel authors must each edit.
+    expect(out).toMatch(/774 uncovered point\(s\) across 8 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -201,7 +209,7 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/775 uncovered point\(s\) across 8 written/);
+    expect(out).toMatch(/774 uncovered point\(s\) across 8 written/);
     // 529 -> 686, and 6 -> 7 written. `core/exam-inventory-telugu-a1.json`
     // enumerates 326 A1 points and the corpus covers 169, so Telugu contributes
     // its 157 unmapped points. The unmeasured remainder falls 18 -> 17 for the

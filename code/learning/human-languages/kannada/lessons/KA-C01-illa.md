@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: KA-C01-illa
+spine_node: SPINE-RESPOND-BASIC
 sequence: 40
 chapter: 1
 type: word
@@ -10,18 +12,32 @@ concept_tag: RESPONSE-NO
 prerequisites: [KA-C01-haudu]
 sounds: [independent-vowel-i, lla-conjunct]
 roots: [il]
-est_minutes: 4
+duration:
+  max_seconds: 270
+requires:
+  knowledge: [KA-LEX-C01-HAUDU-01]
+introduces:
+  knowledge: [KA-LEX-C01-ILLA-01, KA-GRAMMAR-C01-ILLA-02, KA-ETYMON-C01-ILLA-03]
+practises:
+  knowledge: [KA-LEX-C01-ILLA-01, KA-GRAMMAR-C01-ILLA-02, KA-ETYMON-C01-ILLA-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [KA-C01-haudu, KA-C01-namaskara]
 ---
 
 # ಇಲ್ಲ (illa) — "no," and a word Tamil shares almost exactly
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The partner of *haudu* — and a beautiful piece of family evidence:
 this Kannada "no" is essentially the **same word** as Tamil's *illai*.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *(Skim if you read Kannada.)*
 
@@ -35,6 +51,7 @@ Left to right: **ಇ · ಲ್ಲ** = *i-lla* →
 > **ಇಲ್ಲ** = **illa**
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[KA-LEX-C01-ILLA-01]; assesses=[] -->
 
 **ಇಲ್ಲ** (*illa*) is built on the old Dravidian root **il**, "not-being,
 absence" — so, like Tamil *illai*, it is really the statement **"[it] is not,
@@ -42,6 +59,7 @@ absence" — so, like Tamil *illai*, it is really the statement **"[it] is not,
 **ಇದೆ** (*ide*), "there is."
 
 ## Grammar Lens: Dravidian negates by *being*, not with a "not"-word
+<!-- hl-knowledge: introduces=[KA-GRAMMAR-C01-ILLA-02]; assesses=[] -->
 
 English inserts *not* / *no* to make a sentence negative. Kannada — exactly like
 Tamil — instead swaps in the **negative verb of existence**:
@@ -54,6 +72,7 @@ This is a **shared Dravidian inheritance**: Tamil *illai*, Kannada *illa*,
 Malayalam *illa* — one family, one way of saying a thing is not.
 
 ## Across the family — the same idea, five ways
+<!-- hl-knowledge: introduces=[KA-ETYMON-C01-ILLA-03]; assesses=[] -->
 
 | Language | "No / isn't" | Note |
 |---|---|---|
@@ -66,14 +85,8 @@ Malayalam *illa* — one family, one way of saying a thing is not.
 Three of the four Dravidian languages share *il-*; only Telugu picked a
 different native root. Hindi, from the other family entirely, is unrelated.
 
-## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-ಇ is the **independent vowel** “i” (word-initial, so a full
-letter). ಲ್ಲ is “lla” — ಲ *la* vowel-stripped and stacked
-under another *la*, a held “ll.” Read ಇ·ಲ್ಲ → *illa*.
-
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-ILLA-01, KA-GRAMMAR-C01-ILLA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: i · lla → "illa"]
@@ -81,6 +94,7 @@ under another *la*, a held “ll.” Read ಇ·ಲ್ಲ → *illa*.
 - [YOU SAY: "pustaka illa" — "there is no book"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-ILLA-01, KA-ETYMON-C01-ILLA-03] -->
 
 [PAUSE 3s] Read **ಇಲ್ಲ**. Literally, is it closer to "no" or "is not"? ("Is
 not / there is not.") Which two other Dravidian languages share this exact

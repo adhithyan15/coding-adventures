@@ -5,11 +5,14 @@
     "KA-C04-hoogu",
     "KA-C04-hoogi-baruttene",
     "KA-C04-naale-sigona",
-    "KA-C04-matte-sigona"
+    "KA-C04-matte-sigona",
+    "KA-C04-practice"
   ],
   "before": [
     "KA-EXT-009-LANGUAGE-SPECIFIC"
   ],
   "inline": [],
-  "after": []
+  "after": [
+    "KA-EXT-009-CONSOLIDATION"
+  ]
 }
