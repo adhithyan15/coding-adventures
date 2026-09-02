@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:9630241966a57f18",
+  "lessonIds": [
+    "KA-C70-say",
+    "KA-C70-quotative",
+    "KA-S138-vowel-sign-ee",
+    "KA-C70-because",
+    "KA-C70-i-think"
+  ],
+  "tex": "kannada/book/chapters/ch70-saying-so-and-saying-why.tex"
+}

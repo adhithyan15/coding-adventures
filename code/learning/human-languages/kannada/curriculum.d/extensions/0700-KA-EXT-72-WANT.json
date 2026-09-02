@@ -1,0 +1,14 @@
+{
+  "id": "KA-EXT-72-WANT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when something happens, say what I want, and answer a choice with a preference.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C72-when-clause",
+    "KA-C72-want",
+    "KA-C72-do-you-like",
+    "KA-C72-prefer"
+  ]
+}

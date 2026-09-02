@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-68-DENY",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "KA-C68-is-not",
+    "KA-C68-neither",
+    "KA-C68-dont-know",
+    "KA-C68-me-neither"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-68-DENY"
+  ],
+  "after": []
+}

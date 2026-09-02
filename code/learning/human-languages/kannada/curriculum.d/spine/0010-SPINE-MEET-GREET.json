@@ -4,7 +4,8 @@
     "KA-PATH-100",
     "KA-PATH-52-WELCOME",
     "KA-PATH-53-SKY",
-    "KA-PATH-60-ANIMAL"
+    "KA-PATH-60-ANIMAL",
+    "KA-PATH-72-WANT"
   ],
   "omits": [
     "GREETING-FORMAL",

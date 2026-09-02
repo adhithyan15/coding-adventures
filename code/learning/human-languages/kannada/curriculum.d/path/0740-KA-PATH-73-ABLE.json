@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-73-ABLE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "KA-C73-very",
+    "KA-C73-in-order-to",
+    "KA-C73-can",
+    "KA-C73-a-flower"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-73-ABLE"
+  ],
+  "after": []
+}

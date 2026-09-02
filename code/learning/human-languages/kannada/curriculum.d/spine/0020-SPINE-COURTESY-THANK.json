@@ -4,7 +4,8 @@
     "KA-PATH-008",
     "KA-PATH-51-COURTESY",
     "KA-PATH-56-HOUSE",
-    "KA-PATH-65-MANNERS"
+    "KA-PATH-65-MANNERS",
+    "KA-PATH-68-DENY"
   ],
   "omits": [
     "COURTESY-THANKS-CASUAL"
