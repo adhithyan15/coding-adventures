@@ -1,5 +1,96 @@
 # Changelog
 
+## Unreleased — chapters 11 and 12 are generated; Marathi owns no hand-written chapter (HL-C287)
+
+`ch11-farewells.tex` and `ch12-first-verbs.tex` now generate from their lessons.
+With chapters 9 and 10 already done, **Marathi holds no hand-written chapter and
+no schema-v1 lesson at all** — `handwritten_parity.py --check marathi` answers
+"already retired, nothing handwritten remains" and exits 0.
+
+- **Eleven schema-v1 lessons migrated**, 21 atoms between them, none over the
+  per-lesson budget of three. Per-character non-ASCII census across all eleven:
+  **zero** Devanagari or IAST characters changed.
+- **`MR-C04-kalji-ghya` and `MR-C04-practice` were in no path segment**; both
+  append to `MR-PATH-010` at their sequence positions under a new
+  `MR-EXT-040-FAREWELL-CARE-AND-CONSOLIDATION`. As in chapter 10, appending to
+  an existing segment avoids forcing the canonical re-shard to renumber every
+  following path file.
+- **`ळ` is taught, and chapter 11 is where a lesson finally says so.**
+  `MR-C04-kalji-ghya` teaches the retroflex *ḷa* in its letters block; it now
+  requires and practises `MR-SCRIPT-LLA-01`, the atom `MR-W03-lla` has owned
+  since chapter 3. `scriptClosureViolations` stays at **0**.
+- **`MR-C05-practice` required three atoms its prerequisite chain never
+  reached.** The chain ran `kaam-karne → rahne → bolne` and never touched
+  `MR-C05-mi-marathi-bolto`, whose phrase, etymon and no-copula atoms the recap
+  tests. The lesson is now a prerequisite, which is what `reviews_of` had been
+  claiming all along.
+- **A second atom minted alongside an existing one.** `MR-C07-jane` in chapter
+  14 owns `MR-GRAMMAR-PRESENT-GENDER`, for the gendered present that chapter 12
+  teaches *first*. Chapter 12 takes `MR-GRAMMAR-PRESENT-GENDERED-ENDING`,
+  the same call as `MR-LEX-AAHE-COPULA` in chapter 9 and for the same reason:
+  re-pointing a generated chapter has the larger blast radius.
+- **Subject–verb agreement fixed** in `MR-C04-practice`: "What **do** every
+  Marathi goodbye have in common?" It is the chapter's closing question, and
+  only the rendered page made it obvious.
+
+Counters, re-measured: lesson-content budget **194 → 205**; `atomsTaught`
+**197 → 218**; `atomMeasurementBlindLessons` **13 → 2**;
+`reinforcementWindowMisses` **293 → 353**, the same legitimate rise as before.
+`forwardReferences` stays at **4** and `scriptClosureViolations` at **0**, both
+measured before and after rather than assumed. Idioms, senses and culture
+claims never moved off 5 / 4 / 7 across the whole 179 → 205 migration.
+
+Verified: 124 test files / 1730 passing; all eleven `check:*` gates;
+language-ladder 39 files / 442 passing; the whole Marathi book compiles under
+XeLaTeX with zero overfull boxes, and both chapters' pages were read as rendered
+PDF — the retroflex ळ, the conjuncts in पुण्यात and करणे, the √kṛ radical and
+the three-column tables all set correctly.
+
+## Unreleased — chapter 10 is generated, and its six lessons are typed (HL-C287)
+
+`book/chapters/ch10-responding.tex` now generates from its six lessons. Two of
+Marathi's four hand-written chapters remain (11 and 12).
+
+- **Six schema-v1 lessons migrated**, eleven atoms between them, no lesson over
+  the per-lesson budget of three. Four `unknown` headings re-pointed by
+  prefixing: `The phrase, assembled` → `You'll want to know — …` (×3), plus the
+  recap's `The whole exchange` → `The exchange` and `Atoms banked this chapter`
+  → `What you've built — …`. Per-character non-ASCII census: **zero**
+  Devanagari or IAST characters changed.
+- **The spine node has to be the node of the segment that holds the lesson.**
+  `MR-C03-mi` sits in `MR-PATH-007` (SPINE-EXCHANGE-NAMES) and
+  `MR-C03-kaahi-harkat-nahi` in `MR-PATH-009` (SPINE-COURTESY-THANK), not the
+  chapter's headline SPINE-CHECK-WELLBEING. Declaring the chapter's node for
+  all six would have been wrong for two of them.
+- **`MR-C03-practice` joins `MR-PATH-009` rather than getting a segment of its
+  own.** A new path shard would have forced the canonical re-shard to renumber
+  every following segment by ten — a 25-file rename for no reader-visible gain
+  — and `curriculum-shards.test.ts` catches exactly that.
+- **`MR-C03-mi` required `MR-LEX-BARAM-01` without declaring the
+  prerequisite.** Its Grammar Lens reaches back to *baraṁ* by name and uses its
+  gendered form, so the dependency was real and only the declaration was
+  missing; `MR-C01-baram` is now a prerequisite.
+- **Two stale chapter pointers, both HL-C102's own failure mode.**
+  `MR-C03-mi-bara-aahe` said "the Chapter-1 *baraṁ*" in its recall while saying
+  "Chapter 4" twice elsewhere in the same lesson — the lesson id `MR-C01-` had
+  leaked into reader prose after a renumber. Named the thing instead. The
+  `.tex` carried the same error.
+- **One thing carried back from the `.tex`**: it dated the Perso-Arabic loans
+  to the **Deccan sultanates**; the lesson said only "Persian-speaking rulers",
+  which is true of several centuries. The anchor makes the claim checkable.
+
+Counters, re-measured: lesson-content budget **188 → 194** (six lessons became
+measurable, none added; idioms/senses/culture unchanged at 5 / 4 / 7);
+`atomsTaught` **186 → 197**; `atomMeasurementBlindLessons` **19 → 13**;
+`reinforcementWindowMisses` **267 → 293**, the usual legitimate rise as newly
+declared atoms become newly measured ones. `atomChapterSpikes` does NOT move —
+eleven atoms is inside the per-chapter budget of twelve. `atomsNeverRevisited`
+does not move either: no atom this chapter mints is a dead end.
+
+Verified: 124 test files / 1730 passing; all eleven `check:*` gates; the whole
+Marathi book compiles under XeLaTeX with zero overfull boxes, and chapter 10's
+pages were read as rendered PDF.
+
 ## Unreleased — chapter 9 is generated, and its nine lessons are typed (HL-C287)
 
 `book/chapters/ch09-introductions.tex` is now generated from its ten lessons.
