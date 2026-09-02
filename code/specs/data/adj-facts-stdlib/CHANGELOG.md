@@ -28,9 +28,10 @@ landed and why, not a semver-tracked API.
   A PRE-EXISTING PIN IN `electoral-college-count` FAILED, CORRECTLY. It asserted the whole citation,
   anchored on the JSON key and closed on the terminating quote, and its own comment cites #13916 and
   #13918 on why fragments are insufficient. It was right in form and **faithfully defended a value
-  absent from its own page**. Repointed to the curly form. Third instance this effort of an anchored
-  pin protecting a defect, after `mixture-types`' five-clause join and the `oganesson` substring
-  assertion.
+  absent from its own page**. Repointed to the curly form. Second instance this effort of an
+  *anchored* pin protecting a defect, after `mixture-types`' five-clause join. (The `oganesson`
+  case belongs to the opposite category and was miscited here at first: that assertion was a bare
+  **unanchored** substring, and what it obstructed was a correct repair.)
 
   Four restore-the-flattened-form mutations pass — each differs from the repaired value by **one
   character**, so a pin that survived would not be checking the glyph at all.
@@ -57,8 +58,24 @@ landed and why, not a semver-tracked API.
   all three would have made a currently-verbatim quote stop appearing on its own page. The file now
   carries a DO-NOT-NORMALIZE note so a future editor does not "fix" the odd one out.
 
-  *Scope note:* this is 4 of 15 confirmed glyph repairs. The other 11 are `language/*` and ship
-  separately — a 15-file PR across 15 libraries is harder to review than two coherent ones.
+  *Scope note:* this is **4 of 19** confirmed glyph repairs; **15 remain, and 4 of those are not
+  `language/*`** — `biology/cell-division-daughter-cells:93`,
+  `biology/cell-division-genetic-outcome:55`, `biology/heredity-term:122`, `physics/newton-laws:88`.
+  The language group still ships separately, because a 19-file PR is harder to review than coherent
+  ones.
+
+  **This entry first said "4 of 15, the other 11 all `language/*`", and that was wrong in a way worth
+  recording.** The collector wrapped its fetch in `except Exception: continue`. TLS to several hosts
+  fails on this machine (a proxy root the Python bundle does not carry), so those sites raised, were
+  skipped, and came out the far end **indistinguishable from sites that had been checked and found
+  clean**. A screen that reports absence of evidence as evidence of absence does not fail loudly; it
+  fails silently and confidently, and it had me telling the next installment to sweep `language/*`
+  and stop — leaving four biology/physics citations shipping text absent from their own pages. The
+  transport now goes through curl (system trust store, **verification not disabled**) and fetch
+  failures are counted and printed separately from clean results. One site still cannot be reached
+  (`biology/vitamin-deficiency-symptom:77`) and is now *visible* as unchecked rather than silently
+  counted as fine.
+
 
   533 test binaries / 1622 tests green, clippy `-D warnings` clean; all four `.query.adj` companions
   parse, run and abstain correctly.

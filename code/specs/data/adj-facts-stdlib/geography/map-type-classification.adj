@@ -50,10 +50,12 @@
 % WAS. The apostrophe below was re-verified against the live page under
 % #14070 and is U+2019; `map-type.adj:30` still carries the ASCII form and
 % is tracked in #14111. When that lands the two agree again. The original
-% claim ("byte-for-byte ... no new WebFetch") was made true by neither side
-% once one side was corrected -- an identity asserted between two copies is
-% only as durable as the copy nobody is editing. `trust consensus` -- the same tier the parent table already
-% carries (Geology.com is a reputable secondary reference).
+% claim ("byte-for-byte ... no new WebFetch") was made true by neither
+% side once one side was corrected -- an identity asserted between two
+% copies is only as durable as the copy nobody is editing.
+%
+% `trust consensus` -- the same tier the parent table already carries
+% (Geology.com is a reputable secondary reference).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
