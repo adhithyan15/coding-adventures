@@ -8,14 +8,19 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-type"
+      "writing-type",
+      "script-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:9812c788ff106819"
+    "sourceHash": "fnv1a64:5b1c9db919e44810",
+    "detachableSegments": [
+      "Script — ي (yāʾ) — two dots below",
+      "Script — Assemble — first اسم, then اسمي"
+    ]
   },
   "findings": []
 }
