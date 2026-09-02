@@ -1,22 +1,23 @@
 {
   "chapter": 9,
-  "title": "The First Verbs",
-  "label": "ch:first-verbs",
-  "canDo": "I can build short present-tense Bengali sentences with the chapter's first verbs.",
+  "title": "The Roof, the Teeth, and the Grid Closed",
+  "label": "ch:bn-roof-teeth-grid",
+  "canDo": "I can write the five consonants that finish Bengali's stop grid, hear the breath that separates চ from ছ, read আছি off the page, and say every consonant I own by where in the mouth it is made rather than by what it looks like.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C05-practice",
-    "kind": "task",
-    "summary": "Complete BN-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Bengali sentences with the chapter's first verbs.",
+    "lesson": "BN-W04-ja",
+    "kind": "reading",
+    "summary": "The chapter closes by reciting ten consonants back from their places of articulation rather than from their shapes, which is the difference between holding a grid and holding a list.",
     "assesses": [
-      "BN-CONCEPT-C03-AMI-01",
-      "BN-CONCEPT-C05-AMIBANGLABOLI-01",
-      "BN-CONCEPT-C05-BOLA-01",
-      "BN-CONCEPT-C05-KAJKORA-01",
-      "BN-CONCEPT-C05-PRACTICE-01",
-      "BN-CONCEPT-C05-THAKA-01"
+      "BN-SCRIPT-JA-01",
+      "BN-SCRIPT-CHA-01",
+      "BN-SCRIPT-CHHA-01",
+      "BN-SCRIPT-PA-01",
+      "BN-SCRIPT-DA-01",
+      "BN-SCRIPT-DHA-01",
+      "BN-SCRIPT-ACHHI-READ-01"
     ]
   }
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S132-sign-visarga",
     "language": "kannada",
-    "chapter": 43,
-    "sequence": 1051,
+    "chapter": 38,
+    "sequence": 845,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d18152eaea479fa3",
+    "sourceHash": "fnv1a64:f0d7a6991f07a4c9",
     "detachableSegments": [
       "Script you'll notice: ◌ಃ",
       "Writing: ◌ಃ — copy what you see"

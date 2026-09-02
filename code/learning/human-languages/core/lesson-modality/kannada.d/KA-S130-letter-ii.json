@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S130-letter-ii",
     "language": "kannada",
-    "chapter": 31,
-    "sequence": 601,
+    "chapter": 26,
+    "sequence": 555,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:f6cc0900434dc3e6",
+    "sourceHash": "fnv1a64:59e6f2441ac899aa",
     "detachableSegments": [
       "Script you'll notice: ಈ",
       "Writing: ಈ — copy what you see"

@@ -9,27 +9,27 @@ headword: ਚਾਹ
 romanization: cāh
 gloss: tea — a word that took the overland road out of China, and a level high tone hiding inside its own spelling
 concept_tag: PA-FOOD-TEA
-prerequisites: [PA-C10-paani]
+prerequisites: [PA-C10-paani, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora]
 sounds: [tone-high-level, kanna-aa]
 roots: [persian-caa, mandarin-cha]
 etymology_hook: ਚਾਹ is borrowed from Classical Persian čā, itself from Mandarin Chinese chá — the overland route out of China, the same one that gave Hindi-Urdu chāy, Russian chai, and Turkish çay; Punjabi's own final ਹ is not pronounced as a consonant at all, but marks the level high tone the word is actually said with.
 duration:
   max_seconds: 260
 requires:
-  knowledge: [PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-ETYMON-PAANI-DRINK, PA-SOUND-PUNJABI-TONE, PA-SOUND-TONE-FALLING]
+  knowledge: [PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-ETYMON-PAANI-DRINK, PA-SOUND-PUNJABI-TONE, PA-SOUND-TONE-FALLING, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01]
 introduces:
   knowledge: [PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-SOUND-TONE-HIGH-LEVEL]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [PA-CULTURE-CHA-OVERLAND-TRADE-ROUTE-01]
 practises:
-  knowledge: [PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-SOUND-TONE-HIGH-LEVEL, PA-LEX-PAANI, PA-ETYMON-PAANI-DRINK, PA-PHRASE-KIRPA-KARKE, PA-SOUND-PUNJABI-TONE, PA-SOUND-TONE-FALLING, PA-LEX-PASAND]
+  knowledge: [PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-SOUND-TONE-HIGH-LEVEL, PA-LEX-PAANI, PA-ETYMON-PAANI-DRINK, PA-PHRASE-KIRPA-KARKE, PA-SOUND-PUNJABI-TONE, PA-SOUND-TONE-FALLING, PA-LEX-PASAND, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C10-paani, PA-C08-samajhna, PA-C09-pasand]
+reviews_of: [PA-C10-paani, PA-C08-samajhna, PA-C09-pasand, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora]
 ---
 
 # ਚਾਹ — the ਹ that is not a consonant
@@ -58,8 +58,8 @@ has nowhere to fall *to*. It simply stays **high**: *cā́h*, level and high
 from the vowel to the end of the word.
 
 Gurmukhi has no separate tone mark. A trailing **ਹ** that is not pronounced
-is, in practice, how the script writes this tone — the same way **ਗ਼**'s dot
-writes a borrowed sound. Say **ਖਾਣਾ** *khāṇā* again, flat, then **ਚਾਹ** *cā́h*,
+is, in practice, how the script writes this tone — the same way the dot
+under a borrowed letter writes a borrowed sound. Say **ਖਾਣਾ** *khāṇā* again, flat, then **ਚਾਹ** *cā́h*,
 high: two words that both end their vowel clean, one levelled and one not.
 
 ## The word, taken apart — the tea that went overland
@@ -84,7 +84,7 @@ language met it on a caravan route or a ship's deck.
 - [YOU RECALL: what **ਮੈਨੂੰ ... ਪਸੰਦ ਹੈ** does to the thing you like]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-SOUND-TONE-HIGH-LEVEL, PA-SOUND-TONE-FALLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-SOUND-TONE-HIGH-LEVEL, PA-SOUND-TONE-FALLING, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01] -->
 <!-- hl-activity: {"id":"PA-C10-chaa-tone","kind":"text","assesses":["PA-SOUND-TONE-HIGH-LEVEL"],"prompt":"Is chaa's tone falling or level?","answer":"level","accepted":["high level","level high","high and level","stays high"],"feedback":{"correct":"Right: with nothing left in the word to fall across, the high pitch simply stays level.","incorrect":"Level. Chapter 8's falling tone needed more word after it; chaa is one syllable, so the high pitch has nowhere to fall and stays level."},"response_seconds":8} -->
 
 [PAUSE 3s] Did *cāh* come by land or by sea? (**Land** — through Persian, from

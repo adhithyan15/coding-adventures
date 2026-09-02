@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S118-letter-dda
 spine_node: SPINE-MEET-GREET
-sequence: 421
+sequence: 375
 delivery: script
-chapter: 14
+chapter: 9
 type: writing
 headword: "ಡ"
 gloss: the single character ಡ — recognised inside words you already say
@@ -49,8 +49,7 @@ You already say these, and every one of them has ಡ somewhere inside it:
 
 - **ಮಾತನಾಡು** *mātanāḍu* — to speak
 - **ಕೆಲಸ ಮಾಡು** *kelasa māḍu* — to work (lit. "work-do")
-- **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು** *nanage kannaḍa gottu* — 'I know Kannada'
-- **ಒಂದು ಎರಡು ಮೂರು ನಾಲ್ಕು ಐದು** *ondu eraḍu mūru nālku aidu* — one to five
+- **ಎರಡು** *eraḍu* — two
 
 ## Writing: ಡ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-118] -->

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C13-doya-kore",
     "language": "bengali",
-    "chapter": 19,
-    "sequence": 950,
+    "chapter": 22,
+    "sequence": 1110,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c2a926115241671f",
+    "sourceHash": "fnv1a64:87758cc620b477fc",
     "detachableSegments": [
       "The letters in this word"
     ]

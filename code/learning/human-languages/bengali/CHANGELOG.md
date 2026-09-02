@@ -2,6 +2,108 @@
 
 ## [Unreleased]
 
+### Added — eight shapes, a body-parts reading chapter, and a retrieval chapter (HL-C201)
+
+The previous tranche measured its own ceiling honestly: with every script lesson
+hypothetically pre-taught, closure still reported 36, so **reordering was worth
+at most five more and the rest was inventory**. This tranche buys the inventory.
+
+**Twenty-four lessons, four chapters, no vocabulary invented.** Every one of the
+eight new shapes is anchored on a word the learner has already said aloud, taught
+one per lesson, and placed before the lessons that show it wherever gloss-first
+allows:
+
+| chapter | shape | anchor, first said in |
+|---|---|---|
+| 4 | **য** | হ্যাঁ, the greetings chapter |
+| 4 | **ঁ** | হ্যাঁ, the greetings chapter |
+| 8 | **গ** | লাগলো, inside *ālāp kore bhālo lāglo* |
+| 9 | **ছ** | আছি, the responding chapter |
+| 10 | **ও** | হওয়া, glossed in the farewells chapter |
+| 10 | **়** | য় inside হওয়া |
+| 17 | **ড** | পড়া, the mind-and-page chapter |
+| 21 | **ৃ** | হৃদয়, the body chapter |
+
+`neverTaughtGlyphs` **22 → 11**; `taughtGlyphs` 26 → 34; `scriptLessons` 45 → 60.
+
+Chapter 8 split into two so the grid could take গ and ছ without breaching the
+twelve-atom chapter ceiling: chapter 8 now closes the throat row (ক/খ/গ) and
+chapter 9 closes the whole twelve-cell grid. Two chapters are new outright —
+**chapter 10**, which buys ও and the dot below and reads হওয়া whole, and
+**chapter 21**, which reads চোখ, নাক and মুখ for free before spending ৃ on হৃদয়.
+মুখ moved from the colours-reading chapter to the body-reading chapter, where the
+word it names was taught.
+
+### Changed — Sanskrit citation forms are given in IAST, not in Bengali script
+
+An **editorial** decision, and a pedagogical one rather than an orthographic one.
+Bengali script genuinely *is* used for Sanskrit in Bengal; `√দৃশ্` is not wrong
+the way a Devanagari citation would be wrong in a book that loads no Devanagari
+font. But a citation form set in Bengali script puts letters in front of a reader
+who has not been taught them, and `measureScriptClosure` counts that, correctly.
+The IAST was already sitting in italics beside every one of these forms, so
+dropping the Bengali-script twin costs the reader nothing.
+
+Fifty-four forms across thirty-two lessons: twenty-one Sanskrit roots (*√kṛ*,
+*√dṛś*, *√bhū*, *√jñā*, …), the Sanskrit and Prakrit word-forms cited as
+ancestors (*asmi*, *bhadra*, *bhāvayati*, *dugdha*, *bhrātṛ*, *cakṣus*, *cakhu*,
+*coukh*, *karpaṭa*, *śāṭī*), the Persian *chashm*, and the prefixes *saha-* and
+*su-*. A Bengali **word** stays in Bengali script even where its Sanskrit
+ancestor is spelled identically — হৃদয়, মুখ, দয়া, নীল, ভগিনী, ক্ষমা, শ্বেত — because
+the rule is about which language a form is being *cited as*, not how it looks.
+
+### Fixed — script closure 41 → 21, and the two levers measured apart
+
+The tranche ran both levers and measured each on its own, because the corpus has
+five other tracks with the same citation pattern and they deserve a number rather
+than a repeat of the experiment:
+
+- the orthography change **alone** clears **6** of the 41 lessons;
+- the eight new letters **alone** clear **9**;
+- **5** more clear only when both are done — the lesson's untaught set had one
+  glyph from each lever.
+
+That is **41 → 21**, and corpus-wide 518 → 498. `headwordsWithoutRomanization`
+stays 0. Bengali's cross-chapter prose references stay at their ceiling of 47
+after all 139 lessons were remapped for the new chapter numbering, and forward
+references stay at 4.
+
+Six of the twenty-one that remain want **ঞ** or **ষ**, both of which appear in
+ordinary Bengali words rather than citations (জিজ্ঞাসা, ওষুধ, ক্ষমা) and so are the
+next inventory to buy.
+
+### Added — chapter 26, nine lessons that teach nothing
+
+A `SCRIPT-RECOG` atom used to be taught, called back once, and abandoned. The
+three reading chapters were the first answer; this is the second, and it copies
+the shape Gujarati proved.
+
+Nine lessons, **zero new atoms**, each returning material **98–104 lesson
+positions** back — the R4 window, reached deliberately rather than by accident.
+The hand work sits in a detachable `Writing — from sound` block, so the whole
+chapter has a **voice core** and can be driven by ear; that is the shape Urdu and
+Sanskrit lost sixteen and sixty-one lessons of hands-free reach by not using.
+
+- retrieval misses at **R4: 26 → 14**
+- atoms never revisited: **9 → 5**
+- chapter-prefix reach (hands-free): **70 → 79 lessons**, and chapter 26 is
+  startable by ear
+- lessons rescued by a detachable writing segment: 55 → 64
+
+R1 34 → 38, R2 70 → 85 and R3 80 → 88 all grew, and that is reported rather than
+hidden: fifteen new atoms open fifteen new sets of windows, and a return inside
+R2 (5–15 lessons) or R3 (20–60) cannot be manufactured from the end of the book.
+Two honest R2 returns were added where the prose could carry them — আমি-read and
+কেমন-read now read হ্যাঁ back, seven and fourteen lessons after it was taught.
+
+### Changed — chapter numbering, 22 chapters to 26
+
+Chapters 1–8 keep their numbers. Old 9–18 shift by one (the split of chapter 8
+and the new chapter 10), old 19–22 by two (the new chapter 21). All 139 lessons,
+the chapter ledger, the book targets, the generated LaTeX, narration, modality
+and the gentle-ramp snapshots were regenerated rather than hand-edited. Chapter
+17 lost its "No New Pieces" title, which stopped being true when it took ড.
+
 ### Changed — the script strand is now interleaved, not appended (HL-C194)
 
 **No lesson was added, removed, or renamed.** All 115 lessons are the same 115

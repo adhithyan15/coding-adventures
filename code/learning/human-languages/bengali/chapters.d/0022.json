@@ -1,22 +1,21 @@
 {
   "chapter": 22,
-  "title": "Cloth, Shirt, Sari, and Glasses",
-  "label": "ch:bn-cloth-shirt-sari-glasses",
-  "canDo": "I can name cloth, a shirt, a sari and glasses in Bengali, and say which word English borrowed directly and which is built on the same Persian word already met for 'eye'.",
+  "title": "Please, Sorry, and Welcome",
+  "label": "ch:bn-please-sorry-welcome",
+  "canDo": "I can say please and sorry in Bengali, excuse myself politely, and welcome someone with a word that carries the same 'hither' prefix already met on the verb for coming.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-POLITE-REQUEST-REPAIR",
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C15-choshma",
+    "lesson": "BN-C13-sbagotom",
     "kind": "production",
-    "summary": "The chapter closes on চশমা, 'glasses', built on Persian chashm, 'eye' — the very word চোখ's own lesson once named as its only cousin outside the family, here turned into 'eye-thing'. The reader names all four garments — kāpoṛ, jāmā, shāṛi, chôshmā — states that শাড়ি reached English as a direct modern loanword rather than through a shared ancient root, and reaches back to rescue the dative construction and ভালোবাসা, unrevisited since they were taught.",
+    "summary": "The chapter closes on স্বাগতম, 'welcome', literally 'a good coming': su-, 'good' (PIE h1su-, cousin of Greek eu-), fused by ordinary sandhi onto āgata, 'arrived', which opens with the same ā- 'hither' prefix already met on āsā, this time riding √gam, PIE gʷem-, the secure direct ancestor of English come. The reader gives all four new words of the chapter — doya kore, dukkhito, maf korben, shbagotom — closing the two courtesy concepts, please and sorry, this book had never taught, and a third greeting concept, welcome.",
     "assesses": [
-      "BN-LEX-C15-KAPOR-01",
-      "BN-LEX-C15-JAMA-01",
-      "BN-LEX-C15-SHARI-01",
-      "BN-LEX-C15-CHOSHMA-01",
-      "BN-GRAMMAR-C09-DATIVE-02",
-      "BN-LEX-C09-BHALOBASA-03"
+      "BN-LEX-C13-DOYAKORE-01",
+      "BN-LEX-C13-DUKKHITO-01",
+      "BN-LEX-C13-MAFKORBEN-01",
+      "BN-LEX-C13-SBAGOTOM-01"
     ]
   }
 }

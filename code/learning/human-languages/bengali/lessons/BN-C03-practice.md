@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C03-practice
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 360
+sequence: 390
 chapter: 5
 type: practice
 headword: (dialogue)

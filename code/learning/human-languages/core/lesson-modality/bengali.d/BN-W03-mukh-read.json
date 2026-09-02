@@ -3,7 +3,7 @@
     "id": "BN-W03-mukh-read",
     "language": "bengali",
     "chapter": 21,
-    "sequence": 1040,
+    "sequence": 1080,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:b935830975773dfb",
+    "sourceHash": "fnv1a64:f8667c2d497bba51",
     "detachableSegments": [
       "Script"
     ],

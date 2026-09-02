@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C11-bondhu
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 850
-chapter: 16
+sequence: 960
+chapter: 18
 type: word
 headword: বন্ধু
 romanization: bôndhu
@@ -44,7 +44,7 @@ make.
 > **বন্ধু** — *bôndhu* — **friend**
 
 **আমার বন্ধু** (*āmār bôndhu*) — my friend. One word, whether that friend is
-a man or a woman: Chapter 11 already told you Bengali carries no grammatical
+a man or a woman: Chapter 13 already told you Bengali carries no grammatical
 gender on its verbs, its adjectives, or its nouns, and বন্ধু is the plainest
 place to feel it — no ending changes, no second word to learn.
 
@@ -61,7 +61,7 @@ together with no vowel between them, said as one cluster: *n-dhu*.
 **বন্ধু** is Sanskrit **বন্ধু** (*bandhu*), kept essentially whole rather than
 worn down the way চা or ভাত were — Bengali took this one straight from
 Sanskrit rather than inheriting it through centuries of sound change. It is
-built on **√বন্ধ্** (*√bandh*, "to bind, to tie"), from PIE **\*bʰendʰ-** —
+built on *√bandh* ("to bind, to tie"), from PIE **\*bʰendʰ-** —
 and here, unusually, the English cousin is not buried: **bind**, **bond**
 and **band** all come from the very same root. Bengali did not need to
 explain what a friend is; the word does it for you. A বন্ধু is, at the root,
@@ -82,5 +82,5 @@ someone you are bound to.
 বন্ধু built on, and which English words share it? (**√bandh, "to bind"** —
 **bind**, **bond**, **band**.) Is বন্ধু a word Bengali inherited through sound
 change, or one it kept whole from Sanskrit? (**Kept whole** — a tatsama.)
-Does বন্ধু change for a friend who is a woman? (**No** — Chapter 11 already
+Does বন্ধু change for a friend who is a woman? (**No** — Chapter 13 already
 told you why: no grammatical gender, anywhere in the language.)

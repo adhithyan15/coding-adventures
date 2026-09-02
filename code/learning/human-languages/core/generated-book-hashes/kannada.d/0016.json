@@ -1,10 +1,11 @@
 {
   "language": "kannada",
   "chapter": 16,
-  "sourceHash": "fnv1a64:636e88cd515f353f",
+  "sourceHash": "fnv1a64:a04b7027d63b0d31",
   "lessonIds": [
     "KA-C16-tingalugalu",
-    "KA-S120-letter-ha"
+    "KA-S126-letter-u",
+    "KA-S147-digit-eight"
   ],
   "tex": "kannada/book/chapters/ch16-months.tex"
 }

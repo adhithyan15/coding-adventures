@@ -1,0 +1,27 @@
+{
+  "id": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read seven more Bengali words I already say — হ্যাঁ, আছি, লাগলো, হওয়া, পড়া, চোখ, নাক, মুখ and হৃদয় among them — and write the eight pieces they needed: য, ঁ, ছ, গ, ও, the dot below, ড and ৃ.",
+  "prerequisites": [
+    "BN-EXT-021-SCRIPT-VOWEL-BODIES"
+  ],
+  "lessons": [
+    "BN-W02-ya",
+    "BN-W02-chandrabindu",
+    "BN-W02-hyan-read",
+    "BN-W03-ga",
+    "BN-W04-chha",
+    "BN-W04-achhi-read",
+    "BN-W04-o-indep",
+    "BN-W04-nukta",
+    "BN-W04-howa-read",
+    "BN-W04-dda",
+    "BN-W04-pora-read",
+    "BN-W04-chokh-read",
+    "BN-W04-nak-read",
+    "BN-W04-ri-matra",
+    "BN-W04-hridoy-read"
+  ]
+}

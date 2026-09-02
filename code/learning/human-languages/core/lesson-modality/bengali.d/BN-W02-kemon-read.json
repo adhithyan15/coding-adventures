@@ -3,7 +3,7 @@
     "id": "BN-W02-kemon-read",
     "language": "bengali",
     "chapter": 6,
-    "sequence": 420,
+    "sequence": 450,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:1f2445130946e074",
+    "sourceHash": "fnv1a64:fd3083c7a0534024",
     "detachableSegments": [
       "Script"
     ],

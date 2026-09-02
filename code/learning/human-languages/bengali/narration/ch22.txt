@@ -1,140 +1,150 @@
-Bengali, chapter 22: Cloth, Shirt, Sari, and Glasses.
+Bengali, chapter 22: Please, Sorry, and Welcome.
 4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 4.
-কাপড় (kapor) — "cloth," a word five languages share.
+দয়া করে (doya kore) — "please," a kindness done.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Five colors named. Now the things they color, starting with the plainest word for cloth itself — and a sound you have not needed since the verb for reading.
+The heart word closed the last chapter. A new one opens on a feeling that starts in the same place — and a word this book has never taught you before now.
 
-You'll want to know: কাপড়.
-কাপড় (kapor) — kāpoṛ — cloth, clothing.
-সাদা কাপড় (kapor) (shādā kāpoṛ) — white cloth.
+You'll want to know: দয়া করে.
+দয়া করে — doya kore — please.
+দয়া করে বসুন (doya kore bôshun) — please, sit.
 
 The letters in this word.
-কাপড় (kapor) is ক (kô) with the vowel sign া (ā), plus প (pô), plus ড় — the flapped letter, the same curled-tongue sound the reading verb needed, silent-final here: kā-po-ṛ.
+দয়া is দ (dô) plus য় (the glide already met inside হৃদয়) with the vowel sign া (ā): doyā. করে is ক (kô) plus র (r) with the vowel sign ে (e): kôre.
 
 The word, taken apart.
-কাপড় (kapor) traces to Sanskrit কর্পট (karpaṭa), "rag, old cloth." Here the honesty runs deeper than usual: even Sanskrit's own dictionaries label karpaṭa a deśī word — homegrown vernacular vocabulary that was already sitting inside classical Sanskrit rather than inherited from any older reconstructed root. No further ancestor is claimed for it at all. What makes it worth teaching anyway is how far it travelled sideways: the identical word, worn down by the same kind of sound change, gives Hindi kapṛā, Marathi kapaḍā, Gujarati kapaḍũ, and Punjabi kapṛā — five Indo-Aryan languages sharing one root together, none of them borrowing from the others.
+দয়া is Sanskrit দয়া (dayā), "compassion, pity." Most Indo-Europeanists trace its root back to PIE deh₂-, "to divide, to apportion" — the same root proposed for Greek daíomai, "to divide," and dêmos, "a portion of land, the people," which English holds without inheriting it directly: democracy, epidemic, demographic. If the comparison is right, compassion and sharing are the same idea at the root — you feel দয়া for someone by dividing your own good fortune with them, the warmth this book already located in হৃদয়, the heart.
+
+Grammar Lens: করা wears a new outfit.
+Noun plus করা already builds a verb — কাজ করা, "to work"; জিজ্ঞাসা করা, "to ask." Here করা takes a different shape, করে, "having done": not a full sentence on its own, but a piece that leans on the next word.
+[a table of 2 rows, read aloud]
+shape of করা: a finite ending (করি, করে, করেন…) job: states an action. example: আমি কাজ করি — I work.
+shape of করা: করে, unchanged. job: "having done," leaning forward. example: দয়া করে (doya kore) বসুন — please, sit.
+দয়া করে (doya kore) literally says "having done a kindness, [now do this]" — the kindness is named, then the actual request follows.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "kāpoṛ" — cloth]
+[your turn — say: "doya" — compassion, then "kore" — having done]
 [pause 8 seconds for the answer]
-[your turn — say: "shādā kāpoṛ" — white cloth]
+[your turn — say: "doya kore bôshun" — please, sit]
 [pause 8 seconds for the answer]
-[your turn — say: the flap, again — "poṛā … kāpoṛ"]
-[pause 8 seconds for the answer]
-[your turn — say: the family sharing this root — "kāpoṛ … kapṛā … kapaḍā"]
+[your turn — say: the family this word joins — "kāj kôrā … jijñāsā kôrā … doya kore"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does কাপড় (kapor)'s root, karpaṭa, trace back to a reconstructed PIE ancestor? (No — Sanskrit's own dictionaries call it a homegrown, deśī word.) Name two other Indo-Aryan languages that share this exact root. (Hindi's kapṛā, Marathi's kapaḍā — or Gujarati's kapaḍũ, or Punjabi's kapṛā.)
+What does দয়া করে (doya kore) mean literally, piece by piece? ("Having done a kindness" — দয়া "compassion" + করে "having done.") Is করে here a full sentence by itself? (No — it leans forward onto the request that follows it.) One quick reach back: what root does দয়া share with a very old disputed argument about democracy? (PIE deh₂-, "to divide" — the same proposed root behind Greek dêmos, and behind the warmth হৃদয়, the heart, already carries — two lessons after নাক, the nose, which shares none of it.)
 
 
 Lesson 2 of 4.
-জামা (jama) — "shirt," a third word from Persian.
+দুঃখিত (dukkhito) — "sorry," and a prefix that reaches Greek.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Cloth in general, now a specific garment — and Persian, again, supplies the word.
+Last lesson's kindness gets a request said politely. This lesson is what you say when the kindness came too late.
 
-You'll want to know: জামা.
-জামা (jama) — jāmā — shirt.
-লাল জামা (jama) (lāl jāmā) — a red shirt.
+You'll want to know: দুঃখিত.
+দুঃখিত — dukkhito — sorry.
+আমি দুঃখিত (āmi dukkhito) — I'm sorry.
 
 The letters in this word.
-জামা (jama) is জ (jô) with the vowel sign া (ā), plus ম (mô) with the vowel sign া (ā) again: jā-mā.
+দুঃখিত is দ (dô) with the vowel sign ু (u), then ঃ — a new mark, the visarga, two small stacked dots that add a light breath after the vowel — then খ (kh) with the vowel sign ি (i), then ত (t, silent at the end). Spelled duḥkhita, said dukkhito: the breath mark softens toward the consonant that follows it rather than staying a separate sound.
 
 The word, taken apart.
-জামা (jama) is a Persian loan, jāma, "robe, garment" — carried into Hindi and Urdu as the identical word, jāmā. Count it up: of the clothing and color words in this small set, three now trace to Persian rather than Sanskrit — লাল, সবুজ, and জামা (jama). Bengali's everyday wardrobe vocabulary leans on the same trading world its colors did.
+দুঃখিত (dukkhito) is built on Sanskrit দুঃখ (duḥkha), "sorrow, suffering" — the word Buddhism made famous as dukkha. Take it apart and one half is certain: দুঃ/দুস্ (dus-) means "bad, difficult," from PIE dus-, the very prefix inside Greek dys-: dystopia, dysfunctional. The other half, খ (kha), is where the certainty ends. Sanskrit's own grammatical tradition explains it as "an axle-hole" — a duḥkha journey is a bad axle-hole, a rough ride, set against সুখ (sukha), "a good axle-hole," comfort. It is a vivid story, and it is repeated everywhere. It is also, by the account of modern Sanskritists including Mayrhofer, not a story to trust: the axle-hole reading may be a later folk explanation grafted onto a word whose real root is lost. দুঃ's cousin is real; খ's is a story, reported and not settled.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "jāmā" — shirt]
+[your turn — say: "dukkhito" — sorry]
 [pause 8 seconds for the answer]
-[your turn — say: "lāl jāmā" — a red shirt]
+[your turn — say: "āmi dukkhito" — I'm sorry]
 [pause 8 seconds for the answer]
-[your turn — say: the three Persian loans so far — "lāl … shôbuj … jāmā"]
+[your turn — say: the secure half and its Greek cousin — "dus- … dystopia"]
+[pause 8 seconds for the answer]
+[your turn — say: last lesson's request again — "doya kore bôshun"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does জামা (jama) come from? (Persian jāma, "robe, garment," the identical word Hindi and Urdu also use.) How many of this set's clothing and color words now trace to Persian? (Three — লাল, সবুজ, জামা (jama).)
+Say "I'm sorry" in Bengali. (আমি দুঃখিত (dukkhito).) Which half of দুঃখ is a secure PIE prefix, and which English word shares it? (দুঃ/dus-, "bad" — dystopia, by way of Greek dys-.) Is the "bad axle-hole" story of খ settled fact? (No — a repeated tradition, treated with real skepticism by modern Sanskritists.) Sorrow, like compassion, can weigh somewhere specific — where? (হৃদয়, the heart.)
 
 
 Lesson 3 of 4.
-শাড়ি (shari) — "sari," a word English simply borrowed.
+মাফ করবেন (maf korben) — "excuse me," borrowed and softened.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Every English cousin this book has traced so far has been buried deep — a shared PIE root, worn down over thousands of years past recognizing. This word's road into English was much shorter.
+Last lesson's word for "sorry" was a native Sanskrit word. This one is a loanword — the very same loanword Hindi uses in its own "sorry" phrase — and it softens a request in a way you have not met yet.
 
-You'll want to know: শাড়ি.
-শাড়ি (shari) — shāṛi — sari.
-লাল শাড়ি (shari) (lāl shāṛi) — a red sari.
+You'll want to know: মাফ করবেন.
+মাফ করবেন — maf korben — excuse me.
+মাফ করবেন, একটু জায়গা দেবেন? (maf korben, êktu jāygā debên?) — excuse me, could you make a little room?
 
 The letters in this word.
-শাড়ি (shari) opens with শ — a second letter for an s-family sound, a different one from স. Sanskrit distinguished three of these (স, শ, and a third, ষ); modern Bengali speech has merged them into one sound, but the spelling keeps them apart. Then া (ā), ড় (the flap you now know from কাপড় (kapor)), and ি (i): shā-ṛi.
+মাফ is ম (mô) with া (ā) plus ফ (ph, the puffed p). Notice what is missing: Hindi marks this same borrowed sound with a small dot under its own letter for pha, a nuqtā, to write a dedicated letter for f. Bengali's script has no such mark at all — ফ alone serves for both the native puffed p and this borrowed f, and only habit tells a reader which one a given word means.
 
 The word, taken apart.
-শাড়ি (shari) traces to Sanskrit শাটী (śāṭī), "a strip of cloth, a garment," worn down through Middle Indic সাড়ী (sāḍī) into Bengali and Hindi's shared śāṛī/sāṛī. Here is the unusual part: every English cousin this book has traced so far — heart, nose, bind, come — went underground for thousands of years, worn down by sound change on both ends until only a shared ancient root connects them. This word took a different road. It entered English directly, in the modern era, as an ordinary borrowed word: "sari." No PIE root, no centuries of drift — just a garment's name, carried whole into another language's dictionary.
+মাফ is not Bengali, and not Sanskrit: it is borrowed, by way of Persian, from Arabic 'afw, "to pardon, to wipe a wrong away." Hindi borrowed the identical word for the identical job. Bengali also keeps a formal, Sanskritic cousin for the same idea, ক্ষমা করবেন, from ক্ষমা (kṣamā), "patience, forbearance" — the everyday loan and the bookish native word side by side, the same split Hindi keeps.
+
+Grammar Lens: the future, asked to be gentle.
+The tea-offering pattern you already own reuses a present verb — আপনি খান — to make a request. করবেন does the same job with a different tense: it is the plain future, "you will do," not a command at all by its grammar, and yet its job here is exactly a request — a third shape for করা, beside last lesson's participle করে.
+[a table of 2 rows, read aloud]
+tense used: present habitual. what it does: states, and doubles as a request. example: আপনি খান — you eat / please eat.
+tense used: future. what it does: states, and doubles as a softer request. example: মাফ করবেন (maf korben) — you will excuse / please excuse.
+The future's distance is what buys the softness: asking rather than telling, even grammatically.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "shāṛi" — sari]
+[your turn — say: "maf korben" — excuse me]
 [pause 8 seconds for the answer]
-[your turn — say: "lāl shāṛi" — a red sari]
-[pause 8 seconds for the answer]
-[your turn — say: the second s-letter — "শ, beside স"]
-[pause 8 seconds for the answer]
-[your turn — say: three garments so far — "kāpoṛ … jāmā … shāṛi"]
+[your turn — say: the two soft requests compared — "chā khān … maf korben"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How did শাড়ি (shari) reach English — through a shared ancient root, worn down over millennia, or as a direct modern loanword? (A direct loanword — "sari," borrowed whole, no PIE root involved.) How many distinct s-family letters did Sanskrit distinguish, now merged in Bengali speech? (Three — স, শ, ষ.)
+Where does মাফ come from? (Arabic 'afw, "to pardon," by way of Persian — the same loan Hindi's own "sorry" phrase uses.) What tense is করবেন, and why does that make it gentler than a command? (Future — "you will do," asking rather than telling.)
 
 
 Lesson 4 of 4.
-চশমা (choshma) — "glasses," built on an old cousin's name.
+স্বাগতম (shbagotom) — "welcome," a good arrival.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Three garments named. This one closes the chapter by returning to the very body part the eye lesson once traced to a single named Persian cousin — and building something new out of it.
+This chapter has taught what to say after a mistake. It closes on what to say before anything goes wrong at all — a word built on the same "hither" you have carried since the verb for coming.
 
-You'll want to know: চশমা.
-চশমা (choshma) — chôshmā — glasses.
-আমার চশমা (choshma) (āmār chôshmā) — my glasses.
+You'll want to know: স্বাগতম.
+স্বাগতম — shbagotom — welcome.
+আমাদের বাড়িতে স্বাগতম (āmāder bāṛite shbagotom) — welcome to our house.
 
 The letters in this word.
-চশমা (choshma) is spelled চ (chô) + শ (shô, the second s-letter শাড়ি (shari) just introduced) + ম (mô) + া (ā) — four sounds by the spelling. Ordinary speech thins it to three: chôsh-mā, not chô-sho-mā — an everyday shortening this particular loanword has settled into.
+স্বাগতম (shbagotom) is স্ব (a conjunct, স joined straight to ব with no vowel between — sbô, tilted by the same s becomes sh habit every Sanskrit word in this book has shown) plus া (ā), then গ (gô), ত (tô), and ম (mô, keeping its own inherent vowel at the very end): shbā-go-to-m.
 
 The word, taken apart.
-চশমা (choshma) is built on Persian চশম (chashm), "eye" — the exact word the eye lesson once named as চোখ's only named cousin outside the Indo-Aryan family, with no secure English descendant claimed for চোখ itself. চশমা (choshma) takes that word and adds a suffix that turns "eye" into "eye-thing": spectacles, the thing that sits in front of your eyes. Bengali did not build this the way it built জিজ্ঞাসা করা or সাহায্য করা, by hanging করা on a noun; it took a ready-made South Asian coinage on a Persian root, the same formation Hindi and Urdu also use.
+স্বাগতম (shbagotom) is Sanskrit স্বাগতম (shbagotom) (svāgatam), built from two pieces fused together. The second piece, āgata, "arrived, come," opens with the very same আ-, "hither," that আসা's own lesson already named — except here it rides a different verb, √gam ("to go, to come"), not আসা's own unsettled stem. √gam is PIE gʷem-, and this root is about as secure as roots get: it is the direct ancestor of English come, and, by way of Latin venīre, of advent and convene too. The first piece, su- ("good"), loses its vowel to the glide ব when the next syllable also opens with a vowel — ordinary Sanskrit sandhi, the same trade su- plus āgata makes every time: svāgata. su- is PIE h₁su-, cousin of Greek eu-, the "good" inside eulogy and euphoria. Put the pieces back together: স্বাগতম (shbagotom) is, literally, "a good coming."
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "chôshmā" — glasses]
+[your turn — say: "shbagotom" — welcome]
 [pause 8 seconds for the answer]
-[your turn — say: "āmār chôshmā" — my glasses]
+[your turn — say: "āmāder bāṛite shbagotom" — welcome to our house]
 [pause 8 seconds for the answer]
-[your turn — say: the eye it is built on — "chashm … chôshmā"]
+[your turn — say: the shared prefix — "ā-, hither" — on āsā, then on āgata]
 [pause 8 seconds for the answer]
-[your turn — say: all four garments of this chapter — "kāpoṛ, jāmā, shāṛi, chôshmā"]
+[your turn — say: the two secure cousins — "gam … come" and "su- … eu-"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Persian word is চশমা (choshma) built on, and where did this book meet it before? (Chashm, "eye" — named as চোখ's only cousin outside the family.) Say all five colors and all four garments this small set has now taught. (লাল, নীল, কালো, সাদা, সবুজ; কাপড় (kapor), জামা (jama), শাড়ি (shari), চশমা (choshma).) Two reaches further back, to close out: who is the subject of āmār bhālo lāge, "I like it"? (Not you — the good is, the same shape as āmār chôshmā, "to me, glasses.") And is āmi bhālobāsi, "I love," built the same inverted way? (No — loving takes you as subject; liking happens to you.)
+Give "welcome" in Bengali. (স্বাগতম (shbagotom).) What does স্বাগতম (shbagotom) mean, piece by piece? ("Good" plus "come" — a good arrival.) Which prefix does it share with আসা, and on a different verb this time? (আ-, "hither" — on √gam here, not আসা's own uncertain stem.) Run this chapter's three other new words back: a kindness done, a word for sorrow, and a borrowed pardon. (দয়া করে (doya kore), দুঃখিত (dukkhito), মাফ করবেন (maf korben).) One more reach: what tense softened that pardon into a request? (Future — করবেন, "you will do.")

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Water, Tea, Milk, and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9b254de191b7b036",
+  "sourceHash": "fnv1a64:7c002113e716cf35",
   "lessons": [
     {
       "id": "PA-C10-paani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:268b734c24f667cb",
+      "sourceHash": "fnv1a64:0d17d07a526d2bb7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -210,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5f961502f8bc694",
+      "sourceHash": "fnv1a64:1e33a2199fecb7d4",
       "notice": null,
       "blocks": [
         {
@@ -256,7 +256,7 @@
             },
             {
               "kind": "speech",
-              "text": "Gurmukhi has no separate tone mark. A trailing ਹ that is not pronounced is, in practice, how the script writes this tone — the same way ਗ਼'s dot writes a borrowed sound. Say ਖਾਣਾ khāṇā again, flat, then ਚਾਹ (cāh) cā́h, high: two words that both end their vowel clean, one levelled and one not."
+              "text": "Gurmukhi has no separate tone mark. A trailing ਹ that is not pronounced is, in practice, how the script writes this tone — the same way the dot under a borrowed letter writes a borrowed sound. Say ਖਾਣਾ khāṇā again, flat, then ਚਾਹ (cāh) cā́h, high: two words that both end their vowel clean, one levelled and one not."
             }
           ]
         },
@@ -368,6 +368,169 @@
       ]
     },
     {
+      "id": "PA-S10-chachcha",
+      "sequence": 515,
+      "title": "ਚ (ca) — one piece met inside a word you already say",
+      "headword": "ਚ",
+      "romanization": "ca",
+      "gloss": "one piece of Gurmukhi, met inside a word you already say",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:54f53be309c46f01",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ਚ"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਚ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One consonant, and it opens the word you are about to order."
+            },
+            {
+              "kind": "speech",
+              "text": "First, say the last things you learned once more, out loud and from memory:"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madad karnā, pasand, pāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madad karnā* · *pasand* · *pāṇī*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ਚ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚ (ca)."
+            },
+            {
+              "kind": "speech",
+              "text": "chachchā — ca. A consonant, the ch of church but with no puff of breath after it."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put them where you have already heard them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਚ (ca) + ਾ + ਹ becomes ਚਾਹ (cāh) ਚਾਹ — cāh — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not being asked to write any of this. You are being asked to recognise it the next time it goes past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: copy what you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਚ (ca) in front of you and do not cover it. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops."
+            },
+            {
+              "kind": "speech",
+              "text": "This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਚਾਹ (cāh) and point to each of today's piece in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਚਾਹ** and point to each of today's piece in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ca, then the whole word — cāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ca*, then the whole word — *cāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name today's piece: chachchā. Which of them is a mātrā or a mark rather than a letter, and what does ਚਾਹ say? (cāh, “tea”.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gurmukhi chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "PA-C10-dudh",
       "sequence": 520,
       "title": "ਦੁੱਧ (dudh) — a third request, and a tone that stays away",
@@ -380,7 +543,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7e5eaa8a86a0eb67",
+      "sourceHash": "fnv1a64:fa7204710f28e421",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -529,7 +692,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4e28f6858db1647c",
+      "sourceHash": "fnv1a64:5a809b2b4f9d2b42",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -680,6 +843,177 @@
                 "correct": "Right: roṭī, kirpā karke — bread, please.",
                 "incorrect": "roṭī, kirpā karke — bread, please, the same pattern as the other three requests."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-S10-addak-dhadda",
+      "sequence": 535,
+      "title": "ੱ, ਧ — two pieces met inside a word you already say",
+      "headword": "ੱ · ਧ",
+      "romanization": "(doubled) · dha",
+      "gloss": "two pieces of Gurmukhi, met inside a word you already say",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:578dd4e41c6c77f9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ੱ, ਧ"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ੱ, ਧ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A mark that makes no sound of its own, and still changes what a word means."
+            },
+            {
+              "kind": "speech",
+              "text": "First, say the last things you learned once more, out loud and from memory:"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇī, cāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṇī* · *cāh*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ੱ, ਧ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ੱ."
+            },
+            {
+              "kind": "speech",
+              "text": "aḍḍak — (doubled). Not a sound of its own. It sits above the line and says double the consonant that follows — and doubling changes meaning in Punjabi, so this small mark is load-bearing."
+            },
+            {
+              "kind": "speech",
+              "text": "ਧ."
+            },
+            {
+              "kind": "speech",
+              "text": "dhaddā — dha. A third letter whose breath became pitch: written breathy-d, said today with a falling tone."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put them where you have already heard them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਦ + ੁ + ੱ + ਧ becomes ਦੁੱਧ (dudh) ਦੁੱਧ — dudh — milk."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not being asked to write any of this. You are being asked to recognise it the next time it goes past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: copy what you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ੱ, ਧ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops."
+            },
+            {
+              "kind": "speech",
+              "text": "This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਦੁੱਧ (dudh) and point to each of today's pieces in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਦੁੱਧ** and point to each of today's pieces in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "(doubled), dha, then the whole word — dudh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *(doubled)*, *dha*, then the whole word — *dudh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name today's pieces: aḍḍak, dhaddā. Which of them is a mātrā or a mark rather than a letter, and what does ਦੁੱਧ say? (dudh, “milk”.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gurmukhi chart."
             }
           ]
         }

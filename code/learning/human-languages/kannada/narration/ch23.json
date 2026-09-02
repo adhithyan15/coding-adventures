@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f5bc148429471763",
+  "sourceHash": "fnv1a64:407ea69c67f5e39a",
   "lessons": [
     {
       "id": "KA-C23-dina",
@@ -132,34 +132,32 @@
       ]
     },
     {
-      "id": "KA-S127-letter-uu",
-      "sequence": 521,
-      "title": "ಊ (ū) — one character, the long partner of one you already have",
-      "headword": "ಊ",
-      "romanization": "ū",
-      "gloss": "the single character ಊ — the long partner of the vowel you met two chapters ago",
+      "id": "KA-S129-letter-tha",
+      "sequence": 525,
+      "title": "ಥ (tha) — one character, and the gap it fills",
+      "headword": "ಥ",
+      "romanization": "tha",
+      "gloss": "the single character ಥ — the breathed partner of ತ, the last gap in the pattern",
       "script": "kannada",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block",
-        "sight-cue"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:3353b604f7d87bef",
+      "sourceHash": "fnv1a64:2878593c07cd0a87",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ಊ",
+          "Script you'll notice: ಥ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ಊ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಥ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -175,7 +173,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ಉ — what sound does it carry, and does it stand alone or ride on a consonant?"
+              "text": "Before the new one: ಝ — which plain letter is it built on, and what does the extra stroke stand for?"
             },
             {
               "kind": "pause",
@@ -185,61 +183,73 @@
             },
             {
               "kind": "speech",
-              "text": "One character this time. It is the same vowel held longer."
+              "text": "One character this time, and it closes the set you started three chapters ago."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice: ಊ",
+          "title": "Script you'll notice: ಥ",
           "segments": [
             {
               "kind": "speech",
-              "text": "ಊ — ū, the long u."
+              "text": "ಥ — tha."
             },
             {
               "kind": "speech",
-              "text": "Kannada keeps short and long as two different letters, not as one letter with a mark on it. So the vowel you met two chapters ago has a partner:"
+              "text": "Same step as last time, on a letter you have read since the beginning: ತ (ta) with breath behind it. ತ in ಹತ್ತು hattu leaves the air still; ಥ (tha) pushes it into your palm. That completes the run:"
             },
             {
               "kind": "speech",
-              "text": "ಉ — u, short. Say it and stop."
+              "text": "ಕ ka, ಖ kha."
             },
             {
               "kind": "speech",
-              "text": "ಊ — ū, long. Say it and hold it about twice as long."
+              "text": "ಗ ga, ಘ gha."
             },
             {
               "kind": "speech",
-              "text": "Look at the shapes: ಊ (ū) is ಉ with an extra stroke. Kannada builds the long vowel out of the short one and repeats that habit across its vowels."
+              "text": "ಜ ja, ಝ jha."
             },
             {
               "kind": "speech",
-              "text": "The length is not decoration. It separates words, the way ship and sheep are separated by nothing else."
+              "text": "ಡ ḍa, ಢ ḍha."
             },
             {
               "kind": "speech",
-              "text": "ಊ (ū) has a riding half too. You have already read it:"
+              "text": "ದ da, ಧ dha."
             },
             {
               "kind": "speech",
-              "text": "ಮೂರು mūru — three."
+              "text": "ಪ pa, ಫ pha."
             },
             {
               "kind": "speech",
-              "text": "That ೂ in the middle is this same long vowel, drawn as a tail on ಮ. Take the consonant away and it has to stand up, and standing up it is ಊ (ū)."
+              "text": "ಬ ba, ಭ bha."
+            },
+            {
+              "kind": "speech",
+              "text": "ತ ta, ಥ tha."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight pairs, one step between each, drawn the same way every time. The eighth cost you almost nothing, because you learned the pattern at the first."
+            },
+            {
+              "kind": "speech",
+              "text": "A warning worth having. Do not read ಥ (tha) as the English th of think. There is no such sound here. It is a ತ with breath after it, nothing more."
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಊ — copy what you see",
+          "title": "Writing: ಥ — copy what you see",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಊ (ū) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ಥ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -261,42 +271,42 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two and say which is the long one",
+              "instruction": "at these two and say which one carries the breath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these two and say which is the long one]"
+              "source": "[YOU LOOK: at these two and say which one carries the breath]"
             },
             {
               "kind": "speech",
-              "text": "ಉ, ಊ (ū)."
+              "text": "ತ, ಥ (tha)."
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ಊ three times, holding the ū long as you finish each one",
+              "instruction": "ಥ (tha) three times, pushing the breath out as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ಊ three times, holding the *ū* long as you finish each one]"
+              "source": "[YOU TRACE: ಥ three times, pushing the breath out as you finish each one]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at ಮೂರು and find the riding half of today's letter inside it",
+              "instruction": "at ಹತ್ತು and ಸಂತೋಷ and find the plain letter in both",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at ಮೂರು and find the riding half of today's letter inside it]"
+              "source": "[YOU LOOK: at ಹತ್ತು and ಸಂತೋಷ and find the plain letter in both]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the short one, then the long one — \"u … ū\"",
+              "instruction": "\"ta … tha\" with your palm at your mouth, and feel the difference",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the short one, then the long one — \"u … ū\"]"
+              "source": "[YOU SAY: \"ta … tha\" with your palm at your mouth, and feel the difference]"
             }
           ]
         },
@@ -313,7 +323,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ಊ? What sound does it carry? (ū, the long u.) How is its shape related to ಉ? (It is ಉ with an added stroke.) What is its riding half, and in which word have you already read it? (ೂ, in mūru.)"
+              "text": "Which character is this — ಥ (tha)? Which plain letter is it built on? (ತ, ta.) Is it the th of English think? (No — a ta with breath after it.) How many plain-and-breathed pairs can you now read? (Eight.)"
             }
           ]
         }

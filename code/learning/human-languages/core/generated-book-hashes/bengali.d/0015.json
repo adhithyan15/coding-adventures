@@ -1,11 +1,12 @@
 {
   "language": "bengali",
   "chapter": 15,
-  "sourceHash": "fnv1a64:9443aef900711b7c",
+  "sourceHash": "fnv1a64:e3d7732a710beac6",
   "lessonIds": [
-    "BN-W04-chaa-read",
-    "BN-W04-jol-read",
-    "BN-W03-dudh-read"
+    "BN-C09-neowa",
+    "BN-C09-jijnasa-kora",
+    "BN-C09-sahajjo-kora",
+    "BN-C09-bhalo-laga"
   ],
-  "tex": "bengali/book/chapters/ch15-three-words-no-new-pieces.tex"
+  "tex": "bengali/book/chapters/ch15-conjunct-verbs.tex"
 }

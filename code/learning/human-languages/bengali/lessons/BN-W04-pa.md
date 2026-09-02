@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W04-pa
 spine_node: SPINE-MEET-GREET
-sequence: 530
+sequence: 570
 delivery: script
-chapter: 8
+chapter: 9
 type: writing
 headword: প
 romanization: "pô"

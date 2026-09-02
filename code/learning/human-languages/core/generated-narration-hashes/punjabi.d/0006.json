@@ -1,16 +1,17 @@
 {
   "language": "punjabi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:e5e2b0df8902a562",
+  "sourceHash": "fnv1a64:da737f40bbfedf02",
   "lessonIds": [
+    "PA-S06-kakka-aira-aara",
     "PA-C06-numbers-1-5",
     "PA-C06-panj-convergence"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "drivablePrefix": 0,
   "text": "punjabi/narration/ch06.txt",
   "json": "punjabi/narration/ch06.json",
-  "textHash": "fnv1a64:281aa641ce5dab6c",
-  "jsonHash": "fnv1a64:14f18819bbf48f37",
+  "textHash": "fnv1a64:c6241bcb62a4a4c9",
+  "jsonHash": "fnv1a64:e30f38d6f563a32e",
   "findings": []
 }

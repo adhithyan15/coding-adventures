@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S125-letter-oo",
     "language": "kannada",
-    "chapter": 34,
-    "sequence": 741,
+    "chapter": 29,
+    "sequence": 585,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:bbe6d97809c8b2dd",
+    "sourceHash": "fnv1a64:a1201994ac1d9b65",
     "detachableSegments": [
       "Script you'll notice: ಓ",
       "Writing: ಓ — copy what you see"

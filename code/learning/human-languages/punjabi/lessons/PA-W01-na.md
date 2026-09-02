@@ -9,32 +9,32 @@ type: writing
 headword: ਨ
 romanization: "na"
 gloss: "the consonant na"
-prerequisites: [PA-W01-bindi]
+prerequisites: [PA-W01-bindi, PA-S03-nanna-bihari-dulava]
 sounds: []
 roots: []
 etymology_hook: "Gurmukhi means from the mouth of the Guru; it was standardised in one go in the sixteenth century, which is why it is tidier than the scripts around it."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01]
+  knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-RECOG-NANNA-01]
 introduces:
   knowledge: [PA-SCRIPT-NA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-NA-01]
+  knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-NA-01, PA-SCRIPT-RECOG-NANNA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [PA-W01-bindi]
+reviews_of: [PA-W01-bindi, PA-S03-nanna-bihari-dulava]
 ---
 # ਨ — the consonant na
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-RECOG-NANNA-01] -->
 
 [PAUSE 2s] Write the piece from the previous lesson before adding another.
 

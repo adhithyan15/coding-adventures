@@ -3,7 +3,7 @@
     "id": "BN-W03-kha",
     "language": "bengali",
     "chapter": 8,
-    "sequence": 520,
+    "sequence": 550,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:014458d9ccda4f99",
+    "sourceHash": "fnv1a64:382411b286be33c4",
     "detachableSegments": [
       "Script"
     ],

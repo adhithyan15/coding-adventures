@@ -10,26 +10,26 @@ headword: "ਭਾਸ਼ਾ · ਰਿਹਾਇਸ਼ · ਕੰਮ"
 romanization: "supported two-line and three-line form"
 gloss: "rebuild the two supported form shapes at R3 while every answer bank remains visible"
 concept_tag: REVIEW
-prerequisites: [PA-R27-nose-heart-r4, PA-W06-two-field-supported, PA-W06-three-field-supported]
+prerequisites: [PA-R27-nose-heart-r4, PA-W06-two-field-supported, PA-W06-three-field-supported, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava, PA-S11-bhabbha, PA-S02-mamma-rara-lava]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [PA-FORM-THREE-TWO-LINE-SUPPORTED-01, PA-FORM-THREE-SUPPORTED-01]
+  knowledge: [PA-FORM-THREE-TWO-LINE-SUPPORTED-01, PA-FORM-THREE-SUPPORTED-01, PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-TA-01, PA-SCRIPT-RECOG-LAVA-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-THREE-TWO-LINE-SUPPORTED-01, PA-FORM-THREE-SUPPORTED-01]
+  knowledge: [PA-FORM-THREE-TWO-LINE-SUPPORTED-01, PA-FORM-THREE-SUPPORTED-01, PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-TA-01, PA-SCRIPT-RECOG-LAVA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W06-two-field-supported, PA-W06-three-field-supported]
+reviews_of: [PA-W06-two-field-supported, PA-W06-three-field-supported, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava, PA-S11-bhabbha, PA-S02-mamma-rara-lava]
 ---
 
 # Two supported lines, then three, at R3
@@ -61,6 +61,6 @@ Copy only the two requested lines. Check the labels before adding anything.
 Check selection, spelling, and placement one pass at a time.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-THREE-TWO-LINE-SUPPORTED-01, PA-FORM-THREE-SUPPORTED-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-THREE-TWO-LINE-SUPPORTED-01, PA-FORM-THREE-SUPPORTED-01, PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-TA-01, PA-SCRIPT-RECOG-LAVA-01] -->
 
 The models and answers stayed visible, so this is supported guided-copy practice. It does not award independent Punjabi writing evidence.

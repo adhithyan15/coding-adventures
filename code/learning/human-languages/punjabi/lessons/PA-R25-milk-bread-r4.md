@@ -9,27 +9,27 @@ headword: ਦੁੱਧ · ਰੋਟੀ
 romanization: dudh · roṭī
 gloss: retrieve milk and bread with honest source limits at R4
 concept_tag: REVIEW
-prerequisites: [PA-R25-drink-request-r4, PA-C10-roti]
+prerequisites: [PA-R25-drink-request-r4, PA-C10-roti, PA-S03-retroflex-row, PA-S10-addak-dhadda]
 sounds: []
 roots: []
 etymology_hook: Milk remains what was milked; bread remains inherited while its deeper root stays unsettled.
 duration:
   max_seconds: 180
 requires:
-  knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN]
+  knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-TAINKA-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN]
+  knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-TAINKA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C10-dudh, PA-C10-roti]
+reviews_of: [PA-C10-dudh, PA-C10-roti, PA-S03-retroflex-row, PA-S10-addak-dhadda]
 ---
 
 # Milk and bread return at R4
@@ -47,6 +47,6 @@ reviews_of: [PA-C10-dudh, PA-C10-roti]
 Read **ਦੁੱਧ · ਰੋਟੀ** once. No copying is requested, and no independent writing evidence is awarded.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DUDH, PA-LEX-ROTI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DUDH, PA-LEX-ROTI, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-TAINKA-01] -->
 
 [PAUSE 4s] Ask for either one using the already-known **kirpā karke**.
