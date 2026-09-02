@@ -154,6 +154,44 @@ def md_block_counts(body):
     return counts
 
 
+def schema_v1_lessons(track, chapters):
+    """Lessons inside a track's hand-written chapters that are still schema v1.
+
+    This is the half of the job the block gap cannot see, and five tracks
+    discovered it independently the hard way. `book.ts` refuses to generate a
+    chapter from a v1 lesson, so a chapter is hand-written BECAUSE its lessons
+    were never migrated, and stays unmeasured BECAUSE it is hand-written. The
+    Telugu agent put it best: retiring a hand-written chapter and migrating its
+    lessons to schema v2 are the SAME TASK.
+
+    The numbers are not comparable. Telugu's block gap was 7; the actual work was
+    30 lessons, 16 unclassifiable headings, four missing curriculum-path
+    placements and five chapter payoffs. German's gap is 78 against 65 legacy
+    lessons. Planning a retirement off the block count alone under-reads it by an
+    order of magnitude, so the count is reported beside it.
+
+    A v1 lesson also declares NO atoms at all -- not a few -- so every atom
+    budget reads it as zero. That is why retiring a chapter appears to make it
+    steeper: the debt was always there and is only now measurable.
+    """
+    total = v1 = 0
+    directory = os.path.join(HL, track, "lessons")
+    if not os.path.isdir(directory):
+        return 0, 0
+    for name in sorted(os.listdir(directory)):
+        if not name.endswith(".md"):
+            continue
+        body = open(os.path.join(directory, name), encoding="utf-8").read()
+        chapter = re.search(r"^chapter: (\d+)", body, re.M)
+        if not chapter or int(chapter.group(1)) not in chapters:
+            continue
+        total += 1
+        version = re.search(r"^schema_version: (\d+)", body, re.M)
+        if not version or version.group(1) != "2":
+            v1 += 1
+    return total, v1
+
+
 def unportable_blocks(tex):
     """Prose environments in the .tex the generator cannot emit at all.
 
@@ -269,6 +307,20 @@ def main(argv=None):
     # An unmeasured track is NOT a clean one.
     clean = [t for t in tracks
              if not per_track.get(t) and t not in unmeasured]
+    # The block gap is only half the job; report the migration half beside it.
+    print()
+    print(f"{'track':<12}{'hw ch':>6}{'lessons':>9}{'schema v1':>11}   blocks")
+    v1_total = 0
+    for track in tracks:
+        owned = {e["chapter"] for e in config["handwritten"] if e["language"] == track}
+        total, v1 = schema_v1_lessons(track, owned)
+        v1_total += v1
+        print(f"{track:<12}{len(owned):>6}{total:>9}{v1:>11}   {per_track.get(track, 0)}")
+    print(f"\n{v1_total} lesson(s) inside hand-written chapters are still schema v1.")
+    print("  -- book.ts refuses to generate a chapter from a v1 lesson, so these")
+    print("     must be migrated before any flip. This is usually the LARGER half")
+    print("     of a retirement and the block gap above cannot see it.")
+
     print(f"\n{chapters} handwritten chapter(s) across {len(tracks)} track(s) examined.")
     print(f"{total} block(s) of hand-written prose would be dropped by generating "
           "these chapters as they stand.")
