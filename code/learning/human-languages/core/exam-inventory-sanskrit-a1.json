@@ -1,0 +1,3334 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY SANSKRIT EXAMINING OR TEACHING BODY -- not to Samskrita Bharati, whose ladder core/exam-levels.json names, not to any traditional pariksha, not to a university or a board. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT SANSKRIT: they published a Spanish syllabus and have said nothing whatever about this language. Three claims are stacked here with very different strengths, so read them apart. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, which restates the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing in this file and all it establishes is a LEVEL: what an A1 candidate must be able to HANDLE, asked as a language-neutral demand rather than as a piece of Spanish grammar. (2) THE SANSKRIT EXPONENTS are editorial throughout and are this project's judgement and nobody else's. Deciding that Spanish's four article points are answered by the single fact that Sanskrit has no article, that its three-way este/ese/aquel is answered honestly by the track's two-way etat/tat rather than by reaching for the untaught adas, that its nine punctuation points collapse onto the daṇḍa, and that gustar's frame has NO taught Sanskrit answer at all -- every one of those is chosen here. The CATEGORY NAMES use standard vyākaraṇa terms where one exists (nāma, viśeṣaṇa, sarvanāma, avyaya, dhātu, vibhakti, vākya, samuccaya, lipi) and plain description where inventing a Sanskrit term would have been a pretence. (3) THE COVERAGE NUMBER is a measure of the corpus against this list. It is not an exam-readiness claim and cannot become one while every scope dimension is `partial`. WHY A PROXY AT ALL: no awarding body publishes a content syllabus for Sanskrit that this project has found, and NO SEARCH WAS RUN, BY INSTRUCTION. BACKLOG.d HL-C287 and HL-C290 record the sourcing question as settled -- there is no South Asian equivalent of the Plan Curricular and no further agent-hours are to be spent hunting one per track. This file follows that instruction and states the consequence rather than hiding it. WHAT core/exam-levels.json RECORDS FOR SANSKRIT WAS READ BEFORE ANY POINT WAS WRITTEN, and it carries a caveat that is load-bearing twice over: this project teaches Sanskrit AS A LIVING SPOKEN LANGUAGE so CEFR can-do descriptors apply, while 'a traditional syllabus is ordered by grammar and text rather than by communicative function, so the two ladders are not parallel'. That is the origin of the Register category, and of the deliberately uncovered SA-A1-RG-02, which says in the file rather than in a commit message that this inventory CANNOT measure a traditional pariksha and that anybody who wants it to must build a second column. THE EVIDENCE BASE IS AS THIN AS TAMIL'S AND THINNER THAN HINDI'S OR MARATHI'S. There is no sanskrit/assessment-spec.md, no sanskrit/assessment.json, no sanskrit/task-shapes/ and no sanskrit/mocks/ -- the directory holds lessons, chapters, curriculum, narration, a book, a roadmap, a session map and a pronunciation reference, and nothing that fixes what an A1 paper would ask. Every exponent choice is bounded by the proxy alone and every gap note says what is missing from the CORPUS rather than what some paper demands. Writing that contract is the single change that would most improve this file. PROXY ACCOUNTING: every one of the proxy's 273 points is accounted for -- 272 are cited by some point's `derivedFrom` and 1 is listed in `proxy.notTransferred` with a reason. Points marked `sanskritSpecific` answer no Spanish demand at all: the eight-case system, sandhi, the ten verb classes, the upasarga, the dual, the noun families, hospitality as a field, the etymological layer the whole track is built on, and the two register points. A proxy is a scaffold, not a template to translate, and those are why. LEVEL PURITY IS NOT A CONSTRAINT ON THIS CURRICULUM, so a point is recorded as covered when the corpus teaches it, whether or not it teaches it at A1: the fifteen body atoms and the ten animals are both well past A1 and both count.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Sanskrit is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: NONE EXISTS. Unlike hindi/assessment-spec.md with hindi/task-shapes/a1.json and hindi/mocks/a1/, and unlike marathi/assessment-spec.md with marathi/task-shapes/a1.json, the sanskrit track ships no assessment spec, no assessment.json, no task shapes and no mocks, so no project-internal contract bounds the exponent choices or the gap notes below. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.sanskrit -- exam 'Samskrita Bharati ladder / traditional pariksha', basis 'editorial', mapping 'cefr', with the caveat quoted in `about`. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 304 lesson files in code/learning/human-languages/sanskrit/lessons/, which introduce 381 distinct atoms between them -- 236 LEX, 48 ETYMON, 48 SCRIPT, 24 GRAMMAR, 11 HISTORY, 7 PATTERN, 4 CULTURE, 2 SOUND and 1 COMPARISON. FROM CHAPTER 14 THE LEXICAL IDS ARE OPAQUE (SA-LEX-C31-SKY-03), so each was resolved to the word it carries by reading the introducing lesson's headword and block before any probe was written; probing them by name would have been guessing. The script claims were taken by walking every character in the Devanagari block that any lesson puts on a page and comparing it with the set the script lessons teach: 53 shown, 48 taught, 5 neither. The letter inventory those are compared against is sanskrit/pronunciation-reference.md and code/learning/human-languages/data/scripts/devanagari.json. NOT SEARCHED, BY INSTRUCTION: no external search for a Sanskrit awarding-body syllabus was performed. See `about`.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The project's restatement of the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language: nothing about Sanskrit is attributable to DELE, the Instituto Cervantes or the Plan Curricular."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral. It can anchor a FUNCTION -- 'can introduce himself/herself', 'can ask and answer simple questions about personal details' -- and it can never anchor a Sanskrit form, because it names none. Used only where a point is a can-do rather than a structure."
+    },
+    {
+      "id": "SA-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/sanskrit/ -- 304 lessons, 51 chapters, curriculum.d and chapters.d",
+      "note": "Our own work, and what every probe resolves against. It is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory."
+    },
+    {
+      "id": "SA-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.sanskrit",
+      "note": "Records Sanskrit as exam 'Samskrita Bharati ladder / traditional pariksha', basis 'editorial', mapping 'cefr', with the caveat that this project teaches Sanskrit as a LIVING SPOKEN LANGUAGE so CEFR descriptors apply, while a traditional syllabus is ordered by grammar and text rather than by function and the two ladders are NOT PARALLEL. That caveat is the origin of the Register category and of SA-A1-RG-02."
+    },
+    {
+      "id": "SA-SCRIPT-DATA",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/data/scripts/devanagari.json",
+      "note": "The shared Devanagari ductus file, read by Hindi, Marathi, Marwadi and Sanskrit. It carries a CITED stroke order for each of the 44 letters it lists. It is the evidence behind SA-A1-L-08: ऋ is in it with a four-panel Commons citation, and ङ is not in it at all. HL11 §5 binds -- no citation, no pen path."
+    },
+    {
+      "id": "ED-SANSKRIT",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Sanskrit",
+      "note": "Every Sanskrit exponent below. Deciding that the four article points collapse into 'there is no article', that the nine punctuation points collapse onto the daṇḍa, that punar darśanāya answers the purpose-clause demand with a case rather than a clause, and that the gustar frame has no taught answer at all rather than a stretched one, is a judgement made here and nowhere else. It is a working default to be corrected, not a standard."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-O1-06"
+        ],
+        "why": "Superscript letters in frequent abbreviations. A Spanish typographic convention with no Devanagari counterpart: the script is unicameral, has no superscript convention, and classical Sanskrit has no abbreviation practice of this kind. Sanskrit abbreviation is covered instead, as an untaught and probably permanently untaught demand, at SA-A1-L-09."
+      }
+    ]
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the CEFR Companion Volume A1 descriptors",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Sanskrit is our choice every time. Sanskrit has no checked-in mock or task shape to pin an exponent against, so unlike Hindi's file no note here can say which paper item needs a word. AND THE REGISTER QUESTION SITS UNDER EVERY FUNCTION: the exponents measured here are spoken-revival forms, not classical usage. See SA-A1-RG-01."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS MOST AND STILL DOES NOT CLOSE, and for Sanskrit it helps less than for a modern language. Walking the Spanish column surfaces demands worth asking -- past tense, relative clause, coordination -- and is silent on the things that actually gate a Sanskrit sentence: eight cases, three numbers, ten verb classes, sandhi and the noun families. Five points are marked sanskritSpecific in this column alone. A proxy built on an analytic language cannot enumerate an inflectional one."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's orthography column) and the corpus's own script lessons",
+      "note": "The best-measured dimension here, because the claim is countable: 53 Devanagari characters shown, 48 taught, 5 neither, walked character by character. What keeps it partial is that the proxy's accent and punctuation points do not transfer -- Sanskrit writes no accent and punctuates with one mark -- so nine Spanish points collapse onto a daṇḍa the track does not teach, and conjunct consonants, which are the real difficulty of reading Devanagari, have no proxy point at all."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's general and specific notion columns)",
+      "note": "The proxy's specific-notion column is a list of MODERN LIFE FIELDS -- the telephone, the bank, the restaurant, unemployment, the internet. A classical corpus answers almost none of them, and that is not a defect in the corpus: it is what the Register category exists to say. The fifteen Modern-life points are kept rather than dropped so the proxy accounting stays complete and so the work queue is honest about how much of an A1 communicative syllabus a classical register cannot reach."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. EVERY ATOM NAMED IN EVERY PROBE WAS CHECKED MECHANICALLY against the 381 atoms the sanskrit track actually introduces, and the check is re-runnable: a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so no id was invented to fill a point and no probe points at a lesson somebody intends to write. TWO HABITS ARE NAMED SO THEY ARE NOT HIDDEN GENEROSITIES. (1) This track files a great deal under atom kinds other than LEX: the greeting culture carries CULTURE atoms, the numeral family carries COMPARISON and SOUND atoms, the whole comparative layer carries HISTORY and ETYMON atoms, and the chapter-14-to-19 consolidations carry GRAMMAR '-SYSTEM' atoms. Probing those points names a culture, history, sound or grammar atom rather than a lexis one; the note on each such point says so. (2) Several points are counted covered on ONE exponent where the proxy asks for a field -- SA-A1-M-05 rests on krīḍati alone and SA-A1-M-10 on vaidyaḥ and kuśalam. Each of those notes says 'thin' in as many words, because a coverage tick that hides a one-word field is worse than an honest gap. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT, and this is where most of the uncovered points come from rather than from total absence: kutaḥ ('from where') is taught and there is no country, city or gentilic to answer it with; hyaḥ ('yesterday') is taught and there is no past tense to put in it; cintayati ('thinks') is taught and iti, which is what makes a thought reportable, is not. A candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `sanskritSpecific: true`. `anchorIds` records which anchor each point leans on and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "points": [
+    {
+      "id": "SA-A1-N-01",
+      "category": "Nāma — the noun",
+      "label": "proper nouns: a personal name, given in an introduction and used in address",
+      "probe": [
+        "SA-LEX-NAMA",
+        "SA-PATTERN-MY-NAME-IS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "nāma and the frame mama nāma … asti are both chapter 2, and the frame is what an introduction uses. Sanskrit takes no article, so the Spanish point's second half — that a title takes one — has no counterpart and is answered by SA-A1-ART-01."
+    },
+    {
+      "id": "SA-A1-N-02",
+      "category": "Nāma — the noun",
+      "label": "common nouns naming periods of time: day, night, morning, noon, evening, month, year",
+      "probe": [
+        "SA-LEX-C17-TIME-01",
+        "SA-LEX-C17-TIME-02",
+        "SA-LEX-C45-DAYTIME-01",
+        "SA-LEX-C45-DAYTIME-02",
+        "SA-LEX-C45-DAYTIME-03",
+        "SA-LEX-C45-DAYTIME-04",
+        "SA-LEX-C45-DAYTIME-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "dinam, rātriḥ, prātaḥ, madhyāhnaḥ, sāyam, māsaḥ and saṁvatsaraḥ are all taught. WEEKDAY AND MONTH NAMES AND THE SEASONS ARE NOT, anywhere in the track, which is why SA-A1-T-02 below is uncovered even though this point is covered: naming a period is not the same as locating a day in the week."
+    },
+    {
+      "id": "SA-A1-N-03",
+      "category": "Nāma — the noun",
+      "label": "grammatical gender: three, not two, and carried by the ending",
+      "probe": [
+        "SA-GRAMMAR-NOUN-GENDER-THREE",
+        "SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "note": "Spanish asks for a two-way gender in -o/-a. Sanskrit answers with three — masculine, feminine and neuter — and the corpus teaches the visarga as the mark of the masculine singular in chapter 1, before it names the system in chapter 10."
+    },
+    {
+      "id": "SA-A1-N-04",
+      "category": "Nāma — the noun",
+      "label": "gender by different word: father against mother, brother against sister",
+      "probe": [
+        "SA-LEX-FATHER",
+        "SA-LEX-MOTHER",
+        "SA-LEX-BHRATA-BROTHER",
+        "SA-LEX-BHAGINI-SISTER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "pitā / mātā and bhrātā / bhaginī, the same heteronymy Spanish asks for, and the corpus teaches all four."
+    },
+    {
+      "id": "SA-A1-N-05",
+      "category": "Nāma — the noun",
+      "label": "number: SINGULAR, DUAL AND PLURAL — three numbers, not two",
+      "probe": [
+        "SA-GRAMMAR-SINGULAR-DUAL-PLURAL",
+        "SA-GRAMMAR-NUMERAL-DUAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "The proxy asks for a plural in -s. Sanskrit's answer is larger than the question: it keeps a DUAL, obligatory for exactly two of anything, and chapter 5 teaches it as a category before chapter 6 shows it on the numeral. An A1 learner who does not know the dual will make an error on every pair."
+    },
+    {
+      "id": "SA-A1-N-06",
+      "category": "Nāma — the noun",
+      "label": "the noun families: which ending a noun belongs to, and why that decides everything else",
+      "probe": [
+        "SA-GRAMMAR-C16-NOUN-FAMILIES"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific and there is no Spanish demand behind it. A Sanskrit noun cannot be used at all until you know its stem class, because the class chooses the case endings. Chapter 16 gathers the families the first fifteen chapters have been using."
+    },
+    {
+      "id": "SA-A1-ADJ-01",
+      "category": "Viśeṣaṇa — the adjective",
+      "label": "qualifying adjectives, attributive and predicative",
+      "probe": [
+        "SA-GRAMMAR-C15-ADJ-SYSTEM",
+        "SA-LEX-C15-ADJ-01",
+        "SA-LEX-C15-ADJ-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "note": "mahat and alpa, and chapter 15 states the system that governs their use."
+    },
+    {
+      "id": "SA-A1-ADJ-02",
+      "category": "Viśeṣaṇa — the adjective",
+      "label": "relational adjectives: the gentilic, saying what country or people someone belongs to",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "note": "UNCOVERED, AND THE WHOLE FIELD IS MISSING. There is no word for a country, no country name, and no gentilic anywhere in the track. A learner cannot say where they are from. See SA-A1-G-02."
+    },
+    {
+      "id": "SA-A1-ADJ-03",
+      "category": "Viśeṣaṇa — the adjective",
+      "label": "adjective gender: the adjective takes the gender of its noun",
+      "probe": [
+        "SA-GRAMMAR-C15-ADJ-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03"
+      ],
+      "note": "Chapter 15's system lesson is where agreement is stated. Sanskrit agrees in gender, number AND case, which is more than the proxy asks and is the same lesson."
+    },
+    {
+      "id": "SA-A1-ADJ-04",
+      "category": "Viśeṣaṇa — the adjective",
+      "label": "adjective number and agreement in the plural",
+      "probe": [
+        "SA-GRAMMAR-C15-ADJ-SYSTEM",
+        "SA-GRAMMAR-SINGULAR-DUAL-PLURAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-04"
+      ],
+      "note": "Agreement runs through three numbers here, the dual included."
+    },
+    {
+      "id": "SA-A1-ADJ-05",
+      "category": "Viśeṣaṇa — the adjective",
+      "label": "position: Sanskrit puts the adjective before its noun, and word order is free anyway",
+      "probe": [
+        "SA-GRAMMAR-C15-ADJ-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "note": "Spanish asks for a POSTNOMINAL restrictive adjective. Sanskrit's usual order is the opposite, and the deeper answer is that case endings carry the roles, so order is a matter of emphasis rather than grammar. Recorded here rather than invented as a rule."
+    },
+    {
+      "id": "SA-A1-ADJ-06",
+      "category": "Viśeṣaṇa — the adjective",
+      "label": "degree: intensifying an adjective",
+      "probe": [
+        "SA-LEX-C42-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06"
+      ],
+      "note": "bahu ('much, many') is the nearest thing the track teaches to Spanish muy, and chapter 42 introduces it as a quantity word rather than as a degree modifier on an adjective. The absolute superlative in -tama is not taught. Counted covered on the exponent, not on the construction."
+    },
+    {
+      "id": "SA-A1-ART-01",
+      "category": "Article — the category Sanskrit does not have",
+      "label": "the article: Sanskrit has none, definite or indefinite, and nothing stands in for it",
+      "probe": [
+        "SA-GRAMMAR-C16-NOUN-FAMILIES"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-02",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "note": "FOUR SPANISH POINTS COLLAPSE INTO ONE FACT. Sanskrit has no article; a bare noun is both 'a house' and 'the house', and definiteness is read off context or carried by a demonstrative. The corpus never teaches an article because there is none to teach, and the noun-families lesson is where a learner meets the bare stem as the citation form. Recording this as covered is a judgement: nothing is TAUGHT here, but nothing is missing either, and leaving it uncovered would report a gap that no lesson could ever close."
+    },
+    {
+      "id": "SA-A1-DEM-01",
+      "category": "Sarvanāma — deixis and demonstratives",
+      "label": "the demonstrative forms: this one and that one",
+      "probe": [
+        "SA-LEX-C14-DEIXIS-01",
+        "SA-LEX-C14-DEIXIS-02",
+        "SA-GRAMMAR-C14-DEIXIS-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01"
+      ],
+      "note": "etat and tat, with chapter 14's system lesson behind them."
+    },
+    {
+      "id": "SA-A1-DEM-02",
+      "category": "Sarvanāma — deixis and demonstratives",
+      "label": "spatial deixis: TWO terms, near and far, not Spanish's three",
+      "probe": [
+        "SA-LEX-C14-DEIXIS-03",
+        "SA-LEX-C14-DEIXIS-04",
+        "SA-GRAMMAR-C14-DEIXIS-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02"
+      ],
+      "note": "atra and tatra. Spanish's three-way este/ese/aquel is answered honestly by a two-way system rather than by inventing a middle term. (Sanskrit does have a third stem, adas, for the remote; the track does not teach it and this point does not pretend otherwise.)"
+    },
+    {
+      "id": "SA-A1-DEM-03",
+      "category": "Sarvanāma — deixis and demonstratives",
+      "label": "position, and that the demonstrative is not blocked by an article",
+      "probe": [
+        "SA-GRAMMAR-C14-DEIXIS-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ],
+      "note": "The Spanish point exists because a demonstrative and an article compete for one slot. With no article there is no competition, and the system lesson is what a learner has instead."
+    },
+    {
+      "id": "SA-A1-POS-01",
+      "category": "Ṣaṣṭhī — possession",
+      "label": "possession, one possessor: the genitive, not a possessive adjective",
+      "probe": [
+        "SA-LEX-MAMA",
+        "SA-PATTERN-MY-NAME-IS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "note": "mama is the GENITIVE of aham, not a separate possessive word, which is the honest shape of the answer. tava is taught in the same chapter inside the question frame."
+    },
+    {
+      "id": "SA-A1-POS-02",
+      "category": "Ṣaṣṭhī — possession",
+      "label": "possession, several possessors: our and your-plural",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-POS-02"
+      ],
+      "note": "UNCOVERED. asmākam and yuṣmākam are taught nowhere. The track teaches the first and second person singular genitive only, so a learner can say 'my name' and never 'our house'."
+    },
+    {
+      "id": "SA-A1-POS-03",
+      "category": "Ṣaṣṭhī — possession",
+      "label": "distribution: the genitive stands alone and needs no noun after it",
+      "probe": [
+        "SA-GRAMMAR-C16-NOUN-FAMILIES"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-POS-03"
+      ],
+      "note": "The Spanish point is about an unstressed form that CANNOT stand alone. Sanskrit's genitive can, being a full case form; the noun-families lesson is where case forms are shown as self-standing words."
+    },
+    {
+      "id": "SA-A1-Q-01",
+      "category": "Saṅkhyā — number and quantity",
+      "label": "cardinal numerals one to ten",
+      "probe": [
+        "SA-LEX-NUMBERS-ONE-TO-FIVE",
+        "SA-LEX-C19-NUM-01",
+        "SA-LEX-C19-NUM-02",
+        "SA-LEX-C19-NUM-03",
+        "SA-LEX-C19-NUM-04",
+        "SA-LEX-C19-NUM-05",
+        "SA-GRAMMAR-C19-NUMBER-FAMILY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "note": "eka to pañca in chapter 6, ṣaṭ to daśa in chapter 19, and chapter 19's family lesson ties them together. Eleven upward is not taught."
+    },
+    {
+      "id": "SA-A1-Q-02",
+      "category": "Saṅkhyā — number and quantity",
+      "label": "ordinal numerals to tenth",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "note": "UNCOVERED. prathamaḥ, dvitīyaḥ and the rest appear nowhere. This also leaves ordering — first, second, then — without its exponents, which is why the spatial-order point below is uncovered too."
+    },
+    {
+      "id": "SA-A1-Q-03",
+      "category": "Saṅkhyā — number and quantity",
+      "label": "vague quantity: a little and a lot",
+      "probe": [
+        "SA-LEX-C42-REPLY-04",
+        "SA-LEX-C42-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-NG2-02"
+      ],
+      "note": "kiñcit and bahu, both chapter 42."
+    },
+    {
+      "id": "SA-A1-Q-04",
+      "category": "Saṅkhyā — number and quantity",
+      "label": "sufficiency: enough",
+      "probe": [
+        "SA-LEX-C27-REPLY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-Q-04"
+      ],
+      "note": "alam, chapter 27 — and it is the exact idiomatic 'enough!' the Spanish bastante covers at A1."
+    },
+    {
+      "id": "SA-A1-Q-05",
+      "category": "Saṅkhyā — number and quantity",
+      "label": "the numeral agrees in gender, and two behaves like nothing else",
+      "probe": [
+        "SA-GRAMMAR-NUMERAL-GENDER",
+        "SA-GRAMMAR-NUMERAL-DUAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific. eka, dvi and tri inflect for gender, and dvi is grammatically dual. No Spanish A1 point asks this because Spanish numerals above one do not agree."
+    },
+    {
+      "id": "SA-A1-PRON-01",
+      "category": "Sarvanāma — the pronoun",
+      "label": "subject pronouns: I, you familiar, you respectful",
+      "probe": [
+        "SA-LEX-AHAM",
+        "SA-LEX-TVAM",
+        "SA-LEX-BHAVAN",
+        "SA-GRAMMAR-POLITENESS-BY-PERSON"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "aham, tvam and bhavān. The paradigm is NOT full — no third person pronoun, no plural — but the three an A1 conversation needs are taught, and the register split between tvam and bhavān is taught with them."
+    },
+    {
+      "id": "SA-A1-PRON-02",
+      "category": "Sarvanāma — the pronoun",
+      "label": "the pronoun may be dropped, because the verb already says who",
+      "probe": [
+        "SA-GRAMMAR-PRONOUN-DROPPING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01",
+        "A1-V-01"
+      ],
+      "note": "Chapter 3. The same fact Spanish has, taught explicitly here rather than assumed."
+    },
+    {
+      "id": "SA-A1-PRON-03",
+      "category": "Sarvanāma — the pronoun",
+      "label": "object pronouns",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02",
+        "A1-PRON-08"
+      ],
+      "note": "UNCOVERED. mām, tvām and the rest are not taught. The track's sentences take a NOUN object throughout, so a learner can say 'I see the house' and not 'I see you'."
+    },
+    {
+      "id": "SA-A1-PRON-04",
+      "category": "Sarvanāma — the pronoun",
+      "label": "the dative-experiencer frame Spanish gustar needs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01",
+        "A1-F3-01",
+        "A1-NG6-08"
+      ],
+      "note": "UNCOVERED, AND IT IS THE LARGEST SINGLE HOLE. Sanskrit's answer to gustar is rocate with the dative, and neither it nor any liking-frame is taught. snihyati ('loves') and priyam ('dear') are in chapter 9, but neither builds a sentence saying what you LIKE. Four proxy points depend on this one exponent."
+    },
+    {
+      "id": "SA-A1-PRON-05",
+      "category": "Sarvanāma — the pronoun",
+      "label": "reflexive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "UNCOVERED. Neither ātman used reflexively nor the middle voice is taught."
+    },
+    {
+      "id": "SA-A1-PRON-06",
+      "category": "Sarvanāma — the pronoun",
+      "label": "interrogative pronouns: who, what, how many",
+      "probe": [
+        "SA-LEX-C14-DEIXIS-05",
+        "SA-LEX-KIM",
+        "SA-LEX-C18-ASK-03",
+        "SA-GRAMMAR-C18-K-QUESTIONS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "kaḥ, kim and kati, with chapter 18's lesson on the k- question family behind them — the same family resemblance the Spanish qu- words have."
+    },
+    {
+      "id": "SA-A1-PRON-07",
+      "category": "Sarvanāma — the pronoun",
+      "label": "the relative pronoun, and the correlative that answers it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "UNCOVERED. The yad … tad correlative is Sanskrit's whole relative-clause machinery and no lesson introduces it. yathā ('as', chapter 49) is the only member of the family taught and it is an adverb, not a relative pronoun."
+    },
+    {
+      "id": "SA-A1-PRON-08",
+      "category": "Sarvanāma — the pronoun",
+      "label": "exclamative",
+      "probe": [
+        "SA-LEX-C49-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "aho, chapter 49. It is an interjection rather than an exclamative determiner, which is the honest Sanskrit answer to Spanish exclamative qué."
+    },
+    {
+      "id": "SA-A1-ADV-01",
+      "category": "Avyaya — the indeclinable and the adverb",
+      "label": "place deictics: here and there",
+      "probe": [
+        "SA-LEX-C14-DEIXIS-03",
+        "SA-LEX-C14-DEIXIS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "note": "atra and tatra, two terms against Spanish's three."
+    },
+    {
+      "id": "SA-A1-ADV-02",
+      "category": "Avyaya — the indeclinable and the adverb",
+      "label": "time deictics: now, today, yesterday, tomorrow, the day after",
+      "probe": [
+        "SA-LEX-C28-LEAVE-01",
+        "SA-LEX-C17-TIME-03",
+        "SA-LEX-C17-TIME-04",
+        "SA-LEX-SHVAH",
+        "SA-LEX-C28-LEAVE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "note": "idānīm, adya, hyaḥ, śvaḥ and paraśvaḥ. The set is unusually complete — Sanskrit gives the day after tomorrow its own word, and chapter 4 teaches śvaḥ inside the leave-taking that needs it."
+    },
+    {
+      "id": "SA-A1-ADV-03",
+      "category": "Avyaya — the indeclinable and the adverb",
+      "label": "quantity adverbs: a little, much, mostly, sometimes",
+      "probe": [
+        "SA-LEX-C42-REPLY-04",
+        "SA-LEX-C42-REPLY-05",
+        "SA-LEX-C42-REPLY-03",
+        "SA-LEX-C42-REPLY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03",
+        "A1-NG2-03"
+      ],
+      "note": "kiñcit, bahu, prāyaḥ, kadācit — chapter 42 is exactly this point."
+    },
+    {
+      "id": "SA-A1-ADV-04",
+      "category": "Avyaya — the indeclinable and the adverb",
+      "label": "manner adverbs: well, rightly, slowly, thus",
+      "probe": [
+        "SA-LEX-C27-REPLY-02",
+        "SA-LEX-C36-REPLY-05",
+        "SA-LEX-C36-REPLY-04",
+        "SA-LEX-C27-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04",
+        "A1-NG6-07"
+      ],
+      "note": "sādhu, samyak, mandam and evam. Spanish's mal has no taught counterpart — see SA-A1-EV-01."
+    },
+    {
+      "id": "SA-A1-ADV-05",
+      "category": "Avyaya — the indeclinable and the adverb",
+      "label": "polarity: yes and no",
+      "probe": [
+        "SA-LEX-AM-YES",
+        "SA-LEX-NA-NO",
+        "SA-CULTURE-SANSKRIT-ANSWERING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "note": "ām and na, chapter 1, with the culture note on how a Sanskrit answer is actually given."
+    },
+    {
+      "id": "SA-A1-ADV-06",
+      "category": "Avyaya — the indeclinable and the adverb",
+      "label": "connective adverbs: also, likewise",
+      "probe": [
+        "SA-LEX-C36-REPLY-01",
+        "SA-LEX-C36-REPLY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "api and tathā. Spanish's negative counterpart tampoco has no taught equivalent."
+    },
+    {
+      "id": "SA-A1-ADV-07",
+      "category": "Avyaya — the indeclinable and the adverb",
+      "label": "interrogative adverbs: where, when, why, how, from where",
+      "probe": [
+        "SA-LEX-C14-DEIXIS-06",
+        "SA-LEX-C18-ASK-01",
+        "SA-LEX-C18-ASK-02",
+        "SA-LEX-KATHAM",
+        "SA-LEX-C18-ASK-04",
+        "SA-GRAMMAR-C18-K-QUESTIONS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-ADV-08",
+        "A1-F1-02"
+      ],
+      "note": "kutra, kadā, kimartham, katham and kutaḥ. This is the best-covered corner of the whole inventory: five question adverbs and a lesson naming the family they belong to."
+    },
+    {
+      "id": "SA-A1-ADV-08",
+      "category": "Avyaya — the indeclinable and the adverb",
+      "label": "frequency: always, again, again and again",
+      "probe": [
+        "SA-LEX-C17-TIME-05",
+        "SA-LEX-PUNAH",
+        "SA-LEX-C49-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "note": "sadā, punaḥ and muhuḥ."
+    },
+    {
+      "id": "SA-A1-V-01",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "the present indicative, third person, as the citation form of a verb",
+      "probe": [
+        "SA-GRAMMAR-DHATU-GANA",
+        "SA-LEX-GACCHATI-GO",
+        "SA-LEX-ASTI-BHAVATI-BE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03"
+      ],
+      "note": "The corpus teaches verbs in the third singular present throughout, and chapter 7 names the dhātu and its gaṇa — the root and the class it belongs to, which is what decides the present stem."
+    },
+    {
+      "id": "SA-A1-V-02",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "the first person: I go, I speak, I live, I do",
+      "probe": [
+        "SA-LEX-GACCHAMI",
+        "SA-LEX-VADAMI",
+        "SA-LEX-VASAMI",
+        "SA-LEX-KAROMI",
+        "SA-GRAMMAR-ASMI-FIRST-PERSON"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "gacchāmi, vadāmi, vasāmi, karomi and asmi. The first person is what an A1 candidate needs most and the track teaches it early, in chapters 3 to 5."
+    },
+    {
+      "id": "SA-A1-V-03",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "the copula across three persons",
+      "probe": [
+        "SA-GRAMMAR-COPULA-THREE-PERSONS",
+        "SA-GRAMMAR-COPULA-IS-KEPT",
+        "SA-LEX-ASTI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-OS-05"
+      ],
+      "note": "asti / asi / asmi, with chapter 2's point that Sanskrit KEEPS the copula where a modern Indo-Aryan language would drop it. Spanish's ser/estar split has no Sanskrit counterpart and is answered by this one verb."
+    },
+    {
+      "id": "SA-A1-V-04",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "the verb classes: ten of them, and which one a root belongs to changes its stem",
+      "probe": [
+        "SA-GRAMMAR-DHATU-GANA",
+        "SA-GRAMMAR-GANA-TEN-AYA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific. No Spanish A1 point asks it because Spanish has three conjugations that a learner can read off the infinitive; Sanskrit has ten gaṇas that must be learned per root. Chapters 7 and 8 teach the idea and the tenth class's -aya- infix."
+    },
+    {
+      "id": "SA-A1-V-05",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "the upasarga: a prefix that redirects the root",
+      "probe": [
+        "SA-GRAMMAR-UPASARGA-PREFIX",
+        "SA-LEX-AGACCHATI-COME",
+        "SA-LEX-AVAGACCHATI-UNDERSTAND"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific and load-bearing: gacchati 'goes', ā-gacchati 'comes', ava-gacchati 'understands'. One root and a preverb give a learner three words, which is the single highest-leverage fact in the track's verb column."
+    },
+    {
+      "id": "SA-A1-V-06",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "past tense",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09",
+        "A1-V-10"
+      ],
+      "note": "UNCOVERED, AND SEVEN PROXY POINTS RIDE ON IT. Not one past form is taught anywhere in the track — no imperfect, no perfect, no aorist, and no past participle used as a past. A candidate cannot say what they did yesterday, although hyaḥ ('yesterday') is taught in chapter 17. This is the largest structural absence in the inventory."
+    },
+    {
+      "id": "SA-A1-V-07",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "the imperative: giving an instruction",
+      "probe": [
+        "SA-LEX-C27-REPLY-01",
+        "SA-LEX-C29-COURTESY-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ],
+      "note": "astu ('so be it') and kṣamyatām ('let it be forgiven') are both imperatives and both taught as whole words. The FORM is never taught as a paradigm, so a learner has two frozen imperatives and no way to build a third. Counted covered on the exponent and flagged here as not covered on the rule."
+    },
+    {
+      "id": "SA-A1-V-08",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "the infinitive and other non-finite forms",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-V-12",
+        "A1-V-13",
+        "A1-V-14",
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "note": "UNCOVERED. The infinitive in -tum, the gerund in -tvā and the past participle in -ta are the three non-finite forms Sanskrit lives on, and none is taught. This blocks both infinitive-clause points as well."
+    },
+    {
+      "id": "SA-A1-V-09",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "verbs of doing, going, coming, eating, seeing, knowing",
+      "probe": [
+        "SA-LEX-GACCHATI-GO",
+        "SA-LEX-AGACCHATI-COME",
+        "SA-LEX-KHADATI-EAT",
+        "SA-LEX-PASHYATI-SEE",
+        "SA-LEX-JANATI-KNOW",
+        "SA-LEX-KAROMI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01",
+        "A1-NG5-01"
+      ],
+      "note": "The chapter-7 verb set, and it is the spine of everything after it."
+    },
+    {
+      "id": "SA-A1-V-10",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "verbs of thinking, understanding, reading and writing",
+      "probe": [
+        "SA-LEX-CINTAYATI-THINK",
+        "SA-LEX-AVAGACCHATI-UNDERSTAND",
+        "SA-LEX-PATHATI-READ",
+        "SA-LEX-LIKHATI-WRITE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01",
+        "A1-NG7-02",
+        "A1-NE06-04"
+      ],
+      "note": "Chapter 8. paṭhati is taught as reciting aloud, which is what reading meant."
+    },
+    {
+      "id": "SA-A1-V-11",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "verbs of taking, asking, helping and loving",
+      "probe": [
+        "SA-LEX-GRHNATI-TAKE",
+        "SA-LEX-PRCCHATI-ASK",
+        "SA-LEX-SAHAYYAM-KAROTI-HELP",
+        "SA-LEX-SNIHYATI-PRIYAM-LOVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "note": "Chapter 9, and sāhāyyaṁ karoti is the noun-plus-karoti compound verb that Sanskrit builds most of its vocabulary from."
+    },
+    {
+      "id": "SA-A1-V-12",
+      "category": "Dhātu and kriyāpada — the verb",
+      "label": "verbs of the body and the day: dancing, laughing, standing, remembering, hearing, leading, playing, burning",
+      "probe": [
+        "SA-LEX-DANCE",
+        "SA-LEX-LAUGH",
+        "SA-LEX-STAND",
+        "SA-LEX-REMEMBER",
+        "SA-LEX-HEAR",
+        "SA-LEX-LEAD",
+        "SA-LEX-PLAY",
+        "SA-LEX-BURN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03",
+        "A1-NG5-02",
+        "A1-NE08-04"
+      ],
+      "note": "Chapters 21 and 22. śṛṇoti answers the proxy's hearing notion and krīḍati its games notion."
+    },
+    {
+      "id": "SA-A1-C-01",
+      "category": "Vibhakti — the case system",
+      "label": "the case system itself: eight cases doing what Spanish does with prepositions and order",
+      "probe": [
+        "SA-GRAMMAR-C16-NOUN-FAMILIES",
+        "SA-GRAMMAR-LOCATIVE-CASE",
+        "SA-GRAMMAR-DATIVE-OF-PURPOSE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific, and the single biggest thing the proxy cannot ask for. Spanish marks roles with word order and prepositions; Sanskrit marks them on the noun, and until a learner has that, no sentence parses. The track teaches the locative in chapter 5 and the dative of purpose in chapter 4 before naming the families in chapter 16."
+    },
+    {
+      "id": "SA-A1-C-02",
+      "category": "Vibhakti — the case system",
+      "label": "the locative: saying where you live",
+      "probe": [
+        "SA-GRAMMAR-LOCATIVE-CASE",
+        "SA-LEX-VASAMI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-SV-06"
+      ],
+      "note": "vasāmi with the locative is chapter 5's sentence, and it is how Sanskrit answers 'I live in …' with no preposition at all."
+    },
+    {
+      "id": "SA-A1-C-03",
+      "category": "Vibhakti — the case system",
+      "label": "the dative of purpose: what a thing is FOR",
+      "probe": [
+        "SA-GRAMMAR-DATIVE-OF-PURPOSE",
+        "SA-PATTERN-PUNAR-DARSHANAYA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "note": "punar darśanāya, 'for seeing again', is the leave-taking of chapter 4 and a dative of purpose. It answers the proxy's purpose-clause demand with a case rather than a clause, which is the honest Sanskrit shape."
+    },
+    {
+      "id": "SA-A1-C-04",
+      "category": "Vibhakti — the case system",
+      "label": "the direct object",
+      "probe": [
+        "SA-PATTERN-I-SPEAK-SANSKRIT",
+        "SA-LEX-VADAMI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SV-04",
+        "A1-OS-06"
+      ],
+      "note": "aham saṁskṛtam vadāmi puts the object in the accusative. Spanish's rule that a human object takes the preposition a has no Sanskrit counterpart: the case does the work for both."
+    },
+    {
+      "id": "SA-A1-C-05",
+      "category": "Vibhakti — the case system",
+      "label": "sandhi: words change shape where they meet",
+      "probe": [
+        "SA-GRAMMAR-SANDHI-JOINS-WORDS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific and unavoidable at any level, because it changes what a written sentence LOOKS like. Chapter 5 teaches it on the track's own first full sentence. Nothing in the proxy corresponds; Spanish's nearest relative is the contraction al/del, which is a two-item list rather than a system."
+    },
+    {
+      "id": "SA-A1-S-01",
+      "category": "Vākya — the sentence",
+      "label": "declarative sentences, affirmative and negative",
+      "probe": [
+        "SA-LEX-NA-NO",
+        "SA-PATTERN-I-SPEAK-SANSKRIT",
+        "SA-PATTERN-NA-CINTA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "na before the verb, and na cintā ('no worry') as the chapter-3 negative the track actually uses."
+    },
+    {
+      "id": "SA-A1-S-02",
+      "category": "Vākya — the sentence",
+      "label": "yes-or-no questions",
+      "probe": [
+        "SA-LEX-AM-YES",
+        "SA-LEX-NA-NO",
+        "SA-CULTURE-SANSKRIT-ANSWERING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-OS-02",
+        "A1-F1-05"
+      ],
+      "note": "The track teaches the ANSWERS and the culture of answering. The interrogative particle kim at the head of a sentence — Sanskrit's actual yes-or-no marker — is taught as the word 'what' and never in that job, so a learner can answer such a question and not ask one."
+    },
+    {
+      "id": "SA-A1-S-03",
+      "category": "Vākya — the sentence",
+      "label": "questions with an asking word",
+      "probe": [
+        "SA-GRAMMAR-C18-K-QUESTIONS",
+        "SA-GRAMMAR-RESPECTFUL-QUESTION",
+        "SA-PATTERN-WHATS-YOUR-NAME"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-OS-03",
+        "A1-F1-02"
+      ],
+      "note": "tava nāma kim? is the model, and chapter 2 teaches the respectful version alongside it."
+    },
+    {
+      "id": "SA-A1-S-04",
+      "category": "Vākya — the sentence",
+      "label": "the copular and attributive sentence",
+      "probe": [
+        "SA-GRAMMAR-COPULA-IS-KEPT",
+        "SA-PATTERN-MY-NAME-IS",
+        "SA-PATTERN-I-AM-WELL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-OS-05",
+        "A1-SV-03"
+      ],
+      "note": "mama nāma … asti and kuśalī asmi."
+    },
+    {
+      "id": "SA-A1-S-05",
+      "category": "Vākya — the sentence",
+      "label": "existence and possession",
+      "probe": [
+        "SA-LEX-ASTI-BHAVATI-BE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "note": "asti does existential duty ('there is'). Sanskrit expresses possession with the genitive plus asti and the track never builds that sentence, so 'I have a brother' is not sayable — the point is counted covered on existence and the possession half is called out here."
+    },
+    {
+      "id": "SA-A1-S-06",
+      "category": "Vākya — the sentence",
+      "label": "word order is free, because the endings carry the roles",
+      "probe": [
+        "SA-GRAMMAR-C16-NOUN-FAMILIES",
+        "SA-GRAMMAR-SANDHI-JOINS-WORDS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "Sanskrit's answer to the proxy's word-order flexibility point is much stronger than Spanish's, and it follows from the case system rather than from style."
+    },
+    {
+      "id": "SA-A1-S-07",
+      "category": "Vākya — the sentence",
+      "label": "the vocative: addressing somebody",
+      "probe": [
+        "SA-LEX-BHAVAN",
+        "SA-GRAMMAR-POLITENESS-BY-PERSON"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "note": "bhavān is how the track addresses a person respectfully. The vocative CASE — he mitra! — is not taught as a form, and no title or honorific noun of address is taught, so this is thin."
+    },
+    {
+      "id": "SA-A1-CO-01",
+      "category": "Samuccaya — coordination",
+      "label": "joining two things with 'and'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "UNCOVERED, AND IT IS THE CHEAPEST GAP IN THE FILE TO CLOSE. Sanskrit's ca is a single enclitic word, it appears incidentally in several lesson bodies, and NO lesson introduces it as an atom. A candidate cannot join two nouns. One lesson closes this point and part of SA-A1-CO-05."
+    },
+    {
+      "id": "SA-A1-CO-02",
+      "category": "Samuccaya — coordination",
+      "label": "negative coordination: neither … nor",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "note": "UNCOVERED. na … na … is the construction and nothing teaches it as a pattern."
+    },
+    {
+      "id": "SA-A1-CO-03",
+      "category": "Samuccaya — coordination",
+      "label": "disjunctive coordination: or",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ],
+      "note": "UNCOVERED. vā, the enclitic 'or', is taught nowhere."
+    },
+    {
+      "id": "SA-A1-CO-04",
+      "category": "Samuccaya — coordination",
+      "label": "adversative coordination: but",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "note": "UNCOVERED. kintu and paraṁtu are both absent, which also blocks offering a counter-argument."
+    },
+    {
+      "id": "SA-A1-CO-05",
+      "category": "Samuccaya — coordination",
+      "label": "distributive: one … the other",
+      "probe": [
+        "SA-LEX-C36-REPLY-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "note": "sarvam ('all, the whole of it') is the only quantifier of this family taught; the eka … anya pairing is not. Counted covered on the exponent, thinly."
+    },
+    {
+      "id": "SA-A1-SUB-01",
+      "category": "Subordination",
+      "label": "a finite clause as object: saying that you think that something is so",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03",
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "UNCOVERED. Sanskrit uses the quotative particle iti after the reported clause, which is the single most characteristic thing about Sanskrit subordination, and iti is taught nowhere. cintayati ('thinks') is taught in chapter 8 with nothing to think."
+    },
+    {
+      "id": "SA-A1-SUB-02",
+      "category": "Subordination",
+      "label": "the relative clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05",
+        "A1-SN-01"
+      ],
+      "note": "UNCOVERED. See SA-A1-PRON-07: the yad … tad correlative is absent."
+    },
+    {
+      "id": "SA-A1-SUB-03",
+      "category": "Subordination",
+      "label": "causal and temporal clauses: because, and when",
+      "probe": [
+        "SA-LEX-C49-REPLY-01",
+        "SA-LEX-C49-REPLY-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06",
+        "A1-SUB-08"
+      ],
+      "note": "tarhi ('then, in that case') and yathā ('as, in the way that') are the two correlative adverbs the track teaches, both in chapter 49. Their partners — yadi, yadā, yasmāt — are not, so a learner has the second half of each pair and not the first. Counted covered on the exponents, and the note is the work item."
+    },
+    {
+      "id": "SA-A1-F-01",
+      "category": "Giving and asking for information",
+      "label": "identify yourself by name",
+      "probe": [
+        "SA-PATTERN-MY-NAME-IS",
+        "SA-LEX-NAMA",
+        "SA-LEX-MAMA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F1-01",
+        "A1-F1-03",
+        "A1-NE03-01"
+      ],
+      "note": "mama nāma … asti. Name only: age, address and telephone number are all untaught, so 'personal information' is a third answered."
+    },
+    {
+      "id": "SA-A1-F-02",
+      "category": "Giving and asking for information",
+      "label": "ask who somebody is, what a thing is, and where it is",
+      "probe": [
+        "SA-LEX-C14-DEIXIS-05",
+        "SA-LEX-KIM",
+        "SA-LEX-C14-DEIXIS-06",
+        "SA-PATTERN-WHATS-YOUR-NAME"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "note": "kaḥ, kim, kutra and the name question that models them."
+    },
+    {
+      "id": "SA-A1-F-03",
+      "category": "Giving and asking for information",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "SA-LEX-AM-YES",
+        "SA-LEX-NA-NO",
+        "SA-LEX-C27-REPLY-04",
+        "SA-CULTURE-SANSKRIT-ANSWERING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F1-04",
+        "A1-F1-05"
+      ],
+      "note": "ām, na and satyam ('true'). The TAG question Spanish asks for — 'you're coming, aren't you?' — has no taught Sanskrit exponent (nanu, na vā), so the confirm half is covered and the asking-for-confirmation half is not."
+    },
+    {
+      "id": "SA-A1-F-04",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "give and evaluate an opinion",
+      "probe": [
+        "SA-LEX-C27-REPLY-02",
+        "SA-LEX-C27-REPLY-04",
+        "SA-LEX-C27-REPLY-05",
+        "SA-LEX-C15-ADJ-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-04",
+        "A1-F2-10",
+        "A1-NG6-01",
+        "A1-NG6-04"
+      ],
+      "note": "sādhu, satyam, evam and uttama. What is missing is the FRAME: no 'I think that …', because iti is untaught (SA-A1-SUB-01). A learner can pronounce a verdict and not attribute it to themselves."
+    },
+    {
+      "id": "SA-A1-F-05",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "agree, approve and accept",
+      "probe": [
+        "SA-LEX-C27-REPLY-01",
+        "SA-LEX-C27-REPLY-02",
+        "SA-LEX-C36-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F2-05",
+        "A1-F2-06",
+        "A1-NG6-05",
+        "A1-NG6-06",
+        "A1-F4-08"
+      ],
+      "note": "astu ('so be it'), sādhu ('well done') and samyak ('exactly so') — a genuinely idiomatic Sanskrit agreement set, and chapter 27 exists to teach it."
+    },
+    {
+      "id": "SA-A1-F-06",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "disagree, decline, express doubt",
+      "probe": [
+        "SA-LEX-NA-NO",
+        "SA-LEX-C42-REPLY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F2-07",
+        "A1-F2-08",
+        "A1-F2-12",
+        "A1-F4-09"
+      ],
+      "note": "na, and prāyaḥ ('mostly') as the nearest thing to hedging. There is no 'I don't know' (na jānāmi is not taught as a phrase) and no politeness formula for declining, so this is the thinnest of the reply functions."
+    },
+    {
+      "id": "SA-A1-F-07",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "say that you know, or do not know, something",
+      "probe": [
+        "SA-LEX-JANATI-KNOW",
+        "SA-LEX-AVAGACCHATI-UNDERSTAND"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-F2-15",
+        "A1-NG7-01"
+      ],
+      "note": "jānāti and avagacchati are both taught, in the third person. The first-person jānāmi that the function actually needs is not, and neither is the negated form."
+    },
+    {
+      "id": "SA-A1-F-08",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "say what you can do",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "note": "UNCOVERED. śaknoti ('is able') is taught nowhere, and there is no other way to say you can do something."
+    },
+    {
+      "id": "SA-A1-F-09",
+      "category": "Likes, wishes and feelings",
+      "label": "say what you like, want or prefer",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-F3-02",
+        "A1-F3-03",
+        "A1-F3-04"
+      ],
+      "note": "UNCOVERED, and it is the second-largest hole after the past tense. icchati ('wants') and rocate ('is pleasing to') are both absent. snihyati and priyam (chapter 9) name affection without building a sentence that expresses a preference."
+    },
+    {
+      "id": "SA-A1-F-10",
+      "category": "Likes, wishes and feelings",
+      "label": "say what you are going to do",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "note": "UNCOVERED. There is no future tense anywhere in the track and no periphrastic intention frame."
+    },
+    {
+      "id": "SA-A1-F-11",
+      "category": "Influencing the other person",
+      "label": "ask for something, and ask for help, politely",
+      "probe": [
+        "SA-LEX-C29-COURTESY-01",
+        "SA-LEX-SAHAYYAM-KAROTI-HELP",
+        "SA-LEX-C29-COURTESY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F4-02",
+        "A1-F4-03"
+      ],
+      "note": "kṛpayā ('please'), sāhāyyaṁ karoti ('helps') and upakāraḥ ('a favour'). The imperative that a request needs is only present as two frozen forms — see SA-A1-V-07."
+    },
+    {
+      "id": "SA-A1-F-12",
+      "category": "Influencing the other person",
+      "label": "respond to a request; grant or refuse",
+      "probe": [
+        "SA-LEX-C27-REPLY-01",
+        "SA-LEX-C27-REPLY-03",
+        "SA-LEX-NA-NO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F4-04",
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "note": "astu grants, alam refuses ('enough'), na declines. Idiomatic and taught."
+    },
+    {
+      "id": "SA-A1-F-13",
+      "category": "Influencing the other person",
+      "label": "offer and invite",
+      "probe": [
+        "SA-LEX-SVAGATAM",
+        "SA-LEX-C30-WELCOME-02",
+        "SA-CULTURE-WELCOMING-A-GUEST",
+        "SA-LEX-C26-ROLE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "note": "svāgatam, āsanam ('a seat'), atithiḥ ('a guest') and the culture note on receiving one. Sanskrit's hospitality vocabulary is unusually well taught — chapters 30, 37 and 43 are all about it."
+    },
+    {
+      "id": "SA-A1-F-14",
+      "category": "Relating socially",
+      "label": "greet, and respond to a greeting",
+      "probe": [
+        "SA-LEX-NAMASTE",
+        "SA-LEX-NAMASKARA",
+        "SA-CULTURE-ANJALI-BOW",
+        "SA-LEX-C29-COURTESY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F5-02",
+        "A1-F6-02"
+      ],
+      "note": "namaste and namaskāraḥ, with the añjali bow that goes with them and praṇāmaḥ in chapter 29. The greeting IS the salutation in Sanskrit, and the culture atom says so."
+    },
+    {
+      "id": "SA-A1-F-15",
+      "category": "Relating socially",
+      "label": "address somebody respectfully, and choose the register",
+      "probe": [
+        "SA-LEX-BHAVAN",
+        "SA-LEX-TVAM",
+        "SA-GRAMMAR-POLITENESS-BY-PERSON",
+        "SA-GRAMMAR-RESPECTFUL-QUESTION"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "note": "bhavān against tvam, and — the fact worth the lesson — bhavān takes a THIRD person verb. Sanskrit is polite by grammatical person, not by pronoun alone."
+    },
+    {
+      "id": "SA-A1-F-16",
+      "category": "Relating socially",
+      "label": "introduce yourself and respond to an introduction",
+      "probe": [
+        "SA-PATTERN-MY-NAME-IS",
+        "SA-PATTERN-WHATS-YOUR-NAME",
+        "SA-LEX-ANANDAH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F5-05"
+      ],
+      "note": "The chapter-2 pair, and ānandaḥ — 'meeting you is a joy' — as the response."
+    },
+    {
+      "id": "SA-A1-F-17",
+      "category": "Relating socially",
+      "label": "thank, and apologise",
+      "probe": [
+        "SA-LEX-DHANYAVADA",
+        "SA-CULTURE-SANSKRIT-THANKS",
+        "SA-LEX-C29-COURTESY-02",
+        "SA-LEX-C29-COURTESY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F5-06",
+        "A1-F5-07"
+      ],
+      "note": "dhanyavādaḥ and kṣamyatām, with the culture note on how thanks actually work in Sanskrit."
+    },
+    {
+      "id": "SA-A1-F-18",
+      "category": "Relating socially",
+      "label": "congratulate, bless, wish well",
+      "probe": [
+        "SA-LEX-C37-COURTESY-04",
+        "SA-LEX-C37-COURTESY-05",
+        "SA-LEX-C28-LEAVE-05",
+        "SA-LEX-C28-LEAVE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "note": "abhinandanam, āśīrvādaḥ, svasti and śubham. Spanish's toast has no exact counterpart; svasti is the nearest and is recorded as such rather than as a match."
+    },
+    {
+      "id": "SA-A1-F-19",
+      "category": "Relating socially",
+      "label": "offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ],
+      "note": "UNCOVERED. No word for grief, death or sympathy is taught anywhere in the track."
+    },
+    {
+      "id": "SA-A1-F-20",
+      "category": "Relating socially",
+      "label": "take leave",
+      "probe": [
+        "SA-PATTERN-PUNAR-DARSHANAYA",
+        "SA-LEX-GACCHAMI",
+        "SA-LEX-PUNAH",
+        "SA-LEX-SHVAH",
+        "SA-LEX-C28-LEAVE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F5-11",
+        "A1-F6-06"
+      ],
+      "note": "punar darśanāya, gacchāmi, punaḥ, śvaḥ and svasti. Chapter 4 is entirely this function and chapter 28 extends it."
+    },
+    {
+      "id": "SA-A1-F-21",
+      "category": "Structuring the exchange",
+      "label": "show you are following, and hand the turn back",
+      "probe": [
+        "SA-LEX-C27-REPLY-05",
+        "SA-LEX-C36-REPLY-03",
+        "SA-LEX-KATHAM",
+        "SA-PATTERN-HOW-ARE-YOU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F2-01",
+        "A1-F2-03",
+        "A1-F6-01",
+        "A1-F6-04"
+      ],
+      "note": "evam, tathā, and bhavān katham asti? as the model of handing the turn back. Spanish's 'ask somebody to be quiet' (A1-F6-05) and 'ask for a person' (A1-F6-03) have no taught exponent and are recorded in proxy.notTransferred."
+    },
+    {
+      "id": "SA-A1-EX-01",
+      "category": "Existential notions",
+      "label": "existence, and its absence",
+      "probe": [
+        "SA-LEX-ASTI-BHAVATI-BE",
+        "SA-LEX-NA-NO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-NG1-02",
+        "A1-NG1-03"
+      ],
+      "note": "asti and bhavati, which Sanskrit keeps apart as being and becoming — a distinction Spanish makes with ser/estar for a different reason. na negates."
+    },
+    {
+      "id": "SA-A1-EX-02",
+      "category": "Existential notions",
+      "label": "certainty and its lack",
+      "probe": [
+        "SA-LEX-C27-REPLY-04",
+        "SA-LEX-C42-REPLY-03",
+        "SA-LEX-C43-COURTESY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05"
+      ],
+      "note": "satyam, prāyaḥ and viśvāsaḥ ('trust'). Thin: there is no modal machinery."
+    },
+    {
+      "id": "SA-A1-QT-01",
+      "category": "Quantitative notions",
+      "label": "measures of size and quantity",
+      "probe": [
+        "SA-LEX-C15-ADJ-01",
+        "SA-LEX-C15-ADJ-02",
+        "SA-LEX-C42-REPLY-05",
+        "SA-LEX-C42-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG2-02",
+        "A1-NG2-03",
+        "A1-NG2-04"
+      ],
+      "note": "mahat, alpa, bahu, kiñcit. Distance and weight have no units taught; size is the only measure a learner can express."
+    },
+    {
+      "id": "SA-A1-SP-01",
+      "category": "Spatial notions",
+      "label": "location, and being somewhere",
+      "probe": [
+        "SA-GRAMMAR-LOCATIVE-CASE",
+        "SA-LEX-C14-DEIXIS-03",
+        "SA-LEX-C14-DEIXIS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-NG3-03"
+      ],
+      "note": "The locative case plus atra and tatra. Near/far as ADJECTIVES are not taught, so relative distance is not expressible."
+    },
+    {
+      "id": "SA-A1-SP-02",
+      "category": "Spatial notions",
+      "label": "relative position: left, right, above, below, in front, behind",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02"
+      ],
+      "note": "UNCOVERED. Not one of vāmam, dakṣiṇam, upari, adhaḥ, agre or paścāt is taught. A learner can say something is here and never where."
+    },
+    {
+      "id": "SA-A1-SP-03",
+      "category": "Spatial notions",
+      "label": "movement and direction",
+      "probe": [
+        "SA-LEX-GACCHATI-GO",
+        "SA-LEX-AGACCHATI-COME",
+        "SA-LEX-C18-ASK-04",
+        "SA-LEX-C28-LEAVE-03",
+        "SA-LEX-C16-PLACE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04",
+        "A1-NG3-05"
+      ],
+      "note": "gacchati, āgacchati, kutaḥ ('from where'), yātrā ('a journey') and mārgaḥ ('road'). The prefix pair carries this point almost by itself."
+    },
+    {
+      "id": "SA-A1-SP-04",
+      "category": "Spatial notions",
+      "label": "origin: where you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07",
+        "A1-F1-03"
+      ],
+      "note": "UNCOVERED. kutaḥ ('from where') is taught in chapter 18 and there is NOTHING TO ANSWER IT WITH — no country, no city name, no gentilic, and no ablative-of-origin sentence. Asking is taught and answering is not, which is the exact half-a-pair failure that earns no credit."
+    },
+    {
+      "id": "SA-A1-T-01",
+      "category": "Temporal notions",
+      "label": "the parts of the day, and the clock",
+      "probe": [
+        "SA-LEX-C45-DAYTIME-01",
+        "SA-LEX-C45-DAYTIME-02",
+        "SA-LEX-C45-DAYTIME-03",
+        "SA-LEX-C17-TIME-01",
+        "SA-LEX-C17-TIME-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "prātaḥ, madhyāhnaḥ, sāyam, dinam and rātriḥ. THE CLOCK IS NOT TAUGHT — no word for hour and no way to say a time — so half the proxy point is unanswerable."
+    },
+    {
+      "id": "SA-A1-T-02",
+      "category": "Temporal notions",
+      "label": "locating a day: today, yesterday, tomorrow — and the week, month and year",
+      "probe": [
+        "SA-LEX-C17-TIME-03",
+        "SA-LEX-C17-TIME-04",
+        "SA-LEX-SHVAH",
+        "SA-LEX-C28-LEAVE-02",
+        "SA-LEX-C45-DAYTIME-04",
+        "SA-LEX-C45-DAYTIME-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "adya, hyaḥ, śvaḥ, paraśvaḥ, māsaḥ, saṁvatsaraḥ — an unusually full set. THE WEEKDAY NAMES, THE MONTH NAMES AND THE SEASONS ARE ALL ABSENT, so a learner has the relative days and no calendar."
+    },
+    {
+      "id": "SA-A1-T-03",
+      "category": "Temporal notions",
+      "label": "before and after; sequence",
+      "probe": [
+        "SA-LEX-C49-REPLY-01",
+        "SA-LEX-C28-LEAVE-01",
+        "SA-LEX-C17-TIME-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "note": "tarhi, idānīm and sadā. pūrvam and paścāt — the actual before/after pair — are not taught, so sequencing is thin and the ordinal gap (SA-A1-Q-02) compounds it."
+    },
+    {
+      "id": "SA-A1-QL-01",
+      "category": "Qualitative notions",
+      "label": "sight and hearing",
+      "probe": [
+        "SA-LEX-PASHYATI-SEE",
+        "SA-LEX-HEAR",
+        "SA-LEX-AKSHI-EYE",
+        "SA-LEX-KARNAH-EAR",
+        "SA-LEX-C46-LIGHT-03",
+        "SA-LEX-C50-SOUND-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "note": "paśyati, śṛṇoti, akṣi, karṇaḥ, prakāśaḥ and śabdaḥ — both senses with their organ and their object."
+    },
+    {
+      "id": "SA-A1-QL-02",
+      "category": "Qualitative notions",
+      "label": "colour",
+      "probe": [
+        "SA-LEX-C44-COLOUR-01",
+        "SA-LEX-C44-COLOUR-02",
+        "SA-LEX-C44-COLOUR-03",
+        "SA-LEX-C44-COLOUR-04",
+        "SA-LEX-C44-COLOUR-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "śvetaḥ, śyāmaḥ, pītaḥ, haritaḥ, nīlaḥ — chapter 44 is exactly this point and closes it."
+    },
+    {
+      "id": "SA-A1-QL-03",
+      "category": "Qualitative notions",
+      "label": "age and old age",
+      "probe": [
+        "SA-LEX-C20-PERSON-04",
+        "SA-LEX-C15-ADJ-04",
+        "SA-LEX-C15-ADJ-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "note": "vṛddhaḥ ('an elder'), nava ('new') and purātana ('old, of a thing'). The track carefully distinguishes old-of-a-thing from old-of-a-person. ASKING OR STATING AN AGE IN YEARS IS NOT POSSIBLE: there is no word for age and no 'how old are you'."
+    },
+    {
+      "id": "SA-A1-QL-04",
+      "category": "Qualitative notions",
+      "label": "open and closed, the way in and the way out",
+      "probe": [
+        "SA-LEX-C30-WELCOME-01",
+        "SA-LEX-C47-DWELL-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "dvāram ('door') and vātāyanam ('window'). The adjectives open and closed are not taught, so only the nouns are there."
+    },
+    {
+      "id": "SA-A1-EV-01",
+      "category": "Evaluative notions",
+      "label": "general evaluation: good and its opposite",
+      "probe": [
+        "SA-LEX-C15-ADJ-03",
+        "SA-LEX-C27-REPLY-02",
+        "SA-LEX-C28-LEAVE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG6-01",
+        "A1-NG6-04",
+        "A1-NG6-07"
+      ],
+      "note": "uttama, sādhu and śubham are all POSITIVE. There is no taught word for bad — no pāpa, no duṣṭa, no asādhu — so a learner can praise and not criticise. Counted covered because the proxy point names good first, and flagged because the missing antonym is the real finding."
+    },
+    {
+      "id": "SA-A1-EV-02",
+      "category": "Evaluative notions",
+      "label": "value and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02",
+        "A1-NE12-03",
+        "A1-NE15-01"
+      ],
+      "note": "UNCOVERED. No word for money, price, cost, buying or selling appears in the track. A whole transactional field is absent."
+    },
+    {
+      "id": "SA-A1-EV-03",
+      "category": "Evaluative notions",
+      "label": "attractiveness and pleasingness",
+      "probe": [
+        "SA-LEX-C37-COURTESY-03",
+        "SA-LEX-C30-WELCOME-03",
+        "SA-LEX-C30-WELCOME-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03"
+      ],
+      "note": "prasannaḥ ('pleased, gracious'), puṣpam and mālā. sundara ('beautiful') is not taught, so this is answered obliquely."
+    },
+    {
+      "id": "SA-A1-EV-04",
+      "category": "Evaluative notions",
+      "label": "ease and difficulty",
+      "probe": [
+        "SA-LEX-C43-COURTESY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG6-10"
+      ],
+      "note": "saralaḥ means 'straightforward, honest' and covers the 'easy' sense obliquely. sukara and duṣkara are not taught. Thin, and recorded as such."
+    },
+    {
+      "id": "SA-A1-MN-01",
+      "category": "Mental notions",
+      "label": "thinking, knowing, remembering",
+      "probe": [
+        "SA-LEX-CINTAYATI-THINK",
+        "SA-LEX-JANATI-KNOW",
+        "SA-LEX-REMEMBER",
+        "SA-LEX-AVAGACCHATI-UNDERSTAND"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "note": "cintayati, jānāti, smarati, avagacchati — a strong set, all in the third person."
+    },
+    {
+      "id": "SA-A1-MN-02",
+      "category": "Mental notions",
+      "label": "speaking and writing",
+      "probe": [
+        "SA-LEX-VADAMI",
+        "SA-LEX-LIKHATI-WRITE",
+        "SA-LEX-PATHATI-READ",
+        "SA-LEX-C50-SOUND-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02",
+        "A1-NE06-04"
+      ],
+      "note": "vadāmi, likhati, paṭhati and vāṇī ('the voice')."
+    },
+    {
+      "id": "SA-A1-X-01",
+      "category": "Specific notions — the lexical fields",
+      "label": "the body",
+      "probe": [
+        "SA-LEX-AKSHI-EYE",
+        "SA-LEX-KARNAH-EAR",
+        "SA-LEX-MUKHAM-MOUTH",
+        "SA-LEX-NASIKA-NOSE",
+        "SA-LEX-HRIDAYAM-HEART",
+        "SA-LEX-C25-BODY-01",
+        "SA-LEX-C25-BODY-02",
+        "SA-LEX-C25-BODY-03",
+        "SA-LEX-C25-BODY-04",
+        "SA-LEX-C25-BODY-05",
+        "SA-LEX-C34-LIMB-01",
+        "SA-LEX-C34-LIMB-02",
+        "SA-LEX-C34-LIMB-03",
+        "SA-LEX-C34-LIMB-04",
+        "SA-LEX-C34-LIMB-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "Fifteen body atoms across chapters 12, 13, 25 and 34 — the best-covered lexical field in the track, and far past what A1 asks."
+    },
+    {
+      "id": "SA-A1-X-02",
+      "category": "Specific notions — the lexical fields",
+      "label": "physical characteristics and personality",
+      "probe": [
+        "SA-LEX-C43-COURTESY-02",
+        "SA-LEX-C43-COURTESY-03",
+        "SA-LEX-C43-COURTESY-05",
+        "SA-LEX-C37-COURTESY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NE02-01"
+      ],
+      "note": "vinayaḥ, namratā, saralaḥ, prasannaḥ. All of chapter 43 is character vocabulary — Sanskrit's own moral register — and none of it is physical description, which is untaught."
+    },
+    {
+      "id": "SA-A1-X-03",
+      "category": "Specific notions — the lexical fields",
+      "label": "family",
+      "probe": [
+        "SA-LEX-KUTUMBAM-FAMILY",
+        "SA-LEX-BHRATA-BROTHER",
+        "SA-LEX-BHAGINI-SISTER",
+        "SA-LEX-FATHER",
+        "SA-LEX-MOTHER",
+        "SA-LEX-SON",
+        "SA-LEX-DAUGHTER",
+        "SA-LEX-C51-KIN-01",
+        "SA-LEX-C51-KIN-02",
+        "SA-LEX-C51-KIN-03",
+        "SA-LEX-C51-KIN-04",
+        "SA-LEX-C51-KIN-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "Twelve kinship atoms across chapters 11, 23 and 51, down to the mother's brother — an Indic kinship distinction the proxy has no slot for."
+    },
+    {
+      "id": "SA-A1-X-04",
+      "category": "Specific notions — the lexical fields",
+      "label": "social relationships and roles",
+      "probe": [
+        "SA-LEX-MITRAM-FRIEND",
+        "SA-LEX-C26-ROLE-01",
+        "SA-LEX-C26-ROLE-02",
+        "SA-LEX-C26-ROLE-03",
+        "SA-LEX-C26-ROLE-04",
+        "SA-LEX-C26-ROLE-05",
+        "SA-LEX-C20-PERSON-01",
+        "SA-LEX-C20-PERSON-02",
+        "SA-LEX-C20-PERSON-03",
+        "SA-LEX-C20-PERSON-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02",
+        "A1-NE07-01",
+        "A1-NE06-02"
+      ],
+      "note": "mitram, guruḥ, śiṣyaḥ, rājā, atithiḥ, vaidyaḥ, naraḥ, nārī, bālaḥ, janaḥ. The roles are the ones a classical text has — teacher, student, king, guest, physician — which answers the proxy's professions point in the register the language actually carries."
+    },
+    {
+      "id": "SA-A1-X-05",
+      "category": "Specific notions — the lexical fields",
+      "label": "food and drink",
+      "probe": [
+        "SA-LEX-ANNAM-FOOD",
+        "SA-LEX-PANIYAM-WATER",
+        "SA-LEX-KSHIRAM-MILK",
+        "SA-LEX-C24-ASK-01",
+        "SA-LEX-C24-ASK-02",
+        "SA-LEX-C24-ASK-03",
+        "SA-LEX-C35-HOUSE-01",
+        "SA-LEX-C35-HOUSE-02",
+        "SA-LEX-C35-HOUSE-03",
+        "SA-LEX-C40-FOOD-01",
+        "SA-LEX-C40-FOOD-02",
+        "SA-LEX-C40-FOOD-03",
+        "SA-LEX-C40-FOOD-04",
+        "SA-LEX-C40-FOOD-05",
+        "SA-LEX-KHADATI-EAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02",
+        "A1-NE05-03",
+        "A1-NE05-04"
+      ],
+      "note": "Fifteen atoms. THE MEALS OF THE DAY AND THE RESTAURANT ARE ABSENT — this is a pantry, not a menu, which is the right shape for Sanskrit and leaves A1-NE05-01 and A1-NE05-05 unanswered."
+    },
+    {
+      "id": "SA-A1-X-06",
+      "category": "Specific notions — the lexical fields",
+      "label": "the house and its parts",
+      "probe": [
+        "SA-LEX-C16-PLACE-01",
+        "SA-LEX-C30-WELCOME-01",
+        "SA-LEX-C47-DWELL-01",
+        "SA-LEX-C47-DWELL-02",
+        "SA-LEX-C47-DWELL-03",
+        "SA-LEX-C47-DWELL-04",
+        "SA-LEX-C47-DWELL-05",
+        "SA-LEX-C35-HOUSE-05",
+        "SA-LEX-C30-WELCOME-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02",
+        "A1-NE10-04"
+      ],
+      "note": "gṛham, dvāram, bhittiḥ, vātāyanam, sopānam, stambhaḥ, talam, śayyā, āsanam. Buying, renting and domestic activity are absent."
+    },
+    {
+      "id": "SA-A1-X-07",
+      "category": "Specific notions — the lexical fields",
+      "label": "the settlement and the built world",
+      "probe": [
+        "SA-LEX-C16-PLACE-02",
+        "SA-LEX-C16-PLACE-05",
+        "SA-LEX-C33-LAND-04",
+        "SA-LEX-C16-PLACE-03",
+        "SA-LEX-C33-LAND-02",
+        "SA-LEX-C41-CRAFT-01",
+        "SA-LEX-C41-CRAFT-02",
+        "SA-LEX-C41-CRAFT-03",
+        "SA-LEX-C41-CRAFT-04",
+        "SA-LEX-C41-CRAFT-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03",
+        "A1-NE14-03"
+      ],
+      "note": "grāmaḥ, nagaram, puram, mārgaḥ, setuḥ, and chapter 41's made things — cakram, kalaśaḥ, plavaḥ, darpaṇaḥ, chatram. A boat and a wheel are the transport system Sanskrit has."
+    },
+    {
+      "id": "SA-A1-X-08",
+      "category": "Specific notions — the lexical fields",
+      "label": "geography and the natural world",
+      "probe": [
+        "SA-LEX-C33-LAND-01",
+        "SA-LEX-C33-LAND-03",
+        "SA-LEX-C33-LAND-05",
+        "SA-LEX-C16-PLACE-04",
+        "SA-LEX-C38-EARTH-01",
+        "SA-LEX-C38-EARTH-02",
+        "SA-LEX-C38-EARTH-03",
+        "SA-LEX-C38-EARTH-04",
+        "SA-LEX-C38-EARTH-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "note": "nadī, parvataḥ, samudraḥ, vanam and the five earth-atoms of chapter 38."
+    },
+    {
+      "id": "SA-A1-X-09",
+      "category": "Specific notions — the lexical fields",
+      "label": "the sky, the weather and the universe",
+      "probe": [
+        "SA-LEX-C31-SKY-01",
+        "SA-LEX-C31-SKY-02",
+        "SA-LEX-C31-SKY-03",
+        "SA-LEX-C31-SKY-04",
+        "SA-LEX-C31-SKY-05",
+        "SA-LEX-C46-LIGHT-01",
+        "SA-LEX-C46-LIGHT-02",
+        "SA-LEX-C46-LIGHT-04",
+        "SA-LEX-C46-LIGHT-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01",
+        "A1-NE20-04"
+      ],
+      "note": "ākāśaḥ, candraḥ, tārā, vāyuḥ, himam, raviḥ, raśmiḥ, chāyā, tāpaḥ. Weather as a TOPIC of conversation — 'it is raining' — is not sayable; there is no verb and no word for rain."
+    },
+    {
+      "id": "SA-A1-X-10",
+      "category": "Specific notions — the lexical fields",
+      "label": "fauna",
+      "probe": [
+        "SA-LEX-C39-ANIMAL-01",
+        "SA-LEX-C39-ANIMAL-02",
+        "SA-LEX-C39-ANIMAL-03",
+        "SA-LEX-C39-ANIMAL-04",
+        "SA-LEX-C39-ANIMAL-05",
+        "SA-LEX-C48-BEAST-01",
+        "SA-LEX-C48-BEAST-02",
+        "SA-LEX-C48-BEAST-03",
+        "SA-LEX-C48-BEAST-04",
+        "SA-LEX-C48-BEAST-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "note": "Ten animals across chapters 39 and 48. Well past A1, and counted, because level purity is not a constraint on this curriculum."
+    },
+    {
+      "id": "SA-A1-X-11",
+      "category": "Specific notions — the lexical fields",
+      "label": "flora",
+      "probe": [
+        "SA-LEX-C32-TREE-01",
+        "SA-LEX-C32-TREE-02",
+        "SA-LEX-C32-TREE-03",
+        "SA-LEX-C32-TREE-04",
+        "SA-LEX-C32-TREE-05",
+        "SA-LEX-C30-WELCOME-03",
+        "SA-LEX-C30-WELCOME-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "note": "taruḥ, patram, tṛṇam, latā, dāru, puṣpam, mālā."
+    },
+    {
+      "id": "SA-A1-X-12",
+      "category": "Specific notions — the lexical fields",
+      "label": "study, the book and the classroom",
+      "probe": [
+        "SA-LEX-C35-HOUSE-04",
+        "SA-LEX-PATHATI-READ",
+        "SA-LEX-LIKHATI-WRITE",
+        "SA-LEX-C26-ROLE-01",
+        "SA-LEX-C26-ROLE-02",
+        "SA-LEX-C50-SOUND-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-04",
+        "A1-NE06-07"
+      ],
+      "note": "pustakam, paṭhati, likhati, guruḥ, śiṣyaḥ, ślokaḥ. The institution, the timetable, the examination and the mark are all absent — the track teaches the guru-śiṣya relation, not a school."
+    },
+    {
+      "id": "SA-A1-X-13",
+      "category": "Specific notions — the lexical fields",
+      "label": "sound, song and speech as things",
+      "probe": [
+        "SA-LEX-C50-SOUND-01",
+        "SA-LEX-C50-SOUND-02",
+        "SA-LEX-C50-SOUND-03",
+        "SA-LEX-C50-SOUND-04",
+        "SA-LEX-C50-SOUND-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE18-02",
+        "A1-NE18-04"
+      ],
+      "note": "śabdaḥ, praśnaḥ, vāṇī, gītam, ślokaḥ — chapter 50. The verse and the song are how Sanskrit's artistic-activity field is actually shaped, and the proxy's photography, cinema and sculpture points have no counterpart."
+    },
+    {
+      "id": "SA-A1-X-14",
+      "category": "Specific notions — the lexical fields",
+      "label": "cloth, the lamp and the personal object",
+      "probe": [
+        "SA-LEX-C24-ASK-04",
+        "SA-LEX-C24-ASK-05",
+        "SA-LEX-C41-CRAFT-04",
+        "SA-LEX-C41-CRAFT-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03",
+        "A1-NE12-02"
+      ],
+      "note": "vastram, dīpaḥ, darpaṇaḥ, chatram. Clothing as a FIELD — garments a person wears and names — is one word deep."
+    },
+    {
+      "id": "SA-A1-X-15",
+      "category": "Specific notions — the lexical fields",
+      "label": "hospitality as a field of its own",
+      "probe": [
+        "SA-LEX-C43-COURTESY-01",
+        "SA-LEX-C26-ROLE-04",
+        "SA-CULTURE-WELCOMING-A-GUEST",
+        "SA-LEX-SVAGATAM",
+        "SA-LEX-C30-WELCOME-05",
+        "SA-LEX-C37-COURTESY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific. ātithyam, atithiḥ, svāgatam, añjaliḥ, śāntiḥ and a culture atom about receiving a guest. No Spanish A1 point asks for this and three Sanskrit chapters are devoted to it; a proxy-shaped inventory would have missed the field entirely."
+    },
+    {
+      "id": "SA-A1-X-16",
+      "category": "Specific notions — the lexical fields",
+      "label": "religion and the sacred register",
+      "probe": [
+        "SA-LEX-C37-COURTESY-05",
+        "SA-LEX-C37-COURTESY-01",
+        "SA-CULTURE-ANJALI-BOW",
+        "SA-LEX-C50-SOUND-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "āśīrvādaḥ, śāntiḥ, the añjali and the śloka. This is the one proxy point where Sanskrit is RICHER than Spanish at A1, and the register question it raises is SA-A1-RG-01."
+    },
+    {
+      "id": "SA-A1-L-01",
+      "category": "Lipi — the script and its orthography",
+      "label": "the writing system: Devanagari, an abugida with an inherent vowel",
+      "probe": [
+        "SA-SCRIPT-RECOG-01",
+        "SA-SCRIPT-RECOG-03",
+        "SA-SCRIPT-RECOG-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-O1-01",
+        "A1-O1-02"
+      ],
+      "note": "The proxy asks for an alphabet and the names of its letters. Devanagari is not an alphabet: every consonant carries an inherent a, and a vowel after a consonant is written as a sign rather than a letter. The track teaches ma, the independent a and the ā sign in chapters 1-3, which is where a learner meets the distinction."
+    },
+    {
+      "id": "SA-A1-L-02",
+      "category": "Lipi — the script and its orthography",
+      "label": "the consonant letters",
+      "probe": [
+        "SA-SCRIPT-RECOG-02",
+        "SA-SCRIPT-RECOG-111",
+        "SA-SCRIPT-RECOG-107",
+        "SA-SCRIPT-RECOG-108",
+        "SA-SCRIPT-RECOG-114",
+        "SA-SCRIPT-RECOG-110",
+        "SA-SCRIPT-RECOG-113"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Thirty-two consonant recognition segments across the track. Counted covered on the class; the five characters still untaught are named at SA-A1-L-07."
+    },
+    {
+      "id": "SA-A1-L-03",
+      "category": "Lipi — the script and its orthography",
+      "label": "the vowel signs, and that they are not letters",
+      "probe": [
+        "SA-SCRIPT-RECOG-06",
+        "SA-SCRIPT-RECOG-109",
+        "SA-SCRIPT-RECOG-203",
+        "SA-SCRIPT-RECOG-112",
+        "SA-SCRIPT-RECOG-210",
+        "SA-SCRIPT-RECOG-214",
+        "SA-SCRIPT-RECOG-115",
+        "SA-SCRIPT-RECOG-222",
+        "SA-SCRIPT-RECOG-223"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "Nine mātrā segments. Sanskrit's answer to the proxy's vowel-letter point has two halves — the independent letter and the attached sign — and the track teaches both for a, i, u, e, o and au."
+    },
+    {
+      "id": "SA-A1-L-04",
+      "category": "Lipi — the script and its orthography",
+      "label": "the virāma, the visarga and the anusvāra: marks that are not letters",
+      "probe": [
+        "SA-SCRIPT-RECOG-05",
+        "SA-SCRIPT-RECOG-201",
+        "SA-SCRIPT-RECOG-209"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "note": "Spanish's two written-accent points have no Sanskrit counterpart — Sanskrit writes no accent. What it writes instead are these three marks, and the visarga in particular is the masculine-singular ending a learner meets in chapter 1's very first word."
+    },
+    {
+      "id": "SA-A1-L-05",
+      "category": "Lipi — the script and its orthography",
+      "label": "Devanagari has no capital letters",
+      "probe": [
+        "SA-SCRIPT-RECOG-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "note": "Two proxy points collapse into one fact: the script is unicameral, so nothing distinguishes a proper noun or a sentence opening. Nothing is taught here because nothing exists to teach, and the same judgement is made as at SA-A1-ART-01."
+    },
+    {
+      "id": "SA-A1-L-06",
+      "category": "Lipi — the script and its orthography",
+      "label": "punctuation: the daṇḍa, and almost nothing else",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "note": "UNCOVERED, AND NINE PROXY POINTS COLLAPSE ONTO IT. Classical Sanskrit punctuates with one mark, the daṇḍa (।), doubled at the end of a verse. It appears in the track's printed text and NO LESSON TEACHES IT. Spanish's comma, colon, brackets, quotes, hyphen, dash and slash have no classical counterpart at all. One short lesson closes this point."
+    },
+    {
+      "id": "SA-A1-L-07",
+      "category": "Lipi — the script and its orthography",
+      "label": "the five Devanagari characters the track shows and never teaches",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific, and a measurement rather than a demand: the track puts 53 Devanagari characters on the page and teaches 48. The five are ऋ, ङ, ई, ँ and घ. THE TWO REFUSALS ARE BLOCKED ON OPPOSITE HALVES AND ONE OF THEM HAS NOW FLIPPED — see SA-A1-L-08."
+    },
+    {
+      "id": "SA-A1-L-08",
+      "category": "Lipi — the script and its orthography",
+      "label": "ऋ can now be taught and ङ still cannot, for opposite reasons",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific, and the most actionable line in this file. The roadmap records ऋ and ङ as having 'no cited stroke order in the shared script file and so no lesson at all'. That is now HALF TRUE. ऋ HAS a cited four-stroke ductus in data/scripts/devanagari.json, sourced to Saurmandal's four-panel Commons diagram, so the SOURCING refusal on it is lifted; what still blocks it is that NO SANSKRIT HEADWORD CONTAINS ऋ, and HL-C217's own rule says a recognition segment with an empty 'you already say these' list teaches a shape for nothing. The fix is vocabulary first: schedule ऋतु ('season') — which would also close the seasons half of SA-A1-T-02 — or ऋषि, then teach the shape. ङ IS THE MIRROR IMAGE: it sits in a headword already, सङ्ख्याशब्दाः in chapter 19, and it is ABSENT FROM devanagari.json ENTIRELY, so there is no sourced pen path. That refusal stands and must stand; a stroke order must be sourced and cited, never invented."
+    },
+    {
+      "id": "SA-A1-L-09",
+      "category": "Lipi — the script and its orthography",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03"
+      ],
+      "note": "UNCOVERED, and probably permanently. Classical Sanskrit has no abbreviation convention of the kind the proxy means; the nearest thing is the scribal use of the avagraha and of numerals in verse citation, neither taught nor arguably A1. Recorded rather than dropped, so the count stays honest."
+    },
+    {
+      "id": "SA-A1-RG-01",
+      "category": "Register — which Sanskrit is being taught",
+      "label": "WHICH SANSKRIT: the course teaches a spoken register, and the exam ladder behind it does not",
+      "probe": [
+        "SA-GRAMMAR-POLITENESS-BY-PERSON",
+        "SA-PATTERN-HOW-ARE-YOU",
+        "SA-PATTERN-I-AM-WELL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-EXAM-LEVELS",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific, and the first point a reader should look at. core/exam-levels.json records Sanskrit as basis 'editorial' with the caveat that this project teaches it AS A LIVING SPOKEN LANGUAGE so CEFR can-do descriptors apply, while 'a traditional syllabus is ordered by grammar and text rather than by communicative function, so the two ladders are not parallel'. That is load-bearing: every functional point in this file measures the spoken-revival register that Samskrita Bharati teaches, and NONE of it measures the traditional pariksha, which would ask for declension tables and a text. bhavān katham asti? and kuśalī asmi are spoken-revival forms; a classical text would not use them conversationally. A coverage number here is not progress toward a traditional examination and cannot become one."
+    },
+    {
+      "id": "SA-A1-RG-02",
+      "category": "Register — which Sanskrit is being taught",
+      "label": "the traditional ladder is ordered by grammar and text, and this inventory cannot measure it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-EXAM-LEVELS",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific and deliberately UNCOVERED, because there is nothing in the corpus that could cover it and pretending otherwise would be the error. A pariksha syllabus asks for the śabda-rūpa and dhātu-rūpa tables, for sandhi rules by name, for samāsa analysis, and for a set text. The track teaches sandhi as a fact (SA-A1-C-05) and the noun families as a category (SA-A1-N-06), and it teaches NO paradigm table and NO text. Anybody who wants this file to speak to the traditional ladder has to build a second column, not extend this one."
+    },
+    {
+      "id": "SA-A1-RG-03",
+      "category": "Register — which Sanskrit is being taught",
+      "label": "the etymological layer: what this track teaches that no exam asks for",
+      "probe": [
+        "SA-HISTORY-JONES-1786",
+        "SA-COMPARISON-NUMERAL-FAMILY",
+        "SA-SOUND-PIE-KW-OUTCOMES",
+        "SA-SOUND-GRIMMS-LAW-P-TO-F",
+        "SA-HISTORY-TATSAMA-TADBHAVA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-EXAM-LEVELS",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [],
+      "sanskritSpecific": true,
+      "note": "Sanskrit-specific. Eleven HISTORY atoms, forty-eight ETYMON atoms, a COMPARISON atom and two SOUND atoms carry an Indo-European comparative layer — Jones's 1786 lecture, Grimm's law, the kʷ outcomes, the tatsama/tadbhava split — that is the reason this track exists and that no A1 syllabus anywhere would ask for. Counted as a point so the inventory does not silently imply the track is only 'A1 minus gaps'."
+    },
+    {
+      "id": "SA-A1-AG-01",
+      "category": "Agreement and the phrase",
+      "label": "agreement inside the noun phrase, and between subject and verb",
+      "probe": [
+        "SA-GRAMMAR-C15-ADJ-SYSTEM",
+        "SA-GRAMMAR-COPULA-THREE-PERSONS",
+        "SA-GRAMMAR-SINGULAR-DUAL-PLURAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SN-02",
+        "A1-SN-03"
+      ],
+      "note": "The adjective agrees in gender, number and case; the verb agrees in person and number. Sanskrit demands both more strictly than Spanish, and chapters 3, 5 and 15 are where each is stated."
+    },
+    {
+      "id": "SA-A1-AG-02",
+      "category": "Agreement and the phrase",
+      "label": "degree modifiers on an adjective",
+      "probe": [
+        "SA-LEX-C42-REPLY-05",
+        "SA-LEX-C42-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SADJ-01"
+      ],
+      "note": "bahu and kiñcit, taught as quantity words in chapter 42 rather than as adjective modifiers. Thin, and the -tara/-tama comparative and superlative suffixes are untaught."
+    },
+    {
+      "id": "SA-A1-AG-03",
+      "category": "Agreement and the phrase",
+      "label": "the indirect object",
+      "probe": [
+        "SA-GRAMMAR-DATIVE-OF-PURPOSE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-SV-05"
+      ],
+      "note": "Sanskrit's dative. The track teaches it only in the purpose sense (punar darśanāya), never as a recipient — 'I give the book to the teacher' is not built anywhere, and no verb of giving is taught."
+    },
+    {
+      "id": "SA-A1-T-04",
+      "category": "Temporal notions",
+      "label": "locating an event in time: saying when something is",
+      "probe": [
+        "SA-LEX-C18-ASK-01",
+        "SA-LEX-C17-TIME-03",
+        "SA-LEX-SHVAH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "note": "kadā asks it and adya / śvaḥ answer it. Spanish uses ser for this; Sanskrit uses the locative of time, which the track does not teach as such."
+    },
+    {
+      "id": "SA-A1-F-22",
+      "category": "Structuring the exchange",
+      "label": "ask for a person, and ask for quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-F6-03",
+        "A1-F6-05"
+      ],
+      "note": "UNCOVERED but transferable. Both are ordinary spoken-Sanskrit acts — Samskrita Bharati teaches tūṣṇīm ('quietly, be quiet') — and neither has any taught exponent here. Listed as a point rather than as untransferable, because the demand does cross and only the corpus is missing."
+    },
+    {
+      "id": "SA-A1-L-10",
+      "category": "Lipi — the script and its orthography",
+      "label": "the akṣara: the syllable is the unit Devanagari is built from",
+      "probe": [
+        "SA-SCRIPT-RECOG-05",
+        "SA-GRAMMAR-SANDHI-JOINS-WORDS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "SA-SCRIPT-DATA",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Spanish asks for syllable division. Devanagari's unit is the akṣara — a consonant with its vowel — and the virāma is what strips the inherent vowel so two consonants can bind. The track teaches the virāma in chapter 1. CONJUNCT CONSONANTS as a written form are not taught systematically, which is the real gap behind this point."
+    },
+    {
+      "id": "SA-A1-M-01",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "personal data beyond a name: age, address, telephone number",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01",
+        "A1-NE03-02"
+      ],
+      "note": "UNCOVERED. Age, address, document and telephone are all absent. A spoken-Sanskrit A1 would use dūravāṇī for the telephone; nothing of the kind is taught. This is the field an A1 speaking paper opens with."
+    },
+    {
+      "id": "SA-A1-M-02",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "meals, the restaurant and ordering",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01",
+        "A1-NE05-05"
+      ],
+      "note": "UNCOVERED. The track teaches fifteen foodstuffs (SA-A1-X-05) and no meal, no eating-place and no way to order. A pantry without a table."
+    },
+    {
+      "id": "SA-A1-M-03",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "the school as an institution: timetable, examination, marks, classroom language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE06-03",
+        "A1-NE06-05",
+        "A1-NE06-06"
+      ],
+      "note": "UNCOVERED. guruḥ and śiṣyaḥ are taught (SA-A1-X-12); vidyālayaḥ, parīkṣā and the classroom imperatives are not."
+    },
+    {
+      "id": "SA-A1-M-04",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "work: the workplace, the activity, looking for work, rights at work",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02",
+        "A1-NE07-03",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "note": "UNCOVERED. kāryaṁ karomi ('I work') is taught inside SA-LEX-KAROMI in chapter 5 and nothing else in this field exists. Five proxy points ride on one absent lexical set."
+    },
+    {
+      "id": "SA-A1-M-05",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "leisure, sport, shows and games",
+      "probe": [
+        "SA-LEX-PLAY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "krīḍati ('plays') is the ONLY atom in this whole field, and it is a verb with no game to play. Counted covered on that single exponent and named here as the thinnest 'covered' point in the file."
+    },
+    {
+      "id": "SA-A1-M-06",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "media and communication: press, telephone, radio, television, the internet, letters",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-03",
+        "A1-NE09-04",
+        "A1-NE09-05",
+        "A1-NE09-06"
+      ],
+      "note": "UNCOVERED, six proxy points. Spoken Sanskrit has coined every one of these — dūravāṇī, saṅgaṇakaḥ, vārtāpatram — and the track teaches none. This is the sharpest illustration of SA-A1-RG-01: a corpus built on the classical register cannot answer a modern-life demand even when the living register can."
+    },
+    {
+      "id": "SA-A1-M-07",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "housing as an activity: buying, renting, keeping house",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-03"
+      ],
+      "note": "UNCOVERED. The parts of a house are well taught (SA-A1-X-06); doing anything with one is not."
+    },
+    {
+      "id": "SA-A1-M-08",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "services: post, bank, health service, police",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04"
+      ],
+      "note": "UNCOVERED, four proxy points, nothing in the corpus."
+    },
+    {
+      "id": "SA-A1-M-09",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "shopping: the shop, the shopkeeper, buying",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01",
+        "A1-NE15-02"
+      ],
+      "note": "UNCOVERED. No verb of buying or selling and no word for a shop. See also SA-A1-EV-02 for price."
+    },
+    {
+      "id": "SA-A1-M-10",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "health, illness, medicine and hygiene",
+      "probe": [
+        "SA-LEX-C26-ROLE-05",
+        "SA-LEX-KUSHALAM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "note": "vaidyaḥ ('a physician') and kuśalam ('well-being') are the only two atoms in this field, and kuśalam is taught as a greeting rather than as health. No word for illness, pain, medicine or a hospital. Counted covered, very thinly, and the four proxy points behind it are effectively open."
+    },
+    {
+      "id": "SA-A1-M-11",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "travel: documents, accommodation, the journey",
+      "probe": [
+        "SA-LEX-C28-LEAVE-03",
+        "SA-LEX-C41-CRAFT-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02"
+      ],
+      "note": "yātrā ('a journey') and plavaḥ ('a boat'). No document, no lodging, no fare. Thin."
+    },
+    {
+      "id": "SA-A1-M-12",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "economy, industry, energy and organisations",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "note": "UNCOVERED and arguably not A1 in any language; recorded so the proxy accounting is complete rather than because it is a priority."
+    },
+    {
+      "id": "SA-A1-M-13",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "computing and new technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "note": "UNCOVERED. saṅgaṇakaḥ is the standard spoken-Sanskrit coinage and is not taught."
+    },
+    {
+      "id": "SA-A1-M-14",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "government, politics, law and justice",
+      "probe": [
+        "SA-LEX-C26-ROLE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "rājā ('a king') is the entire political vocabulary of the track, which is the honest classical answer and answers almost none of what the proxy means."
+    },
+    {
+      "id": "SA-A1-M-15",
+      "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+      "label": "the visual and performing arts",
+      "probe": [
+        "SA-LEX-DANCE",
+        "SA-LEX-C50-SOUND-04",
+        "SA-LEX-C41-CRAFT-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-03",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "nṛtyati ('dances'), gītam ('a song') and darpaṇaḥ. Dance and song are taught; architecture, sculpture, painting, photography, cinema and theatre are not, and the last three could not be classical."
+    },
+    {
+      "id": "SA-A1-G-02",
+      "category": "Specific notions — the lexical fields",
+      "label": "geography: the country, the capital, and where you are from",
+      "probe": [
+        "SA-LEX-C16-PLACE-02",
+        "SA-LEX-C16-PLACE-05",
+        "SA-LEX-C33-LAND-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "note": "grāmaḥ, nagaram and puram give village, city and walled town. THERE IS NO WORD FOR A COUNTRY (deśaḥ) AND NO PROPER PLACE NAME ANYWHERE IN THE TRACK, not even bhāratam. Counted covered on the settlement half; the country half is what makes SA-A1-SP-04 and SA-A1-ADJ-02 uncovered."
+    },
+    {
+      "id": "SA-A1-X-17",
+      "category": "Specific notions — the lexical fields",
+      "label": "celebrations and occasions",
+      "probe": [
+        "SA-LEX-C37-COURTESY-04",
+        "SA-LEX-C30-WELCOME-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "SA-CORPUS",
+        "ED-SANSKRIT"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "abhinandanam ('congratulation') and mālā ('a garland'). No festival is named — no utsavaḥ, and none of the calendar festivals a living Sanskrit course would reach for."
+    }
+  ]
+}
