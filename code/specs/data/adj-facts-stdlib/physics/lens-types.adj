@@ -114,4 +114,6 @@ table optic_action {
     source "A convex or converging lens is shaped so that all light rays that enter it parallel to its optical axis intersect (or focus) at a single point on the optical axis on the opposite side of the lens"
     locator "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/02:_Geometric_Optics_and_Image_Formation/2.05:_Thin_Lenses"
     trust consensus
+    cites "Likewise, a concave or diverging lens is shaped so that all rays that enter it parallel to its optical axis diverge, as shown in part (b)." locator "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/02:_Geometric_Optics_and_Image_Formation/2.05:_Thin_Lenses"
+    cites "Convex mirrors diverge light rays and, thus, have a negative focal length." locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/25:_Geometric_Optics/25.07:_Image_Formation_by_Mirrors"
 }
