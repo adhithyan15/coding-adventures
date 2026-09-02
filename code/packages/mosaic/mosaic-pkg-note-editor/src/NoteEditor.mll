@@ -6,7 +6,7 @@ layout NoteEditor {
       content : slot: editor-label
     )
     Row [ note-metadata ] {
-      Box [ note-id-meta ] {
+      Column [ note-id-meta ] {
         Text [ note-id-label ] (
           content : slot: note-id-label
         )
@@ -14,7 +14,7 @@ layout NoteEditor {
           content : slot: note-id-value
         )
       }
-      Box [ note-type-meta ] {
+      Column [ note-type-meta ] {
         Text [ note-type-label ] (
           content : slot: note-type-label
         )
@@ -22,7 +22,7 @@ layout NoteEditor {
           content : slot: note-type-value
         )
       }
-      Box [ deck-meta ] {
+      Column [ deck-meta ] {
         Text [ deck-label ] (
           content : slot: deck-label
         )
