@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W04-chha",
+    "language": "bengali",
+    "chapter": 9,
+    "sequence": 610,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c2527c2fc866e6ee",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

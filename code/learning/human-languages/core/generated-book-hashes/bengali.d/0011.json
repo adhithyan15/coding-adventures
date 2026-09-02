@@ -1,14 +1,13 @@
 {
   "language": "bengali",
   "chapter": 11,
-  "sourceHash": "fnv1a64:fe85756fbc22556f",
+  "sourceHash": "fnv1a64:86b9a9f7c95498c4",
   "lessonIds": [
-    "BN-C07-howa",
-    "BN-C07-jaowa",
-    "BN-C07-asha",
-    "BN-C07-khaowa",
-    "BN-C07-dekha",
-    "BN-C07-jana"
+    "BN-C05-bola",
+    "BN-C05-ami-bangla-boli",
+    "BN-C05-kaj-kora",
+    "BN-C05-thaka",
+    "BN-C05-practice"
   ],
-  "tex": "bengali/book/chapters/ch11-core-verbs.tex"
+  "tex": "bengali/book/chapters/ch11-first-verbs.tex"
 }

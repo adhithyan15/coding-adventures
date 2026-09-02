@@ -201,7 +201,16 @@ describe("the real corpus", () => {
     // The point of the whole module. HL08's glyph budget flags tens of lessons
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
-    expect(report.summary.violations).toBeGreaterThan(500);
+    // HL-C201: the floor this line used to carry (`toBeGreaterThan(500)`) failed
+    // the first time a tranche removed enough debt to cross it — Bengali's glyph
+    // inventory and Sanskrit-citation cleanup took the corpus 518 -> 498. A floor
+    // on debt forbids exactly the work the module exists to prompt, which is the
+    // same argument the note below already made about `tracksTeachingNothing`.
+    // Both are now CEILINGS on the same footing as the forward-reference one: they
+    // may fall, never grow, and whoever raises one writes down why. The test's
+    // stated point — that closure finds hundreds where the pace budget finds tens —
+    // is still carried by the magnitude of the number itself.
+    expect(report.summary.violations).toBeLessThanOrEqual(498);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed

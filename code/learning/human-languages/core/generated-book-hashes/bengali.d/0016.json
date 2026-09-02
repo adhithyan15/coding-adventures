@@ -1,12 +1,12 @@
 {
   "language": "bengali",
   "chapter": 16,
-  "sourceHash": "fnv1a64:be66f45586a4b829",
+  "sourceHash": "fnv1a64:86d4ae1438f08d8e",
   "lessonIds": [
-    "BN-C11-bondhu",
-    "BN-C11-poribar",
-    "BN-C11-bhai",
-    "BN-C11-bon"
+    "BN-C10-cha",
+    "BN-C10-jol",
+    "BN-C10-dudh",
+    "BN-C10-bhat"
   ],
-  "tex": "bengali/book/chapters/ch16-friend-family-brother-sister.tex"
+  "tex": "bengali/book/chapters/ch16-tea-water-milk-rice.tex"
 }

@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C04-dekha-hobe
 spine_node: SPINE-TAKE-LEAVE
-sequence: 440
+sequence: 470
 chapter: 7
 type: word
 headword: দেখা হবে

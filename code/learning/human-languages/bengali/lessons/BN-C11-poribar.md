@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C11-poribar
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 860
-chapter: 16
+sequence: 970
+chapter: 18
 type: word
 headword: পরিবার
 romanization: pôribār
@@ -58,7 +58,7 @@ syllables in the spelling, three said aloud: *pô-ri-bār*.
 whole from Sanskrit rather than letting it wear down — like বন্ধু, another
 tatsama. It is built from **pari-**, "around, about" (PIE **\*peri-**, the
 same prefix English itself borrowed for **peri-meter** and **peri-phery**),
-plus **√বৃ** (*√vṛ*, "to cover, to surround," PIE **\*h₂wer-**). That root's
+plus *√vṛ* ("to cover, to surround," PIE **\*h₂wer-**). That root's
 secure cousins are Latin *operiō*, "to cover," and Lithuanian *suverti*, "to
 shut" — no English word is claimed here, since none is secure. Put the pieces
 together and a পরিবার is, at the root, **what stands around you and covers

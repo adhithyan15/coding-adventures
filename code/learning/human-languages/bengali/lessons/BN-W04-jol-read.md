@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W04-jol-read
 spine_node: SPINE-MEET-GREET
-sequence: 830
+sequence: 920
 delivery: script
-chapter: 15
+chapter: 17
 type: writing
 headword: জল
 romanization: "jôl"

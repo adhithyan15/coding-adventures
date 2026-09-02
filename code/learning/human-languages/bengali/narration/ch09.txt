@@ -1,169 +1,231 @@
-Bengali, chapter 9: The First Verbs.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Bengali, chapter 9: The Roof, the Teeth, and the Grid Closed.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
-বলা (bôlā) — "to speak," your first full verb.
+Lesson 1 of 7.
+প (pô) — the consonant pa.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-So far, "to be." Here is a verb that does something — and it reveals how gloriously simple Bengali verbs are.
+Write খ from memory, and say what separates it from ক.
 
-The letters in this word.
-ব (bô) + লা (lā) becomes বলা (bôlā). The dictionary form of the verb.
-
-The word, taken apart.
-বলা (bôlā, "to speak, to say") is a native Indo-Aryan verb (the same bol- as Hindi bolnā, Punjabi bolṇā). Its ending -আ (-ā) is Bengali's infinitive marker. To say "I speak," add the present ending -ই (-i) to the stem: bôl- + -i becomes বলি (bôli), "I speak."
-
-Grammar Lens: the verb changes for person — but never for gender.
-Bengali verbs change ending for who speaks: āmi bôli (I say), tumi bôlo (you say), se bôle (he/she says). But — and here is Bengali's great simplification — the verb never changes for gender. There is no "he-form" and "she-form," no masculine/feminine at all: se bôle is "he says" and "she says." Where Hindi and Punjabi make even "I speak" agree with the speaker's gender (boltā/boltī), Bengali dropped grammatical gender entirely. One less thing to track, forever.
+Script.
+প (pô).
+pô — the p of English spin, lips shut, no puff of air after the release.
+The place is the lips, which is where ব was made too. So the two of them fill two cells of one square:
+প (pô) — lips, voice off.
+ব — lips, voice on.
+The English p of pin is the breathy one and belongs to a different letter, the same trap ক and খ laid a lesson ago. Palm in front of the mouth: spin gives no air, and that is this letter.
+With the lips named, the map is complete. Every consonant this book has taught is made at one of four places — lips, teeth, roof, throat — and every one of them is one of four cells at that place. A reader who has that grid is not memorising forty unrelated shapes. They are filling in a table.
+With the mātrā:
+প (pô) + া becomes পা.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "bôlā" (to speak)]
-[pause 8 seconds for the answer]
-[your turn — say: "I speak" — āmi bôli]
-[pause 8 seconds for the answer]
-[your turn — say: does "he says" differ from "she says"? (No — se bôle for both; Bengali has no gender)]
+[once you have stopped driving — write: প (pô)]
+[once you have stopped driving — write: প (pô) ব]
+[your turn — read: ভালো]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does the Bengali verb change for, and what does it never change for? (For person — bôli/bôlo/bôle — but never for gender.)
+Where is প (pô) made? (At the lips.) Which other letter is made there? (ব.) And what separates them? (The voice.)
+Source: Unicode Bengali chart.
 
 
-Lesson 2 of 5.
-আমি বাংলা বলি (āmi bānglā bôli) — "I speak Bengali".
+Lesson 2 of 7.
+দ (dô) — the consonant da.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Your first complete, moving sentence — and the language's own name for itself.
+Write খ and প (pô), then write ত and say where the tongue goes for it.
 
-The letters in this word.
-বাংলা (bānglā): বা (bā) + ং (the anusvāra nasal) + লা (lā).
-
-The sentence, taken apart.
-আমি বাংলা বলি (āmi bānglā bôli) = আমি (āmi, "I") + বাংলা (bānglā, the object) + বলি (bôli, "speak") — "I Bengali speak," the verb last as always. The name বাংলা (bānglā) is the language's own word for itself (English "Bengali" comes from it, via Bangla becomes Bengal). It descends from বঙ্গ (bôngo), the ancient name of the region — so the language is named after its land, the great delta of the Ganges.
-
-Grammar Lens: no gender, so the sentence is the same for anyone.
-Because Bengali verbs carry no gender, আমি বাংলা বলি (āmi bānglā bôli) is exactly the same whether a man or a woman says it — unlike Hindi (maiṁ … boltā/boltī hūṁ). And because the -i ending already means "I," you could even drop āmi: bānglā bôli is a complete "I speak Bengali."
+Script.
+দ (dô).
+dô — the same tongue position as ত, on the back of the top front teeth, with the voice switched on.
+So the warning that came with ত applies here without a word changed. English makes its d on the ridge behind the teeth; Bengali has a separate letter for that position, and it is a different letter spelling different words. Slide the tongue forward onto enamel.
+The pair to hold is not t and d as English thinks of them. It is:
+ত dental, voice off.
+দ (dô) dental, voice on.
+Two settings on one place of articulation. Bengali's consonant grid is built out of exactly these two switches — where the tongue is, and whether the voice is on — plus the breath from the last lesson. Three switches, and most of the inventory falls out of them.
+With the mātrā:
+দ (dô) + া becomes দা.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "āmi bānglā bôli"]
-[pause 8 seconds for the answer]
-[your turn — say: what bānglā is named after (bôngo, the ancient region — the Ganges delta)]
-[pause 8 seconds for the answer]
-[your turn — say: does the sentence change for a man vs. a woman? (No — Bengali has no gender)]
+[once you have stopped driving — write: দ (dô)]
+[once you have stopped driving — write: ত দ (dô)]
+[your turn — read: ভালো আবার]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I speak Bengali," and give the origin of the name bānglā. (Āmi bānglā bôli; from bôngo, the ancient name of the Bengal region.)
+What is the same about ত and দ (dô)? (Where the tongue goes — the teeth.) What is different? (The voice.) And is an English d the same letter? (No — it is made further back.)
+Source: Unicode Bengali chart.
 
 
-Lesson 3 of 5.
-কাজ করা (kāj kôrā) — "to work".
+Lesson 3 of 7.
+ধ (dhô) — the consonant dha.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The last verb of the chapter — and, like Hindi's karnā, it is a "do" verb that builds a hundred others.
+Write দ (dô) from memory, and say where the tongue touches for it.
 
-The letters in this word.
-কাজ (kāj, "work"): কা (kā) + জ (j). করা (kôrā, "do"): ক (kô) + রা (rā).
-
-The word, taken apart.
-করা (kôrā, "to do, to make") is from Sanskrit √কৃ (√kṛ, "to do"), from PIE kʷer- — the same root you met in Chapter 1's নমস্কার (nômoshkar = namas + kāra, "the making of a bow") and in karma. And কাজ (kāj, "work") is itself from Sanskrit kārya ("work, task," also from √kṛ) — so "work- do" is, at root, "kṛ-thing kṛ-do." Like Hindi, Bengali builds compound verbs as noun + করা:
-কাজ করা (kāj kôrā) = "work-do" = "to work".
-কথা বলা (kôthā bôlā) = "to converse" (using bôlā from earlier).
-So āmi kāj kôri = "I work" — the -i "I" ending, no gender.
+Script.
+ধ (dhô).
+dhô — দ (dô) with the breath let out through it. Voice on, tongue on the teeth, and air after the release.
+Set the four dental letters side by side and the grid the last two lessons have been building is visible in one line:
+ত — voice off, no breath.
+দ (dô) — voice on, no breath.
+ধ (dhô) — voice on, with breath.
+The fourth cell, voice off and with breath, is a letter this book has not needed yet. It exists, it sits between the first two in every dictionary, and it will arrive when a word calls for it.
+That square is the unit. Every place of articulation in the script — teeth, ridge, palate, throat — gets the same four cells in the same order, and the order is over two thousand years old: the Sanskrit grammarians sorted the sounds by where they were made and wrote the list down, and every script descended from that tradition still lists them that way.
+With the u-sign:
+ধ (dhô) + ু becomes ধু.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "kāj kôrā" (to work)]
-[pause 8 seconds for the answer]
-[your turn — say: "I work" — āmi kāj kôri]
-[pause 8 seconds for the answer]
-[your turn — say: the Chapter-1 word that shares the √kṛ root (nômoshkar)]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ধ (dhô)]
+[once you have stopped driving — write: ত দ (dô) ধ (dhô)]
+[once you have stopped driving — write: দা ধা]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit root do both kôrā ("do") and kāj ("work") come from, and name a Chapter-1 word built on it. (√kṛ, "to do"; nômoshkar — "the making of a bow.")
+What two things separate ধ (dhô) from ত? (Voice and breath.) How many cells does one place of articulation get? (Four.) And who fixed that order? (The Sanskrit grammarians.)
+Source: Unicode Bengali chart.
 
 
-Lesson 4 of 5.
-থাকা (thākā) — "to live, to stay".
+Lesson 4 of 7.
+চ (chô) — the consonant cha.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-A second verb, so you can say where you live.
+Write দ (dô) and ধ (dhô), and say which of the two lets the breath out.
 
-The letters in this word.
-থা (thā, an aspirated t + long ā) + কা (kā) becomes থাকা (thākā).
-
-The word, taken apart.
-থাকা (thākā, "to live, to stay, to remain") is from Sanskrit স্থা (sthā, "to stand, to stay") — the same PIE root steh₂- ("to stand") that gives English stand, stay, state, and Latin stāre. So Bengali's "to live/stay" and English's "to stand/stay" are, at the root, one word. "I live in Kolkata" is আমি কলকাতায় থাকি (āmi Kolkātāy thāki) — stem thāk- + the -i "I" ending, no gender.
-
-Grammar Lens: "in" comes after the noun.
-কলকাতায় (Kolkātāy) = Kolkata + -য় / -তে (-y/-te, "in, at"), glued to the end of the noun. Bengali uses postpositions (case-endings) where English uses prepositions: "Kolkata-in I live," the verb last.
+Script.
+চ (chô).
+chô — the ch of English cheap, with no puff of air after it.
+The tongue is somewhere new. Not on the teeth, where ত and দ (dô) are made, and not at the back, where ক is: the body of the tongue comes up flat against the hard roof of the mouth, a little behind the ridge. English spells that place with two letters, ch, because its alphabet has no single sign for it. Bengali has one letter, and — following the square this chapter has been filling — a breathy partner and two voiced cells to go with it.
+That is the fourth place of articulation this book has named: teeth, roof, throat, and lips. The list is not long. Everything the script writes is one of those places with the voice and breath switches set.
+With the mātrā:
+চ (chô) + া becomes চা.
+That is already a word, and it gets its own lesson next.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "thākā"]
-[pause 8 seconds for the answer]
-[your turn — say: "I live in Kolkata" — āmi Kolkātāy thāki]
-[pause 8 seconds for the answer]
-[your turn — say: the English cousins of its root sthā (stand, stay, state)]
+[once you have stopped driving — write: চ (chô)]
+[once you have stopped driving — write: চা]
+[your turn — read: কেমন ভালো]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit/PIE root is thākā from, and its English cousins? (Sanskrit sthā / PIE steh₂- "to stand"; English stand, stay, state.)
+Where in the mouth is চ (chô) made? (Against the roof, behind the ridge.) How many letters does English need for that sound? (Two.) And Bengali? (One.)
+Source: Unicode Bengali chart.
 
 
-Lesson 5 of 5.
-Chapter 9 — The first verbs.
+Lesson 5 of 7.
+ছ (chhô) — the breathy one on the roof.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-No new words. Three verbs, one gender-free engine — build real sentences about yourself.
+Write চ (chô) and say where in the mouth it is made. Then write গ.
 
-How to answer — build the sentences.
-[pause 1 second after each]
-[your turn — say: "I speak Bengali" — āmi bānglā bôli]
-[pause 8 seconds for the answer]
-[your turn — say: "I live in Kolkata" — āmi Kolkātāy thāki]
-[pause 8 seconds for the answer]
-[your turn — say: "I work" — āmi kāj kôri]
-[pause 8 seconds for the answer]
-[your turn — say: "he speaks" and "she speaks" — se bôle (the same for both!)]
-[pause 8 seconds for the answer]
+Script.
+ছ (chhô).
+chhô — চ (chô) with the breath let out behind it, the way খ is ক with the breath let out behind it. Same place on the roof of the mouth, same tongue, one switch flipped.
+The pair is worth hearing rather than reading about. Hold a hand in front of your mouth. Say chô: the hand feels almost nothing. Say chhô: the hand is pushed. English has no contrast here at all — the ch of church sits somewhere between the two — so the ear has to be told what to listen for before it can hear it.
+With the mātrā:
+ছ (chhô) + া becomes ছা.
+This letter has been under your nose since the first chapter. আচ্ছা (āchchhā, "okay, I see") is spelled with চ (chô) and ছ (chhô) stacked, one on the other: the plain one, then the breathy one, said as a single long push. That is why the romanization has always carried that awkward chchh — it was reporting two letters honestly.
 
-Grammar lens — the engine.
-[pause 2 seconds]
-[your turn — say: the "I" ending on every present verb (-i)]
+Guided Practice.
+[once you have stopped driving — write: ছ (chhô)]
+[once you have stopped driving — write: চ (chô) ছ (chhô)]
+[once you have stopped driving — write: ক খ / চ (chô) ছ (chhô)]
+[your turn — say: chô then chhô, hand in front of the mouth]
 [pause 8 seconds for the answer]
-[your turn — say: the one thing Bengali verbs never mark (gender)]
-[pause 8 seconds for the answer]
-[your turn — say: where the verb sits, and where "in" sits (verb last; -y/-te after the noun)]
-[pause 8 seconds for the answer]
-
-What you've built — roots you now carry.
-[pause 2 seconds]
-bôlā "to speak" (native; bol-, like Hindi/Punjabi).
-thākā "to live" from Sanskrit sthā becomes English stand/stay/state.
-kôrā "to do" from √kṛ — root of nômoshkar; kāj "work" from kārya (also √kṛ).
-bānglā from bôngo, the ancient region — the Ganges delta.
 
 Wrap-up Recall.
 [pause 3 seconds]
-In one breath, say your language, your city, and your work in Bengali — and note what stays the same for anyone. (Āmi bānglā bôli. Āmi … thāki. Āmi kāj kôri — no gender, so it's the same for a man or a woman.)
+What separates ছ (chhô) from চ (chô)? (The breath.) Which pair from the throat works the same way? (ক and খ.) And which word from the first chapter stacks these two letters? (আচ্ছা.)
+Source: Unicode Bengali chart.
+
+
+Lesson 6 of 7.
+আছি (āchhi) — "I am," read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ছ (chhô). Then read আমি.
+
+Script.
+আ + ছি becomes আছি (āchhi).
+আ — the vowel standing on its own, because the word opens on it.
+ছ (chhô) with ি in front of it — chhi.
+āchhi — "[I] am [here]." It is the second half of the exchange you have been having since the responding chapter: তুমি কেমন আছো? and the answer আমি ভালো আছি.
+Look at what the last sign is doing. ি is not decoration and it is not part of the stem: it is the I of the sentence. Bengali packs the person into the verb's ending, so āchhi means "I am" with no pronoun needed at all, and āchho means "you are" by swapping that one sign for another. The আমি in front is emphasis, not grammar.
+That is a genuinely large idea arriving in a three-piece word, and it arrives by eye rather than by rule. You have been saying both endings for chapters. Seeing them written next to each other is what makes them a pattern rather than two memorised noises.
+Now the reply, whole:
+আমি ভালো আছি (āchhi).
+Ten pieces, three words, and not one new shape in any of them.
+
+Guided Practice.
+[your turn — read: আছি (āchhi)]
+[pause 8 seconds for the answer]
+[your turn — read: আমি ভালো আছি (āchhi)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: আছি (āchhi)]
+[your turn — say: the whole reply, out loud]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which piece of আছি (āchhi) carries the "I"? (The ি at the end.) So does the sentence need আমি? (No — it is emphasis.) And how many new shapes were in আমি ভালো আছি (āchhi)? (None.)
+Source: Unicode Bengali chart.
+
+
+Lesson 7 of 7.
+জ (jô) — the consonant ja, and the grid closed.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write চ (chô) and ছ (chhô), and say what separates them.
+
+Script.
+জ (jô).
+jô — the j of English jam. Same place as চ (chô), the flat of the tongue on the roof of the mouth, with the voice on.
+The third cell of the roof, and by now the move should be predictable: meet a consonant, ask where it is made and whether the voice and the breath are running, and the letter has a family rather than being a shape on its own.
+This letter carries a root worth knowing. Sanskrit jñā, "to know," is spelled with it, and the verbs chapter followed that root out to English know and to the k that English still writes and no longer says. The Bengali verb for knowing facts opens on this shape.
+With the mātrā:
+জ (jô) + া becomes জা.
+That is the last consonant of the two script chapters that built this grid, and it closes a table rather than lengthening a list. Every letter in it was met as a cell — a place in the mouth, with the voice and the breath switched on or off. Say them back by place rather than by shape:
+at the lips: প (pô) voice off, ব voice on, ভ voice on with breath.
+on the teeth: ত voice off, দ (dô) voice on, ধ (dhô) voice on with breath.
+on the roof: চ (chô) voice off, ছ (chhô) voice off with breath, জ (jô) voice on.
+at the throat: ক voice off, খ voice off with breath, গ voice on.
+Twelve cells, four rows, and not one of them learned as a picture. The cells nobody has filled are letters this book has not needed yet, not gaps in the script. A reader who can recite that table by place is filling in a grid; a reader holding twelve shapes is memorising twelve shapes. That difference is the whole reason these chapters kept asking where and with what breath instead of what does this look like.
+
+Guided Practice.
+[once you have stopped driving — write: জ (jô)]
+[once you have stopped driving — write: চ (chô) ছ (chhô) জ (jô)]
+[once you have stopped driving — write: প (pô) ব ভ / ত দ (dô) ধ (dhô) / চ (chô) ছ (chhô) জ (jô) / ক খ গ]
+[your turn — read: আছি (āchhi)]
+[pause 8 seconds for the answer]
+[your turn — read: আবার ভালো]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What separates জ (jô) from চ (chô)? (The voice.) How many cells does the grid now hold? (Twelve — four rows of three.) And what question does the grid ask of a new letter — what it looks like, or where it is made? (Where it is made, and with what breath.)
+Source: Unicode Bengali chart.

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C15-choshma",
     "language": "bengali",
-    "chapter": 22,
-    "sequence": 1150,
+    "chapter": 25,
+    "sequence": 1300,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:aee736fcc0172fea",
+    "sourceHash": "fnv1a64:c2fffcacab95485e",
     "detachableSegments": [
       "The letters in this word"
     ]

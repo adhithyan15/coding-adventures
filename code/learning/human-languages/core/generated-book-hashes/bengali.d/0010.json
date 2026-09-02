@@ -1,9 +1,11 @@
 {
   "language": "bengali",
   "chapter": 10,
-  "sourceHash": "fnv1a64:dbe4fc62e51f1a9f",
+  "sourceHash": "fnv1a64:c6ceaa28ab76e072",
   "lessonIds": [
-    "BN-C06-numbers-1-5"
+    "BN-W04-o-indep",
+    "BN-W04-nukta",
+    "BN-W04-howa-read"
   ],
-  "tex": "bengali/book/chapters/ch10-numbers-1-5.tex"
+  "tex": "bengali/book/chapters/ch10-two-marks-inside-a-verb.tex"
 }

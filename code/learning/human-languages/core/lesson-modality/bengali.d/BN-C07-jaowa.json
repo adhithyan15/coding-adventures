@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C07-jaowa",
     "language": "bengali",
-    "chapter": 11,
-    "sequence": 650,
+    "chapter": 13,
+    "sequence": 740,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2ded5fb3bcec23e1"
+    "sourceHash": "fnv1a64:fb0518b40610b4f5"
   },
   "findings": []
 }

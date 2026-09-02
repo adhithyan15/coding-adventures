@@ -1,12 +1,12 @@
 {
   "language": "bengali",
   "chapter": 22,
-  "sourceHash": "fnv1a64:db3f0e1245e994e3",
+  "sourceHash": "fnv1a64:9e6319ab36d330fd",
   "lessonIds": [
-    "BN-C15-kapor",
-    "BN-C15-jama",
-    "BN-C15-shari",
-    "BN-C15-choshma"
+    "BN-C13-doya-kore",
+    "BN-C13-dukkhito",
+    "BN-C13-maf-korben",
+    "BN-C13-sbagotom"
   ],
-  "tex": "bengali/book/chapters/ch22-cloth-shirt-sari-glasses.tex"
+  "tex": "bengali/book/chapters/ch22-please-sorry-welcome.tex"
 }
