@@ -532,6 +532,55 @@ AppContainer profile *is* a SID and `CreateAppContainerProfile` needs no
 administrator, so each Windows agent gets its own and profiles are never
 shared.
 
+### S-I8 — an optional in-runtime layer, which may only ever subtract
+
+Where a language runtime has its own capability enforcement, an agent may be
+launched under it **in addition to** the OS sandbox. Compromising the agent then
+takes two independent steps instead of one.
+
+Three rules keep this defence in depth rather than defence instead of:
+
+1. **It is derived from the same signed manifest.** Two capability sources that
+   can disagree is a worse position than one. `chief-of-staff-skill-parser`
+   already does this — `deno_permissions()` lowers the same
+   `Capability{category, action, ...}` values into `--allow-read`,
+   `--allow-net`, `--allow-run`, `--allow-ffi`.
+2. **It may only subtract.** The in-runtime layer is never wider than the OS
+   plan, and its presence **never** justifies relaxing the OS plan. A Deno agent
+   does not get a looser Layer 7 because Deno is watching. That inversion is how
+   defence in depth becomes a single point of failure wearing two names.
+3. **It is not a boundary under S-B1.** It is enforced by code sharing an
+   address space with the code it constrains. Deno's is strong — V8 isolates JS
+   from the host and `--deny-ffi` closes the obvious escape — but strong is not
+   the same as being the thing the design rests on.
+
+**Availability is poor outside JavaScript, and the industry is moving away from
+in-process sandboxing rather than toward it.** This is recorded so nobody plans
+around a facility that no longer exists:
+
+| Runtime | In-runtime enforcement | Status |
+|---|---|---|
+| **Deno** | `--deny-net`, `--deny-read`, `--deny-write`, `--deny-env`, `--deny-sys`, `--deny-run`, `--deny-ffi` | Supported, first-class. Already used here. |
+| **Node.js** | `--permission` with `--allow-fs-read`, `--allow-child-process` | Real, but young (experimental in v20) and has had bypasses. Usable with the caveat recorded. |
+| **Lua** | restricted environments | Supported; sandboxing is a design goal of the language. |
+| **wasm / WASI** | capability-based by construction | Supported, and the only **language-agnostic** option here — see below. |
+| **Java / JVM** | `SecurityManager` | **Gone.** Deprecated for removal by JEP 411, permanently disabled by JEP 486. No replacement is planned. |
+| **.NET** | Code Access Security | **Removed** in .NET Core. |
+| **Ruby** | `$SAFE` taint mode | **Removed** in Ruby 3.0 (deprecated 2.7). Nothing replaces it. |
+| **Python** | none | `rexec`/`Bastion` were withdrawn in 2003 as unfixable. PEP 578 audit hooks are *observability*, not enforcement, and native extensions bypass them. RestrictedPython is a subset compiler its own authors decline to call a security boundary. |
+| **Go, Rust** | none | Compiled; no runtime to enforce anything. |
+
+So for the two languages most likely to be asked for after JavaScript — Python
+and Ruby — **there is no inner layer to add, and there will not be one.** Their
+agents run with Layer 7 alone, which is precisely why Layer 7 had to be the
+boundary and not this.
+
+**WASI is the interesting option.** A wasm runtime is capability-based by
+construction and many languages compile to it, so it would give one inner layer
+across languages rather than a per-runtime patchwork — including for Python and
+Ruby, which have no native facility. It is out of scope here and worth its own
+evaluation; the trade is a compilation constraint on agent authors.
+
 ---
 
 ## Broker rules
@@ -869,10 +918,9 @@ and the relaxation is recorded in the manifest and visible in review.
 - **Whether the broker is one process per agent or one per supervisor.** Per
   agent is simpler to reason about and matches S-K2; per supervisor amortizes
   the channel. It interacts with the capacity numbers above.
-- **Whether `DENO_FLAGS` is deleted or retained.** The spec calls it a real
-  boundary. Deleting a working in-process boundary once the OS boundary lands
-  is a net reduction, not a cleanup; retaining it as defence in depth for Deno
-  agents costs nothing. Decide with a measurement, not on tidiness.
+(`DENO_FLAGS` was listed here as undecided. It is decided: **retained**, as the
+Deno case of S-I8. Deleting a working in-process layer once the OS layer lands
+is a net reduction, not a cleanup.)
 
 Decided, and recorded here because earlier drafts left it open: the launcher
 shim is **supervisor-owned and injected** (S-I4d), never a library the agent
@@ -908,7 +956,8 @@ through S-I3 before two weeks are spent on Windows.
 7. **macOS Seatbelt** (Tier A).
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
-   than the enforcement mechanism.
+   than the enforcement mechanism — its flags are retained beneath the OS plan
+   as the S-I8 inner layer, not deleted.
 
 Steps 1-4 are the smallest useful increment: they give compiled agents a real
 OS boundary on Linux, which is where CI runs.
