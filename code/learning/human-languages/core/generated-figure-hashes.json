@@ -3,11 +3,32 @@
   "algorithm": "fnv1a64",
   "figures": [
     {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S04-letter-aa",
+      "sourceHash": "fnv1a64:c93cbe36fe97f5b9",
+      "svgHash": "fnv1a64:3ff9e4e4b0158f9e",
+      "svg": "hindi/book/figures/HI-S04-letter-aa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FA-C03-chist",
+      "sourceHash": "fnv1a64:6eabe122b58a83b0",
+      "svgHash": "fnv1a64:04a7ef0c32970fb0",
+      "svg": "persian/book/figures/FA-C03-chist-filmstrip.svg"
+    },
+    {
       "kind": "etymology-route",
       "lessonId": "ES-C06-cafe",
       "sourceHash": "fnv1a64:0a6c7fc405ec2d4d",
       "svgHash": "fnv1a64:02c8a41905e07c2b",
       "svg": "spanish/book/figures/ES-C06-cafe-etymology.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S119-letter-a",
+      "sourceHash": "fnv1a64:dde5a30b59a43527",
+      "svgHash": "fnv1a64:d269704bb2add46c",
+      "svg": "tamil/book/figures/TA-S119-letter-a-filmstrip.svg"
     }
   ]
 }

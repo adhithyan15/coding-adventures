@@ -4,7 +4,12 @@ import { assertRelativeManifestPath } from "./manifest-path.js";
 import { readLedgerFile } from "./shard.js";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot, loadLessons } from "./loader.js";
-import { renderFigure, type FigureTarget } from "./figure.js";
+import { renderFigure, type FigureSources, type FigureTarget } from "./figure.js";
+import {
+  indexFilmstripLedger,
+  FILMSTRIP_LEDGER_PATH,
+  type FilmstripLedger,
+} from "./figure-filmstrip.js";
 
 interface FigureGenerationConfig {
   version: 1;
@@ -36,6 +41,30 @@ function loadConfig(root: string): FigureGenerationConfig {
   return readLedgerFile<FigureGenerationConfig>(join(root, FIGURE_CONFIG_PATH));
 }
 
+/**
+ * Reject a target the renderer could not honour, at the point the config is
+ * read rather than deep inside a renderer. `figure-generation.json` is authored
+ * by hand, so "kind" is checked against the union it claims to belong to and a
+ * filmstrip target is required to name the letter it draws.
+ */
+export function assertKnownFigureTarget(target: FigureTarget): void {
+  if (typeof target.lessonId !== "string" || target.lessonId === "") {
+    throw new Error("every figure target needs a lessonId");
+  }
+  if (target.kind === "etymology-route") return;
+  if (target.kind === "script-filmstrip") {
+    if (typeof target.script !== "string" || !/^[a-z][a-z-]*$/.test(target.script)) {
+      throw new Error(`${target.lessonId}: script-filmstrip needs a canonical script id`);
+    }
+    if (typeof target.glyph !== "string" || target.glyph === "") {
+      throw new Error(`${target.lessonId}: script-filmstrip needs a glyph`);
+    }
+    return;
+  }
+  const exhaustive: never = target;
+  throw new Error(`unknown figure kind in target ${JSON.stringify(exhaustive)}`);
+}
+
 /** Every generated SVG must remain under one track's book/figures directory. */
 export function safeFigureOutput(root: string, relative: string): string {
   assertRelativeManifestPath(relative, `unsafe generated figure output '${relative}'`);
@@ -52,6 +81,20 @@ export function safeFigureOutput(root: string, relative: string): string {
   return output;
 }
 
+/**
+ * Load whatever the declared targets actually need.
+ *
+ * The filmstrip ledger is only read when a `script-filmstrip` target exists, so
+ * a curriculum that prints no filmstrips does not require the generated file to
+ * be present at all — and one that does gets a named, actionable failure rather
+ * than a missing-file stack trace.
+ */
+function figureSources(root: string, targets: FigureTarget[]): FigureSources {
+  if (!targets.some((target) => target.kind === "script-filmstrip")) return {};
+  const ledger = readLedgerFile<FilmstripLedger>(join(root, FILMSTRIP_LEDGER_PATH));
+  return { filmstrips: indexFilmstripLedger(ledger) };
+}
+
 export function generatedFigureOutputs(
   root = defaultCurriculumRoot(),
 ): Map<string, string> {
@@ -60,6 +103,7 @@ export function generatedFigureOutputs(
     throw new Error("figure-generation.json must declare version 1 and at least one target");
   }
   const lessons = new Map(loadLessons(root).map((lesson) => [lesson.realization.lessonId, lesson]));
+  const sources = figureSources(root, config.targets);
   const outputs = new Map<string, string>();
   const manifest: GeneratedFigureHashManifest = {
     version: 1,
@@ -67,6 +111,7 @@ export function generatedFigureOutputs(
     figures: [],
   };
   for (const target of config.targets) {
+    assertKnownFigureTarget(target);
     safeFigureOutput(root, target.output);
     if (outputs.has(target.output)) throw new Error(`${target.output}: duplicate figure output`);
     const lesson = lessons.get(target.lessonId);
@@ -74,7 +119,7 @@ export function generatedFigureOutputs(
     if (!target.output.startsWith(`${lesson.language}/book/figures/`)) {
       throw new Error(`${target.lessonId}: figure output must stay in the lesson's track book`);
     }
-    const generated = renderFigure(target, lesson);
+    const generated = renderFigure(target, lesson, sources);
     outputs.set(target.output, generated.svg);
     manifest.figures.push({
       kind: target.kind,

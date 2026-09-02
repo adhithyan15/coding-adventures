@@ -56,14 +56,14 @@ pen path, the segment labels, the lift points.
 
 - **Source of truth:** `DUCTUS` in `strokes.ts` for the pen path; the vendored font
   outline via `truetype.ts` for the glyph shape.
-- **Renderer:** `penPathD()` / `penTip()` composed into SVG. In the **app** this is
-  `language-ladder`'s `src/ductusview.ts` (shipped in HL-C08), which emits an
-  `SvgNode` tree plus a serialiser and takes no runtime dependency — the app is a
-  browser bundle, and `paint-vm-svg` would be dead weight in it. The **book**
-  pipeline may compose the same `penPathD()`/`penTip()` output through
-  `renderToSvgString()` from `@coding-adventures/paint-vm-svg` where that fits the
-  build. Both read the same `DUCTUS` and the same font outline, which is what
-  makes them the same figure.
+- **Renderer:** `penPathD()` / `penTip()` composed into SVG by `ductusview.ts`, now
+  in `@coding-adventures/script-ductus`, which emits an `SvgNode` tree plus a
+  serialiser and takes no runtime dependency — the app is a browser bundle, and
+  `paint-vm-svg` would be dead weight in it. The **book** pipeline consumes that
+  same renderer's output rather than re-composing it; see *As built (HL-C300)*
+  below for why it arrives as generated data and not as a package import. Both
+  read the same `DUCTUS` and the same font outline, which is what makes them the
+  same figure.
 - **Verification:** the existing `strokes.test.ts` invariants continue to gate the
   data — every pen point on real ink, every intra-stroke join under tolerance, the
   path covering the whole letter — plus provenance (`citation`, `url`) on every entry.
@@ -77,11 +77,51 @@ pen path, the segment labels, the lift points.
 > that cannot yet read Tamil, so the error would not merely ship — it would ship *as
 > the lesson*. No drawn, traced, or model-generated image may render script. Ever.
 
-Authoring cost is real and should not be understated: `DUCTUS` holds one letter today
-and needs roughly 190 to cover the nine scripts that already carry cited prose stroke
-order. The Dravidian syllabaries (1,378 entries across Kannada, Telugu and Malayalam)
+Authoring cost is real and should not be understated: `DUCTUS` holds 349 cited
+letters across thirteen script ids as of HL-C300, and **Bengali has none at all** —
+it is absent from `src/strokes/` even though its font is already vendored, and it
+is the track with the most never-taught glyphs, so it is the highest-value gap. The Dravidian syllabaries (1,378 entries across Kannada, Telugu and Malayalam)
 do **not** need per-syllable ductus — they compose, so only base consonants and vowel
 signs are authored, and the syllable figure is assembled from those parts.
+
+#### As built (HL-C300) — the printed filmstrip
+
+The first Class-A figure kind is `script-filmstrip`: one letter, one frame per
+labelled segment, the finished outline behind in pale grey, the strokes already
+written muted, and the segment being added in ink with its own authored label as
+the caption. Tamil **அ**, Devanagari **आ** and Perso-Arabic **چ** ship as the
+proving set; all thirteen authored script ids render, and every one of the 349
+cited glyphs resolves an outline in the font its canonical inventory names.
+
+**Divergence from the original plan, and why.** The spec assumed the book would
+re-compose `penPathD()`/`penTip()` through `paint-vm-svg`. It does not, because
+that would be a second renderer for the same picture — the exact drift this class
+exists to prevent — and because it is not reachable anyway:
+
+- `script-ductus` cannot run under plain Node. `scriptdata.ts` reads the canonical
+  Japanese/Perso-Arabic/Tamil/Urdu inventories through a Vite virtual module, and
+  the plugin that serves it imports `human-language-data`.
+- `human-language-data` is a Node CLI, so it cannot import `script-ductus`
+  directly; and because `script-ductus` already depends on it, a dependency back
+  would close a cycle the repository's build tool rejects outright.
+
+So the two meet on generated data. `script-ductus` writes
+`data/ductus/filmstrip-geometry.json` — the frames its own renderer produced, as
+escaped SVG fragments in one shared viewBox, with the citation and the font each
+was drawn from — and regenerates and byte-checks it inside its own test suite, so
+a stroke edited and not regenerated fails there rather than in the book.
+`human-language-data` reads that ledger and does the one job it cannot: the
+printed layout (a wrapping grid of panels, a heading, the citation). There is
+still exactly one renderer; the ledger is its output written down.
+
+`paint-vm-svg` therefore remains the Class-B renderer only. Class A composes SVG
+directly, which is what `ductusview.ts` has always done for the app.
+
+**Consequence for the glyph monopoly.** Unchanged and reinforced: the book's
+frames are the font's own outline plus a cited pen path, never a drawing. The
+book generator re-checks every fragment it embeds against a five-tag allowlist
+before it can reach a committed file, so a tampered ledger fails the build rather
+than shipping markup into a figure.
 
 ### Class B — data diagrams (generated)
 
