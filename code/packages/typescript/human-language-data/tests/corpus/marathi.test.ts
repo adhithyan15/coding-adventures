@@ -21,7 +21,15 @@ it("pins Marathi lesson-content budgets", () =>
     // reviewed-lesson count moves and the three content counters below are
     // unchanged. That is the evidence the runway declared nothing new against
     // those budgets rather than that nobody looked.
-    lessons: 179,
+    //
+    // 179 -> 188: chapter 9's nine schema-v1 lessons migrated to v2, the last
+    // thing standing between ch09-introductions and the generator. Not one is
+    // a new lesson -- every one was already written and already in the book;
+    // declaring their atoms is what made them MEASURABLE, so this budget can
+    // see them. Re-measured against the tree, never derived. Idioms, senses
+    // and culture claims are unchanged at 5 / 4 / 7: the migration typed the
+    // knowledge that was already on the page and authored no new vocabulary.
+    lessons: 188,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,

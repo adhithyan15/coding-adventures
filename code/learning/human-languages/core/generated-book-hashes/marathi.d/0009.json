@@ -1,7 +1,8 @@
 {
-  "id": "MR-PATH-005",
-  "spine_node": "SPINE-EXCHANGE-NAMES",
-  "lessons": [
+  "language": "marathi",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:0273a2275da1aa7a",
+  "lessonIds": [
     "MR-C02-naav",
     "MR-C02-majhe",
     "MR-C02-aahe",
@@ -13,11 +14,5 @@
     "MR-C02-practice",
     "MR-R09-runway-tail-r2"
   ],
-  "before": [],
-  "inline": [
-    "MR-EXT-038-INTRODUCTIONS-CONSOLIDATION"
-  ],
-  "after": [
-    "MR-EXT-037-SECOND-RUNWAY-FIRST-RETRIEVAL"
-  ]
+  "tex": "marathi/book/chapters/ch09-introductions.tex"
 }
