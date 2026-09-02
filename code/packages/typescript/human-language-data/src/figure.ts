@@ -8,16 +8,48 @@ import {
 } from "@coding-adventures/paint-instructions";
 import { renderToSvgString } from "@coding-adventures/paint-vm-svg";
 import { fnv1a64 } from "./hash.js";
+import {
+  renderScriptFilmstripFigure,
+  type FilmstripEntry,
+} from "./figure-filmstrip.js";
 import type { ParsedLesson } from "./parse.js";
 
-/** The first deterministic Class-B figure from HL06. */
-export type FigureKind = "etymology-route";
+/**
+ * The deterministic vector figures this curriculum generates.
+ *
+ * `etymology-route` was the first (HL06): the ordered roots a headword
+ * travelled through. `script-filmstrip` is the second, and it exists because
+ * writing cannot be taught in sentences — see `figure-filmstrip.ts`.
+ */
+export type FigureKind = "etymology-route" | "script-filmstrip";
 
-export interface FigureTarget {
-  kind: FigureKind;
+interface FigureTargetBase {
   lessonId: string;
   output: string;
 }
+
+/** One lesson's etymology route: roots -> headword, left to right. */
+export interface EtymologyRouteTarget extends FigureTargetBase {
+  kind: "etymology-route";
+}
+
+/**
+ * One letter's handwriting, frame by frame.
+ *
+ * `script` and `glyph` are named explicitly rather than inferred from the
+ * lesson's headword: a lesson may print a letter it is not itself named after,
+ * and a figure that silently followed a headword edit would redraw itself the
+ * next time somebody fixed a typo.
+ */
+export interface ScriptFilmstripTarget extends FigureTargetBase {
+  kind: "script-filmstrip";
+  /** Canonical script id, e.g. `tamil`, `devanagari`, `perso-arabic`. */
+  script: string;
+  /** The character whose ductus is drawn. */
+  glyph: string;
+}
+
+export type FigureTarget = EtymologyRouteTarget | ScriptFilmstripTarget;
 
 export interface GeneratedFigure {
   svg: string;
@@ -151,8 +183,36 @@ export function renderEtymologyRouteFigure(lesson: ParsedLesson): GeneratedFigur
   };
 }
 
-export function renderFigure(target: FigureTarget, lesson: ParsedLesson): GeneratedFigure {
+/**
+ * Everything a figure kind may need that is not in the lesson.
+ *
+ * Today that is one thing: the filmstrip geometry `script-ductus` generates.
+ * It is passed in rather than read here so this module stays free of the
+ * filesystem and every figure remains a pure function of its inputs — which is
+ * what makes `check:figures` a byte comparison rather than a re-run.
+ */
+export interface FigureSources {
+  /** Filmstrip entries by `script:glyph`. */
+  filmstrips?: Map<string, FilmstripEntry>;
+}
+
+export function renderFigure(
+  target: FigureTarget,
+  lesson: ParsedLesson,
+  sources: FigureSources = {},
+): GeneratedFigure {
   if (target.kind === "etymology-route") return renderEtymologyRouteFigure(lesson);
-  const exhaustive: never = target.kind;
-  throw new Error(`unsupported figure kind '${exhaustive}'`);
+  if (target.kind === "script-filmstrip") {
+    const key = `${target.script}:${target.glyph}`;
+    const entry = sources.filmstrips?.get(key);
+    if (entry === undefined) {
+      throw new Error(
+        `${target.lessonId}: no filmstrip geometry for ${key} — add the target, ` +
+          `then run \`npm run generate:filmstrip-ledger\` in script-ductus`,
+      );
+    }
+    return renderScriptFilmstripFigure(target.lessonId, entry);
+  }
+  const exhaustive: never = target;
+  throw new Error(`unsupported figure kind '${JSON.stringify(exhaustive)}'`);
 }

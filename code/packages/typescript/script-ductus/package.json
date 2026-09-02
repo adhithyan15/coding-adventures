@@ -6,6 +6,8 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "generate:filmstrip-ledger": "vitest run tests/filmstrip-ledger.test.ts --mode write",
+    "check:filmstrip-ledger": "vitest run tests/filmstrip-ledger.test.ts",
     "shard:docs": "node ../human-language-data/dist/doc-shard-cli.js --shard code/packages/typescript/script-ductus/CHANGELOG.md",
     "unshard:docs": "node ../human-language-data/dist/doc-shard-cli.js --unshard code/packages/typescript/script-ductus/CHANGELOG.md",
     "check:doc-shards": "node ../human-language-data/dist/doc-shard-cli.js --check code/packages/typescript/script-ductus/CHANGELOG.md",
