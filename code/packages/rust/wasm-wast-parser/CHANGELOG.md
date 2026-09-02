@@ -1,5 +1,102 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.101 — 2026-09-02 — fix: reject malformed numeric-literal grammar instead of silently accepting it
+
+`simd_const.wast` was the single largest "not yet supported" file in the
+conformance report (109 `assert_malformed` directives, all a `v128.const`
+text literal this crate wrongly *accepted* instead of rejecting). Root
+cause, confirmed via a throwaway probe against
+`wasm_conformance::run_wast_source` (byte-offset-annotated `NotYetSupported`
+dump, then read against the actual `.wast` source): `numeric.rs`'s shared
+magnitude parsers — used by `i32.const`/`i64.const`/`f32.const`/
+`f64.const`/plain integer literals AND every `v128.const` lane, not just
+SIMD's own — had three real gaps, none of them SIMD-specific:
+
+1. **`_` digit separators were stripped from the whole literal before
+   anything else looked at it.** `parse_int_magnitude` and both float
+   magnitude parsers called `strip_underscores` first, then checked for an
+   `0x`/`0X` prefix on the ALREADY-STRIPPED text. That order can change
+   what a literal even means: `0_x100` (a decimal literal starting with
+   digit `0`, not a hex prefix at all) stripped to `0x100` and was then
+   parsed as hex 256 — the separator retroactively manufactured a prefix
+   that was never really there. It also meant placement was never checked
+   at all: leading/trailing/doubled `_` (`_100`, `100_`, `1__000`,
+   `0x_100`, `0x00_`, `0xff__ffff`, and the same beside a float's `.`/`e`/
+   `p`) all silently parsed as if the `_` were never there, instead of
+   being rejected. Fixed by checking for the prefix on the RAW text first,
+   then validating placement (new `valid_underscore_run`) on the exact
+   raw digit run before ever stripping anything.
+2. **An out-of-range float magnitude silently rounded to infinity.**
+   `0x1p128`/`1e39`/a huge decimal literal for `f32x4` (or the `f64`
+   equivalents) are all mathematically too large to represent — WAT's
+   "constant out of range" malformed rule. `round_hex_mantissa` already
+   saturates to the infinity bit pattern on hex overflow (by design — see
+   its own doc comment, that's correct FOR THAT FUNCTION), and
+   `str::parse::<f32>`/`str::parse::<f64>` do the identical silent
+   saturation for decimal overflow; neither magnitude parser used to check
+   for that afterward, so a magnitude literal that was never the `inf`
+   keyword ended up indistinguishable from one that was. Fixed with one
+   post-parse check per magnitude function (after both the hex and decimal
+   branches join): a result equal to the raw infinity bit pattern is now
+   `InvalidNumericLiteralForType`, not `Ok`.
+3. **`.0`/`.0e0`-style leading-dot literals parsed successfully.** WAT
+   requires at least one digit before an optional `.`; Rust's own
+   `str::parse::<f32>`/`str::parse::<f64>` are more permissive and accept
+   a leading `.` with no digit before it. New `valid_float_grammar` checks
+   this (and reuses the same underscore-placement check for the
+   mantissa/exponent digit runs) before delegating to Rust's parser.
+4. **`parse_v128_const`'s folded form silently accepted extra trailing
+   lane literals** (`(v128.const i32x4 1 2 3 4 5)`, one too many for a
+   4-lane shape) — it only ever checked for TOO FEW (`lanes.len() <
+   lane_count`), and simply ignored anything past `lane_count` rather than
+   erroring. The two FOLDED call sites (`module.rs`'s instruction encoder,
+   `script.rs`'s `assert_return`/`invoke` const-expression parser) now
+   both check that the whole bounded operand list was consumed; the
+   STREAM/flat call site is intentionally unchanged (its trailing tokens
+   are legitimately the rest of the instruction stream, not extra lanes).
+
+**Changes:**
+
+- `numeric.rs`: new `valid_underscore_run` (one digit run's `_` placement)
+  and `valid_float_grammar` (a float literal's overall mantissa/exponent
+  shape, including the leading-dot rule) helpers. `parse_int_magnitude`,
+  `parse_float_magnitude_f64_bits`, and `parse_float_magnitude_f32_bits`
+  all now check the prefix/validate placement on the RAW text before
+  stripping underscores, instead of stripping first and inspecting after.
+  Both float magnitude functions also now reject a result equal to the
+  raw infinity bit pattern.
+- `module.rs`: the folded `v128.const` instruction-encoder arm now checks
+  `parse_v128_const`'s `consumed` count against the operand list length,
+  rejecting extra lane literals.
+- `script.rs`: the `v128.const` const-expression arm (used by
+  `assert_return`/`invoke` arguments and expected values) gets the
+  identical extra-lane-literal check, for the same reason at the sibling
+  call site.
+- 6 new tests in `module.rs`'s `v128_const_*` cluster (one per bug class
+  above, through the full instruction-literal grammar) and 8 in
+  `numeric.rs` (the same bugs at the shared-function layer, plus explicit
+  regression coverage that `inf`/valid `_`-separated literals are
+  unaffected). 2 pre-existing `numeric.rs` tests
+  (`hex_float_above_largest_finite_value_*`,
+  `hex_float_extreme_positive_exponent_*`) had their assertions updated:
+  they were security-review regression tests for "must not panic on an
+  attacker-controlled extreme exponent," and their asserted VALUE
+  (silently-saturated infinity) was the old, now-fixed, incorrect
+  behavior — the invariant they actually guard (no panic) is unchanged and
+  still holds; a rejected-with-Err result satisfies it too.
+
+**Corpus impact** (`wasm-conformance`'s conformance report, before/after
+diff over all 257 files' `tests/fixtures/testsuite-status.json`, restricted
+to files whose tally moved at all — zero others changed): `simd_const.wast`
+`assert_malformed` 72/181 (100%) NYS 109→0 (the target file, now fully
+resolved — no other category in that file had any NYS to begin with);
+`const.wast` 56/76 (100%) NYS 20→0; `float_literals.wast` 2/78 (100%) NYS
+76→0; `int_literals.wast` 0/20 (100%) NYS 20→0 — all four files now sit at
+literal 100% pass, 0 not-yet-supported, in EVERY directive category, not
+just `assert_malformed`. Every other file's tally is byte-for-byte
+unchanged. Aggregate `assert_malformed`: 1489/1940 (451 NYS) → 1714/1940
+(226 NYS).
+
 ## 0.1.100 — 2026-09-02 — feat: accept GC reftypes in table declarations (W37)
 
 Per `code/specs/W37-wasm-gc-reftype-tables.md`. Before this release, a
