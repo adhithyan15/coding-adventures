@@ -170,6 +170,32 @@ pub fn flutter_pubspec_with_runtime_binding(pubspec_yaml: &str) -> String {
     )
 }
 
+/// Add dependencies a package's `[host_assets]` declared for Flutter.
+///
+/// Each coordinate is a pubspec dependency line written verbatim -- `ffi:
+/// ^2.1.3`, `file_selector: ^1.0.3` -- because the manifest carries the string
+/// the package manager expects rather than trying to model every ecosystem's
+/// version syntax.
+///
+/// This exists for the same reason the Compose equivalent does: `[host_assets]`
+/// lets a package replace a generated host file, and a replacement that imports
+/// something the emitter has no reason to know about needs a way to say so.
+/// Engram's `mosaic_host.dart` imports `package:file_selector`, which no
+/// generated Dart uses.
+pub fn flutter_pubspec_with_host_asset_dependencies(
+    pubspec_yaml: &str,
+    coordinates: &[String],
+) -> String {
+    if coordinates.is_empty() {
+        return pubspec_yaml.to_string();
+    }
+    let block: String = coordinates
+        .iter()
+        .map(|coordinate| format!("  {coordinate}\n"))
+        .collect();
+    pubspec_yaml.replacen("dependencies:\n", &format!("dependencies:\n{block}"), 1)
+}
+
 /// Add stable Dart build-hook dependencies and SDK floors to a Flutter
 /// project that bundles a selected precompiled Rust code asset.
 pub fn flutter_pubspec_with_bundled_runtime(pubspec_yaml: &str) -> String {

@@ -2286,6 +2286,14 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 } else {
                     mosaic_app_bindings::flutter_pubspec_with_runtime_binding(&proj.pubspec_yaml)
                 };
+                // Dependencies this package's `[host_assets]` declared. The
+                // emitter cannot know what a replacement host file imports, so
+                // without this the emitted project does not resolve.
+                let pubspec =
+                    mosaic_app_bindings::flutter_pubspec_with_host_asset_dependencies(
+                        &pubspec,
+                        &host_asset_dependencies_for(host_asset_dependencies, "flutter"),
+                    );
                 let runtime_distribution = if let Some(source) = runtime_library {
                     let file_name = runtime_file_name(source)?;
                     format!(

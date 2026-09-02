@@ -50,6 +50,9 @@ files = [
 # build.gradle.kts afterwards -- and therefore never on the Linux CI runner.
 dependencies = [
   { backend = "compose", coordinate = "org.json:json:20260522" },
+  # `mosaic_host.dart` opens the platform file picker for Anki import/export.
+  # No generated Dart uses it, so the emitter has no reason to declare it.
+  { backend = "flutter", coordinate = "file_selector: '>=1.0.0 <2.0.0'" },
 ]
 
 [kernel]
