@@ -1,24 +1,20 @@
 {
   "language": "bengali",
   "chapter": 8,
-  "sourceHash": "fnv1a64:c59bf844267f7a89",
+  "sourceHash": "fnv1a64:1adbe8a662ff392d",
   "lessonIds": [
     "BN-W03-ba",
     "BN-W03-abar-read",
     "BN-W03-bha",
     "BN-W03-bhalo-read",
     "BN-W03-kha",
-    "BN-W04-pa",
-    "BN-W03-da",
-    "BN-W03-dha",
-    "BN-W04-cha",
-    "BN-W04-ja"
+    "BN-W03-ga"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch08.txt",
   "json": "bengali/narration/ch08.json",
-  "textHash": "fnv1a64:836197493d8389cf",
-  "jsonHash": "fnv1a64:4bb6cf8b7c52a0e3",
+  "textHash": "fnv1a64:2ba54c2718ae3b65",
+  "jsonHash": "fnv1a64:067dff1dbbcf2d83",
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "BN-W03-abar-read",
     "language": "bengali",
     "chapter": 8,
-    "sequence": 490,
+    "sequence": 520,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:8d653b2bbd028e5a",
+    "sourceHash": "fnv1a64:15d4ad6567db0992",
     "detachableSegments": [
       "Script"
     ],

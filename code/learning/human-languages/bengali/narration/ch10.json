@@ -2,25 +2,37 @@
   "version": 1,
   "language": "bengali",
   "chapter": 10,
-  "title": "Numbers One to Five",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f455a8426e72c35f",
+  "title": "Two Marks Inside a Verb",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:49d4c640222e3737",
   "lessons": [
     {
-      "id": "BN-C06-numbers-1-5",
-      "sequence": 630,
-      "title": "এক, দুই, তিন, চার, পাঁচ — one to five",
-      "headword": "এক দুই তিন চার পাঁচ",
-      "romanization": "ek dui tin chār pā̃ch",
-      "gloss": "one to five — and the \"two\" that kept its Sanskrit vowel",
+      "id": "BN-W04-o-indep",
+      "sequence": 640,
+      "title": "ও — the independent o",
+      "headword": "ও",
+      "romanization": "o",
+      "gloss": "the independent o — the fourth vowel to show both of its bodies",
       "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:5e021f858f9f7911",
-      "notice": null,
+      "sourceHash": "fnv1a64:ec72bc60f7f0e57b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,134 +47,106 @@
             },
             {
               "kind": "speech",
-              "text": "Bengali writes in its own script, but the words underneath are the same family you'd hear in Delhi or Mumbai — with one number that preserves something both of them lost."
+              "text": "Write এ, then write ো and say which letter it wraps around."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the five",
+          "type": "script",
+          "title": "Script",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "Bengali",
-                "said"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "1. Bengali: এক. said: ek.",
-                "2. Bengali: দুই. said: dui.",
-                "3. Bengali: তিন. said: tin.",
-                "4. Bengali: চার. said: chār.",
-                "5. Bengali: পাঁচ. said: pā̃ch."
-              ]
+              "kind": "speech",
+              "text": "ও (o)."
             },
             {
               "kind": "speech",
-              "text": "The ঁ on pā̃ch is the chandrabindu, the same moon-dot Hindi uses, nasalising the vowel."
+              "text": "The fourth vowel this book has shown you in both of its bodies, and by now the arrangement should feel less like a rule and more like a habit:"
+            },
+            {
+              "kind": "speech",
+              "text": "আ stands alone, া rides a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "ই stands alone, ি rides a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "এ stands alone, ে rides a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "ও stands alone, ো rides a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "The choice is never about the sound. It is about whether the vowel has a consonant to sit on. Opening a word, or following another vowel, it has none, so it needs a body of its own. That is the entire distinction, and it is the same distinction Devanagari, Gujarati and Telugu all make — one of the genuinely portable facts about the scripts of South Asia."
+            },
+            {
+              "kind": "speech",
+              "text": "ও is also a word in its own right, the everyday and and also, which is a convenience the other three vowels do not offer."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it long. The sign ো and the letter ও are the same o as in English go — but without the slide toward w that English adds. One steady vowel, not two."
+            },
+            {
+              "kind": "speech",
+              "text": "হ + ও becomes হও."
+            },
+            {
+              "kind": "speech",
+              "text": "The হ keeps its own inherent ô, and then ও is a second syllable standing on its own feet. Two letters, two syllables — which is exactly why the vowel could not have been written as a sign here."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — দুই and the conservative two",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "language",
-                "2"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "language: Sanskrit. 2: stem dvá- (masc. dváu, fem./neut. dvé).",
-                "language: Prakrit. 2: do / duve.",
-                "language: Hindi. 2: do.",
-                "language: Marathi. 2: don.",
-                "language: Bengali. 2: dui."
-              ]
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ও (o)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ও]"
             },
             {
-              "kind": "speech",
-              "text": "Hindi and Marathi flattened the old form into a single o. Bengali kept a trace of the following -i, which is why it has two syllables where its neighbours have one."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "আ ই এ ও (o)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: আ ই এ ও]"
             },
             {
-              "kind": "speech",
-              "text": "The dv- cluster itself is gone from the numeral in all of them. (Not from the languages — dv- is alive in words borrowed straight back out of Sanskrit, like Bengali দ্বার dvār \"door.\" It's the everyday inherited word that simplified.)"
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হও",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: হও]"
             },
             {
-              "kind": "speech",
-              "text": "And Bengali isn't unique in keeping that vowel: Assamese, Odia and Nepali have dui too. Among the four languages in this chapter it stands alone; across the eastern Indo-Aryan languages it has plenty of company."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "কেমন",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: কেমন]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: where Bengali's inherent ô does not appear",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Bengali's inherent vowel leans toward o, not a — which is why the greeting from Chapter 1 is nomoshkar where Hindi says namaskār."
-            },
-            {
-              "kind": "speech",
-              "text": "You won't hear that in these five numbers, as it happens: এক opens with the independent vowel এ, and none of the others has a bare inherent-vowel syllable either. Mentioned so you don't go looking for it here — but keep it in mind the moment a word does have one."
-            },
-            {
-              "kind": "speech",
-              "text": "Don't let a neighbouring language's spelling tell you how Bengali sounds."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ek, dui, tin, chār, pā̃ch\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ek, dui, tin, chār, pā̃ch\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the twos — \"dvá- … do … don … dui\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the twos — \"dvá- … do … don … **dui**\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the Ch. 1 echo — \"nomoshkar, not namaskār\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the Ch. 1 echo — \"**no**moshkar, not **na**maskār\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -174,7 +158,319 @@
             },
             {
               "kind": "speech",
-              "text": "Count to five in Bengali. (Ek, dui, tin, chār, pā̃ch.) What does দুই keep that Hindi and Marathi flattened away? (The following -i, which is why it has two syllables.) Is Bengali alone in that? (No — Assamese, Odia and Nepali have dui too; it's alone only among the four here.) Did the dv- cluster survive anywhere in the everyday numeral? (No — though dv- is alive in words re-borrowed from Sanskrit, like dvār \"door\".) What is the ঁ? (The chandrabindu, nasalising the vowel.) Next: six to ten."
+              "text": "When does a vowel need its standing-alone letter? (When it has no consonant to ride — opening a word, or after another vowel.) Do ও and ো sound different? (No.) And how many syllables are in হও? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W04-nukta",
+      "sequence": 650,
+      "title": "় ((the dot below)) — the dot below",
+      "headword": "়",
+      "romanization": "(the dot below)",
+      "gloss": "the dot that takes a consonant's job away and gives it another",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ec9eff0487cbdeb3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write য and say what it sounds like standing alone. Then read হ্যাঁ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "় ((the dot below))."
+            },
+            {
+              "kind": "speech",
+              "text": "One dot, tucked under a letter. It adds no sound of its own. What it does is change the letter it sits under into a different letter, and Bengali uses it in exactly three places."
+            },
+            {
+              "kind": "speech",
+              "text": "The one you need today:"
+            },
+            {
+              "kind": "speech",
+              "text": "য + ় ((the dot below)) becomes য়."
+            },
+            {
+              "kind": "speech",
+              "text": "য on its own says j. With the dot it stops being a stop altogether and becomes a glide — the y of yes between vowels, and the w of away when the vowel beside it is round. It is the sound the letter used to have before Bengali hardened it, given back by a dot."
+            },
+            {
+              "kind": "speech",
+              "text": "The other two are the same trick on another letter, and they are coming later in this book. What matters now is the shape of the idea: Bengali did not invent new letters for these sounds. It marked old ones. The dot is borrowed machinery — Persian scribes used it to bend Arabic letters into Persian sounds, and Indian scribes took the device rather than the letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the dot goes on the page is worth watching, too. It hangs below the body of the letter, the same country as ু, and it is small. Two words can differ by this dot alone, so a reader who is skimming the head-line will read the wrong word rather than no word — the most expensive kind of mistake a script can offer."
+            },
+            {
+              "kind": "speech",
+              "text": "হ + ও + য় becomes হওয়."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "় ((the dot below))",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ়]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "য then য়",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: য then য়]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jô then yô — stop, then glide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jô* then *yô* — stop, then glide]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হওয়",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: হওয়]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does ় ((the dot below)) add a sound? (No — it changes the letter above it.) What does য become with it? (A glide, y or w.) And which mark sits above the head-line rather than below? (ঁ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W04-howa-read",
+      "sequence": 660,
+      "title": "হওয়া (hôwā) — to be, read whole",
+      "headword": "হওয়া",
+      "romanization": "hôwā",
+      "gloss": "to be, to become — the verb behind the farewell, read whole",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:08dad5bafe99f7e4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write য়. Then write ও and say why it is not a sign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হ + ও + য় + া becomes হওয়া (hôwā)."
+            },
+            {
+              "kind": "speech",
+              "text": "হ — with its own inherent ô."
+            },
+            {
+              "kind": "speech",
+              "text": "ও — standing alone, because a vowel cannot ride a vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "য় — the dotted glide, here doing the w job."
+            },
+            {
+              "kind": "speech",
+              "text": "া — the vowel sign, on the glide."
+            },
+            {
+              "kind": "speech",
+              "text": "hôwā — to be, to become. You met it romanized in the farewells chapter, as the verb hiding inside dækhā hôbe, \"seeing will happen.\" Here it is on the page, and every one of its four pieces was bought in the last two chapters."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it slowly and notice what is not there. No stacked letters. No killed vowels. Four pieces in a row, left to right, each one saying its own thing. This is what Bengali looks like when a word is made mostly of vowels: the spelling stops being a puzzle and becomes a transcript."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare it with the word you read two chapters ago:"
+            },
+            {
+              "kind": "speech",
+              "text": "হ্যাঁ — five pieces, one syllable হওয়া (hôwā) — four pieces, three syllables."
+            },
+            {
+              "kind": "speech",
+              "text": "Same first letter, opposite arrangements. A Bengali reader's real skill is telling those two shapes apart at a glance, and it is a skill of the eye rather than the memory: stacked pieces are one syllable, pieces in a row are several."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "হওয়া (hôwā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: হওয়া]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হওয়া (hôwā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: হওয়া]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hôwā — three syllables, no cluster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hôwā* — three syllables, no cluster]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "হবে",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: হবে]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many syllables in হওয়া (hôwā)? (Three.) Why is the ও written standing alone? (A vowel cannot ride a vowel.) And what does the dot under the য do? (Turns it into a glide.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
             }
           ]
         }

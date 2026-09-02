@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C05-kaj-kora
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 600
-chapter: 9
+sequence: 690
+chapter: 11
 type: word
 headword: কাজ করা
 romanization: "kāj kôrā"
@@ -45,7 +45,7 @@ verb that builds a hundred others.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01] -->
 
-**করা** (*kôrā*, "to do, to make") is from Sanskrit **√কৃ** (*√kṛ*, "to do"), from
+**করা** (*kôrā*, "to do, to make") is from Sanskrit *√kṛ* ("to do"), from
 PIE **\*kʷer-** — the same root you met in Chapter 1's **নমস্কার** (*nômoshkar* =
 *namas* + *kāra*, "the **making** of a bow") and in *karma*. And **কাজ** (*kāj*,
 "work") is itself from Sanskrit *kārya* ("work, task," also from √kṛ) — so "work-

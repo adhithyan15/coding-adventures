@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C08-pora",
     "language": "bengali",
-    "chapter": 12,
-    "sequence": 720,
+    "chapter": 14,
+    "sequence": 810,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:82000b92553f73de",
+    "sourceHash": "fnv1a64:5a9eab9bafab9f42",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W02-hyan-read",
+    "language": "bengali",
+    "chapter": 4,
+    "sequence": 330,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0fba1240b73f68b9",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

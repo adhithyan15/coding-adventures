@@ -1,0 +1,20 @@
+{
+  "id": "BN-PATH-022",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "BN-R01-tumi-again",
+    "BN-R01-ta-u-again",
+    "BN-R01-ya-again",
+    "BN-R01-chandrabindu-again",
+    "BN-R01-hyan-again",
+    "BN-R01-ami-again",
+    "BN-R01-kemon-again",
+    "BN-R01-bhalo-again",
+    "BN-R01-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "BN-EXT-023-DISTANT-BAND"
+  ]
+}

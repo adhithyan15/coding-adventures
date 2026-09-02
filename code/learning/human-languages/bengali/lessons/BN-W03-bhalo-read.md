@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-W03-bhalo-read
 spine_node: SPINE-MEET-GREET
-sequence: 510
+sequence: 540
 delivery: script
 chapter: 8
 type: writing
