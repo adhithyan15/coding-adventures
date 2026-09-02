@@ -26,7 +26,7 @@
 %
 %     type                     description                                                                       quote (verbatim)
 %     -----------------------  --------------------------------------------------------------------------------  ------------------------------------------------------------------------------------------------
-%     total_lunar_eclipse       the_moon_moves_into_the_inner_part_of_earths_shadow_the_umbra                       "The Moon moves into the inner part of Earth's shadow, or the umbra."
+%     total_lunar_eclipse       the_moon_moves_into_the_inner_part_of_earths_shadow_the_umbra                       "The Moon moves into the inner part of Earth’s shadow, or the umbra."
 %     partial_lunar_eclipse     an_imperfect_alignment_of_sun_earth_and_moon_results_in_partial_umbra_passage       "An imperfect alignment of Sun, Earth and Moon results in the Moon passing through only part of Earth's umbra."
 %     penumbral_eclipse         the_moon_travels_through_earths_penumbra_the_faint_outer_part_of_its_shadow         "The Moon travels through Earth's penumbra, or the faint outer part of its shadow."
 %
@@ -55,7 +55,7 @@ table lunar_eclipse_type {
     row (partial_lunar_eclipse, an_imperfect_alignment_of_sun_earth_and_moon_results_in_partial_umbra_passage)
     row (penumbral_eclipse, the_moon_travels_through_earths_penumbra_the_faint_outer_part_of_its_shadow)
 
-    source "The Moon moves into the inner part of Earth's shadow, or the umbra."
+    source "The Moon moves into the inner part of Earth’s shadow, or the umbra."
     locator "https://science.nasa.gov/moon/eclipses/"
     trust authoritative
 }

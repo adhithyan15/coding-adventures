@@ -98,7 +98,7 @@ table electoral_college_count {
     row (electors_needed_to_win, 270)
     row (winner_take_all_states, 48)
 
-    source "Including Washington, D.C.'s three electors, there are currently 538 electors in all."
+    source "Including Washington, D.C.’s three electors, there are currently 538 electors in all."
     locator "https://www.usa.gov/electoral-college"
     trust authoritative
 

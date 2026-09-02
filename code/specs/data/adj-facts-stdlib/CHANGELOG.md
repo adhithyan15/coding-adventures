@@ -5,6 +5,39 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#14070 installment 3a: four glyph-flattened `source` values repaired, two headers synced.**
+  `astronomy/lunar-eclipse-type`, `civics/electoral-college-count`,
+  `earth-science/seismic-wave-arrival-order`, `geography/map-type-classification`.
+
+  Each shipped an ASCII apostrophe where its page renders U+2019, so **the citation did not appear on
+  its own page** — the premise being that a caller can check a citation against its locator. All four
+  now verify verbatim, and the old forms appear on none of the pages.
+
+  **The replacement text was taken from the page, not hand-curled.** A candidate swap was applied and
+  the result confirmed present in a rendered block. Hand-curling is how the earlier undercount
+  happened: assuming the contraction rule covered every case left eight quoted-word values reported
+  as "not glyph issues" when they plainly were (the page opens a quoted word with U+2018, not
+  U+2019).
+
+  Two of the four carried the same flattened string in their **header**, fixed in the same edit —
+  installment 1 shipped four header/data desyncs and the security review caught them.
+
+  A PRE-EXISTING PIN IN `electoral-college-count` FAILED, CORRECTLY. It asserted the whole citation,
+  anchored on the JSON key and closed on the terminating quote, and its own comment cites #13916 and
+  #13918 on why fragments are insufficient. It was right in form and **faithfully defended a value
+  absent from its own page**. Repointed to the curly form. Third instance this effort of an anchored
+  pin protecting a defect, after `mixture-types`' five-clause join and the `oganesson` substring
+  assertion.
+
+  Four restore-the-flattened-form mutations pass — each differs from the repaired value by **one
+  character**, so a pin that survived would not be checking the glyph at all.
+
+  *Scope note:* this is 4 of 15 confirmed glyph repairs. The other 11 are `language/*` and ship
+  separately — a 15-file PR across 15 libraries is harder to review than two coherent ones.
+
+  533 test binaries / 1622 tests green, clippy `-D warnings` clean; all four `.query.adj` companions
+  parse, run and abstain correctly.
+
 - **#14070 installment 2: `chemistry/mixture-types` — a joined five-clause `source` becomes one
   `source` plus four `cites`.** Interior-ellipsis count over shipped values falls 5 → 4.
 

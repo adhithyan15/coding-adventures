@@ -100,3 +100,28 @@ fn map_type_classification_abstains_honestly_on_political() {
         "political is a real, already-tabled map type but its own quote never classifies it as a kind of map -- honest abstention: {out}"
     );
 }
+
+const MAPT_PIN: &str = r#""bindings":{"Classification":"reference_map"},"citations":[{"source":"Topographic maps are reference maps that show the shape of Earth’s surface.","locator":"https://geology.com/maps/types-of-maps/","trust":"consensus""#;
+
+#[test]
+fn map_type_classification_citation_keeps_the_pages_curly_apostrophe() {
+    let dir = scratch("cite_mapt");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"map-type-classification.adj\"\n? map_type_classification(topographic, $Classification)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator. The replacement
+    // text was taken FROM the page (a candidate swap applied, then confirmed
+    // present in a rendered block), not hand-curled.
+    assert!(
+        out.contains(MAPT_PIN),
+        "the topographic citation matches its page: {out}"
+    );
+}
