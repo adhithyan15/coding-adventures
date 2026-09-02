@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0934805c81a29262",
+  "sourceHash": "fnv1a64:5979c369960700c1",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -226,7 +226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a82d0eaef7f27a82",
+      "sourceHash": "fnv1a64:47b92359f8aca2ba",
       "notice": null,
       "blocks": [
         {
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1accbb1fadaa6ce8",
+      "sourceHash": "fnv1a64:50ae2458056b90e8",
       "notice": null,
       "blocks": [
         {
@@ -572,7 +572,19 @@
             },
             {
               "kind": "speech",
-              "text": "So the three Romance-and-Germanic \"day\" words line up by ancestry: Spanish día, French jour from Latin dies / diurnum German Tag corresponds to English day from Germanic dagaz Two entirely different roots for \"day\" (Latin dies vs Germanic dagaz) — which is why día and Tag look nothing alike, even though both languages are cousins far enough back."
+              "text": "So the three Romance-and-Germanic \"day\" words line up by ancestry:"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish día, French jour from Latin dies / diurnum."
+            },
+            {
+              "kind": "speech",
+              "text": "German Tag corresponds to English day from Germanic dagaz."
+            },
+            {
+              "kind": "speech",
+              "text": "Two entirely different roots for \"day\" (Latin dies vs Germanic dagaz) — which is why día and Tag look nothing alike, even though both languages are cousins far enough back."
             }
           ]
         },

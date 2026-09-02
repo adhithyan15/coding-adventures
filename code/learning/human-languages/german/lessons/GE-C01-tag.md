@@ -62,13 +62,14 @@ English **day** is the same word. The only difference is the High German
 Consonant Shift from the *gut* lesson (**d → t**): *dagaz* → English *day*,
 German *Tag*.
 
-> So the three Romance-and-Germanic "day" words line up by ancestry:
-> - Spanish *día*, French *jour* ← Latin *dies* / *diurnum*
-> - German **Tag** ↔ English **day** ← Germanic *\*dagaz*
->
-> Two entirely different roots for "day" (Latin *dies* vs Germanic *dagaz*) —
-> which is why *día* and *Tag* look nothing alike, even though both languages
-> are cousins far enough back.
+So the three Romance-and-Germanic "day" words line up by ancestry:
+
+- Spanish *día*, French *jour* ← Latin *dies* / *diurnum*
+- German **Tag** ↔ English **day** ← Germanic *\*dagaz*
+
+Two entirely different roots for "day" (Latin *dies* vs Germanic *dagaz*) —
+which is why *día* and *Tag* look nothing alike, even though both languages
+are cousins far enough back.
 
 ## Grammar Lens
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-TAG-02, GE-LEX-DER-DIE-DAS-02] -->
