@@ -1,7 +1,7 @@
 ---
 id: FR-C14-avoir
-sequence: 385
-chapter: 16
+sequence: 470
+chapter: 17
 type: word
 headword: avoir
 gloss: to have — the most worn-down verb in French, and a root you already met

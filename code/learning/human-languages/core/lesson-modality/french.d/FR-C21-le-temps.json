@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C21-le-temps",
     "language": "french",
-    "chapter": 23,
+    "chapter": 24,
     "sequence": 780,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b1a4cf6ed5c4a9ef"
+    "sourceHash": "fnv1a64:eeb8b3067c161a6e"
   },
   "findings": []
 }

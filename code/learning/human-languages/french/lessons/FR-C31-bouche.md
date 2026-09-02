@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C31-bouche
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1110
-chapter: 33
+chapter: 34
 type: word
 headword: la bouche
 gloss: mouth — feminine, and originally the Latin word for cheek, not mouth at all

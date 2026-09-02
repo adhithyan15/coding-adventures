@@ -1,12 +1,17 @@
 {
   "language": "french",
   "chapter": 35,
-  "sourceHash": "fnv1a64:948c956b4cff870e",
+  "sourceHash": "fnv1a64:9a3114ac06165dea",
   "lessonIds": [
-    "FR-C33-vouloir",
-    "FR-C33-pouvoir",
-    "FR-C33-devoir",
-    "FR-C33-practice"
+    "FR-C32-intonation",
+    "FR-C32-est-ce-que",
+    "FR-C32-ou",
+    "FR-C32-quand",
+    "FR-C32-comment",
+    "FR-C32-combien",
+    "FR-C32-pourquoi",
+    "FR-C32-inversion",
+    "FR-C32-quel"
   ],
-  "tex": "french/book/chapters/ch35-modaux.tex"
+  "tex": "french/book/chapters/ch35-questions.tex"
 }

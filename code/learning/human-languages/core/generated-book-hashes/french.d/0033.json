@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 33,
-  "sourceHash": "fnv1a64:3b24c4b7e9e06aa2",
+  "sourceHash": "fnv1a64:1f844bc71faacd33",
   "lessonIds": [
-    "FR-C31-oeil",
-    "FR-C31-nez",
-    "FR-C31-bouche",
-    "FR-C31-ventre"
+    "FR-C30-fromage",
+    "FR-C30-beurre",
+    "FR-C30-sel",
+    "FR-C30-oeuf"
   ],
-  "tex": "french/book/chapters/ch33-eyes-nose-mouth-stomach.tex"
+  "tex": "french/book/chapters/ch33-cheese-butter-salt-egg.tex"
 }

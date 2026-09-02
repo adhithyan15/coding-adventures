@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C25-lire",
     "language": "french",
-    "chapter": 27,
+    "chapter": 28,
     "sequence": 870,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:41a2ca88b63dbd60"
+    "sourceHash": "fnv1a64:f451de4a08604759"
   },
   "findings": []
 }

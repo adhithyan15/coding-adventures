@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C32-intonation",
     "language": "french",
-    "chapter": 34,
+    "chapter": 35,
     "sequence": 1200,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:792d307fa2854a66"
+    "sourceHash": "fnv1a64:d46953edf99d3f57"
   },
   "findings": []
 }

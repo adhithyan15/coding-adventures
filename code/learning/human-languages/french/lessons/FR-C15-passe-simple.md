@@ -1,7 +1,7 @@
 ---
 id: FR-C15-passe-simple
-sequence: 400
-chapter: 17
+sequence: 490
+chapter: 18
 type: word
 headword: il parla
 gloss: the passé simple — the tense the passé composé drove out of speech, alive only in books

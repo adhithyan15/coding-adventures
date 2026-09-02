@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 27,
-  "title": "Verbs of the Mind",
+  "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f389d2269b10e8ae",
+  "sourceHash": "fnv1a64:71f774732e9ba015",
   "lessons": [
     {
-      "id": "FR-C25-comprendre",
-      "sequence": 850,
-      "title": "comprendre — \"to understand,\" which is just taking, together",
-      "headword": "comprendre",
-      "romanization": "comprendre",
-      "gloss": "to understand — literally com- + prendre, \"to take together,\" so in French understanding IS grasping, and the verb conjugates exactly like the one it is built from",
+      "id": "FR-C24-prendre",
+      "sequence": 810,
+      "title": "prendre — \"to take,\" the verb your hand does",
+      "headword": "prendre",
+      "romanization": "prendre",
+      "gloss": "to take — the grasping verb English borrowed a dozen times over, from prehensile to prison to surprise",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:660a5341a9e060a4",
+      "sourceHash": "fnv1a64:d75e72da35ad0098",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the cheapest verb you will ever learn, because you already own all of it. Prendre was \"to take.\" Put com- in front, and French tells you what it thinks understanding actually is."
+              "text": "You already have la main, the hand. Here is the verb that hand performs — and it turns out to be hiding inside a surprising number of English words you use without thinking."
             }
           ]
         },
@@ -46,81 +46,89 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "comprendre — to understand. Said kohn-PRAHN-druh: two nasals in a row, kohn then prahn. Je comprends. — I understand. Vous comprenez? — Do you understand?"
+              "text": "prendre — to take. Said PRAHN-druh: the -en- is the nasal vowel of an, sent through the nose, not a clean en. Je prends le pain. — I take the bread."
             },
             {
               "kind": "speech",
-              "text": "The -ds of je comprends is silent, exactly as in je prends."
+              "text": "The -ds of je prends is silent. You say prahn, and stop."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: taking things together",
+          "title": "The word, taken apart: prendre",
           "segments": [
             {
               "kind": "speech",
-              "text": "comprendre is com- (\"together, with\") + prendre (\"to take\"), and Latin had already built it: comprehendere, \"to grasp several things at once.\" Nothing has been added since. To understand, in French, is to get your hand around the whole of it."
+              "text": "prendre from Latin prehendere, \"to grasp, to seize,\" which Romans themselves shortened to prendere. That short form is the one French inherited — and English borrowed the family repeatedly:"
             },
             {
               "kind": "speech",
-              "text": "English took the long Latin form and the short French one both:"
+              "text": "prehensile — a tail that grasps."
             },
             {
               "kind": "speech",
-              "text": "comprehend — the full Latin spelling, straight through."
+              "text": "apprehend — to seize (ad- \"toward\" + grasp); reprehensible, something to be seized back on."
             },
             {
               "kind": "speech",
-              "text": "comprehensive — having taken everything in; comprehension."
+              "text": "prison from Latin prehensiō, \"a seizing\" — a jail is, literally, a taking-hold."
             },
             {
               "kind": "speech",
-              "text": "comprise — from French compris, \"taken together\": what a thing takes in."
+              "text": "surprise — French sur- \"over\" + prendre: an over-taking."
             },
             {
               "kind": "speech",
-              "text": "And you can hear the metaphor still alive in English: we say we grasp an idea, or that a point is over our heads — out of reach of the hand."
+              "text": "enterprise, something undertaken; apprentice, one who takes on."
+            },
+            {
+              "kind": "speech",
+              "text": "impregnable — from Old French imprenable, \"not takeable.\" Nothing to do with pregnancy."
+            },
+            {
+              "kind": "speech",
+              "text": "Manus gave you a hand that holds — manual, maintain. Prendere gives you the hand that closes."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the same verb, so the same forms",
+          "title": "Grammar Lens: the stem that doubles",
           "segments": [
             {
               "kind": "speech",
-              "text": "Because comprendre is prendre with a prefix, it breaks in exactly the same places. Nothing new to memorise — say the six and hear the nasal die in the plural, just as before:"
+              "text": "Prendre is irregular, and its irregularity is one clean rule: the stem loses its d, and in the ils form it doubles its n. Say the six:"
             },
             {
               "kind": "speech",
-              "text": "je comprends — kohn-PRAHN."
+              "text": "je prends — prahn."
             },
             {
               "kind": "speech",
-              "text": "tu comprends — kohn-PRAHN."
+              "text": "tu prends — prahn."
             },
             {
               "kind": "speech",
-              "text": "il comprend — kohn-PRAHN (three identical to the ear)."
+              "text": "il prend — prahn (all three identical to the ear)."
             },
             {
               "kind": "speech",
-              "text": "nous comprenons — kohn-pruh-NOHN, nasal gone from the stem."
+              "text": "nous prenons — pruh-NOHN, and the nasal is gone."
             },
             {
               "kind": "speech",
-              "text": "vous comprenez — kohn-pruh-NAY."
+              "text": "vous prenez — pruh-NAY, nasal gone again."
             },
             {
               "kind": "speech",
-              "text": "ils comprennent — kohn-PREN, the doubled n again."
+              "text": "ils prennent — PREN, a doubled n and a flat e."
             },
             {
               "kind": "speech",
-              "text": "This is worth more than one verb. Every French verb built on prendre behaves this way, so the pattern you drilled once now pays out repeatedly."
+              "text": "So the nasal survives in the singular and dies in the plural. That is the whole verb."
             }
           ]
         },
@@ -138,38 +146,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je prends\" then \"je comprends\" — the second is the first, plus com-",
+              "instruction": "\"prendre\" — PRAHN-druh, nasal in the middle",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je prends\" then \"je comprends\" — the second is the first, plus *com-*]"
+              "source": "[YOU SAY: \"prendre\" — *PRAHN-druh*, nasal in the middle]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nous prenons, nous comprenons\" — both lose the nasal",
+              "instruction": "\"je prends le pain\" then \"nous prenons le pain\" — nasal, then no nasal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nous prenons, nous comprenons\" — both lose the nasal]"
+              "source": "[YOU SAY: \"je prends le pain\" then \"nous prenons le pain\" — nasal, then no nasal]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vous comprenez?\" then answer \"oui\" and then \"non\"",
+              "instruction": "\"je prends la main\" — I take the hand, the manus you already have",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vous comprenez ?\" then answer \"oui\" and then \"non\"]"
+              "source": "[YOU SAY: \"je prends la main\" — I take the hand, the *manus* you already have]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comprendre, comprehend, comprise\" — one family, two spellings",
+              "instruction": "the family — \"prehensile, apprehend, prison, surprise\" — all a grasp",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comprendre, comprehend, comprise\" — one family, two spellings]"
+              "source": "[YOU SAY: the family — \"prehensile, apprehend, prison, surprise\" — all a **grasp**]"
             }
           ]
         },
@@ -186,26 +194,26 @@
             },
             {
               "kind": "speech",
-              "text": "What two pieces is comprendre made of, and what does the whole literally mean? (Com- \"together\" + prendre \"to take\" — to take together.) Say \"we understand.\" (Nous comprenons — nasal gone, like nous prenons.) Someone asks vous comprenez? — give both possible answers. (Oui or non.)"
+              "text": "Say \"I take the bread.\" (Je prends le pain — and the -ds is silent.) What happens to the nasal in nous prenons? (It disappears; the stem flattens to pruh-.) What did Latin prehendere mean, and what is a prison literally? (To grasp; a prison is \"a seizing\".) And the hand that does the taking? (La main.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C25-penser",
-      "sequence": 860,
-      "title": "penser — \"to think,\" which began as weighing",
-      "headword": "penser",
-      "romanization": "penser",
-      "gloss": "to think — from a Latin verb meaning \"to weigh,\" which is why English pensive, ponder, compensate, expense and even the flower pansy all sit in one family",
+      "id": "FR-C24-demander",
+      "sequence": 820,
+      "title": "demander — \"to ask,\" and the trap it sets in English",
+      "headword": "demander",
+      "romanization": "demander",
+      "gloss": "to ask — an ordinary, polite, everyday word, and one of the sharpest false friends French holds for an English speaker",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a949b4e20ba1900f",
+      "sourceHash": "fnv1a64:3b6a833d3342f945",
       "notice": null,
       "blocks": [
         {
@@ -221,7 +229,7 @@
             },
             {
               "kind": "speech",
-              "text": "Understanding, you saw with comprendre, is grasping. This verb says thinking is weighing — and once you know that, half a dozen English words you use in money and medicine suddenly line up behind it."
+              "text": "Prendre was taking. This one is the opposite move: putting a question out. And it is the word most likely to make you sound furious when you meant to sound polite."
             }
           ]
         },
@@ -232,69 +240,57 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "penser — to think. Said pahn-SAY: the -en- is the nasal you have been making since prendre, and -er is a clean ay. Je pense. — I think. Vous pensez? — Do you think so?"
+              "text": "demander — to ask. Said duh-mahn-DAY: the -an- is that same nasal from prendre, and the -er ending is a clean ay. Je demande l'heure. — I ask the time."
             },
             {
               "kind": "speech",
-              "text": "A completely regular -er verb after the strain of comprendre: je pense, tu penses, il pense, nous pensons, vous pensez, ils pensent. Four of the six sound identical — pahns — and only nous and vous stand out."
+              "text": "It is an ordinary -er verb, so nothing in it breaks: je demande, tu demandes, il demande, nous demandons, vous demandez, ils demandent. Only nous and vous are audible; the other four all sound duh-MAHND."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart: a thing put in your hand",
           "segments": [
             {
               "kind": "speech",
-              "text": "Two nasals sit close together in French and beginners flatten them into one. Hold them apart by saying them back to back:"
+              "text": "demander from Latin dēmandāre, \"to hand over, to entrust\" — dē- plus mandāre. And mandāre is itself two words: manus, \"hand,\" plus dare, \"to give.\" Giving into the hand."
             },
             {
               "kind": "speech",
-              "text": "non — the -on nasal, rounded, lips pushed forward."
+              "text": "So the manus you met in la main is sitting inside this verb too:"
             },
             {
               "kind": "speech",
-              "text": "pense — the -en nasal, unrounded, mouth wider and flatter."
+              "text": "mandate — what was placed in someone's hands to carry out."
             },
             {
               "kind": "speech",
-              "text": "Same trick every time: your lips tell the two apart, not your tongue."
+              "text": "command — com- + mandāre: to entrust an order; and commandment, ten of them."
+            },
+            {
+              "kind": "speech",
+              "text": "mandatory — handed over as an obligation; remand, handed back."
+            },
+            {
+              "kind": "speech",
+              "text": "One family, two very different jobs: manual is work done by the hand, mandate is a charge given into it."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: weighing a thing",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the false friend",
           "segments": [
             {
               "kind": "speech",
-              "text": "penser from Latin pēnsāre, \"to weigh carefully,\" a repeated-action form of pendere, \"to weigh, to hang.\" Roman weighing was done by hanging things from a balance, which is why one root covers both. English inherited the whole scale:"
+              "text": "Careful. French demander means simply \"to ask.\" It is neutral, everyday and perfectly polite. English demand is forceful — a thing you insist on."
             },
             {
               "kind": "speech",
-              "text": "pensive — weighing something in your mind."
-            },
-            {
-              "kind": "speech",
-              "text": "compensate — to weigh one thing against another until they balance; expense and expend, money weighed out; dispense, weighed apart."
-            },
-            {
-              "kind": "speech",
-              "text": "pension — originally a weighing-out, a payment; poise, a balance held."
-            },
-            {
-              "kind": "speech",
-              "text": "suspend and pendant — the hanging half of the same root."
-            },
-            {
-              "kind": "speech",
-              "text": "The prettiest cousin is a flower. French pensée means \"a thought\" — and English borrowed it, sound and all, as pansy."
-            },
-            {
-              "kind": "speech",
-              "text": "One honest note: English think is Germanic and is not related to any of this. The two words mean the same thing and share no history."
+              "text": "Je demande l'heure is \"I'm asking the time,\" not \"I demand the time.\" The English word drifted toward force; the French one never did. Translate demander as ask, every time, and you will never be rude by accident."
             }
           ]
         },
@@ -312,38 +308,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"penser\" — pahn-SAY",
+              "instruction": "\"demander\" — duh-mahn-DAY, nasal in the middle",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"penser\" — *pahn-SAY*]"
+              "source": "[YOU SAY: \"demander\" — *duh-mahn-DAY*, nasal in the middle]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"non, pense\" — the round nasal, then the flat one",
+              "instruction": "\"je demande l'heure\" — I ask the time, not demand it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"non, pense\" — the round nasal, then the flat one]"
+              "source": "[YOU SAY: \"je demande l'heure\" — I **ask** the time, not demand it]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je pense\" then \"je comprends\" — I think, I understand",
+              "instruction": "\"je prends, je demande\" — take, then ask",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je pense\" then \"je comprends\" — I think, I understand]"
+              "source": "[YOU SAY: \"je prends, je demande\" — take, then ask]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"penser, pensive, compensate, pansy\" — all a weighing",
+              "instruction": "the family — \"mandate, command, mandatory\" — a hand and a giving",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"penser, pensive, compensate, pansy\" — all a **weighing**]"
+              "source": "[YOU SAY: the family — \"mandate, command, mandatory\" — a **hand** and a **giving**]"
             }
           ]
         },
@@ -360,26 +356,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I think\" and \"do you think so.\" (Je pense. Vous pensez?) What did Latin pēnsāre mean, and name three English cousins. (To weigh — pensive, compensate, expense, pension, poise.) What flower is French for \"a thought\"? (The pansy, from pensée.) Which of non and pense has the rounded lips? (Non — pense is flat and wide.)"
+              "text": "Say \"I ask the time.\" (Je demande l'heure.) Does demander carry the force of English demand? (No — it is the ordinary, polite word for asking.) What two Latin words are inside mandāre, and which one do you already know? (Manus \"hand\" — the source of la main — plus dare, \"to give.\")"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C25-lire",
-      "sequence": 870,
-      "title": "lire — \"to read,\" which used to mean \"to pick up\"",
-      "headword": "lire",
-      "romanization": "lire",
-      "gloss": "to read — from a Latin verb that first meant \"to gather,\" which is why reading, electing, collecting and being elegant all turn out to be the same act",
+      "id": "FR-C24-aider",
+      "sequence": 830,
+      "title": "aider — \"to help,\" and the English word that is really the same word",
+      "headword": "aider",
+      "romanization": "aider",
+      "gloss": "to help — English aid arriving by the Latin road, while English help came by the Germanic one; the two words are unrelated",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41a2ca88b63dbd60",
+      "sourceHash": "fnv1a64:3125a51d070e68a2",
       "notice": null,
       "blocks": [
         {
@@ -395,7 +391,7 @@
             },
             {
               "kind": "speech",
-              "text": "A short word with an enormous family behind it. Before lire meant reading, its Latin ancestor meant gathering — and that older sense is why a dozen English words that seem unrelated turn out to be relatives."
+              "text": "You can ask for something now. This is the verb for what you hope the other person then does — and it is one of the rare cases where the English cousin is not a distant relative but the very same word, spelled shorter."
             }
           ]
         },
@@ -406,79 +402,62 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "lire — to read. Said leer, with the throaty French r at the end. Je lis le français. — I read French."
+              "text": "aider — to help. Said ay-DAY: the ai- is a plain ay, the -er ending is another ay. Two of them in a row. Vous m'aidez. — You are helping me."
             },
             {
               "kind": "speech",
-              "text": "Lire is irregular, and its stem grows an s in the plural. Say the six:"
-            },
-            {
-              "kind": "speech",
-              "text": "je lis — lee, the -s silent."
-            },
-            {
-              "kind": "speech",
-              "text": "tu lis — lee."
-            },
-            {
-              "kind": "speech",
-              "text": "il lit — lee (three identical again)."
-            },
-            {
-              "kind": "speech",
-              "text": "nous lisons — lee-ZOHN, and there is the s."
-            },
-            {
-              "kind": "speech",
-              "text": "vous lisez — lee-ZAY."
-            },
-            {
-              "kind": "speech",
-              "text": "ils lisent — LEEZ."
+              "text": "Another ordinary -er verb: j'aide, tu aides, il aide, nous aidons, vous aidez, ils aident. The j' is the elision you already make in j'ai."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: gathering, then reading",
+          "title": "The word, taken apart: aid, by the other road",
           "segments": [
             {
               "kind": "speech",
-              "text": "lire from Latin legere, whose first meaning was \"to gather, to pick out.\" Reading was a later use of it: your eye picks the letters up off the page one after another. Both senses left English words behind."
+              "text": "aider from Latin adiūtāre, a repeated-action form of adiuvāre — ad- \"toward\" plus iuvāre, \"to help.\" English took the same verb through French and clipped it:"
             },
             {
               "kind": "speech",
-              "text": "The reading half:"
+              "text": "aid — the noun and verb; aide, a person who is your help."
             },
             {
               "kind": "speech",
-              "text": "legible, able to be picked out; lecture, \"a reading\"; lesson, from lectiō, the passage read aloud."
+              "text": "aide-de-camp — literally a \"camp helper,\" an officer's assistant."
             },
             {
               "kind": "speech",
-              "text": "legend — literally \"things which must be read.\""
+              "text": "adjutant, the officer who assists; adjuvant, a substance in medicine that helps another one work."
             },
             {
               "kind": "speech",
-              "text": "The gathering half, which is the surprise:"
-            },
-            {
-              "kind": "speech",
-              "text": "collect — gather together; select, gather apart; elect, pick out; neglect, fail to pick up at all."
-            },
-            {
-              "kind": "speech",
-              "text": "elegant — originally \"choosy,\" someone who picks well; diligent; intellect, what picks between things."
-            },
-            {
-              "kind": "speech",
-              "text": "One honest limit. Greek's legein — the -logy in every science name — is a cousin, not a parent: it descends from the same ancient root alongside Latin legere, rather than from it. And French le livre, \"book,\" is not in this family at all; that is Latin liber, a separate word."
+              "text": "Two honesty notes. English help is Germanic and has no connection to aider whatsoever. And juvenile is not in this family: that is Latin iuvenis, \"young,\" a different word that merely resembles iuvāre."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: asking for it politely",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put the verb together with the courtesy you already have:"
+            },
+            {
+              "kind": "speech",
+              "text": "Vous m'aidez, s'il vous plaît. — Help me, please. Tu m'aides, s'il te plaît. — the same request, to a friend."
+            },
+            {
+              "kind": "speech",
+              "text": "The register has to match on both halves. Vous takes s'il vous plaît; tu takes s'il te plaît. Mixing them — tu m'aides, s'il vous plaît — is the mistake a beginner makes most, and a French ear catches it instantly."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -491,47 +470,52 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lire\" — leer, throaty r",
+              "instruction": "\"aider\" — ay-DAY, two ay sounds",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lire\" — *leer*, throaty *r*]"
+              "source": "[YOU SAY: \"aider\" — *ay-DAY*, two *ay* sounds]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je lis\" then \"nous lisons\" — the s appears",
+              "instruction": "\"j'aide\" then \"vous aidez\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je lis\" then \"nous lisons\" — the *s* appears]"
-            },
-            {
-              "kind": "speech",
-              "text": "[YOU READ ALOUD, gathering the words one by one: \"le chien, le chat\"]."
+              "source": "[YOU SAY: \"j'aide\" then \"vous aidez\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je lis le français\" then \"je pense\"",
+              "instruction": "\"vous m'aidez, s'il vous plaît\" — both halves formal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je lis le français\" then \"je pense\"]"
+              "source": "[YOU SAY: \"vous m'aidez, s'il vous plaît\" — both halves formal]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"legible, lecture, collect, elect, elegant\" — all a picking out",
+              "instruction": "\"tu m'aides, s'il te plaît\" — both halves familiar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"legible, lecture, collect, elect, elegant\" — all a **picking out**]"
+              "source": "[YOU SAY: \"tu m'aides, s'il te plaît\" — both halves familiar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je demande, vous aidez\" — I ask, you help",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je demande, vous aidez\" — I ask, you help]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -543,26 +527,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I read French\" and \"we read.\" (Je lis le français. Nous lisons — the s only appears in the plural.) What did Latin legere mean first? (To gather, to pick out — reading came second.) Which of collect, elegant and book is not in this family? (Book — French livre is from liber, a different word.) Now read these two aloud. (Le chien, le chat.)"
+              "text": "Ask a stranger for help, politely. (Vous m'aidez, s'il vous plaît.) And a friend? (Tu m'aides, s'il te plaît — both halves change together.) What Latin verb is aider from, and which English word is the same word? (Adiūtāre; English aid.) Is English help related? (No — it is Germanic, unrelated.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C25-ecrire",
-      "sequence": 880,
-      "title": "écrire — \"to write,\" born from a scratch",
-      "headword": "écrire",
-      "romanization": "écrire",
-      "gloss": "to write — Latin scrībere, \"to scratch,\" with a propped-up é- that French added in front of every borrowed sc-, sp- and st- word",
+      "id": "FR-C24-aimer",
+      "sequence": 840,
+      "title": "aimer — one verb for \"like\" and \"love,\" and the word that weakens it",
+      "headword": "aimer",
+      "romanization": "aimer",
+      "gloss": "to like AND to love — one French verb where English keeps two, so the strength comes from what follows it, and adding bien makes it WEAKER",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b46f0f531c4776f",
+      "sourceHash": "fnv1a64:94cb996684b89077",
       "notice": null,
       "blocks": [
         {
@@ -578,7 +562,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can think, understand and read. The last of the four is the one that puts something back out — and its French spelling still carries a repair job the language did more than a thousand years ago."
+              "text": "Three verbs so far: je prends, je demande, j'aide. The fourth does a job English needs two words for — and the way you soften it is the opposite of what you would guess."
             }
           ]
         },
@@ -589,67 +573,62 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "écrire — to write. Said ay-KREER: the é is a sharp ay, then the throaty r at the end, as in lire. J'écris le français. — I write French."
+              "text": "aimer — to like and to love. Said ay-MAY: the ai- is ay, the -mer is may. J'aime le chien. — I like the dog. J'aime le chat. — I like the cat."
             },
             {
               "kind": "speech",
-              "text": "Irregular, and the stem grows a v in the plural:"
-            },
-            {
-              "kind": "speech",
-              "text": "j'écris — ay-KREE."
-            },
-            {
-              "kind": "speech",
-              "text": "tu écris — ay-KREE."
-            },
-            {
-              "kind": "speech",
-              "text": "il écrit — ay-KREE."
-            },
-            {
-              "kind": "speech",
-              "text": "nous écrivons — ay-kree-VOHN, and there is the v."
-            },
-            {
-              "kind": "speech",
-              "text": "vous écrivez — ay-kree-VAY."
-            },
-            {
-              "kind": "speech",
-              "text": "ils écrivent — ay-KREEV."
+              "text": "An ordinary -er verb: j'aime, tu aimes, il aime, nous aimons, vous aimez, ils aiment. French does not choose between \"like\" and \"love\" — the thing you name does. A dog, a colour, a food: that reads as like. A person: love."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: scratching, and a propped-up é",
+          "title": "The word, taken apart: amāre",
           "segments": [
             {
               "kind": "speech",
-              "text": "écrire from Latin scrībere, \"to scratch, to incise.\" A Roman wrote by scratching a stylus across wax, and the verb never forgot it. English took the Latin form whole:"
+              "text": "aimer from Latin amāre, \"to love,\" and English is full of it:"
             },
             {
               "kind": "speech",
-              "text": "scribe, script, scripture, scribble."
+              "text": "amateur — one who does a thing for love, not for money."
             },
             {
               "kind": "speech",
-              "text": "describe — scratch it down; prescribe, subscribe, inscribe."
+              "text": "amorous, full of love; enamoured, in it; paramour, beside it."
             },
             {
               "kind": "speech",
-              "text": "Now the é. Latin scrībere began with sc-, and a French-speaking mouth could not start a word that way, so it propped one up with a vowel in front: scrībere becomes escrire becomes écrire. The same repair ran through the whole language — schola became école, spatha became épée, stella became étoile. That accent is not decoration: it is standing where an s used to be."
+              "text": "amiable and amicable — from amīcus, \"friend\"; amity between nations."
             },
             {
               "kind": "speech",
-              "text": "And the best cousin belongs to both halves of this chapter. Manuscript is manus + scrībere — \"scratched by hand.\" La main and écrire meet inside one English word."
+              "text": "An honest stop, though: unlike viridis behind vert, amāre has no agreed ancestor beyond Latin. It is often guessed to be a nursery word, a baby's amma, but that is a guess. The trail genuinely ends at Latin."
             }
           ]
         },
         {
           "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: bien makes it weaker",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Je t'aime. — I love you. Full strength. Je t'aime bien. — I like you. Much weaker."
+            },
+            {
+              "kind": "speech",
+              "text": "Every English speaker gets this backwards. Bien means \"well,\" so je t'aime bien looks like it ought to be more. It is less. Adding bien — or beaucoup — downgrades love to friendly liking, which is exactly why je t'aime bien is the polite way to turn someone down."
+            },
+            {
+              "kind": "speech",
+              "text": "With a thing, no such danger: j'aime bien le chat is simply \"I quite like the cat.\" The trap only bites when the object is a person."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -662,70 +641,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"écrire\" — ay-KREER",
+              "instruction": "\"j'aime le chien\" then \"j'aime le chat\" — liking, because they are animals",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"écrire\" — *ay-KREER*]"
+              "source": "[YOU SAY: \"j'aime le chien\" then \"j'aime le chat\" — liking, because they are animals]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'écris\" then \"nous écrivons\" — the v appears in the plural",
+              "instruction": "\"j'aime le vert\" — I like green",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'écris\" then \"nous écrivons\" — the *v* appears in the plural]"
+              "source": "[YOU SAY: \"j'aime le vert\" — I like green]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four of this chapter — \"je comprends, je pense, je lis, j'écris\"",
+              "instruction": "\"je t'aime\" then \"je t'aime bien\" — love, then only liking",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four of this chapter — \"je comprends, je pense, je lis, j'écris\"]"
+              "source": "[YOU SAY: \"je t'aime\" then \"je t'aime bien\" — love, then only liking]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'écris à la main\" — I write by hand; that is manuscript, taken apart",
+              "instruction": "the four verbs — \"je prends, je demande, j'aide, j'aime\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'écris à la main\" — I write by hand; that is *manuscript*, taken apart]"
+              "source": "[YOU SAY: the four verbs — \"je prends, je demande, j'aide, j'aime\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'aime lire\" then \"j'aime écrire\" — I like reading, I like writing",
+              "instruction": "\"vous m'aidez, s'il vous plaît\" — the request, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'aime lire\" then \"j'aime écrire\" — I like reading, I like writing]"
+              "source": "[YOU SAY: \"vous m'aidez, s'il vous plaît\" — the request, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je prends le pain, et j'écris\" — the taking verb, still there",
+              "instruction": "\"aimer, amateur, amiable\" — the amāre family, which stops at Latin",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je prends le pain, et j'écris\" — the taking verb, still there]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lire, écrire\" — gathering off the page, scratching onto it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lire, écrire\" — gathering off the page, scratching onto it]"
+              "source": "[YOU SAY: \"aimer, amateur, amiable\" — the *amāre* family, which stops at Latin]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -737,7 +707,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I write\" and \"we write.\" (J'écris. Nous écrivons — the v arrives in the plural.) What did scrībere literally mean, and why does écrire start with an é? (To scratch; French propped a vowel in front of Latin's sc-, the same repair that made école and étoile.) Pull manuscript apart. (Manus \"hand\" — your la main — plus scrībere, \"scratched\": written by hand.) Now say the four verbs of this chapter with je. (Je comprends, je pense, je lis, j'écris.)"
+              "text": "Which is stronger, je t'aime or je t'aime bien? (Je t'aime — bien makes it weaker.) Say \"I like the dog\" and \"I like green.\" (J'aime le chien. J'aime le vert.) What does amateur literally mean, and how far back does amāre go? (One who does it for love; the trail stops at Latin.) Say the chapter's four verbs with je. (Je prends, je demande, j'aide, j'aime.)"
             }
           ]
         }

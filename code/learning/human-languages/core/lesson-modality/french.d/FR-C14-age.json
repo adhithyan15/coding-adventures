@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C14-age",
     "language": "french",
-    "chapter": 16,
-    "sequence": 390,
+    "chapter": 17,
+    "sequence": 475,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c91573735f6e67e0"
+    "sourceHash": "fnv1a64:a78de6ec814987d1"
   },
   "findings": []
 }

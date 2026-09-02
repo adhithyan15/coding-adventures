@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C28-the",
     "language": "french",
-    "chapter": 30,
+    "chapter": 31,
     "sequence": 980,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:615007f885dbccb5"
+    "sourceHash": "fnv1a64:34320deba19b903e"
   },
   "findings": []
 }

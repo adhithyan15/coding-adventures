@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C25-penser",
     "language": "french",
-    "chapter": 27,
+    "chapter": 28,
     "sequence": 860,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a949b4e20ba1900f"
+    "sourceHash": "fnv1a64:4934d8ff44b00ec4"
   },
   "findings": []
 }

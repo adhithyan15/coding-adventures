@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C26-courir
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 920
-chapter: 28
+chapter: 29
 type: word
 headword: courir
 gloss: to run — Latin currere, the root under current, course, courier and curriculum, and the verb that shows why chien palatalized its c and courir did not

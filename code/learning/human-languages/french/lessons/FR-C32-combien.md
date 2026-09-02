@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C32-combien
 spine_node: SPINE-ASK-LOCATION
 sequence: 1250
-chapter: 34
+chapter: 35
 type: word
 headword: combien
 gloss: "how much and how many — one word where English needs two"

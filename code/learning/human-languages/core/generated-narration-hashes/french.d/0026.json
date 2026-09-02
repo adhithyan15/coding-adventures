@@ -1,18 +1,15 @@
 {
   "language": "french",
   "chapter": 26,
-  "sourceHash": "fnv1a64:7db82c31f93b5fc7",
+  "sourceHash": "fnv1a64:5f025ab048ad1a4c",
   "lessonIds": [
-    "FR-C24-prendre",
-    "FR-C24-demander",
-    "FR-C24-aider",
-    "FR-C24-aimer"
+    "FR-C23-vert-jaune"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "french/narration/ch26.txt",
   "json": "french/narration/ch26.json",
-  "textHash": "fnv1a64:324bab344c0fe6e4",
-  "jsonHash": "fnv1a64:cfc5cbda58b4d3fb",
+  "textHash": "fnv1a64:2dfc5358ecc1b100",
+  "jsonHash": "fnv1a64:18423cfe448d120e",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C12-ze-decem",
+    "language": "french",
+    "chapter": 14,
+    "sequence": 375,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fcd0e2ebe9379f5"
+  },
+  "findings": []
+}

@@ -1,16 +1,16 @@
 {
   "language": "french",
   "chapter": 17,
-  "sourceHash": "fnv1a64:5ad04ce701cf57ac",
+  "sourceHash": "fnv1a64:64968b9eda538792",
   "lessonIds": [
-    "FR-C15-passe-compose",
-    "FR-C15-passe-simple"
+    "FR-C14-avoir",
+    "FR-C14-age"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
   "text": "french/narration/ch17.txt",
   "json": "french/narration/ch17.json",
-  "textHash": "fnv1a64:815346bc14bcc742",
-  "jsonHash": "fnv1a64:ad1b4c39fd4a3a3f",
+  "textHash": "fnv1a64:8a89f8b9737d14b5",
+  "jsonHash": "fnv1a64:087be299d9abb998",
   "findings": []
 }

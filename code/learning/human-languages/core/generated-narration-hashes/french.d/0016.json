@@ -1,16 +1,16 @@
 {
   "language": "french",
   "chapter": 16,
-  "sourceHash": "fnv1a64:35eadb16cbc5e751",
+  "sourceHash": "fnv1a64:2cb6d7e1d2229883",
   "lessonIds": [
-    "FR-C14-avoir",
-    "FR-C14-age"
+    "FR-C13-noir-blanc",
+    "FR-C13-rouge-bleu"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "french/narration/ch16.txt",
   "json": "french/narration/ch16.json",
-  "textHash": "fnv1a64:382c2611fa8000ce",
-  "jsonHash": "fnv1a64:8a82264a261f5b40",
+  "textHash": "fnv1a64:6615957ea2970ed1",
+  "jsonHash": "fnv1a64:af137322b5404662",
   "findings": []
 }

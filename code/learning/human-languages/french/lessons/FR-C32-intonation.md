@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C32-intonation
 spine_node: SPINE-ASK-LOCATION
 sequence: 1200
-chapter: 34
+chapter: 35
 type: grammar
 headword: une question
 gloss: "the question you make with your voice alone"

@@ -1,93 +1,148 @@
-French, chapter 19: Head and Hand.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+French, chapter 19: To Be, and the Past That Takes It.
+4 lessons. All 4 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-la tête — "the head".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 1 of 4.
+être — “to be”.
 
 Warm-up.
 [pause 2 seconds]
-The first body part, and one of the best etymologies in French. The word for head is not the Latin word for head.
+You have avoir, “to have.” Meet its partner être, the auxiliary and everyday verb “to be.”
 
-You'll want to know: The word.
-la tête — the head. Feminine, so la.
+The six forms.
+[a table of 3 rows, read aloud]
+je suis, nous sommes.
+tu es, vous êtes.
+il/elle est, ils/elles sont.
+These forms are old and frequent, so sound change has worn away any neat modern pattern. Learn the row as a rhythm:
+suis, es, est — sommes, êtes, sont.
+Use the subject pronoun every time; unlike Spanish or Italian, French verb sounds often do not identify the person by themselves.
+Examples:
+Je suis français. — I am French.
+Elle est fatiguée. — She is tired.
+Nous sommes prêts. — We are ready.
+The present forms continue Latin esse, “to be”: suis beside sum, est beside est, sommes beside sumus, and sont beside sunt. Other tenses draw on different roots; the next micro-lesson maps those seams.
 
-The word, taken apart: Latin had a perfectly good word.
-Latin's word for "head" was caput. You can see it surviving all over Europe:
+Guided Practice.
+[pause 1 second]
+[your turn — say: “je suis, tu es, il est”]
+[pause 8 seconds for the answer]
+[your turn — say: “nous sommes, vous êtes, ils sont”]
+[pause 8 seconds for the answer]
+[your turn — say: “Je suis français. Elle est fatiguée.”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Suis, es, est — sommes, êtes, sont.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the six present forms. (Suis, es, est, sommes, êtes, sont.) Which pronoun goes with êtes? (Vous.) Which Latin verb supplies this row? (Esse.) Next: find the fu- and ét- pieces inside the wider paradigm.
+
+
+Lesson 2 of 4.
+suis / fus / étais — three stems.
+
+Warm-up.
+[pause 2 seconds]
+The present of être comes from Latin esse. Its other forms expose two more historical pieces.
+[a table of 3 rows, read aloud]
+French: suis, es, est, sommes, êtes, sont. source: Latin esse, “be”.
+French: fus, fut. source: ancient perfect stem fuī.
+French: été, étant, étais, était. source: Latin stāre, “stand”.
+Every ét- form comes from the standing verb: participle été, present participle étant, imperfect étais / était. A paradigm patched from different roots is suppletive, like English go / went.
+The fu- stem is related to the root of English be. The ét- limb is even more striking because Spanish kept the same stāre source as a separate verb, estar.
+[a table of 2 rows, read aloud]
+language: Spanish. what happened to esse and stāre: kept ser and estar separate.
+language: French. what happened to esse and stāre: kept être and absorbed a whole ét- limb.
+French also preserves stāre outside être, for example in rester, “stay.” But it no longer has a separate standing-based “to be.”
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “suis from esse”]
+[pause 8 seconds for the answer]
+[your turn — say: “fus from fuī”]
+[pause 8 seconds for the answer]
+[your turn — say: “été, étant, étais from stāre”]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“Es-, fu-, ét-: three stems, one verb.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which root supplies the present? (Esse.) Which supplies fus? (Fuī.) Which supplies every ét- form? (Stāre, “stand.”) What is such patching called? (Suppletion.) What did Spanish do differently? (Kept the two verbs separate.) Next: build the compound past with être.
+
+
+Lesson 3 of 4.
+Je suis allé — the past built from “be”.
+
+Warm-up.
+[pause 2 seconds]
+The compound past built j’ai parlé with avoir. A smaller family uses être, and its participle agrees with the subject.
+
+Start with aller.
+[a table of 5 rows, read aloud]
+je suis allé, I went.
+tu es allé, you went.
+il est allé, he went.
+nous sommes allés, we went.
+ils sont allés, they went.
+The family centres on arriving, leaving, and changing state: aller, venir, partir, arriver, entrer, sortir, naître, mourir, rester, tomber.
+Do not interpret that as “every verb involving movement.” Marcher, courir, nager, and danser take avoir. Some verbs switch with a direct object: je suis monté (“I went up”) but j’ai monté les valises (“I took the suitcases up”).
+
+Agreement with the subject.
 [a table of 4 rows, read aloud]
-Portuguese, cabeça.
-Spanish, cabeza.
-Italian, capo (now "chief, boss").
-English, captain, capital, decapitate.
-French has caput too, and in two layers. Inherited, worn down by use: chef ("chief," originally "head"), chapitre, cap (a headland), achever ("to finish" — to bring to a head). Re-borrowed later, straight from written Latin: capital, capitaine, décapiter.
-What French does not use it for is the thing on your shoulders.
-Tête comes from Latin testa: an earthenware pot, a shell, a potsherd.
-
-Why it's said this way: Why a pot?
-Soldiers' slang. Roman troops called the skull a testa the way English speakers say someone got hit on the noggin — a noggin being a small mug. It was a joke, it spread, and eventually the joke replaced the real word in Gaul and Italy.
-So a French speaker saying j'ai mal à la tête is, historically, saying "my pot hurts."
-Testa is still visible in English test — which began as the shallow pot an alchemist used to assay metals.
-
-Sounds you'll need: The circumflex is a receipt.
-Look at the accent: tête. Chapter W01 taught what a circumflex records — a letter that used to be there, almost always an s.
-testa becomes Old French teste becomes modern tête.
-The s stopped being pronounced, and the accent was put in to mark the grave. That is why English, which borrowed from Old French before the s fell, still has it in test.
+subject: il. sentence: Il est allé.
+subject: elle. sentence: Elle est allée.
+subject: ils. sentence: Ils sont allés.
+subject: elles. sentence: Elles sont allées.
+The participle takes the subject’s gender and number like an adjective. That is its history: elle est allée began as “she is gone,” with gone describing her state just as fatiguée would.
+This connects both auxiliary systems:
+with avoir, agreement can follow a preceding object;
+with être, agreement follows the subject.
+Underneath both, the participle was an adjective agreeing with what it described.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la tête"]
+[your turn — say: “je suis allé; elle est allée”]
 [pause 8 seconds for the answer]
-[your turn — say: "j'ai mal à la tête" — "my head hurts"]
+[your turn — say: “ils sont allés; elles sont allées”]
 [pause 8 seconds for the answer]
-[your turn — say: the joke — "testa = a pot"]
-[pause 8 seconds for the answer]
-[your turn — say: the receipt — "teste becomes tê-te"]
+[your turn — say: the contrast — “j’ai parlé; je suis allé”]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the head." (La tête — feminine.) Does it come from Latin caput? (No — from testa, an earthenware pot.) Why a pot? (Roman soldiers' slang for the skull, which replaced the proper word.) Where did caput survive in French? (Inherited in chef, chapitre, cap, achever; re-borrowed in capital, capitaine, décapiter — just never for the head itself.) What does the circumflex on tête record? (A lost s — teste, still visible in English test.) Next: the hand.
+Which broad family takes être? (Arriving, leaving, and change of state.) Does courir? (No: j’ai couru.) What does the participle agree with here? (The subject.) Why? (It began as an adjective.) Next: the special agreement logic of pronominal verbs.
 
 
-Lesson 2 of 2.
-la main — "the hand".
+Lesson 4 of 4.
+Elle s’est lavée — pronominal past agreement.
 
 Warm-up.
 [pause 2 seconds]
-Where tête abandoned its Latin ancestor, this one kept it — and then lent it to English several dozen times over.
+All pronominal verbs use être in the compound past: je me suis levé, elle s’est lavée. Their agreement, however, follows the direct object rather than blindly following the subject.
+[a table of 3 rows, read aloud]
+sentence: Elle s’est lavée. why: se means “herself,” a preceding direct object.
+sentence: Elle s’est lavé les mains. why: direct object les mains follows, so no agreement.
+sentence: Elles se sont parlé. why: se means “to each other,” an indirect object.
+The auxiliary looks like être, but the decision is the same one used with avoir: agree with a preceding direct object.
+Ask two questions:
+What received the action directly?
+Does that direct object come before the participle?
+In elle s’est lavée, se is direct and precedes, so add -e. In elle s’est lavé les mains, les mains is direct but follows, so leave lavé unchanged. In se parler, the person is indirect — you speak to someone — so there is no agreement.
 
-You'll want to know: The word.
-la main — the hand. Feminine, and worth flagging: it ends in a consonant and still takes la. French gender is not predictable from the ending, which is why this book always gives you the article.
-The -ain is the nasal vowel of pain, the bread — say them together: pain, main.
-
-The word, taken apart: manus in English.
-Main comes from Latin manus, "hand." That word is inside an enormous number of English words, and once you see it you cannot unsee it:
-[a table of 6 rows, read aloud]
-English: manual. literally: done by hand.
-English: manufacture. literally: made by hand (manus + facere "to make").
-English: manuscript. literally: written by hand (manus + scrībere).
-English: maintain. literally: hold in the hand (manū tenēre).
-English: manage. literally: to handle — via Italian maneggiare, of horses.
-English: manoeuvre. literally: work by hand (manū operārī).
-Manufacture is the one worth pausing on. It means "made by hand" — and it now names precisely the thing that isn't.
-
-The phrase, taken apart: French kept it too.
-Maintenir / English maintain is Latin manū tenēre, "to hold in the hand" — a hand, plus the verb tenēre, "to hold."
-So maintenance — the least romantic word in any office — is literally keeping something in hand.
+Verbs that exist only pronominally.
+Verbs such as se souvenir (remember), s’enfuir (flee), and s’évanouir (faint) have no ordinary non-reflexive partner. They simply agree with the subject: elles se sont souvenues.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la main" — and hear pain, main]
+[your turn — say: “Elle s’est lavée.”]
 [pause 8 seconds for the answer]
-[your turn — say: "j'ai mal à la main"]
+[your turn — say: “Elle s’est lavé les mains.”]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "manual, manuscript, maintain — all a hand"]
-[pause 8 seconds for the answer]
-[your turn — say: the irony — "manufacture = made by hand"]
+[your turn — say: “Elles se sont parlé.”]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the hand." (La main — feminine, despite the consonant ending.) What Latin word is it from? (Manus.) Give three English words built on it. (Manual, manufacture, manuscript, maintain, manage, manoeuvre.) What does manufacture literally mean? ("Made by hand" — now the name for the opposite.) And maintenir? (Manū tenēre, "hold in the hand".) Next: the rest of the body.
+Which auxiliary do pronominal verbs take? (Être.) Do they always agree with the subject? (No.) What controls ordinary pronominal agreement? (A preceding direct object.) Why no agreement in se sont parlé? (Se is indirect.) How do inherently pronominal verbs behave? (They agree with the subject.)

@@ -1,7 +1,7 @@
 ---
 id: FR-C13-rouge-bleu
-sequence: 380
-chapter: 15
+sequence: 460
+chapter: 16
 type: word
 headword: rouge, bleu
 gloss: red and blue — one ancient inherited root, and a second Germanic loan
@@ -11,7 +11,7 @@ sounds: [uvular-r, vowel-eu]
 roots: [pie-rewdh, germanic-blao]
 etymology_hook: "rouge ← Latin rubeus, from the PIE root that also gave English red/ruby/rust — so rouge and red are cousins; bleu is a SECOND Germanic loan (*blāo), and English borrowed it back from French"
 est_minutes: 4
-reviews_of: [FR-C13-noir-blanc, FR-C12-nombres-17-20]
+reviews_of: [FR-C13-noir-blanc, FR-C12-practice-seam]
 ---
 
 # rouge, bleu — an ancient word and a borrowed one

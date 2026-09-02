@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:9302af1b8150e1a9",
+  "lessonIds": [
+    "FR-C12-dix-sept",
+    "FR-C12-seam",
+    "FR-C12-dix-huit",
+    "FR-C12-dix-neuf",
+    "FR-C12-vingt",
+    "FR-C12-vigesimal",
+    "FR-C12-practice-seam"
+  ],
+  "tex": "french/book/chapters/ch15-numbers-17-20.tex"
+}

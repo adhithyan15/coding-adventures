@@ -1,17 +1,17 @@
 ---
 id: FR-C14-age
-sequence: 390
-chapter: 16
+sequence: 475
+chapter: 17
 type: phrase
 headword: j'ai vingt ans
 gloss: "age — French HAS its years, it doesn't BE them"
 concept_tag: FR-AGE
-prerequisites: [FR-C14-avoir, FR-C12-nombres-17-20]
+prerequisites: [FR-C14-avoir, FR-C12-practice-seam]
 sounds: [liaison-z, nasal-an]
 roots: [latin-annus]
 etymology_hook: "Romance says 'I HAVE twenty years' (j'ai vingt ans = Spanish tengo veinte años, Italian ho venti anni) where English and German say 'I AM twenty years old' — age as possession vs age as identity; an ← annus → annual/anniversary"
 est_minutes: 4
-reviews_of: [FR-C14-avoir, FR-C12-nombres-17-20, FR-C09-mois-practice-2]
+reviews_of: [FR-C14-avoir, FR-C12-practice-seam, FR-C09-mois-practice-2]
 ---
 
 # j'ai vingt ans — having your years

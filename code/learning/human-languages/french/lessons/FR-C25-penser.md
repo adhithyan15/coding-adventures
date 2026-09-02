@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C25-penser
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 860
-chapter: 27
+chapter: 28
 type: word
 headword: penser
 gloss: to think — from a Latin verb meaning "to weigh," which is why English pensive, ponder, compensate, expense and even the flower pansy all sit in one family

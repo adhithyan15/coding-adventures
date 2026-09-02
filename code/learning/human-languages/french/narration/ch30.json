@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 30,
-  "title": "Coffee, Tea, Milk, Sugar",
+  "title": "Sitting, Standing, Opening, Closing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9404a7e7e860e758",
+  "sourceHash": "fnv1a64:c40923eb78cda0b3",
   "lessons": [
     {
-      "id": "FR-C28-cafe",
-      "sequence": 970,
-      "title": "le café — coffee, one word the whole road agrees on",
-      "headword": "le café",
-      "romanization": "le café",
-      "gloss": "coffee — masculine, and the one drink-word nearly all of Europe borrowed along the same single road",
+      "id": "FR-C27-sasseoir",
+      "sequence": 930,
+      "title": "s'asseoir — \"to sit down,\" a verb you do to yourself",
+      "headword": "s'asseoir",
+      "romanization": "s'asseoir",
+      "gloss": "to sit down — a verb you do to yourself, from Latin sedēre, and the one French verb that ships with two accepted sets of forms",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29e027c65540488b",
+      "sourceHash": "fnv1a64:4babf93a9b50d6db",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already know how to ask nicely — s'il vous plaît. Now something worth asking for: the first of four everyday words for what's on the table."
+              "text": "You have walked and you have run. Now stop. French does not say \"I sit\" — it says \"I seat myself,\" and that extra word is one you own."
             }
           ]
         },
@@ -46,462 +46,295 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "le café — coffee. Masculine."
+              "text": "s'asseoir — to sit down. Said sah-SWAHR. Je m'assieds. — I sit down. Said juh mah-SYAY."
             },
             {
               "kind": "speech",
-              "text": "Un café, s'il vous plaît. — \"A coffee, please.\""
+              "text": "The m' is the me inside je m'appelle: French treats sitting as something you do to yourself, so the pronoun is not optional."
             },
             {
               "kind": "speech",
-              "text": "Café also names the place you drink it, exactly the way English cafe does — one word, two jobs, in both languages at once."
+              "text": "Keep two ideas apart. S'asseoir is the movement, lowering yourself into a chair. Je suis assis is the state after it, \"I am seated.\" English lets sit cover both; French makes you choose."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: one road, not four",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "café comes from Ottoman Turkish kahve, which comes from Arabic qahwa. Arabic lexicographers record qahwa as an older word for wine — it only attached to the coffee bean once the drink spread out of Yemen, in the fifteenth century."
-            },
-            {
-              "kind": "speech",
-              "text": "From Ottoman kahve, the word crossed into Europe through Italian caffè — and stopped there. French café, English coffee, German Kaffee, Italian caffè itself: every one of these is the same borrowing, taken at a different stop on a single road out of the Ottoman Empire. Nobody translated it; everybody just repeated it."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"le café\" — masculine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"le café\" — masculine]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"un café, s'il vous plaît\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"un café, s'il vous plaît\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the road — \"qahwa, kahve, caffè, café\" — one word, four stops",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the road — \"qahwa, kahve, caffè, café\" — one word, four stops]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the surprise — \"qahwa once meant wine\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the surprise — \"qahwa once meant **wine**\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"coffee, please.\" (Un café, s'il vous plaît. — masculine.) What Arabic word is café from, and what did it mean before coffee existed? (Qahwa — \"wine.\") Name the road it travelled. (Arabic qahwa becomes Ottoman kahve becomes Italian caffè becomes French café, with English coffee and German Kaffee the same borrowing at other stops.) Is s'il vous plaît the right register here? (Yes — spoken, to someone you don't know well.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C28-the",
-      "sequence": 980,
-      "title": "le thé — tea, the word that took the other road",
-      "headword": "le thé",
-      "romanization": "le thé",
-      "gloss": "tea — masculine, and the drink whose name split in two depending which Chinese port a trader dealt with",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:615007f885dbccb5",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You just saw café travel Europe as one word, unchanged at every stop. Tea took the opposite kind of trip — it split."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le thé — tea. Masculine."
-            },
-            {
-              "kind": "speech",
-              "text": "Un thé, s'il vous plaît. — \"A tea, please.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: two ports, two words",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "China writes \"tea\" with one character everywhere, but doesn't say it the same way everywhere. In Mandarin it's chá. In the Hokkien of the south-eastern coast — the Amoy dialect — it's tê."
-            },
-            {
-              "kind": "speech",
-              "text": "Traders who bought the leaf overland or through Mandarin-speaking ports carried home chá: it travelled into Persian, into Arabic, into Hindi. Dutch traders bought their tea specifically at Amoy, in Hokkien territory, and carried home tê instead — which became Dutch thee, then French thé, English tea, German Tee."
-            },
-            {
-              "kind": "speech",
-              "text": "So café and thé make a matched pair with opposite stories: café is one word repeated unchanged at every stop; thé is the same original word, worn into two different shapes depending which Chinese port a trader happened to deal with."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"le thé\" — masculine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"le thé\" — masculine]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"un café, un thé\" — both masculine, both borrowed",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"un café, un thé\" — both masculine, both borrowed]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the fork — \"chá overland, tê by Dutch ship\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the fork — \"chá overland, tê by Dutch ship\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — \"café: one road. thé: two.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"café: one road. thé: two.\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"tea, please.\" (Un thé, s'il vous plaît. — masculine.) What Chinese dialect gave French thé its shape, and by what route? (Hokkien tê, carried by Dutch ships from the port of Amoy.) What's the overland word that chá-family languages use instead? (Chá, into Persian, Arabic, Hindi.) How is thé's story different from café's? (Café stayed one word everywhere; thé split in two depending on the port.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C28-lait",
-      "sequence": 990,
-      "title": "le lait — milk, the word French never had to borrow",
-      "headword": "le lait",
-      "romanization": "le lait",
-      "gloss": "milk — masculine, and the one drink in this chapter French did not have to borrow",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c2cea4750c7a0670",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Café and thé both crossed an ocean to reach French. This word never left home."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le lait — milk. Masculine, like café and thé."
-            },
-            {
-              "kind": "speech",
-              "text": "Du lait, s'il vous plaît. — \"Some milk, please.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: inherited, not borrowed",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "lait comes from Latin lac (stem lact-) — a word Latin-speakers in Gaul simply kept saying, generation after generation, until it wore down into lait. No port, no trade route: this one was inherited, not borrowed, unlike café's single road or thé's forked one."
-            },
-            {
-              "kind": "speech",
-              "text": "English shows the same split tête showed for \"head\": the inherited, everyday English word for this drink is milk — and it has nothing to do with lac. Milk descends from a completely different Proto-Indo-European root, one meaning \"to milk a cow.\" English only meets lac's stem lact- in learned words borrowed straight from written Latin much later: lactic, lactose, lactate. So French lait and English lactic are close cousins; French lait and English milk are not related at all."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"le lait\" — masculine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"le lait\" — masculine]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"un café, un thé, du lait\" — three drinks, one gender",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"un café, un thé, du lait\" — three drinks, one gender]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"lait, lactic, lactose\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"lait, lactic, lactose\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the non-cousins — \"lait and milk share no root at all\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the non-cousins — \"lait and milk share no root at all\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"milk, please.\" (Du lait, s'il vous plaît. — masculine.) Is lait borrowed, like café and thé, or inherited straight from Latin? (Inherited — from lac, stem lact-.) Which English words are close cousins of lait? (Lactic, lactose, lactate — learned borrowings of the same stem.) Is English milk one of those cousins? (No — a completely different, unrelated root.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C28-sucre",
-      "sequence": 1000,
-      "title": "le sucre — sugar, the longest road of the four",
-      "headword": "le sucre",
-      "romanization": "le sucre",
-      "gloss": "sugar — masculine, closing a chapter where every drink-word is; the fourth and longest road of the four",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:3992b8aaa0f6a06a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Coffee took one road, tea forked into two, milk never left home. Sugar's road is the longest of all — and it ends the chapter with a whole table's worth of masculine drink-words."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le sucre — sugar. Masculine."
-            },
-            {
-              "kind": "speech",
-              "text": "Du sucre, s'il vous plaît. — \"Some sugar, please.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: grit, gravel, sugar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sucre from Old French çucre from Arabic sukkar from Persian shakar from Sanskrit śárkarā, which first meant \"grit, gravel\" — crystallized sugar looked like gravel to whoever named it first."
-            },
-            {
-              "kind": "speech",
-              "text": "Sucre passed through Arabic just like café did, but through a different Arabic word (sukkar, not qahwa): a shared language of transmission, not a shared root. Where lait is inherited straight from Latin, sucre is borrowed — from further back than café or thé, all the way to Sanskrit."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a lean, and its one loud exception",
+          "title": "Grammar Lens: one verb, two accepted sets",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four drink-words, four masculine articles: le café, le thé, le lait, le sucre. Not a rule to trust — a lean: French tends to make plain substances masculine. This lean has a loud exception: l'eau, \"water,\" is feminine. You still learn each word with its article, the promise this book has kept since la main."
+              "text": "The only verb in this book with two correct answers, both in dictionaries. Learn this series whole:"
+            },
+            {
+              "kind": "speech",
+              "text": "je m'assieds — mah-SYAY."
+            },
+            {
+              "kind": "speech",
+              "text": "tu t'assieds — tah-SYAY."
+            },
+            {
+              "kind": "speech",
+              "text": "il s'assied — sah-SYAY (three identical to the ear)."
+            },
+            {
+              "kind": "speech",
+              "text": "nous nous asseyons — noo-zah-say-YOHN."
+            },
+            {
+              "kind": "speech",
+              "text": "vous vous asseyez — voo-zah-say-YAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils s'asseyent — sah-SAY."
+            },
+            {
+              "kind": "speech",
+              "text": "Then recognise the rival singulars je m'assois, tu t'assois, il s'assoit — ordinary spoken French. Their plurals (assoyons, assoyez) are much rarer in France, so the series above is the safer one to own. Since 1990 the infinitive may also be spelled s'assoir. Nothing here is wrong; the language never chose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: sedēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "s'asseoir from Vulgar Latin adsedēre, a remaking of Classical adsidēre — ad- \"at\" plus sedēre, \"to sit.\" Latin had built the compound; French only wore it down. And sedēre is everywhere in English:"
+            },
+            {
+              "kind": "speech",
+              "text": "sedentary, sitting work; a session, \"a sitting\"; sediment, what sits at the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "reside, sit back; preside and president, sitting in front; assiduous, sitting at a task."
+            },
+            {
+              "kind": "speech",
+              "text": "siege — an army sitting down before a city; possess, obsess, subsidy."
+            },
+            {
+              "kind": "speech",
+              "text": "A bishop's see is his sedēs, his seat."
+            },
+            {
+              "kind": "speech",
+              "text": "Dormir English only borrowed. This root it owns from birth too: sit, seat and settle come down the Germanic road from the same source."
             }
           ]
         },
         {
           "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: si, not oui",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "The si you learned — the \"yes\" for contradicting a negative — fits this table exactly:"
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Vous ne voulez pas de sucre? — Si, un peu. (\"You don't want sugar? — Yes, a little.\")"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"s'asseoir\" — sah-SWAHR",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"s'asseoir\" — *sah-SWAHR*]"
             },
             {
-              "kind": "speech",
-              "text": "Plain oui here would agree you don't want it; si is what pushes back. That same oui once mattered enough to split a country — langue d'oïl in the north, langue d'oc in the south."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je m'assieds\" then \"nous nous asseyons\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je m'assieds\" then \"nous nous asseyons\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je m'appelle\" then \"je m'assieds\" — the same little m'",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je m'appelle\" then \"je m'assieds\" — the same little *m'*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je m'assieds\" then \"je suis assis\" — movement, then state",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je m'assieds\" then \"je suis assis\" — movement, then state]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je marche, je cours, je m'assieds, je dors\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je marche, je cours, je m'assieds, je dors\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'entends\" — the ear needs no chair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'entends\" — the ear needs no chair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sedentary, session, siege\" — every one a sitting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sedentary, session, siege\" — every one a sitting]"
             }
           ]
         },
         {
           "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I sit down\" and \"we sit down.\" (Je m'assieds. Nous nous asseyons.) Why is the pronoun there? (French sits you yourself down — the same m' as in je m'appelle.) What is a siege, literally? (A sitting — an army sitting down before a city.) Which English words are cousins of sedēre by birth rather than borrowing? (Sit, seat, settle.) Now the pair: \"je cours\" and \"je dors.\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C27-se-lever",
+      "sequence": 940,
+      "title": "se lever, debout — standing, which French says in two pieces",
+      "headword": "se lever, debout",
+      "romanization": "se lever, debout",
+      "gloss": "to stand — French has no single verb for it, so the movement is se lever (\"to lighten yourself\") and the state is être debout, literally \"on end\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea0da58fdbf95a60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You sat down. Getting up is harder, because French has no single verb for \"to stand.\" It splits the idea in two."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the movement",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "se lever — to get up, to rise. Said suh luh-VAY. Je me lève. — I get up. Said juh muh LEV."
+            },
+            {
+              "kind": "speech",
+              "text": "Reflexive, as s'asseoir is: you raise yourself. After that verb's two paradigms this is a relief — an ordinary -er verb with one habit. Silent ending, and the e takes a grave accent; spoken ending, and it flattens:"
+            },
+            {
+              "kind": "speech",
+              "text": "je me lève — LEV."
+            },
+            {
+              "kind": "speech",
+              "text": "tu te lèves — LEV."
+            },
+            {
+              "kind": "speech",
+              "text": "il se lève — LEV."
+            },
+            {
+              "kind": "speech",
+              "text": "nous nous levons — luh-VOHN, flat."
+            },
+            {
+              "kind": "speech",
+              "text": "vous vous levez — luh-VAY, flat."
+            },
+            {
+              "kind": "speech",
+              "text": "ils se lèvent — LEV."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the state",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "debout — standing, upright. Said duh-BOO. Je suis debout. — I am standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Se lever is the movement, debout the state — the split between sitting down and being seated. Debout is no verb: attach it to être."
+            },
+            {
+              "kind": "speech",
+              "text": "And it is transparent once opened: de + bout, \"on end.\" A bout is a tip or end, so standing is being set on your end. French did once have a plain verb for standing, ester; it survives only in a courtroom phrase, which is why the language builds this from pieces."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: lightness",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lever from Latin levāre, \"to raise\" — built on levis, \"light in weight.\" To raise a thing is to lighten it. Hence elevate, elevator, levitate, levity; a lever, which lightens a load; alleviate, relieve, relief; leaven."
+            },
+            {
+              "kind": "speech",
+              "text": "So two of this book's verbs come from one corner of Roman thought. Penser is pēnsāre, \"to weigh\"; lever is levāre, \"to make light.\" Thinking weighs, rising un-weighs, and sedēre just sits there."
+            },
+            {
+              "kind": "speech",
+              "text": "One correction. Bout comes from bouter, \"to strike,\" taken from Frankish — and its English relative by descent is beat. Butt looks closer but is a later borrowing back out of French."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -514,43 +347,70 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le sucre\" — masculine",
+              "instruction": "\"se lever\" — suh luh-VAY",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le sucre\" — masculine]"
+              "source": "[YOU SAY: \"se lever\" — *suh luh-VAY*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four — \"le café, le thé, le lait, le sucre\"",
+              "instruction": "\"je me lève\" then \"nous nous levons\" — sharp, then flat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"le café, le thé, le lait, le sucre\"]"
+              "source": "[YOU SAY: \"je me lève\" then \"nous nous levons\" — sharp, then flat]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exception — \"l'eau\" — feminine, against the lean",
+              "instruction": "\"je m'assieds\" then \"je me lève\" — down, then up",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exception — \"l'eau\" — feminine, against the lean]"
+              "source": "[YOU SAY: \"je m'assieds\" then \"je me lève\" — down, then up]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contradiction — \"Vous ne voulez pas de sucre? — Si!\"",
+              "instruction": "\"je suis debout\" — the state, on être",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contradiction — \"Vous ne voulez pas de sucre ? — Si !\"]"
+              "source": "[YOU SAY: \"je suis debout\" — the state, on *être*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je me lève et je cours\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je me lève et je cours\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je pense\" then \"je me lève\" — weighing, then lightening",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je pense\" then \"je me lève\" — weighing, then lightening]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"elevate, lever, relief\" — all a raising",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"elevate, lever, relief\" — all a raising]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -562,7 +422,430 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"sugar, please.\" (Du sucre, s'il vous plaît. — masculine.) Trace sucre back to Sanskrit. (Sukkar from shakar from śárkarā, \"grit, gravel.\") Do café and sucre share a root? (No — a language of transmission, Arabic, not a root; qahwa and sukkar are different words.) What is the lean about French drink-words, and what breaks it? (Masculine by default — broken by l'eau, feminine.) When do you answer si instead of oui? (Contradicting a negative — the same word-pair that once split France into langue d'oïl and langue d'oc.)"
+              "text": "Say \"I get up\" and \"we get up.\" (Je me lève. Nous nous levons — the accent appears only when the ending is silent.) How does French say \"I am standing\"? (Je suis debout — a state pinned to être, not a verb, and debout is de + bout, \"on end.\") Penser came from weighing; what does lever come from? (Levis, \"light in weight\".) And the opposite movement? (Je m'assieds.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C27-ouvrir",
+      "sequence": 950,
+      "title": "ouvrir — \"to open,\" an -ir verb wearing -er endings",
+      "headword": "ouvrir",
+      "romanization": "ouvrir",
+      "gloss": "to open — an -ir verb that takes -er endings, from a Latin verb reshaped to look like its own opposite, and the source of English overt and overture",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:495ab34f72fbbc0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can sit and rise. Now something for the hand. This verb is French conjugation's small trap: spelled like one family, behaving like another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ouvrir — to open. Said oo-VREER. J'ouvre la main. — I open my hand."
+            },
+            {
+              "kind": "speech",
+              "text": "French says la main where English says \"my hand\"; with your own body the article does the work. And listen to that nasal — pain, main — the same -ain you have been making since the bread."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the endings it should not have",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ouvrir ends in -ir, so you would expect it to run like dormir. It does not. It takes the endings of marcher, an -er verb, exactly:"
+            },
+            {
+              "kind": "speech",
+              "text": "j'ouvre — JOOVR."
+            },
+            {
+              "kind": "speech",
+              "text": "tu ouvres — OOVR."
+            },
+            {
+              "kind": "speech",
+              "text": "il ouvre — OOVR."
+            },
+            {
+              "kind": "speech",
+              "text": "nous ouvrons — oo-VROHN."
+            },
+            {
+              "kind": "speech",
+              "text": "vous ouvrez — oo-VRAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils ouvrent — OOVR."
+            },
+            {
+              "kind": "speech",
+              "text": "Four identical to the ear, nous and vous audible: the shape of je marche, nous marchons. A small group of -ir verbs does this, and ouvrir is the one you meet most. The spelling promises one thing; listen to what the verb does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: reshaped by its own opposite",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin's verb for opening was aperīre, which ouvrir does not look much like — because the word was remodelled on the way into popular Latin operīre. The likeliest cause is the pull of its own opposite, cooperīre, \"to cover,\" which became French couvrir. Opening and covering ended up rhyming and have stayed matched since. The meaning stayed aperīre's; only the shape moved."
+            },
+            {
+              "kind": "speech",
+              "text": "English collected both ends:"
+            },
+            {
+              "kind": "speech",
+              "text": "from aperīre — an aperture; an aperitif, the drink that opens a meal."
+            },
+            {
+              "kind": "speech",
+              "text": "from Old French ovrir — overt, its past participle \"opened,\" and overture, ouverture."
+            },
+            {
+              "kind": "speech",
+              "text": "from the covering half — curfew, Old French cuevrefeu, \"cover-fire,\" the bell that said to bank the hearth."
+            },
+            {
+              "kind": "speech",
+              "text": "Set that beside the hand. Maintenir is manū tenēre, \"to hold in the hand\" — and ouvrir la main releases that grip."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ouvrir\" — oo-VREER",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ouvrir\" — *oo-VREER*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'ouvre la main\" — and hear pain, main",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'ouvre la main\" — and hear *pain*, *main*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je marche, nous marchons\" then \"j'ouvre, nous ouvrons\" — one shape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je marche, nous marchons\" then \"j'ouvre, nous ouvrons\" — one shape]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je m'assieds, je me lève, j'ouvre la main\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je m'assieds, je me lève, j'ouvre la main\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je suis debout et j'ouvre la main\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je suis debout et j'ouvre la main\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"maintenir\" then \"ouvrir\" — holding in the hand, then letting go",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"maintenir\" then \"ouvrir\" — holding in the hand, then letting go]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aperture, aperitif, overt, overture\" — every one an opening",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aperture, aperitif, overt, overture\" — every one an opening]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I open my hand\" and \"we open.\" (J'ouvre la main. Nous ouvrons.) Which endings does ouvrir borrow, despite its spelling? (The -er set — marcher's.) What is an aperitif, literally? (The opener — the drink that opens a meal.) Why does ouvrir not look like Latin aperīre? (It was reshaped to match its own opposite, the verb for covering.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C27-fermer",
+      "sequence": 960,
+      "title": "fermer — \"to close,\" which in French means \"to make firm\"",
+      "headword": "fermer",
+      "romanization": "fermer",
+      "gloss": "to close — from Latin firmāre, \"to make firm,\" so a French door is not shut but made fast; the same verb gave Italian \"to stop\" and Spanish \"to sign\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55c1f8a3c63816e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last of the four, and the opposite of the one before it. French chose an unexpected picture: to close a thing is to make it firm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fermer — to close. Said fer-MAY. Je ferme la main. — I close my hand. Il pleut. Je ferme. — It's raining. I'm closing up."
+            },
+            {
+              "kind": "speech",
+              "text": "A regular -er verb: je ferme, tu fermes, il ferme, nous fermons, vous fermez, ils ferment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two opposites, one set of endings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ouvrir borrowed the -er endings against its own spelling. Fermer owns them outright. So the two opposites conjugate in step, and drill as one pair:"
+            },
+            {
+              "kind": "speech",
+              "text": "j'ouvre / je ferme."
+            },
+            {
+              "kind": "speech",
+              "text": "nous ouvrons / nous fermons."
+            },
+            {
+              "kind": "speech",
+              "text": "ils ouvrent / ils ferment."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: making it firm",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fermer from Latin firmāre, \"to make firm,\" from firmus, \"firm.\" A Roman door was not closed, it was secured. English took the adjective and left the verb: firm, affirm, confirm, infirm and the infirmary, the firmament — the sky as a solid vault."
+            },
+            {
+              "kind": "speech",
+              "text": "Probably also farm. Old French ferme meant a fixed rent, from Medieval Latin firma, \"a fixed payment,\" so a farm began as a lease and not a field. Etymologists call this history a confused one, because Old English feorm, \"food-rent,\" sat nearby and may have pulled on it. Likely, not clean."
+            },
+            {
+              "kind": "speech",
+              "text": "The best part is the split. One Latin verb, three languages, three jobs:"
+            },
+            {
+              "kind": "speech",
+              "text": "French fermer — to close."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian fermare — to stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish firmar — to sign, because a signature makes a paper firm."
+            },
+            {
+              "kind": "speech",
+              "text": "And Spanish and Portuguese do not close with this verb at all. Their words come from Latin's bolt. So French shuts a door by making it solid while its neighbours slide a bar across."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fermer\" — fer-MAY",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fermer\" — *fer-MAY*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'ouvre la main\" then \"je ferme la main\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'ouvre la main\" then \"je ferme la main\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chapter's four — \"je m'assieds, je me lève, j'ouvre, je ferme\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chapter's four — \"je m'assieds, je me lève, j'ouvre, je ferme\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je suis debout et je ferme\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je suis debout et je ferme\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"il pleut, je ferme\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"il pleut, je ferme\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vous fermez, s'il vous plaît\" then \"tu fermes, s'il te plaît\" — formal, then familiar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vous fermez, s'il vous plaît\" then \"tu fermes, s'il te plaît\" — formal, then familiar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je suis désolé, je ferme\" — the apology before the refusal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je suis désolé, je ferme\" — the apology before the refusal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fermer, firm, affirm, confirm\" — all a making-firm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fermer, firm, affirm, confirm\" — all a making-firm]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the chapter's four with je. (Je m'assieds, je me lève, j'ouvre, je ferme.) What did firmāre mean, and what is a French door doing when it closes? (Making firm — being secured, not barred.) One Latin verb, three languages: Italian and Spanish? (Fermare, \"to stop\"; firmar, \"to sign\".) Now close politely in both registers, then apologise. (Vous fermez, s'il vous plaît. Tu fermes, s'il te plaît. Je suis désolé.) And the hand? (J'ouvre la main, je ferme la main.)"
             }
           ]
         }
