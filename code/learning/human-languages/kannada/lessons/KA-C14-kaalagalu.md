@@ -7,6 +7,7 @@ chapter: 14
 type: word
 headword: ವಸಂತ ಋತು ಬೇಸಿಗೆ ಮಳೆಗಾಲ ಚಳಿಗಾಲ
 gloss: spring, summer, monsoon, winter — native heat/rain/cold words, one shared Sanskrit "spring"
+romanization: "vasanta ṛtu bēsige maḷegāla caḷigāla"
 concept_tag: KA-SEASONS
 prerequisites: [KA-C13-dehada-bhagagalu]
 sounds: [kannada-vocalic-r, kannada-anusvara]

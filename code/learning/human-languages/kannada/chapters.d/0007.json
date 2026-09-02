@@ -1,22 +1,26 @@
 {
   "chapter": 7,
-  "title": "Numbers One to Ten",
+  "title": "Counting One to Ten",
   "label": "ch:ka-numbers-one-to-ten",
-  "canDo": "I can count from one to ten in Kannada and read the Kannada digits ೧–೧೦ off the page.",
+  "canDo": "I can count from one to ten in Kannada, one word at a time, and read each number word off the page in Kannada letters.",
   "spineNodes": [
     "SPINE-COUNT-ONE-TO-FIVE"
   ],
   "payoff": {
-    "lesson": "KA-C07-numbers-6-10",
+    "lesson": "KA-C07-hattu",
     "kind": "task",
-    "summary": "Count ಒಂದು through ಹತ್ತು aloud, read the digits ೬ ೭ ೮ ೯ ೧೦, and hear the p → h shift that turns Tamil pattu into Kannada hattu.",
+    "summary": "Count ondu through hattu aloud, reading each word in Kannada script, and hear the p to h shift that turns Tamil pattu into Kannada hattu.",
     "assesses": [
-      "KA-LEX-C07-NUMBERS-1-5-01",
-      "KA-ETYMON-C07-NUMBERS-1-5-02",
-      "KA-GRAMMAR-C07-NUMBERS-1-5-03",
+      "KA-LEX-C07-ONDU-01",
+      "KA-LEX-C07-ERADU-01",
+      "KA-LEX-C07-MUURU-01",
+      "KA-LEX-C07-NAALKU-01",
+      "KA-LEX-C07-AIDU-01",
       "KA-LEX-C07-NUMBERS-6-10-01",
-      "KA-ETYMON-C07-NUMBERS-6-10-02",
-      "KA-ETYMON-C07-NUMBERS-6-10-03"
+      "KA-LEX-C07-EELU-01",
+      "KA-ETYMON-C07-NUMBERS-6-10-03",
+      "KA-LEX-C07-OMBATTU-01",
+      "KA-ETYMON-C07-NUMBERS-6-10-02"
     ]
   }
 }

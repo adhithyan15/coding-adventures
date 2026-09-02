@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S132-sign-visarga
 spine_node: SPINE-MEET-GREET
-sequence: 1051
+sequence: 845
 delivery: script
-chapter: 43
+chapter: 38
 type: writing
 headword: "ಃ"
 gloss: the single character ಃ — two dots of breath, the other mark that rides at the end of a syllable

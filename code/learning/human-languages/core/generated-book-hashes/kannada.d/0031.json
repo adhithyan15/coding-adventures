@@ -1,10 +1,10 @@
 {
   "language": "kannada",
   "chapter": 31,
-  "sourceHash": "fnv1a64:cfce14ef2742ea0a",
+  "sourceHash": "fnv1a64:f093015f83ec73f6",
   "lessonIds": [
     "KA-C31-shubha-madhyahna",
-    "KA-S130-letter-ii"
+    "KA-S131-vowel-sign-vocalic-r"
   ],
   "tex": "kannada/book/chapters/ch31-good-afternoon.tex"
 }

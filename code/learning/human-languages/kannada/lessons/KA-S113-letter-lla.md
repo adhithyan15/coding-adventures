@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S113-letter-lla
 spine_node: SPINE-MEET-GREET
-sequence: 376
+sequence: 245
 delivery: script
-chapter: 9
+chapter: 4
 type: writing
 headword: "ಳ"
 gloss: the single character ಳ — recognised inside words you already say
@@ -48,7 +48,6 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 You already say these, and every one of them has ಳ somewhere inside it:
 
 - **ನಾಳೆ ಸಿಗೋಣ** *nāḷe sigōṇa* — see you tomorrow
-- **ಆರು ಏಳು ಎಂಟು ಒಂಬತ್ತು ಹತ್ತು** — six to ten
 
 ## Writing: ಳ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-113] -->

@@ -1,20 +1,21 @@
 {
   "language": "kannada",
   "chapter": 42,
-  "sourceHash": "fnv1a64:4e30e5b75b79b180",
+  "sourceHash": "fnv1a64:6cc44ec38882a75d",
   "lessonIds": [
     "KA-C42-big",
     "KA-C42-small",
     "KA-C42-good",
     "KA-C42-new",
     "KA-C42-old",
-    "KA-C42-adjective-system"
+    "KA-C42-adjective-system",
+    "KA-S133-letter-nya"
   ],
   "voiceLessons": 6,
   "drivablePrefix": 6,
   "text": "kannada/narration/ch42.txt",
   "json": "kannada/narration/ch42.json",
-  "textHash": "fnv1a64:1d3336bb6f8d0025",
-  "jsonHash": "fnv1a64:b4f05ca35fd2e130",
+  "textHash": "fnv1a64:d64d8d459fd3199c",
+  "jsonHash": "fnv1a64:c436e87809fc0528",
   "findings": []
 }

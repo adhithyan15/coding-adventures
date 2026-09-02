@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S146-digit-seven",
+    "language": "kannada",
+    "chapter": 15,
+    "sequence": 437,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6f713f476402dc9b",
+    "detachableSegments": [
+      "Script you'll notice: ೭",
+      "Writing: ೭ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

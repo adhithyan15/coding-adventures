@@ -4,14 +4,14 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:12f92fc1da647044",
+  "sourceHash": "fnv1a64:9d78a4f845c3cb1b",
   "lessons": [
     {
       "id": "KA-C20-hannondu-ippattu",
       "sequence": 480,
       "title": "ಹನ್ನೊಂದು to ಇಪ್ಪತ್ತು — numbers 11–20",
       "headword": "ಹನ್ನೊಂದು — ಇಪ್ಪತ್ತು",
-      "romanization": "",
+      "romanization": "hannondu — ippattu",
       "gloss": "11-20 — additive \"ten-echo\" compounds for the teens, then ಇಪ್ಪತ್ತು (20), compositionally \"two-tens\" from OLD Dravidian roots — though the pieces have shifted enough that it no longer looks like the MODERN words eraḍu/hattu on the surface",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e5f6d95d47961f9",
+      "sourceHash": "fnv1a64:28d083e94f853c86",
       "notice": null,
       "blocks": [
         {
@@ -247,12 +247,12 @@
       ]
     },
     {
-      "id": "KA-S124-letter-pa",
-      "sequence": 491,
-      "title": "ಪ (pa) — one character, met inside words you already say",
-      "headword": "ಪ",
-      "romanization": "pa",
-      "gloss": "the single character ಪ — recognised inside words you already say",
+      "id": "KA-S128-letter-jha",
+      "sequence": 492,
+      "title": "ಝ (jha) — one character, and the pattern it completes",
+      "headword": "ಝ",
+      "romanization": "jha",
+      "gloss": "the single character ಝ — the breathed partner of ಜ, completing a pattern you have met six times",
       "script": "kannada",
       "modality": "pen",
       "derivedModality": "pen",
@@ -261,7 +261,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:10e668a8bbc69773",
+      "sourceHash": "fnv1a64:75e3347eea0c3331",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -269,10 +269,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ಪ",
+          "Script you'll notice: ಝ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಪ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಝ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -288,7 +288,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ಂ — what does it do?"
+              "text": "Before the new one: ಊ — short or long?"
             },
             {
               "kind": "pause",
@@ -298,53 +298,69 @@
             },
             {
               "kind": "speech",
-              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+              "text": "One character this time, and it is the rarest one in this book. That is the reason to meet it now rather than inside a word."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice: ಪ",
+          "title": "Script you'll notice: ಝ",
           "segments": [
             {
               "kind": "speech",
-              "text": "ಪ — pa."
+              "text": "ಝ — jha."
             },
             {
               "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not p, it is pa."
+              "text": "It is ಜ (ja) with a puff of breath behind it. Hold your palm at your mouth: on ja the air stays put, on jha it hits your hand."
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ಪ (pa) somewhere inside it:"
+              "text": "You have met that pairing six times already, in letters you can read:"
             },
             {
               "kind": "speech",
-              "text": "ಪರವಾಗಿಲ್ಲ paravāgilla — it's okay / no problem / you're welcome."
+              "text": "ಕ ka, ಖ kha."
             },
             {
               "kind": "speech",
-              "text": "ಕಪ್ಪು ಬಿಳಿ ಕೆಂಪು ನೀಲಿ — black, white, red, blue."
+              "text": "ಗ ga, ಘ gha."
             },
             {
               "kind": "speech",
-              "text": "ಅಪ್ಪ ಅಮ್ಮ ಅಣ್ಣ ತಮ್ಮ ಅಕ್ಕ ತಂಗಿ — father, mother, and four age-graded sibling words."
+              "text": "ಡ ḍa, ಢ ḍha."
             },
             {
               "kind": "speech",
-              "text": "ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತೀಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ — the twelve lunisolar months."
+              "text": "ದ da, ಧ dha."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ pa, ಫ pha."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬ ba, ಭ bha."
+            },
+            {
+              "kind": "speech",
+              "text": "Two of those sit inside words you say daily — the ಧ of ಧನ್ಯವಾದ dhanyavāda, the ಭ of ಶುಭ śubha. ಝ (jha) takes the same step from ಜ, and its shape keeps the plain letter visible inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "Why it is rare. A native Kannada word will almost never hand you this letter. It writes words Kannada took in from elsewhere — and one of those is coming shortly, which is why you meet it here first."
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಪ — copy what you see",
+          "title": "Writing: ಝ — copy what you see",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಪ (pa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ಝ (jha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -366,33 +382,42 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ಪ (pa) in the ones that have it",
+              "instruction": "at these two and say which one carries the breath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find ಪ in the ones that have it]"
+              "source": "[YOU LOOK: at these two and say which one carries the breath]"
             },
             {
               "kind": "speech",
-              "text": "ಪರವಾಗಿಲ್ಲ, ನಮಸ್ಕಾರ."
+              "text": "ಜ, ಝ (jha)."
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ಪ three times, saying pa as you finish each one",
+              "instruction": "ಝ (jha) three times, pushing the breath out as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ಪ three times, saying *pa* as you finish each one]"
+              "source": "[YOU TRACE: ಝ three times, pushing the breath out as you finish each one]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ಪ once more",
+              "instruction": "at ಧನ್ಯವಾದ and find the breathed letter at the front of it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ಪ once more]"
+              "source": "[YOU LOOK: at ಧನ್ಯವಾದ and find the breathed letter at the front of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ka kha, ga gha, da dha, ba bha\" — then the new one, \"ja jha\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ka kha, ga gha, da dha, ba bha\" — then the new one, \"ja jha\"]"
             }
           ]
         },
@@ -409,7 +434,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ಪ? What sound does it carry? (pa.) Name one word you already say that contains it."
+              "text": "Which character is this — ಝ (jha)? Which plain letter is it built on? (ಜ, ja.) What does the extra stroke stand for? (A puff of breath.) Name one breathed letter you already read inside a word you say."
             }
           ]
         }
