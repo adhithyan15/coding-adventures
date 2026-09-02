@@ -5973,3 +5973,89 @@ git diff --name-only --diff-filter=U
 must be empty, then sweep the branch for leftover markers, then run the **whole
 package suite** rather than the file you edited. Prefer naming the resolved
 files to `git add` over `-A` while a merge is in progress.
+
+## A slot's consumers use its camelCase alias, so grepping the kebab key misses them
+
+Renaming a Mosaic slot `deck-names` → `deck-rows`, I swept the repo for
+`"deck-names"` and found every Rust site. CI then failed on
+`engram-wasm/js/smoke.mjs`, which asserts `demo.props.deckNames` — the host
+converts kebab-case prop keys to camelCase, so **no consumer outside the
+`.mil`/`.mll` files spells the name the way the declaration does**.
+
+The Kotlin, Swift, Dart and C# consumers are the same: `deckNames`,
+`DeckNamesProperty`, `let deckNames: [String]`. A grep for the declared key
+finds the declaration and nothing that reads it.
+
+When renaming a slot, grep **both** spellings, and include the PascalCase one
+for XAML:
+
+```bash
+git grep -n 'deck-names\|deckNames\|DeckNames'
+```
+
+Note that two of the consumer suites — the JS smoke test and
+`engram-app/tests/package_compiles.rs` — are outside the Rust workspace, so
+`cargo test --workspace` does not reach either.
+
+## An emitter that falls through to a sample value binds host data to a constant
+
+`list<list<text>>` — the shape every table slot uses — hit `_ => fallback` in
+the host-binding match on Compose, SwiftUI and Flutter. `fallback` is the
+*sample* value, so the generated shell emitted:
+
+```kotlin
+deckName = mosaicString(hostProps, "deck-name", "Sample DeckName")
+deckRows = emptyList()                       // a constant
+```
+
+Every neighbouring prop read from the host; this one did not. The app compiles,
+launches, and shows an **empty table** whatever the host sends. Nothing errors,
+nothing logs, and the artifact looks entirely reasonable in review.
+
+A catch-all arm in an emitter is not a default, it is a silent feature drop.
+When adding a slot type, check the emitted artifact **binds** it rather than
+merely mentioning it — compare the generated line against a sibling slot of a
+type known to work:
+
+```bash
+grep -h "deckRows\|browserResultCardIds" <emitted shell>
+```
+
+If one reads `hostProps` and the other does not, the type is unhandled. Then
+compile the emitted project; matching text is not evidence.
+
+## Depth limits do not bound breadth
+
+`glyph-parser` capped composite nesting at 10 levels, which reads like a
+complete guard against a malicious font. It is not. Depth bounds the *height*
+of the tree and says nothing about its *width*: a glyph nine levels deep —
+inside the cap — that fans out to eight components per level asks for 8^9, over
+134 million resolutions, from a few hundred bytes.
+
+A recursion guard needs a **total work budget**, not just a depth counter, and
+the test has to build the wide-and-shallow font specifically. A chain deep
+enough to trip the depth limit passes while proving nothing about breadth — my
+first attempt did exactly that, and the assertion on which error fired is what
+exposed it.
+
+## `git add -A` sweeps in whatever else the worktree was mid-way through
+
+Two work streams in one worktree — a deck-list fix and a new glyph-parser crate
+— and `git add -A` put ten files of the half-finished crate into the deck-list
+commit. The PR then carried an unrelated 6,000-line crate, and splitting it
+afterwards meant rebuilding both branches from `origin/main` file by file.
+
+`git status` before committing shows this immediately; the fix is to name the
+paths. Cheap to avoid, tedious to undo.
+
+## `git checkout <branch> -- <file>` destroys an uncommitted edit in that file
+
+Immediately after the above, moving the `lessons.md` write onto its own branch,
+I ran `git checkout feat/... -- lessons.md` to "bring the file across". The edit
+was never committed, so that command replaced my working-tree text with the
+branch's committed version and the write was simply gone — no warning, no
+conflict, nothing in `git status` to notice afterwards.
+
+Uncommitted changes already follow you across `git checkout -b`. There was
+nothing to bring across; the command could only destroy. Commit first, or do
+nothing.
