@@ -2764,13 +2764,25 @@ fn encode_stream_instr(
     // task #97): same "no vendored corpus file exercises this flat/
     // stream form" deferral as `table.grow`/`table.size`/`table.fill`
     // above -- `table_init.wast`/`table_copy.wast` only ever use folded
-    // syntax (confirmed by direct census, `code/specs/
-    // W17-wasm-bulk-table-ops.md`). `table.init` still needs a real
-    // elem-segment index (unlike table/memory indices, WHICH segment to
-    // read from can't be hardcoded), so this consumes ONE following
-    // token even in this deferred form; `table.copy` needs no immediate
-    // token at all (both table operands are 0); `elem.drop` needs a real
-    // elem-segment index, same shape as `data.drop`.
+    // syntax, so this deferred form's hardcoded-table-0 behavior is still
+    // fine. CORRECTION (W36, `code/specs/
+    // W36-wasm-element-segment-exprs-list.md`'s own "Correction to
+    // Addendum 2" section): the W17 census this comment used to cite for
+    // that claim never separately checked whether the folded syntax
+    // always supplies BOTH of `table.init`'s/`table.copy`'s OPTIONAL
+    // leading index atoms -- it does not (the real grammar lets both
+    // default to 0 for `table.copy`, and lets `table.init`'s table index
+    // default to 0), and the FOLDED form's own encoder
+    // (`encode_table_init_flat`/`encode_table_copy_flat`, reached via
+    // `encode_flat_instr` below) now detects that arity itself. This
+    // deferred/flat form is unaffected -- it was never reachable by any
+    // corpus file with a non-default table index anyway. `table.init`
+    // still needs a real elem-segment index (unlike table/memory
+    // indices, WHICH segment to read from can't be hardcoded), so this
+    // consumes ONE following token even in this deferred form;
+    // `table.copy` needs no immediate token at all (both table operands
+    // are 0); `elem.drop` needs a real elem-segment index, same shape as
+    // `data.drop`.
     if name == "table.init" {
         let idx = resolve_idx(&icx.module.elem_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "elem")?;
         out.push(0xFC);
@@ -3808,20 +3820,52 @@ fn encode_table_fill_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>)
 /// its own `#[inline(never)]` function for the same stack-frame-bloat
 /// reason `encode_table_grow_flat`'s own doc comment explains (task
 /// #98). LEADING immediates, matching `"call" | "return_call"`'s own
-/// folded shape -- unlike `table.grow`/`table.size`/`table.fill`'s
-/// single OPTIONAL table index, `table.init` always takes TWO required
-/// leading tokens: the target table (`$t`) THEN the source elem segment
-/// (`$e`), in that TEXT order -- but the real BINARY encoding is
+/// folded shape -- but unlike that fixed-arity precedent, the real
+/// grammar makes the LEADING table index itself optional (W36's own
+/// "Correction" section, `code/specs/
+/// W36-wasm-element-segment-exprs-list.md`):
+///
+/// ```text
+/// 'table.init' x:tableidx_I y:elemidx_I  ⟹  table.init x y
+/// 'table.init' y:elemidx_I               ≡  table.init 0 y
+/// ```
+///
+/// The elem index can never be omitted (which segment to read from can't
+/// be inferred), so there are exactly two shapes to disambiguate: TWO
+/// leading atoms (`$t $e`, today's only previously-handled case) or ONE
+/// leading atom (`$e` alone, table implicit 0) -- never zero. The
+/// disambiguator is simply "is `args[1]` ALSO an atom" -- every real
+/// stack operand is written as a parenthesized folded instruction (even
+/// a zero-operand one, e.g. `(nop)`), so a bare atom can never be
+/// anything OTHER than an index in this position, and a list can never
+/// be anything BUT a stack operand; there is no way for a legitimate
+/// index to be misread as an operand or vice versa.
+///
+/// Once the two indices are resolved, the real BINARY encoding is
 /// `elemidx` FIRST, `tableidx` SECOND (`0xFC 0x0C <elemidx> <tableidx>`,
 /// same "segment index, then target index" convention `memory.init`'s
 /// own `0xFC 0x08 <dataidx> <memidx>` already establishes), so the two
 /// resolved indices are written in the OPPOSITE order from how they're
-/// read here.
+/// read here -- unaffected by which text-format shape was used.
 #[inline(never)]
 fn encode_table_init_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
-    let table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 0)?, "table")?;
-    let elem_idx = resolve_idx(&icx.module.elem_names, expect_get(args, 1)?, "elem")?;
-    encode_instr_list(&args[2..], icx, out)?;
+    let two_leading_atoms = matches!(args.first(), Some(SExpr::Atom(..))) && matches!(args.get(1), Some(SExpr::Atom(..)));
+    let (table_idx, elem_idx, operands) = if two_leading_atoms {
+        let table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 0)?, "table")?;
+        let elem_idx = resolve_idx(&icx.module.elem_names, expect_get(args, 1)?, "elem")?;
+        (table_idx, elem_idx, &args[2..])
+    } else {
+        // Exactly one leading atom (the elem-only abbreviation) -- or, for
+        // genuinely malformed input with zero leading atoms, `expect_get`/
+        // `resolve_idx` below still produce the correct "expected an index"
+        // error against `args[0]` (a list), matching this function's own
+        // pre-existing error-shape convention. Either way, the table index
+        // NEVER gets resolved against `table_names` here -- there is no
+        // atom left over to misread as one.
+        let elem_idx = resolve_idx(&icx.module.elem_names, expect_get(args, 0)?, "elem")?;
+        (0, elem_idx, &args[1..])
+    };
+    encode_instr_list(operands, icx, out)?;
     out.push(0xFC);
     out.push(0x0C);
     out.extend(wasm_leb128::encode_unsigned(elem_idx as u64));
@@ -3831,14 +3875,38 @@ fn encode_table_init_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>)
 
 /// `table.copy $dst $src (dest)(src)(len)` (task #97) — folded form. See
 /// [`encode_table_init_flat`]'s doc comment for why this is its own
-/// function. Unlike `table.init`, the TEXT and BINARY operand orders
-/// match (`0xFC 0x0E <dst_tableidx> <src_tableidx>`, destination first
-/// both times) -- no reordering needed.
+/// function, and for the general shape of this crate's optional-leading-
+/// index disambiguation (reused here). Unlike `table.init`, `table.copy`
+/// is fully symmetric: the real grammar has NO "exactly one index"
+/// abbreviation, only "both present" or "both absent" (W36's own
+/// "Correction" section):
+///
+/// ```text
+/// 'table.copy' x₁:tableidx_I x₂:tableidx_I  ⟹  table.copy x₁ x₂
+/// 'table.copy'                              ≡  table.copy 0 0
+/// ```
+///
+/// so the check is a simple "is `args[0]` an atom at all" -- zero leading
+/// atoms means both tables default to 0 and zero atoms are consumed;
+/// otherwise (two leading atoms) today's behavior is unchanged. As with
+/// `table.init` above, every real stack operand is a parenthesized list,
+/// never a bare atom, so this can't be tricked into skipping a real
+/// index by a cleverly-shaped operand.
+///
+/// The TEXT and BINARY operand orders match (`0xFC 0x0E <dst_tableidx>
+/// <src_tableidx>`, destination first both times) -- no reordering
+/// needed, unlike `table.init` above.
 #[inline(never)]
 fn encode_table_copy_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
-    let dst_table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 0)?, "table")?;
-    let src_table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 1)?, "table")?;
-    encode_instr_list(&args[2..], icx, out)?;
+    let (dst_table_idx, src_table_idx, operands) = match args.first() {
+        Some(expr @ SExpr::Atom(..)) => {
+            let dst_table_idx = resolve_idx(&icx.module.table_names, expr, "table")?;
+            let src_table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 1)?, "table")?;
+            (dst_table_idx, src_table_idx, &args[2..])
+        }
+        _ => (0, 0, args),
+    };
+    encode_instr_list(operands, icx, out)?;
     out.push(0xFC);
     out.push(0x0E);
     out.extend(wasm_leb128::encode_unsigned(dst_table_idx as u64));
@@ -4205,8 +4273,12 @@ fn encode_flat_instr(
     // grow`/`table.size`/`table.fill` above, for the identical stack-
     // frame-bloat reason -- `table_init.wast`/`table_copy.wast` (unlike
     // `table_grow.wast`) exclusively use FOLDED syntax for these three,
-    // confirmed by direct census (`code/specs/W17-wasm-bulk-table-ops.
-    // md`), so this is where the real work happens.
+    // so this is where the real work happens, INCLUDING resolving
+    // `table.init`'s/`table.copy`'s optional leading index atoms (W36,
+    // see `encode_table_init_flat`'s/`encode_table_copy_flat`'s own doc
+    // comments -- a prior version of this comment claimed, citing a now-
+    // superseded W17 census, that the folded syntax always supplies both
+    // indices; it does not).
     if name == "table.init" {
         return encode_table_init_flat(args, icx, out);
     }
@@ -6185,6 +6257,113 @@ mod tests {
         )
         .unwrap();
         assert_eq!(code_of(&drop, 1), &[0xFC, 0x0D, 0x00, 0x0B]);
+    }
+
+    /// W36 ("Correction to Addendum 2"): `table.copy` with ZERO leading
+    /// index atoms -- the real grammar's own backward-compatible
+    /// abbreviation, `'table.copy' ≡ table.copy 0 0` -- must resolve both
+    /// tables to 0 and consume no atoms from `args`, exactly like
+    /// `table_copy.wast`'s/`table_copy64.wast`'s own dominant fixture
+    /// shape (`(table.copy (local.get $targetOffs) (local.get $srcOffs)
+    /// (local.get $len))`). Before this fix, `args[0]` (the first stack
+    /// operand, a `SExpr::List`) was unconditionally fed to `resolve_idx`
+    /// against `table_names`, producing `"expected an index or
+    /// $identifier, found list"`.
+    #[test]
+    fn table_copy_folded_form_with_zero_leading_indices_defaults_both_tables_to_zero() {
+        let m = parse_module(
+            r#"(module (table $t 30 30 funcref)
+                 (func (param $a i32) (param $b i32) (param $c i32)
+                   (table.copy (local.get $a) (local.get $b) (local.get $c))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[
+                0x20, 0x00, // local.get $a
+                0x20, 0x01, // local.get $b
+                0x20, 0x02, // local.get $c
+                0xFC, 0x0E, 0x00, 0x00, // table.copy dst=0 src=0
+                0x0B,
+            ]
+        );
+    }
+
+    /// W36: `table.copy` with its full TWO leading index atoms must keep
+    /// resolving exactly as before this fix (regression guard for the
+    /// arity-detection branch added alongside the zero-atom case above).
+    #[test]
+    fn table_copy_folded_form_with_two_leading_indices_is_unchanged() {
+        let m = parse_module(
+            r#"(module
+                 (table $t0 30 30 funcref) (table $t1 30 30 funcref)
+                 (func (table.copy $t1 $t0 (i32.const 20) (i32.const 15) (i32.const 5))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[
+                0x41, 20, // i32.const 20 (dest)
+                0x41, 15, // i32.const 15 (src)
+                0x41, 5, // i32.const 5 (len)
+                0xFC, 0x0E, 0x01, 0x00, // table.copy dst=1 src=0
+                0x0B,
+            ]
+        );
+    }
+
+    /// W36: `table.init` with exactly ONE leading atom -- the real
+    /// grammar's own backward-compatible abbreviation, `'table.init'
+    /// y:elemidx_I ≡ table.init 0 y` -- must resolve that atom against
+    /// `elem_names` (NOT `table_names`) with the table index implicitly
+    /// 0, exactly like `table_init.wast`'s/`table_init64.wast`'s/
+    /// `bulk.wast`'s own dominant fixture shape (`(table.init 1
+    /// (i32.const 12) (i32.const 1) (i32.const 1))`). Before this fix,
+    /// the single atom was wrongly resolved against `table_names`
+    /// instead (producing `unknown table identifier` for a name like
+    /// `$p` that only exists in `elem_names`, or consuming the wrong
+    /// atom entirely for a numeric literal).
+    #[test]
+    fn table_init_folded_form_with_one_leading_atom_resolves_it_as_the_elem_index() {
+        let m = parse_module(
+            r#"(module
+                 (func) (table $t 30 30 funcref) (elem $e (table $t) (i32.const 0) func 0)
+                 (func (table.init $e (i32.const 1) (i32.const 0) (i32.const 4))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 1),
+            &[
+                0x41, 0x01, // i32.const 1 (dest)
+                0x41, 0x00, // i32.const 0 (src)
+                0x41, 0x04, // i32.const 4 (len)
+                0xFC, 0x0C, 0x00, 0x00, // table.init elemidx=0 tableidx=0
+                0x0B,
+            ]
+        );
+    }
+
+    /// W36: `table.init` with its full TWO leading index atoms must keep
+    /// resolving exactly as before this fix (regression guard for the
+    /// arity-detection branch added alongside the one-atom case above).
+    #[test]
+    fn table_init_folded_form_with_two_leading_indices_is_unchanged() {
+        let m = parse_module(
+            r#"(module
+                 (func) (table $t 30 30 funcref) (elem $e (table $t) (i32.const 0) func 0)
+                 (func (table.init $t $e (i32.const 1) (i32.const 0) (i32.const 4))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 1),
+            &[
+                0x41, 0x01, // i32.const 1 (dest)
+                0x41, 0x00, // i32.const 0 (src)
+                0x41, 0x04, // i32.const 4 (len)
+                0xFC, 0x0C, 0x00, 0x00, // table.init elemidx=0 tableidx=0
+                0x0B,
+            ]
+        );
     }
 
     /// Task #98: `table.size`'s folded form resolves a REAL leading `$t`
