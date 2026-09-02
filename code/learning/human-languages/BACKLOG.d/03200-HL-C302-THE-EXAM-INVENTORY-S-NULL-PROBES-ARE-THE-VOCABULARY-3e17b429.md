@@ -1,10 +1,9 @@
 ## HL-C302 — the exam inventory's null probes ARE the vocabulary work queue, and a tranche that leaves them null under-reports itself
 
-The Hindi pre-A1 vocabulary round-four tranche (chapters 68-74, 35 headwords)
-started from `npm run plan`, which named `vocabulary/hindi/pre-A1` — *teaches 155
-distinct headwords at or below pre-A1, against 300* — and nothing else about
-which 35 words to pick. The plan cannot say which words, because the vocabulary
-item is a COUNT.
+The Hindi pre-A1 vocabulary round-four tranche started from `npm run plan`,
+which named `vocabulary/hindi/pre-A1` — *teaches 155 distinct headwords at or
+below pre-A1, against 300* — and nothing else about which words to pick. The
+plan cannot say which words, because the vocabulary item is a COUNT.
 
 The words were chosen from a different artifact entirely: the 127 uncovered
 points in `core/exam-inventory-hindi-a1.json`, every one of which carries a
@@ -16,12 +15,22 @@ had to use them as one.
 
 **Choosing by exam point rather than by topic changed the answer.** A round of
 five-word topic chapters chosen for coherence closed roughly two points per
-chapter. Choosing for exam demand closed 18 points across 7 chapters, and one
-chapter — `aaj`, `bhi`, `bahut`, `kab`, `kyon` — closed five points with five
-words, because the inventory had enumerated each of them as its own demand. A
-health-vocabulary chapter was designed, measured at ONE point, and cut for that
-chapter instead. That trade is only visible if the inventory is consulted while
-choosing, not after authoring.
+chapter. Choosing for exam demand closed 18 points across 7 chapters as first
+measured, and one chapter — `aaj`, `bhi`, `bahut`, `kab`, `kyon` — closed five
+points with five words, because the inventory had enumerated each of them as its
+own demand. A health-vocabulary chapter was designed, measured at ONE point, and
+cut for that chapter instead. That trade is only visible if the inventory is
+consulted while choosing, not after authoring.
+
+WHAT SHIPPED, AND THE HAZARD THAT CHANGED IT. The tranche shipped as **33 words
+in chapters 75-81**, closing **16** points, 176/282 -> 192/282. It was authored
+against chapters 68-74; #14113 merged into those seven numbers first, and both
+tranches had been chosen from the SAME uncovered list, so both taught `kab` and
+`kyon` and both closed HI-A1-Q-07 and HI-A1-Q-08. That is the sharp edge of this
+entry's own advice: **an uncovered-point list is a shared queue, and two authors
+reading it in parallel will pick the same words.** Two of the five words in the
+`aaj`/`bhi`/`bahut`/`kab`/`kyon` chapter were cut for exactly that reason. Claim
+the points you intend to close before authoring, or expect to cut.
 
 ### The trap: the probe does not fill itself
 
@@ -36,7 +45,7 @@ to say what is still missing. Skip it and the tranche teaches 35 words and
 reports **zero** movement — 155/282 before, 155/282 after — which reads exactly
 like a tranche that taught nothing. That was measured on this branch: coverage
 sat at 155/282 with all 35 lessons authored, green, and merged into the book,
-and moved to 173/282 only when the 18 probes were filled.
+and moved only when the probes were filled.
 
 The note rewrite is not optional politeness. `HI-A1-LEX-56` claimed "`desh` is
 not taught either"; leaving that sentence in place beside a filled probe is a
@@ -49,7 +58,7 @@ thin-atom count 54 -> 68. The +14 was not diffuse. Inside a five-lesson chapter
 each word is retrieved by the lessons that follow it, so words 1, 2 and 3
 accumulate revisits and words **4 and 5 have nowhere left to go** -- one later
 practise each, against the two the gate asks for. Twelve of the fourteen were
-exactly the fourth and fifth atom of chapters 68-73.
+exactly the fourth and fifth atom of the first six chapters.
 
 The fix is not a pin reseat and not more drills inside the chapter, because the
 shortfall is at the boundary. Every chapter-OPENING lesson declares the two
@@ -58,15 +67,16 @@ both by name in its Warm-up and Guided Practice; the second lesson of each
 chapter picks up the one still short. That is four frontmatter lines per lesson
 -- `prerequisites`, `requires.knowledge`, `practises.knowledge` and
 `reviews_of` -- plus one retrieval bullet, and a reworded Warm-up in each
-chapter opener. Twelve lessons, opening chapters 69 to 74: 68 -> 56.
+chapter opener. Twelve lessons, opening the tranche's second through seventh
+chapters: 68 -> 56.
 
 The last three came from the same rule applied one step further back, in the
-two lessons that open chapter 68. They reach past the A1 name-field runway to
-`ghas` and `kuan`, the final two words of the PREVIOUS vocabulary run, and pick
-up the runway's own payoff atom on the way. All three had been sitting at the
-end of the corpus with their windows unjudged and became judgeable the moment
-35 lessons were appended after them. 56 -> 53, below where the tranche
-started.
+two lessons that open the tranche's first chapter. They reach past the A1
+name-field runway to `ghas` and `kuan`, the final two words of the PREVIOUS
+vocabulary run, and pick up the runway's own payoff atom on the way. All three
+had been sitting at the end of the corpus with their windows unjudged and became
+judgeable the moment the tranche was appended after them. 56 -> 53, below where
+the tranche started.
 
 Two general points fall out. **Appending makes previously-unjudged tail atoms
 judgeable**, so a tranche inherits the previous tranche's tail whether it wants
