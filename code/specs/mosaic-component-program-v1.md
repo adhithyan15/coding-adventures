@@ -63,8 +63,24 @@ This program is largely reconciliation, not invention. Verified against `main`.
 
 ### Four gaps that block the method
 
-1. **MosaicBook is not in CI.** No workflow references it. "Tested in isolation
-   in MosaicBook and then committed" is currently a manual habit, not a gate.
+1. **MosaicBook cannot story the components this repo actually has, and is not
+   in CI.** Two problems, and the first is the deeper one.
+
+   *Stories are structurally unavailable.* `loadStoriesFile` is called from
+   exactly one place — inside MosaicBook's single-file `.mosaic` walk
+   (`stories.go:367`). `threeFileComponent` never calls it; it hardcodes
+   `Stories: [{Name: "Default", Fixtures: {}}]` at `stories.go:169`. Since
+   three-file UI29 is, in MosaicBook's own README, "what every component in this
+   repo uses", **every** component previews as one Default story with every slot
+   empty. Measured: **63 `.mll` components in `code/packages/`, and 0
+   `.stories.json` files.** No variant, size, error, overflow, or populated
+   state has ever been previewable for any component — and the tool reports
+   success while doing it. ([#14031](https://github.com/adhithyan15/coding-adventures/issues/14031))
+
+   *And no workflow runs it.* "Tested in isolation in MosaicBook and then
+   committed" is a manual habit, not a gate — but gating it while stories cannot
+   exist would certify 63 components on empty fixtures, so #14031 lands
+   first.
 2. **MosaicBook is browser-only.** It compiles HTML, Web Component, and React.
    Qt, SwiftUI, XAML, Compose, and Flutter are not previewable, so isolation
    testing cannot see the backends most likely to break.
@@ -204,9 +220,11 @@ Every component already built gets released with a test app that can be
 downloaded and run, and a showcase page that links to it. Nothing here requires
 a new component; it is entirely the "done" contract applied to existing work.
 
-- **A1 — the four Phase 0 gaps:** MosaicBook in CI ([#14012](https://github.com/adhithyan15/coding-adventures/issues/14012)),
-  native previews ([#14013](https://github.com/adhithyan15/coding-adventures/issues/14013)), publishing ([#14014](https://github.com/adhithyan15/coding-adventures/issues/14014)),
-  the test-app lane ([#14015](https://github.com/adhithyan15/coding-adventures/issues/14015)).
+- **A1 — the Phase 0 gaps, in this order:** stories for three-file components
+  ([#14031](https://github.com/adhithyan15/coding-adventures/issues/14031)) — because a CI gate over impossible stories certifies
+  nothing — then MosaicBook in CI ([#14012](https://github.com/adhithyan15/coding-adventures/issues/14012)), native previews
+  ([#14013](https://github.com/adhithyan15/coding-adventures/issues/14013)), publishing ([#14014](https://github.com/adhithyan15/coding-adventures/issues/14014)), and the
+  per-component demo-app lane ([#14015](https://github.com/adhithyan15/coding-adventures/issues/14015)).
 - **A2 — a Mosaic section on GitHub Pages** ([#14026](https://github.com/adhithyan15/coding-adventures/issues/14026)). The repository already deploys 18
   sub-sites this way (`destination_dir: arithmetic`, `engram`,
   `language-ladder`, …), so this is a new `destination_dir: mosaic` and a
