@@ -1,16 +1,30 @@
 {
   "language": "german",
   "chapter": 6,
-  "sourceHash": "fnv1a64:6866acd0f8171296",
+  "sourceHash": "fnv1a64:d50f6c0ac4fa6ed5",
   "lessonIds": [
+    "GE-C06-eins",
+    "GE-C06-zwei",
+    "GE-C06-drei",
+    "GE-C06-grimm",
+    "GE-C06-vier",
+    "GE-C06-fuenf",
     "GE-C06-zahlen-1-5",
-    "GE-C06-zahlen-6-10"
+    "GE-C06-ein-eine",
+    "GE-C06-sechs",
+    "GE-C06-sieben",
+    "GE-C06-acht",
+    "GE-C06-neun",
+    "GE-C06-zehn",
+    "GE-C06-zahlen-6-10",
+    "GE-C06-monate-latein",
+    "GE-C06-practice"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 16,
+  "drivablePrefix": 16,
   "text": "german/narration/ch06.txt",
   "json": "german/narration/ch06.json",
-  "textHash": "fnv1a64:44ef522197d162f6",
-  "jsonHash": "fnv1a64:fdc1829a825239c4",
+  "textHash": "fnv1a64:eea7ae574e0928a4",
+  "jsonHash": "fnv1a64:dc4fde5befc77dc6",
   "findings": []
 }

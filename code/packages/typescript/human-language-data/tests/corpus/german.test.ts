@@ -8,9 +8,9 @@ it("pins German continuity", () => expectLanguageContinuity("german"));
 it("pins German modality", () => expectLanguageModality("german"));
 it("pins German lesson-content budgets", () =>
   expectLanguageLessonBudgets("german", {
-    lessons: 139,
+    lessons: 155,
     idioms: 1,
     senses: 5,
-    cultureClaims: 14,
+    cultureClaims: 15,
     unitPrefix: "GE",
   }));
