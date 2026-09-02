@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:de2729c5f502c996",
+  "sourceHash": "fnv1a64:b6c8f1de756acfd9",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:510d5c117cc597ef",
+      "sourceHash": "fnv1a64:2a2cbd495648d6c5",
       "notice": null,
       "blocks": [
         {
@@ -186,7 +186,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which “you” opens a respectful first meeting? (آپ, āp.) Now add the question word."
+              "text": "Which “you” opens a respectful first meeting? (āp.) Now add the question word."
             }
           ]
         },
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read right to left: ک k, ی supplying the y glide here, then ا long ā. The same ی carried long ī in جی and نہیں. Its job depends on the word; here the learned shape is kyā."
+              "text": "Read right to left: ک k, ی supplying the y glide here, then ا long ā. The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
             }
           ]
         },
@@ -257,7 +257,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which letter acts as y here but as long ī in جی? (ی.) What does کیا (kyā) mean? (What.)"
+              "text": "Which letter acts as y here but as long ī in jī? (ی.) What does کیا (kyā) mean? (What.)"
             },
             {
               "kind": "activity",

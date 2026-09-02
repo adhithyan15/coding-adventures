@@ -60,12 +60,12 @@ Not one new shape — a whole verb you can read straight off.
 ## Grammar Lens: all four in the frame
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-LIKHNA, UR-LEX-SOCHNA, UR-LEX-SAMAJHNA, UR-LEX-PARHNA, UR-SCRIPT-MAIN-HUN, UR-LEX-BOLNA] -->
 
-> **میں لکھتا ہوں** — *maiṅ likhtā hūṅ* — **I write** (man speaking)
-> **میں لکھتی ہوں** — *maiṅ likhtī hūṅ* — **I write** (woman speaking)
+> *maiṅ likhtā hūṅ* — **I write** (man speaking)
+> *maiṅ likhtī hūṅ* — **I write** (woman speaking)
 
 Run the chapter through that frame without changing anything but the stem:
 *maiṅ sochtā hūṅ*, *maiṅ samajhtā hūṅ*, *maiṅ paṛhtā hūṅ*, *maiṅ likhtā hūṅ*.
-One machine, four verbs, and **میں ہوں** holding the ends of every sentence.
+One machine, four verbs, and *maiṅ … hūṅ* holding the ends of every sentence.
 
 ## The word, taken apart — the deed is inherited, the desk is borrowed
 <!-- hl-knowledge: introduces=[UR-REGISTER-WRITING-BORROWED]; assesses=[UR-LEX-LIKHNA, UR-REGISTER-INDO-ARYAN-CORE, UR-ETYMON-SOCHNA-GRIEVE, UR-ETYMON-SAMAJHNA-WAKE, UR-ETYMON-PARHNA-RECITE] -->
@@ -79,9 +79,11 @@ scratching.
 
 Now the part only Urdu can show you. All four verbs of this chapter are inherited
 Indo-Aryan, the plain floor of the language — but the **things** writing needs
-are borrowed to a word: **قلم** *qalam*, the pen, Arabic from Greek *kálamos*, “a
-reed”; **کتاب** *kitāb*, the book, from the Arabic root *k-t-b*, “to write”; and
-**نستعلیق** *nastaʿlīq*, the Persian name of the flowing hand Urdu is set in. The
+are borrowed to a word: *qalam*, the pen, Arabic from Greek *kálamos*, “a
+reed”; *kitāb*, the book, from the Arabic root *k-t-b*, “to write”; and
+*nastaʿlīq*, the Persian name of the flowing hand Urdu is set in. All three are
+printed the way you say them: each is spelled with letters still ahead of you.
+The
 deed is inherited; the equipment came by ship.
 
 ## Guided Practice
@@ -90,7 +92,7 @@ deed is inherited; the equipment came by ship.
 - [YOU SAY: **likhnā** — to write; then the stem **likh-**]
 - [YOU RUN: all four — *sochnā, samajhnā, paṛhnā, likhnā* — stripping each stem]
 - [YOU SAY: the four in the frame — *maiṅ sochtā hūṅ* … *maiṅ likhtā hūṅ*]
-- [YOU NAME: which letter is **چ**, which is **ڑ**, and what **ھ** does to a neighbour]
+- [YOU NAME: which letter is *che*, which is *ṛe*, and what **ھ** does to a neighbour]
 - [YOU TRACE: *soch-* from grieving, *samajh-* from waking, *paṛh-* from reciting]
 - [YOU SORT: **likhnā** inherited; **qalam** and **kitāb** borrowed]
 
@@ -102,4 +104,4 @@ deed is inherited; the equipment came by ship.
 *likhati* mean before it meant “write”? (**Scratches**.) Which layer of Urdu does
 *qalam* belong to? (**The borrowed one**.)
 
-Sources: [Wiktionary: لکھنا](https://en.wiktionary.org/wiki/%D9%84%DA%A9%DA%BE%D9%86%D8%A7); [Wiktionary: قلم](https://en.wiktionary.org/wiki/%D9%82%D9%84%D9%85#Arabic).
+Sources: [Wiktionary: لکھنا](https://en.wiktionary.org/wiki/%D9%84%DA%A9%DA%BE%D9%86%D8%A7); [Wiktionary: *qalam*](https://en.wiktionary.org/wiki/%D9%82%D9%84%D9%85#Arabic).

@@ -55,17 +55,17 @@ letter from Chapter 9 makes a second appearance.
 
 From the right edge: **چ** *ch*, already yours from *sochnā* and
 *samajhnā*; then **ا** long *ā*; then **ئ**, hamza-ye, the vowel-glide
-letter **بھائی** introduced; then **ے**, broad final *e* from *kaise*.
-**چائے**'s **ئ** does the same job it did in **بھائی**: keeping **ā** and
+letter *bhāī* introduced; then **ے**, broad final *e* from *kaise*.
+**چائے**'s **ئ** does the same job it did in *bhāī*: keeping **ā** and
 the vowel after it from colliding.
 
-## The word, taken apart — the same road as خدا and حافظ (*hāfiz*)
+## The word, taken apart — the same road as *khudā* and *hāfiz* (*hāfiz*)
 <!-- hl-knowledge: introduces=[UR-ETYMON-CHAI-SILKROAD]; assesses=[UR-LEX-CHAI, UR-ETYMON-KHUDA-PERSIAN] -->
 
 **چائے** is borrowed from Classical Persian **چای** (*chāy*), which traces
 back to Northern Chinese **chá**, carried overland through Central Asia
-into Persian before Urdu ever had it. That is the same road **خدا** and
-**دل** travelled in earlier chapters — Persian into Urdu — just with a
+into Persian before Urdu ever had it. That is the same road *khudā* and
+*dil* travelled in earlier chapters — Persian into Urdu — just with a
 Chinese starting point this time instead of one further west.
 
 Tea that instead reached Europe by **sea** kept a different form, from
@@ -87,6 +87,6 @@ travelled by land or by water.
 [PAUSE 3s] Which three languages did **چائے** pass through, in order?
 (**Chinese, then Persian, then Urdu.**) Why does English say "tea" instead
 of "chai"? (**It arrived by sea, carrying a different Chinese form.**)
-Which earlier Urdu word already used the hamza-ye letter? (**بھائی**.)
+Which earlier Urdu word already used the hamza-ye letter? (*bhāī*.)
 
 Sources: [Wiktionary: چائے](https://en.wiktionary.org/wiki/%DA%86%D8%A7%D8%A6%DB%92).
