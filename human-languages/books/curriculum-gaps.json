@@ -26,10 +26,10 @@
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 39,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 576,
-    "scriptExposureExemptedGlyphs": 2046,
+    "scriptClosureViolations": 547,
+    "scriptExposureExemptedGlyphs": 2133,
     "tracksTeachingNoScript": 0,
-    "headwordsWithoutRomanization": 188,
+    "headwordsWithoutRomanization": 118,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 585,
@@ -72267,10 +72267,10 @@
         "taughtGlyphs": 45,
         "shownGlyphs": 57,
         "neverTaughtGlyphs": 12,
-        "violations": 68,
-        "exposureOnly": 27,
-        "exposureExemptedGlyphs": 39,
-        "headwordsWithoutRomanization": 71
+        "violations": 39,
+        "exposureOnly": 56,
+        "exposureExemptedGlyphs": 126,
+        "headwordsWithoutRomanization": 1
       },
       {
         "language": "japanese",
@@ -72613,13 +72613,6 @@
         "count": 15
       },
       {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "कतदधनमयरवशसािु्",
-        "count": 15
-      },
-      {
         "lessonId": "PA-C13-dil",
         "language": "punjabi",
         "chapter": 13,
@@ -72844,20 +72837,6 @@
         "count": 12
       },
       {
-        "lessonId": "HI-C01-alvida",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "अकदयरलवशािु्",
-        "count": 12
-      },
-      {
-        "lessonId": "HI-C01-shukriya",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "कदधनयरवशािु्",
-        "count": 12
-      },
-      {
         "lessonId": "ML-C02-practice",
         "language": "malayalam",
         "chapter": 2,
@@ -72960,13 +72939,6 @@
         "language": "bengali",
         "chapter": 14,
         "glyphs": "খগঙতধবমশুে্",
-        "count": 11
-      },
-      {
-        "lessonId": "HI-C01-namaskar",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "ःकतनमरसाृे्",
         "count": 11
       },
       {
@@ -73439,6 +73411,13 @@
         "count": 8
       },
       {
+        "lessonId": "HI-C01-dhanyavad",
+        "language": "hindi",
+        "chapter": 1,
+        "glyphs": "कतमरशसिु",
+        "count": 8
+      },
+      {
         "lessonId": "KA-C05-kelasa-maadu",
         "language": "kannada",
         "chapter": 5,
@@ -73712,13 +73691,6 @@
         "count": 7
       },
       {
-        "lessonId": "HI-C02-khushi",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "आईलह़ीु",
-        "count": 7
-      },
-      {
         "lessonId": "HI-C02-practice",
         "language": "hindi",
         "chapter": 2,
@@ -73894,10 +73866,10 @@
         "count": 6
       },
       {
-        "lessonId": "HI-C16-mahine",
+        "lessonId": "HI-C01-alvida",
         "language": "hindi",
-        "chapter": 16,
-        "glyphs": "ईघढफभौ",
+        "chapter": 1,
+        "glyphs": "कयरशु्",
         "count": 6
       },
       {
@@ -74419,10 +74391,24 @@
         "count": 4
       },
       {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
+        "lessonId": "HI-C01-namaskar",
+        "language": "hindi",
+        "chapter": 1,
+        "glyphs": "ःतृे",
+        "count": 4
+      },
+      {
+        "lessonId": "HI-C01-shukriya",
+        "language": "hindi",
+        "chapter": 1,
+        "glyphs": "दधनव",
+        "count": 4
+      },
+      {
+        "lessonId": "HI-C02-khushi",
         "language": "hindi",
         "chapter": 2,
-        "glyphs": "आयहै",
+        "glyphs": "आईलह",
         "count": 4
       },
       {
@@ -74433,24 +74419,10 @@
         "count": 4
       },
       {
-        "lessonId": "HI-C09-maaf-kijiye",
+        "lessonId": "HI-C16-mahine",
         "language": "hindi",
-        "chapter": 9,
-        "glyphs": "एफ़ृ",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C34-padhna",
-        "language": "hindi",
-        "chapter": 34,
-        "glyphs": "ईछढौ",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C39-aurat",
-        "language": "hindi",
-        "chapter": 39,
-        "glyphs": "ईऔथभ",
+        "chapter": 16,
+        "glyphs": "घढभौ",
         "count": 4
       },
       {
@@ -74741,20 +74713,6 @@
         "count": 3
       },
       {
-        "lessonId": "HI-C03-thik",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "ँठड",
-        "count": 3
-      },
-      {
-        "lessonId": "HI-C05-bolta-hun",
-        "language": "hindi",
-        "chapter": 5,
-        "glyphs": "ँआब",
-        "count": 3
-      },
-      {
         "lessonId": "HI-C08-kripaya",
         "language": "hindi",
         "chapter": 8,
@@ -74762,17 +74720,24 @@
         "count": 3
       },
       {
-        "lessonId": "HI-C12-bhaai-bahin",
-        "language": "hindi",
-        "chapter": 12,
-        "glyphs": "ईबभ",
-        "count": 3
-      },
-      {
         "lessonId": "HI-C22-gyarah-bees",
         "language": "hindi",
         "chapter": 22,
         "glyphs": "उऊौ",
+        "count": 3
+      },
+      {
+        "lessonId": "HI-C34-padhna",
+        "language": "hindi",
+        "chapter": 34,
+        "glyphs": "ईछौ",
+        "count": 3
+      },
+      {
+        "lessonId": "HI-C39-aurat",
+        "language": "hindi",
+        "chapter": 39,
+        "glyphs": "ईथभ",
         "count": 3
       },
       {
@@ -75266,27 +75231,6 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C02-aap-tum",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "आु",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "है",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C03-aapka-swagat-hai",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "आग",
-        "count": 2
-      },
-      {
         "lessonId": "HI-C03-kaise",
         "language": "hindi",
         "chapter": 3,
@@ -75294,66 +75238,10 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C04-phir-milenge",
+        "lessonId": "HI-C03-thik",
         "language": "hindi",
-        "chapter": 4,
-        "glyphs": "गफ",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C05-main-hindi-bolta-hun",
-        "language": "hindi",
-        "chapter": 5,
-        "glyphs": "ँब",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C06-numbers-1-5",
-        "language": "hindi",
-        "chapter": 6,
-        "glyphs": "ँए",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C11-kaalaa-safed",
-        "language": "hindi",
-        "chapter": 11,
-        "glyphs": "फ़",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C20-mausam",
-        "language": "hindi",
-        "chapter": 20,
-        "glyphs": "डौ",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C21-numbers-6-10",
-        "language": "hindi",
-        "chapter": 21,
-        "glyphs": "छौ",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C21-six-nine-ten-history",
-        "language": "hindi",
-        "chapter": 21,
-        "glyphs": "छौ",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C32-shubh-sandhya",
-        "language": "hindi",
-        "chapter": 32,
-        "glyphs": "झभ",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C35-puchna",
-        "language": "hindi",
-        "chapter": 35,
-        "glyphs": "उछ",
+        "chapter": 3,
+        "glyphs": "ँड",
         "count": 2
       },
       {
@@ -75826,24 +75714,10 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C03-aap-kaise-hain",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "आ",
-        "count": 1
-      },
-      {
         "lessonId": "HI-C03-main",
         "language": "hindi",
         "chapter": 3,
         "glyphs": "य",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C04-chalta-hun",
-        "language": "hindi",
-        "chapter": 4,
-        "glyphs": "ँ",
         "count": 1
       },
       {
@@ -75854,30 +75728,16 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C04-phir",
-        "language": "hindi",
-        "chapter": 4,
-        "glyphs": "फ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C05-bolna",
+        "lessonId": "HI-C05-bolta-hun",
         "language": "hindi",
         "chapter": 5,
-        "glyphs": "ब",
+        "glyphs": "आ",
         "count": 1
       },
       {
         "lessonId": "HI-C05-rahna",
         "language": "hindi",
         "chapter": 5,
-        "glyphs": "ँ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C07-haan",
-        "language": "hindi",
-        "chapter": 7,
         "glyphs": "ँ",
         "count": 1
       },
@@ -75889,24 +75749,10 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C10-somavaar-shukravaar",
+        "lessonId": "HI-C09-maaf-kijiye",
         "language": "hindi",
-        "chapter": 10,
-        "glyphs": "ब",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C12-pitaa-maataa",
-        "language": "hindi",
-        "chapter": 12,
-        "glyphs": "ब",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C13-haath",
-        "language": "hindi",
-        "chapter": 13,
-        "glyphs": "थ",
+        "chapter": 9,
+        "glyphs": "ृ",
         "count": 1
       },
       {
@@ -75917,45 +75763,10 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C19-umr",
-        "language": "hindi",
-        "chapter": 19,
-        "glyphs": "उ",
-        "count": 1
-      },
-      {
         "lessonId": "HI-C23-billi-history",
         "language": "hindi",
         "chapter": 23,
         "glyphs": "ड",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C27-shubh-raatri",
-        "language": "hindi",
-        "chapter": 27,
-        "glyphs": "भ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C31-suprabhat",
-        "language": "hindi",
-        "chapter": 31,
-        "glyphs": "भ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C33-shubh-dopahar",
-        "language": "hindi",
-        "chapter": 33,
-        "glyphs": "भ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C34-samajhna",
-        "language": "hindi",
-        "chapter": 34,
-        "glyphs": "झ",
         "count": 1
       },
       {
@@ -75966,17 +75777,10 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C35-pasand",
+        "lessonId": "HI-C35-puchna",
         "language": "hindi",
         "chapter": 35,
-        "glyphs": "झ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C36-ghar",
-        "language": "hindi",
-        "chapter": 36,
-        "glyphs": "घ",
+        "glyphs": "उ",
         "count": 1
       },
       {
@@ -75984,13 +75788,6 @@
         "language": "hindi",
         "chapter": 36,
         "glyphs": "घ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C37-kitaab",
-        "language": "hindi",
-        "chapter": 37,
-        "glyphs": "थ",
         "count": 1
       },
       {
@@ -76466,10 +76263,10 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 576,
-      "exposureOnly": 245,
-      "exposureExemptedGlyphs": 2046,
-      "headwordsWithoutRomanization": 188,
+      "violations": 547,
+      "exposureOnly": 274,
+      "exposureExemptedGlyphs": 2133,
+      "headwordsWithoutRomanization": 118,
       "tracksWithUnknownScript": 0
     },
     "unknownScriptTracks": []
@@ -90881,7 +90678,7 @@
         "atomChapterSpikes": 2,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 68,
+        "scriptClosureViolations": 39,
         "neverTaughtGlyphs": 12,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
