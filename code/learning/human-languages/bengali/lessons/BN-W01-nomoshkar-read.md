@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W01-nomoshkar-read
 spine_node: SPINE-MEET-GREET
-sequence: 1690
+sequence: 160
 delivery: script
-chapter: 16
+chapter: 2
 type: writing
 headword: নমস্কার
 romanization: "nomoshkar"

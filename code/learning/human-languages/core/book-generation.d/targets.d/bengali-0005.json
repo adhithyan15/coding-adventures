@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 5,
-  "output": "bengali/book/chapters/ch05-first-verbs.tex",
+  "output": "bengali/book/chapters/ch05-responding.tex",
   "unicodeScript": "Bengali",
   "scriptCommand": "bn"
 }

@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C05-thaka
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 290
-chapter: 5
+sequence: 610
+chapter: 9
 type: word
 headword: থাকা
+romanization: "thākā"
 gloss: to live, to stay, to remain
 concept_tag: BN-VERB-THAKA
 prerequisites: [BN-C05-bola]

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C11-bondhu
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 800
-chapter: 11
+sequence: 850
+chapter: 16
 type: word
 headword: বন্ধু
 romanization: bôndhu
@@ -34,7 +34,7 @@ reviews_of: [BN-C10-bhat, BN-C02-alaap]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Chapter 2 taught you to exchange names. This chapter names the
+[PAUSE 2s] Chapter 3 taught you to exchange names. This chapter names the
 people themselves — starting with the one whose acquaintance you were glad to
 make.
 
@@ -44,7 +44,7 @@ make.
 > **বন্ধু** — *bôndhu* — **friend**
 
 **আমার বন্ধু** (*āmār bôndhu*) — my friend. One word, whether that friend is
-a man or a woman: Chapter 7 already told you Bengali carries no grammatical
+a man or a woman: Chapter 11 already told you Bengali carries no grammatical
 gender on its verbs, its adjectives, or its nouns, and বন্ধু is the plainest
 place to feel it — no ending changes, no second word to learn.
 
@@ -82,5 +82,5 @@ someone you are bound to.
 বন্ধু built on, and which English words share it? (**√bandh, "to bind"** —
 **bind**, **bond**, **band**.) Is বন্ধু a word Bengali inherited through sound
 change, or one it kept whole from Sanskrit? (**Kept whole** — a tatsama.)
-Does বন্ধু change for a friend who is a woman? (**No** — Chapter 7 already
+Does বন্ধু change for a friend who is a woman? (**No** — Chapter 11 already
 told you why: no grammatical gender, anywhere in the language.)

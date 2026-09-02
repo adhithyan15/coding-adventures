@@ -4,14 +4,14 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8e8a96d1f2286cc2",
+  "sourceHash": "fnv1a64:c942399ff06ca8f4",
   "lessons": [
     {
       "id": "TA-C12-kudumbam",
       "sequence": 550,
       "title": "அப்பா, அம்மா, and four sibling words",
       "headword": "அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை",
-      "romanization": "",
+      "romanization": "appā ammā aṇṇaṉ tambi akkā tangai",
       "gloss": "father, mother, and FOUR sibling words — Tamil splits \"brother\"/\"sister\" by age, where Spanish/French use just one word each",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:418d1b0b702acbe3",
+      "sourceHash": "fnv1a64:deb85aeebbf9e442",
       "notice": null,
       "blocks": [
         {

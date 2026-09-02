@@ -3,11 +3,14 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "UR-C06-bolna",
-    "UR-C06-janna"
+    "UR-C06-janna",
+    "UR-W07-alif-madda"
   ],
   "before": [],
   "inline": [
     "UR-EXT-017-CORE-VERBS-C"
   ],
-  "after": []
+  "after": [
+    "UR-EXT-017D-SCRIPT-ALIF-MADDA"
+  ]
 }

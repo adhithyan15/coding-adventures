@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C10-bhat
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 730
-chapter: 10
+sequence: 810
+chapter: 14
 type: word
 headword: ভাত
 romanization: bhāt
@@ -82,7 +82,7 @@ shared" — √bhaj, "to divide."**) Offer all four of this chapter's words,
 politely, in one breath. (**Chā khān, jôl khān, dudh khān, bhāt khān.**) Why
 do দুধ and ভাত both drop their final vowel? (**Each ends in one plain
 consonant, easily said bare.**) A
-quick run back through Chapter 7 while you're at it: which verb does Bengali
+quick run back through Chapter 11 while you're at it: which verb does Bengali
 reach for when আছে runs out of future? (**হবে.**) How many forms of "I come"
 does a Bengali speaker need, whoever is talking? (**One** — *āmi āsi*.) And
 "you go" to a stranger, versus to a friend? (**যান** *jān*, versus **যাও**

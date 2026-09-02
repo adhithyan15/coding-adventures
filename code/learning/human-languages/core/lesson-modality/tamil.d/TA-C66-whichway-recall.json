@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C66-whichway-recall",
+    "language": "tamil",
+    "chapter": 66,
+    "sequence": 2600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:059dc2132484fffe"
+  },
+  "findings": []
+}

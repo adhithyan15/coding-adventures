@@ -4,14 +4,14 @@
   "chapter": 16,
   "title": "Tamil Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bb3fab32cb07454c",
+  "sourceHash": "fnv1a64:fdbaa38f9f220b7f",
   "lessons": [
     {
       "id": "TA-C16-thamizh-maadangal",
       "sequence": 600,
       "title": "சித்திரை to பங்குனி — Tamil's own solar calendar",
       "headword": "சித்திரை வைகாசி ஆனி ஆடி ஆவணி புரட்டாசி ஐப்பசி கார்த்திகை மார்கழி தை மாசி பங்குனி",
-      "romanization": "",
+      "romanization": "Chithirai Vaikāsi Āṉi Āḍi Āvaṇi Puraṭṭāsi Aippasi Kārthigai Mārgazhi Thai Māsi Panguṉi",
       "gloss": "the twelve months of the Tamil solar calendar — Tamil's OWN calendar, distinct from both the Gregorian and Hindu lunisolar systems",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14dab8c9cd8fec07",
+      "sourceHash": "fnv1a64:f5d1837b6d25c601",
       "notice": null,
       "blocks": [
         {

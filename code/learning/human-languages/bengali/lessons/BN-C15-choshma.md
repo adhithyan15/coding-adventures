@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C15-choshma
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1230
-chapter: 15
+sequence: 1150
+chapter: 22
 type: word
 headword: চশমা
 romanization: choshma

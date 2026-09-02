@@ -1,22 +1,21 @@
 {
   "chapter": 4,
-  "title": "Farewells",
-  "label": "ch:farewells",
-  "canDo": "I can end a Bengali conversation politely and choose a farewell that fits the situation.",
+  "title": "In Front, Underneath, and On Its Own",
+  "label": "ch:bn-signs-around-the-letter",
+  "canDo": "I can read নাম and তুমি, write the i-sign, the u-sign and the independent ই, and say what decides whether a vowel is written as a mark on a consonant or as a letter of its own.",
   "spineNodes": [
-    "SPINE-TAKE-LEAVE"
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C04-practice",
-    "kind": "task",
-    "summary": "Complete BN-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Bengali conversation politely and choose a farewell that fits the situation.",
+    "lesson": "BN-W02-tumi-read",
+    "kind": "reading",
+    "summary": "The familiar you read off the page as four pieces on three levels — head-line, a sign slung underneath, a sign standing in front — which is the chapter's whole claim about how Bengali is scanned.",
     "assesses": [
-      "BN-CONCEPT-C01-ASHI-01",
-      "BN-CONCEPT-C04-ABAR-01",
-      "BN-CONCEPT-C04-ABARDEKHAHOBE-01",
-      "BN-CONCEPT-C04-DEKHAHOBE-01",
-      "BN-CONCEPT-C04-KALDEKHAHOBE-01",
-      "BN-CONCEPT-C04-PRACTICE-01"
+      "BN-SCRIPT-I-MATRA-01",
+      "BN-SCRIPT-MA-01",
+      "BN-SCRIPT-TA-01",
+      "BN-SCRIPT-TUMI-READ-01",
+      "BN-SCRIPT-U-MATRA-01"
     ]
   }
 }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C08-bhaba
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 500
-chapter: 8
+sequence: 700
+chapter: 12
 type: word
 headword: ভাবা
 romanization: bhābā
@@ -12,7 +12,7 @@ concept_tag: VERB-THINK
 prerequisites: [BN-C07-jana]
 sounds: [bha-aspirate, long-aa]
 roots: [bhu-become, bhava-state]
-etymology_hook: "ভাবা is Sanskrit bhāvayati, the causative of √bhū 'to become' — the very root of Chapter 7's হওয়া — so to think is, at root, to make a thing be; and the same causative move is still alive in Bengali, turning দেখা 'see' into দেখানো 'show'"
+etymology_hook: "ভাবা is Sanskrit bhāvayati, the causative of √bhū 'to become' — the very root of Chapter 11's হওয়া — so to think is, at root, to make a thing be; and the same causative move is still alive in Bengali, turning দেখা 'see' into দেখানো 'show'"
 duration:
   max_seconds: 256
 requires:

@@ -2,11 +2,14 @@
   "id": "UR-PATH-007-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "UR-C06-ana"
+    "UR-C06-ana",
+    "UR-W06-bari-ye"
   ],
   "before": [],
   "inline": [
     "UR-EXT-017-CORE-VERBS-B"
   ],
-  "after": []
+  "after": [
+    "UR-EXT-017C-SCRIPT-BARI-YE"
+  ]
 }

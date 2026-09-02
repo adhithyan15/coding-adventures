@@ -177,4 +177,4 @@ relocating chapter 16 alone is worth three.
 
 Note: Bengali marks "you" **three** ways by register — *tui* (intimate) / *tumi*
 (familiar) / *āpni* (respectful) — a finer distinction than the two-way split of
-the Romance and other Indo-Aryan tracks. Introduced in Chapter 2.
+the Romance and other Indo-Aryan tracks. Introduced in Chapter 3.

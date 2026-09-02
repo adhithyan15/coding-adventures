@@ -1,18 +1,20 @@
 {
   "language": "bengali",
   "chapter": 11,
-  "sourceHash": "fnv1a64:08a61c259a749e99",
+  "sourceHash": "fnv1a64:327e8ad0e2eb2e54",
   "lessonIds": [
-    "BN-C11-bondhu",
-    "BN-C11-poribar",
-    "BN-C11-bhai",
-    "BN-C11-bon"
+    "BN-C07-howa",
+    "BN-C07-jaowa",
+    "BN-C07-asha",
+    "BN-C07-khaowa",
+    "BN-C07-dekha",
+    "BN-C07-jana"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "bengali/narration/ch11.txt",
   "json": "bengali/narration/ch11.json",
-  "textHash": "fnv1a64:306694d81f9b00c1",
-  "jsonHash": "fnv1a64:2651e904ca27e3d1",
+  "textHash": "fnv1a64:c9e60187387881ac",
+  "jsonHash": "fnv1a64:24cf47601a556fec",
   "findings": []
 }

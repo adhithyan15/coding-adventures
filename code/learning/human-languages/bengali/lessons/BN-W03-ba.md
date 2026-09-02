@@ -2,38 +2,39 @@
 schema_version: 2
 id: BN-W03-ba
 spine_node: SPINE-MEET-GREET
-sequence: 1830
+sequence: 480
 delivery: script
-chapter: 18
+chapter: 8
 type: writing
 headword: ব
 romanization: "bô"
 gloss: "the consonant ba — the letter that swallowed Sanskrit's v"
-prerequisites: [BN-W03-kalo-read]
+prerequisites: [BN-W02-kemon-read]
 sounds: []
 roots: []
 etymology_hook: "Sanskrit had a v and Bengali does not, so this one letter now does the work of two: it is why dhanyavada is said dhonnobad and why the sound-fingerprint of the whole track runs through a single shape."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KALO-READ-01]
+  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-O-MATRA-01]
 introduces:
   knowledge: [BN-SCRIPT-BA-01]
 practises:
-  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KALO-READ-01, BN-SCRIPT-BA-01]
+  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-O-MATRA-01, BN-SCRIPT-BA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W03-kalo-read]
+reviews_of: [BN-W02-kemon-read]
 ---
 # ব — the consonant ba
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-KALO-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-O-MATRA-01] -->
 
-[PAUSE 2s] Read **কালো** and **লাল** aloud before adding a new shape.
+[PAUSE 2s] Read **কেমন** aloud before adding a new shape, and say which way its
+vowel sign faces.
 
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-BA-01]; assesses=[BN-SCRIPT-AA-MATRA-01] -->
@@ -57,11 +58,11 @@ With the mātrā:
 > **ব** + **া** → **বা**
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KALO-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-O-MATRA-01] -->
 
 - [YOU WRITE: ব]
 - [YOU WRITE: বা]
-- [YOU READ: কালো]
+- [YOU READ: কেমন]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-BA-01] -->

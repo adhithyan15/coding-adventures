@@ -2,17 +2,17 @@
 schema_version: 2
 id: BN-C10-jol
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 710
-chapter: 10
+sequence: 790
+chapter: 14
 type: word
 headword: জল
 romanization: jôl
-gloss: water — the word Chapter 7 already used to say "drink water," now taught on its own, beside the Bangladesh-register পানি
+gloss: water — the word Chapter 11 already used to say "drink water," now taught on its own, beside the Bangladesh-register পানি
 concept_tag: BN-FOOD-WATER
 prerequisites: [BN-C10-cha]
 sounds: [ja-unaspirated]
 roots: [jala-uncertain, pa-drink]
-etymology_hook: "জল is Sanskrit জল jala through Prakrit — an old Indo-Aryan word whose own root is genuinely disputed (perhaps PIE gʷelHo- 'to gush forth', perhaps not Indo-European at all); its Bangladesh-register neighbour পানি is on firmer ground, from Sanskrit pānīya, 'drinkable,' built on the very √pā that Chapter 7's পান করা already named"
+etymology_hook: "জল is Sanskrit জল jala through Prakrit — an old Indo-Aryan word whose own root is genuinely disputed (perhaps PIE gʷelHo- 'to gush forth', perhaps not Indo-European at all); its Bangladesh-register neighbour পানি is on firmer ground, from Sanskrit pānīya, 'drinkable,' built on the very √pā that Chapter 11's পান করা already named"
 duration:
   max_seconds: 265
 requires:
@@ -34,7 +34,7 @@ reviews_of: [BN-C10-cha, BN-C07-khaowa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C07-KHAOWA-02] -->
 
-[PAUSE 2s] Chapter 7 taught you **জল খাওয়া**, "to drink water" — literally
+[PAUSE 2s] Chapter 11 taught you **জল খাওয়া**, "to drink water" — literally
 "water-eat" — without ever teaching জল by itself. Here it is, on its own.
 
 ## You'll want to know: জল
@@ -63,7 +63,7 @@ claimed here; the honest answer is that nobody is sure.
 
 Bengali has a second word for water, most common in Bangladesh: **পানি**
 (*pani*). That one *is* on secure ground — Sanskrit **pānīya**, "drinkable,"
-built directly on **√pā**, "to drink," the very root behind Chapter 7's
+built directly on **√pā**, "to drink," the very root behind Chapter 11's
 **পান করা** and English **potion**, **potable**. Two words for the same
 thing, one of disputed origin and one you can trace all the way home.
 
@@ -80,7 +80,7 @@ thing, one of disputed origin and one you can trace all the way home.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02] -->
 <!-- hl-activity: {"id":"BN-C10-jol-water","kind":"text","assesses":["BN-LEX-C10-JOL-01"],"prompt":"Type the Bengali word jôl, meaning 'water'.","answer":"জল","accepted":["jôl","jol"],"feedback":{"correct":"Right: জল is jôl, water.","incorrect":"The word is জল - jôl."},"response_seconds":8} -->
 
-[PAUSE 3s] What did Chapter 7 already say with জল, without teaching it as a
+[PAUSE 3s] What did Chapter 11 already say with জল, without teaching it as a
 word? (**জল খাওয়া**, "to drink water.") Is জল's root secure? (**No** —
 genuinely disputed.) Which everyday synonym for water traces cleanly to
 "drinkable," from the root behind *potion*? (**পানি.**)

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C08-pora
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 520
-chapter: 8
+sequence: 720
+chapter: 12
 type: word
 headword: পড়া
 romanization: pôṛā

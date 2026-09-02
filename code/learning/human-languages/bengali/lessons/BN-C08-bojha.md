@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C08-bojha
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 510
-chapter: 8
+sequence: 710
+chapter: 12
 type: word
 headword: বোঝা
 romanization: bojhā

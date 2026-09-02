@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C15-kapor",
     "language": "bengali",
-    "chapter": 15,
-    "sequence": 1200,
+    "chapter": 22,
+    "sequence": 1120,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7b44fcd2e26effb3",
+    "sourceHash": "fnv1a64:56046f3f2b2935dc",
     "detachableSegments": [
       "The letters in this word"
     ]

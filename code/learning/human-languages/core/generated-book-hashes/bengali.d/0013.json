@@ -1,12 +1,12 @@
 {
   "language": "bengali",
   "chapter": 13,
-  "sourceHash": "fnv1a64:2cc8d10a95ff36e5",
+  "sourceHash": "fnv1a64:a1b3aa44061f7b4a",
   "lessonIds": [
-    "BN-C13-doya-kore",
-    "BN-C13-dukkhito",
-    "BN-C13-maf-korben",
-    "BN-C13-sbagotom"
+    "BN-C09-neowa",
+    "BN-C09-jijnasa-kora",
+    "BN-C09-sahajjo-kora",
+    "BN-C09-bhalo-laga"
   ],
-  "tex": "bengali/book/chapters/ch13-please-sorry-welcome.tex"
+  "tex": "bengali/book/chapters/ch13-conjunct-verbs.tex"
 }

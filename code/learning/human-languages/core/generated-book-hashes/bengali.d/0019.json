@@ -1,20 +1,12 @@
 {
   "language": "bengali",
   "chapter": 19,
-  "sourceHash": "fnv1a64:fe7036b758622cd1",
+  "sourceHash": "fnv1a64:b2f51b9ea25b9d43",
   "lessonIds": [
-    "BN-W04-cha",
-    "BN-W04-chaa-read",
-    "BN-W04-pa",
-    "BN-W04-poribar-read",
-    "BN-W04-ja",
-    "BN-W04-jol-read",
-    "BN-W04-ii-matra",
-    "BN-W04-nil-read",
-    "BN-W04-i-indep",
-    "BN-W04-bhai-read",
-    "BN-W04-e-indep",
-    "BN-W04-ek-read"
+    "BN-C13-doya-kore",
+    "BN-C13-dukkhito",
+    "BN-C13-maf-korben",
+    "BN-C13-sbagotom"
   ],
-  "tex": "bengali/book/chapters/ch19-both-bodies-of-a-vowel.tex"
+  "tex": "bengali/book/chapters/ch19-please-sorry-welcome.tex"
 }

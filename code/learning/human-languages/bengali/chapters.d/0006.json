@@ -1,22 +1,29 @@
 {
   "chapter": 6,
-  "title": "Numbers One to Five",
-  "label": "ch:numbers-one-to-five",
-  "canDo": "I can count from one to five in Bengali script and say what দুই kept that Hindi and Marathi flattened away.",
+  "title": "A Sign Made of Two Signs",
+  "label": "ch:bn-sign-made-of-two-signs",
+  "canDo": "I can read আমি and কেমন, write ল, the e-sign and its independent twin এ, and build the o-sign out of two signs I already hold rather than memorising a new shape.",
   "spineNodes": [
-    "SPINE-COUNT-ONE-TO-FIVE"
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C06-numbers-1-5",
-    "kind": "production",
-    "summary": "Count ek, dui, tin, chār, pā̃ch aloud, name the chandrabindu riding পাঁচ, and set দুই beside Hindi do and Marathi don to show the -i it preserved.",
+    "lesson": "BN-W02-kemon-read",
+    "kind": "reading",
+    "summary": "How read back with nothing new, and the count that shows why four pieces bought two more words — three of the four being vowel pieces, which multiply across every consonant already held.",
     "assesses": [
-      "BN-LEX-NUMBERS-ONE-TO-FIVE",
-      "BN-SCRIPT-CHANDRABINDU-NASAL",
-      "BN-ETYMON-DUI-COMPARISON",
-      "BN-HISTORY-DV-NUMERAL-SIMPLIFICATION",
-      "BN-HISTORY-DUI-AREAL-COMPANY",
-      "BN-SOUND-INHERENT-O-NOT-IN-NUMBERS"
+      "BN-SCRIPT-AMI-READ-01",
+      "BN-SCRIPT-E-MATRA-01",
+      "BN-SCRIPT-I-MATRA-01",
+      "BN-SCRIPT-KA-01",
+      "BN-SCRIPT-KEMON-READ-01",
+      "BN-SCRIPT-LA-01",
+      "BN-SCRIPT-MA-01",
+      "BN-SCRIPT-NA-01",
+      "BN-SCRIPT-NAAM-READ-01",
+      "BN-SCRIPT-NOMOSHKAR-READ-01",
+      "BN-SCRIPT-TA-01",
+      "BN-SCRIPT-TUMI-READ-01",
+      "BN-SCRIPT-U-MATRA-01"
     ]
   }
 }

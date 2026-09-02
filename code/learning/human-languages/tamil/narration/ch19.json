@@ -4,14 +4,14 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8f7c62818e2d37aa",
+  "sourceHash": "fnv1a64:6f25a70388d1cc41",
   "lessons": [
     {
       "id": "TA-C19-vayathu",
       "sequence": 670,
-      "title": "உனக்கு எத்தனை வயது ஆகிறது? — Tamil actually has BOTH shapes",
+      "title": "உனக்கு எத்தனை வயது ஆகிறது? (unakku ettanai vayathu aakirathu?) — Tamil actually has BOTH shapes",
       "headword": "உனக்கு எத்தனை வயது ஆகிறது?",
-      "romanization": "",
+      "romanization": "unakku ettanai vayathu aakirathu?",
       "gloss": "how old are you? — literally \"to you how many years is becoming?\"; the SAME Sanskrit vayas word as Kannada/Telugu/Malayalam; Tamil actually spans BOTH grammatical shapes seen so far, from a plain possessive in casual speech to this more formal dative+verb construction",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7a729c0a3693e61",
+      "sourceHash": "fnv1a64:8d8f59b95076e5ee",
       "notice": null,
       "blocks": [
         {
@@ -64,11 +64,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vayathu\" — age",
+              "instruction": "\"vayathu\" — age — then the whole formal question, \"unakku ettanai vayathu aakirathu?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vayathu\" — age]"
+              "source": "[YOU SAY: \"vayathu\" — age — then the whole formal question, \"unakku ettanai vayathu aakirathu?\"]"
             },
             {
               "kind": "prompt",
@@ -105,7 +105,7 @@
       "sequence": 680,
       "title": "Your age what? / To you how many years becomes?",
       "headword": "உன் வயசு என்ன? / உனக்கு எத்தனை வயது ஆகிறது?",
-      "romanization": "",
+      "romanization": "un vayasu enna? / unakku ettanai vayathu aakirathu?",
       "gloss": "casual Tamil uses a possessive age question while formal Tamil uses dative plus become",
       "script": "tamil",
       "modality": "voice",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e56e7a5816e08838",
+      "sourceHash": "fnv1a64:4f7d3e620ca27133",
       "notice": null,
       "blocks": [
         {
@@ -155,7 +155,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "உனக்கு எத்தனை வயது ஆகிறது? — \"to you how many years is becoming?\" எனக்கு இருபது வயது ஆகிறது. — \"to me twenty years is becoming.\""
+              "text": "உனக்கு எத்தனை வயது ஆகிறது? (unakku ettanai vayathu aakirathu?) — \"to you how many years is becoming?\" எனக்கு இருபது வயது ஆகிறது. — \"to me twenty years is becoming.\""
             },
             {
               "kind": "speech",

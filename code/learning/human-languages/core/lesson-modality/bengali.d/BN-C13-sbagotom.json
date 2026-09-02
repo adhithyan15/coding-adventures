@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C13-sbagotom",
     "language": "bengali",
-    "chapter": 13,
-    "sequence": 1030,
+    "chapter": 19,
+    "sequence": 980,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0ab6d51218767ac6",
+    "sourceHash": "fnv1a64:5930db11d5b296a9",
     "detachableSegments": [
       "The letters in this word"
     ]

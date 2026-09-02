@@ -4,6 +4,7 @@ chapter: 3
 sequence: 190
 type: phrase
 headword: நீங்கள் எப்படி இருக்கிறீர்கள்?
+romanization: "nīṅgaḷ eppaḍi irukkiṟīrgaḷ?"
 gloss: how are you? (respectful)
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [TA-C03-eppadi, TA-C02-nii-niingal]
