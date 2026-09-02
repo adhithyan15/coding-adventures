@@ -1,5 +1,65 @@
 # Changelog
 
+## Chapter 7 is generated, and the week arrives one day at a time
+
+Chapter 7 was hand-written LaTeX built from two schema-v1 lessons: one taught
+**five** day-names at once behind a four-column reveal table, the other taught
+the remaining two. Neither declared any atoms, so the chapter could not be
+generated and no lesson-level gate could see it.
+
+It is now **nine** schema-v2 lessons.
+
+### The measurement that sized this, and why the parity gap did not
+
+`handwritten_parity.py` scored chapter 7 at a gap of **one block**. That is a
+true count of LaTeX environments and a bad estimate of the work, because it
+counts *environments* and the debt is in *words*: a word taught in a paragraph
+inside a surviving `cousinweb` costs **zero blocks and a whole lesson**.
+
+So the chapter was sized a second way -- **count the French words the `.tex`
+teaches, against the lessons that own them.** Chapter 7 teaches eight: the seven
+days, and **la lune**, which the `.tex` glossed inside a parenthesis in a table
+cell and which no lesson owned at all. One block of gap; eight words with two
+lessons between them.
+
+`la lune` now has its own lesson, and it goes **first** -- so *lundi* arrives as
+a word the reader can take apart rather than a shape to memorise.
+
+### One new word per lesson
+
+`la lune`, then `lundi`, `mardi`, `mercredi`, `jeudi`, `vendredi`, `samedi`,
+`dimanche`, then the chapter practice. Every block of the hand-written prose is
+carried and several are promoted from an aside to the point of a lesson:
+
+- **the `-di` rule** -- every weekday ends in Latin *diēs*, "day" -- is now a
+  grammar lens in `FR-C07-lundi` rather than a sentence before a table. Half of
+  five words comes free, and the reader is told so before meeting them.
+- **`interpretatio germanica`** -- the Germanic peoples swapped their own gods
+  into the Roman week role for role, which is why *mardi* and *Tuesday* are the
+  same day sharing no sound -- is a typed culture claim owned by `FR-C07-mardi`,
+  and the three days after it apply the key instead of restating it.
+- **the weekend rewrite** -- *samedi* takes the **Sabbath** where English keeps
+  Saturn, *dimanche* the **Lord's day** where English keeps the Sun -- is two
+  lessons and two claims rather than one dense `cousinweb`.
+- **the `di-` that moved to the front** of *dimanche* now gets a grammar lens
+  that says the pattern flipped rather than broke.
+
+The chapter's closing French/English recap survives as a **two-column** table in
+the practice lesson, which the narrator can speak; the two four-column tables it
+replaces were refused as unspeakable.
+
+### Measured
+
+- Hand-written French chapters: **12 -> 11**.
+- Chapter atoms: **12**, exactly at `maxNewAtomsPerChapter`; French's
+  `atomChapterSpikes` stays at **0**.
+- Forward references: **50 -> 50**. The chapter contributes none.
+- Narration refusals: **54 -> 52**.
+- Measurable French lessons: **90 -> 99**.
+- Culture claims: **14 -> 16**.
+- The book compiles under XeLaTeX with `missing_character = 0`, and the rendered
+  pages were read: the day recap sets as a real two-column table, one day a row.
+
 ## Chapter 6 is generated, and its ten numbers now arrive one at a time
 
 Chapter 6 was hand-written LaTeX built from two schema-v1 lessons. Each of those

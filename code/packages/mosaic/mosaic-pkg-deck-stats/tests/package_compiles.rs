@@ -121,7 +121,7 @@ fn deck_stats_layout_binds_all_stat_slots() {
         ("deck-stat-hidden", "hidden-label", "hidden-value"),
     ] {
         assert!(
-            source.contains(&format!("Column [ {part} ]")),
+            source.contains(&format!("Box [ {part} ]")),
             "DeckStatsPanel.mll must expose {part}"
         );
         assert!(

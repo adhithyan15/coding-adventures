@@ -1156,6 +1156,11 @@ fn emit_jsx_tree(
         extra_attrs,
     } = primitive_to_jsx_tag(&node.tag)?;
 
+    // A multi-child `Box` needs a layout style the tag mapping cannot supply,
+    // because that mapping sees only the tag name and this depends on how many
+    // children the node has.
+    let builtin_style = merge_styles(&builtin_style, container_layout_style(node));
+
     // Look up the author-declared part style (if any) and merge it with the
     // built-in style. The built-in style appears first so that the author's
     // declarations can override the defaults — last property wins in a JSX
@@ -4790,6 +4795,35 @@ struct JsxTag {
     close: String,
     /// `true` for `<tag />` self-closing tags.
     self_close: bool,
+}
+
+/// The built-in style a container needs purely to lay its children out.
+///
+/// Only `Box` needs one, and only when it holds more than one child.
+///
+/// Flutter lowers `Box` to `Container`, which takes a single child, so it
+/// already wraps multiple children in a `Column`; Qt, SwiftUI and XAML do the
+/// equivalent. React alone emitted a bare `<div>`, so two `Text` children
+/// became adjacent inline `<span>`s with no margin and ran together -- every
+/// statistic in Engram rendered as "2Total", "1New", "Prompt:No cards queued".
+/// The `.msl` files set background, radius and padding and no layout, because
+/// the authors reasonably expected a container to lay its children out, and on
+/// four of five backends it did.
+///
+/// Scoped to the multi-child case deliberately. A single-child `Box` is a plain
+/// wrapper and stays exactly as it was, which is also what keeps this from
+/// perturbing every existing layout to fix a handful.
+///
+/// Fixing it here rather than by rewriting the layouts as `Column` matters:
+/// `Column` lowers to a Flutter `Column`, which carries neither colour nor
+/// padding, so that approach silently stripped every chip background on Flutter
+/// while making the web look right.
+fn container_layout_style(node: &LayoutNode) -> &'static str {
+    if node.tag == "Box" && node.children.len() > 1 {
+        "display: \"flex\", flexDirection: \"column\""
+    } else {
+        ""
+    }
 }
 
 fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {

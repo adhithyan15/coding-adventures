@@ -22,9 +22,6 @@ The -ಏನೆ (-ēne) ending is "I," so nānu is rarely needed. Change the endi
 Grammar Lens: stem + tense + person.
 Every Kannada verb is built this way — a stem, a tense-marker, a person-ending. And, like Tamil and Telugu, Kannada marks no gender in the first person: mātanāḍuttēne is the same for a man or a woman.
 
-Sounds you'll need.
-ಮಾ (mā) + ತ (ta) + ನಾ (nā) + ಡು (ḍu) becomes ಮಾತನಾಡು (mātanāḍu).
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "mātanāḍu" (speak)]
@@ -184,7 +181,7 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three verbs, one engine — build real sentences about yourself.
 
-Build the sentences.
+Guided Practice: Build the sentences.
 [pause 1 second after each]
 [your turn — say: "I speak Kannada" — nānu kannaḍa mātanāḍuttēne]
 [pause 8 seconds for the answer]
@@ -195,7 +192,7 @@ Build the sentences.
 [your turn — say: "he speaks" vs. "she speaks" — mātanāḍuttāne / mātanāḍuttāḷe]
 [pause 8 seconds for the answer]
 
-The engine.
+You'll want to know: The engine.
 [pause 2 seconds]
 [your turn — say: the three stacked pieces of every Kannada verb (stem + tense + person)]
 [pause 8 seconds for the answer]
@@ -204,7 +201,7 @@ The engine.
 [your turn — say: where Kannada marks gender — and where it doesn't (3rd person only)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+The word, taken apart: Roots you now carry.
 [pause 2 seconds]
 mātanāḍu "to speak" from mātu "word".
 iru "to be / stay / live"; -alli "in" attaches to the noun's end.

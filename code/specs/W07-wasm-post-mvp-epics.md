@@ -551,7 +551,13 @@ every distinct `DirectiveOutcome::NotYetSupported` message):
 4. **`global.wast`'s `spectest.global_i32` import gap** — check first
    whether this is actually a missing, cheap, one-time host-stub
    addition to `wasm-conformance`'s own test harness (likely) rather
-   than an interpreter capability gap at all.
+   than an interpreter capability gap at all. **DONE** (`wasm-conformance`
+   0.1.123): it was exactly a harness gap, and a live census found the
+   corpus actually needs the ENTIRE upstream `spectest` module (13
+   exports across 23 files), not just `global_i32` — see that crate's own
+   CHANGELOG for the full census and per-file diff. Closed 272 `not_yet_
+   supported` directives across 18 files with zero regressions; no
+   changes needed in any interpreter crate.
 5. **Re-probe everything** after items 1-4 land — several of the
    still-untriaged buckets above (GC remainder, bulk-memory, imports)
    may substantially shrink once the exprs-list fix removes their
