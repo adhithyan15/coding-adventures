@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-68-JOINERS",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "HI-C68-aur",
+    "HI-C68-ya",
+    "HI-C68-lekin",
+    "HI-R68-three-joins"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-068-FLAT-JOINS"
+  ],
+  "after": []
+}

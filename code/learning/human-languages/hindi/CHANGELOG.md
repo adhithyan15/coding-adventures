@@ -2,6 +2,68 @@
 
 ## [Unreleased]
 
+### Added - the joining column: 155 -> 176 of 282 A1 points
+
+**Chapters 68-74 teach Hindi's joining words, and A1 exam coverage moves
+155/282 (55%) -> 176/282 (62%).** Measured with `measureExamCoverage` against
+`core/exam-inventory-hindi-a1.json`, before and after, on the tree - not
+arithmetic on the deltas.
+
+- **`Samuchchay (joining clauses)` goes 0/6 to 6/6, and `Prashn (asking
+  questions)` 5/10 to 10/10.** Fifteen items closed twenty-one points, because
+  they were chosen against the inventory rather than by topic: six of the
+  twenty-one fell in the communicative-function column the tranche was not
+  aimed at (asking a preference, saying what you want, asking about ability,
+  saying why you cannot do something, asking when something happens), and one in
+  pronunciation.
+- **What is taught, one item per lesson:**
+
+  | ch. | items |
+  |---|---|
+  | 68 | *aur* and - **या** or - **लेकिन** but |
+  | 69 | the verb comes last - **कि** that |
+  | 70 | **सकना** can - **चाहना** want - the -ना form as an object |
+  | 71 | **क्यों** why - **क्योंकि** because |
+  | 72 | **कब** when? - **जब … तब** when/then |
+  | 73 | **-कर** having done |
+  | 74 | **क्या …?** the polar particle - the rising voice - **… ना?** the tag |
+
+- **`aur` is taught GLOSS-FIRST, and the letter debt is written into the
+  lesson.** Its opening vowel is the independent *au*, which no Hindi writing
+  lesson has ever drawn and which the corpus shows exactly once, inside
+  *aurat*. Its Devanagari therefore appears only in the headword, where the
+  romanization exemption makes it exposure; the body is entirely romanized and
+  says in as many words that the letter is owed. The word carries a clause join
+  in five of the six mock profile texts and is far too load-bearing to wait for
+  a script lesson. This is the shape the Marathi tranche used for **सांगणे**.
+- **Every other item is spelled from Devanagari the corpus already teaches.**
+  The candidate list was filtered against the track's taught-glyph set before a
+  word of prose was written, and the first draft still had seventeen closure
+  violations - **झ** inside *mujhe*, **छ** inside *acchā*, **ौ** inside *kaun*
+  - every one of which was rewritten around rather than waved through.
+  `scriptClosureViolations` and `neverTaughtGlyphs` are unchanged at 38 and 11.
+- **Four spine omissions close.** `VERB-CAN` (HI-C70-sakna), `VERB-WANT`
+  (HI-C70-chahna), `CONNECTIVE-BECAUSE` (HI-C71-kyonki) and `QUESTION-POLAR`
+  (HI-C74-kya-polar). `SPINE-SAY-WHY` and `SPINE-SAY-WHAT-I-WANT` now omit
+  nothing at all.
+- **The tranche's own reinforcement debt is zero**, and `atomsNeverRevisited`
+  FALLS 81 -> 79: the two atoms rescued are ones the older track had nothing
+  later to revisit them with. `reinforcementWindowMisses` rises 1035 -> 1071,
+  and every one of the 36 is pre-existing debt this tranche EXPOSED rather than
+  created - twenty-three more lessons made reinforcement windows fit that the
+  end of the track had previously cut off. Not one of the 36 is on a lesson in
+  this tranche.
+- **Chapter 74 was split rather than crammed.** The intonation question started
+  as a section of the **क्या** lesson and pushed its COMPUTED duration to 308
+  seconds against a 300-second ceiling. Trimming prose moved it by four seconds
+  and made the lesson worse; lifting it into its own lesson - one new item per
+  lesson - fixed it and is the better book.
+- **Left uncovered, with the reason written into the inventory:**
+  `HI-A1-V-21` (*chahiye* takes a noun where *chahna* takes a verb, and it needs
+  the independent vowel **ए**, which no writing lesson has drawn - a script
+  lesson as much as a vocabulary one) and `HI-A1-F-39` (the asking half now
+  exists; *janna* still has no atom, and half a pair is not the point).
+
 ### Added - an A1 exam inventory, measured against a proxy with a real syllabus behind it
 
 `core/exam-inventory-hindi-a1.json` enumerates **282 things an A1 Hindi

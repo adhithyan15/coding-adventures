@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:446c9212ff93d017",
+  "lessonIds": [
+    "HI-C70-sakna",
+    "HI-C70-chahna",
+    "HI-C70-infinitive-object",
+    "HI-R70-can-want"
+  ],
+  "tex": "hindi/book/chapters/ch70-can-and-want.tex"
+}

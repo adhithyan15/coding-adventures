@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C72-kab",
+    "language": "hindi",
+    "chapter": 72,
+    "sequence": 2750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78ed8c52b63f273f"
+  },
+  "findings": []
+}

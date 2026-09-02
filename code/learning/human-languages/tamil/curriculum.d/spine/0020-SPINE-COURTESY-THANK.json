@@ -5,7 +5,8 @@
     "TA-PATH-49-COURTESY",
     "TA-PATH-54-HOUSE",
     "TA-PATH-63-MANNERS",
-    "TA-PATH-67-WEAR"
+    "TA-PATH-67-WEAR",
+    "TA-PATH-81-REGISTER"
   ],
   "omits": [
     "COURTESY-THANKS-CASUAL"

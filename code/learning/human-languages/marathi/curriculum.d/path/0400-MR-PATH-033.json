@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-033",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "MR-C31-naa-naa",
+    "MR-C31-naa-tag",
+    "MR-C31-dusra",
+    "MR-R31-pairs"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-046-PAIRED-JOINS"
+  ],
+  "after": []
+}

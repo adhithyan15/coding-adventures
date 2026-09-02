@@ -109,6 +109,27 @@ pub enum WastParseError {
     /// exactly the mechanism `assert_malformed` fixtures use to embed
     /// otherwise-illegal bytes on purpose.
     IllegalStringCharacter { pos: usize, byte: u8 },
+    /// A memory instruction's `align=N` immediate whose `N` is not a power
+    /// of two (including `N = 0`) -- e.g. `i32.load align=7`. The real
+    /// spec text-format grammar (`interpreter/text/parser.mly`'s
+    /// `ALIGN_EQ_NAT` rule in the upstream reference implementation)
+    /// requires `align=N` to name a power of two, since it's stored in the
+    /// binary encoding as `log2(N)`, not `N` itself -- there is no bit
+    /// pattern for "align to 7 bytes." This is a TEXT-FORMAT syntax rule
+    /// (caught here, at parse time), distinct from `align.wast`'s sibling
+    /// `assert_invalid` cases, which use a syntactically valid power-of-two
+    /// `align=N` that's simply larger than the instruction's natural
+    /// access width (a semantic rule `wasm-validator` checks instead, well
+    /// after this parser has already produced `log2(N)`). Before this
+    /// variant existed, `parse_memarg` computed `align_log2` via
+    /// `n.trailing_zeros()` unconditionally: `align=0` produced
+    /// `trailing_zeros() == 32` (silently corrupting the align byte with a
+    /// nonsense log2), and `align=7` produced `trailing_zeros() == 0`
+    /// (silently treated as `align=1`, which is always <= any natural
+    /// alignment, so the module parsed and validated cleanly instead of
+    /// being rejected) -- both hid a real malformed-input case as a
+    /// falsely-valid module.
+    InvalidAlignment { pos: usize, value: u32 },
 }
 
 impl std::fmt::Display for WastParseError {
@@ -161,6 +182,9 @@ impl std::fmt::Display for WastParseError {
             }
             WastParseError::IllegalStringCharacter { pos, byte } => {
                 write!(f, "at byte {pos}: illegal unescaped character {byte:#04x} inside a string literal")
+            }
+            WastParseError::InvalidAlignment { pos, value } => {
+                write!(f, "at byte {pos}: alignment {value} must be a power of two")
             }
         }
     }

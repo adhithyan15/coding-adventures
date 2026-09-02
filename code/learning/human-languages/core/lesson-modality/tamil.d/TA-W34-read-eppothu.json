@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W34-read-eppothu",
+    "language": "tamil",
+    "chapter": 79,
+    "sequence": 3260,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:75fb93a5173cf23d",
+    "detachableSegments": [
+      "Script you'll notice: எப்போது — one letter, twice, on either side of a புள்ளி"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

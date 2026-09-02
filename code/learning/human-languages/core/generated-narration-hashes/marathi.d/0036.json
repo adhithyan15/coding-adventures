@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:1f75412bb82ebe02",
+  "lessonIds": [
+    "MR-C36-jevha",
+    "MR-C36-lyaavar",
+    "MR-C36-sudhaa",
+    "MR-R36-joined"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch36.txt",
+  "json": "marathi/narration/ch36.json",
+  "textHash": "fnv1a64:702d4e861f61a482",
+  "jsonHash": "fnv1a64:2be160076bf765fd",
+  "findings": []
+}

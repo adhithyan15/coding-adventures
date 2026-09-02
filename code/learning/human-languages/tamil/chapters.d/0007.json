@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "TA-C07-numbers-practice",
     "kind": "task",
-    "summary": "Count onru to pattu, read the ten Tamil numeral shapes out of order, write eezhu with its numeral from sound alone, and recall the pattu/hattu relationship.",
+    "summary": "Count onru to pattu, read all ten Tamil numeral shapes out of order, write eezhu with its numeral from sound alone, and recall the pattu/hattu relationship.",
     "assesses": [
       "TA-LEX-NUMBERS-1-5-01",
       "TA-ETYMON-NUMBERS-1-5-FAMILY-01",
@@ -17,7 +17,11 @@
       "TA-LEX-NUMBERS-6-10-02",
       "TA-GRAMMAR-NUMBERS-6-10-03",
       "TA-ETYMON-NUMBERS-6-10-FAMILY-01",
-      "TA-ETYMON-NUMBERS-6-10-FAMILY-02"
+      "TA-ETYMON-NUMBERS-6-10-FAMILY-02",
+      "TA-SCRIPT-W07-DIGITS-01",
+      "TA-SCRIPT-W07-DIGITS-02",
+      "TA-SCRIPT-W07-DIGITS-03",
+      "TA-SCRIPT-W07-DIGITS-04"
     ]
   }
 }

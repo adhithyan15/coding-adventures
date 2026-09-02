@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-070-INFINITIVE-OBJECT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can put any verb's -naa form in the object slot of another verb, and tell the stem construction apart from the infinitive one.",
+  "prerequisites": [
+    "HI-EXT-070-WANTING"
+  ],
+  "lessons": [
+    "HI-C70-infinitive-object",
+    "HI-R70-can-want"
+  ]
+}

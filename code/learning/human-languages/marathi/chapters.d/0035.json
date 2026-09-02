@@ -1,0 +1,19 @@
+{
+  "chapter": 35,
+  "title": "A Sentence Inside a Sentence",
+  "label": "ch:mr-clause-inside-clause",
+  "canDo": "I can report what I think or know with a whole clause after ki, and turn any Marathi verb into a purpose with -nyaasaathii.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MR-R35-inside",
+    "kind": "production",
+    "summary": "Complete MR-R35-inside and produce a reason, a reported thought and an aim, naming what each underneath clause is doing.",
+    "assesses": [
+      "MR-JOIN-KII",
+      "MR-JOIN-SAATHI",
+      "MR-JOIN-KAARAN"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "chapter": 73,
+  "title": "Two Actions, One Clause",
+  "label": "ch:hi-chained-actions",
+  "canDo": "I can chain two actions inside a single Hindi clause with -kar, conjugating only the last verb.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-R73-chain",
+    "kind": "production",
+    "summary": "Complete HI-R73-chain and say the same two actions twice -- joined with aur, then chained with -kar -- and count the person endings in each.",
+    "assesses": [
+      "HI-GRAMMAR-KAR-01"
+    ]
+  }
+}

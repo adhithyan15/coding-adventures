@@ -1,0 +1,20 @@
+{
+  "chapter": 33,
+  "title": "Asking a Yes-or-No Question",
+  "label": "ch:mr-polar-question",
+  "canDo": "I can turn any statement I own into a yes-or-no question with kaa, hear one carried by the voice alone, and write it with one trailing mark.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MR-R33-ask-and-answer",
+    "kind": "task",
+    "summary": "Complete MR-R33-ask-and-answer and run a two-turn exchange: ask whether there is tea and answer it, then ask permission and decline.",
+    "assesses": [
+      "MR-GRAMMAR-QUESTION-KAA",
+      "MR-SOUND-QUESTION-RISE",
+      "MR-SCRIPT-QUESTION-MARK",
+      "MR-SCRIPT-EXCLAMATION-MARK"
+    ]
+  }
+}

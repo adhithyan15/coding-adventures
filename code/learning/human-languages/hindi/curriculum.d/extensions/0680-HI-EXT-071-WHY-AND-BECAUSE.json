@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-071-WHY-AND-BECAUSE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask why in Hindi and answer it with a whole reason clause after kyonki, including saying why I cannot do something.",
+  "prerequisites": [
+    "HI-EXT-070-INFINITIVE-OBJECT"
+  ],
+  "lessons": [
+    "HI-C71-kyon",
+    "HI-C71-kyonki",
+    "HI-R71-reasons"
+  ]
+}

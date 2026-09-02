@@ -1,0 +1,18 @@
+{
+  "chapter": 81,
+  "title": "Two Tamils",
+  "label": "ch:ta-two-tamils",
+  "canDo": "I can say why written Tamil and spoken Tamil differ, and move between them.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-C81-which-tamil",
+    "kind": "production",
+    "summary": "Complete TA-C81-which-tamil and say three joining words in both forms.",
+    "assesses": [
+      "TA-PRAGMATICS-C81-REG-01",
+      "TA-PRAGMATICS-C81-REG-02"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MR-W33-question-mark",
+    "language": "marathi",
+    "chapter": 33,
+    "sequence": 1380,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3c59c00b11ea9c41",
+    "detachableSegments": [
+      "Script: one mark, and only at the end",
+      "Script: the exclamation mark",
+      "Writing — copy and mark"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

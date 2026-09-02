@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C32-nahi-verb",
+    "language": "marathi",
+    "chapter": 32,
+    "sequence": 1340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5749835de3f84a0c"
+  },
+  "findings": []
+}

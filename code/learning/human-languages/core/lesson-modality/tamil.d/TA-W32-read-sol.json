@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W32-read-sol",
+    "language": "tamil",
+    "chapter": 77,
+    "sequence": 3170,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2c0c80704a13fb2c",
+    "detachableSegments": [
+      "Script you'll notice: சொல் — two letters, and a sign that surrounds one"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

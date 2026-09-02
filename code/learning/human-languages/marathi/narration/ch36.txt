@@ -1,0 +1,126 @@
+Marathi, chapter 36: When, After, and Too.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+जेव्हा … तेव्हा … (jevhā … tevhā …) — when, then.
+
+Warm-up.
+[pause 3 seconds]
+Retrieve the two items before this one by name: की, which hangs a whole sentence on a thinking verb, and -ण्यासाठी, which turns a verb into an aim. Both put a clause underneath. This one does it in time.
+
+Grammar Lens: the two-word frame.
+जेव्हा मी वाचतो तेव्हा मला समजतं. — jevhā mī vācto tevhā malā samajtaṁ. — When I read, then I understand.
+Marathi does not leave when on its own. It opens with जेव्हा and answers with तेव्हा in the second half, and the second word is not optional padding — it is what tells you the first clause has finished.
+You have met this machinery before without being told its name. जेव्हा is built on the relative stem ज-, तेव्हा on the demonstrative त-, and the same two stems sit under जो/तो. English keeps the pair in when … then and drops the then; Latin kept both in cum … tum. Marathi keeps both, always.
+Because the frame is spoken in the order the events happen, it is also the easiest long sentence in the book to say: first clause, तेव्हा, second clause.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: jevhā mī vācto tevhā malā samajtaṁ]
+[pause 8 seconds for the answer]
+[your turn — say: the pair on its own — jevhā … tevhā]
+[pause 8 seconds for the answer]
+[your turn — say: which of the two stems is the relative one — ज-]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 25 seconds]
+Say: when I read, then I understand.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What must follow a जेव्हा clause? (तेव्हा.) What does that second word do for the listener? (Tells them the first clause has ended.)
+Sources: Wiktionary: जेव्हा.
+
+
+Lesson 2 of 4.
+-ल्यावर (-lyāvar) — after doing.
+
+Warm-up.
+[pause 2 seconds]
+Say the two-clause frame you got last lesson: जेव्हा मी वाचतो तेव्हा मला समजतं. Nine syllables of scaffolding for two events. Marathi has a shorter way.
+
+Grammar Lens: one ending instead of two clauses.
+वाचल्यावर मला समजतं. — vācalyāvar malā samajtaṁ. — After reading, I understand.
+The swap is the same shape as -ण्यासाठी: take -णे off the verb and put -ल्यावर (-lyāvar) on. The result is one word that means after doing it, and it stands at the front of the sentence with no second half required.
+[a table of 2 rows, read aloud]
+dictionary form: वाचणे. after-doing form: वाचल्यावर.
+dictionary form: शिकणे. after-doing form: शिकल्यावर.
+Taken apart, -ल्यावर (-lyāvar) is a past participle in -ल- with वर ("on, upon") behind it. After reading is literally upon having-read. English reaches for the same preposition in upon reading, which makes this one of the few Marathi endings you can feel your way into rather than memorise.
+जेव्हा says the two things happen at once; -ल्यावर (-lyāvar) says one finished before the other began. Choose by which you mean, not by which is shorter.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: vācṇe becomes vācalyāvar, then shikṇe becomes shikalyāvar]
+[pause 8 seconds for the answer]
+[your turn — say: vācalyāvar malā samajtaṁ]
+[pause 8 seconds for the answer]
+[your turn — say: which of the two says at the same time — jevhā]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 30 seconds]
+Say the same idea twice: as a jevhā frame, then packed into -lyāvar.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -ल्यावर (-lyāvar) replace? (A whole जेव्हा … तेव्हा frame.) What is the वर in it doing? (It means upon — upon having done it.)
+
+
+Lesson 3 of 4.
+सुद्धा (sudhā) — too, and "not even".
+
+Warm-up.
+[pause 2 seconds]
+आणि joins two things in one sentence. But often the first thing was said a minute ago, by somebody else. There is no gap to put आणि in.
+
+You'll want to know: सुद्धा.
+मला दूध सुद्धा आवडतं. — malā dūdh sudhā āvaḍtaṁ. — I like milk too.
+सुद्धा (sudhā) goes straight after the word it adds — not between two things, but behind one. That is what lets it reach back to something already said. It is the joining word for a CONVERSATION rather than for a sentence.
+
+Grammar Lens: the same word in front of a denial.
+मला दूध सुद्धा आवडत नाही. — malā dūdh sudhā āvaḍat nāhī. — I don't even like milk.
+Nothing about सुद्धा (sudhā) changed. The sentence around it turned negative, and too became not even on its own. English does the identical thing: I like it too against I don't even like it. One word, two readings, and the negation picks which.
+सुद्धा (sudhā) is Sanskrit शुद्ध (śuddha), "pure." Purely that hardened into even that, which is the ordinary road a purity word travels.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: malā chahā āvaḍto — then malā dūdh sudhā āvaḍtaṁ]
+[pause 8 seconds for the answer]
+[your turn — say: malā dūdh sudhā āvaḍat nāhī]
+[pause 8 seconds for the answer]
+[your turn — say: where सुद्धा (sudhā) stands — right after the word it adds]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 30 seconds]
+Say that you like milk too, then that you do not even like milk.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does सुद्धा (sudhā) stand? (Directly after the word it adds.) What turns too into not even? (Negating the verb; सुद्धा (sudhā) itself does not change.)
+Sources: Wiktionary: सुद्धा (sudhā).
+
+
+Lesson 4 of 4.
+Everything that joins — every joining word in the book, run once, from the flattest to the deepest.
+
+Warm-up.
+[pause 5 seconds]
+Seven chapters ago you could name a hundred Marathi things and say nothing about two of them at once. Name the six joining words in this lesson's title without looking.
+
+Guided Practice — flat joins.
+[pause 1 second]
+[your turn — say: chahā āṇi dūdh, chahā kiṁvā dūdh, chahā āhe paṇ dūdh nāhī]
+[pause 8 seconds for the answer]
+[your turn — say: nā chahā nā dūdh, ek chahā āṇi dusrā pāṇī]
+[pause 8 seconds for the answer]
+[your turn — say: malā dūdh sudhā āvaḍtaṁ, malā dūdh sudhā āvaḍat nāhī]
+[pause 8 seconds for the answer]
+[your turn — say: chahā āhe nā?, chahā? — nako, dhanyavād]
+[pause 8 seconds for the answer]
+
+Guided Practice — clauses underneath.
+[pause 2 seconds]
+Say each of the five, and after each one name what the underneath clause is doing: a reason, a content, an aim, a same-time, an after.
+[question — say your answer, then pause 45 seconds]
+Say five sentences with a clause underneath: a reason, a thought, an aim, a when-frame, and an after-form.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which joining words treat the two halves as EQUALS? (आणि, किंवा, पण, ना … ना, एक … दुसरा.) Which ones put one half UNDERNEATH the other? (कारण, की, -ण्यासाठी, जेव्हा … तेव्हा, -ल्यावर (-lyāvar).) And which single syllable both asks a yes-or-no question and asks why, depending only on where it stands? (का.) When it is dropped altogether, what carries the question instead? (A rising voice — and on paper, the single?, with! its partner.) Then stop.

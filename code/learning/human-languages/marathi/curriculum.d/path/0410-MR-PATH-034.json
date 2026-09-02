@@ -1,0 +1,14 @@
+{
+  "id": "MR-PATH-034",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "MR-C32-nahi-verb",
+    "MR-C32-nako",
+    "MR-R32-not-so"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-047-SENTENCE-NEGATION"
+  ],
+  "after": []
+}

@@ -9,18 +9,18 @@ headword: மணி
 gloss: hour — Tamil's OWN dictionaries treat this as a native Dravidian "bell" word, most likely NOT Kannada/Telugu/Hindi's Sanskrit ghaṇṭā, and a probable homophone trap with an unrelated Sanskrit "gem" word spelled the same way
 romanization: "maṇi"
 concept_tag: TA-TIME-HOUR
-prerequisites: [TA-C17-transparent-middle-synonyms]
+prerequisites: [TA-C17-transparent-middle-synonyms, TA-C07-numbers-practice]
 sounds: [tamil-retroflex-nna, tamil-vowel-sign-i]
 roots: [tamil-mani-bell]
 etymology_hook: "மணி (maṇi, 'hour') — Tamil's own dictionaries (Wiktionary) split this into a native Dravidian 'bell, gong' word (→'hour', via the same bell-strikes-the-hour logic as Sanskrit's ghaṇṭā) and a wholly separate Sanskrit loan meaning 'gem' — though even the comparative Dravidian dictionary (DEDR) flags a possible Sanskrit connection for the whole family as unresolved, so treat 'native' as the best current account, not a closed case"
 duration:
   max_seconds: 240
 requires:
-  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01]
+  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 introduces:
   knowledge: [TA-ETYMON-MANI-01]
 practises:
-  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-MANI-01]
+  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-MANI-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -53,13 +53,14 @@ possible Sanskrit connection for this whole word-family as unresolved, so hold
 "native" as the best current account rather than a settled fact.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-MANI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-MANI-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "maṇi" — hour, also "bell" — native, NOT from Sanskrit ghaṇṭā]
+- [YOU READ: **௩ மணி** — the numeral from chapter seven and the hour word you have met, side by side]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-MANI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-MANI-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 [PAUSE 3s] Is Tamil's **மணி** ("hour") from the same Sanskrit root as
 Kannada/Telugu/Hindi's hour-words? (**Most likely no** — it's treated as a native

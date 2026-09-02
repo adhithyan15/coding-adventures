@@ -1,0 +1,20 @@
+{
+  "chapter": 68,
+  "title": "And, Or, But",
+  "label": "ch:hi-flat-joins",
+  "canDo": "I can join two Hindi sentences with aur, offer a choice with yaa, and take something back with lekin.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "HI-R68-three-joins",
+    "kind": "production",
+    "summary": "Complete HI-R68-three-joins and fill the same slot three ways with chay and dudh: added, offered, contradicted.",
+    "assesses": [
+      "HI-JOIN-AUR-01",
+      "HI-JOIN-YA-01",
+      "HI-JOIN-LEKIN-01"
+    ],
+    "note": "aur is taught gloss-first: its opening au has never been taught, so its Devanagari stays in the headword where the romanization exemption makes it exposure, and the lesson says the letter is owed."
+  }
+}

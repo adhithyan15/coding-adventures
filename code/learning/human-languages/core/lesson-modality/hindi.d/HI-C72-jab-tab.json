@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C72-jab-tab",
+    "language": "hindi",
+    "chapter": 72,
+    "sequence": 2760,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0ea98ededb19eb10"
+  },
+  "findings": []
+}

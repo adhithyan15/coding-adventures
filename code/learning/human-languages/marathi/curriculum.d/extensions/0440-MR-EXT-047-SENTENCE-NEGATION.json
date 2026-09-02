@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-047-SENTENCE-NEGATION",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say that a whole Marathi sentence is not so, say that I do not know, and decline an offer without saying that the thing does not exist.",
+  "prerequisites": [
+    "MR-EXT-046-PAIRED-JOINS"
+  ],
+  "lessons": [
+    "MR-C32-nahi-verb",
+    "MR-C32-nako",
+    "MR-R32-not-so"
+  ]
+}
