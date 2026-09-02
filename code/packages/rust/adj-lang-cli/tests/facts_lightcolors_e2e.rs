@@ -68,3 +68,31 @@ fn physics_light_colors_recall_binds_combined_color_with_citation() {
     // Yellow is a SECONDARY color of light — honest abstention, never a fabricated answer.
     assert!(out.contains("\"abstained\":true"), "yellow abstains: {out}");
 }
+
+const LC_PIN: &str = r#""bindings":{"Makes":"white"},"citations":[{"source":"The commonly used additive primary colors are red, green and blue, and if you overlap all three in effectively equal mixture, you get white light as shown at the center.","locator":"http://hyperphysics.gsu.edu/hbase/vision/addcol.html","trust":"authoritative","corroborations":[{"source":"the standard additive primary colors are red, green and blue.","locator":"http://hyperphysics.gsu.edu/hbase/vision/pricol2.html""#;
+
+#[test]
+fn light_colors_answer_carries_the_second_hyperphysics_span() {
+    let dir = scratch("cite_lc");
+    std::fs::copy(
+        facts_stdlib().join("physics/light-colors.adj"),
+        dir.join("light-colors.adj"),
+    )
+    .expect("copy shipped light-colors.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"light-colors.adj\"\n? light_primary(red, $Makes)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The header documented this as "a second span of the same primary
+    // university resource" restating the primaries, and it had never reached
+    // the data. ANCHORED and JOINT: bindings + envelope + corroboration in one
+    // contiguous span ending on a closing quote.
+    assert!(
+        out.contains(LC_PIN),
+        "red's answer carries the second HyperPhysics span verbatim: {out}"
+    );
+}

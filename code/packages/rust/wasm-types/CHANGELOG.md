@@ -2,6 +2,50 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.25] - 2026-09-02 (feat: `Eqref`/`StructRefAny` -- W37 GC reftype tables)
+
+Two new `ValueType` variants, per `code/specs/W37-wasm-gc-reftype-tables.md`:
+
+- `Eqref` -- `eqref`/`(ref null eq)`, the nullable abstract top of the `eq`
+  hierarchy. Encoded as a single byte `0x6D`, mirroring `Anyref`'s `0x6E`/
+  `I31ref`'s `0x6C` exactly.
+- `StructRefAny` -- `structref`/`(ref null struct)`, the nullable abstract
+  top of the `struct` hierarchy, distinct from the existing `StructRef(u32)`
+  (a nullable CONCRETE reference that always carries a type index). Encoded
+  as a single byte `0x6B`.
+
+`is_bottom_subtype_of` gains `NullRef <: Eqref` and `NullRef <: StructRefAny`,
+mirroring the existing `NullRef <: Anyref`/`NullRef <: I31ref`/`NullRef <:
+StructRef(_)` arms. `canonicalize_value_type` gains matching arms (both
+using the ALREADY-EXISTING `AbstractHeapKind::Eq`/`::Struct` -- this crate's
+canonical-type machinery was one `ValueType` arm away from covering these,
+not missing the underlying representation).
+
+`WasmModule::table_concrete_element_types`'s own doc comment is corrected:
+it previously asserted `Some(vt)` is "always `ConcreteFuncRef`/
+`NonNullConcreteFuncRef`... because no struct/array-typed table can arise
+here" -- true only because nothing had ever populated it with anything else
+yet, not because the field's own `Vec<Option<ValueType>>` type was
+restricted. `wasm-wast-parser` 0.1.100 is the first version to write a
+non-func-family `ValueType` into this field (for a table declared with any
+of the reftypes this slice adds text-format recognition for).
+
+**Why this is a smaller change than the motivating W36 spec's "GC proposal
+remainder" framing suggested**: W37's own re-verification (throwaway-probe
+method against the pinned corpus) found the ~550 NYS directives it cited
+split into three separate causes, only ~302 of which trace to a table
+declaration at all -- see that spec's own "Correction 1" for the full
+breakdown. This slice addresses exactly the table-declaration-attributable
+share.
+
+New unit tests: `eqref_structref_any_single_byte`,
+`eqref_structref_any_byte_tag_matches_encode`,
+`nullref_is_a_bottom_subtype_of_eqref_and_structref_any`,
+`eqref_and_structref_any_are_never_bottom_subtypes_of_nullref`,
+`eqref_and_structref_any_are_distinct_from_every_other_reftype`, and both
+new variants added to `every_abstract_heap_type_canonicalizes_
+deterministically`'s existing table-driven test.
+
 ## [0.1.24] - 2026-09-01 (fix: `Element::is_declarative`, closing the active/declarative-elem-segment-drop gap)
 
 New field on `Element`: `pub is_declarative: bool`. Root-caused while

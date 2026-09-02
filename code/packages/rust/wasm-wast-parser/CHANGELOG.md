@@ -1,6 +1,114 @@
 # Changelog — wasm-wast-parser
 
-## 0.1.99 — 2026-09-02 — fix: parse `select`'s typed `(result t)` folded/flat form (0x1C)
+## 0.1.100 — 2026-09-02 — feat: accept GC reftypes in table declarations (W37)
+
+Per `code/specs/W37-wasm-gc-reftype-tables.md`. Before this release, a
+table declaration accepted only `funcref`/`externref` (and, since W32, a
+concrete function reference type) at its "limits reftype" call site
+(`build_table_limits_and_elements`) -- every other reference type
+(`anyref`/`eqref`/`i31ref`/`structref`/`(ref null eq)`/`(ref null struct)`,
+and any concrete struct/array type) was rejected with `"expected funcref
+or externref"` before `parse_value_type` was ever consulted, even though
+the real GC/function-references proposal's own text-format grammar places
+**no restriction** on which reference type a table may hold
+(`tabletype ::= limits reftype`, verified directly against
+`https://webassembly.github.io/gc/core/syntax/types.html`).
+
+**Changes:**
+
+- `parse_value_type`'s atom match gains `"eqref"`/`"structref"`; its
+  3-item `(ref null <heaptype>)` compound branch gains `"eq"`/`"struct"`
+  alongside the existing `"func"`/`"extern"`/`"i31"` -- the SAME function
+  every other value-type-typed position (params/results/locals/globals/
+  `ref.test`/`ref.cast`) already shares, so every one of those benefits
+  identically, not just tables.
+- `parse_ref_null_heap_type` (the SEPARATE function backing `ref.null
+  <heaptype>`'s own instruction immediate) gains `"eq"` (`0x6D`) and
+  `"struct"` (`0x6B`) -- needed independently: `ref_eq.wast`'s `(ref.null
+  eq)` and `ref_cast.wast`/`ref_test.wast`/`br_on_cast*.wast`'s `(ref.null
+  struct)` calls use this function as an ordinary stack operand, not a
+  table declaration.
+- `build_table_limits_and_elements`'s "limits reftype" branch (the form
+  EVERY table in this cluster's own corpus uses -- `(table 20 (ref null
+  eq))`, `(table $ta 10 anyref)`, `(table 20 structref)`) now dispatches
+  through `parse_value_type` and accepts ANY successfully-parsed
+  `ValueType`, not just `Funcref`/`Externref`/`ConcreteFuncRef`/
+  `NonNullConcreteFuncRef` -- a strict simplification (one match arm
+  covering every case) versus the previous binary allowlist. The inline-
+  shorthand `(table reftype (elem e*))` site's own narrower allowlist is
+  generalized identically, for consistency (no corpus fixture currently
+  exercises that combination with a non-func-family reftype -- this half
+  is a cleanup, not a corpus-driven fix). The imported-table site is
+  deliberately left unchanged: no file in the pinned corpus imports a
+  GC-reftype table, and this crate's text format has no concrete-typed
+  table IMPORT syntax at all (`table_concrete_element_types` is
+  module-defined-tables-only, per its own doc comment).
+
+**A real regression found and fixed during this slice's own
+implementation** (security-review-caught, not corpus-cited by the spec):
+the "limits reftype" branch's own trailing-content handling. The function-
+references proposal's THIRD table form, `limits reftype init_expr` (an
+inline non-`elem`-wrapped initializer right after the reftype -- already
+flagged out of scope by W36 for `elem.wast`'s own 6 NYS of this shape, and
+by W37 for `i31.wast`'s own 4), was previously reachable ONLY with a bare
+`funcref`/`externref` reftype (anything else failed to parse on its own),
+and no corpus fixture that used it ever read the table's content back --
+so silently discarding the trailing content there (falling through without
+consuming it) never surfaced as an observable bug. Generalizing the
+reftype dispatch newly let a CONCRETE reftype (e.g. `(ref $dummy)`) reach
+this same silent-discard path too, and `table.wast`'s own `$t3`/`$t5`
+(`(table $t3 10 (ref $dummy) (ref.func $dummy))`) DO read their content
+back via `table.get` -- silently discarding the initializer there would
+have flipped an honest `NotYetSupported` into a confidently WRONG `Fail`
+(`table.get` returning a null reference instead of the declared one).
+Fixed by explicitly rejecting trailing content after a richer (non-
+`Funcref`/non-`Externref`) reftype -- scoped to exactly the newly-reachable
+combination, so the long-standing, harmless `funcref`/`externref` +
+trailing-content silent-discard behavior (used all over the corpus, e.g.
+`instance.wast`'s `(table (export "tab") 10 funcref (ref.null func))`,
+never read back) is completely unaffected.
+
+**New unit tests** (`src/module.rs`, mirroring
+`declared_table_reads_its_own_reftype_not_a_hardcoded_funcref_default`'s
+own two-part "parses AND `table_concrete_element_types` holds the right
+value" shape): `declared_table_accepts_each_bare_gc_reftype_atom`,
+`declared_table_accepts_compound_ref_null_eq_and_ref_null_struct`,
+`declared_table_still_accepts_a_concrete_function_reference_type`,
+`declared_funcref_and_externref_tables_are_completely_unaffected`,
+`ref_null_eq_and_ref_null_struct_parse_as_instruction_immediates`.
+
+**Corpus impact** (re-verified live, `wasm_conformance_report
+--write-baseline`, diffed programmatically against the pre-slice baseline
+across all 257 files): only 4 files changed. `table-sub.wast` (the
+`table-decl`-attributable share of its 3 NYS) closes as predicted: 0/3
+pass -> 1/3 pass. `ref_cast.wast`/`ref_eq.wast`/`ref_test.wast`/`i31.wast`/
+`br_on_cast.wast`/`br_on_cast_fail.wast` show IDENTICAL pass/fail/NYS
+counts pre- and post-fix (confirmed via direct `run_wast_source` probe:
+their table declarations now parse, but every one hits a SEPARATE,
+already-identified, out-of-scope blocker moving the failure point rather
+than closing it -- `any.convert_extern`/`ref.eq`/`br_on_cast`/an elem-
+segment bare-reftype-keyword gap/`ref.cast`'s own pre-existing concrete-
+func-only restriction). `ref.wast` and `table.wast` each show a small,
+honestly-diagnosed number of `Pass` -> `NotYetSupported` shifts (never
+`Fail`) -- pre-existing, permanently-deferred gaps (`code/specs/
+W05-wasm-conformance-harness.md` §4.3's "no instruction-level type-
+checker", and the non-null-abstract-heap-type gap this crate's own
+`parse_value_type` doc comment already documents) becoming reachable in a
+table-declaration POSITION for the first time now that this dispatch is
+shared infrastructure -- not a new class of gap. `linking.wast` shows 2
+new, real `Fail`s (`assert_unlinkable` cases expecting an "incompatible
+import type" rejection that now links successfully) tracing to a
+DIFFERENT, pre-existing, already-self-documented gap in `wasm-runtime`'s
+own table-import linking (`instantiate`'s own comment: "`Table` doesn't
+track its declared element type at runtime... a table import mismatched
+purely on element type... would incorrectly link here rather than fail...
+revisit if a future PR gives `Table` a real element-type field") -- newly
+EXERCISABLE for the first time because the ONE corpus fixture that tests
+table-import type-checking (`linking.wast`'s own `$Mtable_ex`-based tests)
+itself needed this exact slice to parse at all. Flagged as a follow-up,
+not fixed here (implementing real runtime table-type tracking is a
+`wasm-runtime`/`wasm-execution` `HostInterface` API change, well beyond
+"table declaration parsing").
 
 Closes `code/packages/rust/wasm-conformance/tests/fixtures/testsuite/
 select.wast`, which had 126 `not_yet_supported` directives (mostly

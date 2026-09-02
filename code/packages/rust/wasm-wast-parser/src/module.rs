@@ -355,6 +355,20 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &Wa
                 Some("func") => Ok(ValueType::Funcref),
                 Some("extern") => Ok(ValueType::Externref),
                 Some("i31") => Ok(ValueType::I31ref),
+                // `(ref null eq)` / `(ref null struct)` (W37: `code/specs/
+                // W37-wasm-gc-reftype-tables.md`) -- the fully-spelled-out
+                // nullable ABSTRACT heap-type syntax for the `eq`/`struct`
+                // hierarchy tops, exactly like `func`/`extern`/`i31` above.
+                // No distinct non-null variant is modeled for either (same
+                // simplification `i31` already makes, one line up) -- the
+                // real vendored corpus never spells a bare non-null `(ref
+                // eq)`/`(ref struct)`, only `(ref null eq)`/`(ref null
+                // struct)`/the bare `eqref`/`structref` abbreviations
+                // (confirmed by direct probe of `ref_eq.wast`/
+                // `ref_test.wast`/`ref_cast.wast`/`br_on_cast*.wast`/
+                // `i31.wast`).
+                Some("eq") => Ok(ValueType::Eqref),
+                Some("struct") => Ok(ValueType::StructRefAny),
                 Some(_) => Ok(concrete_ref_value_type(module, resolve_idx(type_names, &items[2], "type")?, true)),
                 None => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" }),
             };
@@ -397,6 +411,17 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &Wa
         "funcref" => Ok(ValueType::Funcref),
         "externref" => Ok(ValueType::Externref),
         "i31ref" => Ok(ValueType::I31ref),
+        // `eqref` / `structref` (W37: `code/specs/
+        // W37-wasm-gc-reftype-tables.md`) -- the bare-atom abbreviations
+        // for `(ref null eq)`/`(ref null struct)` respectively (real GC
+        // proposal text-format grammar, `https://webassembly.github.io/gc/
+        // core/text/types.html`'s own abbreviation table). `eqref` is the
+        // nullable abstract top of the `eq` hierarchy; `structref` is the
+        // nullable abstract top of the `struct` hierarchy, distinct from
+        // the existing `ValueType::StructRef(u32)` (a nullable CONCRETE
+        // reference that always carries a type index).
+        "eqref" => Ok(ValueType::Eqref),
+        "structref" => Ok(ValueType::StructRefAny),
         // `anyref` (GC proposal top reference type) and the four BOTTOM
         // reference types (`nullref`/`nullfuncref`/`nullexternref`/
         // `nullexnref`, W32 first slice: `code/specs/
@@ -485,6 +510,19 @@ fn parse_ref_null_heap_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> 
         "nofunc" => Ok(vec![0x73]),
         "noextern" => Ok(vec![0x72]),
         "noexn" => Ok(vec![0x74]),
+        // `eq` / `struct` (W37: `code/specs/W37-wasm-gc-reftype-tables.md`)
+        // -- `ref.null`'s own heap-type immediate for the two new abstract
+        // hierarchy tops, matching `ValueType::Eqref`/`ValueType::
+        // StructRefAny`'s own `byte_tag()`/`encode()` exactly (`0x6D`/
+        // `0x6B`). Needed independently of the table-declaration fix:
+        // `ref_eq.wast`'s own `(ref.null eq)` and `ref_cast.wast`/
+        // `ref_test.wast`/`br_on_cast*.wast`'s own `(ref.null struct)`
+        // calls are used as ordinary STACK OPERANDS (this function's own
+        // call site), not table declarations -- without this arm they
+        // would fall through to the `_` branch below and be misinterpreted
+        // as an attempt to resolve a type NAMED "eq"/"struct".
+        "eq" => Ok(vec![0x6D]),
+        "struct" => Ok(vec![0x6B]),
         _ => {
             let idx = resolve_idx(type_names, expr, "type")?;
             let mut bytes = vec![0x63u8];
@@ -2048,17 +2086,94 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(looks_like_uint_literal)).count();
         ctx.module.tables[storage_idx as usize].limits = if is64 { parse_limits64(&rest[..digit_count])? } else { parse_limits(&rest[..digit_count])? };
         let reftype = expect_get(rest, digit_count)?;
-        ctx.module.tables[storage_idx as usize].element_type = match reftype.as_atom() {
-            Some("funcref") => wasm_types::FUNCREF,
-            Some("externref") => wasm_types::EXTERNREF,
-            _ => {
+        // W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): this used to be
+        // a hand-rolled `funcref`/`externref`-only atom match, rejecting
+        // every other reftype (`anyref`/`eqref`/`i31ref`/`structref`/
+        // `(ref null eq)`/`(ref null struct)`/... -- the entire GC-reftype-
+        // table cluster, ~550 NYS directives across `ref_eq.wast`/
+        // `ref_test.wast`/`ref_cast.wast`/`i31.wast`/`br_on_cast*.wast`/
+        // `table-sub.wast`) with `"expected funcref or externref"` before
+        // this dispatch was ever reached. Reusing `parse_value_type` here
+        // -- the SAME function every other value-type-typed position
+        // (params/results/locals/globals/`ref.test`/`ref.cast`) already
+        // shares -- is a strict SIMPLIFICATION (one match arm covering
+        // every case) rather than new surface area: the real GC/function-
+        // references proposal text-format grammar places NO restriction on
+        // which reference type a table's element type may be
+        // (`tabletype ::= limits reftype`, no narrowing for tables
+        // specifically -- verified directly against `https://
+        // webassembly.github.io/gc/core/syntax/types.html`).
+        match parse_value_type(reftype, &ctx.type_names, &ctx.module) {
+            Ok(ValueType::Funcref) => {} // already the default placeholder
+            Ok(ValueType::Externref) => ctx.module.tables[storage_idx as usize].element_type = wasm_types::EXTERNREF,
+            Ok(other) => {
+                // Any richer reference type (concrete func/struct/array, or
+                // an abstract GC top type such as `eqref`/`structref`/
+                // `anyref`/`i31ref`) is representable generically -- see
+                // `WasmModule::table_concrete_element_types`'s own
+                // (updated) doc comment. `element_type`'s own byte only
+                // needs to stay OFF the funcref fast path so
+                // `wasm-runtime`'s cross-instance-funcref fixup pass (W35)
+                // doesn't try to resolve a non-func handle as a function
+                // index -- funcref-FAMILY concrete types keep FUNCREF
+                // (existing convention, unchanged), everything else gets
+                // EXTERNREF (matches how an ordinary externref table is
+                // already treated: an opaque, not-funcref placeholder
+                // byte).
+                let is_func_family = matches!(other, ValueType::ConcreteFuncRef(_) | ValueType::NonNullConcreteFuncRef(_));
+                ctx.module.tables[storage_idx as usize].element_type =
+                    if is_func_family { wasm_types::FUNCREF } else { wasm_types::EXTERNREF };
+                ctx.module.table_concrete_element_types[storage_idx as usize] = Some(other);
+                // The function-references proposal's THIRD table-
+                // declaration form, `limits reftype init_expr` (an inline
+                // non-`elem`-wrapped initializer right after the reftype,
+                // e.g. `(table $t 10 (ref $dummy) (ref.func $dummy))`) --
+                // already flagged out of scope by W36 for `elem.wast`'s own
+                // 6 NYS of this identical shape, and by `code/specs/
+                // W37-wasm-gc-reftype-tables.md` for `i31.wast`'s own 4 NYS
+                // of it (binary tag `TABLE_WITH_INIT_EXPR_TAG`/`0x40`; no
+                // implementation exists in this crate for either the
+                // parsing or execution side).
+                //
+                // Before W37, a richer reftype here (anything reaching THIS
+                // arm) always failed to parse on its own, so this trailing
+                // form was never reachable in combination with one. W37's
+                // own `parse_value_type` reuse newly lets it succeed (e.g.
+                // `(ref $dummy)` naming a concrete function type) -- and
+                // `table.wast`'s own `$t3`/`$t5` (`(table $t3 10 (ref
+                // $dummy) (ref.func $dummy))`) DO read their table's
+                // content back via `table.get`. Silently discarding the
+                // trailing initializer here (falling through to `Ok(())`
+                // the way the pre-existing `funcref`/`externref` fast paths
+                // above always have, harmlessly, since no corpus fixture
+                // reads THEIR content back either) would flip an honest
+                // `NotYetSupported` into a confidently WRONG `Fail`
+                // (`table.get` returning a null reference instead of the
+                // declared one) -- exactly the "never trade loud for
+                // silent" failure mode this campaign's own standing
+                // discipline forbids. Explicitly rejecting it, scoped to
+                // richer reftypes only (never the `Funcref`/`Externref` fast
+                // paths above, whose identical silent-discard behavior is
+                // long-standing, corpus-wide, and unaffected by this spec),
+                // keeps this newly-reachable combination the same honest
+                // `NotYetSupported` every other use of this construct
+                // already gets.
+                if rest.len() > digit_count + 1 {
+                    return Err(WastParseError::UnexpectedToken {
+                        pos: expect_get(rest, digit_count + 1)?.pos(),
+                        found: "an inline table initializer expression".to_string(),
+                        expected: "nothing (the function-references proposal's `limits reftype init_expr` table form is not yet supported for a non-funcref/externref reftype)",
+                    });
+                }
+            }
+            Err(_) => {
                 return Err(WastParseError::UnexpectedToken {
                     pos: reftype.pos(),
                     found: reftype.as_atom().unwrap_or("list").to_string(),
-                    expected: "funcref or externref",
+                    expected: "a reference type",
                 })
             }
-        };
+        }
         return Ok(());
     }
 
@@ -2091,35 +2206,39 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
     // actually present before slicing `[1..]`, not just that the list is
     // non-empty.
     let reftype = expect_get(rest, 0)?;
-    match reftype.as_atom() {
-        Some("funcref") => {}
-        Some("externref") => ctx.module.tables[storage_idx as usize].element_type = wasm_types::EXTERNREF,
-        _ => match parse_value_type(reftype, &ctx.type_names, &ctx.module) {
-            Ok(ValueType::Funcref) => {}
-            Ok(ValueType::Externref) => ctx.module.tables[storage_idx as usize].element_type = wasm_types::EXTERNREF,
-            Ok(vt @ (ValueType::ConcreteFuncRef(_) | ValueType::NonNullConcreteFuncRef(_))) => {
-                // Every concrete function reference is still funcref-
-                // family -- `element_type` (the byte every pre-existing
-                // consumer reads) stays FUNCREF; only the richer parallel
-                // vec records which concrete type it actually is.
-                ctx.module.tables[storage_idx as usize].element_type = wasm_types::FUNCREF;
-                ctx.module.table_concrete_element_types[storage_idx as usize] = Some(vt);
-            }
-            Ok(other) => {
-                return Err(WastParseError::UnexpectedToken {
-                    pos: reftype.pos(),
-                    found: format!("{other:?}"),
-                    expected: "funcref, externref, or a concrete function reference type",
-                })
-            }
-            Err(_) => {
-                return Err(WastParseError::UnexpectedToken {
-                    pos: reftype.pos(),
-                    found: reftype.as_atom().unwrap_or("list").to_string(),
-                    expected: "funcref or externref",
-                })
-            }
-        },
+    // W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): generalized
+    // identically to the "limits reftype" branch above -- this used to
+    // hand-check the `funcref`/`externref` atoms first and only fall back
+    // to `parse_value_type` for a concrete function reference type. Since
+    // `parse_value_type`'s own atom match already recognizes `funcref`/
+    // `externref` (returning the exact same `ValueType::Funcref`/
+    // `ValueType::Externref` this branch used to special-case), calling it
+    // unconditionally is a strict simplification, not new surface area --
+    // and, for consistency with the "limits reftype" form, accepts any
+    // successfully-parsed reference type (not just a concrete function
+    // one) so a future `(table funcref (elem ...))`-shaped GC table
+    // doesn't hit a second, differently-scoped restriction. No file in the
+    // current corpus exercises this combination with a non-func-family
+    // reftype -- this is a consistency cleanup, not a corpus-driven fix.
+    match parse_value_type(reftype, &ctx.type_names, &ctx.module) {
+        Ok(ValueType::Funcref) => {}
+        Ok(ValueType::Externref) => ctx.module.tables[storage_idx as usize].element_type = wasm_types::EXTERNREF,
+        Ok(other) => {
+            // See the "limits reftype" branch above for why funcref-family
+            // concrete types keep `FUNCREF` and everything else (concrete
+            // struct/array, or an abstract GC top type) gets `EXTERNREF`.
+            let is_func_family = matches!(other, ValueType::ConcreteFuncRef(_) | ValueType::NonNullConcreteFuncRef(_));
+            ctx.module.tables[storage_idx as usize].element_type =
+                if is_func_family { wasm_types::FUNCREF } else { wasm_types::EXTERNREF };
+            ctx.module.table_concrete_element_types[storage_idx as usize] = Some(other);
+        }
+        Err(_) => {
+            return Err(WastParseError::UnexpectedToken {
+                pos: reftype.pos(),
+                found: reftype.as_atom().unwrap_or("list").to_string(),
+                expected: "a reference type",
+            })
+        }
     }
     let elem_items = expect_get(rest, 1)?
         .as_list()
@@ -5930,6 +6049,123 @@ mod tests {
         let m = parse_module("(module (table $t2 2 externref) (table $t3 3 funcref))").unwrap();
         assert_eq!(m.tables[0].element_type, wasm_types::EXTERNREF);
         assert_eq!(m.tables[1].element_type, wasm_types::FUNCREF);
+    }
+
+    // ── W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): GC reftype table
+    // declarations -- before this spec, `build_table_limits_and_elements`'s
+    // "limits reftype" branch hand-rolled a `funcref`/`externref`-only atom
+    // match, rejecting every other reftype with `"expected funcref or
+    // externref"` before `parse_value_type` (or `table_concrete_element_
+    // types`) was ever consulted. These tests parse a table declared with
+    // each newly-supported reftype keyword and confirm both that the
+    // module parses AND that `table_concrete_element_types` holds the
+    // expected `ValueType` -- the same two-part assertion this file's own
+    // `declared_table_reads_its_own_reftype_not_a_hardcoded_funcref_
+    // default` test already established for `funcref`/`externref`.
+
+    /// Bare abstract-hierarchy-top atoms (`eqref`/`anyref`/`i31ref`/
+    /// `structref`) -- every one of `ref_eq.wast`'s/`ref_test.wast`'s/
+    /// `ref_cast.wast`'s/`i31.wast`'s own table declarations use exactly
+    /// this shape (`(table 20 (ref null eq))` is the ONE exception, covered
+    /// by the compound-form test below).
+    #[test]
+    fn declared_table_accepts_each_bare_gc_reftype_atom() {
+        let m = parse_module(
+            "(module
+               (table $eq 1 eqref)
+               (table $any 1 anyref)
+               (table $i31 1 i31ref)
+               (table $struct 1 structref))",
+        )
+        .unwrap();
+        // `anyref`/`i31ref` already had real `ValueType` variants before
+        // this spec (W20/pre-existing) -- their OWN table-declaration
+        // acceptance is part of this exact fix too (previously rejected at
+        // the same hand-rolled atom match), so they're included here
+        // alongside the two genuinely NEW variants (`eqref`/`structref`)
+        // for one combined regression test.
+        assert_eq!(m.table_concrete_element_types[0], Some(wasm_types::ValueType::Eqref));
+        assert_eq!(m.table_concrete_element_types[1], Some(wasm_types::ValueType::Anyref));
+        assert_eq!(m.table_concrete_element_types[2], Some(wasm_types::ValueType::I31ref));
+        assert_eq!(m.table_concrete_element_types[3], Some(wasm_types::ValueType::StructRefAny));
+        // None of these are funcref-family, so `element_type` (the legacy
+        // byte every pre-existing consumer still reads) must land on the
+        // generic EXTERNREF placeholder, exactly like an ordinary
+        // externref table -- never the FUNCREF fast path (see
+        // `wasm-runtime`'s cross-instance-funcref fixup pass, which gates
+        // strictly on that byte).
+        for t in &m.tables {
+            assert_eq!(t.element_type, wasm_types::EXTERNREF);
+        }
+    }
+
+    /// The fully-spelled-out compound forms (`(ref null eq)`/`(ref null
+    /// struct)`) -- the exact shape `ref_eq.wast`'s own `(table 20 (ref
+    /// null eq))` and `ref_test.wast`'s/`ref_cast.wast`'s/`br_on_cast*.
+    /// wast`'s own `(table N (ref null struct))` use. Proves
+    /// `parse_value_type`'s COMPOUND list branch (not just its atom match)
+    /// is reachable from a table declaration.
+    #[test]
+    fn declared_table_accepts_compound_ref_null_eq_and_ref_null_struct() {
+        let m = parse_module("(module (table $eq 20 (ref null eq)) (table $struct 20 (ref null struct)))").unwrap();
+        assert_eq!(m.table_concrete_element_types[0], Some(wasm_types::ValueType::Eqref));
+        assert_eq!(m.table_concrete_element_types[1], Some(wasm_types::ValueType::StructRefAny));
+    }
+
+    /// A concrete function reference type (`(ref null $t)`) -- already
+    /// accepted at this exact call site since W32's second slice
+    /// (`br_table.wast`'s own regression), re-asserted here so this spec's
+    /// rewrite of the branch (from a narrow `Funcref`/`Externref` allowlist
+    /// to "accept any successfully-parsed `ValueType`") provably keeps it
+    /// working unchanged -- the same "confirm existing behavior survives
+    /// the generalization" discipline the funcref/externref test below
+    /// applies to the MVP-era reftypes.
+    #[test]
+    fn declared_table_still_accepts_a_concrete_function_reference_type() {
+        let m = parse_module("(module (type $t (func)) (table $ct 10 (ref null $t)))").unwrap();
+        assert_eq!(m.table_concrete_element_types[0], Some(wasm_types::ValueType::ConcreteFuncRef(0)));
+        // Funcref-family concrete types keep the FUNCREF fast-path byte,
+        // an existing convention this spec's rewrite does not change.
+        assert_eq!(m.tables[0].element_type, wasm_types::FUNCREF);
+    }
+
+    /// Existing `funcref`/`externref` table declarations -- including
+    /// multiple tables in the SAME module, and the plain-atom spelling
+    /// every pre-W37 table in the corpus already uses -- are completely
+    /// unaffected by routing this branch through `parse_value_type`
+    /// instead of a hand-rolled atom match. `table_concrete_element_types`
+    /// stays `None` for both (exactly as it always has): the field only
+    /// ever holds `Some` for a reftype richer than plain `funcref`/
+    /// `externref`.
+    #[test]
+    fn declared_funcref_and_externref_tables_are_completely_unaffected() {
+        let m = parse_module("(module (table $tf 1 funcref) (table $te 1 externref))").unwrap();
+        assert_eq!(m.tables[0].element_type, wasm_types::FUNCREF);
+        assert_eq!(m.tables[1].element_type, wasm_types::EXTERNREF);
+        assert_eq!(m.table_concrete_element_types[0], None);
+        assert_eq!(m.table_concrete_element_types[1], None);
+    }
+
+    /// `ref.null eq` / `ref.null struct` -- the SEPARATE `parse_ref_null_
+    /// heap_type` function backing `ref.null`'s own instruction immediate
+    /// (not a table declaration at all), needed independently per the
+    /// spec's own design section 2: `ref_eq.wast`'s `(ref.null eq)` and
+    /// `ref_cast.wast`'s/`ref_test.wast`'s/`br_on_cast*.wast`'s `(ref.null
+    /// struct)` calls use this as an ordinary STACK OPERAND. Encoded as a
+    /// real function body (not just a const-expr) so `encode_instr_list`'s
+    /// normal instruction path exercises it.
+    #[test]
+    fn ref_null_eq_and_ref_null_struct_parse_as_instruction_immediates() {
+        let m = parse_module(
+            "(module
+               (func (drop (ref.null eq)))
+               (func (drop (ref.null struct))))",
+        )
+        .unwrap();
+        // `ref.null <heap type>` = opcode 0xD0 followed by the heap-type
+        // byte -- `Eqref`/`StructRefAny`'s own `byte_tag()` (0x6D/0x6B).
+        assert!(m.code[0].code.windows(2).any(|w| w == [0xD0, 0x6D]), "expected ref.null eq (0xD0 0x6D) in {:?}", m.code[0].code);
+        assert!(m.code[1].code.windows(2).any(|w| w == [0xD0, 0x6B]), "expected ref.null struct (0xD0 0x6B) in {:?}", m.code[1].code);
     }
 
     /// Same class of bug, for an imported table: `(import "m" "n" (table
