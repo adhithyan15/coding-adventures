@@ -1,0 +1,11 @@
+{
+  "id": "TE-EXT-010-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the three Telugu farewells of chapter 4.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C04-practice"
+  ]
+}

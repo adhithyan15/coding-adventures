@@ -14,14 +14,14 @@ roots: [semitic-s-l-m]
 duration:
   max_seconds: 180
 requires:
-  knowledge: [AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-FULL-GREETING-07, AR-SCRIPT-WRITE-FULL-GREETING-09]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-WRITE-FULL-GREETING-13]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,13 +33,13 @@ reviews_of: [AR-W00-kaf-waw-alaykum, AR-C01-as-salamu-alaykum]
 # *as-salāmu ʿalaykum* — hear, write, repair
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11] -->
 
 [PAUSE 2s] Say *as-salāmu ʿalaykum* once. Then turn the page or cover every
 Arabic model. This lesson adds no shape and no new phrase.
 
 ## Writing — dictation and repair
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07, AR-SCRIPT-WRITE-FULL-GREETING-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 1. Hear or read the romanization *as-salāmu ʿalaykum*.
@@ -51,7 +51,7 @@ Stop after one repaired attempt. Retrieval is the goal; repetition without
 attention is not.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07, AR-SCRIPT-WRITE-FULL-GREETING-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 
 [PAUSE 3s] Read **السلام عليكم** aloud. Which part did you repair? Cover the
 model and write only **عليكم** once more if that repair still feels uncertain.

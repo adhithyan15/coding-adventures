@@ -1377,7 +1377,37 @@ pub struct Element {
     /// active segment, applied once at instantiation via `offset_expr`/
     /// `table_index` above. Same role `DataSegment.is_passive` plays for
     /// data segments (task #95).
+    ///
+    /// Also `true` for a **declarative** segment (`is_declarative` below)
+    /// -- declarative segments name no table either, so they share this
+    /// flag's "no `offset_expr`/`table_index`" convention, but are NOT
+    /// genuinely passive: see `is_declarative`'s own doc comment for why
+    /// the two need a second, independent flag to stay distinguishable.
     pub is_passive: bool,
+    /// `true` for a **declarative** segment (reference-types proposal:
+    /// binary segment-mode flags `0x03`/`0x07`, text `(elem declare
+    /// func ...)`). A declarative segment is a THIRD element-segment mode,
+    /// distinct from both active and passive -- like a passive segment it
+    /// names no table (`is_passive` is ALSO `true` for it, by this
+    /// struct's own "no dedicated third-variant" convention -- see
+    /// `wasm-wast-parser::module::build_elem`'s doc comment for the full
+    /// history), but UNLIKE a genuinely passive segment, the real spec
+    /// requires it be treated as already dropped from the moment its
+    /// enclosing module finishes instantiating: its only real purpose is
+    /// making `ref.func`-referenced functions "declared" (a validation-time
+    /// concern this repo's `wasm-validator` does not separately enforce),
+    /// never to be copied into a table. `wasm-runtime::instantiate()`
+    /// consults this flag (not `is_passive` alone) to mark a declarative
+    /// segment's `dropped_elements` entry `true` immediately, with no
+    /// content ever copied anywhere -- so a LATER `table.init` against it
+    /// correctly finds it already-dropped and traps, matching the real
+    /// spec's own "after an active or declarative element segment is
+    /// initialized, it is dropped" rule (which for a declarative segment
+    /// means: dropped before any code can ever run, since it's never live
+    /// to begin with). `false` for both active and genuinely-passive
+    /// segments -- only `elem.drop`/consuming `table.init` calls change a
+    /// genuinely-passive segment's dropped state, never this flag.
+    pub is_declarative: bool,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -3275,6 +3305,7 @@ mod tests {
             offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
             function_indices: vec![Some(1), Some(3), Some(5), Some(7)],
             is_passive: false,
+            is_declarative: false,
         };
         assert_eq!(elem.table_index, 0);
         assert_eq!(elem.function_indices, vec![Some(1), Some(3), Some(5), Some(7)]);

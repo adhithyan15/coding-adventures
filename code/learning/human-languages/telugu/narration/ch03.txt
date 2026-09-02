@@ -349,6 +349,12 @@ Warm-up.
 No new words. The whole responding cycle, from atoms you now own.
 
 The exchange.
+Read the whole cycle off the page first — Telugu, then the sound, then the sense:
+[a table of 3 rows, read aloud]
+Telugu: మీరు ఎలా ఉన్నారు? (mīru elā unnāru?), mīru elā unnāru. English: How are you?
+Telugu: నేను బాగున్నాను, ధన్యవాదములు., nēnu bāgunnānu, dhanyavādamulu. English: I'm well, thank you.
+Telugu: పరవాలేదు., paravālēdu. English: No problem / you're welcome.
+A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead.
 [pause 1 second after each]
 [your turn — say: "How are you?" (respectful) — mīru elā unnāru?]
 [pause 8 seconds for the answer]
@@ -359,7 +365,7 @@ The exchange.
 [your turn — say: the familiar version of the question — nuvvu elā unnāvu?]
 [pause 8 seconds for the answer]
 
-The atoms.
+What you've built — the atoms.
 [pause 2 seconds]
 [your turn — say: the e- question-word for "how" (elā)]
 [pause 8 seconds for the answer]
@@ -368,8 +374,9 @@ The atoms.
 [your turn — say: the "there is / there is not" pair (undi / lēdu)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+The words, taken apart — roots you now carry.
 [pause 2 seconds]
+Roots you now carry:
 elā from the interrogative e- (native Dravidian, like Tamil eppaḍi).
 nēnu from Proto-Dravidian (unrelated to English me); possessive nā.
 bāgā from bāgu "goodness"; nēnu bāgunnānu "I'm well".

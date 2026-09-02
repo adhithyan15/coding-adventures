@@ -170,6 +170,35 @@ export function penPathD(stroke: Stroke, fraction = 1): string {
     .join(" ");
 }
 
+/**
+ * SVG path data for the slice of a stroke between two fractions of its length.
+ *
+ * `penPathD` answers "how much has been written by now"; this answers "which
+ * bit is being written RIGHT NOW". A filmstrip frame needs both, because a
+ * stroke usually holds several labelled parts: the parts already travelled in
+ * this same stroke belong in the muted tone with the finished strokes, and only
+ * the part this frame is about belongs in ink. Without this, a five-segment
+ * stroke would light up entirely on its first frame and the captions would
+ * describe a movement the picture had already finished.
+ *
+ * Both ends are interpolated on the segment the cut falls in, by ARC LENGTH and
+ * with the same arithmetic `penPathD` uses, so `penPathBetween(s, 0, f)` draws
+ * exactly what `penPathD(s, f)` draws — the frames butt together at the joins
+ * rather than merely near them.
+ */
+export function penPathBetween(stroke: Stroke, from: number, to: number): string {
+  const pts = penPath(stroke);
+  if (pts.length === 0) return "";
+  const start = clamp01(from);
+  const end = clamp01(to);
+  if (end <= start) return "";
+  const drawn = sliceByFraction(pts, start, end);
+  const f = (n: number) => Math.round(n * 10) / 10;
+  return drawn
+    .map((p, i) => `${i === 0 ? "M" : "L"}${f(p.x)} ${f(p.y)}`)
+    .join(" ");
+}
+
 /** The pen's position and direction at a given fraction along the stroke. */
 export function penTip(
   stroke: Stroke,
@@ -209,6 +238,45 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
       break;
     }
   }
+  return out;
+}
+
+// Cut a polyline down to the arc-length window [from, to]. Points strictly
+// inside the window are kept as authored; the two ends are interpolated, so a
+// window that starts and finishes mid-segment still yields a path that begins
+// and ends exactly where the fractions say — which is what makes two adjacent
+// frames share a boundary point instead of overlapping or leaving a gap.
+function sliceByFraction(pts: Point[], from: number, to: number): Point[] {
+  if (pts.length === 1) return [pts[0]];
+  const lengths: number[] = [0];
+  for (let i = 1; i < pts.length; i++) {
+    lengths.push(
+      lengths[i - 1] +
+        Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y),
+    );
+  }
+  const total = lengths[lengths.length - 1];
+  // A zero-length path has no window to cut: report the single point it is.
+  if (total === 0) return [pts[0]];
+  const startAt = total * from;
+  const endAt = total * to;
+  const at = (distance: number): Point => {
+    for (let i = 1; i < pts.length; i++) {
+      if (lengths[i] < distance) continue;
+      const span = lengths[i] - lengths[i - 1];
+      const t = span === 0 ? 0 : (distance - lengths[i - 1]) / span;
+      return {
+        x: pts[i - 1].x + t * (pts[i].x - pts[i - 1].x),
+        y: pts[i - 1].y + t * (pts[i].y - pts[i - 1].y),
+      };
+    }
+    return pts[pts.length - 1];
+  };
+  const out: Point[] = [at(startAt)];
+  for (let i = 0; i < pts.length; i++) {
+    if (lengths[i] > startAt && lengths[i] < endAt) out.push(pts[i]);
+  }
+  out.push(at(endAt));
   return out;
 }
 

@@ -1435,6 +1435,7 @@ mod tests {
             offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
             function_indices: vec![Some(0), None],
             is_passive: false,
+            is_declarative: false,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1464,6 +1465,7 @@ mod tests {
             offset_expr: vec![0x41, 0x00, 0x0B],
             function_indices: vec![None],
             is_passive: false,
+            is_declarative: false,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1490,6 +1492,7 @@ mod tests {
             offset_expr: vec![0x41, 0x05, 0x0B], // i32.const 5; end
             function_indices: vec![None, Some(7)],
             is_passive: false,
+            is_declarative: false,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1517,6 +1520,7 @@ mod tests {
             offset_expr: vec![0x41, 0x00, 0x0B],
             function_indices: vec![Some(3), Some(1), Some(4)],
             is_passive: false,
+            is_declarative: false,
         };
         let bytes = encode_element(&element);
         assert_eq!(

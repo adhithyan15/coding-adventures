@@ -1699,6 +1699,7 @@ mod tests {
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 function_indices: vec![Some(0)],
                 is_passive: false,
+                is_declarative: false,
             }],
             ..Default::default()
         };
@@ -1721,6 +1722,7 @@ mod tests {
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 function_indices: vec![Some(0)],
                 is_passive: false,
+                is_declarative: false,
             }],
             ..Default::default()
         };
@@ -1743,6 +1745,7 @@ mod tests {
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 function_indices: vec![Some(99)], // out of bounds
                 is_passive: false,
+                is_declarative: false,
             }],
             ..Default::default()
         };
@@ -1765,6 +1768,7 @@ mod tests {
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 function_indices: vec![Some(0)],
                 is_passive: false,
+                is_declarative: false,
             }],
             ..Default::default()
         };

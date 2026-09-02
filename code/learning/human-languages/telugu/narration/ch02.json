@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ea31596781d8f6fa",
+  "sourceHash": "fnv1a64:65c50d5956a97964",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2799e3e4d20f8597",
+      "sourceHash": "fnv1a64:fc0c48edaec26109",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -70,7 +70,29 @@
             },
             {
               "kind": "speech",
-              "text": "Across the family: Telugu pēru, Tamil peyar, Malayalam pēr, Kannada hesaru — one Dravidian word; only Hindi nām / English name are Indo-European."
+              "text": "Across the family — the same idea, six ways:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Name\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Telugu. \"Name\": పేరు pēru. Source: native Dravidian (pēr).",
+                "Language: Tamil. \"Name\": peyar. Source: the same Dravidian root.",
+                "Language: Malayalam. \"Name\": pēr. Source: the same Dravidian root.",
+                "Language: Kannada. \"Name\": hesaru. Source: Dravidian (pesar, p becomes h).",
+                "Language: Hindi. \"Name\": nām. Source: Sanskrit (Indo-European).",
+                "Language: English. \"Name\": name. Source: Indo-European."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four Dravidian tongues, one inherited word — even Kannada's hesaru, once you know the old p went soft. Only the last two rows come from somewhere else."
             }
           ]
         },
@@ -313,7 +335,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:affcd5254104a7fc",
+      "sourceHash": "fnv1a64:84a96954a98c8ccc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -607,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf5e3adb30e69cbd",
+      "sourceHash": "fnv1a64:c89a30766e4a1cc8",
       "notice": null,
       "blocks": [
         {
@@ -629,8 +651,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -873,7 +895,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a2fe9264ff4f648b",
+      "sourceHash": "fnv1a64:ab6ae7db4c2de91c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -946,7 +968,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నువ్వు (nuvvu); మీరు (m=i ru, మీ m=i + రు ru)."
+              "text": "నువ్వు (nuvvu); మీరు (mīru, మీ mī + రు ru)."
             }
           ]
         },
@@ -1169,7 +1191,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:196b7b98a3b2a6f3",
+      "sourceHash": "fnv1a64:1d598359261ad30d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1443,7 +1465,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:830d4f92b503f5a3",
+      "sourceHash": "fnv1a64:e49ac35f9eccf7d8",
       "notice": null,
       "blocks": [
         {
@@ -1465,8 +1487,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -1717,7 +1739,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9092a3066eddc0a",
+      "sourceHash": "fnv1a64:5c893de1a7b5cb4c",
       "notice": null,
       "blocks": [
         {
@@ -1739,8 +1761,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase",
+          "type": "input",
+          "title": "You'll want to know: the full phrase",
           "segments": [
             {
               "kind": "speech",
@@ -1983,13 +2005,30 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc83a822e1466024",
+      "sourceHash": "fnv1a64:755d3c375d191713",
       "notice": null,
       "blocks": [
         {
           "index": 0,
-          "type": "unknown",
-          "title": "The dialogue",
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Everything you have met in this chapter, said once through as the exchange it was always for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange — the dialogue",
           "segments": [
             {
               "kind": "table",
@@ -2033,7 +2072,7 @@
           ]
         },
         {
-          "index": 1,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -2073,7 +2112,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
