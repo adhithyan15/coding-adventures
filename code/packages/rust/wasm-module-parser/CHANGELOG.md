@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.16] — 2026-09-01 — mechanical fallout of `wasm_types::Element::is_declarative`
+
+`wasm-types` 0.1.24 added `Element::is_declarative` (see that crate's own
+CHANGELOG for the full root-cause writeup: `wasm-runtime::instantiate()`
+had no way to tell a declarative elem segment apart from a genuinely
+passive one, so it could never mark a declarative segment "already
+dropped" without wrongly dropping every passive segment too). This
+crate's own binary decoder (`parse_element_section`) only ever accepts
+segment-mode flags 0/1/2/5 — modes 3/7 (declarative) are a clean, explicit
+`WasmParseError`, never reach the `Element` it pushes — so this is a pure
+mechanical fallout: the one `Element { .. }` construction site now sets
+`is_declarative: false` unconditionally, with a doc-comment note
+explaining why that's always correct here. No behavior change in this
+crate.
+
 ## [0.2.15] — 2026-09-01 — track whether a binary module declared a data count section
 
 Real corpus bug found during a fresh prioritization pass (`code/specs/

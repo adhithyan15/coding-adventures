@@ -62,8 +62,10 @@ export {
   type Point,
   type Segment,
   type Stroke,
+  type StrokeSource,
   type LetterDuctus,
   DUCTUS,
+  penPathBetween,
 } from "./strokes.ts";
 
 export {
@@ -93,3 +95,16 @@ export {
   isSafeName,
   svgMarkup,
 } from "./ductusview.ts";
+
+export {
+  type FilmstripViewBox,
+  type FilmstripFrame,
+  type FilmstripEntry,
+  type FilmstripLedger,
+  FILMSTRIP_LEDGER_PATH,
+  FILMSTRIP_LEDGER_GENERATOR,
+  FILMSTRIP_LEDGER_OPTIONS,
+  buildFilmstripEntry,
+  buildFilmstripLedger,
+  serialiseFilmstripLedger,
+} from "./filmstrip-ledger.ts";

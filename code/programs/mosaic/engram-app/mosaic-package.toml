@@ -34,5 +34,23 @@ files = [
   { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
 ]
 
+# Dependencies Engram's own host assets need, which the generated projects have
+# no reason to declare.
+#
+# `MosaicHost.kt` parses the engine's JSON responses with `org.json`. The Compose
+# emitter declares JNA and kotlinx-serialization because the code IT generates
+# uses them; it cannot know about a library only this package's host file
+# imports.
+#
+# Without this the emitted Compose project does not compile:
+#
+#     e: MosaicHost.kt:8:12 Unresolved reference 'json'.
+#
+# which is why it had only ever been built by a PowerShell script that patched
+# build.gradle.kts afterwards -- and therefore never on the Linux CI runner.
+dependencies = [
+  { backend = "compose", coordinate = "org.json:json:20260522" },
+]
+
 [kernel]
 version = "1"

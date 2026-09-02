@@ -133,10 +133,39 @@ pub struct ComponentsSection {
     pub exports: Vec<String>,
 }
 
-/// Optional files a package wants copied into generated host project shells.
+/// Optional files a package wants copied into generated host project shells,
+/// and the third-party dependencies those files need in order to compile.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct HostAssetsSection {
     pub files: Vec<HostAsset>,
+    /// Dependencies a host asset needs, which the generated project would not
+    /// otherwise declare.
+    ///
+    /// `[host_assets]` lets a package replace a generated host file, but until
+    /// now gave it no way to say what that replacement *needs*. So a host asset
+    /// importing a library outside the emitter's own set produced a project
+    /// that could not compile, and the only fix was patching the generated
+    /// build file out of band.
+    ///
+    /// Engram hit exactly that: its Compose host imports `org.json`, the
+    /// emitted `build.gradle.kts` never declared it, and the emitted Compose
+    /// project had therefore **never compiled** without a PowerShell script
+    /// editing it afterwards — which meant the Linux CI runner could not build
+    /// it at all.
+    pub dependencies: Vec<HostAssetDependency>,
+}
+
+/// One third-party dependency a host asset needs, for one backend.
+///
+/// `coordinate` is passed through verbatim in whatever form the backend's
+/// package manager expects — a Maven coordinate for Compose, an npm
+/// name-and-range for Electron. The manifest deliberately does not try to model
+/// every ecosystem's version syntax; it carries the string the generated build
+/// file needs.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HostAssetDependency {
+    pub backend: String,
+    pub coordinate: String,
 }
 
 /// A single package-relative file copy into one backend output directory.
@@ -263,6 +292,7 @@ struct RawComponents {
 #[derive(Debug, Deserialize)]
 struct RawHostAssets {
     files: Option<Vec<RawHostAsset>>,
+    dependencies: Option<Vec<RawHostAssetDependency>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -270,6 +300,12 @@ struct RawHostAsset {
     backend: Option<String>,
     source: Option<String>,
     target: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct RawHostAssetDependency {
+    backend: Option<String>,
+    coordinate: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -493,7 +529,22 @@ fn validate_host_assets(raw: Option<RawHostAssets>) -> Result<HostAssetsSection,
         });
     }
 
-    Ok(HostAssetsSection { files })
+    let raw_dependencies = raw.dependencies.unwrap_or_default();
+    let mut dependencies = Vec::with_capacity(raw_dependencies.len());
+    for dependency in raw_dependencies {
+        let backend = require_non_empty(dependency.backend, "host_assets.dependencies", "backend")?;
+        let coordinate =
+            require_non_empty(dependency.coordinate, "host_assets.dependencies", "coordinate")?;
+        dependencies.push(HostAssetDependency {
+            backend,
+            coordinate,
+        });
+    }
+
+    Ok(HostAssetsSection {
+        files,
+        dependencies,
+    })
 }
 
 fn validate_kernel(raw: RawKernel) -> Result<KernelSection, ManifestError> {
@@ -933,5 +984,112 @@ version = "{bad}"
         let nope = Path::new("/this/path/should/not/exist/manifest.toml");
         let err = parse_path(nope).unwrap_err();
         assert!(matches!(err, ManifestError::TomlSyntax(_)));
+    }
+
+    #[test]
+    fn host_assets_may_declare_dependencies_their_files_need() {
+        // `[host_assets]` lets a package replace a generated host file. Until
+        // this existed it gave no way to say what the replacement NEEDS, so a
+        // host file importing anything outside the emitter's own set produced a
+        // project that could not compile -- fixable only by patching the
+        // generated build file out of band.
+        let toml = r#"
+[package]
+name = "demo"
+version = "0.1.0"
+description = "demo package"
+license = "MIT"
+
+[components]
+exports = ["Demo"]
+
+[host_assets]
+files = [
+  { backend = "compose", source = "host/MosaicHost.kt", target = "src/main/kotlin/MosaicHost.kt" },
+]
+dependencies = [
+  { backend = "compose", coordinate = "org.json:json:20260522" },
+  { backend = "electron", coordinate = "some-npm-package@^1.2.3" },
+]
+
+[kernel]
+version = "1"
+"#;
+        let manifest = parse(toml).expect("manifest should parse");
+        assert_eq!(manifest.host_assets.dependencies.len(), 2);
+        assert_eq!(manifest.host_assets.dependencies[0].backend, "compose");
+        assert_eq!(
+            manifest.host_assets.dependencies[0].coordinate,
+            "org.json:json:20260522"
+        );
+        // The coordinate is passed through verbatim in whatever form the
+        // backend's package manager expects -- a Maven coordinate here, an npm
+        // range there. The manifest deliberately does not model every
+        // ecosystem's version syntax.
+        assert_eq!(
+            manifest.host_assets.dependencies[1].coordinate,
+            "some-npm-package@^1.2.3"
+        );
+    }
+
+    #[test]
+    fn host_asset_dependencies_are_optional() {
+        // Every existing manifest omits them, and must keep parsing.
+        let toml = r#"
+[package]
+name = "demo"
+version = "0.1.0"
+description = "demo package"
+license = "MIT"
+
+[components]
+exports = ["Demo"]
+
+[host_assets]
+files = [
+  { backend = "qt", source = "host/MosaicHost.cpp", target = "MosaicHost.cpp" },
+]
+
+[kernel]
+version = "1"
+"#;
+        let manifest = parse(toml).expect("manifest should parse");
+        assert!(manifest.host_assets.dependencies.is_empty());
+        assert_eq!(manifest.host_assets.files.len(), 1);
+    }
+
+    #[test]
+    fn a_dependency_missing_its_backend_or_coordinate_is_rejected() {
+        // Both halves are load-bearing: a coordinate with no backend would be
+        // silently dropped by every emitter, and a backend with no coordinate
+        // would emit an empty dependency line into a build file.
+        for body in [
+            r#"dependencies = [ { coordinate = "org.json:json:1" } ]"#,
+            r#"dependencies = [ { backend = "compose" } ]"#,
+            r#"dependencies = [ { backend = "", coordinate = "org.json:json:1" } ]"#,
+        ] {
+            let toml = format!(
+                r#"
+[package]
+name = "demo"
+version = "0.1.0"
+description = "demo package"
+license = "MIT"
+
+[components]
+exports = ["Demo"]
+
+[host_assets]
+{body}
+
+[kernel]
+version = "1"
+"#
+            );
+            assert!(
+                parse(&toml).is_err(),
+                "expected rejection for: {body}"
+            );
+        }
     }
 }

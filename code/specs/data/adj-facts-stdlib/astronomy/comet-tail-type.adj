@@ -58,4 +58,5 @@ table comet_tail_type {
     source "This dust tail traces a broad, gently curving path away from the Sun."
     locator "https://spaceplace.nasa.gov/comets/en/"
     trust authoritative
+    cites "The ion tail always points directly away from the Sun." locator "https://spaceplace.nasa.gov/comets/en/"
 }

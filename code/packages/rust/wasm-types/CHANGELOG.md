@@ -2,6 +2,50 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.24] - 2026-09-01 (fix: `Element::is_declarative`, closing the active/declarative-elem-segment-drop gap)
+
+New field on `Element`: `pub is_declarative: bool`. Root-caused while
+chasing the 4 genuinely new real conformance failures `wasm-conformance`
+0.1.117's baseline regen honestly reported (not fixed) after
+`wasm-wast-parser` 0.1.96 let `table_init.wast`/`table_init64.wast`/
+`elem.wast`'s own "Implicitly dropped elements" corpus cases parse for
+the first time.
+
+**Real spec semantics, verified against the spec text directly**: "after
+an active or declarative element segment is initialized, it is dropped"
+-- so a `table.init` naming an active OR declarative segment must always
+trap "out of bounds table access", never succeed, because by the time any
+code can run, that segment has already been implicitly dropped at
+instantiation. This is DIFFERENT from a genuinely PASSIVE segment, which
+stays resident and `table.init`-able until an EXPLICIT `elem.drop` (never
+`table.init` itself, which does not auto-drop a passive segment).
+
+**The gap this field closes**: `Element` had no way to represent
+"declarative" at all before this change -- `wasm-wast-parser::module::
+build_elem`'s own doc comment already documented the deliberate
+simplification of folding a declarative segment into `is_passive: true`
+(same "no table, no offset" shape a genuinely passive segment has), on
+the theory that "nothing in this repo's vendored corpus ever `table.init`
+s/`elem.drop`s a segment this parser marks declarative." That census was
+wrong: `elem.wast`'s own "Implicitly dropped elements" section does
+exactly that (`(elem $e declare func $f) ... (table.init $e ...)`), newly
+reachable now that `wasm-wast-parser` 0.1.96 fixed an unrelated arity bug
+that had kept this module from parsing at all. With `is_passive: true`
+the ONLY signal available, `wasm-runtime::instantiate()` had no way to
+tell a declarative segment apart from a genuinely passive one, so it
+could never mark a declarative segment "already dropped" without also
+wrongly marking every genuinely passive segment dropped too.
+
+`is_declarative` is `false` for every existing active or genuinely-
+passive segment (every pre-existing construction site across this
+crate and its sibling `wasm-*` crates updated to pass `false`
+explicitly, no `Default` derive on `Element`) and `true` only for a
+segment `wasm-wast-parser::module::build_elem` recognizes as `(elem
+declare ...)`. See `wasm-runtime`'s own CHANGELOG for how `instantiate()`
+now consults this flag; see `wasm-conformance`'s own CHANGELOG for the
+full corpus-diff verification (exactly the 4 known cases move from
+`Fail` to `Pass`, nothing else in the 257-file corpus changes).
+
 ## [0.1.23] - 2026-09-01 (add: `WasmModule::missing_data_count_section`)
 
 New field for the same fresh corpus-prioritization pass as `wasm-
