@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C69-ticket
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 2690
-chapter: 69
+sequence: 2910
+chapter: 76
 type: word
 headword: "टिकट"
 gloss: "a ticket"

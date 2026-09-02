@@ -5,8 +5,8 @@ introduces_senses: [HI-SENSE-GAANA-SING-01]
 introduces_culture_claims: []
 id: HI-C70-song
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2740
-chapter: 70
+sequence: 2960
+chapter: 77
 type: word
 headword: "गाना"
 gloss: "a song"

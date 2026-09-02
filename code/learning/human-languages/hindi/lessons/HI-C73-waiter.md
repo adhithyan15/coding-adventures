@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C73-waiter
 spine_node: SPINE-COURTESY-THANK
-sequence: 2890
-chapter: 73
+sequence: 3090
+chapter: 80
 type: word
 headword: "वेटर"
 gloss: "a waiter"

@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C69-vehicle
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 2660
-chapter: 69
+sequence: 2880
+chapter: 76
 type: word
 headword: "गाड़ी"
 gloss: "a vehicle; a train"

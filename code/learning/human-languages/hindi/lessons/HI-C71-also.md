@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C71-also
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2770
-chapter: 71
+sequence: 2990
+chapter: 78
 type: word
 headword: "भी"
 gloss: "also, too"

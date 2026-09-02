@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C72-price
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2830
-chapter: 72
+sequence: 3030
+chapter: 79
 type: word
 headword: "दाम"
 gloss: "a price"

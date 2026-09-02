@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C72-buy
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2850
-chapter: 72
+sequence: 3050
+chapter: 79
 type: word
 headword: "ख़रीदना"
 gloss: "to buy"

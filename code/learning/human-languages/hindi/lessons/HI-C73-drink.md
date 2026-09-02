@@ -5,8 +5,8 @@ introduces_senses: [HI-SENSE-KHANA-EAT-01]
 introduces_culture_claims: []
 id: HI-C73-drink
 spine_node: SPINE-COURTESY-THANK
-sequence: 2900
-chapter: 73
+sequence: 3100
+chapter: 80
 type: word
 headword: "पीना"
 gloss: "to drink"

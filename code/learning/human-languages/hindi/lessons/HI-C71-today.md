@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C71-today
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2760
-chapter: 71
+sequence: 2980
+chapter: 78
 type: word
 headword: "आज"
 gloss: "today"

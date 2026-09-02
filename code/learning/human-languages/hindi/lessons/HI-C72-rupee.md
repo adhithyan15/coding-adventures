@@ -5,30 +5,30 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C72-rupee
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2820
-chapter: 72
+sequence: 3020
+chapter: 79
 type: word
 headword: "रुपया"
 gloss: "a rupee"
 romanization: "rupayā"
 concept_tag: HI-NOUN-RUPEE
-prerequisites: [HI-C72-money, HI-C71-why]
+prerequisites: [HI-C72-money, HI-C71-kyon]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-05]
+  knowledge: [HI-LEX-C72-COST-01, HI-JOIN-KYON-01]
 introduces:
   knowledge: [HI-LEX-C72-COST-02]
 practises:
-  knowledge: [HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C71-TODAY-05]
+  knowledge: [HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-JOIN-KYON-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C72-money, HI-C71-why]
+reviews_of: [HI-C72-money, HI-C71-kyon]
 ---
 
 # रुपया (rupayā) — a rupee
@@ -63,7 +63,7 @@ A price is said in रुपये: **दस रुपये**, and you have cou
 Money in general, and the unit it is counted in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C71-TODAY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-JOIN-KYON-01] -->
 
 [PAUSE 1s]
 - [YOU RECALL: read **क्यों**, then say it without looking]

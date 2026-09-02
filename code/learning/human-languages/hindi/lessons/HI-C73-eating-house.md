@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C73-eating-house
 spine_node: SPINE-COURTESY-THANK
-sequence: 2860
-chapter: 73
+sequence: 3060
+chapter: 80
 type: word
 headword: "होटल"
 gloss: "an eating house"

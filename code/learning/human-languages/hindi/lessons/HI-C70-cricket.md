@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C70-cricket
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2730
-chapter: 70
+sequence: 2950
+chapter: 77
 type: word
 headword: "क्रिकेट"
 gloss: "cricket, the game"

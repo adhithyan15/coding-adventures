@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C68-city
 spine_node: SPINE-MEET-GREET
-sequence: 2630
-chapter: 68
+sequence: 2850
+chapter: 75
 type: word
 headword: "शहर"
 gloss: "a city, a town"

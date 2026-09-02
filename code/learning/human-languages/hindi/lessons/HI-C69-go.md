@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C69-go
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 2700
-chapter: 69
+sequence: 2920
+chapter: 76
 type: word
 headword: "जाना"
 gloss: "to go"

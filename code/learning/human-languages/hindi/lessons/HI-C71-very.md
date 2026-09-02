@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C71-very
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2780
-chapter: 71
+sequence: 3000
+chapter: 78
 type: word
 headword: "बहुत"
 gloss: "very, a lot"

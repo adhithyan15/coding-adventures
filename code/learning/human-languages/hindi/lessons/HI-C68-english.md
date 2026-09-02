@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C68-english
 spine_node: SPINE-MEET-GREET
-sequence: 2650
-chapter: 68
+sequence: 2870
+chapter: 75
 type: word
 headword: "अंग्रेज़ी"
 gloss: "English, the language"

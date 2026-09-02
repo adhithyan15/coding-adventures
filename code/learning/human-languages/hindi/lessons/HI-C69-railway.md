@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C69-railway
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 2670
-chapter: 69
+sequence: 2890
+chapter: 76
 type: word
 headword: "रेल"
 gloss: "the railway"

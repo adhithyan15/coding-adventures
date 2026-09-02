@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C74-closed
 spine_node: SPINE-TAKE-LEAVE
-sequence: 2920
-chapter: 74
+sequence: 3120
+chapter: 81
 type: word
 headword: "बंद"
 gloss: "closed"

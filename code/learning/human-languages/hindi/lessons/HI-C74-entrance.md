@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C74-entrance
 spine_node: SPINE-TAKE-LEAVE
-sequence: 2930
-chapter: 74
+sequence: 3130
+chapter: 81
 type: word
 headword: "प्रवेश"
 gloss: "entrance"

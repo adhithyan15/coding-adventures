@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C72-expensive
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2840
-chapter: 72
+sequence: 3040
+chapter: 79
 type: word
 headword: "महँगा"
 gloss: "expensive"

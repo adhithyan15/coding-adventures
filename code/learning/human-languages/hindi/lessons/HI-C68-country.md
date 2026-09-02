@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C68-country
 spine_node: SPINE-MEET-GREET
-sequence: 2610
-chapter: 68
+sequence: 2830
+chapter: 75
 type: word
 headword: "देश"
 gloss: "a country"

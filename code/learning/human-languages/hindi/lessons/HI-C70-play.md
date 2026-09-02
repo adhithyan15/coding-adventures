@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C70-play
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2720
-chapter: 70
+sequence: 2940
+chapter: 77
 type: word
 headword: "खेलना"
 gloss: "to play"

@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C74-late
 spine_node: SPINE-TAKE-LEAVE
-sequence: 2950
-chapter: 74
+sequence: 3150
+chapter: 81
 type: word
 headword: "देर"
 gloss: "lateness, a delay"

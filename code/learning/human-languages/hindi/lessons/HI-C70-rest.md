@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C70-rest
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2750
-chapter: 70
+sequence: 2970
+chapter: 77
 type: word
 headword: "आराम"
 gloss: "rest, ease"

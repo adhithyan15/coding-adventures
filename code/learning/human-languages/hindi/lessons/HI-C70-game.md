@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C70-game
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2710
-chapter: 70
+sequence: 2930
+chapter: 77
 type: word
 headword: "खेल"
 gloss: "a game"

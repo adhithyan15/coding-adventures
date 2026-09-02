@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C73-bill
 spine_node: SPINE-COURTESY-THANK
-sequence: 2880
-chapter: 73
+sequence: 3080
+chapter: 80
 type: word
 headword: "बिल"
 gloss: "the bill"

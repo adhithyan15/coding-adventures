@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C68-india
 spine_node: SPINE-MEET-GREET
-sequence: 2620
-chapter: 68
+sequence: 2840
+chapter: 75
 type: word
 headword: "भारत"
 gloss: "India"

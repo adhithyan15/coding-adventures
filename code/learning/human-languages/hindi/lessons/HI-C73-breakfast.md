@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C73-breakfast
 spine_node: SPINE-COURTESY-THANK
-sequence: 2870
-chapter: 73
+sequence: 3070
+chapter: 80
 type: word
 headword: "नाश्ता"
 gloss: "breakfast"

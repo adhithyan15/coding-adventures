@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C74-open
 spine_node: SPINE-TAKE-LEAVE
-sequence: 2910
-chapter: 74
+sequence: 3110
+chapter: 81
 type: word
 headword: "खुला"
 gloss: "open"

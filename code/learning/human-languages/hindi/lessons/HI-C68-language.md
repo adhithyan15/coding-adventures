@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C68-language
 spine_node: SPINE-MEET-GREET
-sequence: 2640
-chapter: 68
+sequence: 2860
+chapter: 75
 type: word
 headword: "भाषा"
 gloss: "a language"

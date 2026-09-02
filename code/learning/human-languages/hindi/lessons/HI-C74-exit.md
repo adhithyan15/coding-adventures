@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C74-exit
 spine_node: SPINE-TAKE-LEAVE
-sequence: 2940
-chapter: 74
+sequence: 3140
+chapter: 81
 type: word
 headword: "निकास"
 gloss: "exit"

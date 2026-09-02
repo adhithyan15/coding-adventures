@@ -5,8 +5,8 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-C69-station
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 2680
-chapter: 69
+sequence: 2900
+chapter: 76
 type: word
 headword: "स्टेशन"
 gloss: "a station"
