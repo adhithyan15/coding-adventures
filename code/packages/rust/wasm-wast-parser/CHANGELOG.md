@@ -1,5 +1,77 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.95 — 2026-09-01 — fix: active element segments may use the exprs-list form
+
+Gap 1 of a two-gap `elem.wast`/`table.wast` investigation pass (`code/
+specs/W07-wasm-post-mvp-epics.md`'s addendum item 3, plus the one
+remaining `elem.wast` `assert_return` failure item 1 already named as
+closed pending this exact follow-up). `build_elem` used to unconditionally
+reject an ACTIVE element segment written with the exprs-list form
+(`funcref`/`externref` keyword followed by `(ref.func ...)`/`(ref.null
+...)` expressions, binary modes 4/6) — added under a `/security-review`
+finding that reasoned "the real spec's own `W17-wasm-bulk-table-ops.md`
+census found no vendored corpus file needs it." That census was wrong.
+
+Root-caused via a throwaway probe (`wasm_conformance::run_wast_source`
+against `elem.wast` directly, correlating the returned directive index
+against a manual top-level-form line count) that pinned the file's last
+remaining `assert_return` failure to directive `#133`, line 1029: after a
+module imports `$m`'s exported externref table and applies `(elem
+(i32.const 0) externref (ref.null extern))` to it, `(invoke $m "get"
+(i32.const 0))` should return `(ref.null extern)` but returned `(ref.extern
+42)` instead — the OLD value from an earlier `set`. The actual root cause
+wasn't a table-sharing bug (the `Table`/`Rc<RefCell<TableStorage>>`
+cross-instance sharing this repo already has, per W28, is correct and
+unrelated) — the anonymous module simply never built at all: its own
+`(elem (i32.const 0) externref (ref.null extern))` is an ACTIVE segment
+using the exprs-list form (a null literal has no representation in a
+plain function-index list), which this parser rejected outright, so the
+elem write never happened and `$m`'s table kept its stale value.
+
+The old rejection's stated reason — that accepting this would reach
+`wasm-module-encoder::encode_element`'s active branch and corrupt a
+`None` entry into function 0 via `unwrap_or(0)` on re-encode — was a real
+bug, but in the wrong layer: rejecting a legal construct here to paper
+over a latent bug in a different, unrelated crate. Fixed at the actual
+root instead: `wasm-module-encoder` 0.2.10 gives `encode_element` its own
+mode-4/6 branch (see that crate's own CHANGELOG), and this parser's
+rejection is removed now that the thing it was guarding against no longer
+exists. `wasm-module-parser`'s binary DECODER still only handles modes
+0/1/2/5 — a real, separate, deliberately deferred gap (declarative/
+active-exprs binary decoding is a larger feature than this fix), unaffected
+since this fix is scoped to the TEXT parser, which never round-trips
+through the binary decoder for a plain `(module ...)` directive.
+
+Verification: regenerated `wasm-conformance`'s baseline and diffed all 257
+files programmatically against the pre-fix baseline — exactly 3 files
+changed (`elem.wast`, `table.wast` [gap 2, see that fix's own entry],
+`ref_func.wast`), every other file byte-identical. `ref_func.wast` (module
+2/1-not-yet-supported → 3/0) uses the exact same construct at a different
+line (`(elem (table $t) (i32.const 0) funcref (ref.func $f4))`) — the same
+root cause, not a new or unrelated regression. `elem.wast` itself moved
+well beyond the single targeted `assert_return` (18/1-fail/8-not-yet-
+supported → 24/0-fail/3-not-yet-supported; `module` 26/50-not-yet-supported
+→ 36/40; `assert_trap` 1/6-not-yet-supported → 4/3) because the SAME
+rejection had been silently swallowing several other modules in the same
+file into "not yet supported" rather than a wrong-value failure — restoring
+them is a genuine coverage win, not scope creep, since it's the identical
+root cause within the file this investigation already targeted.
+
+`elem.wast`'s `assert_invalid` tally also shifted (23/3-not-yet-supported
+→ 21/5): two cases (`(elem (i32.const 0) funcref (ref.null extern))` on a
+funcref table, and its externref-vs-funcref mirror) used to "pass" only
+because this parser's own now-removed rejection happened to reject the
+whole module for an unrelated reason (active exprs-list, not the actual
+declared-vs-actual reftype type mismatch the test exists to probe) — an
+accidental pass for the wrong reason, not real coverage. Now that the
+module builds, this repo's structural-only validator honestly can't tell
+the case is invalid (no instruction-level type-checker), so it correctly
+reports `NotYetSupported` instead of taking credit it hadn't earned. New
+tests: `active_element_segment_using_exprs_list_form_is_accepted` (mirrors
+the previous rejection test, now inverted) and `active_element_segment_
+using_exprs_list_form_with_externref_null_only` (the exact real-corpus
+shape, single null entry, no explicit `(table ...)` clause).
+
 ## 0.1.94 — 2026-09-01 — test fixture update for `wasm-types`' new `missing_data_count_section` field
 
 No functional change in this crate. `wasm-types` 0.1.23 added `WasmModule::
