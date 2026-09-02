@@ -37,6 +37,7 @@ use wasm_execution::{
     LinearMemory, SelfFunctionResolver, Table, TableElement, TrapError, WasmEngineConfig, WasmExecutionEngine,
     WasmValue,
 };
+use wasm_leb128::decode_unsigned;
 use wasm_module_parser::WasmModuleParser;
 use wasm_types::{
     CanonicalGroup, ExternalKind, FuncType, FunctionBody, GlobalType, Import, ImportTypeInfo, Limits, ValueType,
@@ -1706,6 +1707,25 @@ fn combined_table_element_type(instance: &WasmInstance, index: u32) -> Option<u8
 /// `combined_table_element_type`'s own doc comment.
 const FUNCREF_ELEMENT_TYPE: u8 = 0x70;
 
+/// If `expr` is exactly a single `global.get <idx>` constant instruction
+/// (`0x23 <idx:uleb32> 0x0B`, nothing before or after) return `Some(idx)`;
+/// otherwise `None` (W35 fifth slice). Used only at the two elem-item
+/// call sites that need to know whether an item's value came from
+/// READING A GLOBAL specifically (see `element_func_refs`'s own doc
+/// comment, in `instantiate()`, for why) -- not a general-purpose
+/// constant-expression disassembler.
+fn global_get_index(expr: &[u8]) -> Option<u32> {
+    if expr.first() != Some(&0x23) {
+        return None;
+    }
+    let (idx, consumed) = decode_unsigned(expr, 1).ok()?;
+    if expr.len() == 1 + consumed + 1 && expr.get(1 + consumed) == Some(&0x0B) {
+        u32::try_from(idx).ok()
+    } else {
+        None
+    }
+}
+
 /// The "resolution fixup pass" (W35 fourth slice, `code/specs/
 /// W35-wasm-cross-instance-function-identity.md`) for TABLES specifically:
 /// resolve every `TableElement::Raw` entry `instance`'s own
@@ -1802,6 +1822,147 @@ pub fn resolve_all_table_funcrefs(instance_rc: &Rc<RefCell<WasmInstance>>) -> Re
         }
     }
 
+    Ok(())
+}
+
+/// The missing twin of [`resolve_all_table_funcrefs`], for funcref-typed
+/// GLOBALS specifically (W35 fifth slice, closing `elem.wast`'s own
+/// "Initializing a table with imported funcref global" case -- the last
+/// remaining real failure in the whole 257-file corpus). Deliberately
+/// narrower than the table pass's own "every table this instance can
+/// see" scope: this resolves ONLY a global `instance` itself EXPORTS,
+/// never every module-defined funcref global unconditionally.
+///
+/// **Why "exported only," not "every module-defined funcref global"**:
+/// `resolve_all_table_funcrefs`'s own "Why NOT globals too" doc comment
+/// already names the concrete, previously reproduced regression an
+/// earlier, broader attempt at this caused: `return_call_ref.wast`'s own
+/// `$count`/`$even`/`$odd` (deep tail-recursion helpers, `(global $count
+/// (ref $i64-i64) (ref.func $count))` and friends, confirmed by direct
+/// read of that file -- none of them ever `(export ...)`ed) live entirely
+/// within ONE instance and are read via `global.get` on every recursive
+/// step. `global.get`'s own LIVE opcode handler (`wasm-execution`,
+/// `0x23`) already mints a FRESH `func_ref_heap` handle on every read
+/// whenever `func_ref` is `Some` -- fine for a bounded number of reads,
+/// unbounded for thousands of tail-call-optimized "logical" recursive
+/// steps that never actually return to reset the heap (see
+/// `func_ref_heap`'s own doc comment: cleared "at the start of every
+/// call," not every loop iteration). Resolving THOSE globals' `func_ref`
+/// unconditionally would reproduce exactly that exhaustion. Scoping
+/// resolution BY THIS FUNCTION to EXPORTED globals only keeps `$count`/
+/// `$even`/`$odd` themselves untouched (they are never exported), but --
+/// security-review correction, round 2 -- **the real, narrower invariant
+/// that actually protects them is "a `ref.func`-initialized local global
+/// stays deferred," not "export scoping alone."** `instantiate()`'s own
+/// globals-construction loop (below, search `global_get_index`) ALSO
+/// propagates `func_ref` for a `global.get`-initialized global,
+/// UNCONDITIONALLY (regardless of export status) -- deliberately, so a
+/// non-exported pass-through global can still correctly feed an elem
+/// item's own `global.get` (see that loop's own doc comment). This is
+/// safe for the corpus TODAY only because no vendored `.wast` file
+/// combines a `global.get`-of-an-already-resolved-global chain with a
+/// hot, tail-call-recursive read loop (confirmed by direct grep across
+/// all 257 files) -- but it is NOT structurally impossible to construct
+/// such a module (e.g. a local alias of an imported funcref global, read
+/// every step of an unbounded `return_call` loop the way `$count` reads
+/// itself). Should such a case ever appear, `push_func_ref`'s own
+/// `MAX_FUNC_REF_HEAP_LEN` cap (`wasm-execution`) turns it into a clean,
+/// safely-trapped "func_ref heap limit exceeded" error -- a spurious-trap
+/// compatibility regression, never memory corruption or a silent wrong
+/// answer -- see `wasm-runtime`'s own `a_global_get_alias_of_an_imported_
+/// funcref_global_read_in_a_deep_tail_recursion_loop_traps_cleanly_
+/// instead_of_corrupting_state` test for a direct, reproduced proof of
+/// that bound, not just an assertion of it.
+///
+/// **Why this was missing despite `HostInterface::resolve_global`'s own
+/// import-arm doc comment (`instantiate()`, the `ImportTypeInfo::Global`
+/// match arm) already CLAIMING it**: that comment says an imported
+/// global is, for a funcref, "already fully resolved by the EXPORTING
+/// instance's own `instantiate()` fixup pass" -- prose written ahead of
+/// the code it describes. No such pass existed anywhere in this crate or
+/// `wasm-conformance` before this function: `instantiate()` itself
+/// cannot run it (see this function's own sibling
+/// `resolve_func_ref_for_instance`'s doc comment on the self-referential
+/// `Rc` cycle a LOCAL funcref would create), and `resolve_all_table_
+/// funcrefs` explicitly, deliberately excludes globals (see above). This
+/// function is the pass that comment always assumed existed -- called
+/// from the exact same post-`instantiate()`, post-`Rc`-wrap, pre-registry-
+/// insertion point `wasm-conformance` already calls `resolve_all_table_
+/// funcrefs` from, for the identical "a permanent `Rc<RefCell<
+/// WasmInstance>>` finally exists" reason.
+///
+/// Run BEFORE `resolve_all_table_funcrefs` or after -- the two passes
+/// touch disjoint state (`TableStorage` vs `GlobalStorage`) and neither
+/// reads the other's output, so their relative order doesn't matter.
+pub fn resolve_exported_global_funcrefs(instance_rc: &Rc<RefCell<WasmInstance>>) -> Result<(), TrapError> {
+    let exported_global_indices: Vec<u32> = {
+        let instance = instance_rc.borrow();
+        instance
+            .exports
+            .iter()
+            .filter(|(_, kind, _)| *kind == ExternalKind::Global)
+            .map(|(_, _, idx)| *idx)
+            .collect()
+    };
+    for idx in exported_global_indices {
+        let (storage, is_funcref) = {
+            let instance = instance_rc.borrow();
+            // W35 fifth slice, own-review correction (found by this
+            // slice's own new bounded-trap regression test, not a
+            // reported finding): `ValueType::NonNullConcreteFuncRef(_)`
+            // -- `(ref $t)`, the NON-nullable concrete function reference
+            // (`wasm_types::ValueType`'s own doc comment: "only a func
+            // type... via `(ref $t)` in the text format") -- is JUST AS
+            // much funcref-family as `Funcref`/`ConcreteFuncRef` (its
+            // nullable counterpart), and just as reachable as an exported
+            // global's declared type. Missing it here isn't merely an
+            // incompleteness: a global declared `(ref $t)` was silently
+            // skipped by this whole function (treated as "not funcref,
+            // nothing to resolve"), leaving its `func_ref` `None` forever
+            // -- exactly the pre-fix bug for every OTHER funcref shape,
+            // just for a type this function's own first version forgot to
+            // recognize.
+            let is_funcref = matches!(
+                instance.global_types.get(idx as usize).map(|t| &t.value_type),
+                Some(ValueType::Funcref) | Some(ValueType::ConcreteFuncRef(_)) | Some(ValueType::NonNullConcreteFuncRef(_))
+            );
+            let Some(cell) = instance.globals.get(idx as usize) else {
+                continue;
+            };
+            (cell.clone(), is_funcref)
+        };
+        // Non-funcref-family export (i32/i64/externref/...): its `value`
+        // is never a function index, must never be reinterpreted as one
+        // (mirrors `combined_table_element_type`'s own "funcref-typed
+        // tables only" guard on `resolve_all_table_funcrefs`, one type
+        // check earlier).
+        if !is_funcref {
+            continue;
+        }
+        // Already resolved -- e.g. this export is itself a re-export of
+        // an IMPORTED global whose OWN exporting instance already ran
+        // this same pass on the SHARED cell. Re-resolving here would
+        // treat `value`'s raw index as THIS instance's own local index
+        // space, which is exactly the misattribution this whole fix
+        // exists to prevent -- `func_ref: Some` is the one and only
+        // signal that would happen, so it must be checked first.
+        let already_resolved = storage.borrow().func_ref.is_some();
+        if already_resolved {
+            continue;
+        }
+        // `WasmValue::Ref(None)` (a null funcref, `(ref.null func)`) has
+        // no real function to resolve -- leave `func_ref: None`, exactly
+        // as `GlobalStorage::func_ref`'s own doc comment already
+        // documents for that case.
+        let local_idx = match storage.borrow().value {
+            WasmValue::Ref(Some(idx)) => Some(idx),
+            _ => None,
+        };
+        if let Some(local_idx) = local_idx {
+            let target = resolve_func_ref_for_instance(instance_rc, local_idx)?;
+            storage.borrow_mut().func_ref = Some(target);
+        }
+    }
     Ok(())
 }
 
@@ -2165,11 +2326,23 @@ impl WasmRuntime {
                     // copied, so a `global.set` through EITHER this
                     // importing instance or the exporting one is visible
                     // through the other -- and, for a funcref-typed
-                    // global, already fully resolved by the EXPORTING
-                    // instance's own `instantiate()` fixup pass (see that
-                    // function's own doc comment), so this importing
-                    // instance never needs to (and never does) re-resolve
-                    // it itself.
+                    // EXPORTED global, already fully resolved by
+                    // `resolve_exported_global_funcrefs` (W35 fifth
+                    // slice), the embedder's own post-`instantiate()`,
+                    // post-`Rc`-wrap fixup pass -- NOT `instantiate()`
+                    // itself, which cannot safely run it (see that
+                    // function's own doc comment on the self-referential
+                    // `Rc` cycle a local funcref target would create).
+                    // `wasm-conformance` calls it right after this
+                    // exporting instance's own `instantiate()` succeeds,
+                    // before ever registering it -- so by the time ANY
+                    // import reaches this arm, `gval`'s `func_ref` is
+                    // already correct and this importing instance never
+                    // needs to (and never does) re-resolve it itself.
+                    // (Before W35's fifth slice, this comment claimed this
+                    // was already true when no such pass existed at all --
+                    // exactly the "prose ahead of the code" gap that
+                    // slice's own CHANGELOG entry documents finding.)
                     let (gtype, gval) = self
                         .host
                         .as_ref()
@@ -2392,9 +2565,67 @@ impl WasmRuntime {
         // access to `host_functions`/a resolver at all) -- this is the
         // exact construction-order problem this function's own doc
         // comment names: no `Rc<RefCell<WasmInstance>>` exists yet at this
-        // point for a `LocalFunctionRef` to hold. A SEPARATE fixup pass,
-        // below, resolves every module-defined funcref-typed global's
-        // initial value for real, once `instance_rc` exists.
+        // point for a `LocalFunctionRef` to hold. `wasm-conformance`'s own
+        // `resolve_exported_global_funcrefs` (W35 fifth slice) resolves an
+        // EXPORTED module-defined funcref global's initial value for
+        // real, once `instance_rc` exists, AFTER this function returns.
+        //
+        // W35 fifth slice, security-review finding: a global initialized
+        // via `(global.get $idx)` -- copying ANOTHER global's value,
+        // rather than minting its own via `ref.func` -- is a DIFFERENT
+        // case that CANNOT wait for that later, export-scoped fixup: the
+        // source global named by `$idx` may be an IMPORT already resolved
+        // by the EXPORTING instance's own earlier fixup (this is exactly
+        // how a chain like `$B`'s `(global (export "g1") funcref
+        // (global.get $g0))`, where `$g0` is imported from an already-
+        // registered `$A`, must observe `$g0`'s real, already-resolved
+        // `FuncRefTarget` and NOT `$g0`'s raw flattened `value` -- which
+        // is only ever meaningful in `$A`'s own combined function-index
+        // space, never `$B`'s). Reinterpreting that raw value as a local
+        // index in `$B`'s own space (the ONLY thing a later, generic
+        // "resolve this exported global by its own instance" fixup could
+        // ever do, since IT has no idea the value originated from a
+        // `global.get` copy of something else) would silently misdispatch
+        // to whichever of `$B`'s own local functions happens to share that
+        // numeric index -- the exact silent-wrong-function hazard this
+        // whole mechanism exists to prevent, reproducing it one level
+        // removed. `global_get_index` (below `resolve_all_table_funcrefs`)
+        // detects this ONE syntactic shape the same way the elem-item
+        // loop already does; propagating the SOURCE global's own already-
+        // resolved `func_ref` (if any) at COPY time, using the source's
+        // OWN correct owner identity, is what keeps this correct
+        // regardless of which instance actually declared the function.
+        // Deliberately unconditional (not export-scoped, unlike the later
+        // fixup): a NON-exported pass-through global can just as easily
+        // feed an elem item's own `(global.get $idx)` (`element_func_refs`,
+        // further down), so it must be handled here too, not only for
+        // globals a future importer could reach directly. A source
+        // global whose OWN `func_ref` is still `None` at this point
+        // (the overwhelmingly common case -- a `ref.func`-initialized,
+        // never-exported, never-imported global, deliberately left
+        // unresolved by design, e.g. `return_call_ref.wast`'s own
+        // `$count`/`$even`/`$odd`) simply propagates `None` -- byte-for-
+        // byte the pre-existing behavior, since nothing upstream of this
+        // loop can have populated a LOCAL global's `func_ref` yet either.
+        //
+        // Security-review correction (round 2): being unconditional here
+        // DOES mean a `global.get`-initialized global CAN end up with
+        // `func_ref: Some` even when never exported -- so `resolve_
+        // exported_global_funcrefs`'s own "a global this instance never
+        // exports can only ever be read back through its OWN raw value"
+        // framing (see that function's own doc comment) is no longer the
+        // reason `return_call_ref.wast` stays safe; being `ref.func`-
+        // initialized (not `global.get`-initialized) is. No vendored
+        // corpus file combines a `global.get`-of-an-already-resolved-
+        // global chain with a hot tail-call-recursive read loop today
+        // (confirmed by direct grep across all 257 files), but nothing
+        // here PREVENTS one from existing -- see `resolve_exported_
+        // global_funcrefs`'s own doc comment and this crate's own
+        // `a_global_get_alias_of_an_imported_funcref_global_read_in_a_
+        // deep_tail_recursion_loop_traps_cleanly_instead_of_corrupting_
+        // state` test for why that residual case is bounded (a clean
+        // `MAX_FUNC_REF_HEAP_LEN` trap, never memory corruption or a
+        // silent wrong answer) rather than a correctness hazard.
         for global in &module.globals {
             global_types.push(global.global_type.clone());
             let globals_so_far: Vec<WasmValue> = globals.iter().map(|g| g.borrow().value).collect();
@@ -2407,7 +2638,10 @@ impl WasmRuntime {
                 &struct_field_storage,
                 &array_element_storage,
             )?;
-            globals.push(Rc::new(RefCell::new(GlobalStorage { value, func_ref: None })));
+            let func_ref = global_get_index(&global.init_expr)
+                .and_then(|idx| globals.get(idx as usize))
+                .and_then(|cell| cell.borrow().func_ref.clone());
+            globals.push(Rc::new(RefCell::new(GlobalStorage { value, func_ref })));
         }
 
         // A fixed, post-initialization snapshot of every global's value,
@@ -2450,8 +2684,39 @@ impl WasmRuntime {
         // values` entry (`resolve_array_elem_segment`), never trigger
         // evaluation themselves.
         let mut element_values: Vec<Vec<WasmValue>> = Vec::with_capacity(module.elements.len());
+        // W35 fifth slice: the real, self-contained `FuncRefTarget` for
+        // any item whose expr is exactly `global.get <idx>` reading a
+        // global whose own `func_ref` is already `Some` (populated either
+        // by `resolve_exported_global_funcrefs`, for an IMPORTED global
+        // shared from an already-registered exporting instance, or by a
+        // PRIOR entry in this SAME loop, for a local global re-read by a
+        // later one) -- parallel to `element_values`, same shape and same
+        // indexing, `None` for every item that isn't this one shape
+        // (`ref.func`/`ref.null` literals, or a `global.get` of a
+        // not-yet-resolved/non-funcref global, stay on the pre-existing
+        // `TableElement::Raw`/lazy-resolution path below, unaffected).
+        //
+        // Why this can't just be folded into `evaluate_const_expr_gc`
+        // itself: that function only ever sees a flattened `&[WasmValue]`
+        // snapshot of `globals` (`global_values`, just above) -- by
+        // design, so `WasmValue` never has to stop being `Copy` (see
+        // `code/specs/W35-wasm-cross-instance-function-identity.md`'s own
+        // "Why the naive `Rc<WasmInstance>` sketch doesn't work" section).
+        // A funcref-typed constant expression is always EXACTLY one
+        // instruction (`ref.func`/`ref.null`/`global.get`, never a
+        // combination -- the real spec's own restriction, confirmed by
+        // this crate's own `evaluate_const_expr_gc` doc comments on the
+        // legal shapes an active TABLE's own items are restricted to), so
+        // a small, syntactic, single-instruction check here
+        // (`global_get_index`) is exhaustive for this ONE case, not a
+        // heuristic -- far cheaper than threading a parallel
+        // `FuncRefTarget` stack through that function's entire general
+        // constant-expression state machine for a payload only this one
+        // instruction can ever produce.
+        let mut element_func_refs: Vec<Vec<Option<FuncRefTarget>>> = Vec::with_capacity(module.elements.len());
         for elem in &module.elements {
             let mut values = Vec::with_capacity(elem.item_exprs.len());
+            let mut func_refs = Vec::with_capacity(elem.item_exprs.len());
             for expr in &elem.item_exprs {
                 values.push(evaluate_const_expr_gc(
                     expr,
@@ -2462,8 +2727,14 @@ impl WasmRuntime {
                     &struct_field_storage,
                     &array_element_storage,
                 )?);
+                func_refs.push(
+                    global_get_index(expr)
+                        .and_then(|idx| globals.get(idx as usize))
+                        .and_then(|cell| cell.borrow().func_ref.clone()),
+                );
             }
             element_values.push(values);
+            element_func_refs.push(func_refs);
         }
 
         // Apply element segments BEFORE data segments -- the order the
@@ -2691,7 +2962,35 @@ impl WasmRuntime {
                 // variant matches this crate's "never trust the data model
                 // to be exactly what's expected, degrade to null rather
                 // than panic" posture elsewhere in this same function.
+                //
+                // W35 fifth slice: `element_func_refs[elem_idx][j]` (see
+                // that Vec's own doc comment, right above where it's
+                // built) takes priority over the raw `WasmValue` below --
+                // `Some(target)` means this item was a `global.get` of a
+                // global whose value crossed an instance boundary (an
+                // IMPORTED global, or a local one this instance itself
+                // exported and a prior fixup already resolved), so `x`
+                // (module4's own local index, in the motivating `elem.
+                // wast` case) means nothing in THIS instance's own
+                // combined function-index space -- writing it as
+                // `TableElement::Raw(x)` would have `call_indirect`
+                // silently misdispatch to THIS instance's unrelated local
+                // function `x` instead (the exact, confirmed
+                // `elem.wast` "Initializing a table with imported funcref
+                // global" regression this slice fixes: `x` happened to
+                // collide with the very function performing the
+                // `call_indirect`, producing unbounded self-recursion --
+                // "call stack exhausted" -- instead of the expected
+                // value). Writing the already-resolved `target` directly
+                // as `TableElement::Func` sidesteps `resolve_all_table_
+                // funcrefs`'s own later fixup entirely for this slot (it
+                // only ever resolves a `Raw` entry, so a `Func` entry here
+                // is simply left alone, already correct).
                 for (j, val) in element_values[elem_idx].iter().enumerate() {
+                    if let Some(target) = element_func_refs[elem_idx][j].clone() {
+                        table.set((offset_num + j as u64) as u32, Some(TableElement::Func(target)))?;
+                        continue;
+                    }
                     let func_idx = match val {
                         WasmValue::Ref(x) => *x,
                         _ => None,
@@ -4725,6 +5024,80 @@ mod tests {
             Some(instance_rc.borrow().instance_identity),
             "an import's local_index is only meaningful for the instance that resolved it -- a different instance \
              reading this target from a shared table/global must dispatch via `callable.call(..)` instead"
+        );
+    }
+
+    #[test]
+    fn resolve_exported_global_funcrefs_resolves_an_exported_funcref_global_to_the_declaring_functions_real_identity() {
+        // W35 fifth slice: minimal, direct proof of `resolve_exported_
+        // global_funcrefs` itself (see its own doc comment for the full
+        // `elem.wast` motivating case) -- a module exports a funcref-
+        // typed global initialized via `ref.func` on its own local
+        // function; after this pass runs, that global's `GlobalStorage::
+        // func_ref` must hold a real, resolved `FuncRefTarget` naming the
+        // SAME function, not stay `None` (the pre-fix state that let a
+        // later importer misinterpret the raw `value` as an index in ITS
+        // OWN combined function-index space -- `elem.wast`'s own
+        // confirmed "call stack exhausted" bug).
+        let runtime = WasmRuntime::new();
+        let module = wasm_wast_parser::parse_module(
+            r#"(module
+                 (func $answer (result i32) (i32.const 42))
+                 (global (export "g") funcref (ref.func $answer)))"#,
+        )
+        .expect("module should parse");
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        let instance_rc = Rc::new(RefCell::new(instance));
+
+        // Sanity: unresolved before the fixup runs, exactly as
+        // `instantiate()` itself deliberately leaves it (see the
+        // globals-construction loop's own doc comment).
+        assert!(instance_rc.borrow().globals[0].borrow().func_ref.is_none());
+
+        resolve_exported_global_funcrefs(&instance_rc).expect("resolving an exported funcref global must succeed");
+
+        let target = instance_rc.borrow().globals[0].borrow().func_ref.clone().expect("func_ref must now be resolved");
+        assert_eq!(
+            target.owner_instance_identity,
+            Some(instance_rc.borrow().instance_identity),
+            "a locally-declared function's target must be owned by THIS instance"
+        );
+        let results = target.callable.call(&[], None).expect("dispatch through the resolved target should succeed");
+        assert_eq!(results, vec![WasmValue::I32(42)], "must dispatch to $answer's real body");
+    }
+
+    #[test]
+    fn resolve_exported_global_funcrefs_leaves_an_unexported_funcref_global_unresolved() {
+        // The negative half of the fix's own safety scoping: an
+        // UNEXPORTED funcref global (this instance's own private state,
+        // never observable by any importer) must be left `func_ref:
+        // None` -- mirrors `return_call_ref.wast`'s own `$count`/`$even`/
+        // `$odd` pattern, the confirmed, reproduced regression an
+        // earlier, broader "resolve every module-defined funcref global"
+        // attempt caused (see `resolve_exported_global_funcrefs`'s own
+        // doc comment): resolving one of THOSE would make the live
+        // `global.get` opcode mint a fresh `func_ref_heap` handle on
+        // every read of a hot, deep-recursion-loop global, exhausting it.
+        // This test guards against silently widening this fix's own
+        // scope back to "every global" by accident.
+        let runtime = WasmRuntime::new();
+        let module = wasm_wast_parser::parse_module(
+            r#"(module
+                 (func $answer (result i32) (i32.const 42))
+                 (global funcref (ref.func $answer)))"#,
+        )
+        .expect("module should parse");
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        let instance_rc = Rc::new(RefCell::new(instance));
+
+        resolve_exported_global_funcrefs(&instance_rc).expect("must succeed even with nothing to resolve");
+
+        assert!(
+            instance_rc.borrow().globals[0].borrow().func_ref.is_none(),
+            "an unexported global must never be eagerly resolved -- doing so would reproduce the \
+             return_call_ref.wast func_ref_heap-exhaustion regression this scoping exists to avoid"
         );
     }
 

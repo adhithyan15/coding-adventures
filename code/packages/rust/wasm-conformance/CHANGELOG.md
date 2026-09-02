@@ -1,5 +1,97 @@
 # Changelog — wasm-conformance
 
+## 0.1.130 — 2026-09-02 — round-2 security review: bounded-trap proof for a `global.get`-alias read in a hot recursive loop (W35 fifth slice, round 2)
+
+`wasm-runtime` 0.6.36 corrected two now-stale doc comments and fixed a
+real, own-caught gap (`ValueType::NonNullConcreteFuncRef` missing from
+`resolve_exported_global_funcrefs`'s own funcref-family type check) found
+while building this release's own new test. See that crate's own
+CHANGELOG for the full account.
+
+New regression test,
+`a_global_get_alias_of_an_imported_funcref_global_read_in_a_deep_tail_
+recursion_loop_traps_cleanly_instead_of_corrupting_state`: `$B` imports
+`$A`'s exported, `(ref $t)`-typed funcref global `g0` and declares a
+NEVER-exported local alias `$galias` (`(global.get $g0)`) -- exactly the
+new capability 0.6.35's unconditional (not export-scoped) propagation
+introduced. `$B`'s own `count` function self-recurses via `return_call`,
+reading `$galias` (and dropping the result) once per step -- structurally
+the same "read a `func_ref: Some` global on every step of an unbounded
+tail-recursive loop" shape `return_call_ref.wast`'s own `$count`/`$even`/
+`$odd` already exercise (those stay safe because they're `ref.func`-
+initialized, never `global.get`-initialized -- see `wasm-runtime`'s own
+corrected doc comments). Confirmed: a count of 100 completes correctly;
+a count one past `MAX_FUNC_REF_HEAP_LEN` traps cleanly (`assert_trap`,
+message content unchecked per this harness's own established convention)
+-- never a panic, hang, or silently wrong return value. Building this
+test is what caught the `NonNullConcreteFuncRef` gap directly (the first
+version of the test, using `(ref $t)` for `$A`'s exported global, failed
+with a WRONG dispatch result before the type-check fix, not merely an
+unexpected pass/fail on the trap assertion -- a real, reproduced bug this
+test found on its own, not a hypothetical).
+
+`cargo test -p wasm-conformance`: 74 (lib, +1) + 2 (integration) passed,
+0 failed. Corpus baseline unaffected (re-diffed against the original
+pre-fix baseline: still exactly the one `elem.wast` change, zero real
+failures anywhere). `cargo clippy --release --all-targets`: clean.
+
+## 0.1.129 — 2026-09-02 — regression test for a security-review finding: `global.get`-copied funcref globals (W35 fifth slice, round 1)
+
+`wasm-runtime` 0.6.35 fixed a real gap a pre-push security review found
+in 0.1.128's own fix (immediately below): a LOCAL global initialized via
+`(global.get $other)` -- copying another global's value rather than
+minting its own via `ref.func` -- could have its `func_ref` resolved
+against the WRONG instance's own function space, a silent wrong-function
+dispatch. See that crate's own CHANGELOG for the full trace.
+
+New hand-built end-to-end regression test,
+`a_local_global_that_copies_an_imported_funcref_global_via_global_get_
+propagates_the_real_source_identity_not_a_raw_index`: `$B` imports `$A`'s
+exported funcref global `$g0`, defines its OWN local pass-through global
+`$g1` (`(global.get $g0)`, also exported), and declares a decoy local
+function (`$decoy`, returns 999) at the SAME numeric index `$A`'s real
+function (`$ax`, returns 42) occupies in `$A`'s own space -- a table
+populated via `$g1` and read through `call_indirect` must reach `$ax`
+(42), not `$decoy` (999). Confirmed to fail (reaching `$decoy`) with the
+fix reverted and pass with it applied -- a real A/B.
+
+`cargo test -p wasm-conformance`: 73 (lib, +1) + 2 (integration) passed,
+0 failed. Corpus baseline unaffected (re-diffed against the original
+pre-0.1.128 baseline: still exactly the one `elem.wast` change, zero real
+failures anywhere). `cargo clippy --release --all-targets`: clean.
+
+## 0.1.128 — 2026-09-02 — regenerated baseline: cross-instance funcref-GLOBAL fix -- W35 fifth slice (1 file, LAST real failure in the corpus closed)
+
+Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`)
+after `wasm-runtime` 0.6.34 added `resolve_exported_global_funcrefs` (see
+that crate's own CHANGELOG for the full root-cause trace and fix). Diffed
+programmatically (Python, comparing the `files` dict) against the
+pre-fix baseline (0.1.127) across all 257 files: exactly ONE file's
+tally changed, zero elsewhere --
+
+- `elem.wast`: `assert_return` 26/27 (1 real fail) → 27/27 (0 fail) --
+  the "Initializing a table with imported funcref global" case, honestly
+  diagnosed but deliberately left unfixed by the PR that landed W38
+  slices 4/5 (0.1.127, above) as a genuine, out-of-scope-for-that-PR
+  W35-level gap. This was the ONLY real (non-`not_yet_supported`) `Fail`
+  anywhere in the entire 257-file corpus as of 0.1.127 -- confirming a
+  corpus-wide result of ZERO real failures, for the first time in this
+  campaign.
+
+New hand-built end-to-end regression test,
+`a_table_entry_populated_via_an_imported_funcref_global_dispatches_to_
+the_exporters_own_function` -- a minimal reproduction of `elem.wast`'s
+own failing case via `run_wast_source` directly (a funcref-typed global
+populated via `ref.func` on a local function, exported, imported by a
+second module, written into that module's own table through an active
+elem segment's `(global.get 0)` item, and read back via `call_indirect`),
+proving the fix end-to-end without depending on the vendored corpus file.
+
+`cargo test -p wasm-conformance`: 72 (lib, +1) + 2 (integration) passed,
+0 failed -- confirmed via a `git stash` A/B against the pre-fix tree (71
+lib tests passed before, all still passing after, plus the 1 new one).
+`cargo clippy --release --all-targets`: clean.
+
 ## 0.1.127 — 2026-09-02 — regenerated baseline: elem-segment three-layer fix + `array.init_elem`/`array.new_elem` -- W38 slices 4/5 (6 files)
 
 No code changes in this crate — regenerated `tests/fixtures/testsuite-
