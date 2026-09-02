@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 2,
-  "sourceHash": "fnv1a64:a0872df219b02d8b",
+  "sourceHash": "fnv1a64:d3e3174984248c77",
   "lessonIds": [
     "SA-C02-nama",
     "SA-C02-mama",
@@ -9,18 +9,20 @@
     "SA-C02-asti",
     "SA-C02-mama-nama-asti",
     "SA-S04-letter-aa",
-    "SA-C02-bhavan-tvam",
+    "SA-C02-bhavan",
+    "SA-C02-tvam",
     "SA-C02-kim",
     "SA-S202-letter-bha",
     "SA-C02-tava-nama-kim",
     "SA-C02-anandah",
-    "SA-S109-vowel-sign-i"
+    "SA-S109-vowel-sign-i",
+    "SA-C02-practice"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "voiceLessons": 10,
+  "drivablePrefix": 2,
   "text": "sanskrit/narration/ch02.txt",
   "json": "sanskrit/narration/ch02.json",
-  "textHash": "fnv1a64:25478b6b4bc9ff61",
-  "jsonHash": "fnv1a64:2fa71b559eebdd9d",
+  "textHash": "fnv1a64:660113853d06b328",
+  "jsonHash": "fnv1a64:d6fe3c7b4476eeff",
   "findings": []
 }

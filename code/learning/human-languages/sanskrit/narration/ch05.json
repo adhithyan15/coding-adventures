@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 5,
   "title": "The First Verbs",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5718293ec02d68f8",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:acec5d795c484288",
   "lessons": [
     {
       "id": "SA-C05-vadami",
@@ -12,24 +12,15 @@
       "title": "वदामि (vadāmi) — \"I speak,\" and the Sanskrit verb",
       "headword": "वदामि",
       "romanization": "vadāmi",
-      "gloss": "I speak (from वद्, to speak)",
+      "gloss": "I speak (from vad, to speak)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c686c4ae73bc8a1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:2712b08a884ce875",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -50,12 +41,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "व (va) + दा (dā) + मि (mi) becomes वदामि (vadāmi)."
+              "text": "va, dā, mi. The long ā in the middle beat is the ending doing its work — shorten it and the word stops meaning \"I speak.\""
             }
           ]
         },
@@ -66,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "वदामि (vadāmi, \"I speak\") is from the root वद् (vad, \"to speak, to say\") — the very root of वाद (vāda, \"a saying\") inside Chapter 1's धन्यवादः (dhanyavādaḥ, \"thank you\"). The present tense is stem + person- ending: vad-ā-mi, where -मि (-mi) means \"I\" — the same -mi you can see in asmi (\"I am\")."
+              "text": "vadāmi (\"I speak\") is from the root vad (\"to speak, to say\") — the very root of vāda (\"a saying\") inside Chapter 1's dhanyavādaḥ (\"thank you\"). The present tense is stem + person- ending: vad-ā-mi, where -mi means \"I\" — the same -mi you can see in asmi (\"I am\")."
             }
           ]
         },
@@ -368,22 +359,13 @@
       "romanization": "ahaṁ saṁskṛtaṁ vadāmi",
       "gloss": "I speak Sanskrit",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b052e7b455dfc4e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:ce79dcd9efdfad5d",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -404,12 +386,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "संस्कृत (saṁskṛta): सं (saṁ, with the anusvāra) + स्कृ (the conjunct skṛ, with the vocalic ऋ ṛ) + त (ta)."
+              "text": "a, haṁ, saṁs, kṛ, taṁ, va, dā, mi. The ṁ is a hum through the nose that colours the vowel before it rather than a full m; ṛ is a short vowel made with the tongue curled, near the ri of rich."
             }
           ]
         },
@@ -420,7 +402,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) = अहम् (aham, \"I\") + संस्कृतम् (saṁskṛtam, the object) + वदामि (vadāmi, \"speak\") — \"I Sanskrit speak,\" the verb last (as in every daughter language). The name संस्कृत (saṁskṛta) means \"put together, refined, perfected\" — from सम् (sam-, \"together,\" cousin of English same, Greek syn-) + कृत (kṛta, \"made, done,\" from the root कृ kṛ you met in namaskāra). So \"Sanskrit\" literally means \"the perfected [language],\" named in contrast to prākṛta (\"natural, raw\" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend)."
+              "text": "ahaṁ saṁskṛtaṁ vadāmi = aham (\"I\") + saṁskṛtam (the object) + vadāmi (\"speak\") — \"I Sanskrit speak,\" the verb last (as in every daughter language). The name saṁskṛta means \"put together, refined, perfected\" — from sam- (\"together,\" cousin of English same, Greek syn-) + kṛta (\"made, done,\" from the root kṛ you met in namaskāra). So \"Sanskrit\" literally means \"the perfected [language],\" named in contrast to prākṛta (\"natural, raw\" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend)."
             }
           ]
         },
@@ -500,24 +482,15 @@
       "title": "वसामि (vasāmi) — \"I live, I dwell\"",
       "headword": "वसामि",
       "romanization": "vasāmi",
-      "gloss": "I live, I dwell (from वस्, to dwell)",
+      "gloss": "I live, I dwell (from vas, to dwell)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cde751a56ff7912e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:8db6ffb96dfe10ea",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -538,12 +511,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "व (va) + सा (sā) + मि (mi) becomes वसामि (vasāmi)."
+              "text": "va, sā, mi. One consonant apart from vadāmi, and the same long ā carrying the ending."
             }
           ]
         },
@@ -554,7 +527,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "वसामि (vasāmi, \"I dwell, I live\") is from the root वस् (vas, \"to dwell, to stay, to abide\"), from Proto-Indo-European wes- (\"to dwell, to be\") — the ancestor of English was and were (the past of \"to be\" began as \"to dwell/remain\"). So Sanskrit's \"I dwell\" and English's \"was\" are, at the root, one word. From vas come vāsa (\"a dwelling\"), nivāsa (\"a residence\"), and names like Vārāṇasī. \"I live in the city\" is अहं नगरे वसामि (ahaṁ nagare vasāmi)."
+              "text": "vasāmi (\"I dwell, I live\") is from the root vas (\"to dwell, to stay, to abide\"), from Proto-Indo-European wes- (\"to dwell, to be\") — the ancestor of English was and were (the past of \"to be\" began as \"to dwell/remain\"). So Sanskrit's \"I dwell\" and English's \"was\" are, at the root, one word. From vas come vāsa (\"a dwelling\"), nivāsa (\"a residence\"), and names like Vārāṇasī. \"I live in the city\" is ahaṁ nagare vasāmi."
             }
           ]
         },
@@ -565,7 +538,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नगरे (nagare, \"in the city\") = nagara (\"city\") in the locative case (-e, \"in / at\"). Sanskrit has no separate word for \"in\" — it is folded into the noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is your second case, after Chapter 4's dative."
+              "text": "nagare (\"in the city\") = nagara (\"city\") in the locative case (-e, \"in / at\"). Sanskrit has no separate word for \"in\" — it is folded into the noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is your second case, after Chapter 4's dative."
             }
           ]
         },
@@ -799,24 +772,15 @@
       "title": "करोमि (karomi) — \"I do,\" from the root behind karma and namaskāra",
       "headword": "करोमि",
       "romanization": "karomi",
-      "gloss": "I do, I make (कार्यं करोमि, \"I work\")",
+      "gloss": "I do, I make (kāryaṁ karomi, \"I work\")",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:557c4b1e88d8dee8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:4bb9fcbfff7c22cc",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -837,12 +801,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "क (ka) + रो (ro) + मि (mi) becomes करोमि (karomi)."
+              "text": "ka, ro, mi. Three even beats, all short."
             }
           ]
         },
@@ -853,23 +817,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "करोमि (karomi, \"I do, I make\") is from the root कृ (kṛ, \"to do, make\"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:"
+              "text": "karomi (\"I do, I make\") is from the root kṛ (\"to do, make\"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:"
             },
             {
               "kind": "speech",
-              "text": "नमस्कारः (namaskāraḥ) — \"the making of a bow\" (namas + kāra)."
+              "text": "namaskāraḥ — \"the making of a bow\" (namas + kāra)."
             },
             {
               "kind": "speech",
-              "text": "कर्म (karma) — \"a thing done,\" an action."
+              "text": "karma — \"a thing done,\" an action."
             },
             {
               "kind": "speech",
-              "text": "संस्कृत (saṁskṛta) — \"put together, perfected\" (this very language)."
+              "text": "saṁskṛta — \"put together, perfected\" (this very language)."
             },
             {
               "kind": "speech",
-              "text": "To say \"I work,\" Sanskrit says कार्यं करोमि (kāryaṁ karomi) — \"I do work,\" where कार्यम् (kāryam, \"work, task\") is itself from kṛ (\"a thing-to-be-done\"). So \"I work\" is, at root, \"kṛ-thing I kṛ-do.\" Hindi's kām karnā and Bengali's kāj karā are its worn-down grandchildren."
+              "text": "To say \"I work,\" Sanskrit says kāryaṁ karomi — \"I do work,\" where kāryam (\"work, task\") is itself from kṛ (\"a thing-to-be-done\"). So \"I work\" is, at root, \"kṛ-thing I kṛ-do.\" Hindi's kām karnā and Bengali's kāj karā are its worn-down grandchildren."
             }
           ]
         },
@@ -945,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87a8a0de5c869544",
+      "sourceHash": "fnv1a64:6f32e865c62c6807",
       "notice": null,
       "blocks": [
         {
@@ -967,8 +931,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1016,8 +980,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine",
+          "type": "guided-production",
+          "title": "How to answer: the engine",
           "segments": [
             {
               "kind": "pause",
@@ -1056,8 +1020,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry (the taproot, both ways)",
+          "type": "notice",
+          "title": "What you've built: the roots you now carry",
           "segments": [
             {
               "kind": "pause",

@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:37674e6b1968f10a",
+  "lessonIds": [
+    "SA-C04-gacchami",
+    "SA-C04-punah",
+    "SA-S110-letter-ra",
+    "SA-C04-punar-darshanaya",
+    "SA-C04-shvah",
+    "SA-S113-letter-pa",
+    "SA-C04-practice"
+  ],
+  "tex": "sanskrit/book/chapters/ch04-farewells.tex"
+}

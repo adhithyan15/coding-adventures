@@ -1,21 +1,19 @@
 Sanskrit, chapter 2: Introducing Yourself.
-12 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+14 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 12.
+Lesson 1 of 14.
 नाम (nāma) — "name," the source of a word half the world shares.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 The first word of the introduction — and, since this is Sanskrit, the source of the word half the world uses.
 
-The letters in this word.
-न (na) + ा (the long-ā sign) + म (ma) becomes नाम (nāma).
+Sounds you'll need.
+nā, ma. A long first beat and a short second — the two vowels English keeps apart in father and sofa.
 
 The word, taken apart.
-नाम (nāma, "name," neuter) is from the stem नामन् (nāman), from Proto-Indo-European h₃nómn̥. This is not a borrowing from anywhere — it is the ancestor: the same root surfaces as English name, Latin nōmen ( becomes noun, nominate), Greek onoma, and, worn down, as Hindi nām, Bengali nām, Punjabi nāṁ. When you say Sanskrit nāma, you are standing near the headwaters of a word that flowed to both Europe and modern India.
+nāma ("name," neuter) is from the stem nāman, from Proto-Indo-European h₃nomn-. This is not a borrowing from anywhere — it is the ancestor: the same root surfaces as English name, Latin nōmen ( becomes noun, nominate), Greek onoma, and, worn down, as Hindi nām, Bengali nām, Punjabi nāṁ. When you say Sanskrit nāma, you are standing near the headwaters of a word that flowed to both Europe and modern India.
 
 Guided Practice.
 [pause 1 second]
@@ -26,23 +24,21 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What PIE root is nāma from, and name two of its descendants. (h₃nómn̥; any two of English name, Latin nōmen, Greek onoma, Hindi nām.)
+What PIE root is nāma from, and name two of its descendants. (h₃nomn-; any two of English name, Latin nōmen, Greek onoma, Hindi nām.)
 
 
-Lesson 2 of 12.
+Lesson 2 of 14.
 मम (mama) — "my," the ancestor of me and my.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 The word that makes the name yours — and it is, quite literally, the grandparent of English my.
 
-The letters in this word.
-म (ma) + म (ma) becomes मम (mama). Two identical syllables.
+Sounds you'll need.
+ma, ma. Two identical short beats, evenly stressed.
 
 The word, taken apart.
-मम (mama, "my, of me") is the genitive of अहम् (aham, "I"), on the first-person root ma-, from Proto-Indo-European me-. This is the source of the whole first-person family: English me, my, mine, Latin meus, Greek emou, and Hindi merā. Sanskrit mama and English my are not merely similar — they are the same ancient word, one still in its old form, the other worn smooth by five thousand years.
+mama ("my, of me") is the genitive of aham ("I"), on the first-person root ma-, from Proto-Indo-European me-. This is the source of the whole first-person family: English me, my, mine, Latin meus, Greek emou, and Hindi merā. Sanskrit mama and English my are not merely similar — they are the same ancient word, one still in its old form, the other worn smooth by five thousand years.
 
 Guided Practice.
 [pause 1 second]
@@ -56,7 +52,7 @@ Wrap-up Recall.
 What is mama the genitive of, and its English cousins? (Aham, "I"; English me, my, mine.)
 
 
-Lesson 3 of 12.
+Lesson 3 of 14.
 ◌ः (ḥ) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ः and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -94,20 +90,18 @@ Wrap-up Recall.
 Which character is this — ◌ः? What does it add to the end of a syllable? (A soft breathed ḥ.) Name one word you already say that contains it.
 
 
-Lesson 4 of 12.
+Lesson 4 of 14.
 अस्ति (asti) — "is," the ancestor of is and est.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 The little verb "is" — and here you meet it in the form that fathered half the "to be" words on earth.
 
-The letters in this word.
-अ (independent a) + स्ति (sti, the conjunct स् s + ति ti) becomes अस्ति (asti).
+Sounds you'll need.
+as, ti. The s closes the first beat; ti follows cleanly after it.
 
 The word, taken apart.
-अस्ति (asti, "is") is the third-person singular of the root अस् (as-, "to be"), from Proto-Indo-European h₁es-. It is the source of the family's copula: English is, German ist, Latin est, Greek esti, and Hindi hai ( from asti directly). Unlike its Dravidian neighbours — Tamil and Bengali drop "is" in the present — Sanskrit keeps an explicit copula, and it is the very word Europe kept too.
+asti ("is") is the third-person singular of the root as- ("to be"), from Proto-Indo-European h₁es-. It is the source of the family's copula: English is, German ist, Latin est, Greek esti, and Hindi hai ( from asti directly). Unlike its Dravidian neighbours — Tamil and Bengali drop "is" in the present — Sanskrit keeps an explicit copula, and it is the very word Europe kept too.
 
 Guided Practice.
 [pause 1 second]
@@ -121,18 +115,18 @@ Wrap-up Recall.
 What root is asti from, and its cousins across the family? (As- / PIE h₁es-; English is, Latin est, Hindi hai.)
 
 
-Lesson 5 of 12.
+Lesson 5 of 14.
 मम नाम … अस्ति (mama nāma … asti) — "my name is…"
 
 Warm-up.
 [pause 2 seconds]
 Three atoms you now own, assembled — and note that Sanskrit, unlike Tamil or Bengali, actually says the "is."
 
-The phrase, assembled.
-मम (my) + नाम (name) + your name + अस्ति (is) = mama nāma … asti, "my name is…" Mama nāma Aruṇaḥ asti. becomes "My name is Arun."
+The phrase, taken apart.
+mama (my) + nāma (name) + your name + asti (is) = mama nāma … asti, "my name is…" Mama nāma Aruṇaḥ asti. becomes "My name is Arun."
 
 Grammar Lens: Sanskrit keeps the "is".
-Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says मम नाम … अस्ति (mama nāma … asti), with an explicit asti ("is"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the "full-dress" Sanskrit sentence keeps it.)
+Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says mama nāma … asti, with an explicit asti ("is"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the "full-dress" Sanskrit sentence keeps it.)
 
 Guided Practice.
 [pause 1 second]
@@ -146,7 +140,7 @@ Wrap-up Recall.
 Give your name in Sanskrit, and say what it keeps that Tamil and Bengali drop. (Mama nāma … asti; the copula asti, "is.")
 
 
-Lesson 6 of 12.
+Lesson 6 of 14.
 आ (ā) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: आ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -193,52 +187,75 @@ Wrap-up Recall.
 Which character is this — आ? What sound does it carry? (ā.) Name one word you already say that contains it.
 
 
-Lesson 7 of 12.
-भवान् / त्वम् (bhavān / tvam) — "you," respectful and familiar.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 7 of 14.
+भवान् (bhavān) — the respectful "you".
 
 Warm-up.
 [pause 2 seconds]
-To ask a name you need "you" — and Sanskrit's familiar one is the ancestor of English thou.
+To ask someone's name you need a word for "you" — and for a first meeting, Sanskrit reaches for the polite one.
 
-The letters in this word.
-त्वम् (tvam): त्व (the conjunct tva) + म् (bare m, closed by the halant). भवान् (bhavān): भ + वा + न्.
+Sounds you'll need.
+bha, vān. The bh is one sound — a b released with breath behind it. The second beat carries a long ā and closes on n.
 
 The word, taken apart.
-त्वम् (tvam, familiar "you") is from Proto-Indo-European tū — the direct ancestor of English archaic thou, Latin tū, French tu, and Hindi tū. भवान् (bhavān, respectful "you") is different: it is really a third-person honorific — "your honour," from bhavat ("being, gracious one") — and so it takes a third-person verb (bhavān asti, "your honour is"), a politeness by grammatical distance. For a first meeting, use भवान्.
+Bhavān ("you," respectful) is not really a second-person word at all: it is a third-person honorific — "your honour," from bhavat ("being, gracious one") — and so it takes a third-person verb (bhavān asti, "your honour is"). For a first meeting, use bhavān.
 
 Grammar Lens: politeness by grammatical person.
 Where Hindi and Punjabi make respect plural (āp … haiṁ), Sanskrit makes it third-person: to be polite you address someone as though speaking about them — "is your honour well?" rather than "are you well?" Different trick, same courtesy.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "tvam" (familiar) and "bhavān" (respectful)]
+[your turn — say: the respectful "you" — bhavān]
 [pause 8 seconds for the answer]
-[your turn — say: the English cousin of tvam (thou)]
+[your turn — say: what it literally means (your honour)]
 [pause 8 seconds for the answer]
-[your turn — say: why bhavān takes a third-person verb (it means "your honour")]
+[your turn — say: why it takes a third-person verb (it speaks about the person)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which "you" is respectful, and what English word is tvam cousin to? (Bhavān — literally "your honour," taking a 3rd-person verb; tvam corresponds to archaic thou.)
+How does Sanskrit build respect into "you," and how does Hindi do it instead? (Sanskrit uses a third-person honorific, bhavān "your honour"; Hindi uses a plural, āp.)
 
 
-Lesson 8 of 12.
+Lesson 8 of 14.
+त्वम् (tvam) — the familiar "you".
+
+Warm-up.
+[pause 2 seconds]
+The other "you" — the one you use with friends, and the ancestor of English thou.
+
+Sounds you'll need.
+tvam — one beat. The tv- is a single push, t and v said together, and then the lips close on m.
+
+The word, taken apart.
+Tvam (familiar "you") is from Proto-Indo-European tū — the direct ancestor of English archaic thou, Latin tū, French tu, and Hindi tū. Unlike bhavān, it takes an ordinary second-person verb. Its possessive is tava ("your"), which you will need in the very next question.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: both words for you — tvam (familiar), bhavān (respectful)]
+[pause 8 seconds for the answer]
+[your turn — say: the English cousin of tvam (thou)]
+[pause 8 seconds for the answer]
+[your turn — say: which one you would use on a first meeting (bhavān)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What English word is tvam cousin to, and what is its possessive form? (Archaic thou; tava "your.")
+
+
+Lesson 9 of 14.
 किम् (kim) — "what," the source of the question-words.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 The question-word — and the fountainhead of a whole family of "wh-" words, east and west.
 
-The letters in this word.
-कि (ki, क + the i-sign) + म् (bare m, with the halant) becomes किम् (kim).
+Sounds you'll need.
+kim — one short beat, closing on m with no vowel after it.
 
 The word, taken apart.
-किम् (kim, "what") is from the interrogative stem क- (ka-), from Proto-Indo-European kʷo- — the ancestor of the whole question-family: English what, who, which, Latin quis / quid, Greek tis, and Hindi kyā / kaun. Sanskrit's own questions all grow from this ka-: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). It is the single seed from which both Europe's qu-/wh- words and India's k- words grew.
+kim ("what") is from the interrogative stem ka-, from Proto-Indo-European kʷo- — the ancestor of the whole question-family: English what, who, which, Latin quis / quid, Greek tis, and Hindi kyā / kaun. Sanskrit's own questions all grow from this ka-: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). It is the single seed from which both Europe's qu-/wh- words and India's k- words grew.
 
 Guided Practice.
 [pause 1 second]
@@ -254,7 +271,7 @@ Wrap-up Recall.
 What PIE root is kim from, and its cousins? (kʷo-; English what, Latin quis, Hindi kyā.)
 
 
-Lesson 9 of 12.
+Lesson 10 of 14.
 भ (bha) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: भ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -298,18 +315,18 @@ Wrap-up Recall.
 Which character is this — भ? What sound does it carry? (bha.) Name one word you already say that contains it.
 
 
-Lesson 10 of 12.
+Lesson 11 of 14.
 तव नाम किम्? (tava nāma kim?) — "what's your name?"
 
 Warm-up.
 [pause 2 seconds]
 Turn the introduction around — ask, instead of tell.
 
-The phrase, assembled.
-तव (tava, "your," the genitive of tvam) + नाम (name) + किम् (what) becomes "your name what?" Here Sanskrit often drops the asti: tava nāma kim? stands complete, the question-word alone doing the work.
+The phrase, taken apart.
+tava ("your," the genitive of tvam) + nāma (name) + kim (what) becomes "your name what?" Here Sanskrit often drops the asti: tava nāma kim? stands complete, the question-word alone doing the work.
 
 Grammar Lens: the respectful version.
-Tava ("your") is the familiar form, matching tvam. To a respected stranger, use the honorific: भवतः नाम किम्? (bhavataḥ nāma kim? — bhavataḥ, "of your honour"). Note mama / tava / bhavataḥ — "my / your / your-honour's" — all built the same way, as genitives.
+Tava ("your") is the familiar form, matching tvam. To a respected stranger, use the honorific: bhavataḥ nāma kim? (bhavataḥ, "of your honour"). Note mama / tava / bhavataḥ — "my / your / your-honour's" — all built the same way, as genitives.
 
 Guided Practice.
 [pause 1 second]
@@ -325,20 +342,18 @@ Wrap-up Recall.
 Ask "what's your name?" respectfully, and give the "my/your" pair. (Bhavataḥ nāma kim?; mama "my" / tava "your.")
 
 
-Lesson 11 of 12.
+Lesson 12 of 14.
 आनन्दः (ānandaḥ) — "joy," and "a joy to meet you".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 The warm close of an introduction — a word so full it names bliss itself.
 
-The letters in this word.
-आ (independent ā) + न + न्द (the conjunct nda) + ः (the visarga ḥ, the masculine-singular ending you met in Chapter 1) becomes आनन्दः (ānandaḥ).
+Sounds you'll need.
+ā, nan, daḥ. Long ā to open, nd said together in the middle, and the soft breathed -ḥ to close.
 
 The word, taken apart.
-To say "pleased to meet you," Sanskrit can say भवन्तं दृष्ट्वा आनन्दः (bhavantaṁ dṛṣṭvā ānandaḥ) — "seeing you, [there is] joy." The key word आनन्दः (ānandaḥ, "joy, bliss, delight") is from आ- (ā-, "fully") + the root नन्द् (nand, "to rejoice"). It is one of Sanskrit's most beloved words — the ānanda of sat-cit-ānanda ("being-consciousness-bliss"), and the name Ānanda, the Buddha's devoted disciple. So a simple greeting reaches for the word Indian thought uses for the deepest happiness.
+To say "pleased to meet you," Sanskrit can say bhavantaṁ dṛṣṭvā ānandaḥ — "seeing you, [there is] joy." The key word ānandaḥ ("joy, bliss, delight") is from ā- ("fully") + the root nand ("to rejoice"). It is one of Sanskrit's most beloved words — the ānanda of sat-cit-ānanda ("being-consciousness-bliss"), and the name Ānanda, the Buddha's devoted disciple. So a simple greeting reaches for the word Indian thought uses for the deepest happiness.
 
 Guided Practice.
 [pause 1 second]
@@ -354,7 +369,7 @@ Wrap-up Recall.
 What does ānandaḥ mean, and what is it built from? ("Joy, bliss"; ā- "fully" + nand "to rejoice.")
 
 
-Lesson 12 of 12.
+Lesson 13 of 14.
 ◌ि — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ि and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -392,3 +407,44 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ◌ि? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts i on; takes the built-in a off.) Name one word you already say that contains it.
+
+
+Lesson 14 of 14.
+Chapter 2 — the whole exchange.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Two people meet, and every word in the exchange is one you already have.
+
+The exchange.
+[pause 1 second after each]
+[your turn — say: mama nāma mīrā asti. — "My name is Mira."]
+[pause 8 seconds for the answer]
+[your turn — say: tava nāma kim? — "What's your name?"]
+[pause 8 seconds for the answer]
+[your turn — say: mama nāma aruṇaḥ asti. — "My name is Arun."]
+[pause 8 seconds for the answer]
+[your turn — say: bhavantaṁ dṛṣṭvā ānandaḥ. — "Pleased to meet you."]
+[pause 8 seconds for the answer]
+
+How to answer: the atoms.
+[pause 1 second after each]
+[your turn — say: name, my, is, what (nāma, mama, asti, kim)]
+[pause 8 seconds for the answer]
+[your turn — say: where the verb sits in the sentence (last)]
+[pause 8 seconds for the answer]
+[your turn — say: whether Sanskrit drops the "is" (no — it keeps an explicit copula)]
+[pause 8 seconds for the answer]
+
+What you've built: every atom is a source.
+[pause 2 seconds]
+Every word in that exchange is an ancestor, not a borrowing:
+nāma becomes English name, Latin nōmen.
+mama becomes English my, me.
+asti becomes English is, Latin est, Hindi hai.
+kim becomes English what, Latin quid.
+And Sanskrit keeps the copula that its Dravidian neighbours drop. Next chapter: bhavān katham asti? — "how are you?"
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give your name in Sanskrit, ask for someone else's, and name two English words this chapter's vocabulary is the ancestor of. (Mama nāma … asti; tava nāma kim?; any two of name, my, is, what.)

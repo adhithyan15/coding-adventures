@@ -1,0 +1,16 @@
+{
+  "language": "sanskrit",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:a0eb4d40f0877f15",
+  "lessonIds": [
+    "SA-C05-vadami",
+    "SA-S204-letter-ya",
+    "SA-C05-aham-samskritam-vadami",
+    "SA-C05-vasami",
+    "SA-S205-vowel-sign-vocalic-r",
+    "SA-C05-karomi",
+    "SA-C05-practice",
+    "SA-S03-letter-a"
+  ],
+  "tex": "sanskrit/book/chapters/ch05-first-verbs.tex"
+}
