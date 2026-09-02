@@ -168,6 +168,9 @@ describe("the printed filmstrip", () => {
       ["source.url is not a string", (e) => (e.source = { citation: "c", url: 7 })],
       ["penLifts is not a whole number", (e) => (e.penLifts = "one")],
       ["frames is not a list", (e) => (e.frames = "none")],
+      // Escaping makes a value safe, not well-formed: `escapeXml` leaves a NUL
+      // where it found it and the committed `.svg` then fails XML parsing.
+      ["summary contains a control character", (e) => (e.summary = "two\u0000strokes")],
       [
         "frame 1 markup is not a string",
         (e) => ((e.frames as Array<Record<string, unknown>>)[0].markup = 7),

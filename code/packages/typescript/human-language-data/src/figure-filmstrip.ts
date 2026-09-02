@@ -549,6 +549,15 @@ function assertString(value: unknown, where: string, field: string): string {
   if (typeof value !== "string") {
     throw new Error(`${where}: filmstrip ${field} is not a string`);
   }
+  // Escaping makes a value SAFE, not necessarily WELL-FORMED: `escapeXml` leaves
+  // a NUL exactly where it found it, and the result is a committed `.svg` that
+  // XML rejects. That failure would surface in the book's SVG-to-PDF step,
+  // naming a file rather than a field. The markup path already refuses control
+  // characters for this reason; the escaped fields get the same treatment so the
+  // standard is one standard.
+  if (CONTROL_CHARACTER.test(value)) {
+    throw new Error(`${where}: filmstrip ${field} contains a control character`);
+  }
   return value;
 }
 
