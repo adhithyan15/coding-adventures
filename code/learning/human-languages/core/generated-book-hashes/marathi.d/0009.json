@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 9,
-  "sourceHash": "fnv1a64:17907fd82b2ecd60",
+  "sourceHash": "fnv1a64:8cd8c9031e95385a",
   "lessonIds": [
     "MR-C02-naav",
     "MR-C02-majhe",
@@ -14,11 +14,5 @@
     "MR-C02-practice",
     "MR-R09-runway-tail-r2"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 0,
-  "text": "marathi/narration/ch09.txt",
-  "json": "marathi/narration/ch09.json",
-  "textHash": "fnv1a64:dd398d9318e41b2b",
-  "jsonHash": "fnv1a64:4d0e50ffe1bbb945",
-  "findings": []
+  "tex": "marathi/book/chapters/ch09-introductions.tex"
 }

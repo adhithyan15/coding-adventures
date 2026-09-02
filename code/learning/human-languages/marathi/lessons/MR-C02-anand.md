@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: MR-C02-anand
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 295
 chapter: 9
 type: phrase
@@ -10,23 +12,41 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [MR-C02-tumche-naav-kaay-aahe]
 sounds: [anusvara]
 roots: [ananda]
-est_minutes: 4
 reviews_of: [MR-C02-majhe-naav-aahe]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-PHRASE-TUMCHE-NAAV-KAAY-AAHE]
+introduces:
+  knowledge: [MR-PHRASE-BHETUN-ANAND-JHALA, MR-LEX-ANAND]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [MR-PHRASE-BHETUN-ANAND-JHALA, MR-LEX-ANAND]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
 ---
 
 # भेटून आनंद झाला (bheṭūn ānand jhālā) — "pleased to meet you"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Names exchanged — now the warm close of a first meeting.
 
-## The phrase, assembled
+## You'll want to know — the phrase, assembled
+<!-- hl-knowledge: introduces=[MR-PHRASE-BHETUN-ANAND-JHALA]; assesses=[] -->
 
 **भेटून** (*bheṭūn*, "having met") + **आनंद** (*ānand*, "joy") + **झाला**
 (*jhālā*, "happened") → literally **"having met [you], joy happened."** Marathi
 does not say "I am pleased"; it says the joy itself *occurred*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[MR-LEX-ANAND]; assesses=[] -->
 
 The heart of it is **आनंद** (*ānand*, "joy, bliss"), pure **Sanskrit**: **आ-**
 (*ā-*, "fully") + **नन्द** (*nand*, "to rejoice"). It is the *ānanda* of the
@@ -35,6 +55,7 @@ most common given names across India. So a Marathi speaker meets you and names
 the feeling **joy**.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 The verb **झाला** (*jhālā*, "happened/became") also carries gender — *jhālā* by
 default here for the event *ānand*. And **भेटून** (*bheṭūn*) is built on **भेटणे**
@@ -42,12 +63,14 @@ default here for the event *ānand*. And **भेटून** (*bheṭūn*) is bu
 bheṭū* ("we'll meet again").
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-BHETUN-ANAND-JHALA, MR-LEX-ANAND] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bheṭūn ānand jhālā" — pleased to meet you]
 - [YOU SAY: what *ānand* literally means ("joy")]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-BHETUN-ANAND-JHALA, MR-LEX-ANAND] -->
 
 [PAUSE 3s] Literally, what does a Marathi speaker say when meeting you? ("Having
 met you, **joy** happened" — *bheṭūn ānand jhālā*.)

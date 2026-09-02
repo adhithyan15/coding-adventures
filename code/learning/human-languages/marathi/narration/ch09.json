@@ -4,12 +4,12 @@
   "chapter": 9,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f9120d87a1f02a80",
+  "sourceHash": "fnv1a64:17907fd82b2ecd60",
   "lessons": [
     {
       "id": "MR-C02-naav",
       "sequence": 260,
-      "title": "नाव (nāv) — \"name\"",
+      "title": "नाव (nāv) — \"name,\" a word older than Europe",
       "headword": "नाव",
       "romanization": "nāv",
       "gloss": "name (nāv)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:89aebc04614a6474",
+      "sourceHash": "fnv1a64:a57d4393416db623",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नाव (nāv) comes from Sanskrit नामन् (nāman, \"name\"). Watch the small Marathi sound-shift: the Sanskrit -m- softened to -v-, so nām became nāv. (Hindi kept the m: nām.) That Sanskrit nāman traces back to the same ancient root, h₃nómn̥, that gave English name and noun, Latin nōmen, Greek onoma. A cousin from before either language had a name for itself."
+              "text": "नाव (nāv) comes from Sanskrit नामन् (nāman, \"name\"). Watch the small Marathi sound-shift: the Sanskrit -m- softened to -v-, so nām became nāv. (Hindi kept the m: nām.) That Sanskrit nāman traces back to the same ancient root, h₃nómn — that final n is syllabic, a consonant doing a vowel's work — that gave English name and noun, Latin nōmen, Greek onoma. A cousin from before either language had a name for itself."
             }
           ]
         },
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:97386ffbab1e4e86",
+      "sourceHash": "fnv1a64:456cc7be7d690145",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1c03c99a3f01d56b",
+      "sourceHash": "fnv1a64:c42f00bf175a11d5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -327,7 +327,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Marathi is a subject–object–verb language: \"my name Mira is.\" The copula आहे sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, \"you are\") and आहात (āhāt, \"you are,\" respectful) in Chapter 9."
+              "text": "Marathi is a subject–object–verb language: \"my name Mira is.\" The copula आहे sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, \"you are\") and आहात (āhāt, \"you are,\" respectful) in the next chapter."
             }
           ]
         },
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6535a9c9b88da4cf",
+      "sourceHash": "fnv1a64:c921ac70e91b947d",
       "notice": null,
       "blocks": [
         {
@@ -416,8 +416,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:93eddd24430b4cbc",
+      "sourceHash": "fnv1a64:72204b6f78589b31",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -648,7 +648,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88399bb81839acbf",
+      "sourceHash": "fnv1a64:122744e37c4c8b59",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -773,7 +773,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:089fee89fcd5e103",
+      "sourceHash": "fnv1a64:5f1e3ee62732790d",
       "notice": null,
       "blocks": [
         {
@@ -795,8 +795,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -898,7 +898,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89e7a12529d35c76",
+      "sourceHash": "fnv1a64:b6e3d32b94fc62ae",
       "notice": null,
       "blocks": [
         {
@@ -920,8 +920,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -1014,7 +1014,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b93e266420672e4",
+      "sourceHash": "fnv1a64:c3de459958ffd797",
       "notice": null,
       "blocks": [
         {
@@ -1036,8 +1036,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The whole exchange",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "table",
@@ -1059,8 +1059,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Atoms banked this chapter",
+          "type": "notice",
+          "title": "What you've built — atoms banked this chapter",
           "segments": [
             {
               "kind": "speech",
@@ -1151,7 +1151,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:aa55b24f58d32383",
+      "sourceHash": "fnv1a64:68b7f68b8d8353a5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1177,6 +1177,10 @@
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Repair one group only. This is the first retrieval, not the last: the same six come back once at a durable gap, and once more at book distance near the end."
+            },
             {
               "kind": "pause",
               "seconds": 2,

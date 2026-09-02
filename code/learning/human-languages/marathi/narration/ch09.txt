@@ -3,7 +3,7 @@ Marathi, chapter 9: Introducing Yourself.
 
 
 Lesson 1 of 10.
-नाव (nāv) — "name".
+नाव (nāv) — "name," a word older than Europe.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
@@ -15,7 +15,7 @@ The letters in this word.
 (Skim if you read Devanagari.) ना (nā, the न na with the ा long-ā stroke) + व (va) becomes नाव nāv. Two letters, read left to right.
 
 The word, taken apart.
-नाव (nāv) comes from Sanskrit नामन् (nāman, "name"). Watch the small Marathi sound-shift: the Sanskrit -m- softened to -v-, so nām became nāv. (Hindi kept the m: nām.) That Sanskrit nāman traces back to the same ancient root, h₃nómn̥, that gave English name and noun, Latin nōmen, Greek onoma. A cousin from before either language had a name for itself.
+नाव (nāv) comes from Sanskrit नामन् (nāman, "name"). Watch the small Marathi sound-shift: the Sanskrit -m- softened to -v-, so nām became nāv. (Hindi kept the m: nām.) That Sanskrit nāman traces back to the same ancient root, h₃nómn — that final n is syllabic, a consonant doing a vowel's work — that gave English name and noun, Latin nōmen, Greek onoma. A cousin from before either language had a name for itself.
 
 Why it's said this way.
 Marathi softens many old Sanskrit consonants this way — m leaning to v, hard sounds going soft. Spotting the shift lets you read a Sanskrit word straight into its Marathi form.
@@ -78,7 +78,7 @@ The word, taken apart.
 आहे (āhe, "is") descends from Sanskrit अस्ति (ásti, "is"), on the root √as ("to be"). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family, worn down to āhe in Marathi.
 
 Grammar Lens: the verb goes last.
-Marathi is a subject–object–verb language: "my name Mira is." The copula आहे sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, "you are") and आहात (āhāt, "you are," respectful) in Chapter 9.
+Marathi is a subject–object–verb language: "my name Mira is." The copula आहे sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, "you are") and आहात (āhāt, "you are," respectful) in the next chapter.
 
 Guided Practice.
 [pause 1 second]
@@ -99,7 +99,7 @@ Warm-up.
 [pause 2 seconds]
 Now assemble the three atoms you just met into your first full sentence about yourself.
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mīrā āhe) — "my name is Mira."
 Notice the shape:
 माझं (mājhaṁ) is neuter, agreeing with the neuter नाव (nāv).
@@ -190,7 +190,7 @@ Warm-up.
 [pause 2 seconds]
 Now turn the question outward — ask someone else's name.
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 तुमचं (tumchaṁ, "your," neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — literally "your name what is?", verb last.
 The "your" mirrors the "my" set you learned:
 माझं (mājhaṁ) — my.
@@ -220,7 +220,7 @@ Warm-up.
 [pause 2 seconds]
 Names exchanged — now the warm close of a first meeting.
 
-The phrase, assembled.
+You'll want to know — the phrase, assembled.
 भेटून (bheṭūn, "having met") + आनंद (ānand, "joy") + झाला (jhālā, "happened") becomes literally "having met [you], joy happened." Marathi does not say "I am pleased"; it says the joy itself occurred.
 
 The word, taken apart.
@@ -248,14 +248,14 @@ Warm-up.
 [pause 2 seconds]
 Run the whole first exchange, atom by atom, then whole.
 
-The whole exchange.
+The exchange.
 [a table of 4 rows, read aloud]
 Marathi: माझं नाव मीरा आहे. Say it: mājhaṁ nāv Mīrā āhe. English: My name is Mira.
 Marathi: तुमचं नाव काय आहे? Say it: tumchaṁ nāv kāy āhe? English: What's your name?
 Marathi: माझं नाव अरुण आहे. Say it: mājhaṁ nāv Aruṇ āhe. English: My name is Arun.
 Marathi: भेटून आनंद झाला. Say it: bheṭūn ānand jhālā. English: Pleased to meet you.
 
-Atoms banked this chapter.
+What you've built — atoms banked this chapter.
 नाव (nāv) — name; Sanskrit nāman becomes English name (the m softened to v in Marathi).
 माझं (mājhaṁ) — my; root ma- becomes English me/my; three genders mājhā/mājhī/mājhaṁ.
 आहे (āhe) — is; Sanskrit ásti (√as) becomes English is; the verb comes last.
@@ -284,6 +284,7 @@ Warm-up.
 You closed the runway a chapter ago and have been introducing yourself since. Nothing to look at here — this is the first time those six are asked for cold.
 
 Wrap-up Recall.
+Repair one group only. This is the first retrieval, not the last: the same six come back once at a durable gap, and once more at book distance near the end.
 [pause 2 seconds]
 Which l does Marathi keep that Hindi does not? (The curled one.)
 [pause 2 seconds]

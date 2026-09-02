@@ -42,6 +42,9 @@ You closed the runway a chapter ago and have been introducing yourself since. No
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-LA-01, MR-SCRIPT-SHA-01, MR-SCRIPT-SSA-01, MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-INDEPENDENT-01] -->
 <!-- hl-activity: {"id":"MR-R09-runway-tail-r2-check","kind":"text","assesses":["MR-SCRIPT-LA-01","MR-SCRIPT-SHA-01","MR-SCRIPT-SSA-01","MR-SCRIPT-U-INDEPENDENT-01","MR-SCRIPT-UU-INDEPENDENT-01","MR-SCRIPT-E-INDEPENDENT-01"],"prompt":"A chapter after learning them, name the plain l beside the curled one, the two sibilants written apart but said alike, and the three vowels that stand alone as well as leaning.","answer":"la beside lla; sha and ssa; u, uu and e","accepted":[],"feedback":{"correct":"The tail of the runway came back without a model, which is the first real test of it.","incorrect":"Repair one group only. This is the first retrieval, not the last."},"response_seconds":42} -->
 
+Repair one group only. This is the first retrieval, not the last: the same six
+come back once at a durable gap, and once more at book distance near the end.
+
 [PAUSE 2s] Which *l* does Marathi keep that Hindi does not? (**The curled one.**)
 [PAUSE 2s] Which two sibilants are told apart only in spelling? (***śa* and
 *ṣa*.**) [PAUSE 2s] Which vowel opens the word for one? (***e*.**) [PAUSE 2s]

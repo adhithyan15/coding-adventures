@@ -2,7 +2,6 @@
   "language": "marathi",
   "chapter": 9,
   "output": "marathi/book/chapters/ch09-introductions.tex",
-  "embeddedLessonIds": [
-    "MR-R09-runway-tail-r2"
-  ]
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
 }
