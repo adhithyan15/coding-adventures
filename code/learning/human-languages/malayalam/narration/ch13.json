@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:617b1388d6d8f566",
+  "sourceHash": "fnv1a64:9fac3657646b7dc6",
   "lessons": [
     {
       "id": "ML-C13-shareera-bhaagangal",
@@ -132,7 +132,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:891e6a4f03ca67a7",
+      "sourceHash": "fnv1a64:50c768214c73e84d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -159,7 +159,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ു — what does it do?"
+              "text": "Before the new one: മ — what does it do?"
             },
             {
               "kind": "pause",
@@ -301,7 +301,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7523ffa9891f8f44",
+      "sourceHash": "fnv1a64:5f6bf59f4120da1e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -328,7 +328,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ഞ — what does it do?"
+              "text": "Before the new one: ത (ta) — what does it do?"
             },
             {
               "kind": "pause",

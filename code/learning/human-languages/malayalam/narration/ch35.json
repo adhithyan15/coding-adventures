@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friend",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d6cbc7ecc69630b3",
+  "sourceHash": "fnv1a64:d4c53114c5c117a8",
   "lessons": [
     {
       "id": "ML-C35-kudumbam",
@@ -303,7 +303,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c67ec813cf2d7796",
+      "sourceHash": "fnv1a64:dd91bc2bb08e8eb8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -331,7 +331,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ഹ — what does it do?"
+              "text": "Before the new one: ഊ — what does it do?"
             },
             {
               "kind": "pause",
@@ -372,7 +372,7 @@
             },
             {
               "kind": "speech",
-              "text": "In both, look at the consonant the little hook is fastened to: വ becomes vṛ, and ഹ — the letter of the last lesson — becomes hṛ."
+              "text": "In both, look at the consonant the little hook is fastened to: വ becomes vṛ, and ഹ — the ha you have read since the working-verbs chapter — becomes hṛ."
             }
           ]
         },

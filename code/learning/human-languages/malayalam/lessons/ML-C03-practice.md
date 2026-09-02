@@ -42,6 +42,18 @@ reviews_of: [ML-C03-engane, ML-C03-sukhamaano, ML-C03-njaan, ML-C03-sukham, ML-C
 - *āṇŭ* / *illa* — "is" and "is-not"; *illa* shared with Tamil & Kannada
 - the question-marker *-ō* — turns any statement into a yes/no question
 
+## Script check — the letters of this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-126, ML-SCRIPT-RECOG-139, ML-SCRIPT-RECOG-140] -->
+
+[PAUSE 2s] Cover the romanizations. Find each letter once in the Malayalam
+above, then say the word it sits in.
+
+- **ആണോ?** — **ഓ** *ō*, the question ending, standing as its own letter
+- **അതെ**, **എന്റെ** — **◌െ** *e*
+- **ഇല്ല** — **ഇ** *i*
+
+- [YOU LOOK: at each letter, then find it in the word beside it]
+
 ## Wrap-up Recall
 
 [PAUSE 3s] A friend asks *sukhamāṇō?* — give a full, polite reply, and answer
