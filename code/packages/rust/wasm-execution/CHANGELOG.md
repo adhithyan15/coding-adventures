@@ -2,6 +2,71 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.97] - 2026-09-02 - `array.init_elem`/`array.new_elem` execution + `element_values` (W38 slices 4/5)
+
+Per `code/specs/W38-wasm-gc-array-bulk-ops.md`. Two new `0xFB` sub-opcodes,
+`0x0A` (`array.new_elem`) and `0x13` (`array.init_elem`), plus a new
+`WasmExecutionContext::element_values: Vec<Vec<WasmValue>>` field (set via
+`WasmExecutionEngine::set_element_values`) -- the elem-segment analogue of
+`data_segments`, holding each segment's REAL evaluated constant values
+(populated once by `wasm-runtime::instantiate()`; see that crate's own
+CHANGELOG), a NEW, PARALLEL view of the same segments `elements`
+(`table.init`/`table.copy`'s own pre-existing, completely UNCHANGED read
+path) already indexes.
+
+Unlike `array.init_data`/`array.new_data` (byte-REINTERPRETATION reads,
+analogous to `memory.load`), `array.init_elem`/`array.new_elem` copy
+already-typed `WasmValue`s directly -- no width/storage-type decoding
+involved at all, since an elem segment's items are constant EXPRESSIONS,
+already evaluated to real values (possibly fresh `gc_heap` handles) at
+instantiation time. One new shared helper, `resolve_array_elem_segment`
+(the elem-segment mirror of `resolve_array_data_segment`), reads from
+`ctx.element_values`/`ctx.dropped_elements` (shared drop state with
+`ctx.elements` -- the two are always the same length and drop together).
+
+- **`array.new_elem`**: allocates a NEW array, sized and initialized the
+  same way `array.init_elem` initializes an existing one -- `array.new` +
+  `array.init_elem` fused. `n` is bounded by `MAX_ARRAY_ALLOC` (via `pop_
+  array_length`) BEFORE any segment read or allocation, same established
+  convention as every other array-allocating instruction, per this
+  spec's own explicit security requirement.
+- **`array.init_elem`**: writes into an EXISTING array's storage starting
+  at element `d`, copying `n` values from elem segment `elem_idx` starting
+  at entry `s`. Destination-array bounds are checked FIRST, entirely via
+  an immutable peek, before any segment read; the segment-content bounds
+  check runs second, before the final mutable write -- a trap on either
+  leaves the array completely unmodified.
+- Both: a dropped segment (`elem.drop` already ran, or an active/
+  declarative segment already consumed/never-live) degrades to length-0,
+  mirroring `table.init`'s own already-established rule; an out-of-range
+  `elem_idx` is a hard defensive runtime error.
+- **The "not re-evaluated on every call" invariant** (the corpus's own
+  dedicated test in `array_init_elem.wast`/`array_new_elem.wast`) falls
+  out automatically from `element_values` being computed exactly once, at
+  instantiation time, by `wasm-runtime` -- these two handlers only ever
+  READ an already-evaluated entry, never trigger evaluation themselves.
+  Directly tested end-to-end in `wasm-runtime`'s own new integration test
+  (see that crate's CHANGELOG), since it needs a real, persistent
+  `gc_heap` across multiple calls that this crate's own raw-bytecode unit
+  tests don't set up.
+
+Decode table (`decode_function_body`'s `opcode_byte == 0xFB` match): two
+new arms, `0x0A`/`0x13`, both the same two-LEB128-index decode shape as
+`0x09`/`0x12` (`array.new_data`/`array.init_data`) -- the elem-segment
+index rides in `field_idx` (repurposed, same convention).
+
+New unit tests (7): `test_array_new_elem_reads_values_directly_from_
+element_values_no_byte_decoding`, `test_array_new_elem_out_of_bounds_
+segment_content_traps`, `test_array_new_elem_over_the_dos_guard_ceiling_
+traps_before_reading_the_segment`, `test_array_new_elem_out_of_range_
+elem_idx_is_a_defensive_runtime_error`, `test_array_init_elem_writes_
+into_existing_array_leaving_other_elements_untouched`, `test_array_init_
+elem_null_array_reference_traps`, `test_array_init_elem_dropped_segment_
+with_zero_count_succeeds_but_nonzero_traps`.
+
+`cargo test -p wasm-execution`: 613 passed (lib) + 33 (integration
+suites), 0 failed.
+
 ## [0.9.96] - 2026-09-02 - `array.init_data`/`array.new_data` execution (W38 slice 3)
 
 Per `code/specs/W38-wasm-gc-array-bulk-ops.md`. Two new `0xFB` sub-opcodes,

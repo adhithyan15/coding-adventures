@@ -2,6 +2,82 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.33] — 2026-09-02 — elem-item evaluation pass + `element_values` + an active-elem-application fix -- W38 slices 4/5
+
+Per `code/specs/W38-wasm-gc-array-bulk-ops.md`, Correction 2's own Design
+§4: `instantiate()` gains a new pass, evaluating every element segment's
+own item constant expressions ONCE, immediately after the existing
+globals loop (same `evaluate_const_expr_gc`, same persistent `gc_heap`/
+`v128_heap`, same runtime tables, same now-final `global_values` snapshot)
+-- producing `element_values: Vec<Vec<WasmValue>>`, a new `WasmInstance`
+field threaded into `wasm_execution::WasmExecutionEngine` via a new
+`set_element_values` call (mirroring `set_elements`'s own one-time,
+no-writeback-needed setup). `array.init_elem`/`array.new_elem` read from
+here; `table.init`/`table.copy` are completely unchanged, still reading
+`elements` (`function_indices`) exclusively.
+
+Running this evaluation exactly once, before any function body ever
+executes, is what makes the corpus's own "not re-evaluated on every
+`array.init_elem`/`array.new_elem`" invariant fall out automatically --
+confirmed directly by a new integration test (`tests/array_init_elem_
+new_elem.rs`), not merely assumed from the design.
+
+**A real regression this same generalization introduces, found and fixed
+in the same PR**: `wasm-wast-parser`'s own Layer 1/2 fix (see that
+crate's CHANGELOG) newly lets an ACTIVE element segment's own item be
+something richer than a literal `ref.func`/`ref.null` -- e.g. `global.
+wast`'s own `(elem (table $t) (global.get $g3) funcref (global.get
+$gf))`. The pre-existing active-elem-application loop (which populates
+the TARGET TABLE at instantiation time) only ever read `elem.function_
+indices`, which has NO representation for a non-literal item (`None`,
+indistinguishable from an explicit null) -- so this construct, once it
+newly PARSES, would silently write a null/wrong entry into the table
+instead of the real referenced function, caught directly by re-probing
+`global.wast` end-to-end (`AssertReturn "fail": expected RefFuncAny, got
+Ref(None)`), not assumed. Fixed by sourcing the loop's writes from the
+new `element_values` table instead (`WasmValue::Ref(x)` is exactly the
+shape `TableElement::Raw`/`None` already expects) -- a strict
+generalization with ZERO behavior change for the pre-existing `ref.func`/
+`ref.null` cases (confirmed: `element_values[i]` for those two shapes is
+byte-for-byte the same value `function_indices[i]` already produced), and
+a real, correct fix for the `global.get`-of-a-LOCAL-funcref-global case.
+
+**A known, deliberately NOT fixed, genuinely out-of-scope residual**,
+found by the same re-probe: `elem.wast`'s own "Initializing a table with
+imported funcref global" test (`(elem (offset (i32.const 0)) funcref
+(global.get 0))`, where global 0 is IMPORTED from a separate module) still
+produces a wrong answer (a safely-trapped "call stack exhausted", not a
+crash) once it newly parses, because `global.get`'s bare `WasmValue`
+snapshot (both in `evaluate_const_expr_gc` generally, and in this crate's
+own pre-existing "module-defined global's `ref.func` value... DELIBERATELY
+LEFT UNRESOLVED" convention) carries no cross-instance provenance -- the
+raw funcref index it holds is only ever meaningful relative to the
+EXPORTING instance, not whichever instance's own `instantiate()` call
+happens to be applying the elem segment. This is the identical, already-
+documented architectural boundary `resolve_all_table_funcrefs`'s own doc
+comment names explicitly ("Why NOT globals too... no vendored corpus file
+needs cross-instance funcref-GLOBAL resolution at all... this pass is
+scoped to tables only") -- a real W35-level feature (propagating a
+`FuncRefTarget` through an imported global, not just a table), genuinely
+outside this spec's own six-slice scope, not something this PR expands
+into. This ONE corpus directive (previously `NotYetSupported` since the
+whole construct failed to parse) moves to `Fail` as an honest, understood
+cost of correctly generalizing the parser -- see the PR description for
+the full diagnosis and a follow-up tracking note.
+
+New integration test file, `tests/array_init_elem_new_elem.rs` (5 tests):
+happy path for both instructions with a funcref-typed array (`array_new_
+elem_and_array_init_elem_happy_path_with_a_funcref_typed_array`), an
+out-of-bounds segment-range trap, an already-dropped passive segment
+(zero count succeeds, nonzero traps), an out-of-range `$elem_idx`
+validation error (hand-built `WasmModule`, bypassing the text parser), and
+the "evaluated once" invariant (`array_init_elem_evaluates_its_segment_
+item_exactly_once_shared_across_separate_calls` -- proven via shared-
+mutation observation, not `ref.eq`, which this crate doesn't implement).
+
+`cargo test -p wasm-runtime`: 75 (lib) + 43 (integration suites) passed,
+0 failed.
+
 ## [0.6.32] — 2026-09-02 (mechanical fallout of `wasm_types::ValueType::ArrayRefAny`, W38 slice 0)
 
 `wasm-types` 0.1.26 added `ValueType::ArrayRefAny` (`code/specs/

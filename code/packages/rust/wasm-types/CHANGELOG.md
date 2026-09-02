@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.27] - 2026-09-02 (feat: `Element::declared_type` -- W38 slices 4/5, GC array bulk ops)
+
+Slices 4/5 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan
+(the elem-segment three-layer fix, Correction 2, plus `array.init_elem`/
+`array.new_elem` themselves).
+
+- **`Element::declared_type: ValueType`** -- the segment's own declared
+  reference type (its reftype tag -- `funcref`/`externref`/`i31ref`/
+  `arrayref`/`(ref $t)`/etc.), or `ValueType::Funcref` for a plain
+  funcidx-list segment (binary modes 0-3, matching the real spec's own
+  implicit "elemkind" default). Lets `array.init_elem`/`array.new_elem`'s
+  own `wasm-validator` arms statically enforce the real spec's
+  `match-reftype` rule via the existing `is_assignable` relation -- zero
+  new subtyping logic. Real, corpus-driven: without this field,
+  `array_init_elem.wast`'s own `array.init_elem-invalid-2` case (a `(mut
+  funcref)` array fed from an `externref`-tagged segment,
+  `assert_invalid "type mismatch"`) has no way to be rejected, since this
+  repo's `assert_invalid` grading only credits a real structural/static
+  rejection, never a runtime trap.
+- **`Element::item_exprs`'s own doc comment updated**: no longer "always
+  empty" (W38 slice 0's own placeholder note) -- now populated for real,
+  unconditionally, for every element segment this crate's `wasm-wast-
+  parser`/`wasm-module-parser` build (see those crates' own CHANGELOGs).
+- Every existing `Element { .. }` construction site in this crate's own
+  test suite updated with the new field (`declared_type: ValueType::
+  Funcref`, matching every one of them being a plain funcidx-based
+  segment).
+
+New unit test: none added directly here (the new field's real behavior is
+exercised through `wasm-wast-parser`/`wasm-validator`/`wasm-runtime`'s own
+test suites) -- the existing `element_with_function_indices` test updated
+in place for the new field.
+
+`cargo test -p wasm-types`: 119 passed, 0 failed.
+
 ## [0.1.26] - 2026-09-02 (feat: `ArrayRefAny`/`Element::item_exprs` -- W38 slice 0, GC array bulk ops)
 
 Slice 0 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan for

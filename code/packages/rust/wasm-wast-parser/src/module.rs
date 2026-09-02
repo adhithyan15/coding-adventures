@@ -2266,9 +2266,13 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         .map(|f| resolve_idx(&ctx.func_names, f, "func").map(Some))
         .collect::<Result<_, _>>()?;
     let count = function_indices.len() as u64;
-    // W38 slice 0: no consumer for this yet (see `wasm_types::Element::
-    // item_exprs`'s own doc comment) -- always empty, one per entry.
-    let item_exprs = vec![Vec::new(); function_indices.len()];
+    // W38 slice 4 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): populated
+    // for real, same as `build_elem`'s own two paths below -- this
+    // shorthand only ever produces plain funcidx entries (see
+    // `function_indices`'s own construction just above), so every item
+    // re-encodes as a `ref.func` constant expression, matching
+    // `encode_ref_func_item_expr`'s own doc comment.
+    let item_exprs: Vec<Vec<u8>> = function_indices.iter().map(|entry| encode_ref_func_item_expr(*entry)).collect();
     ctx.module.tables[storage_idx as usize].limits = Limits { min: count, max: Some(count) };
     ctx.module.elements.push(Element {
         table_index: table_idx,
@@ -2293,8 +2297,35 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         // table it just declared) -- never declarative.
         is_declarative: false,
         item_exprs,
+        // This shorthand only ever produces plain funcidx entries (see
+        // `function_indices`'s own construction above) -- always the
+        // implicit funcref elemkind.
+        declared_type: ValueType::Funcref,
     });
     Ok(())
+}
+
+/// Re-encode one `function_indices`-style entry (`Some(idx)` for a real
+/// `ref.func idx`, `None` for a `ref.null func`) as its own raw constant-
+/// expression bytes (W38 slice 4, Correction 2, `code/specs/
+/// W38-wasm-gc-array-bulk-ops.md`) -- used everywhere this crate builds an
+/// `Element` from a plain funcidx-list source (no exprs-list reftype tag),
+/// so `item_exprs` stays populated for real even along that path, matching
+/// `function_indices`' own reading exactly (zero divergence between the
+/// two parallel representations, per `wasm_types::Element::item_exprs`'s
+/// own doc comment). `ref.func`/`ref.null func`'s own byte shapes here are
+/// the same ones `wasm-module-encoder::encode_element`'s binary mode-4/6
+/// exprs-list branch already emits for the identical two cases.
+fn encode_ref_func_item_expr(entry: Option<u32>) -> Vec<u8> {
+    match entry {
+        Some(idx) => {
+            let mut bytes = vec![0xD2];
+            bytes.extend(wasm_leb128::encode_unsigned(idx as u64));
+            bytes.push(0x0B);
+            bytes
+        }
+        None => vec![0xD0, 0x70, 0x0B], // ref.null func; end
+    }
 }
 
 /// `(memory $name? (export "e")* i64? [limits shared? | (data <string>*)])`
@@ -2411,16 +2442,29 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
         0
     };
     // Passive segment (bulk-table proposal, task #97): no `(table ...)`
-    // clause AND the next field is the `func` keyword or a reftype
-    // keyword (`funcref`/`externref`) rather than an offset expression --
-    // same "check the shape of the next field" style `build_data`'s own
-    // `is_passive` detection uses (task #95). A `(table ...)` clause
-    // alone already proves this segment is active (a passive segment has
-    // no target table to name at declaration time -- `table.init`
-    // supplies one per-call instead).
+    // clause AND the next field is the `func` keyword or a reftype tag
+    // (`funcref`/`externref`, or -- W38 slice 4, Correction 2 -- ANY
+    // other successfully-parsed reference-type keyword/form: `i31ref`,
+    // `arrayref`, `structref`, `(ref $t)`, etc., via `elem_reftype_tag`
+    // below) rather than an offset expression -- same "check the shape of
+    // the next field" style `build_data`'s own `is_passive` detection
+    // uses (task #95). A `(table ...)` clause alone already proves this
+    // segment is active (a passive segment has no target table to name at
+    // declaration time -- `table.init` supplies one per-call instead).
+    //
+    // W38 slice 4: generalized from the original bare `funcref`/
+    // `externref`-only atom check -- an `(elem $e1 arrayref (item ...)
+    // ...)` segment (real corpus: `array_init_elem.wast`/`array_new_elem.
+    // wast`) used to be misdetected as ACTIVE here (`"arrayref"` matched
+    // none of the old three atoms), which then tried to parse the bare
+    // `arrayref` atom itself as an offset expression -- a confusing,
+    // wrong-layer parse error. Same fix, same underlying test as
+    // `use_exprs`'s own disambiguation below -- see `elem_reftype_tag`'s
+    // own doc comment for why one small shared helper covers both sites.
     let is_passive = is_declarative
         || (!has_table_clause
-            && fields.get(i).and_then(|e| e.as_atom()).is_some_and(|s| s == "func" || s == "funcref" || s == "externref"));
+            && (fields.get(i).and_then(|e| e.as_atom()).is_some_and(|s| s == "func")
+                || elem_reftype_tag(fields.get(i), ctx).is_some()));
     let offset_expr = if is_passive {
         Vec::new()
     } else {
@@ -2441,23 +2485,39 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
         i += 1;
         offset_expr
     };
-    // Reftype-vs-funcidx-list disambiguation (task #97): a leading
-    // `funcref`/`externref` keyword means every following entry is a
-    // real encoded expression (`(ref.func N)`/`(ref.null T)`, binary
-    // exprs-list mode 5 -- this repo only ever produces `funcref`,
-    // matching `parse_element_section`'s own scoped decode). Otherwise,
-    // an OPTIONAL leading bare `func` keyword atom (task #96's own
-    // established skip, now shared by both active and passive
-    // funcidx-list segments) is simply skipped -- it doesn't affect
-    // encoding, this repo only supports funcref elem segments either way.
-    let use_exprs = if fields.get(i).and_then(|e| e.as_atom()).is_some_and(|s| s == "funcref" || s == "externref") {
-        i += 1;
-        true
-    } else {
-        if fields.get(i).is_some_and(|f| matches!(f, SExpr::Atom(s, _) if s == "func")) {
+    // Reftype-vs-funcidx-list disambiguation (task #97; W38 slice 4,
+    // Correction 2, Layer 1: `code/specs/W38-wasm-gc-array-bulk-ops.md`):
+    // a leading reftype tag means every following entry is a real encoded
+    // constant expression (exprs-list, binary modes 4-7) -- originally
+    // this only recognized the bare `funcref`/`externref` atoms, but the
+    // real corpus needs richer tags too: `array_new_elem.wast`'s own
+    // `i31ref`, `array_init_elem.wast`'s/`array_new_elem.wast`'s own
+    // `arrayref`, and `array.wast`'s own `(ref $bvec)` (a concrete,
+    // non-null array reftype). `elem_reftype_tag` generalizes the
+    // recognition to ANY successfully-parsed reference `ValueType` via
+    // `parse_value_type` -- the same generalization pattern W37's own
+    // table-declaration parsing already applies (see that spec's design
+    // section 3) -- rather than hand-listing every new keyword here.
+    // `declared_type` (the parsed tag itself) is threaded onto the
+    // `Element` below for `array.init_elem`/`array.new_elem`'s own
+    // validator-side "segment reftype must match array element type"
+    // check (Design §6, `wasm_types::Element::declared_type`'s own doc
+    // comment). Otherwise, an OPTIONAL leading bare `func` keyword atom
+    // (task #96's own established skip, now shared by both active and
+    // passive funcidx-list segments) is simply skipped -- it doesn't
+    // affect encoding -- and `declared_type` defaults to the real spec's
+    // own implicit "funcref" elemkind for a plain funcidx list.
+    let (use_exprs, declared_type) = match elem_reftype_tag(fields.get(i), ctx) {
+        Some(vt) => {
             i += 1;
+            (true, vt)
         }
-        false
+        None => {
+            if fields.get(i).is_some_and(|f| matches!(f, SExpr::Atom(s, _) if s == "func")) {
+                i += 1;
+            }
+            (false, ValueType::Funcref)
+        }
     };
     // Gap 1 of the W-next `elem.wast`/`table.wast` investigation pass
     // (`code/specs/W07-wasm-post-mvp-epics.md`'s addendum): an ACTIVE
@@ -2493,11 +2553,16 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
     // which never round-trips through the binary decoder for a plain
     // `(module ...)` directive.
     let mut function_indices = Vec::new();
+    let mut item_exprs: Vec<Vec<u8>> = Vec::new();
     for f in fields.get(i..).unwrap_or(&[]) {
         if use_exprs {
-            function_indices.push(resolve_elem_expr_entry(f, ctx)?);
+            let (func_idx, bytes) = resolve_elem_expr_entry(f, ctx)?;
+            function_indices.push(func_idx);
+            item_exprs.push(bytes);
         } else {
-            function_indices.push(Some(resolve_idx(&ctx.func_names, f, "func")?));
+            let idx = resolve_idx(&ctx.func_names, f, "func")?;
+            function_indices.push(Some(idx));
+            item_exprs.push(encode_ref_func_item_expr(Some(idx)));
         }
     }
     // `is_declarative` threads the `declare` keyword detected above
@@ -2507,12 +2572,6 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
     // struct's deliberate "no third variant" convention) isn't enough to
     // tell `instantiate()` this segment must be marked dropped immediately
     // rather than left resident for `table.init`.
-    // W38 slice 0: no consumer for this yet (see `wasm_types::Element::
-    // item_exprs`'s own doc comment) -- always empty, one per entry. Real
-    // population (capturing each item's raw constant-expression bytes
-    // instead of eagerly resolving a function index) is Layers 1-2 of the
-    // elem-segment three-layer fix, a later W38 slice's own work.
-    let item_exprs = vec![Vec::new(); function_indices.len()];
     ctx.module.elements.push(Element {
         table_index,
         offset_expr,
@@ -2520,42 +2579,122 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
         is_passive,
         is_declarative,
         item_exprs,
+        declared_type,
     });
     Ok(())
 }
 
-/// Resolve one exprs-list element-segment entry -- `(ref.func $name_or_
-/// idx)` (→ `Some(idx)`) or `(ref.null func)`/`(ref.null extern)` (→
-/// `None`, a real null table slot) -- the same two shapes `parse_
-/// element_section`'s own `read_elem_expr_entry` decodes from binary
-/// (task #97). Any other expression is a clean parse error, matching
-/// this crate's scoped-modes discipline.
-fn resolve_elem_expr_entry(expr: &SExpr, ctx: &ModuleCtx) -> Result<Option<u32>, WastParseError> {
-    let items = expr.as_list().ok_or_else(|| WastParseError::UnexpectedToken {
-        pos: expr.pos(),
-        found: "atom".to_string(),
-        expected: "(ref.func ...) or (ref.null ...)",
-    })?;
-    match expect_get(items, 0)?.as_atom() {
-        Some("ref.func") => {
-            let idx = resolve_idx(&ctx.func_names, expect_get(items, 1)?, "func")?;
-            Ok(Some(idx))
-        }
-        Some("ref.null") => {
-            // Heap type is validated for shape but otherwise unused --
-            // this repo's `WasmValue::Ref(None)` representation doesn't
-            // distinguish a null funcref from a null externref (see its
-            // own doc comment), so the specific keyword doesn't change
-            // anything downstream.
-            let _ = parse_ref_null_heap_type(expect_get(items, 1)?, &ctx.type_names)?;
-            Ok(None)
-        }
-        _ => Err(WastParseError::UnexpectedToken {
-            pos: expr.pos(),
-            found: "list".to_string(),
-            expected: "(ref.func ...) or (ref.null ...)",
-        }),
+/// Try to parse `expr` (the field immediately after an elem segment's own
+/// optional `(table ...)` clause / offset expression) as a reference-type
+/// reftype TAG -- `funcref`/`externref`/`i31ref`/`arrayref`/`structref`/
+/// `anyref`/`(ref $t)`/`(ref null $t)`/etc., via [`parse_value_type`] --
+/// returning `None` (not an error) for anything that ISN'T a
+/// successfully-parsed NON-NUMERIC value type: a bare `func` keyword, a
+/// `$name`/numeric funcidx-list entry, and an `(offset ...)`/folded-
+/// instruction-shaped offset expression all fail `parse_value_type`
+/// outright (none of them match any of its atom/list arms) and fall
+/// through to `None` here, exactly as before this fix -- so a plain
+/// funcidx-list segment's own entries are never mistaken for a reftype
+/// tag. Only NUMERIC value types (`i32`/`i64`/`f32`/`f64`/`v128`) are
+/// explicitly excluded even on a successful parse -- defense in depth,
+/// since no real corpus elem segment ever tags itself with one, but a
+/// reftype tag by definition can only ever be a reference type.
+///
+/// One shared helper for BOTH of [`build_elem`]'s own two call sites
+/// (`is_passive` detection and the `use_exprs` disambiguation) -- see
+/// Correction 2's Layer 1 fix, `code/specs/
+/// W38-wasm-gc-array-bulk-ops.md`: both sites need the IDENTICAL "is this
+/// a reftype tag" test, just at two different field positions (before vs.
+/// after the offset expression), so duplicating the test itself would
+/// risk the two silently drifting apart.
+fn elem_reftype_tag(expr: Option<&SExpr>, ctx: &ModuleCtx) -> Option<ValueType> {
+    let vt = parse_value_type(expr?, &ctx.type_names, &ctx.module).ok()?;
+    if matches!(vt, ValueType::I32 | ValueType::I64 | ValueType::F32 | ValueType::F64 | ValueType::V128) {
+        return None;
     }
+    Some(vt)
+}
+
+/// Resolve one exprs-list element-segment entry into `(fast_path_func_idx,
+/// raw_constant_expr_bytes)` (W38 slice 4, Correction 2, Layer 2: `code/
+/// specs/W38-wasm-gc-array-bulk-ops.md`) -- generalized from this
+/// function's original "parse `(ref.func ...)` or `(ref.null ...)`, return
+/// `Option<u32>`" contract, which rejected everything else outright. The
+/// real corpus needs richer item shapes too: `array_new_elem.wast`'s own
+/// `(ref.i31 (i32.const 0xaa))`, `array_init_elem.wast`'s/`array_new_elem.
+/// wast`'s own `(item (array.new_default $arr (i32.const N)))`, and
+/// `array.wast`'s own bare (no `item` wrapper) `(array.new $bvec ...)`/
+/// `(array.new_fixed $bvec 2 ...)`.
+///
+/// An item is either `(item instr*)` (the explicit wrapper) or a single
+/// BARE folded instruction with no wrapper at all (the same "explicit
+/// wrapper vs. bare shorthand" duality this file's own `offset_expr`
+/// parsing already handles for a segment's OWN offset, one level up) --
+/// either way, the instruction(s) are encoded via the ordinary
+/// `encode_instr_list` machinery every OTHER constant-expression site in
+/// this crate already uses (a global's `init_expr`, an active segment's
+/// own `offset_expr`) -- no opcode-level allowlist is enforced HERE; a
+/// non-constant instruction still round-trips through this function fine
+/// (matching a global init expr's own permissive parse-time behavior) and
+/// is only rejected later, at evaluation time, by `wasm-execution::
+/// evaluate_const_expr_gc`'s own real "legal constant instruction" check
+/// -- the same division of responsibility this crate already uses for
+/// every other constant expression it builds.
+///
+/// The returned `Option<u32>` is a FAST-PATH cache for `table.init`/
+/// `table.copy`'s own pre-existing `function_indices`-based reading (see
+/// that field's own doc comment in `wasm_types::Element`) -- `Some(idx)`
+/// only for a literal top-level `(ref.func idx)` item, `None` for
+/// EVERYTHING else, including a literal `(ref.null ...)` item (a real
+/// null table slot) AND an arbitrary richer item (which has no funcidx
+/// representation at all) -- both collapse to the identical `None` a
+/// plain null entry already used, which is exactly correct for
+/// `table.init`'s own purposes: neither is ever consumed by it (per this
+/// spec's own corpus-grounded Correction 2 accounting, no real corpus
+/// module ever `table.init`s from a non-funcref/externref-declared
+/// segment).
+fn resolve_elem_expr_entry(expr: &SExpr, ctx: &mut ModuleCtx) -> Result<(Option<u32>, Vec<u8>), WastParseError> {
+    let instrs: &[SExpr] = match expr.as_list() {
+        Some(items) if items.first().and_then(|e| e.as_atom()) == Some("item") => &items[1..],
+        Some(_) => std::slice::from_ref(expr),
+        None => {
+            return Err(WastParseError::UnexpectedToken {
+                pos: expr.pos(),
+                found: "atom".to_string(),
+                expected: "an element-segment item",
+            });
+        }
+    };
+    // Fast-path funcidx extraction (see this function's own doc comment):
+    // only a single top-level `(ref.func ...)`/`(ref.null ...)`
+    // instruction qualifies -- anything else (zero, or more than one,
+    // instruction; a different instruction) falls through to `None`,
+    // still fully encoded into `bytes` below regardless.
+    let func_idx = if let [only] = instrs {
+        match only.as_list() {
+            Some(list) => match list.first().and_then(|e| e.as_atom()) {
+                Some("ref.func") => Some(resolve_idx(&ctx.func_names, expect_get(list, 1)?, "func")?),
+                Some("ref.null") => {
+                    // Heap type is validated for shape but otherwise
+                    // unused -- this repo's `WasmValue::Ref(None)`
+                    // representation doesn't distinguish a null funcref
+                    // from a null externref (see its own doc comment), so
+                    // the specific keyword doesn't change anything
+                    // downstream.
+                    let _ = parse_ref_null_heap_type(expect_get(list, 1)?, &ctx.type_names)?;
+                    None
+                }
+                _ => None,
+            },
+            None => None,
+        }
+    } else {
+        None
+    };
+    let mut bytes = Vec::new();
+    encode_instr_list(instrs, &mut InstrCtx::empty(ctx), &mut bytes)?;
+    bytes.push(0x0B);
+    Ok((func_idx, bytes))
 }
 
 fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
@@ -4180,9 +4319,11 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
 ///   0x0E  array.set            NEW                         0x0E (matches)
 ///   0x0F  array.len            NEW                         0x0F (matches)
 ///   0x09  array.new_data       NEW (W38 slice 3)           0x09 (matches)
+///   0x0A  array.new_elem       NEW (W38 slice 5)           0x0A (matches)
 ///   0x10  array.fill           NEW (W38 slice 2)           0x10 (matches)
 ///   0x11  array.copy           NEW (W38 slice 2)           0x11 (matches)
 ///   0x12  array.init_data      NEW (W38 slice 3)           0x12 (matches)
+///   0x13  array.init_elem      NEW (W38 slice 5)           0x13 (matches)
 /// ```
 ///
 /// `0x10`/`0x11` (W38 slice 2: `code/specs/
@@ -4190,12 +4331,12 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
 /// (`0x0F`) -- real, spec-text-fetched sub-opcode values, cross-checked
 /// against the real GC proposal's own binary grammar page independently
 /// of any single automated fetch (see that spec's own "Real spec text"
-/// section for the corroboration method). `0x09` fills the one remaining
-/// gap in the `0x06`-`0x0F` array-allocation block (immediately after
-/// `array.new_fixed`, `0x08`); `0x12` (W38 slice 3) sits immediately after
-/// `array.copy` (`0x11`) and before `ref.test`/`ref.test null` (`0x14`/
-/// `0x15`) -- both real, spec-text-fetched values, same corroboration
-/// method as `0x10`/`0x11`.
+/// section for the corroboration method). `0x09`/`0x0A` fill the two
+/// remaining gaps in the `0x06`-`0x0F` array-allocation block
+/// (immediately after `array.new_fixed`, `0x08`); `0x12`/`0x13` (W38
+/// slices 3/5) sit immediately after `array.copy` (`0x11`) and before
+/// `ref.test`/`ref.test null` (`0x14`/`0x15`) -- all real, spec-text-
+/// fetched values, same corroboration method as `0x10`/`0x11`.
 ///
 /// This is safe PURELY because this repo's `0xFB`-prefixed bytecode never
 /// round-trips through anything OUTSIDE this crate's own text parser +
@@ -4203,17 +4344,15 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
 /// encodes to real binary for a plain `(module ...)` script directive --
 /// see `wasm-conformance`'s own pipeline doc comment) -- there is no
 /// external tool this byte-level deviation could ever desync from.
-/// `array.new_elem`/`array.init_elem` (the ELEMENT-segment-sourced pair)
-/// are deliberately NOT wired here -- they need the real three-layer
-/// elem-segment data-model fix a later, separate slice attempts (see the
-/// accompanying spec addendum) -- any module using them stays an honest
-/// parse error at this crate's boundary, `NotYetSupported` at the
-/// conformance-harness level, never a silent misencoding. `array.copy`/
+/// `array.new_elem`/`array.init_elem` (W38 slice 5) are the ELEMENT-
+/// segment-sourced pair, built on slice 4's `Element::item_exprs`/
+/// `WasmExecutionContext::element_values` three-layer fix (Correction 2) --
+/// wired below, alongside the rest of this family. `array.copy`/
 /// `array.fill` (W38 slice 2) and `array.new_data`/`array.init_data` (W38
-/// slice 3, below) ARE wired -- the DATA-segment-sourced pair reuses `ctx.
-/// data_segments`/`ctx.dropped_data_segments` verbatim, exactly the same
-/// fields `memory.init` already reads (per this spec's own explicit design
-/// choice), needing no new runtime plumbing beyond the handlers themselves.
+/// slice 3, below) reuse `ctx.data_segments`/`ctx.dropped_data_segments`
+/// verbatim, exactly the same fields `memory.init` already reads (per
+/// this spec's own explicit design choice), needing no new runtime
+/// plumbing beyond the handlers themselves.
 #[inline(never)]
 fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<bool, WastParseError> {
     if matches!(name, "struct.new" | "struct.new_default") {
@@ -4244,10 +4383,7 @@ fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, 
     // two of the six array bulk-ops instructions -- the only two with NO
     // element-/data-segment interaction at all, operating purely on
     // already-allocated arrays (mirroring how `memory.fill`/`memory.copy`
-    // already work in this codebase). `array.init_data`/`array.init_elem`/
-    // `array.new_data`/`array.new_elem` remain deliberately unwired here --
-    // see this function's own doc comment above for why, still accurate
-    // for the remaining four.
+    // already work in this codebase).
     if name == "array.fill" {
         encode_array_fill(args, icx, out)?;
         return Ok(true);
@@ -4256,25 +4392,32 @@ fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, 
         encode_array_copy(args, icx, out)?;
         return Ok(true);
     }
-    // W38 slice 3 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): the two
-    // DATA-segment-sourced bulk-ops instructions -- `wasm-execution`'s own
-    // `0x09`/`0x12` handlers reuse `ctx.data_segments`/`ctx.dropped_data_
-    // segments` verbatim (the same fields `memory.init` already reads),
-    // exactly the spec's own explicit design choice. `array.init_elem`/
-    // `array.new_elem` (the ELEMENT-segment-sourced pair) remain
-    // deliberately unwired here -- see this function's own doc comment
-    // above for why: they need the real three-layer elem-segment data-model
-    // fix (`Element::item_exprs`/`element_values`) a later, separate slice
-    // attempts, not this one.
+    // W38 slices 3 and 5 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): all
+    // four segment-sourced bulk-ops instructions -- two DATA-segment-sourced
+    // (`array.new_data`/`array.init_data`, reusing `ctx.data_segments`/
+    // `ctx.dropped_data_segments` verbatim, the same fields `memory.init`
+    // already reads) and two ELEMENT-segment-sourced (`array.new_elem`/
+    // `array.init_elem`, the pair slice 4's `Element::item_exprs`/
+    // `WasmExecutionContext::element_values` three-layer fix exists
+    // specifically to make possible).
     //
-    // ONE combined branch for both (not two, `array.fill`/`array.copy`'s
-    // own two-branch shape) -- see `encode_array_new_or_init_data`'s own
-    // doc comment for why: this function sits on the hot recursive
-    // encoding path, and two separate branches here once measurably grew
-    // ITS OWN debug-build stack frame enough to overflow the real OS stack
-    // before `MAX_INSTR_NESTING_DEPTH`'s software counter ever fired.
-    if matches!(name, "array.new_data" | "array.init_data") {
-        encode_array_new_or_init_data(name, args, icx, out)?;
+    // ONE combined branch for all four (not two branches of two each) --
+    // this function sits on the hot recursive encoding path, and a debug
+    // build sizes its own stack frame for the union of every branch it
+    // directly contains, REGARDLESS of whether each branch's own callee is
+    // `#[inline(never)]` (confirmed empirically: splitting slice 3's pair
+    // and slice 5's pair into two separate combined-but-still-two branches
+    // reintroduced the exact same real-OS-stack overflow slice 3's own
+    // "two branches vs one" fix first found and fixed -- adding a 7th
+    // top-level branch here, of ANY shape, was enough on its own to tip
+    // `deeply_folded_struct_instructions_do_not_overflow_the_real_stack`
+    // from a clean `TooDeeplyNested` error into a genuine SIGABRT, even
+    // with `#[inline(never)]` on the new callee). Keeping this dispatch
+    // function's own branch count at 6 (its pre-slice-5 count) by merging
+    // BOTH pairs into the ONE function below recovers the exact margin
+    // slice 3 already established.
+    if matches!(name, "array.new_data" | "array.init_data" | "array.new_elem" | "array.init_elem") {
+        encode_array_segment_sourced(name, args, icx, out)?;
         return Ok(true);
     }
     Ok(false)
@@ -4418,6 +4561,7 @@ fn encode_array_len(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Re
 /// operand after the leading type immediate) encodes in written order via
 /// `encode_instr_list`, identical to every other folded GC instruction in
 /// this file.
+#[inline(never)]
 fn encode_array_fill(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
     let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
     let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
@@ -4442,6 +4586,7 @@ fn encode_array_fill(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> R
 /// decode block must read them in the SAME order (see that crate's
 /// `GcOp::field_idx` doc comment for why it's repurposed to carry this
 /// second type index, not a new struct field).
+#[inline(never)]
 fn encode_array_copy(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
     let dest_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
     let dest_idx = resolve_idx(&icx.module.type_names, dest_expr, "type")?;
@@ -4478,36 +4623,75 @@ fn encode_array_copy(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> R
 /// $g_arr8_mut) (local.get $1) (local.get $2) (local.get $3))`: type, data
 /// segment, then arrayref, dest offset, src offset, count in written order).
 ///
-/// Both instructions share ONE function here (dispatching on `name`
-/// internally for the one-byte opcode difference), the same pattern
-/// [`encode_struct_new`] already uses for `struct.new`/`struct.new_default`
-/// -- **not** merely a style preference: `encode_gc_struct_array_instr`
-/// sits on this crate's hot recursive encoding path (guarded only by
-/// `MAX_INSTR_NESTING_DEPTH`'s software counter), and a debug build sizes a
-/// function's own stack frame for the union of every branch it directly
-/// contains. An EARLIER version of this fix added `array.new_data`/`array.
-/// init_data` as two SEPARATE dispatch branches (mirroring `array.fill`/
-/// `array.copy`'s own two-function shape) -- that measurably grew `encode_
-/// gc_struct_array_instr`'s own frame enough to overflow the REAL OS stack
-/// at exactly `MAX_INSTR_NESTING_DEPTH` levels of recursion, before the
-/// depth counter itself ever fired, caught by this file's own `deeply_
-/// folded_struct_instructions_do_not_overflow_the_real_stack` regression
-/// test going from a clean `TooDeeplyNested` error to a genuine SIGABRT --
-/// exactly the class of regression `encode_flat_instr`'s own `i32.load` arm
-/// doc comment already documents having hit once before. Collapsing to ONE
-/// dispatch branch (matching `name` inside this function instead of
-/// `encode_gc_struct_array_instr` itself) keeps that caller's own frame
-/// at its pre-W38-slice-3 size.
-fn encode_array_new_or_init_data(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+/// All FOUR segment-sourced bulk-ops instructions share ONE function here
+/// (dispatching on `name` internally both for the source-segment namespace
+/// -- `data_names` vs `elem_names` -- and the one-byte opcode), the same
+/// pattern [`encode_struct_new`] already uses for `struct.new`/`struct.
+/// new_default` -- **not** merely a style preference: `encode_gc_struct_
+/// array_instr` sits on this crate's hot recursive encoding path (guarded
+/// only by `MAX_INSTR_NESTING_DEPTH`'s software counter), and a debug build
+/// sizes a function's own stack frame for the union of every branch it
+/// directly contains, REGARDLESS of whether each branch's own callee is
+/// `#[inline(never)]`. An EARLIER version of the data-segment half of this
+/// fix (slice 3) added `array.new_data`/`array.init_data` as two SEPARATE
+/// dispatch branches (mirroring `array.fill`/`array.copy`'s own two-function
+/// shape) -- that alone measurably grew `encode_gc_struct_array_instr`'s own
+/// frame enough to overflow the REAL OS stack at exactly `MAX_INSTR_NESTING_
+/// DEPTH` levels of recursion, before the depth counter itself ever fired,
+/// caught by this file's own `deeply_folded_struct_instructions_do_not_
+/// overflow_the_real_stack` regression test going from a clean
+/// `TooDeeplyNested` error to a genuine SIGABRT. Collapsing that pair to ONE
+/// dispatch branch fixed it (slice 3) -- but a LATER attempt at slice 5 that
+/// added a SECOND combined branch for `array.new_elem`/`array.init_elem`
+/// (structured identically, `#[inline(never)]` included) reproduced the
+/// exact same SIGABRT: even `#[inline(never)]` doesn't stop a debug build
+/// from reserving frame space per DISTINCT top-level branch in the caller
+/// (for each branch's own `Result<(), WastParseError>` propagated via `?`),
+/// so a 7th branch of ANY shape was enough on its own. Merging BOTH pairs
+/// into this ONE function keeps `encode_gc_struct_array_instr`'s own branch
+/// count at 6 (its pre-slice-5 count), recovering the exact margin slice 3
+/// already established -- confirmed empirically (not just reasoned about)
+/// by reverting to two combined branches, reproducing the SIGABRT, then
+/// reverting back to this one-function shape and confirming it passes again.
+///
+/// Real spec text-format grammar for all four, confirmed against the real
+/// vendored corpus's own argument order:
+/// `"array.new_data" x:typeidx_I y:dataidx_I => array.new_data x y`,
+/// `"array.init_data" x:typeidx_I y:dataidx_I => array.init_data x y`
+/// (`array_init_data.wast`'s own `(array.init_data $arr8_mut $d1 (global.get
+/// $g_arr8_mut) (local.get $1) (local.get $2) (local.get $3))`: type, data
+/// segment, then arrayref, dest offset, src offset, count in written order);
+/// `"array.new_elem" x:typeidx_I y:elemidx_I => array.new_elem x y`,
+/// `"array.init_elem" x:typeidx_I y:elemidx_I => array.init_elem x y`
+/// (`array.wast`'s own `(array.new_elem $vec $e (i32.const 0) (i32.const
+/// 2))`; `array_init_elem.wast`'s own `(array.init_elem $arrref_mut $e1
+/// (global.get $g_arrref_mut) (local.get $1) (local.get $2) (local.get
+/// $3))`: type, elem segment, then the arrayref/offset operands in written
+/// order). `elem_idx` resolves via `resolve_idx(&icx.module.elem_names, ...,
+/// "elem")` -- the same table `elem.drop`/`table.init`'s own existing
+/// parsing already uses (confirmed present at this file's own `encode_elem_
+/// drop_flat`/`encode_table_init_flat`).
+#[inline(never)]
+fn encode_array_segment_sourced(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
     let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
     let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
-    let data_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
-    let data_idx = resolve_idx(&icx.module.data_names, data_expr, "data")?;
+    let segment_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+    let is_data_sourced = matches!(name, "array.new_data" | "array.init_data");
+    let segment_idx = if is_data_sourced {
+        resolve_idx(&icx.module.data_names, segment_expr, "data")?
+    } else {
+        resolve_idx(&icx.module.elem_names, segment_expr, "elem")?
+    };
     encode_instr_list(&args[2..], icx, out)?;
     out.push(0xFB);
-    out.push(if name == "array.new_data" { 0x09 } else { 0x12 });
+    out.push(match name {
+        "array.new_data" => 0x09,
+        "array.new_elem" => 0x0A,
+        "array.init_elem" => 0x13,
+        _ => 0x12, // "array.init_data"
+    });
     out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
-    out.extend(wasm_leb128::encode_unsigned(data_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(segment_idx as u64));
     Ok(())
 }
 

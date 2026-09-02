@@ -1240,6 +1240,28 @@ pub struct WasmInstance {
     /// threads it into/out of `wasm_execution::WasmExecutionEngine` exactly
     /// like `dropped_data_segments` is.
     pub dropped_elements: Vec<bool>,
+    /// Each element segment's REAL evaluated constant values, for this
+    /// instance's whole lifetime (W38 slice 4/5, Correction 2: `code/specs/
+    /// W38-wasm-gc-array-bulk-ops.md`) -- same index space as
+    /// `module.elements`, computed ONCE at instantiation time (see
+    /// `instantiate()` below) from each segment's own `wasm_types::
+    /// Element::item_exprs` via `evaluate_const_expr_gc` (mirroring how a
+    /// global's own `init_expr` is evaluated once), using the SAME
+    /// persistent `gc_heap`/`v128_heap` the globals loop already
+    /// threads -- so a value here that happens to be a fresh `gc_heap`
+    /// handle stays valid for this instance's whole lifetime, exactly
+    /// like `gc_heap` itself. IMMUTABLE content once set (like `module.
+    /// elements`/`data_segments` -- no opcode ever mutates an entry), so
+    /// unlike `dropped_data_segments`/`dropped_elements` there is no
+    /// per-call writeback; `call_engine` threads it into `wasm_execution::
+    /// WasmExecutionEngine` exactly once, via `WasmExecutionEngine::
+    /// set_element_values`, mirroring `set_elements`'s own one-time
+    /// setup. `array.init_elem`/`array.new_elem` read from here;
+    /// `table.init`/`table.copy` are UNCHANGED, still reading `module.
+    /// elements[..].function_indices` exclusively via `wasm_execution::
+    /// WasmExecutionContext::elements` -- two parallel, independently-
+    /// populated views of the same underlying segments.
+    pub element_values: Vec<Vec<WasmValue>>,
     /// Canonical, cross-instance-safe function identity per combined
     /// func-index-space entry (W35 third slice: `code/specs/
     /// W35-wasm-cross-instance-function-identity.md`, design §2) --
@@ -2397,6 +2419,53 @@ impl WasmRuntime {
         // -- no need to re-snapshot per segment.
         let global_values: Vec<WasmValue> = globals.iter().map(|g| g.borrow().value).collect();
 
+        // W38 slice 4 (`code/specs/W38-wasm-gc-array-bulk-ops.md`,
+        // Correction 2): evaluate every element segment's own item
+        // constant expressions ONCE, here, at instantiation time -- the
+        // elem-segment analogue of the globals loop above (same
+        // `evaluate_const_expr_gc`, same persistent `gc_heap`/`v128_heap`,
+        // same `struct_field_counts`/`struct_field_storage`/`array_
+        // element_storage` runtime tables, same now-final `global_values`
+        // snapshot so an item's own `global.get` reads a fully-initialized
+        // global) -- producing `element_values`, a NEW, PARALLEL per-
+        // segment table of REAL `WasmValue`s (see `WasmInstance::
+        // element_values`'s own doc comment). Deliberately a SEPARATE pass
+        // from the active-elem-application loop immediately below (which
+        // still reads `elem.function_indices` exclusively, for `table.
+        // init`/an active segment's own table write -- completely
+        // unchanged by this addition): `item_exprs` is evaluated for
+        // EVERY segment unconditionally (passive, active, or declarative
+        // alike), matching `wasm-wast-parser::build_elem`'s own
+        // unconditional population choice, so this loop doesn't need to
+        // know or care which mode a given segment is in.
+        //
+        // Running this BEFORE any function body ever executes, and
+        // computing every entry exactly once regardless of how many
+        // `array.init_elem`/`array.new_elem` calls later read it, is
+        // exactly what makes the corpus's own "not re-evaluated on every
+        // `array.init_elem`/`array.new_elem`" requirement (`array_init_
+        // elem.wast`/`array_new_elem.wast`'s own dedicated test) fall out
+        // automatically: `wasm-execution`'s own `array.init_elem`/`array.
+        // new_elem` handlers only ever READ an already-evaluated `element_
+        // values` entry (`resolve_array_elem_segment`), never trigger
+        // evaluation themselves.
+        let mut element_values: Vec<Vec<WasmValue>> = Vec::with_capacity(module.elements.len());
+        for elem in &module.elements {
+            let mut values = Vec::with_capacity(elem.item_exprs.len());
+            for expr in &elem.item_exprs {
+                values.push(evaluate_const_expr_gc(
+                    expr,
+                    &global_values,
+                    &mut v128_heap,
+                    &mut gc_heap,
+                    &struct_field_counts,
+                    &struct_field_storage,
+                    &array_element_storage,
+                )?);
+            }
+            element_values.push(values);
+        }
+
         // Apply element segments BEFORE data segments -- the order the
         // official spec's own instantiation algorithm mandates (step 27,
         // "Execute the sequence instr*_e" for active element segments,
@@ -2554,7 +2623,22 @@ impl WasmRuntime {
                 // past a LATER segment's trap, but a single segment is
                 // itself all-or-nothing) requires exactly this upfront
                 // check.
-                let count = elem.function_indices.len() as u64;
+                // W38 slice 4 (`code/specs/W38-wasm-gc-array-bulk-ops.md`,
+                // Correction 2): `count`/the write loop below now source
+                // from `element_values[elem_idx]`, NOT `elem.function_
+                // indices`, for the identical reason `element_values`
+                // exists at all -- see this loop's own updated doc comment
+                // just below the write loop for the real corpus regression
+                // this fixes (a `global.wast` active segment whose own item
+                // is `(global.get $gf)`, not a literal `ref.func`/`ref.
+                // null`, which Correction 2's own Layer 1/2 generalization
+                // newly lets PARSE here, but which `function_indices`
+                // alone has no correct representation for). The two Vecs
+                // are always the same length (see `wasm_types::Element::
+                // item_exprs`'s own doc comment), so this is not a
+                // behavior change for `count` itself -- only for what gets
+                // WRITTEN into the table, below.
+                let count = element_values[elem_idx].len() as u64;
                 let table_size = table.size() as u64;
                 if offset_num.checked_add(count).is_none_or(|end| end > table_size) {
                     return Err(TrapError::new(format!(
@@ -2582,7 +2666,36 @@ impl WasmRuntime {
                 // resolving eagerly here, using the DECLARING instance's
                 // own context, is W35's third slice (`LocalFunctionRef`),
                 // deliberately out of this slice's scope.
-                for (j, &func_idx) in elem.function_indices.iter().enumerate() {
+                // W38 slice 4 (Correction 2): reads `element_values[elem_
+                // idx]` (each entry a real, already-evaluated `WasmValue`),
+                // NOT `elem.function_indices`, so a richer exprs-list item
+                // this crate's Layer 1/2 generalization newly parses for an
+                // ACTIVE segment -- e.g. `global.wast`'s own `(elem (table
+                // $t) (global.get $g3) funcref (global.get $gf))`, whose
+                // item is a `global.get` read of a funcref-typed global,
+                // not a literal `ref.func`/`ref.null` -- still writes the
+                // REAL referenced function into the table, not a stale
+                // `None` (`function_indices`' own fast-path cache has no
+                // representation for a non-literal item, by its own doc
+                // comment's design). `WasmValue::Ref(x)` is the only shape
+                // an elem item can legally evaluate to (this crate's own
+                // `evaluate_const_expr_gc` never produces anything else for
+                // the funcref-family instructions an active TABLE's own
+                // items are legally restricted to) -- `x` directly IS the
+                // table-slot payload `TableElement::Raw`/`None` already
+                // expects, byte-for-byte the same shape `ref.func`/`ref.
+                // null`'s own OLD dedicated handling already produced (zero
+                // behavior change for either of those two shapes, only a
+                // NEW correct behavior for anything richer). A defensive,
+                // non-panicking `None` fallback for any other `WasmValue`
+                // variant matches this crate's "never trust the data model
+                // to be exactly what's expected, degrade to null rather
+                // than panic" posture elsewhere in this same function.
+                for (j, val) in element_values[elem_idx].iter().enumerate() {
+                    let func_idx = match val {
+                        WasmValue::Ref(x) => *x,
+                        _ => None,
+                    };
                     table.set((offset_num + j as u64) as u32, func_idx.map(TableElement::Raw))?;
                 }
                 // W35 fourth slice: record exactly what was just written,
@@ -2711,6 +2824,17 @@ impl WasmRuntime {
                 // field again regardless -- cloned purely so the value
                 // isn't silently wrong if that ever changes.
                 dropped_elements: dropped_elements.clone(),
+                // Already fully computed above, BEFORE the elem/data
+                // closure that produced the trap `e` this branch is
+                // handling -- unaffected by which segments the closure
+                // did or didn't finish applying (see this field's own
+                // doc comment: it's independent of table/active-segment
+                // application). This temporary instance is about to be
+                // discarded (an `Err` follows immediately), so no `array.
+                // init_elem`/`array.new_elem` can ever read this field
+                // again regardless -- cloned purely so the value isn't
+                // silently wrong if that ever changes.
+                element_values: element_values.clone(),
                 func_identities: func_identities.clone(),
                 instance_identity: NEXT_INSTANCE_IDENTITY.fetch_add(1, Ordering::Relaxed),
                 // Whatever this call's own closure successfully recorded
@@ -2768,6 +2892,7 @@ impl WasmRuntime {
             gc_heap,
             dropped_data_segments,
             dropped_elements,
+            element_values,
             func_identities,
             // W35 third slice: minted ONCE per real `instantiate()` call,
             // from the dedicated `NEXT_INSTANCE_IDENTITY` counter -- see
@@ -3225,6 +3350,16 @@ impl WasmRuntime {
         // segment threading just above.
         engine.set_elements(instance.module.elements.iter().map(|elem| elem.function_indices.clone()).collect());
         engine.set_dropped_elements(instance.dropped_elements.clone());
+
+        // Thread this instance's own real evaluated elem-item values (W38
+        // slice 4/5, Correction 2) -- `array.init_elem`/`array.new_elem`'s
+        // source, a NEW, PARALLEL view of the same segments `set_elements`
+        // just above already threads (see `WasmExecutionContext::
+        // element_values`'s own doc comment). Immutable content, same
+        // "no per-call writeback needed" reasoning as `set_elements`/
+        // `set_data_segments` just above -- only `dropped_elements`
+        // (shared between the two views) needs a writeback.
+        engine.set_element_values(instance.element_values.clone());
 
         // Register the module's WasmGC struct field counts (LANG77 / McCarthy
         // L3b-3a-3c-2) so the engine knows how many fields each `struct.new`

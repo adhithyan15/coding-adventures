@@ -1437,6 +1437,7 @@ mod tests {
             is_passive: false,
             is_declarative: false,
             item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1468,6 +1469,7 @@ mod tests {
             is_passive: false,
             is_declarative: false,
             item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1496,6 +1498,7 @@ mod tests {
             is_passive: false,
             is_declarative: false,
             item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1525,6 +1528,7 @@ mod tests {
             is_passive: false,
             is_declarative: false,
             item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         let bytes = encode_element(&element);
         assert_eq!(
