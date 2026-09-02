@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-dha
 spine_node: SPINE-MEET-GREET
-sequence: 550
+sequence: 590
 delivery: script
-chapter: 8
+chapter: 9
 type: writing
 headword: ধ
 romanization: "dhô"

@@ -9,32 +9,32 @@ type: writing
 headword: "ਬ"
 romanization: "ba"
 gloss: "trace ba before writing Punjabi"
-prerequisites: [PA-W03-ja]
+prerequisites: [PA-W03-ja, PA-S05-babba-lalla-hora]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-JA-01]
+  knowledge: [PA-SCRIPT-JA-01, PA-SCRIPT-RECOG-BA-01]
 introduces:
   knowledge: [PA-SCRIPT-BA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-JA-01, PA-SCRIPT-BA-01]
+  knowledge: [PA-SCRIPT-JA-01, PA-SCRIPT-BA-01, PA-SCRIPT-RECOG-BA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-ja]
+reviews_of: [PA-W03-ja, PA-S05-babba-lalla-hora]
 ---
 
 # ਬ — the last new base in ਪੰਜਾਬੀ
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-JA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-JA-01, PA-SCRIPT-RECOG-BA-01] -->
 
 Point to **ਜ**. Today adds one final base.
 

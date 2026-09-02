@@ -1,12 +1,14 @@
 {
   "language": "bengali",
   "chapter": 13,
-  "sourceHash": "fnv1a64:a1b3aa44061f7b4a",
+  "sourceHash": "fnv1a64:4448f397e9b90cb4",
   "lessonIds": [
-    "BN-C09-neowa",
-    "BN-C09-jijnasa-kora",
-    "BN-C09-sahajjo-kora",
-    "BN-C09-bhalo-laga"
+    "BN-C07-howa",
+    "BN-C07-jaowa",
+    "BN-C07-asha",
+    "BN-C07-khaowa",
+    "BN-C07-dekha",
+    "BN-C07-jana"
   ],
-  "tex": "bengali/book/chapters/ch13-conjunct-verbs.tex"
+  "tex": "bengali/book/chapters/ch13-core-verbs.tex"
 }

@@ -1,18 +1,16 @@
 {
   "language": "bengali",
   "chapter": 19,
-  "sourceHash": "fnv1a64:618d64fd5b462254",
+  "sourceHash": "fnv1a64:ed9b07a489f36fac",
   "lessonIds": [
-    "BN-C13-doya-kore",
-    "BN-C13-dukkhito",
-    "BN-C13-maf-korben",
-    "BN-C13-sbagotom"
+    "BN-W04-poribar-read",
+    "BN-W04-bhai-read"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch19.txt",
   "json": "bengali/narration/ch19.json",
-  "textHash": "fnv1a64:6012397a4a28b58f",
-  "jsonHash": "fnv1a64:b772ec66b495e896",
+  "textHash": "fnv1a64:1c1ba062682e30fc",
+  "jsonHash": "fnv1a64:a8b306cf2abe30d6",
   "findings": []
 }

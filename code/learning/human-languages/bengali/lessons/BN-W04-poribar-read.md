@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W04-poribar-read
 spine_node: SPINE-MEET-GREET
-sequence: 890
+sequence: 1000
 delivery: script
-chapter: 17
+chapter: 19
 type: writing
 headword: পরিবার
 romanization: "pôribār"

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S10-chachcha",
+    "language": "punjabi",
+    "chapter": 10,
+    "sequence": 515,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:54f53be309c46f01",
+    "detachableSegments": [
+      "Script you'll notice: ਚ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

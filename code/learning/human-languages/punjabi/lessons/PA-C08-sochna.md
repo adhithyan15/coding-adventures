@@ -9,27 +9,27 @@ headword: ਸੋਚਣਾ
 romanization: sochṇā
 gloss: to think — a verb that started out meaning to burn, and then to grieve
 concept_tag: VERB-THINK
-prerequisites: [PA-C07-janna]
+prerequisites: [PA-C07-janna, PA-S07-naana-jajja-vavva]
 sounds: [hora-o, retroflex-na]
 roots: [sanskrit-shocyate, sanskrit-shuc]
 etymology_hook: sochṇā comes through Prakrit from Sanskrit śocyate, on the root śuc- “burn, glow; grieve” — the root behind śoka “sorrow” and the name Aśoka, “sorrowless”; it has no secure English cousin, and Punjabi's noun soch still means both a thought and a worry.
 duration:
   max_seconds: 250
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANNA, PA-LEX-AUNA]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANNA, PA-LEX-AUNA, PA-SCRIPT-RECOG-NAANA-01]
 introduces:
   knowledge: [PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC]
 introduces_idioms: []
 introduces_senses: [PA-SENSE-SOCH-THOUGHT-WORRY-01]
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW, PA-LEX-AUNA, PA-ETYMON-AUNA-GAM]
+  knowledge: [PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW, PA-LEX-AUNA, PA-ETYMON-AUNA-GAM, PA-SCRIPT-RECOG-NAANA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C07-janna, PA-C07-auna]
+reviews_of: [PA-C07-janna, PA-C07-auna, PA-S07-naana-jajja-vavva]
 ---
 
 # ਸੋਚਣਾ — “to think,” and it once meant “to burn”
@@ -51,7 +51,7 @@ as a noun too: **ਸੋਚ** *soch*, “**a thought**” — and, just as ordina
 worry**.” Hold on to that double meaning; the history is about to explain it.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-NAANA-01] -->
 
 **ਸ** *s*, carrying the **ੋ** sign for *o* — the *horā*, a small hook above the
 letter. Then **ਚ** *ch*, a plain *ch* with no puff of breath. Then the ending

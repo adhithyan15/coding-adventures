@@ -1,10 +1,13 @@
 {
   "language": "bengali",
   "chapter": 17,
-  "sourceHash": "fnv1a64:c72a37709cc4f9d1",
+  "sourceHash": "fnv1a64:04856e3fe80aa840",
   "lessonIds": [
-    "BN-W04-poribar-read",
-    "BN-W04-bhai-read"
+    "BN-W04-chaa-read",
+    "BN-W04-jol-read",
+    "BN-W03-dudh-read",
+    "BN-W04-dda",
+    "BN-W04-pora-read"
   ],
-  "tex": "bengali/book/chapters/ch17-family-on-the-page.tex"
+  "tex": "bengali/book/chapters/ch17-three-words-and-a-dot.tex"
 }

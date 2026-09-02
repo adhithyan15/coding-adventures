@@ -3,7 +3,7 @@
     "id": "BN-W02-la",
     "language": "bengali",
     "chapter": 6,
-    "sequence": 380,
+    "sequence": 410,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:2f9e547141c33fbd",
+    "sourceHash": "fnv1a64:c7c8c3f4907a00a1",
     "detachableSegments": [
       "Script"
     ],

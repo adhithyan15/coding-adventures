@@ -1,0 +1,17 @@
+{
+  "language": "bengali",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:efad6dbd01265c16",
+  "lessonIds": [
+    "BN-R01-tumi-again",
+    "BN-R01-ta-u-again",
+    "BN-R01-ya-again",
+    "BN-R01-chandrabindu-again",
+    "BN-R01-hyan-again",
+    "BN-R01-ami-again",
+    "BN-R01-kemon-again",
+    "BN-R01-bhalo-again",
+    "BN-R01-practice"
+  ],
+  "tex": "bengali/book/chapters/ch26-distant-band.tex"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-050-PREA1-SCRIPT-RUNWAY-C8",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the mark that says no vowel here, and read a letter tucked underneath its neighbour.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S08-khakkha-jhajja-pairin",
+    "PA-S08-pappa"
+  ]
+}

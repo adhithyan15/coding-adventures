@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C03-bhalo
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 340
+sequence: 370
 chapter: 5
 type: word
 headword: ভালো
@@ -45,7 +45,7 @@ time.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
 
 **ভালো** (*bhālo*, "good, well, fine") is the everyday Bengali "good" — likely
-from Sanskrit **ভদ্র** (*bhadra*, "good, auspicious, gentle"), worn down over
+from Sanskrit *bhadra* ("good, auspicious, gentle"), worn down over
 centuries into *bhālo*. It is one of the most-used words in the language: *bhālo
 lāge* ("[I] like it"), *bhālobāsā* ("love," literally "good-dwelling").
 

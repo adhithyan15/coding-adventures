@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-049-PREA1-SCRIPT-RUNWAY-C7",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read the two pieces that end almost every verb in this chapter, and the two letters English has no sign for.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S07-naana-jajja-vavva",
+    "PA-S07-rara-ghagga-dadda"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C05-panjabi",
+    "language": "punjabi",
+    "chapter": 5,
+    "sequence": 275,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bc7f239988adf7e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

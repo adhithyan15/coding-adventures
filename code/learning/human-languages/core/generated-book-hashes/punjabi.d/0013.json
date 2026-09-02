@@ -1,8 +1,9 @@
 {
   "language": "punjabi",
   "chapter": 13,
-  "sourceHash": "fnv1a64:5410a2d994c5fc66",
+  "sourceHash": "fnv1a64:1883f5250700eb24",
   "lessonIds": [
+    "PA-S13-pairin-bindi",
     "PA-C13-dil",
     "PA-C13-sir"
   ],

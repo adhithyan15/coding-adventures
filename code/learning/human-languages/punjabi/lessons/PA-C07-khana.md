@@ -9,27 +9,27 @@ headword: ਖਾਣਾ
 romanization: khāṇā
 gloss: to eat — and the letter next door that stopped being a consonant and became a tone
 concept_tag: VERB-EAT
-prerequisites: [PA-C07-auna]
+prerequisites: [PA-C07-auna, PA-S05-babba-lalla-hora, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda]
 sounds: [aspirate-kh, tone-low, kanna-aa, retroflex-na]
 roots: [sanskrit-khadati]
 etymology_hook: khāṇā keeps a plain aspirated kh; its rowmate ਘ lost its voice and left a tone behind, which is why Punjabi alone among the big Indo-Aryan languages has pitch.
 duration:
   max_seconds: 265
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01]
 introduces:
   knowledge: [PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C07-auna, PA-C06-numbers-1-5]
+reviews_of: [PA-C07-auna, PA-C06-numbers-1-5, PA-S05-babba-lalla-hora, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda]
 ---
 
 # ਖਾਣਾ — “to eat,” and the tone hiding one letter away
@@ -87,7 +87,7 @@ voice, so it never traded anything for a tone. *Khāṇā* is said flat.
 - [YOU SAY: the rule — the old breathy *gh* went and left a pitch behind]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-GRAMMAR-NA-INFINITIVE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-GRAMMAR-NA-INFINITIVE, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01] -->
 
 [PAUSE 3s] What separates *kòṛā* “horse” from *koṛā* “whip”? (Pitch alone —
 the first dips and rises.) Where did that pitch come from? (From **ਘ**, an old
