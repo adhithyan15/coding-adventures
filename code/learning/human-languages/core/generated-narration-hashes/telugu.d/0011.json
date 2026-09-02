@@ -1,17 +1,16 @@
 {
   "language": "telugu",
   "chapter": 11,
-  "sourceHash": "fnv1a64:4ea2830975802028",
+  "sourceHash": "fnv1a64:be8747d1d5b9ae2a",
   "lessonIds": [
     "TE-C11-rangulu",
-    "TE-S06-letter-ra",
-    "TE-S114-letter-la"
+    "TE-S115-vowel-sign-e"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch11.txt",
   "json": "telugu/narration/ch11.json",
-  "textHash": "fnv1a64:0a3953fec8cc1c5c",
-  "jsonHash": "fnv1a64:9d03cdab5d21fd65",
+  "textHash": "fnv1a64:ec2da4c237d2c759",
+  "jsonHash": "fnv1a64:bcb7c4897b01c6da",
   "findings": []
 }

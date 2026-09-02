@@ -1,17 +1,16 @@
 {
   "language": "telugu",
   "chapter": 10,
-  "sourceHash": "fnv1a64:c6a110ceb55fd4da",
+  "sourceHash": "fnv1a64:965b3af6b316337e",
   "lessonIds": [
     "TE-C10-vaaram",
-    "TE-S05-sign-virama",
-    "TE-S113-letter-pa"
+    "TE-S114-letter-la"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch10.txt",
   "json": "telugu/narration/ch10.json",
-  "textHash": "fnv1a64:02b05428441ceaa9",
-  "jsonHash": "fnv1a64:4b72a57b030d3a4e",
+  "textHash": "fnv1a64:2babb42ee53a6d34",
+  "jsonHash": "fnv1a64:6a6a7cbca0dcc4eb",
   "findings": []
 }

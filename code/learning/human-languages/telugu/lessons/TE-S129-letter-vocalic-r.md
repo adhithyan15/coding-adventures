@@ -19,21 +19,21 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-129]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-128, TE-SCRIPT-RECOG-129]
+  knowledge: [TE-SCRIPT-RECOG-129, TE-SCRIPT-RECOG-128, TE-SCRIPT-RECOG-124, TE-SCRIPT-RECOG-117]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S128-letter-bha]
+reviews_of: [TE-S128-letter-bha, TE-S124-letter-e, TE-S117-letter-va]
 ---
 
 # ఋ — one character, met inside a word you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-128] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-128, TE-SCRIPT-RECOG-124] -->
 
-[PAUSE 1s] Before the new one: భ — what does it do?
+[PAUSE 1s] Before the new one: భ — what does it do? And one from further back: ఎ?
 
 [PAUSE 2s] One character this time — and you have been saying it for pages
 without knowing which mark on the page it was.
@@ -84,8 +84,10 @@ and larger than it is printed.
 - [YOU SAY: *vasanta ṛtuvu*, and name the letter its second word starts with]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-129] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-129, TE-SCRIPT-RECOG-117] -->
 
 [PAUSE 3s] Which character is this — ఋ? What kind of thing is it — a consonant,
 a vowel sign, or an independent vowel? (**An independent vowel**, sounded *ru*.)
 Name the word you already say that contains it.
+
+One more, from much earlier: వ — what does it do?

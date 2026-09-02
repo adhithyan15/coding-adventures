@@ -1,10 +1,9 @@
 {
   "language": "telugu",
   "chapter": 19,
-  "sourceHash": "fnv1a64:913d2eda89d1f762",
+  "sourceHash": "fnv1a64:723fbfe630b020fc",
   "lessonIds": [
-    "TE-C19-vayasu",
-    "TE-S122-letter-u"
+    "TE-C19-vayasu"
   ],
   "tex": "telugu/book/chapters/ch19-age.tex"
 }

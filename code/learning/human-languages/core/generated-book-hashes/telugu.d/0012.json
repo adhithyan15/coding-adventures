@@ -1,11 +1,10 @@
 {
   "language": "telugu",
   "chapter": 12,
-  "sourceHash": "fnv1a64:a5bc30a842c93255",
+  "sourceHash": "fnv1a64:7412c1270828f6b7",
   "lessonIds": [
     "TE-C12-kutumbam",
-    "TE-S07-vowel-sign-aa",
-    "TE-S115-vowel-sign-e"
+    "TE-S116-letter-da"
   ],
   "tex": "telugu/book/chapters/ch12-family.tex"
 }

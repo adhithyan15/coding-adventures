@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S02-vowel-sign-u
 spine_node: SPINE-MEET-GREET
-sequence: 345
+sequence: 85
 delivery: script
-chapter: 7
+chapter: 2
 type: writing
 headword: "ు"
 gloss: the single character ు — recognised inside words you already say
 romanization: "u"
-prerequisites: [TE-S01-letter-ta]
+prerequisites: [TE-S109-letter-na]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-01]
+  knowledge: [TE-SCRIPT-RECOG-109]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-02]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-01, TE-SCRIPT-RECOG-02]
+  knowledge: [TE-SCRIPT-RECOG-02, TE-SCRIPT-RECOG-109, TE-SCRIPT-RECOG-03]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S01-letter-ta]
+reviews_of: [TE-S109-letter-na, TE-S03-letter-ka]
 ---
 
 # ◌ు — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-109, TE-SCRIPT-RECOG-03] -->
 
-[PAUSE 1s] Before the new one: త — what does it do?
+[PAUSE 1s] Before the new one: న — what does it do? And one from further back: క?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ు
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-02]; assesses=[] -->
