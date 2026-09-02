@@ -16,14 +16,14 @@ etymology_hook: Shukriya belongs to the Arabic sh-k-r family of gratitude, carri
 duration:
   max_seconds: 240
 requires:
-  knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01]
+  knowledge: [UR-LEX-SALAM, UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01]
 introduces:
   knowledge: [UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA]
+  knowledge: [UR-LEX-SALAM, UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,10 +57,11 @@ long *ā* in this familiar expression.
 
 The central consonants **sh-k-r** belong to the Arabic family for gratitude
 and thanks; Arabic *shukran* is a close comparison. Urdu **shukriyā** reflects
-the centuries-long Persian-Arabic layer of its vocabulary.
+the centuries-long Persian-Arabic layer of its vocabulary — and for all that
+history it is an ordinary, everyday modern Urdu expression.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SALAM, UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA] -->
 
 - *salām* — Hello. You can say it; its letters are still ahead of you, so it
   is printed here the way you say it.
@@ -74,6 +75,6 @@ three light beats.
 - [YOU SAY: **shukriyā** once after the pen stops]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SALAM, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA] -->
 Which two shapes did this lesson add? **ی** and final **ہ**. Greet, then thank:
 **salām — shukriyā**. Copying with a model is enough for today.

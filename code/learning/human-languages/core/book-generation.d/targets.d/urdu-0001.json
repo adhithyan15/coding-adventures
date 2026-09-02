@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 1,
+  "output": "urdu/book/chapters/ch01-greetings-and-responses.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}
