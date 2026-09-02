@@ -12,7 +12,19 @@
     "lesson": "MR-C03-practice",
     "kind": "task",
     "summary": "Complete MR-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Marathi, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "MR-PHRASE-TUMHI-KASE-AAHAT",
+      "MR-PHRASE-MI-BARA-AAHE",
+      "MR-PHRASE-KAAHI-HARKAT-NAHI",
+      "MR-LEX-KASA",
+      "MR-LEX-MI",
+      "MR-ETYMON-MI-AHAM-EGO",
+      "MR-ETYMON-HARKAT-ARABIC",
+      "MR-GRAMMAR-HOW-AGREES-WITH-ADDRESSEE",
+      "MR-GRAMMAR-PLURAL-RESPECT-AGREEMENT",
+      "MR-GRAMMAR-COPULA-PERSON",
+      "MR-GRAMMAR-ADJECTIVE-TAKES-PERSON-GENDER"
+    ],
+    "note": "The recap runs the three-line exchange whole, re-banks every atom it was built from, and closes on the two things this chapter installs that the reader will use everywhere: the copula reshaping per person, and an adjective taking the gender of the person it describes."
   }
 }

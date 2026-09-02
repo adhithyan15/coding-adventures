@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4e073fd67c477dbc",
+  "sourceHash": "fnv1a64:091b09c08ff26764",
   "lessons": [
     {
       "id": "MR-C05-bolne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f223696de6a5a16e",
+      "sourceHash": "fnv1a64:dba5cff1731ae803",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f65cae607dcfea2e",
+      "sourceHash": "fnv1a64:6bd5845df73c069a",
       "notice": null,
       "blocks": [
         {
@@ -182,8 +182,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — the phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -281,7 +281,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2d0b51bcfd5ed010",
+      "sourceHash": "fnv1a64:7125127827a3402f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f5fae886ce0465c8",
+      "sourceHash": "fnv1a64:5286bafd49c3c004",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48e5c36f1a51adb3",
+      "sourceHash": "fnv1a64:d17fc06dd93ee398",
       "notice": null,
       "blocks": [
         {
@@ -554,8 +554,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Sentences about yourself",
+          "type": "input",
+          "title": "You'll want to know — sentences about yourself",
           "segments": [
             {
               "kind": "table",
@@ -576,8 +576,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine, in one look",
+          "type": "notice",
+          "title": "What you've built — the engine, in one look",
           "segments": [
             {
               "kind": "speech",
@@ -595,8 +595,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots banked",
+          "type": "notice",
+          "title": "What you've built — roots banked",
           "segments": [
             {
               "kind": "speech",

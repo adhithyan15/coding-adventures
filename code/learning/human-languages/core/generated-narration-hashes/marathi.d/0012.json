@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 12,
-  "sourceHash": "fnv1a64:4e073fd67c477dbc",
+  "sourceHash": "fnv1a64:091b09c08ff26764",
   "lessonIds": [
     "MR-C05-bolne",
     "MR-C05-mi-marathi-bolto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch12.txt",
   "json": "marathi/narration/ch12.json",
-  "textHash": "fnv1a64:0ea038c53e1d9527",
-  "jsonHash": "fnv1a64:af3f2954782d1245",
+  "textHash": "fnv1a64:388083ca817df4c5",
+  "jsonHash": "fnv1a64:7e08c3b848529c98",
   "findings": []
 }

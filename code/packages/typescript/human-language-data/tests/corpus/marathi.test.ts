@@ -30,14 +30,27 @@ it("pins Marathi lesson-content budgets", () =>
     // and culture claims are unchanged at 5 / 4 / 7: the migration typed the
     // knowledge that was already on the page and authored no new vocabulary.
     //
-    // 188 -> 213: the joining tranche (chapters 30-36) adds twenty-five
+    // 188 -> 194: chapter 10's six schema-v1 lessons migrated to v2. Same shape
+    // as chapter 9 -- every one was already written and already in the book, so
+    // this counts lessons that became MEASURABLE, not lessons that were added.
+    // Idioms, senses and culture claims stay at 5 / 4 / 7.
+    //
+    // 194 -> 205: chapters 11 and 12's eleven schema-v1 lessons migrated to v2,
+    // which retires the last of Marathi's hand-written chapters. Same shape
+    // again -- all eleven were already written and already in the book, so
+    // this counts lessons that became MEASURABLE. With 9, 10, 11 and 12 done,
+    // marathi/lessons holds NO schema-v1 lesson at all: 179 -> 205 is the
+    // whole v1 island, and idioms, senses and culture claims never moved off
+    // 5 / 4 / 7 across any of it.
+    //
+    // 205 -> 230: the joining tranche (chapters 30-36) adds twenty-five
     // lessons -- seventeen items, two punctuation marks and seven reviews.
-    // These two movements met in one merge, so this number was RE-MEASURED
-    // against the merged tree rather than derived by adding 9 and 25 to 179,
-    // which would have been right only by luck. Idioms, senses and culture
-    // claims stay at 5 / 4 / 7 for the same reason as above: a conjunction is
-    // not an idiom.
-    lessons: 213,
+    // Unlike every movement above it, these ARE new lessons. Four movements
+    // have now met in this one number, so it was RE-MEASURED against the
+    // merged tree rather than derived by adding 9, 6, 11 and 25 to 179, which
+    // would have been right only by luck. Idioms, senses and culture claims
+    // stay at 5 / 4 / 7: a conjunction is not an idiom.
+    lessons: 230,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,

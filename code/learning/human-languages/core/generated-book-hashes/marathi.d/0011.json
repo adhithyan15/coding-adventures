@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:93fe7274067892d8",
+  "lessonIds": [
+    "MR-C04-punha",
+    "MR-C04-bhetu",
+    "MR-C04-punha-bhetu",
+    "MR-C04-udya-bhetu",
+    "MR-C04-kalji-ghya",
+    "MR-C04-practice"
+  ],
+  "tex": "marathi/book/chapters/ch11-farewells.tex"
+}
