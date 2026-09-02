@@ -1,5 +1,20 @@
 # task-app backlog
 
+> **PAUSED — 2026-09-02.** TaskApp feature work is on hold behind the Mosaic
+> component program ([#14011](https://github.com/adhithyan15/coding-adventures/issues/14011),
+> `code/specs/mosaic-component-program-v1.md`).
+>
+> This app was built app-first, on raw kernel primitives: 166 styled parts, 47
+> raw `HostButton`s, 48 `If`/22 `Else`, and none of the 23 composed components
+> `mosaic-pkg-toolkit` already ships. The cost showed up as platform gaps
+> discovered too late — #13692 needed a runtime host environment that exists in
+> none of the nine backends (#14003), and specifying that surfaced a missing
+> adaptive container primitive.
+>
+> The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
+> Phase 5, on components that are already proven in isolation. Until then the
+> app may be an empty screen, which is the intended trade.
+
 Working backlog for the [super-app roadmap](../../../specs/task-app-super-app.md). Ordered
 by priority — top item is next up. Re-prioritized whenever a new item is discovered mid-flight.
 Each item, once picked up, follows: spec-sync → tests → implementation → CHANGELOG → README →
