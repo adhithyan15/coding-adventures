@@ -300,6 +300,31 @@ pub static OPCODES: &[OpcodeInfo] = &[
     //   stack after  select:  [..., (cond ? val1 : val2)]
     OpcodeInfo { name: "drop",   opcode: 0x1A, category: "parametric", immediates: &[], stack_pop: 1, stack_push: 0 },
     OpcodeInfo { name: "select", opcode: 0x1B, category: "parametric", immediates: &[], stack_pop: 3, stack_push: 1 },
+    // `select_t` (reference-types proposal's EXPLICITLY TYPED `select`,
+    // `0x1C`, W37/`select.wast`): same runtime shape as untyped `select`
+    // above (pop cond/val2/val1, push one of the two) -- the ONLY
+    // difference is a `vec(valtype)` immediate that disambiguates which
+    // value type is being selected (needed whenever untyped `select`'s
+    // "infer the type from the operands" rule doesn't apply, e.g.
+    // selecting between two reference values). Named `select_t`, not
+    // `select` -- `get_opcode_by_name` does a linear `name ==` scan over
+    // this table, so a second entry literally named `"select"` would
+    // make that lookup ambiguous (silently returning whichever of the
+    // two happens to come first); `wasm-wast-parser`'s own typed-`select`
+    // encoder emits this opcode BYTE directly (`0x1C`) rather than going
+    // through a by-name lookup, so no code path actually needs this
+    // entry's `name` field to be `"select"` for parsing to work -- only
+    // `get_opcode(0x1C)` (byte-indexed, used by `wasm-execution`'s
+    // `decode_function_body` to size the immediate) needs this entry to
+    // exist at all. `immediates: &["vec_valtype"]` is a variable-length
+    // marker `decode_immediates` special-cases the same way `br_table`'s
+    // own `"vec_labelidx"` already is -- see that function's own doc
+    // comment. `stack_pop`/`stack_push` are placeholders never read
+    // generically, same convention `block`/`throw`/etc. already use for
+    // any instruction whose real arity is immediate-dependent -- the
+    // real popping/pushing happens in `wasm-validator`'s own dedicated
+    // `0x1C` type-check rule.
+    OpcodeInfo { name: "select_t", opcode: 0x1C, category: "parametric", immediates: &["vec_valtype"], stack_pop: 3, stack_push: 1 },
 
     // ── Variable instructions ─────────────────────────────────────────────────
     //

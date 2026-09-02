@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.59] - 2026-09-02 - typed `select` (0x1C)
+
+### Added
+
+- `select_t` (`0x1C`) — the reference-types proposal's explicitly-typed
+  `select`, a distinct opcode from plain `select`'s `0x1B` (not the same
+  opcode plus an immediate). Named `select_t`, not `select`: `get_
+  opcode_by_name` does a linear `name ==` scan over this table, so a
+  second entry literally named `"select"` would make that lookup
+  ambiguous. `immediates: &["vec_valtype"]`, a new variable-length
+  immediate marker (`wasm-execution`'s `decode_immediates` special-cases
+  it the same way `br_table`'s own `"vec_labelidx"` already is) — the
+  real binary immediate is a `vec(valtype)`: a LEB128 count followed by
+  that many value-type encodings.
+- `stack_pop`/`stack_push` are placeholders (`3`/`1`, matching `select`'s
+  own), never read generically — same convention `block`/`throw`/every
+  other immediate-dependent-arity instruction in this table already
+  uses; the real popping/pushing is `wasm-validator`'s own dedicated
+  `0x1C` type-check rule (see that crate's own CHANGELOG).
+
+Closes the WASM-opcodes-table side of `wasm-conformance/tests/fixtures/
+testsuite/select.wast`'s 126 `not_yet_supported` directives — see
+`wasm-wast-parser` 0.1.99's CHANGELOG for the parser-side root cause and
+`wasm-execution` 0.9.92's for the matching decode/runtime fix.
+
 ## [0.2.58] - 2026-08-31 - W32 second slice: call_ref / return_call_ref
 
 ### Added

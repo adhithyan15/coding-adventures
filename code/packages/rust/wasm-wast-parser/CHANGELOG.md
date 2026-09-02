@@ -1,5 +1,100 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.99 — 2026-09-02 — fix: parse `select`'s typed `(result t)` folded/flat form (0x1C)
+
+Closes `code/packages/rust/wasm-conformance/tests/fixtures/testsuite/
+select.wast`, which had 126 `not_yet_supported` directives (mostly
+`assert_return`/`assert_trap`) cascading from just 2 real module-build
+failures. Addendum 2's own diagnosis (`code/specs/W07-wasm-post-mvp-
+epics.md`) held up on live re-verification: a throwaway probe against
+`select.wast` alone (`wasm_conformance::run_wast_source`) confirmed both
+failures were the literal error `unknown instruction "result"`, at byte
+656 (`(select (result i32) (local.get 0) (local.get 1) (local.get 2))`)
+and byte 23437 (the file's own "Flat syntax" section).
+
+**Root cause.** `select`'s folded-form arm (`encode_flat_instr`) and
+flat/stream-form arm (`encode_stream_instr`) both handled `select`
+identically to `drop`/`nop`/`unreachable` — recurse into every argument
+as an operand sub-expression, then emit the bare opcode. For untyped
+`select` that's correct; for the reference-types proposal's EXPLICITLY
+TYPED `select` (`select (result t) a b c`, needed to disambiguate the
+result type when it can't be inferred from the stack — e.g. selecting
+between two reference values, which `wasm-validator`'s own `0x1B`
+handler already rejects for exactly this reason), the leading `(result
+t)` clause got recursed into as if it were an operand, and its own head
+atom `"result"` then failed `get_opcode_by_name` as an unknown
+instruction.
+
+**The fix** teaches both arms to recognize and consume a LEADING run of
+`(result ...)` clauses before `select`'s normal operands, encoding
+`0x1C` (a genuinely different opcode from untyped `select`'s `0x1B`,
+not the same opcode plus an immediate) followed by the real binary
+`vec(valtype)` immediate (`ValueType::encode()`, already used elsewhere
+in this crate for locals/params/results — no new encoding logic
+needed). "Zero or more" clauses, not "at most one": the real corpus's
+own "Flat syntax" section has must-PASS cases with TWO consecutive
+clauses — `select (result i32) (result)` and `select (result) (result
+i32)` — whose valtypes concatenate (`[i32] ++ [] = [i32]`), the same
+"any number of `(result ...)` groups in a row" convention `encode_
+blocktype`'s own `(param...)*(result...)*` scan and `parse_func_
+signature` already use elsewhere in this file. Arity other than exactly
+1 after concatenation (the real corpus's own `arity-0`/`arity-2`
+`assert_invalid` cases, `(result)` and `(result i32 i32)`) is left to
+`wasm-validator`'s new `0x1C` type-check rule (see that crate's own
+CHANGELOG) — this crate parses every shape permissively, matching its
+existing "parse permissively, validate strictly" split.
+
+Verified this was genuinely a TEXT-FORMAT-only gap, not also a binary
+gap: no other already-passing corpus file exercised the binary opcode
+`0x1C` before this fix (a plain grep across `wasm-validator`/`wasm-
+execution` found only `0xFB 0x1C`/`0xFD 0x1C` GC/SIMD sub-opcodes, never
+a bare top-level `0x1C`) — so `wasm-validator` (type-check rule) and
+`wasm-execution` (runtime handler + opcode-table entry) needed matching
+fixes; see those two crates' own CHANGELOGs.
+
+**A second real gap found investigating the same file.** Fixing the two
+`unknown instruction "result"` failures let parsing reach FURTHER into
+`select.wast`'s own "Flat syntax" section, exposing a pre-existing,
+previously-unreachable bug in `call_indirect`'s flat/stream-form
+leading-table-token heuristic (`unreachable select call_indirect
+select`): a bare atom immediately after `call_indirect` was always
+treated as its own table-index token by SHAPE alone, with no way to
+tell "a real table token" apart from "the next instruction's bare atom
+name" (here, a second `select`) — previously safe only because no
+vendored corpus file's flat/stream `call_indirect` had anything
+following it. Fixed by attempting the real `resolve_idx` resolution
+before committing to "this is a table token" — a genuine `$name`/
+numeral token still always resolves; an arbitrary instruction name
+never does. This same fix, needed to fully close `select.wast`, also
+happened to close 1 previously-`not_yet_supported` `module` directive
+each in `call_indirect.wast` and `stack.wast` (both already exercised
+this exact flat-form ambiguity) — a positive side effect, not scope
+creep; every other file's tally is byte-for-byte unchanged (see `wasm-
+conformance`'s own CHANGELOG for the full programmatic diff).
+
+**Stack-frame lesson repeated.** The first version of this fix put the
+type-collection loop directly in `encode_flat_instr`'s own `"select"`
+match arm and immediately overflowed the real OS stack in
+`deeply_folded_struct_instructions_do_not_overflow_the_real_stack` — the
+exact same lesson `"i32.load" | ...`'s own arm already documents: a
+debug build sizes a function's stack frame for the union of every match
+arm's locals, and `encode_flat_instr`/`encode_stream_instr` both sit on
+the hot recursive path every instruction funnels through. Fixed by
+moving all of it into two new free functions, `encode_select_folded`/
+`encode_select_stream` (sharing `collect_leading_select_result_types`),
+called with no other locals alongside them in either match arm.
+
+**Tests**: 6 new unit tests — untyped `select` unaffected (byte-exact),
+typed `select` folded form with `i32`/`funcref` result types (byte-
+exact, including the funcref case a pre-existing test used to pin as a
+"known gap" — now updated to assert the real encoding instead), the
+flat/stream form, the two-clause-concatenation case, and the
+`call_indirect` disambiguation fix (both the regression and a positive
+case confirming a real table token still resolves). 393 tests total (up
+from 386), zero regressions (`git stash` A/B across `wasm-wast-parser`/
+`wasm-validator`/`wasm-execution`/`wasm-runtime`/`wasm-conformance`).
+`cargo clippy` clean.
+
 ## 0.1.98 — 2026-09-01 — fix: reject invalid UTF-8 in name strings instead of silently replacing it
 
 Closes `code/packages/rust/wasm-conformance/tests/fixtures/testsuite/utf8-

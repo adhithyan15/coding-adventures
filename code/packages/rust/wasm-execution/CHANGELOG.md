@@ -2,6 +2,48 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.92] - 2026-09-02 - runtime support for typed `select` (0x1C)
+
+Companion fix to `wasm-wast-parser` 0.1.99 (parses `select`'s typed
+`(result t)` text form) and `wasm-validator` 0.2.87 (type-checks it) —
+see either crate's own CHANGELOG for the full root-cause writeup. This
+crate had NO support at all for the binary opcode `0x1C` (a bare, un-
+prefixed opcode — not to be confused with `0xFB 0x1C` `ref.i31` or `0xFD
+0x1C` `i32x4.replace_lane`, both already implemented): `wasm_opcodes::
+get_opcode(0x1C)` returned `None`, so `decode_function_body` decoded
+ZERO immediate bytes for it, silently misinterpreting whatever bytes
+followed (the real `vec(valtype)` immediate) as the start of the NEXT
+instruction.
+
+**Three changes, one opcode:**
+- `wasm-opcodes`: a new table entry, `0x1C` named `"select_t"` (not
+  `"select"` — `get_opcode_by_name` does a linear `name ==` scan, so a
+  second entry literally named `"select"` would make that lookup
+  ambiguous; nothing needs it to resolve by that name since `wasm-wast-
+  parser`'s encoder emits the opcode byte directly), `immediates: &[
+  "vec_valtype"]`, a new variable-length marker alongside `br_table`'s
+  own `"vec_labelidx"`.
+- `decode_immediates`: a `"vec_valtype"` arm that walks past the
+  immediate's `count` valtype encodings to compute its byte length —
+  only the LENGTH matters here, never the actual type(s), since typed
+  `select`'s runtime behavior is identical to untyped `select`'s
+  regardless of what the immediate says (`WasmValue` already carries its
+  own dynamic type). Deliberately bounded by `code.len()`, not by the
+  declared `count`: `decode_function_body` runs on modules that haven't
+  necessarily gone through `wasm-validator::validate()` yet, so an
+  attacker-controlled LEB128 `count` claiming billions of entries must
+  not become an unbounded loop — unlike naively mirroring `"vec_
+  labelidx"`'s own `for _ in 0..count` (which keeps "consuming" 1 byte
+  by its own fallback default even past the end of `code`).
+- `register_parametric`: a `0x1C` handler, byte-for-byte identical to
+  `0x1B`'s (pop condition/val2/val1, push whichever the condition
+  selects) — the immediate is purely a validation-time disambiguator,
+  never read at runtime.
+
+No regressions: `git stash` A/B across this crate plus `wasm-wast-
+parser`/`wasm-validator`/`wasm-runtime`/`wasm-conformance` is identical
+pass/fail before and after. `cargo clippy` clean.
+
 ## [0.9.91] - 2026-09-01 (gap 2 doc fixup: `Table::new_with_is64`'s per-table cap is no longer a redundant no-op for 32-bit tables)
 
 Companion doc-only fixup to `wasm-validator` 0.2.85 / `wasm-runtime`
