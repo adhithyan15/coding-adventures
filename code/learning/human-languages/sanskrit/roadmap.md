@@ -149,10 +149,18 @@ stands alone; the ladder earns the right to print whole words as it climbs.
 48 of the 53 characters the track shows are now taught, and 31 lessons still
 decode an untaught one (from 46). What remains is **cadence-bound, not
 order-bound** — at one segment per lesson the same scheduler reaches 25, at one
-per two it reaches 30 — and is written up in backlog `HL-C241`. `ऋ` and `ङ` have
-no cited stroke order in the shared script file and so have no lesson at all;
-`ौ ई ँ घ` carry no Sanskrit headword, and for `ई ँ घ` that is a **vocabulary**
-job before it is a script job.
+per two it reaches 30 — and is written up in backlog `HL-C241`. `ऋ` and `ङ` are
+blocked on **opposite halves**, and only one of them is still blocked on
+sourcing. `ऋ` now HAS a cited four-stroke ductus in
+`data/scripts/devanagari.json`, so its sourcing refusal is lifted; what blocks it
+is that no Sanskrit headword contains it, and a recognition segment whose "you
+already say these" list is empty teaches a shape for nothing. Schedule `ऋतु`
+("season") — which the A1 inventory also wants for its calendar gap — or `ऋषि`,
+then teach the shape. `ङ` is the mirror image: it already rides a headword,
+`सङ्ख्याशब्दाः` in chapter 19, and it is **absent from `devanagari.json`
+entirely**, so there is no sourced pen path and HL11 §5 binds. That refusal
+stands. `ई ँ घ` carry no Sanskrit headword, which is a **vocabulary** job before
+it is a script job.
 
 ## Planned
 
