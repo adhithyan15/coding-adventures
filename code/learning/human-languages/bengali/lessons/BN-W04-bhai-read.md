@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W04-bhai-read
 spine_node: SPINE-MEET-GREET
-sequence: 900
+sequence: 1010
 delivery: script
-chapter: 17
+chapter: 19
 type: writing
 headword: ভাই
 romanization: "bhāi"

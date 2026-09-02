@@ -1,14 +1,17 @@
 {
   "language": "bengali",
   "chapter": 4,
-  "sourceHash": "fnv1a64:956b9746c666b1e7",
+  "sourceHash": "fnv1a64:b5fe5413d98c3f1b",
   "lessonIds": [
     "BN-W02-naam-read",
     "BN-W02-i-matra",
     "BN-W04-i-indep",
     "BN-W02-ta",
     "BN-W02-u-matra",
-    "BN-W02-tumi-read"
+    "BN-W02-tumi-read",
+    "BN-W02-ya",
+    "BN-W02-chandrabindu",
+    "BN-W02-hyan-read"
   ],
   "tex": "bengali/book/chapters/ch04-signs-around-the-letter.tex"
 }

@@ -3,7 +3,7 @@
     "id": "BN-C03-kemon",
     "language": "bengali",
     "chapter": 5,
-    "sequence": 320,
+    "sequence": 350,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a01794fb1804c529",
+    "sourceHash": "fnv1a64:c3eab6abe25ff84c",
     "detachableSegments": [
       "The letters in this word"
     ]

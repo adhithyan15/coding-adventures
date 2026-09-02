@@ -9,32 +9,32 @@ type: writing
 headword: "ੰ"
 romanization: "tippi"
 gloss: "place tippi above a base letter"
-prerequisites: [PA-W03-pa]
+prerequisites: [PA-W03-pa, PA-S09-aunkar-tippi]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-PA-01]
+  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-RECOG-TIPPI-01]
 introduces:
   knowledge: [PA-SCRIPT-TIPPI-WRITING-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01]
+  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-RECOG-TIPPI-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-pa]
+reviews_of: [PA-W03-pa, PA-S09-aunkar-tippi]
 ---
 
 # ੰ — the nasal mark inside ਪੰਜਾਬੀ
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PA-01, PA-SCRIPT-RECOG-TIPPI-01] -->
 
 Write **ਪ** once. Today adds only the nasal mark that sits above it.
 

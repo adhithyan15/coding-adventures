@@ -1,13 +1,12 @@
 {
   "language": "bengali",
   "chapter": 20,
-  "sourceHash": "fnv1a64:070f2ce5cd115b7a",
+  "sourceHash": "fnv1a64:7c9468d5d0ade1b6",
   "lessonIds": [
-    "BN-C14-lal",
-    "BN-C14-nil",
-    "BN-C14-kalo",
-    "BN-C14-shada",
-    "BN-C14-shobuj"
+    "BN-C12-chokh",
+    "BN-C12-mukh",
+    "BN-C12-nak",
+    "BN-C12-hridoy"
   ],
-  "tex": "bengali/book/chapters/ch20-five-colors.tex"
+  "tex": "bengali/book/chapters/ch20-eye-mouth-nose-heart.tex"
 }

@@ -1,16 +1,19 @@
 {
   "language": "bengali",
   "chapter": 17,
-  "sourceHash": "fnv1a64:d7f41832ae0d7f41",
+  "sourceHash": "fnv1a64:f88749239a30e133",
   "lessonIds": [
-    "BN-W04-poribar-read",
-    "BN-W04-bhai-read"
+    "BN-W04-chaa-read",
+    "BN-W04-jol-read",
+    "BN-W03-dudh-read",
+    "BN-W04-dda",
+    "BN-W04-pora-read"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch17.txt",
   "json": "bengali/narration/ch17.json",
-  "textHash": "fnv1a64:769b8535889207aa",
-  "jsonHash": "fnv1a64:dc1874d134c715e8",
+  "textHash": "fnv1a64:768a163a4246ba42",
+  "jsonHash": "fnv1a64:4f68c90123078588",
   "findings": []
 }

@@ -9,27 +9,27 @@ headword: ਦੁੱਧ
 romanization: dudh
 gloss: milk — "that which has been milked," said flat, with no tone at all
 concept_tag: PA-FOOD-MILK
-prerequisites: [PA-C10-chaa]
+prerequisites: [PA-C10-chaa, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S10-chachcha]
 sounds: [addak-doubling, aspirate-dh]
 roots: [sanskrit-dugdha, sanskrit-duh-milk]
 etymology_hook: ਦੁੱਧ is inherited from Prakrit duddha, from Sanskrit dugdha, "that which has been milked" — the passive participle of duh-, "to milk" — from a Proto-Indo-European root meaning roughly "to produce, to be of use"; no English word descends from it securely enough for this lesson to claim one.
 duration:
   max_seconds: 245
 requires:
-  knowledge: [PA-LEX-CHA, PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-SCRIPT-ADDAK-DOUBLING]
+  knowledge: [PA-LEX-CHA, PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-AUNKAR-01, PA-SCRIPT-RECOG-CHA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01]
 introduces:
   knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-SCRIPT-ADDAK-DOUBLING, PA-LEX-PASAND]
+  knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-SCRIPT-ADDAK-DOUBLING, PA-LEX-PASAND, PA-SCRIPT-RECOG-AUNKAR-01, PA-SCRIPT-RECOG-CHA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C10-chaa, PA-C10-paani]
+reviews_of: [PA-C10-chaa, PA-C10-paani, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S10-chachcha]
 ---
 
 # ਦੁੱਧ — a third request, and a tone that stays away
@@ -48,7 +48,7 @@ word settles which is the ordinary case.
 > **ਦੁੱਧ, ਕਿਰਪਾ ਕਰਕੇ।** — *dudh, kirpā karke.* — **Milk, please.**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ADDAK-DOUBLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-AUNKAR-01, PA-SCRIPT-RECOG-CHA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01] -->
 
 **ਦ** *d*, **ੁ** short *u*, then the **ੱ** *addak* doubling the consonant that
 follows — the same mark you already read in **ਰੱਬ** — and **ਧ** *dh*, the

@@ -3,7 +3,7 @@
     "id": "BN-C04-dekha-hobe",
     "language": "bengali",
     "chapter": 7,
-    "sequence": 440,
+    "sequence": 470,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:364d7b1d66f43212",
+    "sourceHash": "fnv1a64:afb2b5b5960fe99b",
     "detachableSegments": [
       "The letters in this word"
     ]

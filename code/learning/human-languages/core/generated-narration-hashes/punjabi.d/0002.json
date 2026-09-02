@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:92e90a71f2457bb6",
+  "sourceHash": "fnv1a64:09bb424fd834602f",
   "lessonIds": [
     "PA-C02-naam",
     "PA-C02-mera",
@@ -9,15 +9,17 @@
     "PA-C02-mera-naam-hai",
     "PA-C02-tu-tusi",
     "PA-C02-ki",
+    "PA-S02-mamma-rara-lava",
     "PA-C02-tuhada-naam-ki-hai",
     "PA-C02-khushi",
+    "PA-S02-sassa-tatta-sihari",
     "PA-C02-practice"
   ],
   "voiceLessons": 3,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch02.txt",
   "json": "punjabi/narration/ch02.json",
-  "textHash": "fnv1a64:09cb8f5de3e3ed20",
-  "jsonHash": "fnv1a64:a743b6cee65ab925",
+  "textHash": "fnv1a64:32fa6ab9a423053e",
+  "jsonHash": "fnv1a64:941ba75d6b29c2fe",
   "findings": []
 }

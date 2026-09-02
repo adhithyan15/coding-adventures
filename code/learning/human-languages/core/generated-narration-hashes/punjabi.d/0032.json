@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 32,
-  "sourceHash": "fnv1a64:7ea138477100ab84",
+  "sourceHash": "fnv1a64:002082712c34f574",
   "lessonIds": [
     "PA-C32-changa",
     "PA-W09-chacha",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch32.txt",
   "json": "punjabi/narration/ch32.json",
   "textHash": "fnv1a64:848e3827f8aaf524",
-  "jsonHash": "fnv1a64:ea066cd8dcedf4b1",
+  "jsonHash": "fnv1a64:d7d980ea4c5ee5fc",
   "findings": []
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W04-chaa-read",
     "language": "bengali",
-    "chapter": 15,
-    "sequence": 820,
+    "chapter": 17,
+    "sequence": 910,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:71820f8667e80633",
+    "sourceHash": "fnv1a64:572c2a9cad3f5cd1",
     "detachableSegments": [
       "Script"
     ],

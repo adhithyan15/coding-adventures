@@ -9,27 +9,27 @@ headword: ਕੰਨ
 romanization: kann
 gloss: ear — a word that looks like it hides "to do" inside it, and does not
 concept_tag: PA-BODY-EAR
-prerequisites: [PA-C12-akkh]
+prerequisites: [PA-C12-akkh, PA-S10-addak-dhadda]
 sounds: [tippi-nasal, addak-doubling]
 roots: [sanskrit-karna]
 etymology_hook: ਕੰਨ is inherited from Apabhramsha kaṇṇa, from Prakrit kaṇṇa, from Sanskrit karṇa, "ear" — a noun whose own root beyond Sanskrit is not securely traced, and which is NOT related to karnā, "to do," despite the two words sharing every consonant.
 duration:
   max_seconds: 260
 requires:
-  knowledge: [PA-LEX-AKKH, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA, PA-SCRIPT-ADDAK-DOUBLING]
+  knowledge: [PA-LEX-AKKH, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-ADDAK-01]
 introduces:
   knowledge: [PA-LEX-KANN, PA-CONTRAST-KANN-KARNA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-LEX-AKKH, PA-LEX-MADAD-KARNA, PA-SCRIPT-ADDAK-DOUBLING]
+  knowledge: [PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-LEX-AKKH, PA-LEX-MADAD-KARNA, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-ADDAK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C12-akkh, PA-C09-madad-karna]
+reviews_of: [PA-C12-akkh, PA-C09-madad-karna, PA-S10-addak-dhadda]
 ---
 
 # ਕੰਨ — a false friend hiding in plain sight
@@ -47,7 +47,7 @@ something it has nothing to do with.
 > **ਕੰਨ** — *kann* — **ear**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ADDAK-DOUBLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-ADDAK-01] -->
 
 **ਕ** *k*, **ੰ** the *ṭippī* nasal, **ਨ** *n* — and the vowel is nasalized
 where **ਅੱਖ** doubled a consonant instead. *Ka-nn*, with the doubling this

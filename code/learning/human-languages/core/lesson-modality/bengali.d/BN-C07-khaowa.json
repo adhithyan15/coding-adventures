@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C07-khaowa",
     "language": "bengali",
-    "chapter": 11,
-    "sequence": 670,
+    "chapter": 13,
+    "sequence": 760,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b0092c15738cd221"
+    "sourceHash": "fnv1a64:0e7d26bc6cc93b67"
   },
   "findings": []
 }

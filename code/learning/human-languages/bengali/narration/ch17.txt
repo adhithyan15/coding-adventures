@@ -1,67 +1,162 @@
-Bengali, chapter 17: Family, on the Page.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Bengali, chapter 17: Three Words Free, and One Dot.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
-পরিবার (pôribār) — family, read.
+Lesson 1 of 5.
+চা (chā) — tea, read.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write প, then write ি and say which side of a consonant it goes on.
+Write চ, and say where in the mouth it is made.
 
 Script.
-প + র + ি + ব + া + র becomes পরিবার (pôribār).
-Six pieces — the longest word this book has asked anyone to assemble.
-প — bare, so it carries its own inherent vowel: pô.
-র with ি in front of it — ri.
-ব with া — bā.
-র — rô, worn away at the end.
-pôribār — family, the tatsama from the chapter before this one: pari- "around" plus a root meaning "to cover." What surrounds you.
-The first letter is the lesson here. প wears no sign at all, and a reader who has spent two chapters looking for marks will skate over it and say pri. It is pô. A consonant with nothing on it is not silent — it is carrying the vowel this whole script is named for.
-That inherent ô was the very first thing the script chapters taught, back on ন, and this is the first word long enough to make it matter in the middle of a reading rather than at the start of a letter.
+চ + া becomes চা (chā).
+One consonant and one sign. chā — tea, and the shortest word this book will ask anyone to read.
+It is also a loanword, and the shape of the loan is visible in the sound. Chinese chá travelled overland through Persian čā and arrived in Bengali as চা (chā). The same leaf travelled by sea, through Hokkien and Dutch traders, and arrived in English as tea. One plant, two roads, two words — and which word a language uses tells you which road the leaf took to get there.
+Two pieces, and both of them arrived long before this page: চ from the consonant chapter, া from the very first script chapter. Nothing here is new except the permission to put them together — which is what a reading lesson is for.
 
 Guided Practice.
-[your turn — read: পরিবার (pôribār)]
+[your turn — read: চা (chā)]
 [pause 8 seconds for the answer]
-[your turn — read: চা]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: পরিবার (pôribār)]
+[once you have stopped driving — write: চা (chā)]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What vowel does the bare প carry? (ô.) How many pieces are in পরিবার (pôribār)? (Six.) And what does the word mean? (Family.)
+How many pieces are in চা? (Two.) And why does English say tea where Bengali says chā? (The word came by sea, not overland.)
 Source: Unicode Bengali chart.
 
 
-Lesson 2 of 2.
-ভাই (bhāi) — brother, read.
+Lesson 2 of 5.
+জল (jôl) — water, read.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write ই, and say when a vowel gets its own letter instead of a sign.
+Write জ, and say what separates it from চ.
 
 Script.
-ভ + া + ই becomes ভাই (bhāi).
-ভ with া — bhā, breath and all.
-ই — the full letter, standing on its own.
-bhāi — brother. And the last piece is the rule from the independent-i lesson, many chapters back, doing work in an unexpected place: the i here is not at the start of the word, yet it still takes its full letter. Why? Because the thing in front of it is া, a vowel. There is no consonant for a sign to sit on.
-"Nothing to lean on" does not mean "start of word." It means what it says.
-The word itself is worth a line. The chapter before this one set it out: this is not a cousin of English brother, it is that word, worn down through Prakrit from the same ancestor — a tadbhava rather than a tatsama. Its sister বোন, from the same chapter, is not related to English sister at all.
-Put it beside the family word from two lessons ago and the good from the consonant chapter, and the shared shapes are obvious:
-পরিবার (pôribār), ভালো, ভাই (bhāi).
+জ + ল becomes জল (jôl).
+Two letters. No signs at all.
+jôl — water. And the vowel in the middle of it, the ô you can plainly hear, is written nowhere. It is on the page because জ carries it, the way every bare Bengali consonant does.
+This is the shortest possible demonstration of the word abugida, which the very first script lesson used and this word finally earns. An alphabet writes every vowel. An abugida writes a consonant that already has one, and marks only the vowels that are different. জল (jôl) is what that looks like when nothing is different.
+Set it beside the drink from earlier in this chapter:
+চা (chā) — one consonant, one sign জল (jôl) — two consonants, no signs.
+Both are two syllables in the mouth and neither spells them the way an English reader would expect. The chapter before this one noted that Bengali eats its drinks — jôl khāwā, "to eat water" — so these two words keep company in more than one way.
 
 Guided Practice.
-[your turn — read: ভাই (bhāi)]
+[your turn — read: জল (jôl)]
 [pause 8 seconds for the answer]
-[your turn — read: পরিবার (pôribār) ভালো ভাই (bhāi)]
+[your turn — read: চা (chā) জল (jôl)]
 [pause 8 seconds for the answer]
-[once you have stopped driving — write: ভাই (bhāi)]
+[once you have stopped driving — write: জল (jôl)]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Why does ভাই (bhāi) end in the full letter ই rather than the sign? (The piece before it is a vowel — nothing to lean on.) And is ভাই (bhāi) a cousin of English brother, or the same word? (The same word.)
+How many vowel signs are in জল (jôl)? (None.) So where does the ô come from? (The consonant carries it.) And what does the word mean? (Water.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 5.
+দুধ (dudh) — milk, and the three words this chapter gave back.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write দ and ধ, and say what separates them.
+
+Script.
+দ + ু + ধ becomes দুধ (dudh).
+দ with ু under it — du, voice on, no breath.
+ধ — voice on, with breath, and its own vowel gone at the end of the word.
+dudh — milk. Two letters that a reader half-attending will read as the same shape twice, and the word says them differently: the first closes clean, the second opens onto air. Say it slowly enough to hear the second one leak.
+This is the whole point of a script that spells the breath. English writes d for both and lets speakers sort it out; Bengali writes the difference down, which is more to learn and less to guess.
+Count what this chapter added. No new pieces at all — and three more words handed to the eye:
+চা (chā) — tea.
+জল (jôl) — water.
+দুধ (dudh) — milk.
+Twenty-five pieces, ten words. That is the point of a reading chapter: the eight consonants of the last script chapter were bought once and are still paying, and the three words on this page cost nothing new to read. Two of the three turn on the breathy pairs that chapter drilled, which is the distinction an English-speaking reader has no habit for at all.
+
+Guided Practice.
+[your turn — read: চা (chā) জল (jôl) দুধ (dudh)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: দুধ (dudh)]
+[once you have stopped driving — write: চা (chā) জল (jôl) দুধ (dudh)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter of দুধ (dudh) lets the breath out? (The second.) How many pieces did this chapter add? (None.) And how many words can you read now? (Ten.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 5.
+ড (ḍô) — the tongue curled back.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read দুধ (dudh). Then write ় and say what it does.
+
+Script.
+ড (ḍô).
+দ, which you have had since the chapter of breathy letters, is made with the tongue flat against the back of the teeth. ড (ḍô) is the same voiced stop made with the tongue curled back to the ridge behind them.
+English has neither one exactly. An English d lands between the two, which is why an English ear hears দ and ড (ḍô) as the same letter and a Bengali ear hears two, and why this is the pair that gives a learner's accent away first. Say dô with the tongue-tip on the teeth, then again with it curled back an inch. The second sound is duller and further away.
+Now put the dot you learned two chapters ago underneath it:
+ড (ḍô) + ় becomes ড়.
+That is not a d at all any more. It is a flap: the curled tongue strikes the roof once, on its way past, the way the tt in American butter does. In running Bengali the flap is far more common than the plain ড (ḍô), which is why this letter is nearly always met wearing its dot.
+Between them, the plain letter and the dotted one are one shape and two very different jobs — the same bargain য and য় struck.
+
+Guided Practice.
+[once you have stopped driving — write: ড (ḍô)]
+[once you have stopped driving — write: ড়]
+[your turn — say: দ then ড (ḍô) — teeth, then curled back]
+[pause 8 seconds for the answer]
+[your turn — say: the flap in ড়, once, quickly]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: য় ড়]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where is ড (ḍô) made? (Tongue curled back, behind the teeth-ridge.) What does the dot change it into? (A flap.) And which other letter you know takes the same dot? (য.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 5.
+পড়া (pôṛā) — to read, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ড় and say what the dot did. Then write প.
+
+Script.
+প + ড় + া becomes পড়া (pôṛā).
+প — with its inherent ô.
+ড় — the flap: curled tongue, one strike.
+া — the vowel sign.
+pôṛā — to read. Three pieces, and the middle one is the whole reason this word waited: without the dot it would be pôḍā, and Bengali does not say that.
+The word is worth having on the page rather than only in the ear, because it is the one word in this book that names what the book is asking you to do. The verbs chapter gave it to you as a sound. The flap it hangs on arrived one lesson ago.
+One thing to hear rather than see. The flap is fast. A learner who has been told "curl the tongue back" tends to hold the position and produce a long, deliberate ḍ; the Bengali sound is a single strike in passing, gone before it is noticed. If it feels careful, it is wrong.
+And two words from the food chapter, back for a moment:
+চা (chā), জল (jôl).
+
+Guided Practice.
+[your turn — read: পড়া (pôṛā)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: পড়া (pôṛā)]
+[your turn — read: চা (chā)]
+[pause 8 seconds for the answer]
+[your turn — read: জল (jôl)]
+[pause 8 seconds for the answer]
+[your turn — say: pôṛā — flap it, do not hold it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many pieces in পড়া (pôṛā)? (Three.) What would it say without the dot? (pôḍā — a sound Bengali does not use here.) And should the flap feel long or short? (Short — one strike.)
 Source: Unicode Bengali chart.

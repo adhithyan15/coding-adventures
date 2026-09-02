@@ -9,32 +9,32 @@ type: writing
 headword: "ਆ"
 romanization: "aa"
 gloss: "trace the standalone long-a vowel, aira wearing the kanna"
-prerequisites: [PA-C34-ji-aaian-nu]
+prerequisites: [PA-C34-ji-aaian-nu, PA-S06-kakka-aira-aara]
 sounds: []
 roots: []
 duration:
   max_seconds: 160
 requires:
-  knowledge: [PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-AA-MATRA-01]
+  knowledge: [PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-AIRA-01]
 introduces:
   knowledge: [PA-SCRIPT-INDEPENDENT-AA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-INDEPENDENT-AA-01]
+  knowledge: [PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-INDEPENDENT-AA-01, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-AIRA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W02-a, PA-W01-aa-matra, PA-C34-ji-aaian-nu]
+reviews_of: [PA-W02-a, PA-W01-aa-matra, PA-C34-ji-aaian-nu, PA-S06-kakka-aira-aara]
 ---
 
 # ਆ — a letter you can already build
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-AA-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-RECOG-AARA-01] -->
 
 [PAUSE 2s] Write the standalone **ਅ** once. Then write the upright stroke **ਾ**
 that lengthens a vowel — the one that turned **ਹ** into **ਹਾ**.
@@ -56,7 +56,7 @@ by side and read as one letter.
 Cover the models. Write **ਅ**, then **ਆ**. Compare only the added upright.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-INDEPENDENT-AA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-INDEPENDENT-AA-01, PA-SCRIPT-RECOG-AIRA-01] -->
 <!-- hl-activity: {"id": "PA-W09-aara-check", "kind": "text", "assesses": ["PA-SCRIPT-INDEPENDENT-AA-01"], "prompt": "Write the standalone Gurmukhi letter for long aa.", "answer": "ਆ", "accepted": [], "feedback": {"correct": "ਆ is ਅ wearing the upright you already knew.", "incorrect": "Take ਅ and add the upright stroke: ਆ."}, "response_seconds": 12} -->
 
 A letter built from two you had already climbed.

@@ -2,152 +2,33 @@
   "version": 1,
   "language": "bengali",
   "chapter": 15,
-  "title": "Three Words, No New Pieces",
+  "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fc66370f23bdcff7",
+  "sourceHash": "fnv1a64:2d52c53f381ea3f2",
   "lessons": [
     {
-      "id": "BN-W04-chaa-read",
-      "sequence": 820,
-      "title": "চা (chā) — tea, read",
-      "headword": "চা",
-      "romanization": "chā",
-      "gloss": "tea — the shortest word in the book, and a loan that walked overland",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:71820f8667e80633",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write চ, and say where in the mouth it is made."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "চ + া becomes চা (chā)."
-            },
-            {
-              "kind": "speech",
-              "text": "One consonant and one sign. chā — tea, and the shortest word this book will ask anyone to read."
-            },
-            {
-              "kind": "speech",
-              "text": "It is also a loanword, and the shape of the loan is visible in the sound. Chinese chá travelled overland through Persian čā and arrived in Bengali as চা (chā). The same leaf travelled by sea, through Hokkien and Dutch traders, and arrived in English as tea. One plant, two roads, two words — and which word a language uses tells you which road the leaf took to get there."
-            },
-            {
-              "kind": "speech",
-              "text": "Two pieces, and both of them arrived long before this page: চ from the consonant chapter, া from the very first script chapter. Nothing here is new except the permission to put them together — which is what a reading lesson is for."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "চা (chā)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: চা]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "চা (chā)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: চা]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many pieces are in চা? (Two.) And why does English say tea where Bengali says chā? (The word came by sea, not overland.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W04-jol-read",
+      "id": "BN-C09-neowa",
       "sequence": 830,
-      "title": "জল (jôl) — water, read",
-      "headword": "জল",
-      "romanization": "jôl",
-      "gloss": "water — two bare consonants and the vowel neither of them writes",
+      "title": "নেওয়া (neowā) — \"to take,\" and the verb that finishes other verbs",
+      "headword": "নেওয়া",
+      "romanization": "neowā",
+      "gloss": "to take — and the verb that finishes other verbs",
       "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b3682309da7e504c",
+      "sourceHash": "fnv1a64:b16d37f4c791da2b",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "The letters in this word"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -163,81 +44,131 @@
             },
             {
               "kind": "speech",
-              "text": "Write জ, and say what separates it from চ."
+              "text": "Bengali rarely leaves a verb standing alone. This is the verb it props most of them up with — and the tail it wears will look familiar."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know: নেওয়া",
           "segments": [
             {
               "kind": "speech",
-              "text": "জ + ল becomes জল (jôl)."
+              "text": "নেওয়া — neowā — to take."
             },
             {
               "kind": "speech",
-              "text": "Two letters. No signs at all."
-            },
-            {
-              "kind": "speech",
-              "text": "jôl — water. And the vowel in the middle of it, the ô you can plainly hear, is written nowhere. It is on the page because জ carries it, the way every bare Bengali consonant does."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the shortest possible demonstration of the word abugida, which the very first script lesson used and this word finally earns. An alphabet writes every vowel. An abugida writes a consonant that already has one, and marks only the vowels that are different. জল (jôl) is what that looks like when nothing is different."
-            },
-            {
-              "kind": "speech",
-              "text": "Set it beside the drink from earlier in this chapter:"
-            },
-            {
-              "kind": "speech",
-              "text": "চা (chā) — one consonant, one sign জল (jôl) — two consonants, no signs."
-            },
-            {
-              "kind": "speech",
-              "text": "Both are two syllables in the mouth and neither spells them the way an English reader would expect. The chapter before this one noted that Bengali eats its drinks — jôl khāwā, \"to eat water\" — so these two words keep company in more than one way."
+              "text": "আমি নিই (āmi nii), \"I take.\" আপনি নেন (āpni nen), respectfully."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "জল (jôl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: জল]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "চা (chā) জল (jôl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: চা জল]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "জল (jôl)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: জল]"
+              "kind": "speech",
+              "text": "নেওয়া (neowā) is নে (ne) + ওয়া (-owā). ন is a dental n, tongue on the teeth. The ওয়া tail is the one every dictionary-form verb of this kind wears — you have it already on হওয়া, যাওয়া and খাওয়া."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নেওয়া (neowā) is Sanskrit √nī, \"to lead, to carry away.\" It is a well-attested Indo-Iranian root — Avestan nayeiti, \"he leads\"; Sanskrit netṛ, \"a leader,\" which is why a politician in Kolkata or Delhi is a netā. Beyond that branch the trail thins, and English kept nothing from it. No cousin will be manufactured for you here; some roots stayed home."
+            },
+            {
+              "kind": "speech",
+              "text": "The lesson worth more than a cousin is what Bengali does with the verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb that ends a compound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put a verb into its -এ form (likhe, \"having written\"; niye, \"having taken\") and hang a second verb behind it. The second verb stops meaning what it means and starts colouring the first:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "compound",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "compound: লিখে নেওয়া (likhe neowā). what it does: write it down — take the writing for yourself.",
+                "compound: নিয়ে আসা (niye āsā). what it does: bring — come, having taken.",
+                "compound: নিয়ে যাওয়া (niye jāwā). what it does: take away — go, having taken."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali has no separate word for \"bring.\" It has \"come having taken.\" And নেওয়া is a noun as readily as লেখা was: দেওয়া-নেওয়া (deowā-neowā), \"giving-and-taking,\" is the everyday word for dealings between people."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"neowā\" — take — then \"āmi nii\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"neowā\" — take — then \"āmi nii\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same tail four times — \"hôwā, jāwā, khāwā, neowā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same tail four times — \"hôwā, jāwā, khāwā, neowā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "write it down — \"likhe neowā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: write it down — \"likhe neowā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bring, then take away — \"niye āsā … niye jāwā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bring, then take away — \"niye āsā … niye jāwā\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -249,42 +180,35 @@
             },
             {
               "kind": "speech",
-              "text": "How many vowel signs are in জল (jôl)? (None.) So where does the ô come from? (The consonant carries it.) And what does the word mean? (Water.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
+              "text": "How does Bengali say \"bring,\" having no word for it? (নিয়ে আসা — \"come having taken\"; and \"take away\" is নিয়ে যাওয়া.) Does English share নেওয়া (neowā)'s root? (No — √nī stayed in Indo-Iranian, and that is the honest answer.) Name two more Bengali verbs that are also nouns. (লেখা \"a piece of writing\" and দেখা \"a seeing\" — every -া form does it.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-W03-dudh-read",
+      "id": "BN-C09-jijnasa-kora",
       "sequence": 840,
-      "title": "দুধ (dudh) — milk, and the three words this chapter gave back",
-      "headword": "দুধ",
-      "romanization": "dudh",
-      "gloss": "milk — plain, then breathy, three pieces apart",
+      "title": "জিজ্ঞাসা করা (jijñāsā kôrā) — \"to ask,\" which is wanting to know",
+      "headword": "জিজ্ঞাসা করা",
+      "romanization": "jijñāsā kôrā",
+      "gloss": "to ask — literally \"to do a wanting-to-know,\" and the door into a thousand verbs",
       "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b4bf53cf49760df9",
+      "sourceHash": "fnv1a64:e343932a6725b7c6",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "The letters in this word"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -300,93 +224,121 @@
             },
             {
               "kind": "speech",
-              "text": "Write দ and ধ, and say what separates them."
+              "text": "Chapter 13 warned you about a knot of letters, then spared you it. Here it is, inside a word you will use daily — and the word is Chapter 13's verb with an appetite."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know: জিজ্ঞাসা করা",
           "segments": [
             {
               "kind": "speech",
-              "text": "দ + ু + ধ becomes দুধ (dudh)."
+              "text": "জিজ্ঞাসা করা — jijñāsā kôrā — to ask."
             },
             {
               "kind": "speech",
-              "text": "দ with ু under it — du, voice on, no breath."
-            },
-            {
-              "kind": "speech",
-              "text": "ধ — voice on, with breath, and its own vowel gone at the end of the word."
-            },
-            {
-              "kind": "speech",
-              "text": "dudh — milk. Two letters that a reader half-attending will read as the same shape twice, and the word says them differently: the first closes clean, the second opens onto air. Say it slowly enough to hear the second one leak."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the whole point of a script that spells the breath. English writes d for both and lets speakers sort it out; Bengali writes the difference down, which is more to learn and less to guess."
-            },
-            {
-              "kind": "speech",
-              "text": "Count what this chapter added. No new pieces at all — and three more words handed to the eye:"
-            },
-            {
-              "kind": "speech",
-              "text": "চা (chā) — tea."
-            },
-            {
-              "kind": "speech",
-              "text": "জল (jôl) — water."
-            },
-            {
-              "kind": "speech",
-              "text": "দুধ (dudh) — milk."
-            },
-            {
-              "kind": "speech",
-              "text": "Twenty-five pieces, ten words. That is the point of a reading chapter: the eight consonants of the last script chapter were bought once and are still paying, and the three words on this page cost nothing new to read. Two of the three turn on the breathy pairs that chapter drilled, which is the distinction an English-speaking reader has no habit for at all."
+              "text": "আমি জিজ্ঞাসা করি (āmi jiggāshā kôri), \"I ask\" — two words, one verb."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "চা (chā) জল (jôl) দুধ (dudh)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: চা জল দুধ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "দুধ (dudh)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: দুধ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "চা (chā) জল (jôl) দুধ (dudh)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: চা জল দুধ]"
+              "kind": "speech",
+              "text": "জিজ্ঞাসা is জি + জ্ঞা + সা. The middle piece জ্ঞ is the knot of জ and ঞ Chapter 13 named on √jñā — and Bengali never says jñ. It says gg, so the spelled jijñāsā is spoken jiggāshā, with the s becomes sh tilt at the end."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জিজ্ঞাসা is Sanskrit's desiderative of √jñā (\"to know\") — the form meaning wanting to do a thing. Jijñāsati is \"he desires to know\"; jijñāsā is the desire itself. Bengali took the noun."
+            },
+            {
+              "kind": "speech",
+              "text": "So asking is not a separate idea here. It is জানা with an appetite — and the root behind both is the one Chapter 13 traced: PIE ǵneh₃-, English know, Latin nōscere (notice), Greek gnôsis (diagnosis). The doubled ji- is the desiderative's signature: a quiet echo of the root, meaning reaching for it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: any noun plus করা is a verb",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "noun + করা"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "noun: কাজ (kāj), work. noun + করা: কাজ করা — to work.",
+                "noun: জিজ্ঞাসা (jijñāsā), a wanting-to-know. noun + করা: জিজ্ঞাসা করা (jijñāsā kôrā) — to ask."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 11 built kāj kôrā this way. It is more than a compound: it is the way Bengali makes verbs. The stock of true verbs is small and closed, while nouns pour in from Sanskrit, Persian, Arabic and English — each becoming a verb the moment করা stands behind it. Learn a noun, learn a verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Last lesson’s compound stacks on top: জিজ্ঞাসা করে নেওয়া (jijñāsā kôre neowā) — \"just go ahead and ask.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spelling, then sound — \"jijñāsā … jiggāshā\" — then \"āmi jiggāshā kôri,\" I ask, and the root it grew from, \"jānā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: spelling, then sound — \"jijñāsā … jiggāshā\" — then \"āmi jiggāshā kôri,\" I ask, and the root it grew from, \"jānā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fact, then a person — \"āmi jāni\" … \"āmi tāke chini\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fact, then a person — \"āmi jāni\" … \"āmi tāke chini\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "go ahead and ask — \"jijñāsā kôre neowā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: go ahead and ask — \"jijñāsā kôre neowā\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,11 +350,382 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter of দুধ (dudh) lets the breath out? (The second.) How many pieces did this chapter add? (None.) And how many words can you read now? (Ten.)"
+              "text": "How does Bengali say জ্ঞ, and what is জিজ্ঞাসা literally? (gg, never jñ; and a wanting-to-know, the desiderative of জানা's root.) Someone asks whether you know their brother — which knowing verb answers? (চেনা — a person is known by acquaintance; জানা is for facts.) How do you make a verb from a noun you met this morning? (Put করা behind it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C09-sahajjo-kora",
+      "sequence": 850,
+      "title": "সাহায্য করা (sāhājjo kôrā) — \"to help,\" which is going along with someone",
+      "headword": "সাহায্য করা",
+      "romanization": "sāhājjo kôrā",
+      "gloss": "to help — \"to go together with,\" and the word that finally shows you the inherent vowel",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ab125e9ee0527304",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
+              "text": "Chapter 12 said Bengali's inherent vowel leans to o, then admitted it could not show you. This word can — and it is the word you will most want when stuck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সাহায্য করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাহায্য করা — sāhājjo kôrā — to help."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাকে সাহায্য করুন (āmāke sāhājjo kôrun), \"please help me\"; āmāke is \"to me.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাহায্য is সা + হা + য্য. The last piece is য stacked on itself — a conjunct, how Bengali writes a doubled consonant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: a doubled letter, and a vowel nobody writes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two rules land at the end, neither a quirk. Bengali reads a doubled য as jj, not yy. And nothing is written after it, so it takes the inherent vowel, which leans to o: sāhājjo, never sāhājja."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 12 could not show that inherent o in ek, dui, tin, chār, pā̃ch, since none of the five ends in a bare consonant. This one does. সা takes the s becomes sh tilt, so the whole is shāhājjo."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাহায্য is Sanskrit sāhāyya, \"companionship,\" on sahāya, \"a companion\" — which is saha-, \"together,\" plus √i, \"to go.\" A helper goes along with you."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves have secure English cousins. Saha- is PIE sem-, \"together\": English same, Greek homós (homogeneous), Latin similis (similar). √i is PIE h₁ey-, \"to go\": Latin īre gives exit and transit; Greek ión gives ion. So \"help\" is same-going, and English holds the pieces without ever building the word."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "grammar",
+          "title": "Grammar Lens: asking for help is where the respect ladder bites",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Another noun + করা, like জিজ্ঞাসা করা (jijñāsā kôrā). The respect sits where Chapter 13 put it — in করা’s ending:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who you are asking",
+                "\"help\""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "who you are asking: তুই (tui, intimate). \"help\": সাহায্য কর (kôr).",
+                "who you are asking: তুমি (tumi, familiar). \"help\": সাহায্য করো (kôro).",
+                "who you are asking: আপনি (āpni, respectful). \"help\": সাহায্য করুন (kôrun)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say kôr to a stranger and you were not rude by accident, but in grammar."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spelling, then sound — \"sāhāyya … shāhājjo\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: spelling, then sound — \"sāhāyya … shāhājjo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ladder — \"sāhājjo kôr … kôro … kôrun\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ladder — \"sāhājjo kôr … kôro … kôrun\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "please help me — \"āmāke sāhājjo kôrun\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: please help me — \"āmāke sāhājjo kôrun\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two noun-verbs of this chapter — \"jijñāsā kôrā … sāhājjo kôrā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two noun-verbs of this chapter — \"jijñāsā kôrā … sāhājjo kôrā\"]"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does সাহায্য end in -o with nothing written there? (The inherent vowel — the thing the five numbers could not show.) Which form to a stranger? (করুন — kôr is for তুই.) What is a sahāya? (One who goes with you.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C09-bhalo-laga",
+      "sequence": 860,
+      "title": "ভালো লাগা (bhālo lāgā) — \"to like,\" which happens to you",
+      "headword": "ভালো লাগা",
+      "romanization": "bhālo lāgā",
+      "gloss": "to like — \"good sticks to me\" — and beside it ভালোবাসা, to love",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a8b46ed73f69e78d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every verb so far has let you be the one doing it. Here is one that does not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভালো লাগা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভালো লাগা — bhālo lāgā — to like."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার ভালো লাগে (āmār bhālo lāge), \"I like it.\" Not āmi — āmār, \"to me.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভালো is yours from Chapter 5. The new half is লাগা: লা + গা, গ being a hard g as in go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লাগা is Sanskrit √lag, \"to attach, to stick\": āmār bhālo lāge says, literally, \"good sticks to me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ভালোবাসা (bhālobāsā), \"to love,\" is ভালো plus বাসা, a verb no longer used alone. Its origin is genuinely disputed; the commonest proposal is Sanskrit √vas, \"to dwell\" — love as housed in goodness. If so it carries a startling cousin, since √vas is PIE h₂wes-, \"to stay,\" which became Old English wesan and so English was. That \"if\" is real, and stays open."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: liking lands on you; loving you do",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Bengali",
+                "word for word"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Bengali: আমার ভালো লাগে. word for word: to-me good sticks — I like it.",
+                "Bengali: আমার চা ভালো লাগে. word for word: to-me tea good sticks — I like tea.",
+                "Bengali: আমি ভালোবাসি. word for word: I love."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That āmār … shape is how Bengali says I have — আমার … আছে, with আছে carrying the weight and no future of its own to give."
+            },
+            {
+              "kind": "speech",
+              "text": "ভালোবাসা breaks the pattern on purpose: āmi bhālobāsi puts you in the subject's chair. It is a noun too — \"love\" itself — as লেখা was \"a piece of writing.\" One form serves everybody. The harmony has nothing to bite on: bāsi and bāse keep their ā."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āmār bhālo lāge\" — hearing \"to me,\" not \"I\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āmār bhālo lāge\" — hearing \"to me,\" not \"I\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I like tea — \"āmār chā bhālo lāge\" — the tea Bengali eats, \"chā khāwā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I like tea — \"āmār chā bhālo lāge\" — the tea Bengali eats, \"chā khāwā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one you do — \"āmi bhālobāsi\" — one form, whoever is speaking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one you do — \"āmi bhālobāsi\" — one form, whoever is speaking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the eight verbs of these two chapters — \"bhābā, bojhā, pôṛā, lekhā, neowā, jijñāsā kôrā, sāhājjo kôrā, bhālo lāgā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the eight verbs of these two chapters — \"bhābā, bojhā, pôṛā, lekhā, neowā, jijñāsā kôrā, sāhājjo kôrā, bhālo lāgā\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who is the subject of āmār bhālo lāge, and what else is built that way? (Not you — the good is; আমার … আছে, \"I have,\" and আছে has no future of its own to give.) Does āmi bhālobāsi behave the same, and would a woman say it differently? (No, and no — loving takes you as subject; Bengali has no grammatical gender.) Name two verbs that are also nouns. (ভালোবাসা \"love,\" লেখা \"writing.\") Why bāsi, not bosi? (Nothing to raise — this stem has ā.)"
             }
           ]
         }

@@ -15,7 +15,7 @@ The letters in this word.
 আ (independent long ā) + মি (mi) becomes আমি (āmi).
 
 The word, taken apart.
-আমি (āmi, "I") descends from Sanskrit অস্মি (asmi, "I am"), on the first-person stem asmad. That Sanskrit asmi is from Proto-Indo-European h₁es-, the "to be" root — the very same word that gives English am (and Latin sum). So Bengali's word for "I" is, at the root, a form of "am": "I" and "am" were once one word. Its possessive is the আমার (āmār, "my") from Chapter 3.
+আমি (āmi, "I") descends from Sanskrit asmi ("I am"), on the first-person stem asmad. That Sanskrit asmi is from Proto-Indo-European h₁es-, the "to be" root — the very same word that gives English am (and Latin sum). So Bengali's word for "I" is, at the root, a form of "am": "I" and "am" were once one word. Its possessive is the আমার (āmār, "my") from Chapter 3.
 
 Grammar Lens: "I" can often be dropped.
 Bengali verbs carry the person in their ending — āchhi already means "I am" — so āmi is often left out once it's clear. You still learn it first, because the answer to kēmon āchho? begins with it.
@@ -107,7 +107,7 @@ The letters in this word.
 ভা (bhā, an aspirated b + long ā) + লো (lo) becomes ভালো (bhālo).
 
 The word, taken apart.
-ভালো (bhālo, "good, well, fine") is the everyday Bengali "good" — likely from Sanskrit ভদ্র (bhadra, "good, auspicious, gentle"), worn down over centuries into bhālo. It is one of the most-used words in the language: bhālo lāge ("[I] like it"), bhālobāsā ("love," literally "good-dwelling").
+ভালো (bhālo, "good, well, fine") is the everyday Bengali "good" — likely from Sanskrit bhadra ("good, auspicious, gentle"), worn down over centuries into bhālo. It is one of the most-used words in the language: bhālo lāge ("[I] like it"), bhālobāsā ("love," literally "good-dwelling").
 
 The exchange — the reply.
 With the āchhā verb: আমি ভালো আছি (āmi bhālo āchhi) — "I am well" (āchhi = "I am/exist"). The whole exchange:

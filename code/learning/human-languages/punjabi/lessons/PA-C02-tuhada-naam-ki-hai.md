@@ -9,26 +9,26 @@ headword: ਤੁਹਾਡਾ ਨਾਂ ਕੀ ਹੈ?
 romanization: "tuhāḍā nāṁ kī hai?"
 gloss: "what is your name?"
 concept_tag: INTRO-WHATS-YOUR-NAME
-prerequisites: [PA-C02-tu-tusi, PA-C02-ki, PA-C02-hai]
+prerequisites: [PA-C02-tu-tusi, PA-C02-ki, PA-C02-hai, PA-S02-mamma-rara-lava]
 sounds: []
 roots: []
 duration:
   max_seconds: 170
 requires:
-  knowledge: [PA-LEX-NAAM-02, PA-LEX-HAI-02, PA-GRAMMAR-VERB-LAST-02, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02]
+  knowledge: [PA-LEX-NAAM-02, PA-LEX-HAI-02, PA-GRAMMAR-VERB-LAST-02, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02, PA-SCRIPT-RECOG-LAVA-01, PA-SCRIPT-RECOG-RA-01]
 introduces:
   knowledge: [PA-PHRASE-YOUR-NAME-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-NAAM-02, PA-LEX-HAI-02, PA-GRAMMAR-VERB-LAST-02, PA-PHRASE-MY-NAME-02, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02, PA-PHRASE-YOUR-NAME-02]
+  knowledge: [PA-LEX-NAAM-02, PA-LEX-HAI-02, PA-GRAMMAR-VERB-LAST-02, PA-PHRASE-MY-NAME-02, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02, PA-PHRASE-YOUR-NAME-02, PA-SCRIPT-RECOG-LAVA-01, PA-SCRIPT-RECOG-RA-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: respectful
 variety: standard-punjabi
-reviews_of: [PA-C02-ki, PA-C02-hai, PA-C02-tu-tusi]
+reviews_of: [PA-C02-ki, PA-C02-hai, PA-C02-tu-tusi, PA-S02-mamma-rara-lava]
 ---
 
 # ਤੁਹਾਡਾ ਨਾਂ ਕੀ ਹੈ? (tuhāḍā nāṁ kī hai?) — "what's your name?"
@@ -61,7 +61,7 @@ swaps *tuhāḍā* for **ਤੇਰਾ** (*terā*, "your," from *tū̃*): *terā 
 - [YOU SAY: the familiar "your" (*terā*)]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-YOUR-NAME-02, PA-GRAMMAR-VERB-LAST-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-YOUR-NAME-02, PA-GRAMMAR-VERB-LAST-02, PA-SCRIPT-RECOG-LAVA-01, PA-SCRIPT-RECOG-RA-01] -->
 <!-- hl-activity: {"id":"PA-C02-tuhada-naam-ki-hai-respectful-question","kind":"text","assesses":["PA-PHRASE-YOUR-NAME-02","PA-GRAMMAR-VERB-LAST-02"],"prompt":"Ask what is your name respectfully in Punjabi, then type the romanized question you said.","answer":"tuhāḍā nāṁ kī hai?","accepted":["tuhada nam ki hai","tuhada naam ki hai"],"feedback":{"correct":"Right: tuhāḍā nāṁ kī hai, with hai last.","incorrect":"Use respectful tuhāḍā, then nāṁ, kī, and final hai."},"response_seconds":14} -->
 
 [PAUSE 3s] Ask someone's name respectfully, and note where the verb sits.

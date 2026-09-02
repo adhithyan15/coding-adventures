@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C12-mukh
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 920
-chapter: 18
+sequence: 1030
+chapter: 20
 type: word
 headword: মুখ
 romanization: mukh

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C13-dukkhito",
     "language": "bengali",
-    "chapter": 19,
-    "sequence": 960,
+    "chapter": 22,
+    "sequence": 1120,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8a86dff298abe9d6",
+    "sourceHash": "fnv1a64:3a6d95cd3710ee79",
     "detachableSegments": [
       "The letters in this word"
     ]

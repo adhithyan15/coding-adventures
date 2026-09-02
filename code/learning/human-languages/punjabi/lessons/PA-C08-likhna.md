@@ -9,27 +9,27 @@ headword: ਲਿਖਣਾ
 romanization: likhṇā
 gloss: to write — from a root meaning to scratch, which is how three unrelated languages named it
 concept_tag: VERB-WRITE
-prerequisites: [PA-C08-parhna]
+prerequisites: [PA-C08-parhna, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin]
 sounds: [sihari-i, aspirate-kh, retroflex-na]
 roots: [sanskrit-likhati]
 etymology_hook: likhṇā is Sanskrit likhati, “scratches, scrapes” — writing named as scratching, exactly as Latin scrībere and Old English wrītan named it, three languages arriving at the same picture on their own; likh-'s cousins outside Indo-Aryan are disputed, so none is claimed.
 duration:
   max_seconds: 290
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-PARHNA, PA-LEX-SAMAJHNA, PA-LEX-SOCHNA, PA-LEX-HONA, PA-GRAMMAR-BE-TWO-ROOTS]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-PARHNA, PA-LEX-SAMAJHNA, PA-LEX-SOCHNA, PA-LEX-HONA, PA-GRAMMAR-BE-TWO-ROOTS, PA-SCRIPT-RECOG-DA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01]
 introduces:
   knowledge: [PA-LEX-LIKHNA, PA-ETYMON-LIKH-SCRATCH]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-LIKHNA, PA-ETYMON-LIKH-SCRATCH, PA-LEX-PARHNA, PA-ETYMON-PARHNA-PATH, PA-SCRIPT-SUBJOINED-HA, PA-LEX-SAMAJHNA, PA-ETYMON-SAMAJH-BUDH, PA-SOUND-TONE-FALLING, PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS, PA-SCRIPT-GURMUKHI-TOP-LINE]
+  knowledge: [PA-LEX-LIKHNA, PA-ETYMON-LIKH-SCRATCH, PA-LEX-PARHNA, PA-ETYMON-PARHNA-PATH, PA-SCRIPT-SUBJOINED-HA, PA-LEX-SAMAJHNA, PA-ETYMON-SAMAJH-BUDH, PA-SOUND-TONE-FALLING, PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-RECOG-DA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C08-parhna, PA-C08-samajhna, PA-C08-sochna, PA-C07-hona, PA-C05-main-punjabi-bolda-han]
+reviews_of: [PA-C08-parhna, PA-C08-samajhna, PA-C08-sochna, PA-C07-hona, PA-C05-main-punjabi-bolda-han, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin]
 ---
 
 # ਲਿਖਣਾ — “to write,” which is scratching
@@ -51,7 +51,7 @@ breath — no falling pitch anywhere in this word. Two verbs in a row carried a
 tone; this one does not.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-GURMUKHI-TOP-LINE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-RECOG-DA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01] -->
 
 **ਲ** *l*, then **ਖ** *kh*, then **ਣਾ**. The short *i* has a quirk worth knowing:
 its sign **ਿ** is written **before** the letter it is pronounced after, so *li*
