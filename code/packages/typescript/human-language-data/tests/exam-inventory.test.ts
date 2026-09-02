@@ -651,7 +651,21 @@ describe("the committed French A1 inventory", () => {
     // where the gender it agrees with becomes visible. Both were taught on page
     // one from the beginning and neither could be probed, because a hand-written
     // chapter's grammarlens owns no atom.
-    expect(coverage.covered).toBe(30);
+    //
+    // 30 -> 31: retiring hand-written chapter 2 closed A1-V-12, reflexive verbs
+    // with `se` in the present. Chapter 27 has conjugated s'asseoir and se lever
+    // through the whole present since it was written, and chapter 2 has been
+    // teaching je m'appelle -- but the CONSTRUCTION was owned by nobody: ch27's
+    // atoms type the two verbs and their stems, and ch2 was hand-written, so a
+    // corpus that fully teaches the point had no atom that named it. The probe
+    // lists the rule and the two conjugated verbs, because the rule alone is not
+    // the present tense and the verbs alone were typed as lexis.
+    //
+    // A1-P-04 was already covered and its probe is corrected in the same pass:
+    // it read FR-GRAMMAR-PLEASE-REGISTER-04, chapter 19's s'il vous plait, which
+    // DEMONSTRATES the tu/vous register without naming it. Chapter 2 owns the
+    // point directly and both its atoms are added.
+    expect(coverage.covered).toBe(31);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
     // The shape, not the score: vocabulary is still a strong column and the
     // sentence-level categories are still empty. No quantity of headwords moves
