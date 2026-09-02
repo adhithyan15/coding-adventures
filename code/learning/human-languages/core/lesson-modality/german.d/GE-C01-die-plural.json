@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C01-tag",
+    "id": "GE-C01-die-plural",
     "language": "german",
     "chapter": 1,
-    "sequence": 20,
+    "sequence": 57,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1accbb1fadaa6ce8"
+    "sourceHash": "fnv1a64:471bd510a1d79036"
   },
   "findings": []
 }

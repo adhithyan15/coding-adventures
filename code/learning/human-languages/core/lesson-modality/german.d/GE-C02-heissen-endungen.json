@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C01-tag",
+    "id": "GE-C02-heissen-endungen",
     "language": "german",
-    "chapter": 1,
-    "sequence": 20,
+    "chapter": 2,
+    "sequence": 72,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1accbb1fadaa6ce8"
+    "sourceHash": "fnv1a64:07f4e84dc2e32999"
   },
   "findings": []
 }

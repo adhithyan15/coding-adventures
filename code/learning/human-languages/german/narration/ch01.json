@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:df73d98be014894e",
+  "sourceHash": "fnv1a64:0934805c81a29262",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -226,7 +226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b7781e82f855dca",
+      "sourceHash": "fnv1a64:a82d0eaef7f27a82",
       "notice": null,
       "blocks": [
         {
@@ -253,7 +253,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "German u = oo as in food: goot. see reference."
+              "text": "German u = oo as in food or English boot: goot. The final t stays crisp — never softened. see reference."
             }
           ]
         },
@@ -378,7 +378,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f73d112c1c82581d",
+      "sourceHash": "fnv1a64:6940f8047e65af12",
       "notice": null,
       "blocks": [
         {
@@ -405,7 +405,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "der = dair, die = dee, das = dahss. The German r is soft/guttural; final German s here is a sharp ss."
+              "text": "der = dair, die = dee, das = dahss. The r of der is barely a vowel-like murmur at the back of the mouth, not an English r; die rhymes with English see; the final s of das is a sharp ss."
             }
           ]
         },
@@ -428,7 +428,7 @@
             },
             {
               "kind": "speech",
-              "text": "Unlike Spanish el/la (from Latin ille/illa), German's articles are cousins of English's own \"the\" — Germanic all the way."
+              "text": "Unlike Spanish el/la and French le/la (both from Latin ille/illa), German's articles are cousins of English's own \"the\" — Germanic all the way."
             }
           ]
         },
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbcac780e0277f22",
+      "sourceHash": "fnv1a64:1accbb1fadaa6ce8",
       "notice": null,
       "blocks": [
         {
@@ -557,7 +557,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tag = tahk — long open a; the final g hardens toward k. German nouns are always Capitalized (every noun, not just names)."
+              "text": "Tag = tahk — a long open a, the vowel of English father; Germans harden a final -g to a k (final devoicing), so Tag rhymes with English tock, not with English tag. German nouns are always Capitalized (every noun, not just names)."
             }
           ]
         },
@@ -650,7 +650,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba5164b4c43b07bb",
+      "sourceHash": "fnv1a64:4bf1ed2e679286fe",
       "notice": null,
       "blocks": [
         {
@@ -699,7 +699,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not just gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a fuller phrase meaning \"I wish you a good day.\" In that fuller thought, \"a good day\" is the object of the wish (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten."
+              "text": "Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not just gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a fuller phrase: ich wünsche Ihnen einen guten Tag, \"I wish you a good day.\" In that fuller thought, \"a good day\" is the object of the wish (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten."
             },
             {
               "kind": "speech",
@@ -770,7 +770,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:593e968865a53508",
+      "sourceHash": "fnv1a64:e6dd8773f62e908e",
       "notice": null,
       "blocks": [
         {
@@ -808,7 +808,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Morgen = MOR-gen — the g is a hard g; the German r is soft and guttural."
+              "text": "Morgen = MOR-gun — stress the first syllable; the g is a hard g; the German r is soft and guttural; the unstressed -en sinks to a soft -un."
             }
           ]
         },
@@ -901,7 +901,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cd0b5cccd0c6367",
+      "sourceHash": "fnv1a64:b8ed37d9d6f7878b",
       "notice": null,
       "blocks": [
         {
@@ -1010,7 +1010,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:200c3e27d69a0cda",
+      "sourceHash": "fnv1a64:28b884a7cf001844",
       "notice": null,
       "blocks": [
         {
@@ -1048,7 +1048,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Abend = AH-bent — long open a; the final d hardens to a t sound (German de-voices final consonants)."
+              "text": "Abend = AH-bent — stress the first syllable; a long open a; the final d hardens to a t sound (German de-voices final consonants, exactly as it did to the -g of Tag)."
             }
           ]
         },
@@ -1141,7 +1141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2873d705d4660a78",
+      "sourceHash": "fnv1a64:0b21340dd33e0b92",
       "notice": null,
       "blocks": [
         {
@@ -1250,7 +1250,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25dc252d3716b3d9",
+      "sourceHash": "fnv1a64:16db5c424ebb95ea",
       "notice": null,
       "blocks": [
         {
@@ -1288,7 +1288,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nacht = nahkht — the ch is the guttural loch sound (back of the throat), after the open a. see reference."
+              "text": "Nacht = nahkht — the ch is the guttural loch sound: a scrape at the back of the mouth, after the open a, and not an English ch. It is the same throat-scrape as Spanish j (jamón) and Arabic kh. see reference."
             }
           ]
         },
@@ -1397,7 +1397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c7e010108582b09",
+      "sourceHash": "fnv1a64:ba319d2cabdff185",
       "notice": null,
       "blocks": [
         {
@@ -1524,6 +1524,160 @@
       ]
     },
     {
+      "id": "GE-C01-die-plural",
+      "sequence": 57,
+      "title": "die — one article for every plural",
+      "headword": "die (plural)",
+      "romanization": "die (plural)",
+      "gloss": "the — the one plural article German uses for every gender",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:471bd510a1d79036",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have learned three words for \"the,\" one per gender. Here is the relief: in the plural there is only ever one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die for every plural",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Singular: der Tag, der Morgen, der Abend, die Nacht Plural: die Tage, die Morgen, die Abende, die Nächte."
+            },
+            {
+              "kind": "speech",
+              "text": "Whatever the noun's gender, the plural article is die. der becomes die, das becomes die, die becomes die. Three genders in the singular collapse to one form in the plural — German, like French with les, spends a single article on every plural noun there is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: the ä of Nächte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Many German plurals bend the vowel as well as adding an ending. Nacht becomes Nächte: the open a of nahkht is fronted to ä, the vowel of English bed, so Nächte is NEKH-tuh. That two-dot mark is called an umlaut, and the vowel change it writes down is one of German's regular plural signals."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the four day-parts in the plural",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "singular",
+                "plural",
+                "what changed"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "singular: der Tag. plural: die Tage. what changed: article, plus -e.",
+                "singular: der Morgen. plural: die Morgen. what changed: article only — the noun is unchanged.",
+                "singular: der Abend. plural: die Abende. what changed: article, plus -e.",
+                "singular: die Nacht. plural: die Nächte. what changed: article, plus -e, plus the umlaut a becomes ä."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "German plurals are not built from one rule the way English adds -s. Each noun carries its own plural, which is why a German noun is worth learning as a set of three: der Tag, die Tage. The one thing that never varies is the article."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Tag, die Tage\" — singular, then plural",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Tag, die Tage\" — singular, then plural]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Abend, die Abende\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Abend, die Abende\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Nacht, die Nächte\" — hear the a bend to ä",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Nacht, die Nächte\" — hear the *a* bend to *ä*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Morgen, die Morgen\" — only the article moved",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Morgen, die Morgen\" — only the article moved]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which article do German plurals take? (die — always, whatever the gender.) Which of the four day-parts looks the same in the plural? (Morgen — der Morgen, die Morgen.) What changed in Nächte besides the ending? (The vowel — a took an umlaut and became ä.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GE-C01-practice",
       "sequence": 60,
       "title": "Practice — the German greetings",
@@ -1536,7 +1690,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e71fbad53d81916",
+      "sourceHash": "fnv1a64:f09b3a7f76a9b913",
       "notice": null,
       "blocks": [
         {

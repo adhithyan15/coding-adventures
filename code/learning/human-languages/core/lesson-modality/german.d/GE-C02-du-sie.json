@@ -3,7 +3,7 @@
     "id": "GE-C02-du-sie",
     "language": "german",
     "chapter": 2,
-    "sequence": 80,
+    "sequence": 68,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e740c0e4c476fe4d"
+    "sourceHash": "fnv1a64:562e5ea5512a047d"
   },
   "findings": []
 }

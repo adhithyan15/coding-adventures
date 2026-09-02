@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C01-tag",
+    "id": "GE-C02-mich",
     "language": "german",
-    "chapter": 1,
-    "sequence": 20,
+    "chapter": 2,
+    "sequence": 93,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1accbb1fadaa6ce8"
+    "sourceHash": "fnv1a64:bf8390a9609e6f5d"
   },
   "findings": []
 }

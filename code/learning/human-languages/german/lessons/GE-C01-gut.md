@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: GE-C01-gut
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 10
 chapter: 1
 type: word
@@ -9,23 +11,43 @@ concept_tag: WORD-GOOD
 prerequisites: [GE-C01-hallo]
 sounds: [vowel-u-german]
 roots: [godaz]
-est_minutes: 4
+etymology_hook: gut and English good are the same inherited Germanic word; the High German Consonant Shift turned every d into t
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [GE-SOUND-GUT-01, GE-LEX-GUT-02, GE-ETYMON-GUT-SHIFT-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-SOUND-GUT-01, GE-LEX-GUT-02, GE-ETYMON-GUT-SHIFT-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [GE-C01-hallo]
 ---
 
 # gut — "good," and the sound-law that reshapes German
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] This word starts most German greetings. It's a direct twin of
 English "good" — and the *tiny* difference between them (*good* vs *gut*)
 opens the single most useful decoding rule in the language.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[GE-SOUND-GUT-01]; assesses=[] -->
 
-- German **u** = *oo* as in *food*: *goot*. → [reference](../pronunciation-reference.md)
+- German **u** = *oo* as in *food* or English *boot*: *goot*. The final **t**
+  stays crisp — never softened. → [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[GE-LEX-GUT-02, GE-ETYMON-GUT-SHIFT-03]; assesses=[] -->
 
 **gut** — "good." Root: Proto-Germanic **\*gōdaz** — and English **good**
 comes from the *exact same* word. No Latin in sight; German and English just
@@ -50,6 +72,7 @@ So why *gut* and not *good*? One sound-law:
 > vice-versa) on sight. More rules of the shift as we go.
 
 ## Grammar Lens: German merges "good" and "well"
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GUT-02] -->
 
 English splits *good* (adjective) from *well* (adverb); Spanish splits
 *bueno* from *bien*; French splits *bon* from *bien*. **German does not** —
@@ -58,6 +81,7 @@ geht's gut*. One word covers the whole job. So the Romance *bien/bueno* pair
 collapses back into a single German word.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GUT-02, GE-SOUND-GUT-01, GE-ETYMON-GUT-SHIFT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "gut" — *goot*]
@@ -65,6 +89,7 @@ collapses back into a single German word.
 - [YOU SAY: "Tag" then "day"; "gut" then "good" — same shift, twice]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GUT-02, GE-ETYMON-GUT-SHIFT-03] -->
 
 [PAUSE 3s] English *d* becomes which letter in German? (*t* — *good→gut*,
 *day→Tag*.) Does German split "good" and "well" like English? (No — *gut* is

@@ -13,8 +13,25 @@
   "payoff": {
     "lesson": "GE-C01-practice",
     "kind": "task",
-    "summary": "Complete GE-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in German, recognize the reply, and choose an appropriate response.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The German greetings, built from their pieces — a word for \"good,\" the day-parts, and the three-gender article system. Because German and English are siblings, most words here are direct cousins, reshaped by the High German Consonant Shift; where it helps, Spanish and French stand alongside for contrast. Writing begins with the same familiar cousin: follow one visible Hallo, then copy it once while the model stays in sight — no hidden spelling and no second word are due. GE-C01-practice closes the chapter by running the whole arc, casual to bedtime.",
+    "assesses": [
+      "GE-LEX-HALLO-01",
+      "GE-LEX-GUT-02",
+      "GE-LEX-DER-DIE-DAS-02",
+      "GE-LEX-TAG-02",
+      "GE-LEX-MORGEN-02",
+      "GE-LEX-ABEND-02",
+      "GE-LEX-NACHT-02",
+      "GE-LEX-GUTEN-TAG-01",
+      "GE-LEX-GUTEN-MORGEN-01",
+      "GE-LEX-GUTEN-ABEND-01",
+      "GE-LEX-GUTE-NACHT-01",
+      "GE-GRAMMAR-ADJ-ACC-MASC-02",
+      "GE-GRAMMAR-ADJ-ACC-FEM-02",
+      "GE-ETYMON-GUT-SHIFT-03",
+      "GE-ETYMON-TAG-03",
+      "GE-ETYMON-ARTIKEL-03"
+    ],
+    "note": "Chapter 1 is now generated from schema-v2 lessons, so the payoff is atom-scored rather than authored: GE-C01-practice assesses the sixteen lexical, agreement and sound-law atoms the chapter is about. The per-word pronunciation and etymology atoms it does not drill are deliberately excluded rather than claimed."
   }
 }

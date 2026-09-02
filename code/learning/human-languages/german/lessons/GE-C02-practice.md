@@ -1,25 +1,44 @@
 ---
+schema_version: 2
 id: GE-C02-practice
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 100
 chapter: 2
 type: practice
 headword: (dialogue)
 gloss: Chapter 2 recap — the introduction exchange
 concept_tag: REVIEW
-prerequisites: [GE-C02-ich-heisse, GE-C02-wie-heissen-sie, GE-C02-freut-mich]
+prerequisites: [GE-C02-ich-heisse, GE-C02-wie-heissen-sie, GE-C02-mich, GE-C02-freut-mich]
 sounds: []
 roots: []
-est_minutes: 4
-reviews_of: [GE-C02-ich, GE-C02-heissen, GE-C02-ich-heisse, GE-C02-du-sie, GE-C02-wie, GE-C02-wie-heissen-sie, GE-C02-freut-mich]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-ICH-HEISSE-01, GE-LEX-WIE-HEISSEN-SIE-01, GE-LEX-FREUT-MICH-02, GE-LEX-ICH-02, GE-LEX-MICH-01, GE-LEX-HEISSEN-02, GE-LEX-WIE-02, GE-LEX-DU-SIE-02, GE-ETYMON-ICH-03, GE-ETYMON-MICH-02, GE-ETYMON-HEISSEN-03, GE-ETYMON-WIE-03, GE-ETYMON-FREUEN-FROH-03]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-ICH-HEISSE-01, GE-LEX-WIE-HEISSEN-SIE-01, GE-LEX-FREUT-MICH-02, GE-LEX-ICH-02, GE-LEX-MICH-01, GE-LEX-HEISSEN-02, GE-LEX-WIE-02, GE-LEX-DU-SIE-02, GE-ETYMON-ICH-03, GE-ETYMON-MICH-02, GE-ETYMON-HEISSEN-03, GE-ETYMON-WIE-03, GE-ETYMON-FREUEN-FROH-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C02-ich, GE-C02-heissen, GE-C02-heissen-endungen, GE-C02-ich-heisse, GE-C02-du-sie, GE-C02-wie, GE-C02-wie-heissen-sie, GE-C02-mich, GE-C02-freut-mich]
 ---
 
 # Chapter 2 — the introduction, whole
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Every piece is built. Here's the exchange it was all for.
 
-## The dialogue
+## The exchange
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-HEISSE-01, GE-LEX-WIE-HEISSEN-SIE-01, GE-LEX-FREUT-MICH-02, GE-LEX-ICH-02, GE-LEX-MICH-01, GE-LEX-HEISSEN-02, GE-LEX-WIE-02, GE-LEX-DU-SIE-02, GE-ETYMON-ICH-03, GE-ETYMON-MICH-02, GE-ETYMON-HEISSEN-03, GE-ETYMON-WIE-03, GE-ETYMON-FREUEN-FROH-03] -->
 
 | German | English |
 |---|---|
@@ -41,6 +60,7 @@ called** ("I am called," no "myself"), and it is polite by the **third person**
 (*Sie* = "they").
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-HEISSE-01, GE-LEX-WIE-HEISSEN-SIE-01, GE-LEX-FREUT-MICH-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the whole exchange, both voices]
@@ -48,6 +68,7 @@ called** ("I am called," no "myself"), and it is polite by the **third person**
 - [YOU SAY: ask it back — "wie heißen Sie?"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-HEISSE-01, GE-LEX-WIE-HEISSEN-SIE-01, GE-LEX-FREUT-MICH-02, GE-LEX-DU-SIE-02] -->
 
 [PAUSE 3s] Give your name in German, ask someone else's, and say you're pleased
 to meet them. (*Ich heiße… / Wie heißen Sie? / Freut mich.*) What two German

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 1,
-  "sourceHash": "fnv1a64:0934805c81a29262",
+  "sourceHash": "fnv1a64:f08266c020ceece8",
   "lessonIds": [
     "GE-C01-hallo",
     "GE-W01-hallo-guided-copy",
@@ -18,11 +18,5 @@
     "GE-C01-die-plural",
     "GE-C01-practice"
   ],
-  "voiceLessons": 12,
-  "drivablePrefix": 0,
-  "text": "german/narration/ch01.txt",
-  "json": "german/narration/ch01.json",
-  "textHash": "fnv1a64:247cc643e22f356e",
-  "jsonHash": "fnv1a64:7ed012dff77dbc66",
-  "findings": []
+  "tex": "german/book/chapters/ch01-greetings.tex"
 }
