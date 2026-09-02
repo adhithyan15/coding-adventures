@@ -6,6 +6,21 @@ All notable changes to the `task-app-web` host are documented here.
 
 ### Fixed
 
+- Startup no longer fails to a blank page. The host paints a loading state
+  before the first `await` and replaces it with a failure state carrying the
+  error detail and an in-place **Try again**, instead of leaving `#root` empty
+  with the error only in the console. A 404 on the engine now reports its
+  status rather than reaching `WebAssembly.compile` as an error page and
+  surfacing as a misleading `CompileError`.
+
+  The states live in `src/startup.tsx` — a real seam with tests, rather than
+  glue inside the coverage-exempt `main.tsx`. `vitest.config.ts` had to widen
+  its test glob to collect `.tsx` at all: it matched `*.test.ts` only, so a
+  component test would have been collected by nobody and silently reported as
+  a pass.
+
+### Fixed
+
 - Persistence is no longer silent: the host reports IndexedDB versus volatile
   memory in the app, surfaces background-save failures, and turns rejected saved
   snapshots into a recoverable startup warning. The rejected record is copied to

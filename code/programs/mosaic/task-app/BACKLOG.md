@@ -114,8 +114,13 @@ step, no artifact. The ordered queue below comes from that spec.
 **Tier A — finish the platforms TaskApp already claims.**
 
 1. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
-   replace blank startup with loading and failure states. Highest-severity
-   remaining product defect — every other item assumes the app started.
+   replace blank startup with loading and failure states. **Done for the web
+   host.** Split out while implementing it:
+   [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984) —
+   generated native hosts still surface startup failure only through process and
+   log evidence, which needs a distinct surface in five backends and its own
+   emitted-control coverage. The host-neutral contract both share is
+   `code/specs/task-app-startup-states-v1.md`.
 2. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows.
 3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
@@ -124,6 +129,20 @@ step, no artifact. The ordered queue below comes from that spec.
    roll the changelog forward after each published release and gate against a
    published version still marked Unreleased. `0.1.0` is in exactly that state
    today.
+
+**Discovered while working Tier A, awaiting prioritization.**
+
+- **P1 [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984):**
+  native startup failure states (above). Ranks with Tier A, since it is the same
+  defect on five platforms that ship release artifacts.
+- **P2 [#13982](https://github.com/adhithyan15/coding-adventures/issues/13982):**
+  a `packages.microsoft.com` 403 hard-fails required jobs through 10 unguarded
+  `apt-get update` calls across 5 workflows. Red-flagged a four-file docs PR.
+  Not taken yet: it edits three other products' release lanes, which is wider
+  blast radius than this loop should take unprompted. Workaround is a rerun.
+- **P2 [#13977](https://github.com/adhithyan15/coding-adventures/issues/13977):**
+  signing/notarization/installers, filed when #13522 closed while the README
+  still pointed at it.
 
 **Tier B — close the three unexercised backends.** Filed as work is picked up;
 see the spec for the completion bar each one has to clear.
