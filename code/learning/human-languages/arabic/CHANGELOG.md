@@ -1,5 +1,33 @@
 # Changelog
 
+## Chapter 1's greeting files its pronunciation where its siblings do (HL-C134)
+
+`AR-C01-salam` kept pure pronunciation prose — *"Say it in two easy beats: sa —
+lām … the last sound is a clean m"* — under `## You'll want to know`, which the
+renderer classifies as `input`. Its two siblings in the same chapter,
+`AR-C01-marhaba` and `AR-C01-as-salamu-alaykum`, file identical content under
+`## Sounds you'll need`, and the hand-written book renders all three as
+`sounds`. The heading now matches the other two.
+
+This is groundwork for retiring Arabic's two hand-written chapters, which did
+**not** happen here. `BACKLOG.d/02630-HL-C285-…` records why, with the evidence:
+Chapter 1 contains two complete writing ladders for the same five letters, and
+the hand-written `.tex` shows only one of them. Generating it as it stands would
+teach **ا س ل م ب** twice and write **سلام** twice — the second time in a lesson
+titled *"your first whole written word,"* 126 sequence steps after the first.
+Those six superseded lessons render **nowhere in the book today** — not in a
+chapter, not in the answer key — while the generated narration still scripts
+them for audio, so the listener meets the alphabet twice and the reader never
+meets it at all.
+Which ladder survives is an authorial decision with a large blast radius, so it
+wants its own PR rather than being settled inside a config flip.
+
+The same entry records why the remaining parity gap of nine `sounds` blocks
+should not be closed by typing nine paragraphs: nearly all of them are an
+environment mismatch, where the hand-written chapters boxed letter-shape prose
+as `sounds` and the lessons file the same sentences under `## The letters in
+this word` as `script`. The lessons have it right.
+
 ## Split the four-mark harakat spike (#12256)
 
 - Keep `AR-W06-harakat-and-hamza` focused on the three short-vowel marks and

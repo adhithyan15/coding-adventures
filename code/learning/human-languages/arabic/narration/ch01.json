@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2960b445f5b04148",
+  "sourceHash": "fnv1a64:1e0f4096d87c860e",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:f43bc8f239ca29d9",
+      "sourceHash": "fnv1a64:70b97d4dbb6073be",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -48,8 +48,8 @@
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know — Hear the word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need — Hear the word",
           "segments": [
             {
               "kind": "speech",
