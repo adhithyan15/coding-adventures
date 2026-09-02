@@ -18,6 +18,11 @@
   no real serialiser could have written — a stray bracket, a bare `&`, an unknown
   entity or a control character. Every regex in it scans linearly, because the
   input is a file on disk.
+- Each frame is placed in a **nested SVG viewport**, not a `<g transform>`, so a
+  frame clips to its own panel whatever its contents' transforms say. `transform`
+  has to be on the allowlist, and one `translate` with the right numbers would
+  otherwise drop an allowlisted `<text>` exactly where the citation line goes:
+  containment is geometry, so it gets a geometry answer rather than an assertion.
 - Long letters wrap onto further rows at six frames per row rather than running
   off the page. The citation prints under the strip; a source's full note on
   variation goes into `<desc>` so it travels in the file without burying the art.

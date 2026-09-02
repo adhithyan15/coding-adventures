@@ -56,12 +56,14 @@ describe("the printed filmstrip", () => {
     expect(figure.svg).toContain('d="M0 0L10 10"');
     expect(figure.svg).toContain('<circle cx="5" cy="5" r="3"/>');
 
-    // 150 output units wide for a 200-unit box is a scale of 0.75, and the box
-    // starts at (-10, -100), so the first panel sits at x = 16 (the margin) and
-    // its contents shift by 16 - 0.75 * -10 = 23.5 and 42 - 0.75 * -100 = 117.
-    expect(figure.svg).toContain('transform="translate(23.5 117) scale(0.75)"');
-    // The second panel is one frame plus one gap further right: 23.5 + 160.
-    expect(figure.svg).toContain('transform="translate(183.5 117) scale(0.75)"');
+    // Each frame is a NESTED VIEWPORT, so it clips to its panel whatever its own
+    // transforms say. 150 output units for a 200-unit box makes the panel
+    // 150 x 225; the first sits at the margin and the second one gap further on.
+    expect(figure.svg).toContain(
+      '<svg x="16" y="42" width="150" height="225" ' +
+        'viewBox="-10 -100 200 300" preserveAspectRatio="xMidYMid meet" overflow="hidden">',
+    );
+    expect(figure.svg).toContain('<svg x="176" y="42" width="150" height="225" ');
 
     expect(figure.labels).toEqual([
       "curl around the upper loop",
@@ -83,11 +85,12 @@ describe("the printed filmstrip", () => {
     // Six columns, not nine: 16 + 6*150 + 5*10 + 16.
     expect(width).toBe(982);
     // The seventh frame starts a new row, so its x returns to the first column.
-    const shifts = [...svg.matchAll(/translate\((-?[\d.]+) (-?[\d.]+)\) scale/g)].map(
+    const panels = [...svg.matchAll(/<svg x="(-?[\d.]+)" y="(-?[\d.]+)" width="150"/g)].map(
       (match) => [Number(match[1]), Number(match[2])] as const,
     );
-    expect(shifts[6][0]).toBe(shifts[0][0]);
-    expect(shifts[6][1]).toBeGreaterThan(shifts[0][1]);
+    expect(panels).toHaveLength(9);
+    expect(panels[6][0]).toBe(panels[0][0]);
+    expect(panels[6][1]).toBeGreaterThan(panels[0][1]);
   });
 
   it("prints the citation and says plainly when the order is only attested", () => {
@@ -200,6 +203,39 @@ describe("the fragment allowlist", () => {
     );
     expect(() => assertSafeFilmstripMarkup('</g class="x">', "fixture")).toThrow(
       /malformed closing/,
+    );
+  });
+
+  it("refuses an attribute VALUE no serialiser could have written", () => {
+    // A NUL or a bare `&` inside `d="..."` is not an injection — it fails closed
+    // later, in `rsvg-convert`, with a message that names neither the letter nor
+    // the frame. Naming it here is the whole point.
+    expect(() => assertSafeFilmstripMarkup('<path d="M0 &#48;"/>', "f")).not.toThrow();
+    expect(() => assertSafeFilmstripMarkup('<path d="M0 &0"/>', "f")).toThrow(
+      /'d' has an unknown entity/,
+    );
+    expect(() => assertSafeFilmstripMarkup('<path d="M0\u00000"/>', "f")).toThrow(
+      /'d' has a control character/,
+    );
+    // Paint is the one value shape that can name an external resource.
+    expect(() => assertSafeFilmstripMarkup('<path fill="#e0ddd6" d="M0 0"/>', "f")).not.toThrow();
+    expect(() => assertSafeFilmstripMarkup('<path fill="none" d="M0 0"/>', "f")).not.toThrow();
+    expect(() =>
+      assertSafeFilmstripMarkup('<path fill="url(http://evil.example/x#p)" d="M0 0"/>', "f"),
+    ).toThrow(/'fill' is not a plain colour/);
+    expect(() =>
+      assertSafeFilmstripMarkup('<circle stroke="url(file:///etc/passwd#p)" r="1"/>', "f"),
+    ).toThrow(/'stroke' is not a plain colour/);
+  });
+
+  it("holds XML's own case sensitivity", () => {
+    // `<G></g>` is a mismatch every renderer rejects; catching it here names the
+    // frame instead of failing later in the book's SVG-to-PDF step.
+    expect(() => assertSafeFilmstripMarkup('<G class="x"></g>', "f")).toThrow(
+      /closes 'g' that is not open/,
+    );
+    expect(() => assertSafeFilmstripMarkup("<SCRIPT></SCRIPT>", "f")).toThrow(
+      /disallowed tag 'script'/,
     );
   });
 

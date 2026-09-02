@@ -119,9 +119,11 @@ directly, which is what `ductusview.ts` has always done for the app.
 
 **Consequence for the glyph monopoly.** Unchanged and reinforced: the book's
 frames are the font's own outline plus a cited pen path, never a drawing. The
-book generator re-checks every fragment it embeds against a five-tag allowlist
-before it can reach a committed file, so a tampered ledger fails the build rather
-than shipping markup into a figure.
+book generator re-checks every fragment it embeds — tags, attribute names,
+attribute values, nesting balance and text — before it can reach a committed
+file, and places each frame in a nested SVG viewport so a frame can only ever
+paint inside its own panel. A tampered ledger therefore fails the build, and
+could at worst spoil the one frame it belongs to.
 
 ### Class B — data diagrams (generated)
 

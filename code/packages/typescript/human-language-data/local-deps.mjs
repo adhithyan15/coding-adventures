@@ -51,7 +51,7 @@
 // ---------------------------------------------------------------------------
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -79,9 +79,24 @@ const PACKAGES_ROOT = resolve(HERE, "..");
 /** npm sets this while running a lifecycle script; it stops nested recursion. */
 const GUARD = "HUMAN_LANGUAGE_DATA_LOCAL_DEPS";
 
-/** Is `dir` inside the sibling-packages root (and not the root itself)? */
+/**
+ * Is `dir` really inside the sibling-packages root, and not the root itself?
+ *
+ * REAL paths on both sides, because a lexical comparison is not containment: a
+ * directory that is a symlink to somewhere else passes `relative()` while the
+ * operating system happily resolves it to the target, and `npm ci` would then
+ * run — along with that target's lifecycle scripts — outside the repository.
+ * `realpathSync` throws for a path that does not exist, which is the same
+ * answer: not a sibling package, do not install it.
+ */
 function inPackagesRoot(dir) {
-  const inside = relative(PACKAGES_ROOT, dir);
+  let real;
+  try {
+    real = realpathSync(dir);
+  } catch {
+    return false;
+  }
+  const inside = relative(realpathSync(PACKAGES_ROOT), real);
   return inside !== "" && !inside.startsWith("..") && !isAbsolute(inside);
 }
 

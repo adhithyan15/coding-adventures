@@ -161,7 +161,8 @@ const ALLOWED_ATTRIBUTES = new Set([
 const TAG =
   /<(\/?)([A-Za-z][A-Za-z0-9]*)((?:\s+[A-Za-z_:][A-Za-z0-9_.:-]*="[^"<>]*")*)\s*(\/?)>/g;
 
-const ATTRIBUTE_NAME = /(?:^|\s)([A-Za-z_:][A-Za-z0-9_.:-]*)=/g;
+/** One attribute of a matched tag: its name, and its value without the quotes. */
+const ATTRIBUTE = /(?:^|\s)([A-Za-z_:][A-Za-z0-9_.:-]*)="([^"<>]*)"/g;
 
 /** The five references `escapeXml` produces, plus numeric character references. */
 const ENTITY = /&(?:amp|lt|gt|quot|apos|#\d+|#x[0-9A-Fa-f]+);/g;
@@ -169,6 +170,16 @@ const ENTITY = /&(?:amp|lt|gt|quot|apos|#\d+|#x[0-9A-Fa-f]+);/g;
 /** C0 controls other than tab, newline and carriage return: illegal in XML 1.0. */
 // eslint-disable-next-line no-control-regex
 const CONTROL_CHARACTER = /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/;
+
+/**
+ * `fill` and `stroke` are the only PAINT attributes on the list, and paint is
+ * the one value shape that can name an external resource: `fill="url(http://
+ * evil/x#p)"` is a live reference in a browser-rendered figure. A colour, the
+ * keyword `none`, or a local `url(#id)` is all the ductus renderer has ever
+ * emitted, so that is all this accepts.
+ */
+const PAINT_VALUE = /^(?:none|currentColor|#[0-9A-Fa-f]{3,8}|[a-z]+|url\(#[A-Za-z_][\w.:-]*\))$/;
+const PAINT_ATTRIBUTES = new Set(["fill", "stroke"]);
 
 /**
  * Check the text between two tags.
@@ -195,12 +206,18 @@ function assertSafeText(text: string, where: string): void {
  * Refuse a frame fragment that is anything other than a balanced tree of a
  * handful of drawing tags.
  *
- * BALANCE is not a nicety here. Each fragment is embedded inside a
- * `<g transform="...">` that positions it in its panel, so a fragment starting
- * with `</g>` would close that wrapper and everything after it would escape the
- * panel entirely — allowlisted tags, drawn anywhere on the figure, including a
- * `<text>` that looks exactly like the citation line. Nothing in the tag-by-tag
- * check above notices that, which is why the stack exists.
+ * BALANCE is not a nicety here. Each fragment is placed inside a wrapper that
+ * positions it in its panel, so a fragment starting with `</g>` would close that
+ * wrapper and leave the rest of the fragment as a sibling of the whole figure.
+ * Nothing in the tag-by-tag check above notices that, which is why the stack
+ * exists.
+ *
+ * What the stack does NOT do — and the reason the wrapper is a nested viewport
+ * rather than a `<g transform>` — is stop a perfectly balanced fragment from
+ * PAINTING outside its panel. `transform` is on the allowlist and has to be;
+ * one `translate` with the right numbers puts an allowlisted `<text>` exactly
+ * where the real citation goes. That is a geometry problem, so it has a
+ * geometry answer: see `renderScriptFilmstripFigure`.
  */
 export function assertSafeFilmstripMarkup(markup: string, where: string): void {
   let cursor = 0;
@@ -218,24 +235,39 @@ export function assertSafeFilmstripMarkup(markup: string, where: string): void {
     if (closing && (attributes !== "" || selfClosing)) {
       throw new Error(`${where}: filmstrip markup has a malformed closing '${tag}'`);
     }
-    ATTRIBUTE_NAME.lastIndex = 0;
+    ATTRIBUTE.lastIndex = 0;
     for (
-      let attribute = ATTRIBUTE_NAME.exec(attributes);
+      let attribute = ATTRIBUTE.exec(attributes);
       attribute !== null;
-      attribute = ATTRIBUTE_NAME.exec(attributes)
+      attribute = ATTRIBUTE.exec(attributes)
     ) {
-      if (!ALLOWED_ATTRIBUTES.has(attribute[1])) {
-        throw new Error(
-          `${where}: filmstrip markup uses disallowed attribute '${attribute[1]}'`,
-        );
+      const [, name, value] = attribute;
+      if (!ALLOWED_ATTRIBUTES.has(name)) {
+        throw new Error(`${where}: filmstrip markup uses disallowed attribute '${name}'`);
+      }
+      // A value gets the same treatment as a text node. Without this, a NUL or a
+      // bare `&` inside `d="..."` sails through here and fails much later, in
+      // `rsvg-convert`, with a message that names neither the letter nor the
+      // frame it came from.
+      if (CONTROL_CHARACTER.test(value)) {
+        throw new Error(`${where}: filmstrip attribute '${name}' has a control character`);
+      }
+      if (value.replace(ENTITY, "").includes("&")) {
+        throw new Error(`${where}: filmstrip attribute '${name}' has an unknown entity`);
+      }
+      if (PAINT_ATTRIBUTES.has(name) && !PAINT_VALUE.test(value)) {
+        throw new Error(`${where}: filmstrip attribute '${name}' is not a plain colour`);
       }
     }
     if (closing) {
-      if (open.pop() !== tag) {
+      // The RAW name is compared, not the lowered one. XML is case-sensitive, so
+      // `<G></g>` is a mismatch a renderer would reject; catching it here names
+      // the frame instead of failing later in the book's SVG-to-PDF step.
+      if (open.pop() !== match[2]) {
         throw new Error(`${where}: filmstrip markup closes '${tag}' that is not open`);
       }
     } else if (!selfClosing) {
-      open.push(tag);
+      open.push(match[2]);
     }
     cursor = match.index + match[0].length;
   }
@@ -360,8 +392,9 @@ export function renderScriptFilmstripFigure(
     assertSafeFilmstripMarkup(frame.markup, `${lessonId} frame ${frame.number}`);
   }
 
-  const scale = FRAME_WIDTH / entry.viewBox.width;
-  const frameHeight = round(entry.viewBox.height * scale);
+  // The panel takes its height from the letter's own box, so the nested viewport
+  // below fits exactly and `preserveAspectRatio` never has to letterbox.
+  const frameHeight = round((entry.viewBox.height * FRAME_WIDTH) / entry.viewBox.width);
   const columns = Math.min(entry.frames.length, MAX_COLUMNS);
   const rows = Math.ceil(entry.frames.length / columns);
   const gridWidth = columns * FRAME_WIDTH + (columns - 1) * FRAME_GAP;
@@ -433,10 +466,27 @@ export function renderScriptFilmstripFigure(
       `<rect x="${x}" y="${y}" width="${FRAME_WIDTH}" height="${frameHeight}" rx="6" ` +
         `fill="${PANEL_FILL}" stroke="${PANEL_STROKE}" stroke-width="1"/>`,
     );
-    const shiftX = round(x - scale * entry.viewBox.minX);
-    const shiftY = round(y - scale * entry.viewBox.minY);
+    // A NESTED VIEWPORT, not a `<g transform>`.
+    //
+    // Both would place the frame. Only this one CONTAINS it. A nested `<svg>`
+    // establishes a new viewport that clips to its own bounds, so whatever the
+    // fragment's own transforms say, nothing it draws can appear outside the
+    // panel it belongs to — a tampered ledger can spoil its own frame and
+    // nothing else. With a `<g transform>` the containment would be an
+    // assertion made by the allowlist, and the allowlist has to permit
+    // `transform`, so one `translate` with the right numbers would drop an
+    // allowlisted `<text>` exactly where the citation line goes.
+    //
+    // The viewBox also does the fitting arithmetic, so the scale factor is
+    // stated once, as a ratio of two boxes, instead of being multiplied into a
+    // translate. `preserveAspectRatio` is explicit rather than defaulted: the
+    // panel is sized from this box's own aspect, so `meet` is exact, and saying
+    // so keeps every renderer agreeing about it.
     parts.push(
-      `<g transform="translate(${shiftX} ${shiftY}) scale(${round(scale)})">${frame.markup}</g>`,
+      `<svg x="${x}" y="${y}" width="${FRAME_WIDTH}" height="${frameHeight}" ` +
+        `viewBox="${entry.viewBox.minX} ${entry.viewBox.minY} ${entry.viewBox.width} ` +
+        `${entry.viewBox.height}" preserveAspectRatio="xMidYMid meet" ` +
+        `overflow="hidden">${frame.markup}</svg>`,
     );
   });
 
