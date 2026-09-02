@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C24-verstehen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 720
-chapter: 24
+chapter: 26
 type: word
 headword: verstehen
 gloss: to understand — literally "to stand around a thing", the same picture English built independently in understand
@@ -75,7 +75,7 @@ honest account will claim otherwise.
 
 Either way the important fact holds: **each language welded a prefix onto its
 own inherited verb "to stand" and got a word for comprehension.** Neither
-borrowed the compound. Chapter 23 showed the same move with **grün**: Germanic
+borrowed the compound. The green-and-yellow lesson showed the same move with **grün**: Germanic
 and Latin each built "green" from a verb for "grow," independently. This is
 that coincidence one family closer in.
 

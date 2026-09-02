@@ -43,7 +43,7 @@
 %   "I can add sounds to make new word. Watch me. I say the first sound and
 %    slide a cap: /ī/ [slide a cap]. I add the last sound: /s/ [slide a cap
 %    so it appears left-to-right for students]. I touch and say the
-%    syllables: /ī/, /s/, 'ice' [sweep finger below the caps left-to-right]."
+%    syllables: /ī/, /s/, ‘ice’ [sweep finger below the caps left-to-right]."
 %
 % `trust consensus` — the same tier this page's sibling sections already
 % earned. Deliberately scoped to ONLY this ONE addition the cited page walks
@@ -60,7 +60,7 @@ table phoneme_addition {
 
     row (i, s, ice)
 
-    source "I can add sounds to make new word. Watch me. I say the first sound and slide a cap: /ī/ [slide a cap]. I add the last sound: /s/ [slide a cap so it appears left-to-right for students]. I touch and say the syllables: /ī/, /s/, 'ice' [sweep finger below the caps left-to-right]."
+    source "I can add sounds to make new word. Watch me. I say the first sound and slide a cap: /ī/ [slide a cap]. I add the last sound: /s/ [slide a cap so it appears left-to-right for students]. I touch and say the syllables: /ī/, /s/, ‘ice’ [sweep finger below the caps left-to-right]."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
 }

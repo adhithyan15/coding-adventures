@@ -24,7 +24,7 @@
 %
 %     wave      description                                              quote (verbatim)
 %     --------  -------------------------------------------------------  -----------------------------------------------------------------------------
-%     p_wave     are_the_first_waves_to_arrive_after_an_earthquake         "P-waves, or Primary waves, are the first waves to arrive as soon as there's an earthquake."
+%     p_wave     are_the_first_waves_to_arrive_after_an_earthquake         "P-waves, or Primary waves, are the first waves to arrive as soon as there’s an earthquake."
 %     s_wave     are_the_next_waves_to_arrive_after_p_waves                "S-waves, or Secondary waves, are the next waves to arrive after P-waves."
 %
 % Provenance: quoted verbatim from Cal OES (California Governor's Office of
@@ -66,7 +66,7 @@ table seismic_wave_arrival_order {
     row (p_wave, are_the_first_waves_to_arrive_after_an_earthquake)
     row (s_wave, are_the_next_waves_to_arrive_after_p_waves)
 
-    source "P-waves, or Primary waves, are the first waves to arrive as soon as there's an earthquake."
+    source "P-waves, or Primary waves, are the first waves to arrive as soon as there’s an earthquake."
     locator "https://www.news.caloes.ca.gov/what-are-p-waves-and-s-waves/"
     trust authoritative
 }

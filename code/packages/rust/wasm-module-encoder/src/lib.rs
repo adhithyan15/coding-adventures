@@ -1436,6 +1436,8 @@ mod tests {
             function_indices: vec![Some(0), None],
             is_passive: false,
             is_declarative: false,
+            item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1466,6 +1468,8 @@ mod tests {
             function_indices: vec![None],
             is_passive: false,
             is_declarative: false,
+            item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1493,6 +1497,8 @@ mod tests {
             function_indices: vec![None, Some(7)],
             is_passive: false,
             is_declarative: false,
+            item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         let bytes = encode_element(&element);
         assert_eq!(
@@ -1521,6 +1527,8 @@ mod tests {
             function_indices: vec![Some(3), Some(1), Some(4)],
             is_passive: false,
             is_declarative: false,
+            item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         let bytes = encode_element(&element);
         assert_eq!(

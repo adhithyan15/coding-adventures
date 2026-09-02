@@ -32,7 +32,7 @@
 %
 % Provenance: quoted verbatim from Reading Rockets' "Six Syllable Types"
 % article, which names these seven words as its VCe syllable-pattern
-% examples: "Also known as 'magic e' syllable patterns, VCe syllables
+% examples: "Also known as “magic e” syllable patterns, VCe syllables
 % contain long vowels spelled with a single letter, followed by a single
 % consonant, and a silent e. Examples of VCe syllables are found in wake,
 % whale, while, yoke, yore, rude, and hare." WebFetch-verified TWICE for
@@ -64,7 +64,7 @@ table silent_e_word {
     row (rude, vce_long_vowel)
     row (hare, vce_long_vowel)
 
-    source "Also known as \"magic e\" syllable patterns, VCe syllables contain long vowels spelled with a single letter, followed by a single consonant, and a silent e. Examples of VCe syllables are found in wake, whale, while, yoke, yore, rude, and hare."
+    source "Also known as “magic e” syllable patterns, VCe syllables contain long vowels spelled with a single letter, followed by a single consonant, and a silent e. Examples of VCe syllables are found in wake, whale, while, yoke, yore, rude, and hare."
     locator "https://www.readingrockets.org/topics/spelling-and-word-study/articles/six-syllable-types"
     trust consensus
 }

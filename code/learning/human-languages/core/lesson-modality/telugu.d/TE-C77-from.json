@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C77-from",
+    "language": "telugu",
+    "chapter": 77,
+    "sequence": 2680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:361bfd71f2505a7a"
+  },
+  "findings": []
+}

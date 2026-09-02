@@ -26,7 +26,7 @@
       "note": "No published A1 Telugu word list exists -- no awarding-body list, no Goethe-style Wortliste, no ranked frequency band adopted by anybody. What the proxy supplies is a bounded set of DOMAINS, which is a real improvement on domains chosen by us, and walking it is what showed that this track's lexis is shaped by a village and a household rather than by a city and a transaction: fauna, flora, tools, kitchen, body and kinship are richly covered, while transport, media, leisure, documents and payment have nothing at all. It does not close, because the proxy bounds the domains and never the words inside one, and because the domain list is Spanish-shaped: it has no slot for the five-taste set or for the courtesy abstractions this track teaches."
     }
   },
-  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. Every atom named in every probe was checked mechanically against the atoms the telugu track actually introduces, by re-reading the 301 lesson files; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point. Where the corpus cannot demonstrate a point it gets `probe: null` and a note saying what is missing. ONE HABIT IS NAMED HERE SO IT IS NOT A HIDDEN GENEROSITY: several chapters declare no LEX atom at all and carry only ETYMON, PRAGMATICS or SCRIPT atoms -- C09 (sorry), C10 (the weekdays), C15 (water and rice), C20 (the teens, and the weather), C21, C22 (green and yellow), C23 to C30 (the parts of the day). Probing those points therefore names an etymology or pragmatics atom rather than a lexis one. The word IS introduced by that lesson; the track simply files it under a different atom kind, and every such probe says so in its note. A point is NOT counted as covered when only part of what it names is taught: `manci` without an antonym leaves general evaluation uncovered, `taruvaata` without `mundu` leaves the before/after contrast uncovered, and the six body-part chapters do not buy any credit for physical description. That is deliberate, because a candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or `telugu-specific` -- and is carried for auditability; no code reads it.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. Every atom named in every probe was checked mechanically against the atoms the telugu track actually introduces, by re-reading the 301 lesson files; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point. Where the corpus cannot demonstrate a point it gets `probe: null` and a note saying what is missing. ONE HABIT IS NAMED HERE SO IT IS NOT A HIDDEN GENEROSITY: several chapters declare no LEX atom at all and carry only ETYMON, PRAGMATICS or SCRIPT atoms -- C09 (sorry), C10 (the weekdays), C15 (water and rice), C20 (the teens, and the weather), C21, C22 (green and yellow), C23 to C30 (the parts of the day). Probing those points therefore names an etymology or pragmatics atom rather than a lexis one. The word IS introduced by that lesson; the track simply files it under a different atom kind, and every such probe says so in its note. A point is NOT counted as covered when only part of what it names is taught: `manci` without an antonym leaves general evaluation uncovered, `taruvaata` without `mundu` leaves the before/after contrast uncovered, and the six body-part chapters do not buy any credit for physical description. That is deliberate, because a candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or `telugu-specific` -- and is carried for auditability; no code reads it. CHAPTERS 74-80 UPDATE: a vocabulary tranche of 35 headwords was authored against this file's own uncovered list, and 44 points moved from `probe: null` to a probe. Eight more moved only PARTLY and kept `probe: null` with the note rewritten to say what landed and what did not -- half a pair buys nothing here, which is the rule this file started with and did not bend to make its own number larger. Every word in that tranche is spelled from characters the corpus already used, so no point was closed at the cost of new script debt; TE-A1-DEM-03 records the one point that could not be closed for exactly that reason.",
   "points": [
     {
       "id": "TE-A1-N-01",
@@ -43,9 +43,10 @@
       "id": "TE-A1-N-02",
       "category": "Namavachakamu (the noun)",
       "label": "forms of address: the respectful -garu suffixed to a name",
-      "probe": null,
-      "derivedFrom": "ES:A1-N-01, ES:A1-F5-03",
-      "note": "-gaaru is not introduced anywhere in the track. Telugu respect is carried here entirely by `miiru` (C02) and by the -andi imperative (C08, C32); the suffix a candidate would hear in every shop and office is absent."
+      "probe": [
+        "TE-LEX-C79-WHO-05"
+      ],
+      "derivedFrom": "ES:A1-N-01, ES:A1-F5-03"
     },
     {
       "id": "TE-A1-N-03",
@@ -53,7 +54,7 @@
       "label": "place names: the town, district or state you live in, and the country",
       "probe": null,
       "derivedFrom": "ES:A1-N-01, ES:A1-NE20-02",
-      "note": "Not one settlement, state or country name is introduced. `graamam` ('a village', C55) is the only settlement noun. Hyderabad appears once, inside the C05 grammar lens example, unglossed and carrying no atom."
+      "note": "PARTLY CLOSED, WHICH IS NOT CLOSED. C77 introduces `bhaaratadeesam` (India), the track's first proper place name, along with `pattanam` (a town) and `deesam` (a country). The point also asks for the town, district or state you LIVE IN, and no settlement or state has a name here yet, so the probe stays null. TE-A1-X-10, which asks only that you can say where you are from, IS now covered."
     },
     {
       "id": "TE-A1-N-04",
@@ -99,9 +100,11 @@
       "id": "TE-A1-N-08",
       "category": "Namavachakamu (the noun)",
       "label": "the stem change a noun undergoes before a case ending",
-      "probe": null,
+      "probe": [
+        "TE-GRAMMAR-C79-WHO-01"
+      ],
       "derivedFrom": "telugu-specific",
-      "note": "No Spanish counterpart: Spanish nouns do not inflect for case. The track teaches -ku and -loo but never the shape the noun in front of them takes."
+      "note": "C79's genitive lesson states the stem change directly: the ending never lands on the dictionary form, the noun leans toward it first."
     },
     {
       "id": "TE-A1-N-09",
@@ -136,9 +139,11 @@
       "id": "TE-A1-ADJ-03",
       "category": "Visheshanamu (the adjective)",
       "label": "predicative use: an adjective as the whole comment, with the -di / -vaadu ending it needs",
-      "probe": null,
-      "derivedFrom": "ES:A1-ADJ-01",
-      "note": "C42 teaches the attributive slot only. Nothing shows `ii pustakam mancidi`, so a candidate can modify a noun and cannot yet say that something IS good."
+      "probe": [
+        "TE-LEX-C76-JUDGE-03",
+        "TE-GRAMMAR-C76-JUDGE-03"
+      ],
+      "derivedFrom": "ES:A1-ADJ-01"
     },
     {
       "id": "TE-A1-ADJ-04",
@@ -152,9 +157,10 @@
       "id": "TE-A1-ADJ-05",
       "category": "Visheshanamu (the adjective)",
       "label": "degree: 'very' with an adjective",
-      "probe": null,
-      "derivedFrom": "ES:A1-ADJ-06, ES:A1-SADJ-01",
-      "note": "`chaalaa` is never introduced. `baagaa` (C03) is a manner adverb, 'well', not a degree word, and cannot intensify an adjective."
+      "probe": [
+        "TE-LEX-C76-JUDGE-01"
+      ],
+      "derivedFrom": "ES:A1-ADJ-06, ES:A1-SADJ-01"
     },
     {
       "id": "TE-A1-ADJ-06",
@@ -219,7 +225,7 @@
       "label": "the demonstrative used before its noun (ii pustakam, aa manishi)",
       "probe": null,
       "derivedFrom": "ES:A1-DEM-03",
-      "note": "C41 teaches the pronouns idi / adi. The adnominal ii / aa that a candidate needs to point at a named thing is left implicit in the pattern and never shown."
+      "note": "STILL UNCOVERED, AND THE REASON IS THE SCRIPT. The adnominal pair is `ii` and `aa`, and `ii` is written with the independent vowel letter EE (U+0C08), which occurs ZERO times anywhere in the track. Teaching it would add a glyph the corpus has never shown and raise `script-closure` from zero, so the C74-C80 tranche spelled every one of its 35 words from characters already in use and left this point alone. Closing it needs a script lesson for that letter first, not a vocabulary lesson."
     },
     {
       "id": "TE-A1-DEM-04",
@@ -248,15 +254,17 @@
       "label": "possessives with several possessors: our (inclusive and exclusive), your, their",
       "probe": null,
       "derivedFrom": "ES:A1-POS-02",
-      "note": "Telugu splits 'our' two ways, which is a demand Spanish does not make and the track does not meet either: neither `mana` nor `maa` is introduced."
+      "note": "Two of the three persons. C79 teaches `maa` and `mana`, the exclusive and inclusive `our`, which is the split Spanish does not even make; `mii` for the plural your was already taught at C02. `vaari`, their, is still not introduced, so the probe stays null."
     },
     {
       "id": "TE-A1-POS-03",
       "category": "Sambandham (possession)",
       "label": "the genitive on a full noun, not just a pronoun",
-      "probe": null,
-      "derivedFrom": "ES:A1-SN-01",
-      "note": "Possession is shown only on the first and second person pronouns. Nothing lets a candidate say 'my friend's name'."
+      "probe": [
+        "TE-LEX-C79-WHO-01",
+        "TE-GRAMMAR-C79-WHO-01"
+      ],
+      "derivedFrom": "ES:A1-SN-01"
     },
     {
       "id": "TE-A1-POS-04",
@@ -289,9 +297,11 @@
       "id": "TE-A1-NUM-03",
       "category": "Sankhyalu (numerals and quantity)",
       "label": "cardinals above twenty: the tens and the hundreds, which prices and ages need",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C77-FROM-05"
+      ],
       "derivedFrom": "ES:A1-Q-01, ES:A1-NG2-01",
-      "note": "The track stops at twenty. A candidate cannot state a price, a house number, a year or any age over twenty."
+      "note": "C77 teaches the tens 30 to 90 and `vanda` 100 in one lesson, the way C07 taught one to five."
     },
     {
       "id": "TE-A1-NUM-04",
@@ -324,9 +334,10 @@
       "id": "TE-A1-NUM-07",
       "category": "Sankhyalu (numerals and quantity)",
       "label": "degree words: very, quite, a bit, modifying a quantity",
-      "probe": null,
-      "derivedFrom": "ES:A1-NG2-03",
-      "note": "`koncem` (C58) is a quantity word, not a degree modifier, and no intensifier is taught at all."
+      "probe": [
+        "TE-LEX-C76-JUDGE-01"
+      ],
+      "derivedFrom": "ES:A1-NG2-03"
     },
     {
       "id": "TE-A1-NUM-08",
@@ -388,9 +399,11 @@
       "id": "TE-A1-CASE-04",
       "category": "Vibhakti (case endings and postpositions)",
       "label": "the accusative -ni / -nu, which a human object takes and a thing does not",
-      "probe": null,
-      "derivedFrom": "ES:A1-SV-04",
-      "note": "The exact analogue of Spanish's personal `a`, and the proxy is what surfaced it. Nothing in the track marks an object at all."
+      "probe": [
+        "TE-LEX-C79-WHO-04",
+        "TE-GRAMMAR-C79-WHO-04"
+      ],
+      "derivedFrom": "ES:A1-SV-04"
     },
     {
       "id": "TE-A1-CASE-05",
@@ -403,7 +416,10 @@
       "id": "TE-A1-CASE-06",
       "category": "Vibhakti (case endings and postpositions)",
       "label": "the ablative `nunchi`, 'from', which saying where you come from needs",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C77-FROM-01",
+        "TE-GRAMMAR-C77-FROM-01"
+      ],
       "derivedFrom": "ES:A1-NG3-05, ES:A1-NG3-07"
     },
     {
@@ -622,9 +638,10 @@
       "id": "TE-A1-V-22",
       "category": "Kriya (the verb)",
       "label": "the third person endings: he, she, it, they",
-      "probe": null,
-      "derivedFrom": "ES:A1-V-01",
-      "note": "C05's gender lens mentions -aadu and -undi in passing while making a different point, and no atom teaches them. A candidate can talk about themselves and to one other person, and cannot talk about anybody else."
+      "probe": [
+        "TE-GRAMMAR-C79-WHO-03"
+      ],
+      "derivedFrom": "ES:A1-V-01"
     },
     {
       "id": "TE-A1-NEG-01",
@@ -650,9 +667,10 @@
       "id": "TE-A1-NEG-03",
       "category": "Nishedhamu (negation)",
       "label": "negating an ordinary verb: 'I do not go'",
-      "probe": null,
-      "derivedFrom": "ES:A1-OS-01",
-      "note": "The negative conjugation (vellanu, raanu) is never taught. A candidate can deny existence and identity and cannot deny an action."
+      "probe": [
+        "TE-GRAMMAR-C78-YESNO-03"
+      ],
+      "derivedFrom": "ES:A1-OS-01"
     },
     {
       "id": "TE-A1-Q-01",
@@ -703,24 +721,31 @@
       "id": "TE-A1-Q-06",
       "category": "Prashnalu (asking questions)",
       "label": "eppudu, 'when'",
-      "probe": null,
-      "derivedFrom": "ES:A1-NG4-01",
-      "note": "The one interrogative of the e- series the track never fills in, so no appointment or arrangement can be asked about."
+      "probe": [
+        "TE-LEX-C75-WHEN-03"
+      ],
+      "derivedFrom": "ES:A1-NG4-01"
     },
     {
       "id": "TE-A1-Q-07",
       "category": "Prashnalu (asking questions)",
       "label": "enduku, 'why', and answering it",
-      "probe": null,
-      "derivedFrom": "ES:A1-ADV-08, ES:A1-SUB-06"
+      "probe": [
+        "TE-LEX-C74-LINK-04",
+        "TE-LEX-C74-LINK-05"
+      ],
+      "derivedFrom": "ES:A1-ADV-08, ES:A1-SUB-06",
+      "note": "Both halves: `enduku` asks and `endukantee` answers, which is what the point demands. The e- question row is complete with C75's `eppudu`."
     },
     {
       "id": "TE-A1-Q-08",
       "category": "Prashnalu (asking questions)",
       "label": "the yes-or-no question: the -aa particle, or the same sentence said with a rise",
-      "probe": null,
-      "derivedFrom": "ES:A1-OS-02",
-      "note": "Every question the track teaches is a wh-question. A candidate cannot form the question type that most listening and speaking items turn on."
+      "probe": [
+        "TE-LEX-C78-YESNO-01",
+        "TE-GRAMMAR-C78-YESNO-01"
+      ],
+      "derivedFrom": "ES:A1-OS-02"
     },
     {
       "id": "TE-A1-Q-09",
@@ -758,9 +783,11 @@
       "id": "TE-A1-ADV-03",
       "category": "Kriya visheshanamu (adverbs)",
       "label": "time deictics backward and present: today and yesterday",
-      "probe": null,
-      "derivedFrom": "ES:A1-ADV-02, ES:A1-NG4-02",
-      "note": "Neither `ivaala` / `needu` nor `ninna` is introduced. The track can say tomorrow and the day after and cannot say today, which no A1 paper omits."
+      "probe": [
+        "TE-LEX-C75-WHEN-01",
+        "TE-LEX-C75-WHEN-02"
+      ],
+      "derivedFrom": "ES:A1-ADV-02, ES:A1-NG4-02"
     },
     {
       "id": "TE-A1-ADV-04",
@@ -897,22 +924,27 @@
       "id": "TE-A1-CO-01",
       "category": "Samuchchayamu (joining clauses)",
       "label": "'and': joining two nouns or two clauses",
-      "probe": null,
-      "derivedFrom": "ES:A1-CO-01",
-      "note": "The single most-used connective at A1 and there is no atom for it. `kuudaa` (C64) is 'also', a different job; neither the -uu clitic nor `mariyu` is introduced."
+      "probe": [
+        "TE-LEX-C74-LINK-01"
+      ],
+      "derivedFrom": "ES:A1-CO-01"
     },
     {
       "id": "TE-A1-CO-02",
       "category": "Samuchchayamu (joining clauses)",
       "label": "'or', which offering a choice needs",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C74-LINK-03"
+      ],
       "derivedFrom": "ES:A1-CO-03"
     },
     {
       "id": "TE-A1-CO-03",
       "category": "Samuchchayamu (joining clauses)",
       "label": "'but', which qualifying anything needs",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C74-LINK-02"
+      ],
       "derivedFrom": "ES:A1-CO-04, ES:A1-F2-09"
     },
     {
@@ -951,9 +983,11 @@
       "id": "TE-A1-CO-08",
       "category": "Samuchchayamu (joining clauses)",
       "label": "a finite clause as object: 'I think that...', with the quotative ani",
-      "probe": null,
-      "derivedFrom": "ES:A1-SUB-03, ES:A1-F2-02",
-      "note": "`anukoo` is taught as a verb (C33) with nothing to complement it. The quotative `ani` that every reported thought and speech in Telugu hangs on is absent."
+      "probe": [
+        "TE-LEX-C80-WISH-02",
+        "TE-GRAMMAR-C80-WISH-02"
+      ],
+      "derivedFrom": "ES:A1-SUB-03, ES:A1-F2-02"
     },
     {
       "id": "TE-A1-CO-09",
@@ -973,7 +1007,10 @@
       "id": "TE-A1-CO-11",
       "category": "Samuchchayamu (joining clauses)",
       "label": "a causal clause: because",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C74-LINK-05",
+        "TE-GRAMMAR-C74-LINK-05"
+      ],
       "derivedFrom": "ES:A1-SUB-06"
     },
     {
@@ -988,7 +1025,8 @@
       "category": "Samuchchayamu (joining clauses)",
       "label": "simultaneity: when",
       "probe": null,
-      "derivedFrom": "ES:A1-SUB-08"
+      "derivedFrom": "ES:A1-SUB-08",
+      "note": "C75 teaches `eppudu` as the QUESTION word `when?`. The subordinating `when` this point asks for is a different form (-appudu on the verb, or -tee), and no lesson teaches it."
     },
     {
       "id": "TE-A1-PRON-01",
@@ -1013,15 +1051,20 @@
       "id": "TE-A1-PRON-03",
       "category": "Sarvanamamu (pronouns)",
       "label": "the rest of the paradigm: we (two kinds), he, she, they",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C79-WHO-02",
+        "TE-LEX-C79-WHO-03"
+      ],
       "derivedFrom": "ES:A1-PRON-01",
-      "note": "Two of Telugu's persons are taught and the other four are not. Spanish's A1 column asks for the full paradigm because a candidate has to report what a third person said."
+      "note": "The four missing persons in two lessons: `maa`/`mana` for the two kinds of we, and `atanu`/`aame`/`vaallu` for the third person."
     },
     {
       "id": "TE-A1-PRON-04",
       "category": "Sarvanamamu (pronouns)",
       "label": "the object form of a pronoun: 'see me', 'ask him'",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C79-WHO-04"
+      ],
       "derivedFrom": "ES:A1-PRON-02"
     },
     {
@@ -1147,17 +1190,24 @@
       "id": "TE-A1-T-09",
       "category": "Kaalam mariyu teedi (time and date)",
       "label": "answering with an age in years",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C77-FROM-05",
+        "TE-LEX-C75-WHEN-05",
+        "TE-GRAMMAR-C77-FROM-05"
+      ],
       "derivedFrom": "ES:A1-NG5-04, ES:A1-F1-03",
-      "note": "The question is taught and the answer cannot be given: no word for 'year' is introduced and the cardinals stop at twenty."
+      "note": "The question was already taught at C19 and could not be answered. The tens, `samvatsaram` and the dative age frame together make the answer sayable."
     },
     {
       "id": "TE-A1-T-10",
       "category": "Kaalam mariyu teedi (time and date)",
       "label": "before and after, ordering two events in time",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C75-WHEN-04",
+        "TE-LEX-C64-JOIN-04"
+      ],
       "derivedFrom": "ES:A1-NG4-03",
-      "note": "`taruvaata` ('after that', C64) is taught and `mundu` ('before') is not, so only one half of the contrast is available."
+      "note": "Both ends now: `mundu` from C75 against `taruvaata` from C64."
     },
     {
       "id": "TE-A1-F-01",
@@ -1192,9 +1242,14 @@
       "id": "TE-A1-F-04",
       "category": "Samvyavaharam (communicative functions)",
       "label": "give the standard personal information: name, age, where you are from",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C02-NAA-PERU-01",
+        "TE-GRAMMAR-C77-FROM-05",
+        "TE-LEX-C77-FROM-01",
+        "TE-LEX-C77-FROM-04"
+      ],
       "derivedFrom": "ES:A1-F1-03",
-      "note": "Only the name is producible. Age needs a number over twenty and a word for 'year'; origin needs the ablative and a place name. This is the single item most A1 speaking papers open with."
+      "note": "All three parts now: the name frame from C02, the age frame from C77, and origin from `nunci` with a place that has a name."
     },
     {
       "id": "TE-A1-F-05",
@@ -1225,9 +1280,11 @@
       "id": "TE-A1-F-08",
       "category": "Samvyavaharam (communicative functions)",
       "label": "give an opinion: 'I think that...'",
-      "probe": null,
-      "derivedFrom": "ES:A1-F2-02",
-      "note": "The verb `anukoo` is taught; the clause it would take is not (see TE-A1-CO-08), so the function stays out of reach."
+      "probe": [
+        "TE-LEX-C80-WISH-02",
+        "TE-LEX-C33-ANUKO-01"
+      ],
+      "derivedFrom": "ES:A1-F2-02"
     },
     {
       "id": "TE-A1-F-09",
@@ -1262,9 +1319,10 @@
       "id": "TE-A1-F-12",
       "category": "Samvyavaharam (communicative functions)",
       "label": "express disapproval",
-      "probe": null,
-      "derivedFrom": "ES:A1-F2-05",
-      "note": "No word for 'bad' is introduced anywhere. `ceedu` (C73) is the taste 'bitter', not an evaluation."
+      "probe": [
+        "TE-LEX-C76-JUDGE-02"
+      ],
+      "derivedFrom": "ES:A1-F2-05"
     },
     {
       "id": "TE-A1-F-13",
@@ -1280,9 +1338,11 @@
       "id": "TE-A1-F-14",
       "category": "Samvyavaharam (communicative functions)",
       "label": "express disagreement",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C74-LINK-02"
+      ],
       "derivedFrom": "ES:A1-F2-07",
-      "note": "Disagreeing needs either the negative conjugation or 'but', and the track teaches neither."
+      "note": "`kaanii` supplies the 'but' this needed. The negative conjugation the note used to name as the other route also landed, at TE-GRAMMAR-C78-YESNO-03."
     },
     {
       "id": "TE-A1-F-15",
@@ -1297,7 +1357,9 @@
       "id": "TE-A1-F-16",
       "category": "Samvyavaharam (communicative functions)",
       "label": "offer a counter-argument",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C74-LINK-02"
+      ],
       "derivedFrom": "ES:A1-F2-09"
     },
     {
@@ -1314,9 +1376,10 @@
       "id": "TE-A1-F-18",
       "category": "Samvyavaharam (communicative functions)",
       "label": "ask whether somebody knows something",
-      "probe": null,
-      "derivedFrom": "ES:A1-F2-13",
-      "note": "Needs the yes-or-no question form (TE-A1-Q-08), which is absent."
+      "probe": [
+        "TE-LEX-C78-YESNO-02"
+      ],
+      "derivedFrom": "ES:A1-F2-13"
     },
     {
       "id": "TE-A1-F-19",
@@ -1332,15 +1395,19 @@
       "id": "TE-A1-F-20",
       "category": "Samvyavaharam (communicative functions)",
       "label": "say that you do not know something",
-      "probe": null,
-      "derivedFrom": "ES:A1-F2-15",
-      "note": "`teliyadu` is never introduced, and it cannot be derived from `telusu` by any rule the track teaches -- the negative conjugation is absent (TE-A1-NEG-03). The commonest thing an A1 candidate has to say."
+      "probe": [
+        "TE-LEX-C78-YESNO-03"
+      ],
+      "derivedFrom": "ES:A1-F2-15"
     },
     {
       "id": "TE-A1-F-21",
       "category": "Samvyavaharam (communicative functions)",
       "label": "ask whether somebody can do something",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C80-WISH-03",
+        "TE-GRAMMAR-C78-YESNO-01"
+      ],
       "derivedFrom": "ES:A1-F2-16"
     },
     {
@@ -1367,9 +1434,10 @@
       "id": "TE-A1-F-24",
       "category": "Samvyavaharam (communicative functions)",
       "label": "ask about a preference by offering two alternatives",
-      "probe": null,
-      "derivedFrom": "ES:A1-F3-02",
-      "note": "Needs 'or' (TE-A1-CO-02)."
+      "probe": [
+        "TE-LEX-C74-LINK-03"
+      ],
+      "derivedFrom": "ES:A1-F3-02"
     },
     {
       "id": "TE-A1-F-25",
@@ -1382,9 +1450,10 @@
       "id": "TE-A1-F-26",
       "category": "Samvyavaharam (communicative functions)",
       "label": "say what you want or need",
-      "probe": null,
-      "derivedFrom": "ES:A1-F3-04",
-      "note": "`kaavaali` is not introduced. `vaddu` (C58) is its refusal counterpart and is taught without it, so a candidate can decline a thing and cannot request one."
+      "probe": [
+        "TE-LEX-C80-WISH-01"
+      ],
+      "derivedFrom": "ES:A1-F3-04"
     },
     {
       "id": "TE-A1-F-27",
@@ -1448,22 +1517,28 @@
       "id": "TE-A1-F-33",
       "category": "Samvyavaharam (communicative functions)",
       "label": "grant permission",
-      "probe": null,
-      "derivedFrom": "ES:A1-F4-05",
-      "note": "`anumati` ('permission', C65) is introduced as a noun with no formula around it."
+      "probe": [
+        "TE-LEX-C80-WISH-03"
+      ],
+      "derivedFrom": "ES:A1-F4-05"
     },
     {
       "id": "TE-A1-F-34",
       "category": "Samvyavaharam (communicative functions)",
       "label": "refuse permission",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C80-WISH-03",
+        "TE-LEX-C58-REPLY-04"
+      ],
       "derivedFrom": "ES:A1-F4-06"
     },
     {
       "id": "TE-A1-F-35",
       "category": "Samvyavaharam (communicative functions)",
       "label": "offer something, or invite somebody",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C80-WISH-04"
+      ],
       "derivedFrom": "ES:A1-F4-07"
     },
     {
@@ -1534,9 +1609,10 @@
       "id": "TE-A1-F-42",
       "category": "Samvyavaharam (communicative functions)",
       "label": "address somebody by name or title",
-      "probe": null,
-      "derivedFrom": "ES:A1-F5-03",
-      "note": "Same gap as TE-A1-N-02: no -gaaru, and no title word."
+      "probe": [
+        "TE-LEX-C79-WHO-05"
+      ],
+      "derivedFrom": "ES:A1-F5-03"
     },
     {
       "id": "TE-A1-F-43",
@@ -1554,7 +1630,7 @@
       "label": "introduce a third person: 'this is my friend'",
       "probe": null,
       "derivedFrom": "ES:A1-F5-04",
-      "note": "`sneehitudu` (C35) exists; the frame does not, because it needs the adnominal demonstrative (TE-A1-DEM-03) and a genitive on a full noun (TE-A1-POS-03)."
+      "note": "Still blocked by TE-A1-DEM-03, for the script reason recorded there. The genitive half arrived at C79 (`sneehitudi`); the adnominal half cannot be written without a new glyph."
     },
     {
       "id": "TE-A1-F-45",
@@ -1603,9 +1679,10 @@
       "id": "TE-A1-F-50",
       "category": "Samvyavaharam (communicative functions)",
       "label": "congratulate, or wish somebody well on an occasion",
-      "probe": null,
-      "derivedFrom": "ES:A1-F5-10",
-      "note": "`subhaakaankshalu` is never introduced, although the track spends six chapters on the `subha-` greetings it is built from."
+      "probe": [
+        "TE-LEX-C80-WISH-05"
+      ],
+      "derivedFrom": "ES:A1-F5-10"
     },
     {
       "id": "TE-A1-F-51",
@@ -1642,9 +1719,10 @@
       "id": "TE-A1-F-54",
       "category": "Samvyavaharam (communicative functions)",
       "label": "ask for a person: 'is X there?'",
-      "probe": null,
-      "derivedFrom": "ES:A1-F6-03",
-      "note": "`evaru` and `ekkada` are taught as bare question words with no frame around them, and the yes-or-no question this needs is absent."
+      "probe": [
+        "TE-LEX-C78-YESNO-05"
+      ],
+      "derivedFrom": "ES:A1-F6-03"
     },
     {
       "id": "TE-A1-F-55",
@@ -1660,9 +1738,10 @@
       "id": "TE-A1-F-56",
       "category": "Samvyavaharam (communicative functions)",
       "label": "say you did not understand, or ask for a repeat",
-      "probe": null,
-      "derivedFrom": "ES:A1-F6-04",
-      "note": "The positive `arthamaindi` is taught (C33) and its negative is not, for the same reason as TE-A1-F-20."
+      "probe": [
+        "TE-LEX-C78-YESNO-04"
+      ],
+      "derivedFrom": "ES:A1-F6-04"
     },
     {
       "id": "TE-A1-F-57",
@@ -2005,7 +2084,7 @@
       "label": "the intonation that separates a statement from a question",
       "probe": null,
       "derivedFrom": "telugu-specific",
-      "note": "Doubly unreachable: no phonology atom, and the yes-or-no question this would apply to is not taught either (TE-A1-Q-08)."
+      "note": "Half of the obstacle is gone: the yes-or-no question the intonation would apply to is now taught (TE-A1-Q-08, C78). The point stays unmapped for the reason the whole category does -- the track declares no phonology atom anywhere, so no probe can reach the intonation itself."
     },
     {
       "id": "TE-A1-X-01",
@@ -2082,13 +2161,17 @@
       "category": "Padasampada (core lexis)",
       "label": "order: first, next, last",
       "probe": null,
-      "derivedFrom": "ES:A1-NG3-06"
+      "derivedFrom": "ES:A1-NG3-06",
+      "note": "C75's `mundu` gives `before` and C64's `taruvaata` gives `after`, which closed TE-A1-T-10. Ordinal position -- first, next, last -- still needs the ordinals of TE-A1-NUM-04, which are absent."
     },
     {
       "id": "TE-A1-X-10",
       "category": "Padasampada (core lexis)",
       "label": "origin: saying which place you are from",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C77-FROM-01",
+        "TE-LEX-C77-FROM-04"
+      ],
       "derivedFrom": "ES:A1-NG3-07"
     },
     {
@@ -2144,9 +2227,12 @@
       "id": "TE-A1-X-16",
       "category": "Padasampada (core lexis)",
       "label": "general evaluation: good, bad, so-so",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C42-ADJ-03",
+        "TE-LEX-C76-JUDGE-02"
+      ],
       "derivedFrom": "ES:A1-NG6-01",
-      "note": "Half the pair. `manci` is taught and no antonym is, so a candidate can praise and cannot criticise."
+      "note": "`ceddaa` closes the pair `manci` opened in C42. 'So-so' is still not a single word, but the good/bad axis the point turns on is now sayable at both ends."
     },
     {
       "id": "TE-A1-X-17",
@@ -2206,7 +2292,10 @@
       "id": "TE-A1-X-23",
       "category": "Padasampada (core lexis)",
       "label": "ease and difficulty",
-      "probe": null,
+      "probe": [
+        "TE-LEX-C76-JUDGE-04",
+        "TE-LEX-C76-JUDGE-05"
+      ],
       "derivedFrom": "ES:A1-NG6-10"
     },
     {
@@ -2921,7 +3010,7 @@
       "label": "geography: the country, the town, the city, the capital",
       "probe": null,
       "derivedFrom": "ES:A1-NE20-02",
-      "note": "The same gap as TE-A1-N-03, and the reason a candidate cannot say where they live or where they are from."
+      "note": "Two of the four named. C77 adds `pattanam` (town) and `deesam` (country) to C55's `graamam` (village); `nagaram` (city) and `raajadhaani` (capital) are still absent, and a point needs all of what it names."
     },
     {
       "id": "TE-A1-X-103",

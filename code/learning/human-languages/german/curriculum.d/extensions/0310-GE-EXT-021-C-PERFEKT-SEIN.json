@@ -1,0 +1,16 @@
+{
+  "id": "GE-EXT-021-C-PERFEKT-SEIN",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can choose the German helper verb a perfect needs, and build one for coming, travelling, becoming and staying.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C16-perfekt-sein",
+    "GE-C16-kommen",
+    "GE-C16-fahren",
+    "GE-C16-werden",
+    "GE-C16-bleiben",
+    "GE-C16-perfekt-sein-ausnahmen"
+  ]
+}

@@ -59,10 +59,39 @@
 %   square → equal_sides_at_right_angles
 %     https://mathworld.wolfram.com/Square.html
 %     (Wolfram MathWorld — Weisstein, Eric W.)
-%     "The term 'square' can be used to mean either a square number or a
-%      geometric figure consisting of a convex quadrilateral with sides of equal
-%      length that are positioned at right angles to each other as illustrated
-%      above."
+%     "a geometric figure consisting of a convex quadrilateral with sides of
+%      equal length that are positioned at right angles to each other as
+%      illustrated above. In other words, a square is a regular polygon with
+%      four sides."
+%
+%     WHY THIS QUOTE STARTS MID-SENTENCE. The page's sentence opens: The term
+%     "square" can be used to mean either a square number ("x^2 is the square of
+%     x") or a geometric figure... In the page BODY the two FORMULAS in that
+%     parenthetical are <img class="inlineformula" alt="x^2"> and alt="x"
+%     images -- the surrounding punctuation and connecting words are ordinary
+%     text. They are the same inline-formula images this header already
+%     describes for the rectangle row below. A body span crossing them picks up
+%     whatever an extractor invents for the alt text.
+%
+%     THE FULL SENTENCE *IS* AVAILABLE AS PLAINTEXT, in the page's <meta>
+%     description tags, parenthetical included. It is quoted from the body here
+%     rather than from metadata, because metadata is not what the page displays
+%     -- but that is a choice, not a necessity, and an earlier version of this
+%     note wrongly claimed the full sentence could not be quoted at all.
+%
+%     The value shipped here used to elide the parenthetical silently while
+%     keeping the opening words, so it read as a whole sentence and was not one:
+%     in that form it appeared on no page.
+%
+%     THE SECOND SENTENCE IS PART OF THE QUOTE ON PURPOSE. Without it the
+%     citation says only "a geometric figure...", never naming a square -- and
+%     this same header insists a citation must not drop its subject. "In other
+%     words, a square is a regular polygon with four sides" restores it.
+%
+%     SIDE EFFECT WORTH KNOWING: this span contains no quote characters, so a
+%     screen that only inspects values carrying a quote character cannot see it.
+%     The e2e pin is what checks it. A screen keyed on a character cannot vouch
+%     for values that carry none.
 %
 %   rectangle → four_right_angles
 %     https://mathworld.wolfram.com/Rectangle.html
@@ -113,7 +142,7 @@ table quadrilateral_property {
     row (parallelogram, opposite_sides_parallel)
     row (trapezoid, two_sides_parallel)
 
-    source "The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above."
+    source "a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above. In other words, a square is a regular polygon with four sides."
     locator "https://mathworld.wolfram.com/Square.html"
     trust authoritative
     cites "A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles." locator "https://mathworld.wolfram.com/Rectangle.html"

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:a90e8ebc79f63dba",
+  "lessonIds": [
+    "KA-S136-vowel-sign-uu",
+    "KA-C69-is-it",
+    "KA-C69-isnt-it",
+    "KA-C69-why",
+    "KA-S137-letter-la"
+  ],
+  "tex": "kannada/book/chapters/ch69-asking-and-asking-why.tex"
+}

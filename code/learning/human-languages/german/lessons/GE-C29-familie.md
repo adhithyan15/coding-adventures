@@ -3,10 +3,10 @@ schema_version: 2
 id: GE-C29-familie
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 920
-chapter: 29
+chapter: 31
 type: word
 headword: die Familie
-gloss: family — the whole group Chapter 10's Eltern and Geschwister already named the members of, and this chapter's one Latin loan beside two native words
+gloss: family — the whole group the Eltern and Geschwister already named the members of, and this chapter's one Latin loan beside two native words
 concept_tag: GE-FAMILY-WHOLE
 prerequisites: [GE-C29-freundin, GE-C10-eltern, GE-C10-geschwister]
 sounds: [familie-three-syllables]
@@ -47,7 +47,7 @@ completely different history.
 
 > **Das ist die Familie.** — "This/That is the family."
 
-Chapter 10 already gave you the members: **Vater, Mutter, Bruder, Schwester** —
+You already have the members: **Vater, Mutter, Bruder, Schwester** —
 and the collective **Geschwister**, "siblings." *Familie* is the word that
 gathers all of them into one group.
 
@@ -70,9 +70,9 @@ so close to identical without one having been copied from the other.
 
 So this small chapter runs the same shape twice: **Freund** and **Freundin**
 are native, built from a Germanic verb meaning "to love"; **Familie** is
-borrowed, from a Roman word that first meant "household staff." Chapter 11 set
+borrowed, from a Roman word that first meant "household staff." The food lesson set
 up exactly this pattern with **Wasser** native beside **Wein** borrowed, and
-Chapter 28 just ran it a third time with **Milch** beside **Kaffee** and
+the drinks just ran it a third time with **Milch** beside **Kaffee** and
 **Tee**.
 
 ## Guided Practice

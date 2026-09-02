@@ -1,0 +1,23 @@
+{
+  "chapter": 67,
+  "title": "And, Or, But",
+  "label": "ch:ka-and-or-but",
+  "canDo": "I can join two Kannada ideas with and, or and but, and I can add myself to what somebody else said.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "KA-C67-and-too",
+    "kind": "production",
+    "summary": "Complete KA-C67-and-too and join two things four different ways.",
+    "assesses": [
+      "KA-LEX-C67-LINK-01",
+      "KA-SCRIPT-RECOG-134",
+      "KA-LEX-C67-LINK-02",
+      "KA-LEX-C67-LINK-03",
+      "KA-GRAMMAR-C67-LINK-04",
+      "KA-LEX-C67-LINK-05",
+      "KA-GRAMMAR-C67-LINK-06"
+    ]
+  }
+}

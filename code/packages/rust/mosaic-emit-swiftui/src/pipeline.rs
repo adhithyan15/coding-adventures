@@ -94,7 +94,7 @@
 //!
 //! This PR ships option (a). Option (b) is a future enhancement.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
@@ -486,6 +486,17 @@ fn host_value_for_slot(
             ListInnerType::Bool => {
                 format!("MosaicHostValue.boolList({props_expr}, \"{key}\", fallback: {fallback})")
             }
+            // A list of rows, which is how every table slot is modelled.
+            // Without this it fell through to `fallback` -- a CONSTANT -- so
+            // the shell showed an empty table whatever the host sent.
+            ListInnerType::List(inner)
+                if matches!(
+                    inner.as_ref(),
+                    ListInnerType::Text | ListInnerType::Image | ListInnerType::Color
+                ) =>
+            {
+                format!("MosaicHostValue.stringListList({props_expr}, \"{key}\", fallback: {fallback})")
+            }
             ListInnerType::Node | ListInnerType::Component(_) | ListInnerType::List(_) => fallback,
         },
         SlotType::Node | SlotType::Component(_) => {
@@ -577,7 +588,7 @@ fn runtime_required_host_value_for_slot(
 
 fn build_mosaic_host_state(component_name: &str) -> String {
     let state = format!(
-        "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    bridge?.setPropsChangedHandler? {{ [weak self] in\n      DispatchQueue.main.async {{\n        self?.refreshProps()\n      }}\n    }}\n    refreshProps()\n  }}\n\n  func node(named name: String) -> AnyView {{\n    guard let object = bridge?.node?(named: name as NSString) else {{\n      return AnyView(EmptyView())\n    }}\n#if os(macOS)\n    guard let view = object as? NSView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#elseif os(iOS)\n    guard let view = object as? UIView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#else\n    return AnyView(EmptyView())\n#endif\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func refreshProps() {{\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n  @objc optional func node(named name: NSString) -> NSObject?\n  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n}}\n\n#if os(macOS)\nprivate struct MosaicHostPlatformView: NSViewRepresentable {{\n  let view: NSView\n  func makeNSView(context: Context) -> NSView {{ view }}\n  func updateNSView(_ nsView: NSView, context: Context) {{}}\n}}\n#elseif os(iOS)\nprivate struct MosaicHostPlatformView: UIViewRepresentable {{\n  let view: UIView\n  func makeUIView(context: Context) -> UIView {{ view }}\n  func updateUIView(_ uiView: UIView, context: Context) {{}}\n}}\n#endif\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
+        "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    bridge?.setPropsChangedHandler? {{ [weak self] in\n      DispatchQueue.main.async {{\n        self?.refreshProps()\n      }}\n    }}\n    refreshProps()\n  }}\n\n  func node(named name: String) -> AnyView {{\n    guard let object = bridge?.node?(named: name as NSString) else {{\n      return AnyView(EmptyView())\n    }}\n#if os(macOS)\n    guard let view = object as? NSView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#elseif os(iOS)\n    guard let view = object as? UIView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#else\n    return AnyView(EmptyView())\n#endif\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func refreshProps() {{\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n  @objc optional func node(named name: NSString) -> NSObject?\n  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n}}\n\n#if os(macOS)\nprivate struct MosaicHostPlatformView: NSViewRepresentable {{\n  let view: NSView\n  func makeNSView(context: Context) -> NSView {{ view }}\n  func updateNSView(_ nsView: NSView, context: Context) {{}}\n}}\n#elseif os(iOS)\nprivate struct MosaicHostPlatformView: UIViewRepresentable {{\n  let view: UIView\n  func makeUIView(context: Context) -> UIView {{ view }}\n  func updateUIView(_ uiView: UIView, context: Context) {{}}\n}}\n#endif\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func stringListList(_ props: [String: Any], _ key: String, fallback: [[String]]) -> [[String]] {{\n    if let value = props[key] as? [[String]] {{ return value }}\n    if let rows = props[key] as? [Any] {{\n      return rows.map {{ row in\n        if let row = row as? [String] {{ return row }}\n        if let row = row as? [Any] {{ return row.map {{ String(describing: $0) }} }}\n        return []\n      }}\n    }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
     );
     state
         .replace(
@@ -3046,7 +3057,8 @@ fn emit_view_tree(
     injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let uses_automatic_hover = automatic_hover_style(node, part_styles).is_some();
-    let auto_focus = node.tag == "HostInput" && find_keyword_prop(node, "auto-focus") == Some("true");
+    let auto_focus =
+        node.tag == "HostInput" && find_keyword_prop(node, "auto-focus") == Some("true");
     let uses_automatic_focus = automatic_focus_style(node, part_styles).is_some() || auto_focus;
     let uses_automatic_press = automatic_press_style(node, part_styles).is_some();
     let automatic_wrapper_count = usize::from(uses_automatic_hover)
@@ -3708,6 +3720,241 @@ fn emit_table_cell(
     )
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// #13007 — radio-group mutual exclusion
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// A `HostRadio` alone lowers to a `Toggle`, and N independent Toggles have no
+// mutual exclusion: nothing stops two being on at once except the host sending
+// back consistent state. Qt has `ButtonGroup`, Compose `selectableGroup`,
+// Flutter a shared group value. SwiftUI has no container that groups Toggles
+// *after the fact*, which is why this was previously reported as an
+// unconditional degradation.
+//
+// It does have `Picker`, whose single selection is exclusive by construction.
+// The catch is that a Picker replaces the whole run of radios rather than
+// wrapping each one, so this is a sibling-level transform rather than a
+// per-node one — and it is only sound when the members really are
+// interchangeable options of one control.
+//
+// ## No local state
+//
+// The tempting implementation gives the Picker an `@State` selection. Do not:
+// that state is a second source of truth which drifts from the host's the
+// moment the host changes the selection itself. The binding here derives its
+// value from the members' own `checked:` slots, exactly as the Toggles did,
+// so there is still one source of truth and the Picker is pure projection.
+
+/// One radio in a run that will become a `Picker`.
+struct RadioMember {
+    /// The literal `value:`, used as the SwiftUI `.tag(…)`.
+    value: String,
+    /// Swift expression for `checked:` — a slot identifier, or `false`.
+    checked: String,
+    /// Swift expression for `label:` — a quoted literal or a slot identifier.
+    label: String,
+}
+
+/// A run of contiguous `HostRadio` siblings that can be lowered to one Picker.
+struct RadioGroupPlan {
+    group: String,
+    /// The shared `onSelect` emit, if any. Without one the Picker is read-only.
+    emit: Option<String>,
+    members: Vec<RadioMember>,
+}
+
+/// Is this a run of radios that a single `Picker` can faithfully replace?
+///
+/// Deliberately strict. Every condition below is one where a Picker would
+/// change behaviour rather than preserve it, and a wrong "yes" here produces a
+/// control that looks right and silently drops something:
+///
+/// * **Same literal group.** A `slot:`-bound group is not knowable at compile
+///   time, and two different groups are two different controls.
+/// * **Distinct literal values.** The value is the Picker's tag; duplicates
+///   would make two options indistinguishable to the selection binding.
+/// * **One shared `onSelect`.** A Picker reports one selection change, so
+///   members dispatching different events cannot be merged without losing one.
+/// * **No `disabled:`.** Picker disables as a whole; per-member disabling has
+///   no equivalent, and quietly ignoring it would be the exact class of bug
+///   this degradation exists to report.
+///
+/// Anything that fails falls back to the per-node `Toggle` emission and keeps
+/// reporting `property.radio-group-ignored`, which stays honest.
+fn plan_radio_group(children: &[LayoutNode], start: usize) -> Option<(usize, RadioGroupPlan)> {
+    let first = children.get(start)?;
+    if first.tag != "HostRadio" {
+        return None;
+    }
+    let group = find_string_prop(first, "group")?.to_string();
+
+    let mut end = start;
+    while end < children.len()
+        && children[end].tag == "HostRadio"
+        && find_string_prop(&children[end], "group") == Some(group.as_str())
+    {
+        end += 1;
+    }
+    let run = &children[start..end];
+    if run.len() < 2 {
+        return None;
+    }
+
+    let mut members = Vec::with_capacity(run.len());
+    let mut emit: Option<String> = None;
+    for (index, node) in run.iter().enumerate() {
+        // A member with an explicit `disabled:` cannot be represented.
+        if node.props.iter().any(|p| p.name == "disabled")
+            && !node_prop_is_literal_false(node, "disabled")
+        {
+            return None;
+        }
+
+        let value = find_string_prop(node, "value")?.to_string();
+        if members.iter().any(|m: &RadioMember| m.value == value) {
+            return None;
+        }
+
+        let this_emit = find_emit_ref_prop(node, "onSelect").map(str::to_string);
+        if index == 0 {
+            emit = this_emit;
+        } else if this_emit != emit {
+            return None;
+        }
+
+        let checked = match find_slot_ref_prop(node, "checked") {
+            Some(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).ok()?;
+                camel
+            }
+            None => "false".to_string(),
+        };
+
+        let label = if let Some(text) = find_string_prop(node, "label") {
+            format!("\"{}\"", escape_swift_string(text))
+        } else if let Some(slot) = find_slot_ref_prop(node, "label") {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).ok()?;
+            camel
+        } else {
+            "\"\"".to_string()
+        };
+
+        members.push(RadioMember {
+            value,
+            checked,
+            label,
+        });
+    }
+
+    Some((
+        end,
+        RadioGroupPlan {
+            group,
+            emit,
+            members,
+        },
+    ))
+}
+
+fn node_prop_is_literal_false(node: &LayoutNode, name: &str) -> bool {
+    node.props
+        .iter()
+        .any(|p| p.name == name && matches!(&p.value, LayoutPropValue::Keyword(v) if v == "false"))
+}
+
+/// The literal `group:` values this backend really does lower to a `Picker`.
+///
+/// The degradation reporter calls this, so what is *claimed* and what is
+/// *emitted* come from the same predicate and cannot drift apart — the failure
+/// mode being a report that says a group is handled natively when the emitted
+/// source still contains two independent Toggles.
+pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> {
+    let mut groups = HashSet::new();
+    collect_native_radio_groups(root, &mut groups);
+    groups
+}
+
+fn collect_native_radio_groups(node: &LayoutNode, groups: &mut HashSet<String>) {
+    let mut index = 0;
+    while index < node.children.len() {
+        if let Some((end, plan)) = plan_radio_group(&node.children, index) {
+            groups.insert(plan.group);
+            index = end;
+            continue;
+        }
+        index += 1;
+    }
+    for child in &node.children {
+        collect_native_radio_groups(child, groups);
+    }
+}
+
+/// Lower a qualifying run of radios to one `Picker`.
+fn emit_radio_group_picker(
+    plan: &RadioGroupPlan,
+    indent: usize,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 4);
+    let mut out = String::new();
+
+    writeln!(
+        out,
+        "{pad}// radio group: {}",
+        escape_swift_string(&plan.group).replace(['\r', '\n'], " ")
+    )
+    .unwrap();
+
+    // The selection reads the members' own `checked:` slots, so the host stays
+    // the single source of truth. "" means nothing is selected, which Picker
+    // renders as no active option rather than defaulting to the first.
+    let mut getter = String::from("\"\"");
+    for member in plan.members.iter().rev() {
+        getter = format!(
+            "{} ? \"{}\" : {}",
+            member.checked,
+            escape_swift_string(&member.value),
+            getter
+        );
+    }
+
+    let selection = match &plan.emit {
+        Some(emit_name) => {
+            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            format!(
+                "Binding(get: {{ {getter} }}, set: {{ newValue in dispatch(.{case_name}(value: newValue)) }})"
+            )
+        }
+        // No `onSelect:` — the same read-only shape the Toggle path uses.
+        None => format!(".constant({getter})"),
+    };
+
+    writeln!(out, "{pad}Picker(\"\", selection: {selection}) {{").unwrap();
+    for member in &plan.members {
+        writeln!(
+            out,
+            "{inner}Text({}).tag(\"{}\")",
+            member.label,
+            escape_swift_string(&member.value)
+        )
+        .unwrap();
+    }
+    writeln!(out, "{pad}}}").unwrap();
+    // Without this the Picker reserves space for the empty title label.
+    writeln!(out, "{pad}.labelsHidden()").unwrap();
+    // Exclusivity is inherent to Picker on every platform; the radio *look*
+    // is macOS-only, so ask for it only where it exists rather than failing
+    // to compile on iOS.
+    writeln!(out, "{pad}#if os(macOS)").unwrap();
+    writeln!(out, "{pad}.pickerStyle(.radioGroup)").unwrap();
+    writeln!(out, "{pad}#endif").unwrap();
+
+    Ok(out)
+}
+
 /// Walk a flat list of sibling layout nodes at `indent`, with two
 /// pieces of sibling-aware behaviour:
 ///
@@ -3754,6 +4001,16 @@ fn emit_children(
             )?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
+        }
+        if child.tag == "HostRadio" {
+            // Sibling-level: a Picker replaces the whole run, so this has to
+            // happen where the siblings are visible. Non-qualifying radios
+            // fall through to the per-node Toggle below.
+            if let Some((end, plan)) = plan_radio_group(children, i) {
+                out.push_str(&emit_radio_group_picker(&plan, indent)?);
+                i = end;
+                continue;
+            }
         }
         if child.tag == "Else" {
             // Reached only when an `Else` did NOT immediately follow an
@@ -9797,7 +10054,10 @@ mod tests {
     fn host_checkbox_indeterminate_true_emits_mixed_button() {
         let checkbox = leaf(
             "HostCheckbox",
-            vec![prop_slot_ref("checked", "done"), prop_keyword("indeterminate", "true")],
+            vec![
+                prop_slot_ref("checked", "done"),
+                prop_keyword("indeterminate", "true"),
+            ],
         );
         let layout = layout_with("X", container_node("Box", vec![checkbox]));
         let out = from_pipeline(
@@ -9807,7 +10067,10 @@ mod tests {
         )
         .unwrap()
         .output;
-        assert!(!out.contains("Toggle("), "expected no Toggle(...), got:\n{out}");
+        assert!(
+            !out.contains("Toggle("),
+            "expected no Toggle(...), got:\n{out}"
+        );
         assert!(
             out.contains("Image(systemName: true ? \"minus.square.fill\" : (done ? \"checkmark.square.fill\" : \"square\"))"),
             "expected the mixed-state Image(systemName:), got:\n{out}"
@@ -9861,7 +10124,10 @@ mod tests {
     fn host_checkbox_indeterminate_false_keeps_plain_toggle() {
         let checkbox = leaf(
             "HostCheckbox",
-            vec![prop_slot_ref("checked", "done"), prop_keyword("indeterminate", "false")],
+            vec![
+                prop_slot_ref("checked", "done"),
+                prop_keyword("indeterminate", "false"),
+            ],
         );
         let layout = layout_with("X", container_node("Box", vec![checkbox]));
         let out = from_pipeline(
@@ -9877,10 +10143,205 @@ mod tests {
         );
     }
 
+    // ── #13007 — radio-group mutual exclusion via Picker ─────────────────────
+
+    /// Two radios sharing a literal group become ONE `Picker`, whose single
+    /// selection is exclusive by construction. Two independent `Toggle`s are
+    /// not: nothing stops both being on except the host echoing back
+    /// consistent state.
+    #[test]
+    fn sibling_radios_sharing_a_literal_group_become_one_picker() {
+        let radios = vec![
+            leaf(
+                "HostRadio",
+                vec![
+                    prop_slot_ref("checked", "suspend-on"),
+                    prop_string("value", "suspend"),
+                    prop_string("group", "leech"),
+                    prop_emit_ref("onSelect", "onPick"),
+                ],
+            ),
+            leaf(
+                "HostRadio",
+                vec![
+                    prop_slot_ref("checked", "tag-on"),
+                    prop_string("value", "tag-only"),
+                    prop_string("group", "leech"),
+                    prop_emit_ref("onSelect", "onPick"),
+                ],
+            ),
+        ];
+        let layout = layout_with("X", container_node("Row", radios));
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![
+                    slot("suspend-on", SlotType::Bool, true),
+                    slot("tag-on", SlotType::Bool, true),
+                ],
+                vec![emit("onPick", vec![param("value", EmitPayloadType::Text)])],
+            ),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            out.contains("Picker(\"\", selection:"),
+            "expected a Picker, got:\n{out}"
+        );
+        assert!(
+            out.contains(".tag(\"suspend\")") && out.contains(".tag(\"tag-only\")"),
+            "both options should be tagged by their value, got:\n{out}"
+        );
+        // The selection is DERIVED from the members' own checked slots. A
+        // local @State would be a second source of truth that drifts the
+        // moment the host changes the selection itself.
+        assert!(
+            out.contains("suspendOn ? \"suspend\" : tagOn ? \"tag-only\" : \"\""),
+            "selection should project the bound slots, got:\n{out}"
+        );
+        assert!(
+            !out.contains("@State"),
+            "the Picker must not introduce local state, got:\n{out}"
+        );
+        // The radio *appearance* is macOS-only; exclusivity is not, so the
+        // style is guarded rather than the whole control.
+        assert!(
+            out.contains("#if os(macOS)") && out.contains(".pickerStyle(.radioGroup)"),
+            "expected a guarded radioGroup style, got:\n{out}"
+        );
+        assert!(
+            !out.contains("Toggle("),
+            "the radios should have been replaced, not duplicated, got:\n{out}"
+        );
+    }
+
+    /// A `slot:`-bound group cannot be resolved at compile time, so the run
+    /// stays as Toggles and keeps reporting the degradation. This is the
+    /// toolkit `Radio` component's own shape, and it is why its allowlist
+    /// entries remain correct on every backend.
+    #[test]
+    fn a_slot_bound_group_is_not_grouped() {
+        let radios = vec![
+            leaf(
+                "HostRadio",
+                vec![
+                    prop_string("value", "a"),
+                    prop_slot_ref("group", "group-name"),
+                ],
+            ),
+            leaf(
+                "HostRadio",
+                vec![
+                    prop_string("value", "b"),
+                    prop_slot_ref("group", "group-name"),
+                ],
+            ),
+        ];
+        let layout = layout_with("X", container_node("Row", radios));
+        let out = from_pipeline(
+            &component("X", vec![slot("group-name", SlotType::Text, true)], vec![]),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(!out.contains("Picker("), "should not group, got:\n{out}");
+        assert!(out.contains("Toggle("), "should stay Toggles, got:\n{out}");
+    }
+
+    /// Members dispatching DIFFERENT events cannot merge: a Picker reports one
+    /// selection change, so one of the two events would silently vanish.
+    #[test]
+    fn radios_with_different_emits_are_not_grouped() {
+        let radios = vec![
+            leaf(
+                "HostRadio",
+                vec![
+                    prop_string("value", "a"),
+                    prop_string("group", "g"),
+                    prop_emit_ref("onSelect", "onFirst"),
+                ],
+            ),
+            leaf(
+                "HostRadio",
+                vec![
+                    prop_string("value", "b"),
+                    prop_string("group", "g"),
+                    prop_emit_ref("onSelect", "onSecond"),
+                ],
+            ),
+        ];
+        let layout = layout_with("X", container_node("Row", radios));
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![],
+                vec![
+                    emit("onFirst", vec![param("value", EmitPayloadType::Text)]),
+                    emit("onSecond", vec![param("value", EmitPayloadType::Text)]),
+                ],
+            ),
+            &layout,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            !out.contains("Picker("),
+            "should not merge two events, got:\n{out}"
+        );
+    }
+
+    /// A lone radio has nothing to be exclusive with, matching the 2+ member
+    /// rule the other three backends already apply.
+    #[test]
+    fn a_single_radio_is_not_grouped() {
+        let radio = leaf(
+            "HostRadio",
+            vec![prop_string("value", "a"), prop_string("group", "g")],
+        );
+        let layout = layout_with("X", container_node("Row", vec![radio]));
+        let out = from_pipeline(&component("X", vec![], vec![]), &layout, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            !out.contains("Picker("),
+            "a lone radio is not a group, got:\n{out}"
+        );
+        assert!(out.contains("Toggle("), "should stay a Toggle, got:\n{out}");
+    }
+
+    /// What the emitter claims and what it emits come from one predicate.
+    #[test]
+    fn the_reported_groups_are_exactly_the_ones_lowered_to_a_picker() {
+        let radios = vec![
+            leaf(
+                "HostRadio",
+                vec![prop_string("value", "a"), prop_string("group", "real")],
+            ),
+            leaf(
+                "HostRadio",
+                vec![prop_string("value", "b"), prop_string("group", "real")],
+            ),
+            // A lone radio in a different group: emitted, never grouped.
+            leaf(
+                "HostRadio",
+                vec![prop_string("value", "c"), prop_string("group", "lonely")],
+            ),
+        ];
+        let root = container_node("Row", radios);
+        let groups = radio_groups_with_native_semantics(&root);
+        assert!(groups.contains("real"), "{groups:?}");
+        assert!(!groups.contains("lonely"), "{groups:?}");
+    }
+
+    #[test]
     /// UI29-2 SwiftUI test 6 — a bare `HostRadio` (no props) emits the
     /// same degraded-but-compiling shape as a bare HostCheckbox:
     /// `Toggle("", isOn: .constant(false))`.
-    #[test]
     fn host_radio_empty_emits_toggle_with_constant_binding() {
         let radio = leaf("HostRadio", vec![]);
         let layout = layout_with("X", container_node("Box", vec![radio]));
@@ -10266,8 +10727,8 @@ mod tests {
                     vec![leaf("HostLink", vec![prop_string("href", hostile)])],
                 ),
             );
-            let err = from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X"))
-                .unwrap_err();
+            let err =
+                from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X")).unwrap_err();
             assert!(
                 matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
                 "expected UnsafeUriScheme for {hostile:?}, got: {err:?}"
@@ -10296,8 +10757,8 @@ mod tests {
                     vec![leaf("HostLink", vec![prop_string("href", hostile)])],
                 ),
             );
-            let err = from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X"))
-                .unwrap_err();
+            let err =
+                from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X")).unwrap_err();
             assert!(
                 matches!(err, PipelineEmitError::UnsafeUriScheme(ref h) if h == hostile),
                 "expected UnsafeUriScheme for whitespace-obscured {hostile:?}, got: {err:?}"
@@ -10341,7 +10802,10 @@ mod tests {
         let m = component(
             "X",
             vec![],
-            vec![emit("onNavigate", vec![param("href", EmitPayloadType::Text)])],
+            vec![emit(
+                "onNavigate",
+                vec![param("href", EmitPayloadType::Text)],
+            )],
         );
         let l = layout_with(
             "X",
@@ -10430,7 +10894,9 @@ mod tests {
             "expected the slot's live value to be used, not a literal, got:\n{r}"
         );
         assert!(
-            r.contains("[\"http\", \"https\", \"mailto\"].contains(u.scheme?.lowercased() ?? \"\")"),
+            r.contains(
+                "[\"http\", \"https\", \"mailto\"].contains(u.scheme?.lowercased() ?? \"\")"
+            ),
             "expected the runtime scheme allowlist guard, got:\n{r}"
         );
         assert!(

@@ -95,3 +95,28 @@ fn sentence_type_abstains_honestly_on_an_untabled_sentence() {
         "the_cat_sat_on_the_mat is a real declarative sentence but has no shipped type in this table -- honest abstention, never invented: {out}"
     );
 }
+
+const SENTENCE_TYPE_PIN: &str = r#""bindings":{"Type":"declarative"},"citations":[{"source":"Bears don’t eat when they hibernate.","locator":"https://www.grammarly.com/blog/sentences/kinds-of-sentences/","trust":"consensus""#;
+
+#[test]
+fn sentence_type_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"sentence-type.adj\"
+? sentence_type(bears_dont_eat_when_they_hibernate, $Type)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator.
+    assert!(
+        out.contains(SENTENCE_TYPE_PIN),
+        "the sentence type citation matches its page: {out}"
+    );
+}

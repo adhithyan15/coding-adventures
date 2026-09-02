@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C28-milch
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 890
-chapter: 28
+chapter: 30
 type: word
 headword: die Milch
 gloss: milk — the native Germanic word that closes this trio, standing beside two loanwords the way Wasser once stood beside the loanword Wein
@@ -11,7 +11,7 @@ concept_tag: GE-FOOD-MILK
 prerequisites: [GE-C28-tee, GE-C11-wasser-wein]
 sounds: [milch-ich-laut]
 roots: [germanic-meluks, pie-h2melg]
-etymology_hook: "Milch is native Germanic *meluks, from PIE *h2melg- 'to milk' — a verb turned into its own product, cousin of English milk, and the third drink completes a two-loans-one-native set that mirrors Chapter 11's Wasser/Wein pair"
+etymology_hook: "Milch is native Germanic *meluks, from PIE *h2melg- 'to milk' — a verb turned into its own product, cousin of English milk, and the third drink completes a two-loans-one-native set that mirrors the Wasser/Wein pair"
 duration:
   max_seconds: 240
 requires:
@@ -53,7 +53,7 @@ German already had it.
 German's **ch** is not one sound but two. After a back vowel like the *a* of
 *Nacht*, it is a rasp at the back of the throat. After a front vowel or
 consonant like the *i* of **Milch**, it is soft, made further forward — closer
-to a hissed *h*. Say *ich* (Chapter 2's own word for "I") right before *Milch*
+to a hissed *h*. Say *ich* (your own word for "I") right before *Milch*
 and you are making the same sound twice.
 
 ## The word, taken apart: a verb that became its own product
@@ -66,7 +66,7 @@ the word for the substance is simply that verb, frozen into a noun. English
 it the cousin of German *Melker* ("milker") the way *denken* is the cousin of
 *Dank*.
 
-So the trio closes the way Chapter 11 did: **Wasser** was native beside the
+So the trio closes the way the food lesson did: **Wasser** was native beside the
 loanword **Wein**; here, **Milch** is native beside the loanwords **Kaffee**
 and **Tee**. Two loans, one inherited word, in both chapters — but this time
 the loans arrived from opposite directions on the map, one overland and one by

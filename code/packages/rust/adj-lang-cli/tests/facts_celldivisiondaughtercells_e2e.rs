@@ -59,7 +59,12 @@ fn cell_division_daughter_cells_recall_binds_the_count_directly() {
     // it, because `contains` on a fragment cannot see what precedes or
     // follows it. See issue #13918.
     assert!(
-        out.contains("\"source\":\"Mitosis is generally followed by equal division of the cell's content into two daughter cells that have identical genomes.\""),
+        // The apostrophe here is U+2019, as genome.gov renders it. This pin
+        // previously carried an ASCII one, matching a citation absent from its
+        // own page. It was correct in FORM -- whole sentence, anchored on the
+        // JSON key -- and it faithfully defended a wrong value, which is why
+        // repairing the value broke it.
+        out.contains("\"source\":\"Mitosis is generally followed by equal division of the cell’s content into two daughter cells that have identical genomes.\""),
         "the citation is the whole source sentence, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
@@ -108,5 +113,30 @@ fn cell_division_daughter_cells_abstains_honestly_on_binary_fission() {
     assert!(
         out.contains("\"abstained\":true"),
         "binary fission is the prokaryotic division process, not one of the two tabled here -- honest abstention, never invented: {out}"
+    );
+}
+
+const CELL_DIVISION_DAUGHTER_CELLS_PIN: &str = r#""bindings":{"Count":"2"},"citations":[{"source":"Mitosis is generally followed by equal division of the cell’s content into two daughter cells that have identical genomes.","locator":"https://www.genome.gov/genetics-glossary/Mitosis","trust":"authoritative""#;
+
+#[test]
+fn cell_division_daughter_cells_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"cell-division-daughter-cells.adj\"
+? cell_division_daughter_cells(mitosis, $Count)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator.
+    assert!(
+        out.contains(CELL_DIVISION_DAUGHTER_CELLS_PIN),
+        "the cell division daughter cells citation matches its page: {out}"
     );
 }

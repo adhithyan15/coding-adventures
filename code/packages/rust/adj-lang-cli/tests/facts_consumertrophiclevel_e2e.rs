@@ -108,3 +108,30 @@ fn consumer_trophic_level_abstains_honestly_on_decomposer() {
          grounds -- honest abstention, never invented: {out}"
     );
 }
+
+const CONSUMER_TROPHIC_LEVEL_PIN: &str = r#""bindings":{"Eats":"primary_producers"},"citations":[{"source":"Primary consumers make up the second trophic level. They are also called herbivores. They eat primary producers—plants or algae—and nothing else.","locator":"https://education.nationalgeographic.org/resource/consumers/","trust":"consensus","corroborations":[{"source":"Next are the secondary consumers, which eat primary consumers. Secondary consumers are mostly carnivores, from the Latin words meaning “meat eater.”","locator":"https://education.nationalgeographic.org/resource/consumers/"}"#;
+
+#[test]
+fn consumer_trophic_level_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"consumer-trophic-level.adj\"
+? consumer_trophic_level(primary_consumer, $Eats)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The page renders CURLY DOUBLE quotes; the shipped citation had ASCII
+    // ones. Every glyph screen in this effort keyed on an ASCII APOSTROPHE,
+    // and this value contains none -- the class was invisible by
+    // construction. The pin spans the bindings THROUGH the corroboration,
+    // because a `cites` repair lands past the envelope's trust field.
+    assert!(
+        out.contains(CONSUMER_TROPHIC_LEVEL_PIN),
+        "the consumer trophic level citation matches its page: {out}"
+    );
+}

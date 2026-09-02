@@ -59,7 +59,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
 use wasm_module_parser::WasmModuleParser;
-use wasm_runtime::{resolve_all_table_funcrefs, WasmInstance, WasmRuntime};
+use wasm_runtime::{resolve_all_table_funcrefs, resolve_exported_global_funcrefs, WasmInstance, WasmRuntime};
 use wasm_types::{CanonicalGroup, ExternalKind, FuncType, GlobalType, WasmModule};
 use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, F32LaneExpected, F64LaneExpected, ModuleSource};
 use wasm_wast_parser::{parse_script, WastParseError};
@@ -800,8 +800,8 @@ impl Executor {
                         // WasmInstance>>` finally exists for it -- see
                         // `wasm_runtime::resolve_all_table_funcrefs`'s own
                         // doc comment for the full rationale, including
-                        // why this is deliberately TABLES only (not
-                        // funcref-typed globals too, a real, reproduced
+                        // why this was originally TABLES only (a broader
+                        // attempt at globals too caused a real, reproduced
                         // regression this slice found and backed out of).
                         // Run BEFORE either registry insertion below, so
                         // no subsequent directive (another module's
@@ -810,6 +810,25 @@ impl Executor {
                         if let Err(e) = resolve_all_table_funcrefs(&instance) {
                             return DirectiveOutcome::Trap(format!(
                                 "internal error: post-instantiation cross-instance funcref resolution failed: {e}"
+                            ));
+                        }
+                        // W35 fifth slice: the analogous fixup for
+                        // EXPORTED funcref-typed GLOBALS specifically --
+                        // see `wasm_runtime::resolve_exported_global_
+                        // funcrefs`'s own doc comment for why "exported
+                        // only" (not every module-defined funcref global,
+                        // which is exactly the shape of the earlier
+                        // regression the comment above refers to) is both
+                        // sufficient to fix `elem.wast`'s own
+                        // "Initializing a table with imported funcref
+                        // global" case and provably safe against
+                        // reintroducing that regression. Same placement
+                        // rationale as the table fixup immediately above:
+                        // must run before this instance is ever
+                        // `register`ed/imported from.
+                        if let Err(e) = resolve_exported_global_funcrefs(&instance) {
+                            return DirectiveOutcome::Trap(format!(
+                                "internal error: post-instantiation cross-instance global funcref resolution failed: {e}"
                             ));
                         }
                         if set_current {
@@ -2301,6 +2320,192 @@ mod tests {
             "expected $Mt's own call_indirect to reach the REAL h (77) via $Ot's import-derived write, not \
              misinterpret local_index 0 in $Mt's OWN space ($other, 999) -- got: {:?}",
             results[3].1
+        );
+    }
+
+    /// W35 fifth slice (`code/specs/W35-wasm-cross-instance-function-
+    /// identity.md`): a hand-built, minimal reproduction of `elem.wast`'s
+    /// own "Initializing a table with imported funcref global" case --
+    /// this crate's own corpus baseline's LAST remaining real (non-"not
+    /// yet supported") failure anywhere in the 257-file testsuite before
+    /// this slice. `$module4` exports a funcref-typed GLOBAL, populated
+    /// via `ref.func` on one of ITS OWN local functions (`$const-i32`,
+    /// which returns 42); the importer imports that global and writes it
+    /// into ITS OWN table via an active elem segment whose item is
+    /// `(global.get 0)`, not a literal `ref.func`/`ref.null` -- exactly
+    /// the shape `resolve_exported_global_funcrefs`/`element_func_refs`
+    /// exist to carry a real cross-instance-safe `FuncRefTarget` through.
+    /// `call_imported_elem`'s own `call_indirect` through that table slot
+    /// must then invoke `$module4`'s real function (42), not misdispatch
+    /// to `call_imported_elem`'s OWN local index 0 (itself) -- which, at
+    /// the exact byte-level coincidence this corpus case has, is the
+    /// unbounded self-recursion this fix closes: before it, this same
+    /// scenario traps with "call stack exhausted" (a stack overflow, not
+    /// merely a wrong numeric answer) instead of returning 42.
+    #[test]
+    fn a_table_entry_populated_via_an_imported_funcref_global_dispatches_to_the_exporters_own_function() {
+        let results = outcomes(
+            r#"
+            (module $module4
+              (func $const-i32 (result i32) (i32.const 42))
+              (global (export "f") funcref (ref.func $const-i32)))
+            (register "module4" $module4)
+            (module
+              (import "module4" "f" (global funcref))
+              (type $out-i32 (func (result i32)))
+              (table 10 funcref)
+              (elem (offset (i32.const 0)) funcref (global.get 0))
+              (func (export "call_imported_elem") (type $out-i32)
+                (call_indirect (type $out-i32) (i32.const 0))))
+            (assert_return (invoke "call_imported_elem") (i32.const 42))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[2],
+            (DirectiveKind::Module, DirectiveOutcome::Pass),
+            "the importer must link against $module4's exported funcref global"
+        );
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected call_imported_elem's own call_indirect to reach $module4's REAL function (42) via the \
+             imported global's resolved FuncRefTarget, not misdispatch to its own local index 0 (itself) -- \
+             got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fifth slice, security-review finding (round 1): a LOCAL global
+    /// whose own init expression is `(global.get $other)` -- copying
+    /// ANOTHER global's value, rather than minting its own via `ref.func`
+    /// -- is a DIFFERENT case from the elem-item one the fixup above
+    /// covers, and needs its own propagation at globals-construction time
+    /// (see `instantiate()`'s own updated doc comment on the globals
+    /// loop). `$B`'s own `$g1` copies `$A`'s exported `$g0` (a real
+    /// funcref); `$B` ALSO happens to declare `$decoy` (returns 999) as
+    /// its OWN local function index 0 -- the SAME numeric index as `$A`'s
+    /// own `$ax` (`$A` has no imports, so `$ax`, declared first, is index
+    /// 0 in `$A`'s combined space too). Before this fix, `$g1`'s raw
+    /// value (`$ax`'s index, `0`) would be resolved against `$B`'s OWN
+    /// function space by `resolve_exported_global_funcrefs`'s fallback
+    /// path, silently reaching `$decoy` (999) instead of `$ax` (42) --
+    /// the exact "silent wrong function, tagged as already resolved"
+    /// hazard a security review of the FIRST version of this fix caught
+    /// directly, before it ever reached a real corpus file.
+    #[test]
+    fn a_local_global_that_copies_an_imported_funcref_global_via_global_get_propagates_the_real_source_identity_not_a_raw_index() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (func $ax (result i32) (i32.const 42))
+              (global (export "g0") funcref (ref.func $ax)))
+            (register "A" $A)
+            (module $B
+              (import "A" "g0" (global $g0 funcref))
+              (func $decoy (result i32) (i32.const 999))
+              (global (export "g1") funcref (global.get $g0))
+              (type $out-i32 (func (result i32)))
+              (table 1 funcref)
+              (elem (i32.const 0) funcref (global.get 1))
+              (func (export "call_via_g1") (type $out-i32)
+                (call_indirect (type $out-i32) (i32.const 0))))
+            (assert_return (invoke "call_via_g1") (i32.const 42))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[2],
+            (DirectiveKind::Module, DirectiveOutcome::Pass),
+            "$B must link against $A's exported funcref global"
+        );
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected call_via_g1 to reach $A's REAL $ax (42) via $g1's propagated FuncRefTarget, not \
+             misdispatch to $B's own local index 0 ($decoy, 999) -- got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fifth slice, security-review finding (round 2): the residual
+    /// risk flagged against the immediately-preceding fix -- making
+    /// `func_ref` propagation UNCONDITIONAL for `global.get`-initialized
+    /// globals (not export-scoped, unlike `resolve_exported_global_
+    /// funcrefs`) means a NON-exported alias of an imported funcref
+    /// global (`$B`'s own `$galias`, never exported) can now carry a real
+    /// `func_ref`, so reading it via `global.get` inside a hot,
+    /// self-tail-recursive loop (`$count`, ordinary `return_call` self-
+    /// recursion -- structurally the exact same "read a func_ref: Some
+    /// global once per recursive step, inside a call that never returns
+    /// to reset any per-call scratch state" shape `return_call_ref.wast`'s
+    /// own `$count`/`$even`/`$odd` already exercise, just reading
+    /// `$galias` and `drop`-ing it instead of actually dispatching through
+    /// it) mints a FRESH `func_ref_heap` handle on every single step, same
+    /// as any other `func_ref: Some` global would. No vendored corpus
+    /// file currently combines these two shapes (confirmed by direct grep
+    /// across all 257 files), so this is a PROACTIVE proof, not a
+    /// regression fix: the failure mode this residual case can hit is a
+    /// clean, safely-graded `MAX_FUNC_REF_HEAP_LEN` trap
+    /// (`wasm_execution::push_func_ref`'s own enforcement, mirroring
+    /// `push_v128`/`push_caught_exception`) -- NEVER memory corruption,
+    /// a panic, or (this test's own specific concern) a SILENT WRONG
+    /// ANSWER -- exactly the same class of bounded, honest failure this
+    /// whole campaign already accepts for genuine resource exhaustion
+    /// elsewhere (`assert_exhaustion`'s own call-depth guard). A small
+    /// count (100, far under the 1,000,000-entry cap) proves the
+    /// self-recursion-plus-alias-read mechanism itself is correct and
+    /// terminates normally; a count one past the cap
+    /// (`count($n)` reads `$galias` once per recursive step for `$n` down
+    /// to `1` -- `$n` reads total, none for the `$n == 0` base case -- so
+    /// `MAX_FUNC_REF_HEAP_LEN + 1` reads is the smallest count that
+    /// actually exceeds `push_func_ref`'s own `>=` cap check) must cleanly
+    /// trap, never panic, hang, or complete with a wrong answer.
+    #[test]
+    fn a_global_get_alias_of_an_imported_funcref_global_read_in_a_deep_tail_recursion_loop_traps_cleanly_instead_of_corrupting_state() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (type $t (func (param i32) (result i32)))
+              (elem declare func $ax)
+              (func $ax (type $t) (param $n i32) (result i32) (local.get $n))
+              (global (export "g0") (ref $t) (ref.func $ax)))
+            (register "A" $A)
+            (module $B
+              (type $t (func (param i32) (result i32)))
+              (import "A" "g0" (global $g0 (ref $t)))
+              (global $galias (ref $t) (global.get $g0))
+              (func $count (export "count") (param $n i32) (result i32)
+                (if (result i32) (i32.eqz (local.get $n))
+                  (then (i32.const 0))
+                  (else
+                    (drop (global.get $galias))
+                    (return_call $count (i32.sub (local.get $n) (i32.const 1)))))))
+            (assert_return (invoke "count" (i32.const 100)) (i32.const 0))
+            (assert_trap (invoke "count" (i32.const 1000001)) "func_ref heap limit exceeded")
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[2],
+            (DirectiveKind::Module, DirectiveOutcome::Pass),
+            "$B must link against $A's exported funcref global"
+        );
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "a bounded read count through the alias must work correctly -- got: {:?}",
+            results[3].1
+        );
+        assert_eq!(
+            results[4],
+            (DirectiveKind::AssertTrap, DirectiveOutcome::Pass),
+            "exceeding MAX_FUNC_REF_HEAP_LEN reads through a global.get-aliased funcref global must be a clean \
+             trap, never a panic, hang, or (worst of all) a silently wrong return value -- got: {:?}",
+            results[4].1
         );
     }
 

@@ -1,0 +1,21 @@
+{
+  "chapter": 79,
+  "title": "He, She, and Whose",
+  "label": "ch:te-he-she-and-whose",
+  "canDo": "I can talk about a third person in Telugu, mark a noun as an owner or an object, and address somebody respectfully.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TE-C79-garu",
+    "kind": "production",
+    "summary": "Complete TE-C79-garu and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C79-WHO-01",
+      "TE-LEX-C79-WHO-02",
+      "TE-LEX-C79-WHO-03",
+      "TE-LEX-C79-WHO-04",
+      "TE-LEX-C79-WHO-05"
+    ]
+  }
+}

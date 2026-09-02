@@ -100,3 +100,30 @@ fn syllable_substitution_abstains_honestly_on_an_untabled_pair() {
         "cat -> hat has no shipped row -- honest abstention, never invented: {out}"
     );
 }
+
+const SYLLABLE_SUBSTITUTION_PIN: &str = r#""bindings":{"Position":"second"},"citations":[{"source":"I will change ‘suntan’ to ‘sunset’.","locator":"https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice","trust":"consensus""#;
+
+#[test]
+fn syllable_substitution_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"syllable-substitution.adj\"
+? syllable_substitution(suntan, sunset, $Position)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The page quotes this word with PAIRED curly quotes -- U+2018 opening and
+    // U+2019 closing -- and the shipped citation had flattened both to ASCII.
+    // This is NOT the contraction case: curling both ends the same way yields
+    // a form that appears on no page. The replacement was confirmed present in
+    // a rendered block before being written here.
+    assert!(
+        out.contains(SYLLABLE_SUBSTITUTION_PIN),
+        "the syllable substitution citation matches its page: {out}"
+    );
+}

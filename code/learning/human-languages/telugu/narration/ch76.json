@@ -1,0 +1,677 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 76,
+  "title": "Very Good, Very Bad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:516263982b57a7b4",
+  "lessons": [
+    {
+      "id": "TE-C76-very",
+      "sequence": 2630,
+      "title": "చాలా మంచి (cālā manci) — very good",
+      "headword": "చాలా మంచి",
+      "romanization": "cālā manci",
+      "gloss": "very good",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ea3423015779476",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did saṁvatsaraṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చాలా మంచి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చాలా మంచి (cālā manci) — \"very good\". The new word in it is చాలా, \"very, a lot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Until now every adjective you had was flat: పెద్ద was big and there was no bigger. చాలా is the dial."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands in front of what it strengthens: చాలా పెద్ద \"very big\", చాలా కొత్త \"very new\". It also works on its own for \"a lot\", where కొంచెం was \"a little\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A degree, on any adjective you have."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "put cālā in front of manci, then in front of pedda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: put *cālā* in front of *manci*, then in front of *pedda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lēdā, then madhyāhnam, then say cālā manci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lēdā*, then *madhyāhnam*, then say *cālā manci*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చాలా మంచి (cālā manci) mean? (\"very good\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C76-bad",
+      "sequence": 2640,
+      "title": "చెడ్డ (ceḍḍa) — bad",
+      "headword": "చెడ్డ",
+      "romanization": "ceḍḍa",
+      "gloss": "bad",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9405c3c878e3e101",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cālā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చెడ్డ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెడ్డ (ceḍḍa) — \"bad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మంచి, \"good\", has stood without an opposite ever since the adjectives chapter. చెడ్డ (ceḍḍa) is the opposite."
+            },
+            {
+              "kind": "speech",
+              "text": "It sits in front of its noun and does not change, exactly as మంచి does. Do not reach for చేదు from the last chapter: that is bitter, a taste, and it does not judge anything."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both ends of the judgement: మంచి and చెడ్డ (ceḍḍa)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceḍḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceḍḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceḍḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceḍḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say manci, then ceḍḍa, then cālā ceḍḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *manci*, then *ceḍḍa*, then *cālā ceḍḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say enduku, then śubhōdayam, then say ceḍḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *enduku*, then *śubhōdayam*, then say *ceḍḍa*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చెడ్డ (ceḍḍa) mean? (\"bad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C76-itisgood",
+      "sequence": 2650,
+      "title": "మంచిది (mancidi) — it is a good one",
+      "headword": "మంచిది",
+      "romanization": "mancidi",
+      "gloss": "it is a good one",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d22247adcca853e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ceḍḍa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మంచిది",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మంచిది (mancidi) — \"it is a good one\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You could already say మంచి పుస్తకం, \"a good book\". You could not yet say that the book is good, because a Telugu adjective cannot end a sentence by itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Add -ది and it becomes a thing: మంచి + ది = \"a good one\". పుస్తకం మంచిది (mancidi) — \"the book is a good one\", which is how Telugu says \"the book is good\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -ది turns a describing word into a naming word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Telugu will not let a bare adjective be the predicate. -ది makes it one — a pronoun-like ending meaning \"the one that is\". మంచిది (mancidi) \"a good one\", చెడ్డది \"a bad one\", కొత్తది \"a new one\". For a person the ending is -వాడు or -ఆమె instead. Learn -ది now and every adjective you already have can finish a sentence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An adjective that can be the whole comment."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mancidi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mancidi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mancidi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mancidi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say manci pustakaṁ, then pustakaṁ mancidi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *manci pustakaṁ*, then *pustakaṁ mancidi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say endukaṇṭē, then rāyu, then say mancidi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *endukaṇṭē*, then *rāyu*, then say *mancidi*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మంచిది (mancidi) mean? (\"it is a good one\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C76-easy",
+      "sequence": 2660,
+      "title": "సులభం (sulabhaṁ) — easy",
+      "headword": "సులభం",
+      "romanization": "sulabhaṁ",
+      "gloss": "easy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1e2e9598847cdb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mancidi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సులభం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సులభం (sulabhaṁ) — \"easy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit సు- (\"well\") plus లభ (\"got\"): what is easily got. The same సు- is the శు- of శుభోదయం, softened."
+            },
+            {
+              "kind": "speech",
+              "text": "తెలుగు సులభం (sulabhaṁ) — \"Telugu is easy.\" A -ం noun like this needs no -ది; it is already a naming word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A verdict you can pass on a task."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sulabhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sulabhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sulabhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sulabhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say telugu sulabhaṁ, then add cālā in front of sulabhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *telugu sulabhaṁ*, then add *cālā* in front of *sulabhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ivāḷa, then tīsukō, then say sulabhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ivāḷa*, then *tīsukō*, then say *sulabhaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సులభం (sulabhaṁ) mean? (\"easy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C76-difficult",
+      "sequence": 2670,
+      "title": "కష్టం (kaṣṭaṁ) — difficult; trouble",
+      "headword": "కష్టం",
+      "romanization": "kaṣṭaṁ",
+      "gloss": "difficult; trouble",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd48cf16cd2c820d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did sulabhaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కష్టం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కష్టం (kaṣṭaṁ) — \"difficult\", and also \"trouble, hardship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair to సులభం (sulabhaṁ), and a Sanskrit tatsama shared right across India."
+            },
+            {
+              "kind": "speech",
+              "text": "It carries more weight than English \"difficult\": కష్టం (kaṣṭaṁ) said alone about someone's situation means real hardship, not an awkward crossword."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both ends of a task: సులభం (sulabhaṁ) and కష్టం (kaṣṭaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sulabhaṁ, then kaṣṭaṁ, then cālā kaṣṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sulabhaṁ*, then *kaṣṭaṁ*, then *cālā kaṣṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ninna, then kuṭumbaṁ, then say kaṣṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ninna*, then *kuṭumbaṁ*, then say *kaṣṭaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కష్టం (kaṣṭaṁ) mean? (\"difficult; trouble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

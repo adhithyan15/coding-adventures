@@ -24,9 +24,9 @@
 %
 %     law number   short name         what NASA labels it
 %     ----------   ----------------   -------------------------------------
-%     1            inertia            "Newton's First Law of Motion (Inertia)"
-%     2            force              "Newton's Second Law of Motion (Force)"
-%     3            action_reaction    "Newton's Third Law of Motion (Action & Reaction)"
+%     1            inertia            "Newton’s First Law of Motion (Inertia)"
+%     2            force              "Newton’s Second Law of Motion (Force)"
+%     3            action_reaction    "Newton’s Third Law of Motion (Action & Reaction)"
 %
 % The query also runs BACKWARD — bind a name and recall its law number:
 %
@@ -48,22 +48,22 @@
 % below was read out of a fetched NASA Glenn Research Center page this session,
 % and any pair whose name could not be verified there would have been dropped).
 % All three names come from the SAME primary U.S. government source, NASA's
-% Beginner's Guide to Aeronautics "Newton's Laws of Motion"
+% Beginner's Guide to Aeronautics "Newton’s Laws of Motion"
 % (www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/),
 % whose numbered review list labels each law, quoted here character-for-
 % character so any reader can re-check it:
 %
 %   1 → inertia
-%     "Newton's First Law of Motion (Inertia)"
+%     "Newton’s First Law of Motion (Inertia)"
 %
 %   2 → force
-%     "Newton's Second Law of Motion (Force)"
+%     "Newton’s Second Law of Motion (Force)"
 %     (the same page states the second law as "The acceleration of an object
 %      depends on the mass of the object and the amount of force applied." and
 %      gives the formula "F = m · a")
 %
 %   3 → action_reaction
-%     "Newton's Third Law of Motion (Action & Reaction)"
+%     "Newton’s Third Law of Motion (Action & Reaction)"
 %     (the same page states the third law as "Whenever one object exerts a force
 %      on another object, the second object exerts an equal and opposite force
 %      on the first.")
@@ -85,7 +85,7 @@ table newton_law {
     row (2, force)
     row (3, action_reaction)
 
-    source "Newton's First Law of Motion (Inertia)"
+    source "Newton’s First Law of Motion (Inertia)"
     locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/"
     trust authoritative
 }

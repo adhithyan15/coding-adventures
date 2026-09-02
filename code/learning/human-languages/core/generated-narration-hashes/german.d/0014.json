@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 14,
-  "sourceHash": "fnv1a64:85680b13a9ee2b91",
+  "sourceHash": "fnv1a64:1c89b466661b0283",
   "lessonIds": [
     "GE-C14-haben",
     "GE-C14-alter"
@@ -10,7 +10,7 @@
   "drivablePrefix": 0,
   "text": "german/narration/ch14.txt",
   "json": "german/narration/ch14.json",
-  "textHash": "fnv1a64:8711f08c20f17bda",
-  "jsonHash": "fnv1a64:89ebd07d17a64913",
+  "textHash": "fnv1a64:851a686f4adf23dd",
+  "jsonHash": "fnv1a64:d262b252b47d9eb2",
   "findings": []
 }

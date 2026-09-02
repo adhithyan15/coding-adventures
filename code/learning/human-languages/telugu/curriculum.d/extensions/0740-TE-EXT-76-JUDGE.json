@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-76-JUDGE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that something is very good, bad, easy or difficult in Telugu, and make an adjective the whole comment.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C76-very",
+    "TE-C76-bad",
+    "TE-C76-itisgood",
+    "TE-C76-easy",
+    "TE-C76-difficult"
+  ]
+}

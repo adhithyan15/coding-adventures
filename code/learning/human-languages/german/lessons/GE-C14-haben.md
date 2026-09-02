@@ -59,7 +59,7 @@ look most alike come from **opposite** directions.
 German nouns are capitalised and take their gender (Ch. 10, 11):
 
 > **Ich habe einen Bruder.** — "I have a brother."
-> **Wir haben Brot und Wein.** — Chapter 11's food, now possessed.
+> **Wir haben Brot und Wein.** — the food you already have, now possessed.
 
 ## Guided Practice
 

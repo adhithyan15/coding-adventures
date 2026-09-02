@@ -36,7 +36,7 @@
 %
 %     example (this table's atom label)             type            example sentence (verbatim)
 %     ----------------------------------------------  --------------  ---------------------------------------------
-%     bears_dont_eat_when_they_hibernate               declarative     "Bears don't eat when they hibernate."
+%     bears_dont_eat_when_they_hibernate               declarative     "Bears don’t eat when they hibernate."
 %     what_is_your_next_class                          interrogative   "What is your next class?"
 %     sweep_the_floor_before_you_mop_it                 imperative      "Sweep the floor before you mop it."
 %     myra_had_the_baby                                 exclamatory     "Myra had the baby!"
@@ -60,7 +60,7 @@ table sentence_type {
     row (sweep_the_floor_before_you_mop_it, imperative)
     row (myra_had_the_baby, exclamatory)
 
-    source "Bears don't eat when they hibernate."
+    source "Bears don’t eat when they hibernate."
     locator "https://www.grammarly.com/blog/sentences/kinds-of-sentences/"
     trust consensus
 }

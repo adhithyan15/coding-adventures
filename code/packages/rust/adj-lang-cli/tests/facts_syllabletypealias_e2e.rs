@@ -100,3 +100,29 @@ fn syllable_type_alias_abstains_honestly_on_closed_syllable() {
         "closed_syllable is a real type from the same source article, but not one silent-e-word.adj tables -- honest abstention: {out}"
     );
 }
+
+const SYLLABLE_TYPE_ALIAS_PIN: &str = r#""bindings":{"Alias":"magic_e"},"citations":[{"source":"Also known as “magic e” syllable patterns, VCe syllables contain long vowels spelled with a single letter, followed by a single consonant, and a silent e.","locator":"https://www.readingrockets.org/topics/spelling-and-word-study/articles/six-syllable-types","trust":"consensus""#;
+
+#[test]
+fn syllable_type_alias_citation_keeps_the_pages_curly_double_quotes() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"syllable-type-alias.adj\"
+? syllable_type_alias(vce_long_vowel, $Alias)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The page renders CURLY DOUBLE quotes around "magic e"; the shipped
+    // citation had ASCII ones. This class was invisible to every glyph screen
+    // in this effort: they all keyed on an ASCII APOSTROPHE, and this value
+    // contains none. The same sentence was flattened in two libraries.
+    assert!(
+        out.contains(SYLLABLE_TYPE_ALIAS_PIN),
+        "the syllable-type-alias citation matches its page: {out}"
+    );
+}

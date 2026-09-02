@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:65dc47a59ce740a7",
+  "lessonIds": [
+    "KA-C71-another",
+    "KA-C71-say-again",
+    "KA-C71-when",
+    "KA-S139-letter-va",
+    "KA-C71-which"
+  ],
+  "tex": "kannada/book/chapters/ch71-once-more-and-which-one.tex"
+}

@@ -1,7 +1,7 @@
 //! End-to-end test for the physics FACTS library
 //! (`adj-facts-stdlib/physics/newton-laws.adj`) driven through the built CLI: a
 //! native `table` of law number → short name resolves a binding-query recall
-//! with the NASA "Newton's Laws of Motion" citation, runs the relation backward
+//! with the NASA "Newton’s Laws of Motion" citation, runs the relation backward
 //! (name → number), and abstains on a law number the source does not fix (there
 //! is no fourth law of motion) — 0 model calls.
 
@@ -71,5 +71,34 @@ fn physics_newton_laws_recall_binds_name_with_citation() {
     assert!(
         out.contains("\"abstained\":true"),
         "ungrounded law number abstains: {out}"
+    );
+}
+
+const NEWTON_LAWS_PIN: &str = r#""bindings":{"Name":"inertia"},"citations":[{"source":"Newton’s First Law of Motion (Inertia)","locator":"https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/","trust":"authoritative""#;
+
+#[test]
+fn newton_laws_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    std::fs::copy(
+        facts_stdlib().join("physics/newton-laws.adj"),
+        dir.join("newton-laws.adj"),
+    )
+    .expect("copy shipped newton-laws.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"newton-laws.adj\"
+? newton_law(1, $Name)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped citation carried an ASCII apostrophe where the page renders
+    // U+2019, so it did not appear on its own page -- the whole premise being
+    // that a caller can check a citation against its locator.
+    assert!(
+        out.contains(NEWTON_LAWS_PIN),
+        "the newton laws citation matches its page: {out}"
     );
 }

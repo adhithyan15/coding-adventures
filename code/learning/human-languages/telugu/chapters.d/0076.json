@@ -1,0 +1,21 @@
+{
+  "chapter": 76,
+  "title": "Very Good, Very Bad",
+  "label": "ch:te-very-good-very-bad",
+  "canDo": "I can say that something is very good, bad, easy or difficult in Telugu, and make an adjective the whole comment.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C76-difficult",
+    "kind": "production",
+    "summary": "Complete TE-C76-difficult and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C76-JUDGE-01",
+      "TE-LEX-C76-JUDGE-02",
+      "TE-LEX-C76-JUDGE-03",
+      "TE-LEX-C76-JUDGE-04",
+      "TE-LEX-C76-JUDGE-05"
+    ]
+  }
+}

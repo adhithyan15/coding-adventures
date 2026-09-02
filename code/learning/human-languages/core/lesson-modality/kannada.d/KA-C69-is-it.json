@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C69-is-it",
+    "language": "kannada",
+    "chapter": 69,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cd11669bde28961"
+  },
+  "findings": []
+}

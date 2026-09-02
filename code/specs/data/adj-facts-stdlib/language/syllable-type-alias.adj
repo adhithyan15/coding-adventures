@@ -8,7 +8,7 @@
 % hare → all vce_long_vowel): that table's own `source` field already
 % quotes, verbatim, the Reading Rockets sentence in full --
 %
-%     "Also known as \"magic e\" syllable patterns, VCe syllables contain
+%     "Also known as “magic e” syllable patterns, VCe syllables contain
 %      long vowels spelled with a single letter, followed by a single
 %      consonant, and a silent e."
 %
@@ -18,7 +18,7 @@
 % (syllable_type, alias)` table decodes that clause as its own row:
 %
 %   vce_long_vowel → magic_e
-%     "Also known as \"magic e\" syllable patterns, ..."
+%     "Also known as “magic e” syllable patterns, ..."
 %
 % Recall is a binding query:
 %
@@ -63,7 +63,7 @@ table syllable_type_alias {
 
     row (vce_long_vowel, magic_e)
 
-    source "Also known as \"magic e\" syllable patterns, VCe syllables contain long vowels spelled with a single letter, followed by a single consonant, and a silent e."
+    source "Also known as “magic e” syllable patterns, VCe syllables contain long vowels spelled with a single letter, followed by a single consonant, and a silent e."
     locator "https://www.readingrockets.org/topics/spelling-and-word-study/articles/six-syllable-types"
     trust consensus
 }

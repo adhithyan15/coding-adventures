@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C80-comein",
+    "language": "telugu",
+    "chapter": 80,
+    "sequence": 2860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eaf7ba4e2dd96764"
+  },
+  "findings": []
+}

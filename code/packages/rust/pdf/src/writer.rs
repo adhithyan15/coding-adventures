@@ -233,11 +233,17 @@ pub enum PdfError {
     /// a structurally valid file that silently means something else.
     UnfilledObject(u32),
     UnknownRoot(u32),
+    /// The document as described cannot be written -- a page tree with no
+    /// pages, or a content stream mirrored about the wrong page height. These
+    /// are caught here because the resulting file would be *accepted* by a
+    /// reader and simply be wrong.
+    Invalid(String),
 }
 
 impl std::fmt::Display for PdfError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            PdfError::Invalid(message) => write!(f, "{message}"),
             PdfError::UnfilledObject(number) => write!(
                 f,
                 "object {number} was reserved but never filled; writing it \

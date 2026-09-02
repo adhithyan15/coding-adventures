@@ -78,6 +78,24 @@ class MosaicHost {
     return host;
   }
 
+  /// Register a callback for host-initiated prop changes.
+  ///
+  /// A deliberate no-op. The generated `main.dart` calls this on every host,
+  /// because a host backed by the standard Mosaic runtime can push updates.
+  /// Engram's host is pull-based: `main.dart` calls [props] after each event
+  /// and on startup, and nothing here ever changes state on its own.
+  ///
+  /// It exists because the generated shell calls it unconditionally, and Dart
+  /// has no default interface implementation to fall back on -- so its absence
+  /// is a compile error rather than a missing feature:
+  ///
+  ///     lib/main.dart:29:18: Error: The method 'setPropsChangedHandler' isn't
+  ///     defined for the type 'MosaicHost'.
+  ///
+  /// The same shape as the Qt host's missing `registerTypes`/`attach`, which
+  /// meant that app had never compiled at all.
+  void setPropsChangedHandler(void Function()? handler) {}
+
   Map<String, Object?>? props() {
     if (_disposed) {
       return const <String, Object?>{'error': 'Engram Flutter MosaicHost disposed'};

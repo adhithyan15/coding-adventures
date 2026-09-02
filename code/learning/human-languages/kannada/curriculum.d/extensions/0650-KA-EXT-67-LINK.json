@@ -1,0 +1,14 @@
+{
+  "id": "KA-EXT-67-LINK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can join two Kannada ideas with and, or and but, and I can add myself to what somebody else said.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C67-and",
+    "KA-C67-or",
+    "KA-C67-but",
+    "KA-C67-and-too"
+  ]
+}
