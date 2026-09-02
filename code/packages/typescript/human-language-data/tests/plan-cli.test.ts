@@ -38,6 +38,34 @@ function editInventory(root: string, name: string, edit: (doc: Record<string, un
   writeFileSync(path, JSON.stringify(doc));
 }
 
+/**
+ * The number of DISTINCT (language, level) exam inventories on disk.
+ *
+ * Derived from the `core/` directory listing, which the plan engine does not
+ * produce, so an assertion built on it is a genuine cross-check rather than
+ * `f(x) == x`.
+ *
+ * This exists because the partial count was pinned as a literal and carried the
+ * same churn defect HL-C310 removed from the line beside it: every landing
+ * inventory collides with it, and two branches that both edit it merge quietly
+ * while agreeing on a wrong value. It rises whenever a track becomes measurable
+ * — which is exactly the work we want — so a ratchet is not available either.
+ */
+function writtenInventoryCount(): number {
+  const core = join(defaultCurriculumRoot(), "core");
+  return new Set(
+    readdirSync(core)
+      .filter((f) => /^exam-inventory-.*\.json$/.test(f))
+      .map((f) => {
+        const doc = JSON.parse(readFileSync(join(core, f), "utf8")) as {
+          language?: string;
+          level?: string;
+        };
+        return `${doc.language}/${doc.level}`;
+      }),
+  ).size;
+}
+
 describe("the plan CLI", () => {
   it("leads French and German with their exam gap on a clean corpus", () => {
     // HL16 adds one assessment-contract item per track ahead of content proxy
@@ -102,7 +130,11 @@ describe("the plan CLI", () => {
     // all; the file carries a Register category that says so and a deliberately
     // uncovered point, SA-A1-RG-02, rather than pretending a functional
     // inventory measures a pariksha.
-    expect(out).toMatch(/0 complete and 10 partial of 138/);
+    // DERIVED, not pinned: every proxy-derived inventory lands partial in all
+    // four dimensions, so the partial count is simply how many are written.
+    expect(out).toMatch(
+      new RegExp(`0 complete and ${writtenInventoryCount()} partial of 138`),
+    );
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -132,7 +164,12 @@ describe("the plan CLI", () => {
     // 7 -> 8: Sanskrit A1 joins it as well. French is still the only file this
     // test corrupts, so this number stays the written total minus exactly one.
     // 8 -> 9: Kannada A1 joins it, on the same rule.
-    expect(out).toMatch(/0 complete and 9 partial of 138/);
+    // The written total MINUS EXACTLY ONE -- this test corrupts the French file
+    // and nothing else, which the accreted comments above already say in words.
+    // Deriving it says the same thing in a form that cannot go stale.
+    expect(out).toMatch(
+      new RegExp(`0 complete and ${writtenInventoryCount() - 1} partial of 138`),
+    );
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
