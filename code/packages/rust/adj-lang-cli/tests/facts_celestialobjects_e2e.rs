@@ -81,3 +81,54 @@ fn astronomy_celestial_objects_recall_binds_property_with_citation() {
     // abstention, never a fabricated property.
     assert!(out.contains("\"abstained\":true"), "cloud abstains: {out}");
 }
+
+const MOON_PIN: &str = r#""bindings":{"Object":"moon"},"citations":[{"source":"A star is a big ball of gas which gives off both heat and light.","locator":"https://starchild.gsfc.nasa.gov/docs/StarChild/universe_level1/stars.html","trust":"authoritative","corroborations":[{"source":"A planet is a large space object which revolves around a star.","locator":"https://starchild.gsfc.nasa.gov/docs/StarChild/solar_system_level1/planets.html"},{"source":"Naturally-formed bodies that orbit planets are called moons, or planetary satellites.","locator":"https://science.nasa.gov/solar-system/moons/""#;
+
+const AST_PIN: &str = r#""bindings":{"Property":"rocky"},"citations":[{"source":"A star is a big ball of gas which gives off both heat and light.","locator":"https://starchild.gsfc.nasa.gov/docs/StarChild/universe_level1/stars.html","trust":"authoritative","corroborations":[{"source":"A planet is a large space object which revolves around a star.","locator":"https://starchild.gsfc.nasa.gov/docs/StarChild/solar_system_level1/planets.html"},{"source":"Naturally-formed bodies that orbit planets are called moons, or planetary satellites.","locator":"https://science.nasa.gov/solar-system/moons/"},{"source":"Comets are cosmic snowballs of frozen gases, rock, and dust that orbit the Sun.","locator":"https://science.nasa.gov/solar-system/comets/"},{"source":"Asteroids, sometimes called minor planets, are rocky, airless remnants left over from the early formation of our solar system about 4.6 billion years ago.","locator":"https://science.nasa.gov/solar-system/asteroids/""#;
+
+#[test]
+fn celestial_moon_answer_carries_its_nasa_corroboration_intact() {
+    let dir = scratch("cite_moon");
+    std::fs::copy(
+        facts_stdlib().join("astronomy/celestial-objects.adj"),
+        dir.join("celestial-objects.adj"),
+    )
+    .expect("copy shipped celestial-objects.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"celestial-objects.adj\"\n? celestial_property($Object, orbits_planet)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // science.nasa.gov is a modern CMS of the kind that is often JS-rendered,
+    // and was treated as a blocker risk until checked: all three of its pages
+    // returned 9000+ chars of body text and matched verbatim first try.
+    assert!(
+        out.contains(MOON_PIN),
+        "moon's answer carries the NASA moons sentence verbatim: {out}"
+    );
+}
+
+#[test]
+fn celestial_asteroid_answer_carries_all_four_corroborations_in_order() {
+    let dir = scratch("cite_ast");
+    std::fs::copy(
+        facts_stdlib().join("astronomy/celestial-objects.adj"),
+        dir.join("celestial-objects.adj"),
+    )
+    .expect("copy shipped celestial-objects.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"celestial-objects.adj\"\n? celestial_property(asteroid, $Property)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains(AST_PIN),
+        "asteroid's answer carries all four corroborations in order: {out}"
+    );
+}

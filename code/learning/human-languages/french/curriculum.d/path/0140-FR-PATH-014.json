@@ -4,9 +4,13 @@
   "lessons": [
     "FR-C05-parler",
     "FR-C05-habiter",
-    "FR-C05-travailler"
+    "FR-C05-travailler",
+    "FR-C05-je-parle-francais",
+    "FR-C05-practice"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "FR-EXT-014-LANGUAGE-SPECIFIC"
+  ],
   "after": []
 }

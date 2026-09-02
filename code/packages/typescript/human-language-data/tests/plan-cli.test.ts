@@ -54,6 +54,11 @@ describe("the plan CLI", () => {
     // work did not appear, it was always there and was invisible while the
     // target list covered one of four content dimensions.
     expect(out).toMatch(/exam-point — spanish/);
+    // Hindi is the first Indic track with a target list, so it is the first one
+    // whose exam gap is a MEASUREMENT rather than a proxy. It joins the queue
+    // for the same reason Spanish did: the work was always there and was
+    // invisible while no inventory named it.
+    expect(out).toMatch(/exam-point — hindi/);
     expect(out).toMatch(/human-validation — marwadi/);
     expect(out).toMatch(/human-validate 2 of 2 pre-A1 full mock\(s\) for marwadi/);
     // Marathi joins with an A1 inventory of its own, so this is the first
@@ -65,13 +70,18 @@ describe("the plan CLI", () => {
     // doing its job — three complete dimensions do not add up to a complete
     // file, and the inventory item is not suppressed.
     //
+    // 4 -> 5 partial: Hindi A1 lands, and lands partial in all FOUR dimensions.
+    // No Hindi awarding body publishes a content syllabus — DBHPS names its
+    // examinations and prescribes readers, and stops — so the file is bounded by
+    // the CEFR A1 descriptors and this project's own checked-in A1 mocks. A
+    // wholly editorial inventory is exactly what `partial` is for.
     // 4 -> 5 partial: `exam-inventory-marathi-a1.json` is a PROJECT-DEFINED
     // equivalent, since `exam-levels.json` records Marathi as `basis: editorial`
     // with no widely-sat ladder. Every one of its four dimensions is partial and
     // says why, so it lands on exactly the same side of this gate as the three
     // externally-sourced files. An editorial basis buys no discount here, which
     // is the property that makes the number worth pinning.
-    expect(out).toMatch(/0 complete and 5 partial of 138/);
+    expect(out).toMatch(/0 complete and 6 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -90,9 +100,11 @@ describe("the plan CLI", () => {
     // It comes BACK as an inventory to write, which is what the old comment
     // falsely claimed already happened.
     expect(out).toMatch(/138\s+exam-inventory/);
+    // 3 -> 4: French is the one made unreadable here, and Hindi A1 now sits
+    // alongside Spanish and the two German files in the readable remainder.
     // 3 -> 4: Spanish A1, German A1, German A2 and Marathi A1 still parse; only
     // the French file was corrupted by this test.
-    expect(out).toMatch(/0 complete and 4 partial of 138/);
+    expect(out).toMatch(/0 complete and 5 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -133,6 +145,19 @@ describe("the plan CLI", () => {
     // and -10 are closed by the qualities rung's own lessons, and -09 needed no
     // authoring at all — its note claimed the corpus never introduces `saber`, which
     // stopped being true when chapter 389 authored it two slices earlier.
+    // 190 -> 317, and 4 -> 5 written. `core/exam-inventory-hindi-a1.json`
+    // enumerates 282 A1 points and the track covers 155 of them, so Hindi
+    // contributes its 127 unmapped points to the total. The unmeasured remainder
+    // falls 20 -> 19 for the same reason: Hindi stopped being a proxy.
+    //
+    // The Hindi denominator is 282 and not 172 because its point set is derived
+    // structurally from the DELE-sourced Spanish inventory used as a proxy for
+    // LEVEL. A first draft built from CEFR descriptors alone reached 172 and
+    // measured 67%; the proxy added 110 demands the descriptors never
+    // enumerated -- `apna`, object-marking `ko`, transport, payment, `aaj` --
+    // and the honest figure fell to 55%. A ruler drawn too short flatters the
+    // corpus, so the bigger denominator is the point, not a side effect.
+    expect(out).toMatch(/530 uncovered point\(s\) across 6 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -141,9 +166,9 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/403 uncovered point\(s\) across 5 written/);
-    expect(out).toMatch(/0 complete and 5 partial of 138/);
-    expect(out).toMatch(/the other 19 track\(s\)/);
+    expect(out).toMatch(/530 uncovered point\(s\) across 6 written/);
+    expect(out).toMatch(/0 complete and 6 partial of 138/);
+    expect(out).toMatch(/the other 18 track\(s\)/);
   }, 120_000);
 
   it("rejects a flag used as another flag's value", () => {

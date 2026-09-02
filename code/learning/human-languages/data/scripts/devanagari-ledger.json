@@ -413,6 +413,22 @@
       "family": "दध",
       "familySource": "devanagari.json: components of DEVANAGARI LETTER DHA name DEVANAGARI LETTER DA",
       "unlocks": []
+    },
+    {
+      "position": 25,
+      "glyph": "ऋ",
+      "codePoint": "U+090B",
+      "unicodeName": "DEVANAGARI LETTER VOCALIC R",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ऋतु",
+          "romanization": "ṛtu",
+          "lesson": "HI-C14-ritu"
+        }
+      ]
     }
   ]
 }

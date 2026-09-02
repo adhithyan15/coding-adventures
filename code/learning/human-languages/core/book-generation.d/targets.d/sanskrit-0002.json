@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 2,
+  "output": "sanskrit/book/chapters/ch02-introductions.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

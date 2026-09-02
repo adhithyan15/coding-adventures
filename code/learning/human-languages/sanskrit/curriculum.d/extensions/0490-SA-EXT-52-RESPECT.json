@@ -1,0 +1,11 @@
+{
+  "id": "SA-EXT-52-RESPECT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can choose the respectful Sanskrit \"you\" and explain why it takes a third-person verb.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C02-bhavan"
+  ]
+}

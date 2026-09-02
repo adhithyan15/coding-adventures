@@ -1,0 +1,11 @@
+{
+  "id": "HI-EXT-016-RRI-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognise, sound, and write independent ऋ from memory before reading ऋतु.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-S125-letter-vocalic-r"
+  ]
+}

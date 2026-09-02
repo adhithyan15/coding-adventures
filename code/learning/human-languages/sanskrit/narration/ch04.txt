@@ -1,21 +1,19 @@
 Sanskrit, chapter 4: Farewells.
-7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 7.
 गच्छामि (gacchāmi) — "I go" (taking leave).
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 Sanskrit has no casual "bye." Like its daughters, it takes leave by saying "I go" — and the verb is a cousin of English come and go.
 
-The letters in this word.
-ग (ga) + च्छा (the conjunct cchā) + मि (mi) becomes गच्छामि (gacchāmi).
+Sounds you'll need.
+gac, chā, mi. Both c sounds are the ch of church, and the doubling is real — hold it a moment longer than one ch.
 
 The word, taken apart.
-गच्छामि (gacchāmi, "I go") is from the root गम् (gam, "to go") — the very root you met in Chapter 1's स्वागतम् (svāgatam = su + āgata, "well come," from ā + gam). That root is Proto-Indo-European gʷem-, the ancestor of English come (and, via Latin venīre, of venue, convene). To leave politely one says gacchāmi ("I go") or, more gracefully, āgacchāmi ("I [shall] come [back]") — the same "promise of return" the modern languages kept.
+gacchāmi ("I go") is from the root gam ("to go") — the very root you met in Chapter 1's svāgatam (= su + āgata, "well come," from ā + gam). That root is Proto-Indo-European gʷem-, the ancestor of English come (and, via Latin venīre, of venue, convene). To leave politely one says gacchāmi ("I go") or, more gracefully, āgacchāmi ("I [shall] come [back]") — the same "promise of return" the modern languages kept.
 
 Guided Practice.
 [pause 1 second]
@@ -34,17 +32,15 @@ How does Sanskrit take leave, and what root is gacchāmi from? (By saying "I go,
 Lesson 2 of 7.
 पुनः (punaḥ) — "again," the seed of "till we meet again".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 One small word turns a leave-taking into a promise of return.
 
-The letters in this word.
-पु (pu) + न (na) + ः (the visarga ḥ) becomes पुनः (punaḥ). Before certain sounds the visarga becomes r: punar-.
+Sounds you'll need.
+pu, naḥ, closing on the soft breathed -ḥ. Before certain following sounds that breath turns into an r: punar-.
 
 The word, taken apart.
-पुनः (punaḥ, "again, back, once more") is a native Sanskrit adverb (its combining form is punar-, as in punar-janma, "rebirth" — "birth again"). It has no tidy single English cognate, but its work is one English shares: it turns a parting into "see you again." Add it to darśana ("seeing") and you get the graceful Sanskrit farewell of the next lesson.
+punaḥ ("again, back, once more") is a native Sanskrit adverb (its combining form is punar-, as in punar-janma, "rebirth" — "birth again"). It has no tidy single English cognate, but its work is one English shares: it turns a parting into "see you again." Add it to darśana ("seeing") and you get the graceful Sanskrit farewell of the next lesson.
 
 Guided Practice.
 [pause 1 second]
@@ -104,20 +100,18 @@ Which character is this — र? What sound does it carry? (ra.) Name one word y
 Lesson 4 of 7.
 पुनर्दर्शनाय (punardarśanāya) (punar-darśanāya) — "until we meet again".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 The graceful Sanskrit goodbye — "for the sake of seeing [you] again."
 
-The letters in this word.
-पुनर् (punar, "again," the r-form of punaḥ) + दर्शनाय (darśanāya, "for seeing") becomes पुनर्दर्शनाय (punardarśanāya) (punar-darśanāya).
+Sounds you'll need.
+pu, nar, dar, śa, nā, ya. Six even beats; ś is the sh of ship; the long ā falls in the fifth.
 
 The word, taken apart.
-पुनर्दर्शनाय (punardarśanāya) = punar ("again") + दर्शन (darśana, "seeing, sight, vision") in the dative case (-āya, "for the sake of") — literally "for seeing [you] again," i.e. "until we meet again." The word दर्शन (darśana) is deep: it is "seeing" in the sense of beholding — the darśan one takes of a deity or a revered person, and the name of the six darśanas, the schools of Indian philosophy ("ways of seeing"). So this farewell promises not just a meeting but a beholding to come.
+punardarśanāya = punar ("again") + darśana ("seeing, sight, vision") in the dative case (-āya, "for the sake of") — literally "for seeing [you] again," i.e. "until we meet again." The word darśana is deep: it is "seeing" in the sense of beholding — the darśan one takes of a deity or a revered person, and the name of the six darśanas, the schools of Indian philosophy ("ways of seeing"). So this farewell promises not just a meeting but a beholding to come.
 
 Grammar Lens: the dative "for the sake of".
-The ending -आय (-āya) is the dative singular — "to / for." Darśana (a seeing) becomes darśanāya (for a seeing). You will meet the cases one at a time; this is your first, the "for-the-purpose-of" case.
+The ending -āya is the dative singular — "to / for." Darśana (a seeing) becomes darśanāya (for a seeing). You will meet the cases one at a time; this is your first, the "for-the-purpose-of" case.
 
 Guided Practice.
 [pause 1 second]
@@ -136,17 +130,15 @@ What does punar-darśanāya literally mean, and what case gives the "for"? ("For
 Lesson 5 of 7.
 श्वः (śvaḥ) — "tomorrow".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 A goodbye with a date on it — and a word that, unlike Hindi's kal, means only one day.
 
-The letters in this word.
-श्व (the conjunct śva, श् ś + व va) + ः (visarga) becomes श्वः (śvaḥ).
+Sounds you'll need.
+śvaḥ — one beat: the sh of ship pushed straight into v, then the soft breathed -ḥ.
 
 The word, taken apart.
-श्वः (śvaḥ, "tomorrow") is from Proto-Indo-European ḱes- ("tomorrow / morning"). Where the modern Indian languages muddle "tomorrow" and "yesterday" into one word (Hindi kal, Bengali kāl, from kāla "time"), classical Sanskrit kept them separate and precise: śvaḥ is "tomorrow" and hyaḥ is "yesterday" — two distinct words. "See you tomorrow" is श्वः पुनर्दर्शनम् (śvaḥ punar-darśanam, "tomorrow, a seeing-again") or śvaḥ drakṣyāmi ("tomorrow I shall see [you]").
+śvaḥ ("tomorrow") is from Proto-Indo-European ḱes- ("tomorrow / morning"). Where the modern Indian languages muddle "tomorrow" and "yesterday" into one word (Hindi kal, Bengali kāl, from kāla "time"), classical Sanskrit kept them separate and precise: śvaḥ is "tomorrow" and hyaḥ is "yesterday" — two distinct words. "See you tomorrow" is śvaḥ punar-darśanam ("tomorrow, a seeing-again") or śvaḥ drakṣyāmi ("tomorrow I shall see [you]").
 
 Grammar Lens: Sanskrit's precision.
 That the daughters blurred śvaḥ / hyaḥ into a single kal is a small window into language change: the modern tongues traded precision for economy, letting tense carry the load. Sanskrit, the older layer, still keeps the two days apart.
@@ -215,7 +207,7 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three ways to part — the ancestors of the modern Indian goodbyes.
 
-The farewells.
+Guided Practice.
 [pause 1 second after each]
 [your turn — say: taking leave — gacchāmi ("I go")]
 [pause 8 seconds for the answer]
@@ -224,7 +216,7 @@ The farewells.
 [your turn — say: "see you tomorrow" — śvaḥ punar-darśanam]
 [pause 8 seconds for the answer]
 
-The atoms.
+How to answer: the atoms.
 [pause 2 seconds]
 [your turn — say: the verb "to go" and its Ch-1 cousin (gam; svāgatam)]
 [pause 8 seconds for the answer]
@@ -233,7 +225,7 @@ The atoms.
 [your turn — say: "tomorrow" vs. "yesterday" (Sanskrit keeps śvaḥ / hyaḥ distinct)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+What you've built: the roots you now carry.
 [pause 2 seconds]
 gam "to go" from PIE gʷem- becomes English come.
 punaḥ / punar- "again" ( becomes punarjanma, "rebirth").

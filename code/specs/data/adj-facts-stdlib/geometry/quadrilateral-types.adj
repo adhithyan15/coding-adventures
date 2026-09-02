@@ -67,8 +67,14 @@
 %   rectangle → four_right_angles
 %     https://mathworld.wolfram.com/Rectangle.html
 %     (Wolfram MathWorld — Weisstein, Eric W.)
-%     "A closed planar quadrilateral with opposite sides of equal lengths a and
-%      b, and with four right angles."
+%     "A rectangle is a closed planar quadrilateral with opposite sides of equal
+%      lengths a and b, and with four right angles."
+%     (the previous form DROPPED THE SUBJECT "A rectangle is" -- the one thing a
+%      citation must never omit. The `a` and `b` are <img alt="a"> / <img alt="b">
+%      inline formulas: 9px images OF THOSE LETTERS, so recovering the alt text
+%      reproduces what the page displays. Contrast circle-parts' diameter, whose
+%      <img alt="pi"> renders a pi SYMBOL -- there the alt NAMES the glyph rather
+%      than being it, so that row is left uncited instead.)
 %
 %   rhombus → all_sides_same_length
 %     https://mathworld.wolfram.com/Rhombus.html
@@ -110,4 +116,8 @@ table quadrilateral_property {
     source "The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above."
     locator "https://mathworld.wolfram.com/Square.html"
     trust authoritative
+    cites "A rectangle is a closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles." locator "https://mathworld.wolfram.com/Rectangle.html"
+    cites "A rhombus is a quadrilateral with both pairs of opposite sides parallel and all sides the same length, i.e., an equilateral parallelogram." locator "https://mathworld.wolfram.com/Rhombus.html"
+    cites "A parallelogram is a quadrilateral with opposite sides parallel (and therefore opposite angles equal)." locator "https://mathworld.wolfram.com/Parallelogram.html"
+    cites "A trapezoid is a quadrilateral with two sides parallel." locator "https://mathworld.wolfram.com/Trapezoid.html"
 }

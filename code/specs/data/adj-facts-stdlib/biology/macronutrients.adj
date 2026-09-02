@@ -90,4 +90,5 @@ table kcal_per_gram {
     source "Fat has 9 calories per gram, more than 2 times the number of calories in carbohydrates and protein, which each have 4 calories per gram."
     locator "https://medlineplus.gov/ency/patientinstructions/000104.htm"
     trust authoritative
+    cites "Keep in mind that alcohol has empty calories. This means it has calories (7 per gram versus 4 per gram for carbohydrate and protein) but no nutrients." locator "https://medlineplus.gov/ency/patientinstructions/000889.htm"
 }

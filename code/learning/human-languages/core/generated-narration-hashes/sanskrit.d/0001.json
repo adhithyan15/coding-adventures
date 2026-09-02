@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 1,
-  "sourceHash": "fnv1a64:8df3e3619774df21",
+  "sourceHash": "fnv1a64:3d4d42fdf42cebe6",
   "lessonIds": [
     "SA-C01-namaste",
     "SA-C01-namaskara",
@@ -9,15 +9,16 @@
     "SA-C01-dhanyavada",
     "SA-C01-svagatam",
     "SA-S200-letter-da",
-    "SA-C01-am-na",
+    "SA-C01-am",
+    "SA-C01-na",
     "SA-C01-practice",
     "SA-S05-sign-virama"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch01.txt",
   "json": "sanskrit/narration/ch01.json",
-  "textHash": "fnv1a64:98679b77a4f46899",
-  "jsonHash": "fnv1a64:a23ed196c11f0f39",
+  "textHash": "fnv1a64:b7e0759b769d3ede",
+  "jsonHash": "fnv1a64:ad1e3a03c580cb7f",
   "findings": []
 }

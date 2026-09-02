@@ -8,9 +8,12 @@
     "TA-C02-magizhcci",
     "TA-C02-nii-niingal",
     "TA-C02-enna",
-    "TA-C02-ungal-peyar-enna"
+    "TA-C02-ungal-peyar-enna",
+    "TA-C02-practice"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "TA-EXT-007-CONSOLIDATION"
+  ],
   "after": []
 }

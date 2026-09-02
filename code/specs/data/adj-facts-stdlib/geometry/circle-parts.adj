@@ -95,4 +95,6 @@ table circle_part {
     source "The distance from the center of a circle to its perimeter, or from the center of a sphere to its surface."
     locator "https://mathworld.wolfram.com/Radius.html"
     trust authoritative
+    cites "In plane geometry, a chord is the line segment joining two points on a curve. The term is often used to describe a line segment whose ends lie on a circle." locator "https://mathworld.wolfram.com/Chord.html"
+    cites "In the work, the term \"circumference\" is used to mean the perimeter of a circle." locator "https://mathworld.wolfram.com/Circumference.html"
 }

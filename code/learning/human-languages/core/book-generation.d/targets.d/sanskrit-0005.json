@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 5,
+  "output": "sanskrit/book/chapters/ch05-first-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

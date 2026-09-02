@@ -109,4 +109,8 @@ table celestial_property {
     source "A star is a big ball of gas which gives off both heat and light."
     locator "https://starchild.gsfc.nasa.gov/docs/StarChild/universe_level1/stars.html"
     trust authoritative
+    cites "A planet is a large space object which revolves around a star." locator "https://starchild.gsfc.nasa.gov/docs/StarChild/solar_system_level1/planets.html"
+    cites "Naturally-formed bodies that orbit planets are called moons, or planetary satellites." locator "https://science.nasa.gov/solar-system/moons/"
+    cites "Comets are cosmic snowballs of frozen gases, rock, and dust that orbit the Sun." locator "https://science.nasa.gov/solar-system/comets/"
+    cites "Asteroids, sometimes called minor planets, are rocky, airless remnants left over from the early formation of our solar system about 4.6 billion years ago." locator "https://science.nasa.gov/solar-system/asteroids/"
 }

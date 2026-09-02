@@ -11,8 +11,14 @@
   "payoff": {
     "lesson": "TA-C03-practice",
     "kind": "task",
-    "summary": "Complete TA-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Tamil, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Take the how-are-you exchange both ways out loud: ask it respectfully, answer that you are well, thank them, and wave the thanks away.",
+    "assesses": [
+      "TA-LEX-C03-EPPADI-01",
+      "TA-LEX-C03-EPPADI-IRUKKIRIRGAL-01",
+      "TA-LEX-C03-NAAN-01",
+      "TA-LEX-C03-NALAM-01",
+      "TA-LEX-C03-PARAVAYILLAI-01",
+      "TA-LEX-C03-PRACTICE-01"
+    ]
   }
 }

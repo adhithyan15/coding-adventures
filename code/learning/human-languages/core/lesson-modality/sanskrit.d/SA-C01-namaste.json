@@ -4,21 +4,18 @@
     "language": "sanskrit",
     "chapter": 1,
     "sequence": 10,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "script-block"
+      "no-visual-dependency"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:230c1999511e7459",
-    "detachableSegments": [
-      "The letters in this word"
-    ]
+    "sourceHash": "fnv1a64:c17ffcff81a25c2a"
   },
   "findings": []
 }

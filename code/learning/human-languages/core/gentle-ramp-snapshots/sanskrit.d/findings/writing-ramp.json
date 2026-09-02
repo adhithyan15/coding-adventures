@@ -1,5 +1,11 @@
 {
   "language": "sanskrit",
   "kind": "writing-ramp",
-  "finding": null
+  "finding": {
+    "language": "sanskrit",
+    "kind": "writing-ramp",
+    "count": 2,
+    "unit": "opening lesson(s)",
+    "detail": "move the first gentle writing microstep to lesson one"
+  }
 }

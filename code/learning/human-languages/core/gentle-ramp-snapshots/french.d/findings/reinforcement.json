@@ -4,7 +4,7 @@
   "finding": {
     "language": "french",
     "kind": "reinforcement",
-    "count": 232,
+    "count": 337,
     "unit": "missed window(s)",
     "detail": "add retrieval at the expanding R1-R4 intervals"
   }
