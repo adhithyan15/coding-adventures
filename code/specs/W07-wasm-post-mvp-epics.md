@@ -397,6 +397,11 @@ in the same pass (a `wasm-validator` funcref-assignability bug wiping out
    lack real cross-instance resolution (not needed by any current corpus
    case) — see W35's own closing addendum for the concrete blocker
    (a `return_call_ref.wast` regression) and what a future fix needs.
+   **`elem.wast`'s own remaining failure since CLOSED (2026-09-01)** — see
+   item 3's own updated entry below (found and fixed alongside the
+   `table.wast` investigation): a `wasm-wast-parser` restriction, not a
+   table-identity bug, was the real cause — `elem.wast` now passes
+   19/19, and the whole corpus's `assert_return` category is at 100%.
 
 2. **Malformed-binary LEB128 under-strictness.** `binary-leb128.wast`
    (7 real failures) and `binary.wast` (2 real failures) each contain
@@ -407,17 +412,37 @@ in the same pass (a `wasm-validator` funcref-assignability bug wiping out
    `wasm-module-parser`'s LEB128 decoding, no representation questions —
    a clean, self-contained next PR. Sized **S**.
 
-3. **`table.wast`'s oversized-declared-minimum case (unconfirmed as a
-   real bug — needs spec-text verification before fixing).** One `module`
-   directive declares a table with minimum `4294967295` (`u32::MAX`)
-   elements; `wasm-validator` rejects it for exceeding this interpreter's
-   10,000,000-element resource-limit heuristic. It's genuinely unclear
-   without re-reading the exact `.wast` directive and the spec's own
-   implementation-limits language whether the real spec expects this to
-   validate (deferring the actual failure to instantiation/allocation
-   time, since a numeric minimum alone doesn't have to eagerly allocate)
-   or whether rejecting at validation time is an acceptable
-   implementation-defined limit. Lowest priority of the three (affects
-   exactly one `module` directive in the whole corpus) — investigate the
-   actual assertion type in `table.wast` around this case before deciding
-   whether it's a bug.
+3. **`table.wast`'s oversized-declared-minimum case — investigated and
+   FIXED (2026-09-01).** `table.wast` line 9, `(module definition (table
+   0xffff_ffff funcref))` (`u32::MAX`, no declared `max`), is a bare,
+   UNWRAPPED directive — no `assert_invalid` around it — so the official
+   testsuite itself asserts this declaration must VALIDATE.
+   `wasm-validator` was rejecting it for exceeding this interpreter's
+   10,000,000-element resource-limit heuristic (`ValidationError: table
+   #0: declared minimum 4294967295 elements exceeds this interpreter's
+   resource limit of 10000000`).
+
+   Confirmed against the real spec's own implementation-limits reasoning:
+   a 32-bit table's `min` has no spec ceiling below `2^32 - 1` — an
+   implementation MAY refuse to actually ALLOCATE an oversized table, but
+   may NOT refuse to let a module merely DECLARE one. This is exactly the
+   same "declare freely, cap only at real allocation time" treatment
+   `is64` tables and 64-bit memories already received elsewhere in
+   `wasm-validator`; the 32-bit table case was the one remaining
+   inconsistency, confirmed as a genuine conformance bug, not a
+   defensible implementation choice.
+
+   **Fix**: removed the structural-validation-time rejection (`wasm-
+   validator` 0.2.85's old Check 2b, both the per-table and cross-table-
+   aggregate halves) entirely; the practical resource-limit heuristic
+   moved to `wasm-runtime::instantiate` (0.6.28) — the pipeline stage
+   where real allocation actually happens — generalizing that crate's
+   pre-existing `is64`-only aggregate cap to cover every table. Verified
+   not a DoS regression: `wasm-execution::Table::new_with_is64` already
+   applied its own per-table cap unconditionally regardless of `is64`
+   (0.9.91's doc-only fixup), so only the aggregate half needed a new
+   home, not new protection. See `wasm-validator`/`wasm-runtime`/
+   `wasm-execution`/`wasm-conformance`'s own CHANGELOGs for the full
+   writeup and corpus-wide verification (exactly 3 files changed in the
+   whole 257-file corpus across both this fix and the `elem.wast` one
+   above, every other file byte-identical).

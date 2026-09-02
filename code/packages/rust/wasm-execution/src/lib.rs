@@ -1610,22 +1610,32 @@ impl Table {
     /// 64-bit declaration ceiling, the same "spec allows more than we'll
     /// actually allocate" shape `MAX_MEMORY64_INITIAL_PAGES` already
     /// establishes for memory64. A module that only ever DECLARES such a
-    /// table (never instantiates it) still validates successfully (see
-    /// `wasm-validator`'s own Check 2b) -- only an actual instantiation
-    /// attempt hits this cap, as a real, gracefully-returned `TrapError`,
-    /// never a panic or process abort.
+    /// table (never instantiates it) still validates successfully -- only
+    /// an actual instantiation attempt hits this cap, as a real,
+    /// gracefully-returned `TrapError`, never a panic or process abort.
+    /// This is now true for a 32-bit table's `min` too, not just an
+    /// `is64` one (gap 2 of the W-next `elem.wast`/`table.wast`
+    /// investigation pass, `code/specs/W07-wasm-post-mvp-epics.md`'s
+    /// addendum): `wasm-validator` used to reject an oversized 32-bit
+    /// `min` at STRUCTURAL VALIDATION time (its old Check 2b), which
+    /// `table.wast`'s own real corpus case proved was a genuine
+    /// conformance bug, not a defensible implementation choice -- that
+    /// check was removed, making THIS constructor's own cap the only
+    /// place a 32-bit table's `min` is enforced now too.
     pub fn new_with_is64(initial_size: u64, max_size: Option<u64>, is64: bool) -> Result<Self, TrapError> {
         // Security review: the cap is checked UNCONDITIONALLY (not only
-        // when `is64`) -- a 32-bit table's `min` is already
-        // validator-capped at this exact same `MAX_TABLE_ELEMENTS` bound
-        // (`wasm-validator`'s Check 2b), so this is a pure, behavior-
-        // preserving no-op for every module that went through
-        // `validate()` first. Gating the check on `is64` alone would make
-        // this `pub` constructor's own safety depend entirely on a
-        // caller-external invariant living in a different crate (exactly
-        // the kind of check that silently stops holding the next time
-        // that OTHER crate's logic changes) rather than being true by
-        // construction here.
+        // when `is64`) -- since gap 2's fix removed `wasm-validator`'s old
+        // Check 2b entirely (see this function's own doc comment above),
+        // THIS is now the only place a 32-bit table's `min` is capped at
+        // all, not a redundant behavior-preserving no-op layered on top
+        // of a validator-side check in a different crate. Gating the
+        // check on `is64` alone would make this `pub` constructor's own
+        // safety depend entirely on a caller-external invariant living in
+        // a different crate (exactly the kind of check that silently
+        // stops holding the next time that OTHER crate's logic changes)
+        // rather than being true by construction here -- unconditional
+        // was already the right call before this fix, and is now load-
+        // bearing for 32-bit tables too, not just defense-in-depth.
         if initial_size > MAX_TABLE_ELEMENTS as u64 {
             return Err(TrapError::new(format!(
                 "table of {initial_size} initial elements exceeds this interpreter's practical table allocation cap of {MAX_TABLE_ELEMENTS} elements (a real, spec-valid declaration this interpreter still refuses to actually allocate)"
@@ -6499,9 +6509,15 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // `MAX_TABLE_ELEMENTS` cap bounds a SINGLE table, but
                 // `MAX_TABLES` (64) tables each individually grown to that
                 // cap would still total ~4.77GB from one small module --
-                // reintroducing at RUNTIME exactly the aggregate DoS gap
-                // `wasm-validator`'s "Check 2b" already closes at
-                // DECLARE-time for a table's declared `min`. Sum every
+                // reintroducing at RUNTIME exactly the aggregate DoS shape
+                // `wasm-runtime::instantiate`'s own `total_table_elements`
+                // aggregate closes for a table's declared `min` at
+                // INSTANTIATE-time (gap 2 of the W-next `elem.wast`/
+                // `table.wast` investigation pass moved that check there
+                // from `wasm-validator`'s now-removed declare-time "Check
+                // 2b" -- this `table.grow` guard is a separate, always-
+                // runtime check on CURRENT table sizes, unaffected by that
+                // move). Sum every
                 // OTHER table's CURRENT size plus this table's PROSPECTIVE
                 // new size (`sz + delta`, not yet applied) and reject
                 // BEFORE ever calling `Table::grow` -- so a rejected
@@ -23724,8 +23740,11 @@ mod tests {
     /// growing table 1 by just 1 entry must still fail, because the
     /// CROSS-TABLE total would exceed `MAX_TABLE_ELEMENTS` -- even though
     /// table 1's own per-table check trivially passes on its own (1 is
-    /// nowhere near the cap in isolation). This is the runtime
-    /// counterpart to `wasm-validator`'s declare-time "Check 2b".
+    /// nowhere near the cap in isolation). This is the runtime, CURRENT-
+    /// size counterpart to `wasm-runtime::instantiate`'s own declare-time
+    /// `total_table_elements` aggregate (formerly `wasm-validator`'s
+    /// declare-time "Check 2b", moved by gap 2 of the W-next `elem.wast`/
+    /// `table.wast` investigation pass).
     #[test]
     fn table_grow_rejects_growth_that_would_exceed_the_cross_table_aggregate_cap() {
         let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
