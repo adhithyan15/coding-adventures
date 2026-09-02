@@ -45,6 +45,16 @@ fn transportation_traffic_lights_recall_binds_meaning_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // THE WHOLE CITATION, anchored on its JSON key and closed by the
+    // terminating quote. This sentence carries a qualifier, so a
+    // truncation would silently drop meaning -- the defect issue #13916
+    // shipped. Pinning a fragment narrows that hole rather than closing
+    // it, because `contains` on a fragment cannot see what precedes or
+    // follows it. See issue #13918.
+    assert!(
+        out.contains("\"source\":\"Vehicular traffic facing a steady CIRCULAR RED signal indication, unless entering the intersection to make another movement permitted by another signal indication, shall stop at a clearly marked stop line\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // Red means stop; green means proceed — the recalled meanings.
     assert!(out.contains("\"Meaning\":\"stop\""), "red → stop: {out}");

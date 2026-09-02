@@ -57,6 +57,16 @@ fn silent_letter_sound_recall_binds_the_sound_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"The Silent Letters Unit only consists of one lesson, but this lesson instructs students on three common silent letter patterns (e.g., kn-, wr-, and -mb). This lesson is designed to build students' accuracy and automaticity in recognizing silent letter patterns. The lesson also builds students' proficiency in reading and spelling words that contain silent letter patterns. Diphthongs and Silent Letters Units (Lessons 95-98): 98 kn /n/, wr /r/, mb /m/.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"Sound\":\"n_sound\""),

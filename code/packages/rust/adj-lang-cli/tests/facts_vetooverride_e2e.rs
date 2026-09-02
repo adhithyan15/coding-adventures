@@ -66,6 +66,16 @@ fn veto_override_keeps_the_sources_hedge_on_the_ordinary_veto() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"If the president chooses to veto a bill, in most cases Congress can vote to override that veto and the bill becomes a law.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // The source says "in most cases Congress can vote to override that
     // veto" -- NOT that Congress always can. The atom must keep the

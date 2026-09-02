@@ -71,6 +71,16 @@ fn an_artesian_well_reaches_a_confined_aquifer() {
 
     let (ok, out) = run(&program);
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"The illustration shows an artesian well and a flowing artesian well, which are drilled into a confined aquifer, and a water table well, which is drilled into an unconfined aquifer.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"bindings\":{\"A\":\"confined_aquifer\"}"),

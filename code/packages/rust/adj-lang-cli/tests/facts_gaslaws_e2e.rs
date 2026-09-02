@@ -49,6 +49,16 @@ fn chemistry_gas_laws_recall_binds_pair_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // THE WHOLE CITATION, anchored on its JSON key and closed by the
+    // terminating quote. This sentence carries a qualifier, so a
+    // truncation would silently drop meaning -- the defect issue #13916
+    // shipped. Pinning a fragment narrows that hole rather than closing
+    // it, because `contains` on a fragment cannot see what precedes or
+    // follows it. See issue #13918.
+    assert!(
+        out.contains("\"source\":\"Boyle's law states that the volume of a given mass of gas varies inversely with the pressure when the temperature is kept constant.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // Boyle relates pressure and volume, Charles relates volume and temperature,
     // Avogadro relates volume and moles — the recalled pairs (forward binds).

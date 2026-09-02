@@ -52,6 +52,16 @@ fn ocean_zone_scientific_name_recalls_forward_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // THE WHOLE CITATION, anchored on its JSON key and closed by the
+    // terminating quote. This sentence carries a qualifier, so a
+    // truncation would silently drop meaning -- the defect issue #13916
+    // shipped. Pinning a fragment narrows that hole rather than closing
+    // it, because `contains` on a fragment cannot see what precedes or
+    // follows it. See issue #13918.
+    assert!(
+        out.contains("\"source\":\"The midnight zone, or bathypelagic, extends to about 4,000 meters (about 13,100 feet), which reaches the ocean floor in many places is in perpetual darkness.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"term\":\"ocean_zone_scientific_name(midnight_zone, bathypelagic)\""),

@@ -86,6 +86,16 @@ fn a_red_signal_permits_exactly_two_movements_both_after_stopping() {
 
     let (ok, out) = run(&program);
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"Except when a traffic control device is in place prohibiting a turn on red or a steady RED ARROW signal indication is displayed, vehicular traffic facing a steady CIRCULAR RED signal indication is permitted to enter the intersection to turn right, or to turn left from a one-way street into a one-way street, after stopping.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // EVERY row pinned, not a sample.
     assert!(
