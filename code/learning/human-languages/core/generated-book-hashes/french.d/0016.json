@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:2578bec288895659",
+  "lessonIds": [
+    "FR-C13-noir",
+    "FR-C13-blanc",
+    "FR-C13-aube",
+    "FR-C13-rouge",
+    "FR-C13-bleu",
+    "FR-C13-vin-rouge",
+    "FR-C13-tricolore",
+    "FR-C13-practice"
+  ],
+  "tex": "french/book/chapters/ch16-colours.tex"
+}

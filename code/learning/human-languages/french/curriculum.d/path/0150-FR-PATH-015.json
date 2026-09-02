@@ -71,8 +71,14 @@
     "FR-C12-vingt",
     "FR-C12-vigesimal",
     "FR-C12-practice-seam",
-    "FR-C13-noir-blanc",
-    "FR-C13-rouge-bleu"
+    "FR-C13-noir",
+    "FR-C13-blanc",
+    "FR-C13-aube",
+    "FR-C13-rouge",
+    "FR-C13-bleu",
+    "FR-C13-vin-rouge",
+    "FR-C13-tricolore",
+    "FR-C13-practice"
   ],
   "before": [],
   "inline": [

@@ -1,16 +1,22 @@
 {
   "language": "french",
   "chapter": 16,
-  "sourceHash": "fnv1a64:2cb6d7e1d2229883",
+  "sourceHash": "fnv1a64:df70fba0a5ea3e83",
   "lessonIds": [
-    "FR-C13-noir-blanc",
-    "FR-C13-rouge-bleu"
+    "FR-C13-noir",
+    "FR-C13-blanc",
+    "FR-C13-aube",
+    "FR-C13-rouge",
+    "FR-C13-bleu",
+    "FR-C13-vin-rouge",
+    "FR-C13-tricolore",
+    "FR-C13-practice"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "french/narration/ch16.txt",
   "json": "french/narration/ch16.json",
-  "textHash": "fnv1a64:6615957ea2970ed1",
-  "jsonHash": "fnv1a64:af137322b5404662",
+  "textHash": "fnv1a64:78ac3f64716fba1b",
+  "jsonHash": "fnv1a64:b17b24cd89e74af3",
   "findings": []
 }

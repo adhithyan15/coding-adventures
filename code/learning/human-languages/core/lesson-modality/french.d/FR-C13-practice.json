@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FR-C13-noir-blanc",
+    "id": "FR-C13-practice",
     "language": "french",
     "chapter": 16,
-    "sequence": 455,
+    "sequence": 468,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b408965111080074"
+    "sourceHash": "fnv1a64:4c164124debbf55f"
   },
   "findings": []
 }

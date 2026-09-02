@@ -6,12 +6,12 @@ type: word
 headword: avoir
 gloss: to have — the most worn-down verb in French, and a root you already met
 concept_tag: VERB-HAVE
-prerequisites: [FR-C13-rouge-bleu, FR-C05-habiter]
+prerequisites: [FR-C13-practice, FR-C05-habiter]
 sounds: [elision-j-ai, liaison]
 roots: [latin-habere]
 etymology_hook: "avoir ← Latin habēre — the SAME root as habiter from Ch.5 (habitāre was habēre's frequentative, 'to keep having a place'), and as English habit / inhabit / exhibit / prohibit; habeō wore all the way down to j'ai, one sound"
 est_minutes: 4
-reviews_of: [FR-C13-rouge-bleu, FR-C05-habiter, FR-C05-parler]
+reviews_of: [FR-C13-practice, FR-C05-habiter, FR-C05-parler]
 ---
 
 # avoir — "to have"
