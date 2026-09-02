@@ -1,0 +1,16 @@
+{
+  "language": "kannada",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:c9f439f0e8a09b35",
+  "lessonIds": [
+    "KA-C03-hege",
+    "KA-S03-sign-virama",
+    "KA-C03-niivu-hegiddiira",
+    "KA-C03-naanu",
+    "KA-C03-cennaagi",
+    "KA-S112-letter-ga",
+    "KA-C03-paravaagilla",
+    "KA-C03-practice"
+  ],
+  "tex": "kannada/book/chapters/ch03-responding.tex"
+}
