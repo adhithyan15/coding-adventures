@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:d3f7da967468a0ad",
+  "sourceHash": "fnv1a64:7e7eded69c4d1746",
   "lessonIds": [
     "IT-C01-ciao",
     "IT-W01-ciao-guided-copy",
@@ -14,11 +14,5 @@
     "IT-C01-grazie",
     "IT-C01-practice"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 0,
-  "text": "italian/narration/ch01.txt",
-  "json": "italian/narration/ch01.json",
-  "textHash": "fnv1a64:12798e3e87943da2",
-  "jsonHash": "fnv1a64:bcdda1ddb2cb008c",
-  "findings": []
+  "tex": "italian/book/chapters/ch01-greetings.tex"
 }

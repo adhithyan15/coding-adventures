@@ -251,6 +251,14 @@ that's outside the compiler's scope. Two common patterns:
 A future toolkit component (`<LayoutSwitch>`) could wrap pattern 2
 generically, but it's not required for UI30.
 
+> **Superseded.** `LayoutSwitch` was never built, and the toolkit-component
+> framing turned out to be the wrong one: pattern 2 needs the *host* to observe
+> its own environment, which no toolkit component can do portably. The runtime
+> half of this section is now specified in
+> `code/specs/UI48-host-environment.md` (ML4 + ML5), which keeps UI30's
+> authoring model — one `.mll` per form factor — and only moves the moment of
+> selection from build time to run time.
+
 ---
 
 ## 7. Implementation plan
@@ -285,9 +293,12 @@ The cycle splits into three small PRs:
 
 Future cycles can add:
 
-- **ML4 — runtime LayoutSwitch toolkit component.**
+- **ML4 — runtime variant selection.** Specified as UI48
+  (`code/specs/UI48-host-environment.md`); the `LayoutSwitch`
+  toolkit-component framing was dropped, see §6.
 - **ML5 — per-backend responsive bundling** (one `.tsx` exports
   every variant under a guard, host imports the bundle and picks).
+  Folded into UI48 as ENV2.
 
 ---
 

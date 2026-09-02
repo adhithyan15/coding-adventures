@@ -207,8 +207,9 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
     // The handwritten count STAYS PINNED, and deliberately so — see the note
     // above on why this particular literal is not part of the write-lock.
-    // 69 -> 64: Sanskrit chapters 1-5 left the hand-written set (HL-C200).
-    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(62);
+    // 66 -> 61: Sanskrit chapters 1-5 left the hand-written set (HL-C242),
+    // after Italian chapter 1 took it 69 -> 66.
+    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(61);
     // The total is chapter-scaled, so it is proved against the independently
     // authored `chapters.d` instead.
     expect(
@@ -246,8 +247,8 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    // 69 -> 64: Sanskrit chapters 1-5 are generated now (HL-C200).
-    expect(identities.handwritten.size).toBe(62);
+    // 66 -> 61: Sanskrit chapters 1-5 are generated now (HL-C242).
+    expect(identities.handwritten.size).toBe(61);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
     );
