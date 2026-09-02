@@ -1,16 +1,21 @@
 {
   "language": "french",
   "chapter": 12,
-  "sourceHash": "fnv1a64:ff539d8ada0b512e",
+  "sourceHash": "fnv1a64:1762903b18d7a391",
   "lessonIds": [
-    "FR-C10-parents",
-    "FR-C10-freres-soeurs"
+    "FR-C10-pere",
+    "FR-C10-mere",
+    "FR-C10-grimm",
+    "FR-C10-frere",
+    "FR-C10-soeur",
+    "FR-C10-oe",
+    "FR-C10-practice"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
   "text": "french/narration/ch12.txt",
   "json": "french/narration/ch12.json",
-  "textHash": "fnv1a64:12d0ce48e3dc97d0",
-  "jsonHash": "fnv1a64:c45189055f149b77",
+  "textHash": "fnv1a64:badbd29f2610a6e3",
+  "jsonHash": "fnv1a64:e3a9763eb9938a04",
   "findings": []
 }

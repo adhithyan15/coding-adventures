@@ -56,9 +56,17 @@ it("pins French modality", () => expectLanguageModality("french"));
 // named for; and the two men who put themselves in a calendar of gods. Both
 // lived only in hand-written blocks and are now owned by FR-C09-fevrier and
 // FR-C09-aout.
+// 128 -> 135 lessons: retiring handwritten chapter 12, Family. Its two
+// schema-v1 lessons held FOUR headwords between them -- `le pere, la mere` in
+// one and `le frere, la soeur` in the other -- so no word in the chapter had a
+// lesson of its own. Seven schema-v2 lessons replace them: one per word, one
+// for Grimm's law (which the .tex hid inside a `grammarlens` and no lesson
+// owned), and one for the oe ligature, which is a LETTER and pays forward to
+// l'oeuf and l'oeil. Net +7 measured rather than +5, because the two retired
+// lessons were schema-v1 and never counted toward this budget.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 128,
+    lessons: 135,
     idioms: 3,
     senses: 7,
     cultureClaims: 19,

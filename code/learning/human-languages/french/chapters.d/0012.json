@@ -1,16 +1,27 @@
 {
   "chapter": 12,
-  "title": "Family",
+  "title": "Family, and the Oldest Words We Have",
   "label": "ch:family",
-  "canDo": "I can identify close family members in French and say who someone is.",
+  "canDo": "I can name the four closest family members in French, each with its article, and use one sound-law to recognise their English cousins.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C10-freres-soeurs",
+    "lesson": "FR-C10-practice",
     "kind": "task",
-    "summary": "Complete FR-C10-freres-soeurs, the canonical closing checkpoint, and demonstrate the chapter promise: identify close family members in French and say who someone is.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Four words — père, mère, frère, sœur — and every one of them is older than Latin. Each also hands you an English word you already knew: paternal, maternal, fraternal, sorority. One sound-law, Grimm's p→f and t→th, turns père into father and frāter into brother in a single move, and the fused letter œ arrives here and waits in cœur, œuf and œil.",
+    "assesses": [
+      "FR-LEX-PERE-01",
+      "FR-ETYMON-PATER-PATERNEL-02",
+      "FR-LEX-MERE-03",
+      "FR-ETYMON-MATER-MATERNEL-04",
+      "FR-ETYMON-GRIMM-PERE-FATHER-05",
+      "FR-LEX-FRERE-06",
+      "FR-ETYMON-FRATER-FRATERNEL-07",
+      "FR-LEX-SOEUR-08",
+      "FR-ETYMON-SOROR-SORORITE-09",
+      "FR-SCRIPT-OE-LIGATURE-10"
+    ],
+    "note": "Authored when chapter 12 left the hand-written set: two schema-v1 lessons held four headwords between them, so each word, the sound-law the .tex hid in a grammarlens, and the œ ligature now own a lesson each. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }

@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FR-C10-parents",
+    "id": "FR-C10-soeur",
     "language": "french",
     "chapter": 12,
-    "sequence": 345,
+    "sequence": 320,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8a6538d26a60fc9a"
+    "sourceHash": "fnv1a64:51c72185bed9864d"
   },
   "findings": []
 }

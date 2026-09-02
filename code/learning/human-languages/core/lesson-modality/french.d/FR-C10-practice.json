@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FR-C11-eau-vin",
+    "id": "FR-C10-practice",
     "language": "french",
-    "chapter": 13,
-    "sequence": 360,
+    "chapter": 12,
+    "sequence": 330,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5a1d1e5e61c7d799"
+    "sourceHash": "fnv1a64:cd5956ab4d016d59"
   },
   "findings": []
 }
