@@ -9,31 +9,31 @@ type: writing
 headword: "ദ"
 gloss: the single character ദ — recognised inside words you already say
 romanization: "da"
-prerequisites: [ML-S122-letter-ya]
+prerequisites: [ML-S121-letter-ssa]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-122]
+  knowledge: [ML-SCRIPT-RECOG-121]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-123]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-122, ML-SCRIPT-RECOG-123]
+  knowledge: [ML-SCRIPT-RECOG-121, ML-SCRIPT-RECOG-123]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S122-letter-ya]
+reviews_of: [ML-S121-letter-ssa]
 ---
 
 # ദ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-122] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-121] -->
 
-[PAUSE 1s] Before the new one: യ — what does it do?
+[PAUSE 1s] Before the new one: ഷ — what does it do?
 
 [PAUSE 2s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.

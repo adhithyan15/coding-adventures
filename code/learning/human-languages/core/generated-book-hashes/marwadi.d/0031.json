@@ -1,0 +1,14 @@
+{
+  "language": "marwadi",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:cb8a594e1def2dcd",
+  "lessonIds": [
+    "MW-R26-shopping-counter",
+    "MW-R26-transport-counter",
+    "MW-R26-food-counter",
+    "MW-R26-letters-close",
+    "MW-C26-counter-exchange",
+    "MW-R26-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch31-counter-exchange.tex"
+}

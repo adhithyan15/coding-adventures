@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S06-vowel-sign-aa
 spine_node: SPINE-MEET-GREET
-sequence: 595
+sequence: 161
 delivery: script
-chapter: 13
+chapter: 3
 type: writing
 headword: "ा"
-gloss: the single character ा — recognised inside words you already say
+gloss: the single character ◌ा — recognised inside words you already say
 romanization: "ā"
-prerequisites: [SA-S05-sign-virama]
+prerequisites: [SA-S109-vowel-sign-i]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-05]
+  knowledge: [SA-SCRIPT-RECOG-109]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-06]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-05, SA-SCRIPT-RECOG-06]
+  knowledge: [SA-SCRIPT-RECOG-04, SA-SCRIPT-RECOG-202, SA-SCRIPT-RECOG-109, SA-SCRIPT-RECOG-06]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S05-sign-virama]
+reviews_of: [SA-S04-letter-aa, SA-S202-letter-bha, SA-S109-vowel-sign-i]
 ---
 
 # ◌ा — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-04, SA-SCRIPT-RECOG-202, SA-SCRIPT-RECOG-109] -->
 
-[PAUSE 1s] Before the new one: ◌् — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: आ · भ · ◌ि. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ा
@@ -46,18 +46,18 @@ for pages without knowing which mark on the page it was.
 
 **◌ा** — *ā*.
 
-It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it with *ā*. Replaces, not adds — the *a* is gone.
+It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it. Replaces, not adds — the *a* is gone.
 
 Where it sits: a vertical bar to the right of the consonant.
 
 Worked through: **न** + **◌ा** = **ना** — *nā*.
 
-You already say these, and every one of them has ◌ा somewhere inside it:
+You already say these words, and ◌ा is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
 
-- **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **स्वागतम्** *svāgatam* — welcome (lit. "well come") (svāgatam)
-- **नाम** *nāma* — name
-- **भवान् / त्वम्** *bhavān / tvam* — you (respectful / familiar)
+- *namaskāraḥ* — hello (lit. "the making of a bow")
+- *dhanyavādaḥ* — thank you
+- *svāgatam* — welcome (lit. "well come")
+- *nāma* — name
 
 ## Writing: ◌ा — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-06] -->
@@ -72,12 +72,12 @@ and larger than it is printed.
 > shape gets into your hand in the meantime.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-109, SA-SCRIPT-RECOG-06] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ◌ा in the ones that have it]
+- [YOU LOOK: at this, and find ◌ा in it]
 
-> नमस्कारः  ·  स्वागतम्  ·  नमस्ते
+> ◌ा
 
 - [YOU TRACE: ◌ा three times, saying *ā* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ा once more]

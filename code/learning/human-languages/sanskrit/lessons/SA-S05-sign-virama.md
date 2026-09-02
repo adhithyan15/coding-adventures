@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S05-sign-virama
 spine_node: SPINE-MEET-GREET
-sequence: 575
+sequence: 61
 delivery: script
-chapter: 12
+chapter: 1
 type: writing
 headword: "्"
-gloss: the single character ् — recognised inside words you already say
-romanization: "(vowel killer)"
-prerequisites: [SA-S04-letter-aa]
+gloss: the single character ◌् — recognised inside words you already say
+romanization: "virāma"
+prerequisites: [SA-S200-letter-da]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-04]
+  knowledge: [SA-SCRIPT-RECOG-200]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-05]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-04, SA-SCRIPT-RECOG-05]
+  knowledge: [SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-200, SA-SCRIPT-RECOG-05]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S04-letter-aa]
+reviews_of: [SA-S02-letter-na, SA-S200-letter-da]
 ---
 
 # ◌् — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-200] -->
 
-[PAUSE 1s] Before the new one: आ — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: न · द. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌्
@@ -50,14 +50,14 @@ It is a **vowel-killer**. Every consonant in this script arrives with an *a* alr
 
 Where it sits: a stroke below that removes the inherent 'a' and forms a conjunct with the next consonant.
 
-Worked through: **क** + **◌्** = **क्** — *k*.
+Worked through: **न** + **◌्** = **न्** — *n*.
 
-You already say these, and every one of them has ◌् somewhere inside it:
+You already say these words, and ◌् is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
 
-- **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
-- **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **स्वागतम्** *svāgatam* — welcome (lit. "well come") (svāgatam)
-- **आम् / न** *ām / na* — yes / no (ām / na)
+- *namaste* — hello (lit. "a bow to you")
+- *namaskāraḥ* — hello (lit. "the making of a bow")
+- *dhanyavādaḥ* — thank you
+- *svāgatam* — welcome (lit. "well come")
 
 ## Writing: ◌् — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-05] -->
@@ -72,12 +72,12 @@ and larger than it is printed.
 > shape gets into your hand in the meantime.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-200, SA-SCRIPT-RECOG-05] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ◌् in the ones that have it]
+- [YOU LOOK: at this, and find ◌् in it]
 
-> नमस्ते  ·  नमस्कारः  ·  नाम
+> ◌्
 
 - [YOU TRACE: ◌् three times, and each time say what it does: **it kills the built-in *a***]
 - [YOU LOOK: back at any page of this chapter and find ◌् once more]

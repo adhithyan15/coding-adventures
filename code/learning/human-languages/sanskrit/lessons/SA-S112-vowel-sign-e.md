@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S112-vowel-sign-e
 spine_node: SPINE-MEET-GREET
-sequence: 596
+sequence: 401
 delivery: script
-chapter: 13
+chapter: 8
 type: writing
 headword: "े"
-gloss: the single character े — recognised inside words you already say
+gloss: the single character ◌े — recognised inside words you already say
 romanization: "e"
-prerequisites: [SA-S111-letter-ka]
+prerequisites: [SA-S119-letter-kha]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-111]
+  knowledge: [SA-SCRIPT-RECOG-119]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-112]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-111, SA-SCRIPT-RECOG-112]
+  knowledge: [SA-SCRIPT-RECOG-207, SA-SCRIPT-RECOG-111, SA-SCRIPT-RECOG-119, SA-SCRIPT-RECOG-112]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S111-letter-ka]
+reviews_of: [SA-S207-letter-ca, SA-S111-letter-ka, SA-S119-letter-kha]
 ---
 
 # ◌े — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-111] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-207, SA-SCRIPT-RECOG-111, SA-SCRIPT-RECOG-119] -->
 
-[PAUSE 1s] Before the new one: क — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: च · क · ख. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌े
@@ -46,16 +46,15 @@ for pages without knowing which mark on the page it was.
 
 **◌े** — *e*.
 
-It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it with *e*. Replaces, not adds — the *a* is gone.
+It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it. Replaces, not adds — the *a* is gone.
 
 Where it sits: a stroke above the top bar.
 
-Worked through: **म** + **◌े** = **मे** — *me*.
+Worked through: **न** + **◌े** = **ने** — *ne*.
 
-You already say these, and every one of them has ◌े somewhere inside it:
+You already say this word, and ◌े is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:
 
-- **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
-- **अवगच्छति · बुध्यते** *avagacchati · budhyate* — he, she, or it understands
+- *namaste* — hello (lit. "a bow to you")
 
 ## Writing: ◌े — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-112] -->
@@ -70,12 +69,12 @@ and larger than it is printed.
 > shape gets into your hand in the meantime.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-112] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-119, SA-SCRIPT-RECOG-112] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ◌े in the ones that have it]
+- [YOU LOOK: at this, and find ◌े in it]
 
-> नमस्ते  ·  नमस्कारः
+> ◌े
 
 - [YOU TRACE: ◌े three times, saying *e* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌े once more]

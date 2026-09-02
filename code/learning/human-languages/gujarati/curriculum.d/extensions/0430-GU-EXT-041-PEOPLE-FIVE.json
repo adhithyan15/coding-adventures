@@ -1,0 +1,20 @@
+{
+  "id": "GU-EXT-041-PEOPLE-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear and say five more everyday Gujarati words for people and things, write one of them, and retrieve all five one lesson later.",
+  "prerequisites": [
+    "GU-EXT-040-SKY-FIVE"
+  ],
+  "lessons": [
+    "GU-C30-hear-chhokro",
+    "GU-C30-hear-chhokri",
+    "GU-C30-hear-maanas",
+    "GU-C30-hear-pustak",
+    "GU-C30-hear-kaagal",
+    "GU-C30-people-five",
+    "GU-C30-kaagal",
+    "GU-R30-people-five-r1"
+  ]
+}

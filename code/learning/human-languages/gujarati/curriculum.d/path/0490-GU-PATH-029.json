@@ -1,0 +1,19 @@
+{
+  "id": "GU-PATH-029",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GU-C30-hear-chhokro",
+    "GU-C30-hear-chhokri",
+    "GU-C30-hear-maanas",
+    "GU-C30-hear-pustak",
+    "GU-C30-hear-kaagal",
+    "GU-C30-people-five",
+    "GU-C30-kaagal",
+    "GU-R30-people-five-r1"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-041-PEOPLE-FIVE"
+  ],
+  "after": []
+}

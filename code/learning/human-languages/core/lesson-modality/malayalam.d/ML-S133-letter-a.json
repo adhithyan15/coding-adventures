@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S133-letter-a",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 35,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:eafbfc87f30b9d2d",
+    "detachableSegments": [
+      "Script you'll notice: അ",
+      "Writing: അ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

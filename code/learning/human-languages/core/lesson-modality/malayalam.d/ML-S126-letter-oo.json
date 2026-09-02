@@ -2,8 +2,8 @@
   "lesson": {
     "id": "ML-S126-letter-oo",
     "language": "malayalam",
-    "chapter": 33,
-    "sequence": 705,
+    "chapter": 3,
+    "sequence": 162,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:2d35b4428ce73d94",
+    "sourceHash": "fnv1a64:942e3144fe6ba8b0",
     "detachableSegments": [
       "Script you'll notice: ഓ",
       "Writing: ഓ — copy what you see"

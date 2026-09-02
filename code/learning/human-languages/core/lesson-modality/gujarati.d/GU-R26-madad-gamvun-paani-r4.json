@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R26-madad-gamvun-paani-r4",
+    "language": "gujarati",
+    "chapter": 30,
+    "sequence": 1450,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89a642eaf7ee37d7",
+    "detachableSegments": [
+      "Writing — from sound, every model covered"
+    ]
+  },
+  "findings": []
+}

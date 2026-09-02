@@ -1,0 +1,17 @@
+{
+  "chapter": 31,
+  "title": "One Exchange, Three Counters",
+  "label": "ch:mw-counter-exchange",
+  "canDo": "I can run one five-turn counter exchange over the shopping, transport, and food words this book has already taught, changing nothing but the noun.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C26-counter-exchange",
+    "kind": "four-skill-function-map",
+    "summary": "Each of the three noun sets is run through the exchange in turn, the five least-drilled signs are retrieved alone, and the whole five-turn exchange then passes separately in listening, speaking, reading, and writing.",
+    "assesses": [
+      "MW-PERFORMANCE-COUNTER-EXCHANGE-FOUR-SKILL-01"
+    ]
+  }
+}

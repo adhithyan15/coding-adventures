@@ -3,22 +3,21 @@
     "id": "SA-S123-letter-o",
     "language": "sanskrit",
     "chapter": 24,
-    "sequence": 1172,
+    "sequence": 1151,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block",
-      "sight-cue"
+      "script-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:a8e980d57644e48b",
+    "sourceHash": "fnv1a64:d1ef05218188f94d",
     "detachableSegments": [
       "Script you'll notice: ओ",
       "Writing: ओ"

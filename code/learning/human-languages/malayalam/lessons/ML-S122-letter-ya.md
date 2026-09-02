@@ -2,41 +2,41 @@
 schema_version: 2
 id: ML-S122-letter-ya
 spine_node: SPINE-MEET-GREET
-sequence: 481
+sequence: 276
 delivery: script
-chapter: 19
+chapter: 5
 type: writing
 headword: "യ"
 gloss: the single character യ — recognised inside words you already say
 romanization: "ya"
-prerequisites: [ML-S121-letter-ssa]
+prerequisites: [ML-S142-chillu-n]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-121]
+  knowledge: [ML-SCRIPT-RECOG-142]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-122]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-121, ML-SCRIPT-RECOG-122]
+  knowledge: [ML-SCRIPT-RECOG-142, ML-SCRIPT-RECOG-122]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S121-letter-ssa]
+reviews_of: [ML-S142-chillu-n]
 ---
 
 # യ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-121] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-142] -->
 
-[PAUSE 1s] Before the new one: ഷ — what does it do?
+[PAUSE 1s] Before the new one: ൻ — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has been sitting in front of you on pages you have already read.
 
 ## Script you'll notice: യ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-122]; assesses=[] -->
@@ -45,12 +45,9 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *y*, it is **ya**.
 
-You already say these, and every one of them has യ somewhere inside it:
+- **പോയി വരാം** *pōyi varāṁ* — goodbye, from the chapter behind you
 
-- **പോയി വരാം** *pōyi varāṁ* — goodbye (lit. "I'll go and come back")
-- **ജോലി ചെയ്യുക** *jōli ceyyuka* — to work (lit. "work-do")
-- **എനിക്ക് മലയാളം അറിയാം** *enikku malayāḷam aṟiyām* — 'I know Malayalam'
-- **ദയവായി** *dayavāyi* — please (dayavāyi
+Look at the middle of **പോയി**: **യ** carrying the small *i* hook.
 
 ## Writing: യ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-122] -->
@@ -70,7 +67,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find യ in the ones that have it]
 
-> നമസ്കാരം
+> പോയി വരാം  ·  യ  ·  ഞാൻ
 
 - [YOU TRACE: യ three times, saying *ya* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find യ once more]

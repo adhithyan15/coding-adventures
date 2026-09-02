@@ -221,7 +221,7 @@ describe("the real corpus", () => {
     }
   });
 
-  it("every Indic track now teaches letters, and Tamil still has the most script lessons", () => {
+  it("every Indic track now teaches letters, and Tamil leads the ones still in debt", () => {
     // This test used to assert `scriptLessons === 0` for Telugu, Kannada and
     // Malayalam, which was true and was the problem: four of the six Indic
     // tracks taught no letter at all. HL12's recognition segments ended that, so
@@ -233,11 +233,26 @@ describe("the real corpus", () => {
     // Malayalam below Tamil's remaining debt, which is now tracked in #12521.
     const tamil = report.tracks.find((t) => t.language === "tamil")!;
     expect(tamil.neverTaughtGlyphs).toBeLessThanOrEqual(11);
-    for (const language of ["telugu", "kannada", "malayalam", "sanskrit"]) {
+    for (const language of ["telugu", "kannada", "sanskrit"]) {
       const other = report.tracks.find((t) => t.language === language);
       if (!other) continue;
       expect(other.scriptLessons, language).toBeGreaterThan(0);
       expect(tamil.scriptLessons, language).toBeGreaterThan(other.scriptLessons);
+    }
+    // Malayalam has since overtaken Tamil on VOLUME, and that is not a defect,
+    // so it is no longer held under the lesson-count ordering. Closure is
+    // measured in READING ORDER, so a letter taught late cannot retire an
+    // earlier violation: clearing Malayalam's opening chapters meant teaching
+    // thirty characters inside Chapters 1-5, where the words that need them
+    // actually are. What the ordering was standing in for -- that a track's
+    // letters are genuinely taught before they are asked for -- is pinned
+    // directly here instead, which is a strictly stronger claim than the
+    // count comparison it replaces.
+    const malayalam = report.tracks.find((t) => t.language === "malayalam");
+    if (malayalam) {
+      expect(malayalam.scriptLessons).toBeGreaterThan(0);
+      expect(malayalam.neverTaughtGlyphs).toBe(0);
+      expect(malayalam.violations).toBeLessThanOrEqual(1);
     }
   });
 });

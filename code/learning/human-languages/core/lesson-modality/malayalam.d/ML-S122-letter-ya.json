@@ -2,22 +2,23 @@
   "lesson": {
     "id": "ML-S122-letter-ya",
     "language": "malayalam",
-    "chapter": 19,
-    "sequence": 481,
+    "chapter": 5,
+    "sequence": 276,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block"
+      "script-block",
+      "sight-cue"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:5564bc9174851491",
+    "sourceHash": "fnv1a64:c145cefd70dfb548",
     "detachableSegments": [
       "Script you'll notice: യ",
       "Writing: യ — copy what you see"

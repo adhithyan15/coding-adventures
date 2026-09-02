@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C24-hear-lo",
+    "language": "marwadi",
+    "chapter": 29,
+    "sequence": 2310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d2dc419a38082eb"
+  },
+  "findings": []
+}

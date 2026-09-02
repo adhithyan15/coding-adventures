@@ -1,5 +1,11 @@
 {
   "language": "sanskrit",
   "chapter": 2,
-  "output": "sanskrit/book/chapters/ch02-introductions.tex"
+  "output": "sanskrit/book/chapters/ch02-introductions.tex",
+  "embeddedLessonIds": [
+    "SA-S04-letter-aa",
+    "SA-S109-vowel-sign-i",
+    "SA-S201-sign-visarga",
+    "SA-S202-letter-bha"
+  ]
 }

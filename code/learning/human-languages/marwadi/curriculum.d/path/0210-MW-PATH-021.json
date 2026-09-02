@@ -1,0 +1,20 @@
+{
+  "id": "MW-PATH-021",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C22-hear-kitno",
+    "MW-C22-kitno",
+    "MW-C22-hear-price-question",
+    "MW-C22-price-question",
+    "MW-R22-price-two",
+    "MW-C22-hear-total-question",
+    "MW-C22-total-question",
+    "MW-C22-price-three",
+    "MW-R22-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-035-PRICE-QUESTION"
+  ],
+  "after": []
+}

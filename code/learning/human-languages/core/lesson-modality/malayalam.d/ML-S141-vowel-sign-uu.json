@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S141-vowel-sign-uu",
+    "language": "malayalam",
+    "chapter": 4,
+    "sequence": 226,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:05d87ff7d464740f",
+    "detachableSegments": [
+      "Script you'll notice: ◌ൂ",
+      "Writing: ◌ൂ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
