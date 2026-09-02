@@ -14,7 +14,7 @@ layout ReviewCard {
       )
     }
     If ( when: slot: type-answer-active ) {
-      Column [ type-answer-panel ] {
+      Box [ type-answer-panel ] {
         Text [ type-answer-label ] (
           content : slot: type-answer-label
         )
@@ -34,7 +34,7 @@ layout ReviewCard {
       }
     }
     If ( when: slot: answer-visible ) {
-      Column [ answer-panel ] {
+      Box [ answer-panel ] {
         Text [ answer-label ] (
           content : slot: answer-label
         )
