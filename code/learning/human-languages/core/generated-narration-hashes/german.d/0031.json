@@ -1,17 +1,18 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:7988dbf34b4221cf",
+  "sourceHash": "fnv1a64:5f695a83da9e8b38",
   "lessonIds": [
-    "GE-C29-freund",
-    "GE-C29-freundin",
-    "GE-C29-familie"
+    "GE-C27-gehen",
+    "GE-C27-laufen",
+    "GE-C27-oeffnen",
+    "GE-C27-schliessen"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "german/narration/ch31.txt",
   "json": "german/narration/ch31.json",
-  "textHash": "fnv1a64:62dc768b6804e364",
-  "jsonHash": "fnv1a64:e64ed9954b50b293",
+  "textHash": "fnv1a64:101dc31afe8077b2",
+  "jsonHash": "fnv1a64:278eef0bb2d1740e",
   "findings": []
 }

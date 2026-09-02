@@ -1,21 +1,21 @@
 {
   "chapter": 25,
-  "title": "Green and Yellow",
-  "label": "ch:ge-green-and-yellow",
-  "canDo": "I can name green and yellow in German, and say why grün is English green's own cousin while gelb's link to French jaune is only probable.",
+  "title": "Weather",
+  "label": "ch:ge-weather",
+  "canDo": "I can talk about the weather in German — das Wetter, es ist heiß, es ist kalt, es regnet.",
   "spineNodes": [
-    "SPINE-DEFINITE-REFERENCE"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C23-gruen-gelb",
+    "lesson": "GE-C21-das-wetter",
     "kind": "production",
-    "summary": "Say grün as the direct cousin of English green from a root unrelated to Latin viridis, say gelb, and state the gelb / jaune cousinhood as probable rather than airtight. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Say das Wetter as English weather's own cousin, build hot and cold with sein rather than a Romance 'make', and say es regnet on the same root as English rain. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "GE-LEX-GRUEN-02",
-      "GE-ETYMON-GRUEN-03",
-      "GE-LEX-GELB-04",
-      "GE-ETYMON-GELB-05",
-      "GE-EVIDENCE-GELB-JAUNE-06"
+      "GE-LEX-WETTER-02",
+      "GE-ETYMON-WETTER-03",
+      "GE-GRAMMAR-WEATHER-SEIN-04",
+      "GE-LEX-REGNET-05",
+      "GE-ETYMON-REGNET-06"
     ]
   }
 }

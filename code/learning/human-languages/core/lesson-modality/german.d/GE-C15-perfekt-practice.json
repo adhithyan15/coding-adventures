@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C15-perfekt-practice",
+    "language": "german",
+    "chapter": 16,
+    "sequence": 385,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f72bb18ce4a08398"
+  },
+  "findings": []
+}

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C31-finger",
     "language": "german",
-    "chapter": 33,
+    "chapter": 35,
     "sequence": 980,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1c0cc4121a1b8234"
+    "sourceHash": "fnv1a64:fb599a83d19db92e"
   },
   "findings": []
 }

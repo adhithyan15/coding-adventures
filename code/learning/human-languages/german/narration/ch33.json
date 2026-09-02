@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 33,
-  "title": "Arm, Finger, Foot, Heart",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ec657b1c19751aac",
+  "title": "Friend and Family",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:3694eb43b00b1452",
   "lessons": [
     {
-      "id": "GE-C31-arm",
-      "sequence": 970,
-      "title": "der Arm — the word Hand's own table already named",
-      "headword": "der Arm",
-      "romanization": "der Arm",
-      "gloss": "arm — named on the Hand table and now finally taught, a word Grimm's law never had to touch",
+      "id": "GE-C29-freund",
+      "sequence": 900,
+      "title": "der Freund — a word that was already a compliment",
+      "headword": "der Freund",
+      "romanization": "der Freund",
+      "gloss": "friend — a Germanic cousin of English friend, both frozen out of the same old verb meaning \"to love\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fcd03f74eb19cbf",
+      "sourceHash": "fnv1a64:813f5aed9cd904f7",
       "notice": null,
       "blocks": [
         {
@@ -35,52 +35,48 @@
             },
             {
               "kind": "speech",
-              "text": "The Hand lesson ran a table — Hand, Arm, Finger, Fuß, Herz — to show how closely German and English match on the body. Only Hand was actually taught. Here is the second name from that table."
+              "text": "You were taught freut mich — \"pleased to meet you,\" literally \"it gladdens me.\" The person doing the gladdening has a name of their own, and it is built from the very same root."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: der Arm",
+          "title": "You'll want to know: der Freund",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Arm — arm. Masculine."
+              "text": "der Freund — friend (male, or a friend in general). Masculine."
             },
             {
               "kind": "speech",
-              "text": "Das ist der Arm. — \"This/That is the arm.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Arme."
+              "text": "Das ist der Freund. — \"This/That is the friend.\""
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: an open a",
+          "title": "Sounds you'll need: eu",
           "segments": [
             {
               "kind": "speech",
-              "text": "Arm is said almost exactly as it is spelled, with German's open ah vowel: Arm = AHRM. Of everything in this chapter, it is the smallest gap between the German word and its English cousin."
+              "text": "eu is a diphthong said oy, exactly as in English boy: Freund = FROYND. It is the same sound spelled äu in Häuser and läuft, just without the umlaut in front of it."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: too close to shift",
+          "title": "The word, taken apart: a verb wearing a noun's clothes",
           "segments": [
             {
               "kind": "speech",
-              "text": "Arm is Proto-Germanic armaz, the direct cousin of English arm, from Proto-Indo-European h₂er-, \"to fit together, to join.\" That same root, by a separate Latin path, gave English art (a fitting-together of skill) and harmony by way of Greek."
+              "text": "Freund and English friend are not merely cousins — they are the exact same inherited word, Proto-Germanic frijōnds. That word was never a plain noun to begin with: it is a frozen present participle of the verb frijōną, \"to love,\" so Freund literally means \"the one who is loving.\" freut mich is built on the same family: both trace to Proto-Indo-European preyH-, \"to love, to please.\" The goddess Frigg — whose day German keeps as Freitag and English as Friday — carries the same root one step further."
             },
             {
               "kind": "speech",
-              "text": "Vater/father and Fuß/foot both show Grimm's law loudly, because their starting consonants were exactly the ones the law changed. Arm shows why the law is a rule about specific sounds, not a blanket difference between German and English: the consonants in armaz were never in the law's path, so nothing had to move, and Arm and arm still look like the same word today for the same reason Hand and hand do."
+              "text": "Milch needed no journey to reach German; Freund did not either — but where Milch is a noun that was always a noun, Freund is a verb that stopped moving and became one."
             }
           ]
         },
@@ -98,29 +94,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Arm\" — AHRM; \"die Arme\"",
+              "instruction": "\"der Freund\" — FROYND",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Arm\" — *AHRM*; \"die Arme\"]"
+              "source": "[YOU SAY: \"der Freund\" — *FROYND*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist der Arm.\"",
+              "instruction": "\"Das ist der Freund.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Arm.\"]"
+              "source": "[YOU SAY: \"Das ist der Freund.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the point — \"Grimm's law only moves the sounds in its path; Arm's sounds were never in it\"",
+              "instruction": "the family — \"Freund, freut mich, Frigg, Friday — all one root\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the point — \"Grimm's law only moves the sounds in its path; Arm's sounds were never in it\"]"
+              "source": "[YOU SAY: the family — \"Freund, freut mich, Frigg, Friday — all one root\"]"
             }
           ]
         },
@@ -137,26 +133,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"arm\" with its article and plural. (Der Arm, die Arme.) Which earlier table already named this word? (Hand's table — Hand, Arm, Finger, Fuß, Herz.) Why does Arm look almost identical to English arm, when Vater/father do not? (Its sounds were never in Grimm's law's path.)"
+              "text": "Give \"friend\" with its article. (Der Freund.) What part of speech did Freund start out as? (A verb — a frozen present participle of \"to love.\") Which greeting phrase shares its root? (Freut mich.) Which day of the week carries the same PIE root one step further? (Freitag / Friday, from the goddess Frigg.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C31-finger",
-      "sequence": 980,
-      "title": "der Finger — maybe \"one of the five\"",
-      "headword": "der Finger",
-      "romanization": "der Finger",
-      "gloss": "finger — identical to its English cousin, and possibly, though not certainly, built on the word for \"five\"",
+      "id": "GE-C29-freundin",
+      "sequence": 910,
+      "title": "die Freundin — one suffix, and the fox that kept it in English",
+      "headword": "die Freundin",
+      "romanization": "die Freundin",
+      "gloss": "friend (female) — built on Freund with the native feminine suffix -in, the same suffix English kept in exactly one fossil word, vixen",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0cc4121a1b8234",
+      "sourceHash": "fnv1a64:cb76802b5d354f30",
       "notice": null,
       "blocks": [
         {
@@ -172,338 +168,49 @@
             },
             {
               "kind": "speech",
-              "text": "The third name from the Hand table, and the first numbers come back for a cameo."
+              "text": "You have der Freund. German does not need a new word for the feminine — it needs one small, reusable ending."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: der Finger",
+          "title": "You'll want to know: die Freundin",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Finger — finger. Masculine, spelled and said almost exactly like English."
+              "text": "die Freundin — friend (female). Feminine."
             },
             {
               "kind": "speech",
-              "text": "Das ist der Finger. — \"This/That is the finger.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Finger — unchanged, one of the small set of German plurals that add nothing at all."
+              "text": "Das ist die Freundin. — \"This/That is the (female) friend.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: possibly the fiver",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Finger is Proto-Germanic fingraz, inherited straight into English with no change of shape at all — the closest match of any word in this chapter."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: a tempting but unproven link",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You were taught fünf, \"five,\" from Germanic fimf. One proposed account connects fingraz to that very number, as if a finger were once simply \"one of the five.\" It is a satisfying story, and it shows up often — but it is reported by standard references as plausible, not proven: the sound changes needed to get from fimf to fingraz are not fully regular, so the link stays a proposal rather than a settled fact. Held loosely, the way hören held \"sharp-eared\"."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der Finger\" — \"die Finger\", unchanged plural",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Finger\" — \"die Finger\", unchanged plural]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Das ist der Finger.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Finger.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the maybe-link — \"Finger, fünf — plausible, not proven\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the maybe-link — \"Finger, fünf — plausible, not proven\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"finger\" with its article and plural. (Der Finger, die Finger — unchanged.) What number might Finger be built on, and how certain is that link? (Fünf, \"five\" — plausible, not proven.) Name one other word in this book that carries the same kind of unsettled-but-cited etymology. (Hören's \"sharp-eared\" account.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C31-fuss",
-      "sequence": 990,
-      "title": "der Fuß — Grimm's law, on a second word",
-      "headword": "der Fuß",
-      "romanization": "der Fuß",
-      "gloss": "foot — the fourth name from the Hand table, and the same p-to-f Grimm's law pattern Vater already taught",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:2b047032c098449c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One name left on the Hand table, and it turns out to run the very same sound-law you already learned on a completely different word."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: der Fuß",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "der Fuß — foot. Masculine."
-            },
-            {
-              "kind": "speech",
-              "text": "Das ist der Fuß. — \"This/That is the foot.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Füße — the umlaut marking more than one, the same fronting pattern behind Mann becomes Männer."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: ß after a long vowel",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Fuß = FOOSS, a long u followed by the sharp s spelled ß. The colour words already gave you the rule this word follows exactly: ß after a long vowel, ss after a short one — the same reason weiß keeps its ß while Fluss does not."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: p becomes f, a second time",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Fuß is Proto-Germanic fōts, cousin of English foot, from Proto-Indo-European pṓds. That opening p becomes f is the very shift Vater/father showed you — Grimm's law, run again here on an unrelated word, with the identical result: Latin kept the old p in ped- (giving English pedal, pedestrian), Germanic moved it to f in both Fuß and foot."
-            },
-            {
-              "kind": "speech",
-              "text": "This chapter has now shown you two shapes of Grimm's law and one word that never needed it at all: Vater and Fuß both shift p becomes f; Arm sits outside the law's reach entirely, unchanged in both languages."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der Fuß\" — FOOSS; \"die Füße\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Fuß\" — *FOOSS*; \"die Füße\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Das ist der Fuß.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Fuß.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the shift, twice — \"Vater/father, Fuß/foot — both p to f\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the shift, twice — \"Vater/father, Fuß/foot — both p to f\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"foot\" with its article and plural. (Der Fuß, die Füße.) Which family word already showed this same sound-law step? (Vater/father, both p becomes f.) Why does Fuß keep its ß while Fluss does not? (Long vowel before it, by the eszett rule.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C31-herz",
-      "sequence": 1000,
-      "title": "das Herz — the body list, complete at last",
-      "headword": "das Herz",
-      "romanization": "das Herz",
-      "gloss": "heart — the last name from the Hand table, closing it with the same k-to-h Grimm's law swap already heard on hören and Hund",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9f5368ee1938e690",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The Hand lesson printed a five-word table and taught you one of them. This lesson teaches the fifth and closes it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: das Herz",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "das Herz — heart. Neuter — the one organ word in this chapter that breaks the masculine pattern of Arm, Finger and Fuß."
-            },
-            {
-              "kind": "speech",
-              "text": "Das ist das Herz. — \"This/That is the heart.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Herzen."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: a short e",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Herz takes a short, open e, as in English bed: Herz = HAIRTS, the z said ts, exactly as in Katze."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: the same k-to-h swap, a third time",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Herz is Proto-Germanic hertan, cousin of English heart, from Proto-Indo-European ḱērd-. The opening consonant is Grimm's law again — old k became Germanic h — the identical step already heard on hören (against Greek akoúein, English acoustic) and on Hund (against Latin canis). Three separate words, one law, heard a third time: k stays k in the languages that didn't shift, and softens to h in every Germanic one."
-            },
-            {
-              "kind": "speech",
-              "text": "That five-word list is finally complete. Hand was taught that chapter; Arm, Finger, Fuß and now Herz waited fourteen chapters for their turn. All five are native Germanic, all five are direct cousins of their English translations, and not one of them was borrowed from anywhere."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "grammar",
-          "title": "Grammar Lens: the whole chapter, run once more",
+          "title": "Grammar Lens: the ending that builds a whole class of nouns",
           "segments": [
             {
               "kind": "speech",
-              "text": "Run this chapter's four words back to back: der Arm, said almost exactly as spelled, sitting outside Grimm's law entirely; der Finger, identical to English and maybe — not certainly — built on fünf; der Fuß, the p becomes f Grimm's-law twin of Vater, its ß long-vowel-marked exactly as Chapter 13 taught; and das Herz, the k becomes h twin of hören and Hund. Four words, four different sound-law stories, and not one of them borrowed."
+              "text": "Add -in to a masculine noun for a person and you get the feminine: der Lehrer becomes die Lehrerin (\"teacher\"), der Student becomes die Studentin (\"student\"), der Freund becomes die Freundin. It is entirely regular, and it works on almost any such noun you will ever meet — one rule, not a new word each time."
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: English kept this suffix exactly once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-in is native Germanic, not a Latin import — English inherited the same suffix and mostly stopped using it. Almost mostly: one English word still carries it, fossilized, unrecognized as a suffix by most speakers who use it — vixen, \"female fox,\" built the same way Freundin is built. English did not lose this pattern by borrowing over it; it simply stopped reaching for it, and later borrowed French -ess (princess, actress) to do the same job instead. German never stopped."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -516,43 +223,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Herz\" — HAIRTS; \"die Herzen\"",
+              "instruction": "\"die Freundin\" — Freund plus -in",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Herz\" — *HAIRTS*; \"die Herzen\"]"
+              "source": "[YOU SAY: \"die Freundin\" — Freund plus -in]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist das Herz.\"",
+              "instruction": "\"Das ist die Freundin.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist das Herz.\"]"
+              "source": "[YOU SAY: \"Das ist die Freundin.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole list, complete — \"Hand, Arm, Finger, Fuß, Herz\"",
+              "instruction": "the pattern — \"Lehrer/Lehrerin, Student/Studentin, Freund/Freundin\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole list, complete — \"Hand, Arm, Finger, Fuß, Herz\"]"
+              "source": "[YOU SAY: the pattern — \"Lehrer/Lehrerin, Student/Studentin, Freund/Freundin\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the k-to-h swap, three times — \"Hund/canis, hören/akoúein, Herz/kardia\"",
+              "instruction": "the English fossil — \"fox, vixen — the same -in, once\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the k-to-h swap, three times — \"Hund/canis, hören/akoúein, Herz/kardia\"]"
+              "source": "[YOU SAY: the English fossil — \"fox, vixen — the same -in, once\"]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -564,7 +271,153 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"heart\" with its article and plural. (Das Herz, die Herzen.) Which two earlier words showed the same Grimm's-law k becomes h swap? (Hören and Hund.) Name all five words from that original table, now that all five are taught. (Hand, Arm, Finger, Fuß, Herz.) Which one breaks the chapter's masculine pattern, and how? (Herz — it is neuter.)"
+              "text": "Give \"friend (female)\" with its article. (Die Freundin.) What suffix builds it from Freund, and what does that suffix do generally? (-in — it makes the feminine of a person-noun.) Is -in borrowed or native? (Native — English inherited it too.) Name the one English word that still shows it. (Vixen.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C29-familie",
+      "sequence": 920,
+      "title": "die Familie — the word that gathers Eltern and Geschwister",
+      "headword": "die Familie",
+      "romanization": "die Familie",
+      "gloss": "family — the whole group the Eltern and Geschwister already named the members of, and this chapter's one Latin loan beside two native words",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ef0fbfad53bc67a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have der Freund and die Freundin, both native, both built on a verb meaning \"to love.\" The word for the group at home has a completely different history."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Familie",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Familie — family. Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Das ist die Familie. — \"This/That is the family.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already have the members: Vater, Mutter, Bruder, Schwester — and the collective Geschwister, \"siblings.\" Familie is the word that gathers all of them into one group."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: three syllables, not two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Familie keeps all three vowels distinct: fa-MEE-lee-eh, four syllables in careful speech, with the stress on the second. It does not collapse the way English family does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: the one Latin loan among these three chapters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Familie is a Latin loan: familia, \"household,\" related to famulus, \"servant\" or \"slave\" — a Roman household word, not originally a word about blood relation at all. English family borrowed the very same Latin root, by way of Old French, well before German did; German took Familie directly from Latin later, in the early modern period, which is why the two loans look so close to identical without one having been copied from the other."
+            },
+            {
+              "kind": "speech",
+              "text": "So this small chapter runs the same shape twice: Freund and Freundin are native, built from a Germanic verb meaning \"to love\"; Familie is borrowed, from a Roman word that first meant \"household staff.\" The food lesson set up exactly this pattern with Wasser native beside Wein borrowed, and the drinks just ran it a third time with Milch beside Kaffee and Tee."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Familie\" — fa-MEE-lee-eh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Familie\" — *fa-MEE-lee-eh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das ist die Familie.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das ist die Familie.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the members inside it — \"Vater, Mutter, Bruder, Schwester, Geschwister\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the members inside it — \"Vater, Mutter, Bruder, Schwester, Geschwister\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "native beside borrowed — \"Freund, Freundin native; Familie borrowed\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: native beside borrowed — \"Freund, Freundin native; Familie borrowed\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"family\" with its article. (Die Familie.) Is it native or borrowed? (Borrowed — Latin familia, \"household.\") What did familia first mean, before \"relatives\"? (Household — kin to famulus, \"servant.\") Which two words from this chapter are native instead? (Freund and Freundin.)"
             }
           ]
         }

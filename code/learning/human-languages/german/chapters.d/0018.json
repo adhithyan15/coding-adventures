@@ -1,25 +1,26 @@
 {
   "chapter": 18,
-  "title": "The Past That Takes To Be",
-  "label": "ch:ge-perfekt-sein",
-  "canDo": "I can build the German past of verbs of motion and change with the verb for “to be” instead of the verb for “to have”, and say why the participle never changes.",
+  "title": "I Am, You Are",
+  "label": "ch:sein",
+  "canDo": "I can say what someone is in German, using any of the six present forms of the verb for “to be” — and say that I am tired.",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-PAST"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GE-C16-haben-oder-sein",
+    "lesson": "GE-C16-praesens-practice",
     "kind": "task",
-    "summary": "Motion and change of state build their perfect on sein rather than haben — ich bin gegangen beside ich habe gelernt. The chapter teaches the rule, then the four verbs that follow it (kommen, fahren, werden, bleiben), then the short list that has to be learned outright, and finally the one place German is simpler than French: the participle in the perfect agrees with nothing at all.",
+    "summary": "sein is the one German verb whose forms cannot be guessed from its infinitive, so this chapter meets them one at a time — bin, bist, ist, sind, seid, sind — and only assembles the grid once every cell has had its own lesson. It closes with müde, the adjective that finishes ich bin, and a short exchange that runs on nothing but this verb.",
     "assesses": [
-      "GE-GRAMMAR-PERFEKT-SEIN-01",
-      "GE-LEX-KOMMEN-01",
-      "GE-LEX-FAHREN-01",
-      "GE-LEX-WERDEN-01",
-      "GE-LEX-BLEIBEN-01",
-      "GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01",
-      "GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01",
-      "GE-GRAMMAR-PARTIZIP-ATTRIBUTIV-01"
+      "GE-LEX-SEIN-01",
+      "GE-SOUND-SEIN-01",
+      "GE-GRAMMAR-SEIN-ICH-BIN-01",
+      "GE-GRAMMAR-SEIN-DU-BIST-01",
+      "GE-GRAMMAR-SEIN-ER-IST-01",
+      "GE-GRAMMAR-SEIN-WIR-SIND-01",
+      "GE-GRAMMAR-SEIN-IHR-SEID-01",
+      "GE-GRAMMAR-SEIN-SIE-SIND-01",
+      "GE-LEX-MUEDE-01"
     ],
-    "note": "The second half of the hand-written chapter 16, now a chapter of its own. The payoff claims all eight atoms: the practice lesson runs the whole haben/sein table, the French comparison that shows the missing agreement, and the attributive participle that is the one place the ending returns."
+    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces, because the practice lesson is where the six forms are first allowed to appear together: the grid there is a recap of six lessons, not an introduction, which is the only condition under which a paradigm table may be printed at all."
   }
 }

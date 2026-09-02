@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 32,
-  "title": "Eyes, Ears, Mouth, Nose",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8910eb5f7f5ef320",
+  "title": "Coffee, Tea, and Milk",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:4647fdd2fcc3ded0",
   "lessons": [
     {
-      "id": "GE-C30-auge",
-      "sequence": 930,
-      "title": "das Auge — back to the head, one part at a time",
-      "headword": "das Auge",
-      "romanization": "das Auge",
-      "gloss": "eye — the third gender back on a body part, and a direct Germanic cousin of English eye",
+      "id": "GE-C28-kaffee",
+      "sequence": 870,
+      "title": "der Kaffee — the drink that closes one chapter and opens another",
+      "headword": "der Kaffee",
+      "romanization": "der Kaffee",
+      "gloss": "coffee — a loanword that crossed from Arabic to German by way of Turkish and Italian, and the first word in a new polite request",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfb56e43fa6b0e35",
+      "sourceHash": "fnv1a64:7f310b5e819a359a",
       "notice": null,
       "blocks": [
         {
@@ -35,52 +35,52 @@
             },
             {
               "kind": "speech",
-              "text": "You already have der Kopf and die Hand. The head has more in it than its own name — starting with what you see with."
+              "text": "The last chapter ended by closing a hand. Now open the day with something to drink — and a new use for a request pattern you already own."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: das Auge",
+          "title": "You'll want to know: der Kaffee",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Auge — eye. Neuter."
+              "text": "der Kaffee — coffee. Masculine."
             },
             {
               "kind": "speech",
-              "text": "Das ist das Auge. — \"This/That is the eye.\""
+              "text": "Bitte taught you a complete polite request out of two known words: Wasser, bitte. The same pattern takes any drink you can name:"
             },
             {
               "kind": "speech",
-              "text": "The plural is die Augen — both eyes together, the form you will hear far more often than the singular."
+              "text": "Kaffee, bitte. — Coffee, please."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: au",
+          "title": "Sounds you'll need: where the stress falls",
           "segments": [
             {
               "kind": "speech",
-              "text": "au is a diphthong said ow, as in English how: Auge = OW-geh."
+              "text": "Kaffee is said two ways, and both are standard: many speakers in the north stress the first syllable, KAF-fay; many in the south, and most international learners' material, stress the second, kaf-FAY. Unlike gehen and laufen's Germany/Austria split, this one is not regional in any strict sense — you will hear both from native speakers in the same city."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: a root three families still share",
+          "title": "The word, taken apart: a Turkish word wearing an Italian coat",
           "segments": [
             {
               "kind": "speech",
-              "text": "Auge is Proto-Germanic augô, the direct cousin of English eye — both inherited, no loan in either direction, from Proto-Indo-European h₃ekʷ-. That root did not stay hidden in only the Germanic family: Latin turned it into oculus (giving English ocular, binoculars), and Greek into ophthalmós (giving English ophthalmology). Three branches of one family tree, and English ended up borrowing back two Latin and Greek reflexes of the very root it had already inherited natively as eye."
+              "text": "Kaffee is a loanword, and a young one by this book's standard — nothing like Wein's two-thousand-year-old borrowing from Latin vīnum. The word travelled Arabic qahwa becomes Ottoman Turkish kahve becomes Italian caffè becomes German Kaffee. English coffee and French café took the same Italian step, which is why the whole spread of European words for the drink still rhymes with each other despite crossing four language families to get here."
             },
             {
               "kind": "speech",
-              "text": "Kopf was a container word that took over the everyday job. Auge needed no such replacement — it has meant \"eye\" the whole way down."
+              "text": "The last chapter closed on schließen, a verb Proto-Germanic built and English lost outright. Kaffee is the opposite kind of word: nothing here is inherited, and nothing needed to be — German simply took the whole word, sound and all, the way it took Wein centuries earlier."
             }
           ]
         },
@@ -98,29 +98,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Auge\" — OW-geh; \"die Augen\" — both eyes",
+              "instruction": "\"der Kaffee\" — either stress, both correct",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Auge\" — *OW-geh*; \"die Augen\" — both eyes]"
+              "source": "[YOU SAY: \"der Kaffee\" — either stress, both correct]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist das Auge.\"",
+              "instruction": "\"Kaffee, bitte.\" — the bitte pattern, one word swapped",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist das Auge.\"]"
+              "source": "[YOU SAY: \"Kaffee, bitte.\" — the *bitte* pattern, one word swapped]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three-family root — \"Auge/eye, Latin oculus, Greek ophthalmós\"",
+              "instruction": "the route — \"qahwa, kahve, caffè, Kaffee\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three-family root — \"Auge/eye, Latin oculus, Greek ophthalmós\"]"
+              "source": "[YOU SAY: the route — \"qahwa, kahve, caffè, Kaffee\"]"
             }
           ]
         },
@@ -137,26 +137,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"eye\" with its article, and its plural. (Das Auge, die Augen.) Is it native or borrowed? (Native — cousin of English eye.) Name one English word borrowed from the same PIE root by way of Latin or Greek. (Ocular, binoculars, or ophthalmology.)"
+              "text": "Give \"coffee\" with its article. (Der Kaffee.) Ask for it politely. (Kaffee, bitte.) Name the three languages the word crossed before German. (Arabic, Turkish, Italian.) Is Kaffee inherited like schließen, or borrowed like Wein? (Borrowed.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C30-ohr",
-      "sequence": 940,
-      "title": "das Ohr — the part hören was named for",
-      "headword": "das Ohr",
-      "romanization": "das Ohr",
-      "gloss": "ear — another direct Germanic cousin of its English translation, and the sense hören already named",
+      "id": "GE-C28-tee",
+      "sequence": 880,
+      "title": "der Tee — the same loan as English, by the same ship",
+      "headword": "der Tee",
+      "romanization": "der Tee",
+      "gloss": "tea — a word that looks like its English cousin and is not said like it, and travelled to Europe by sea rather than overland",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:933790957131d207",
+      "sourceHash": "fnv1a64:c533e2de26041138",
       "notice": null,
       "blocks": [
         {
@@ -172,52 +172,48 @@
             },
             {
               "kind": "speech",
-              "text": "You have the eye. You already have the verb for what the next part does — hören, \"to hear\" — without ever naming the part itself."
+              "text": "Kaffee came overland through Turkey and Italy. The next drink took a completely different road — by sea."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: das Ohr",
+          "title": "You'll want to know: der Tee",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Ohr — ear. Neuter."
+              "text": "der Tee — tea. Masculine."
             },
             {
               "kind": "speech",
-              "text": "Das ist das Ohr. — \"This/That is the ear.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Ohren."
+              "text": "Tee, bitte. — Tea, please."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: a long, plain o",
+          "title": "Sounds you'll need: not the English vowel",
           "segments": [
             {
               "kind": "speech",
-              "text": "Ohr is a single long o, said the way you'd say the letter itself in English: Ohr = OHR, no glide, no second vowel."
+              "text": "Tee is spelled almost exactly like the English word it translates, and said nothing like it. German ee is a long, steady ay: Tee = TAY, not tea's ee. Looking alike on the page and sounding different is its own small trap — worth naming so it doesn't catch you."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: the root inside hören",
+          "title": "The word, taken apart: the other half of the tea map",
           "segments": [
             {
               "kind": "speech",
-              "text": "Ohr is Proto-Germanic auzô, the direct cousin of English ear — both from Proto-Indo-European h₂ous-. One disputed idea about hören was already flagged: some accounts break its root into \"sharp\" plus \"ear,\" which would put this very word, Ohr, hiding inside the verb for using it. That analysis was marked cited but unsettled there, and it stays unsettled here — a tidy story is not the same as a confirmed one."
+              "text": "Tee is Hokkien Chinese tê, the word for the plant in the coastal Chinese dialect that Dutch traders dealt with directly. Dutch thee carried it into Europe by sea, and German took the word from Dutch — the same route English tea followed, which is why Tee and tea match as closely as they do."
             },
             {
               "kind": "speech",
-              "text": "What is confirmed: Ohr and ear are not two words that happen to sound alike. They are one Germanic word, unbroken since before English and German were different languages."
+              "text": "That is not the only road this word took. Languages reached by the overland trade routes out of northern China took a different syllable of the same Chinese word: Hindi chai, Russian chai, Turkish çay. One plant, one Chinese word, two pronunciations of it — split by whether a language got the word from a ship or a caravan. Kaffee's three-hop route through Turkish and Italian was its own single path; tea forked into two."
             }
           ]
         },
@@ -235,29 +231,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Ohr\" — a plain long o; \"die Ohren\"",
+              "instruction": "\"der Tee\" — say it TAY, not tea",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Ohr\" — a plain long *o*; \"die Ohren\"]"
+              "source": "[YOU SAY: \"der Tee\" — say it *TAY*, not *tea*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist das Ohr.\"",
+              "instruction": "\"Tee, bitte.\" — \"Kaffee, bitte.\" — same pattern, two drinks",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist das Ohr.\"]"
+              "source": "[YOU SAY: \"Tee, bitte.\" — \"Kaffee, bitte.\" — same pattern, two drinks]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the maybe-link — \"hören, Ohr — sharp-eared, unsettled\"",
+              "instruction": "the fork — \"tê, thee, Tee, tea\" by sea; \"chai, chai, çay\" overland",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the maybe-link — \"hören, Ohr — sharp-eared, unsettled\"]"
+              "source": "[YOU SAY: the fork — \"tê, thee, Tee, tea\" by sea; \"chai, chai, çay\" overland]"
             }
           ]
         },
@@ -274,26 +270,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"ear\" with its article and plural. (Das Ohr, die Ohren.) Is it native or borrowed? (Native — cousin of English ear.) What disputed idea would put this word inside hören? (The \"sharp-eared\" root analysis — cited, not settled.)"
+              "text": "Give \"tea\" with its article, and say it correctly. (Der Tee — TAY.) Which language gave German the word, and by what route? (Hokkien Chinese tê, by way of Dutch sea trade.) Name one language that got the same Chinese word overland instead. (Hindi, Russian, or Turkish.) Does Tee sound the way it's spelled in English? (No — same letters, different vowel.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C30-mund",
-      "sequence": 950,
-      "title": "der Mund — where the family tree runs out",
-      "headword": "der Mund",
-      "romanization": "der Mund",
-      "gloss": "mouth — the same inherited word as English mouth, with a root the standard accounts do not agree on past Proto-Germanic",
+      "id": "GE-C28-milch",
+      "sequence": 890,
+      "title": "die Milch — the one that was never borrowed",
+      "headword": "die Milch",
+      "romanization": "die Milch",
+      "gloss": "milk — the native Germanic word that closes this trio, standing beside two loanwords the way Wasser once stood beside the loanword Wein",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72a06922008fbc83",
+      "sourceHash": "fnv1a64:9a61d61673bed02d",
       "notice": null,
       "blocks": [
         {
@@ -309,52 +305,48 @@
             },
             {
               "kind": "speech",
-              "text": "Auge and Ohr both trace cleanly to Proto-Indo-European. This one does not go nearly as far back with any certainty — and saying so honestly is the lesson."
+              "text": "Kaffee came from Arabic by way of Turkish and Italian. Tee came from Chinese by way of Dutch. The third drink needed no ship and no caravan — German already had it."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: der Mund",
+          "title": "You'll want to know: die Milch",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Mund — mouth. Masculine."
+              "text": "die Milch — milk. Feminine."
             },
             {
               "kind": "speech",
-              "text": "Das ist der Mund. — \"This/That is the mouth.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Münder."
+              "text": "Milch, bitte. — Milk, please."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: a short u",
+          "title": "Sounds you'll need: the other ch",
           "segments": [
             {
               "kind": "speech",
-              "text": "Mund takes a short, closed u, as in English put: Mund = MOONT (final d devoiced, as in Hand)."
+              "text": "German's ch is not one sound but two. After a back vowel like the a of Nacht, it is a rasp at the back of the throat. After a front vowel or consonant like the i of Milch, it is soft, made further forward — closer to a hissed h. Say ich (your own word for \"I\") right before Milch and you are making the same sound twice."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: inherited, but not traced further",
+          "title": "The word, taken apart: a verb that became its own product",
           "segments": [
             {
               "kind": "speech",
-              "text": "Mund is Proto-Germanic munþaz, and English mouth is that same inherited word — no loan in either direction, exactly like Ohr and ear."
+              "text": "Milch is native Germanic, from meluks, and further back from Proto-Indo-European h₂melg-, \"to milk\" — the action came first, and the word for the substance is simply that verb, frozen into a noun. English milk is the exact same word, inherited rather than borrowed, which makes it the cousin of German Melker (\"milker\") the way denken is the cousin of Dank."
             },
             {
               "kind": "speech",
-              "text": "Here the two words part company. Ohr and Auge both trace on to confirmed Proto-Indo-European roots. Munþaz does not: proposed deeper connections exist, but no single one is agreed upon by standard references. Rather than hand you a tidy-sounding root that is not actually settled, this lesson stops at Proto-Germanic. An honest \"we don't fully know\" is worth more than an invented ancestor."
+              "text": "So the trio closes the way the food lesson did: Wasser was native beside the loanword Wein; here, Milch is native beside the loanwords Kaffee and Tee. Two loans, one inherited word, in both chapters — but this time the loans arrived from opposite directions on the map, one overland and one by sea, and only the native word needed no journey at all."
             }
           ]
         },
@@ -372,29 +364,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Mund\" — MOONT; \"die Münder\"",
+              "instruction": "\"die Milch\" — the soft ch, as in ich",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Mund\" — *MOONT*; \"die Münder\"]"
+              "source": "[YOU SAY: \"die Milch\" — the soft *ch*, as in *ich*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist der Mund.\"",
+              "instruction": "all three requests — \"Kaffee, bitte. Tee, bitte. Milch, bitte.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Mund.\"]"
+              "source": "[YOU SAY: all three requests — \"Kaffee, bitte. Tee, bitte. Milch, bitte.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the honest stop — \"Mund and mouth, inherited — but no further-back root is agreed\"",
+              "instruction": "the shape of the chapter — \"Wasser native, Wein borrowed; Milch native, Kaffee and Tee borrowed\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the honest stop — \"Mund and mouth, inherited — but no further-back root is agreed\"]"
+              "source": "[YOU SAY: the shape of the chapter — \"Wasser native, Wein borrowed; Milch native, Kaffee and Tee borrowed\"]"
             }
           ]
         },
@@ -411,153 +403,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"mouth\" with its article and plural. (Der Mund, die Münder.) Is it native or borrowed? (Native — cousin of English mouth.) Does its root trace to a confirmed PIE ancestor, the way Auge and Ohr do? (No — the trail goes cold at Proto-Germanic.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C30-nase",
-      "sequence": 960,
-      "title": "die Nase — the face, complete",
-      "headword": "die Nase",
-      "romanization": "die Nase",
-      "gloss": "nose — the fourth face-part, cousin of English nose and of Latin nasus, and the payoff that completes the face Kopf only started",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:2761b63ab0a66182",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Auge. Ohr. Mund. One part of the face is left, and it closes what Kopf opened and never finished."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: die Nase",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "die Nase — nose. Feminine."
-            },
-            {
-              "kind": "speech",
-              "text": "Das ist die Nase. — \"This/That is the nose.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Nasen."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: a long a",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Nase opens on a long, open a: Nase = NAH-zeh, with the s voiced to z between two vowels — the mirror image of Hand's final d devoicing to t."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: cousins that never borrowed from each other",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Nase is Proto-Germanic nasō, the inherited cousin of English nose — and, further back, of Latin nasus, which gave English nasal and nostril. One Proto-Indo-European root, nas-, split into Germanic and into Latin independently; German Nase and the Latin-derived word are family by descent, exactly like rot and rouge, never by borrowing."
-            },
-            {
-              "kind": "speech",
-              "text": "That gives this small face four parts with four different shapes of story: Auge and Ohr trace cleanly to confirmed PIE roots; Mund is inherited but its root before Proto-Germanic is not agreed upon; Nase traces to a root Latin also inherited, on its own branch. Four native words, four different depths of certainty — which is the honest way etymology actually looks, not four identical tidy stories."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"die Nase\" — NAH-zeh; \"die Nasen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Nase\" — *NAH-zeh*; \"die Nasen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Das ist die Nase.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist die Nase.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the whole face — \"Kopf, Auge, Ohr, Mund, Nase, Hand\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the whole face — \"Kopf, Auge, Ohr, Mund, Nase, Hand\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousin — \"Nase, nose, nasus — one PIE root, two families\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousin — \"Nase, nose, nasus — one PIE root, two families\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"nose\" with its article and plural. (Die Nase, die Nasen.) Which Latin word is its distant cousin, and what English word does that Latin word give? (Nasus, giving nasal.) Name all five face and head words from Chapters 17 and 30. (Kopf, Auge, Ohr, Mund, Nase.) Which of the four words of this chapter does not trace past Proto-Germanic? (Mund.)"
+              "text": "Give \"milk\" with its article. (Die Milch.) Is it native or borrowed? (Native — inherited meluks, the twin of English milk.) Which two drinks in this chapter were borrowed, and from where? (Kaffee from Arabic/Turkish/Italian; Tee from Hokkien Chinese by way of Dutch.) Which earlier chapter set up the exact same native/borrowed shape? (Chapter 11 — Wasser and Wein.)"
             }
           ]
         }
