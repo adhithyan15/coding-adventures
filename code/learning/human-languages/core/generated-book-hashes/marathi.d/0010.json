@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:c990c6aa16431c92",
+  "lessonIds": [
+    "MR-C03-kasa",
+    "MR-C03-tumhi-kase-aahat",
+    "MR-C03-mi",
+    "MR-C03-mi-bara-aahe",
+    "MR-C03-kaahi-harkat-nahi",
+    "MR-C03-practice"
+  ],
+  "tex": "marathi/book/chapters/ch10-responding.tex"
+}

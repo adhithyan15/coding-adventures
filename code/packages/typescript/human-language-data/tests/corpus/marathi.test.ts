@@ -29,7 +29,12 @@ it("pins Marathi lesson-content budgets", () =>
     // see them. Re-measured against the tree, never derived. Idioms, senses
     // and culture claims are unchanged at 5 / 4 / 7: the migration typed the
     // knowledge that was already on the page and authored no new vocabulary.
-    lessons: 188,
+    //
+    // 188 -> 194: chapter 10's six schema-v1 lessons migrated to v2. Same shape
+    // as chapter 9 -- every one was already written and already in the book, so
+    // this counts lessons that became MEASURABLE, not lessons that were added.
+    // Idioms, senses and culture claims stay at 5 / 4 / 7.
+    lessons: 194,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
