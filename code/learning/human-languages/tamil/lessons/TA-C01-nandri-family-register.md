@@ -4,6 +4,7 @@ sequence: 60
 chapter: 1
 type: etymology
 headword: நன்றி / നന്ദി
+romanization: "naṉṟi / nandi"
 gloss: Tamil and Malayalam kept the native goodness-word while explicit thanks can sound marked among intimates
 prerequisites: [TA-C01-nandri]
 sounds: [tamil-nasal-r-cluster]

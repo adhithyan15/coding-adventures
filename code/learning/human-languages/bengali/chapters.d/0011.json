@@ -1,22 +1,24 @@
 {
   "chapter": 11,
-  "title": "Friend, Family, Brother, and Sister",
-  "label": "ch:bn-friend-family-brother-sister",
-  "canDo": "I can name a friend, my family, my brother and my sister in Bengali, none of them marked for gender, and say which are borrowed whole from Sanskrit and which evolved by sound change, including one that turns out to share a root with the previous chapter's rice.",
+  "title": "The Core Verbs",
+  "label": "ch:bn-core-verbs",
+  "canDo": "I can say what I do with six everyday Bengali verbs, pick the ending that matches তুই, তুমি or আপনি, and say why a Bengali verb never changes for gender and why আছে has to hand the future to হবে.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "BN-C11-bon",
+    "lesson": "BN-C07-jana",
     "kind": "production",
-    "summary": "The chapter closes on বোন, which is not related to English 'sister' at all: it traces through Sanskrit bhaginī and bhaga, 'a share,' back to the same √bhaj that named Chapter 10's ভাত. The reader names all four people (bôndhu, pôribār, bhāi, bon), states which two are tatsamas kept whole from Sanskrit (বন্ধু, পরিবার) and which two are tadbhavas worn down by sound change (ভাই, বোন), and counts a sibling or two using Chapter 6's numbers. It reaches back to rescue all five of Chapter 6's numbers atoms, unrevisited since the chapter that introduced them.",
+    "summary": "Say āmi jāni and āmi tāke chini, separate জানা from চেনা the way French separates savoir from connaître, hear the vowel harmony that closes chini where chæne stays open, and run the chapter's six verbs back — hôwā, jāwā, āsā, khāwā, dækhā, jānā.",
     "assesses": [
-      "BN-LEX-C11-BONDHU-01",
-      "BN-LEX-C11-PORIBAR-01",
-      "BN-LEX-C11-BHAI-01",
-      "BN-LEX-C11-BON-01",
-      "BN-LEX-NUMBERS-ONE-TO-FIVE",
-      "BN-ETYMON-DUI-COMPARISON"
+      "BN-LEX-C07-HOWA-01",
+      "BN-LEX-C07-JAOWA-01",
+      "BN-LEX-C07-ASHA-01",
+      "BN-LEX-C07-KHAOWA-01",
+      "BN-LEX-C07-DEKHA-01",
+      "BN-GRAMMAR-C07-DEKHA-02",
+      "BN-LEX-C07-JANA-01",
+      "BN-GRAMMAR-C07-JANA-02"
     ]
   }
 }

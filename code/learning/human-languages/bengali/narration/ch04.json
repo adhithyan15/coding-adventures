@@ -2,499 +2,39 @@
   "version": 1,
   "language": "bengali",
   "chapter": 4,
-  "title": "Farewells",
+  "title": "In Front, Underneath, and On Its Own",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:322ada37d9e4874e",
+  "sourceHash": "fnv1a64:bc3a3b7b527986d2",
   "lessons": [
     {
-      "id": "BN-C04-abar",
-      "sequence": 210,
-      "title": "আবার (ābār) — \"again,\" the seed of \"see you again\"",
-      "headword": "আবার",
-      "romanization": "",
-      "gloss": "again",
-      "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:e82dd6c8fc56ae37",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One small word turns a goodbye from \"farewell\" into \"till next time.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "আ (independent ā) + বা (bā) + র (r) becomes আবার (ābār)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "আবার (ābār, \"again, once more\") is a native Indo-Aryan adverb with no tidy English cognate, but a familiar job: it turns a parting into a promise. Chapter 1 gave you আসি (āshi, \"I'll come [again]\") as goodbye; add ābār and you can say outright \"we'll meet again.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ābār\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ābār\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it adds to a goodbye (\"again\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it adds to a goodbye (\"again\")]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ābār mean, and what does it do to a farewell? (\"Again\"; it makes the parting a promise of return.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C04-dekha-hobe",
-      "sequence": 220,
-      "title": "দেখা হবে (dækhā hôbe) — \"(we) will meet\"",
-      "headword": "দেখা হবে",
-      "romanization": "",
-      "gloss": "(we) will meet (lit. \"seeing will happen\")",
-      "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:4e69cc199d65ed6f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A future-tense phrase — the other half of \"see you again,\" built in a way English never would."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "দেখা (dækhā, \"seeing\") = দে (dæ) + খা (khā). হবে (hôbe, \"will be/happen\") = হ (hô) + বে (be)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "দেখা হবে literally means \"[a] seeing will happen\" — dækhā (the noun \"seeing,\" from দেখা dækhā \"to see\") + hôbe (\"will be/happen,\" the future of হওয়া hôwā, \"to be, to become\"). Bengali says \"a meeting will occur\" rather than \"we will meet\" — an impersonal, gentle way to promise reunion. The verb hôwā (\"to be/become\") is the same one behind āchhā's cousin, and its root ভূ / হ ties (distantly) to English be."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the impersonal future",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Many Bengali \"we'll…\" expressions use this noun + hôbe (\"…will happen\") shape: dækhā hôbe (\"[a] seeing will happen\"), kôthā hôbe (\"[a] talk will happen\"). No \"we,\" no active verb — the event itself is the subject."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"dækhā hôbe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"dækhā hôbe\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "its literal meaning (\"[a] seeing will happen\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: its literal meaning (\"[a] seeing will happen\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the verb \"to see\" inside it (dækhā)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the verb \"to see\" inside it (*dækhā*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does dækhā hôbe literally say, and what is odd (to English ears) about it? (\"A seeing will happen\"; it is impersonal — the event is the subject, not \"we.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C04-abar-dekha-hobe",
-      "sequence": 230,
-      "title": "আবার দেখা হবে (ābār dækhā hôbe) — \"we'll meet again\"",
-      "headword": "আবার দেখা হবে",
-      "romanization": "",
-      "gloss": "we'll meet again (goodbye)",
-      "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:cb222a12664e6489",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The warm, everyday goodbye — the fuller cousin of Chapter 1's āshi."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "আবার দেখা হবে = আবার (ābār, \"again\") + দেখা হবে (dækhā hôbe, \"[a] seeing will happen\") — \"we'll meet again\" (literally \"again a seeing will happen\"). Chapter 1 gave you the tender আসি (āshi, \"I'll come [again]\"), the \"promise of return\" goodbye; ābār dækhā hôbe is its warm, explicit form. It is the sibling of the whole subcontinent's parting habit (Hindi phir milenge, Tamil pōy varugiṟēṉ): never a blunt \"goodbye,\" always a return promised."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the warm goodbye — ābār dækhā hôbe",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the warm goodbye — *ābār dækhā hôbe*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two pieces (ābār + dækhā hôbe)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two pieces (*ābār* + *dækhā hôbe*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the Chapter-1 goodbye it deepens (āshi)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the Chapter-1 goodbye it deepens (*āshi*)]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ābār dækhā hôbe literally say, and how does it relate to āshi? (\"Again a seeing will happen\"; it is the fuller, explicit form of Ch.1's \"promise of return\" goodbye.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C04-kal-dekha-hobe",
-      "sequence": 240,
-      "title": "কাল দেখা হবে (kāl dækhā hôbe) — \"see you tomorrow\"",
-      "headword": "কাল দেখা হবে",
-      "romanization": "",
-      "gloss": "see you tomorrow (and the কাল puzzle)",
-      "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:9cd8d6a17e79f31b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A goodbye for tomorrow — built on a word that means both tomorrow and yesterday."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "কা (kā) + ল (l) becomes কাল (kāl). Two simple letters, one tricky word."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "কাল (kāl) means both \"tomorrow\" and \"yesterday\" — the day on either side of today — from Sanskrit কাল (kāla, \"time\"). (It is the very same kāla behind Hindi's kal and Punjabi's akāl \"timeless.\") Bengali trusts the verb's tense to tell which: kāl dækhā hôbe (future becomes \"tomorrow\"), kāl dækhā hôyechhilo (past becomes \"yesterday\"). So কাল দেখা হবে = \"tomorrow, a seeing will happen\" = \"see you tomorrow.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"kāl dækhā hôbe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"kāl dækhā hôbe\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the puzzle — kāl means both tomorrow and yesterday",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the puzzle — *kāl* means both **tomorrow** and **yesterday**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root and its cousins (kāla \"time\"; Hindi kal, Punjabi akāl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root and its cousins (*kāla* \"time\"; Hindi *kal*, Punjabi *akāl*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C04-practice",
+      "id": "BN-W02-naam-read",
       "sequence": 250,
-      "title": "Chapter 4 — The farewells",
-      "headword": "(dialogue)",
-      "romanization": "",
-      "gloss": "Chapter 4 recap — the farewells",
+      "title": "নাম (nām) — a whole word, read, with nothing new in it",
+      "headword": "নাম",
+      "romanization": "nām",
+      "gloss": "a whole word, read, with nothing new in it",
       "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "script-block",
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:90dc613cfec5f97a",
-      "notice": null,
+      "sourceHash": "fnv1a64:26e397928b7de007",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -509,117 +49,85 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. Three ways to part — none of them a blunt \"goodbye.\""
+              "text": "Write the greeting again before starting. Every piece in it is one you made from memory."
             }
           ]
         },
         {
           "index": 1,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way — the farewells",
+          "type": "script",
+          "title": "Script",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": true,
-              "source": "[PAUSE 1s each]"
+              "kind": "speech",
+              "text": "The word for name has been said aloud since the introductions chapter. Here it is on the page, and there is nothing in it you have not already written:"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the tender Chapter-1 goodbye — āshi (\"I'll come [again]\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the tender Chapter-1 goodbye — *āshi* (\"I'll come [again]\")]"
+              "kind": "speech",
+              "text": "ন + া + ম becomes নাম (nām)."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the fuller \"we'll meet again\" — ābār dækhā hôbe",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the fuller \"we'll meet again\" — *ābār dækhā hôbe*]"
+              "kind": "speech",
+              "text": "ন — nô, carrying its own vowel."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"see you tomorrow\" — kāl dækhā hôbe",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"see you tomorrow\" — *kāl dækhā hôbe*]"
+              "kind": "speech",
+              "text": "া — the mātrā, which throws that vowel out and puts ā in its place, so the piece now says nā."
+            },
+            {
+              "kind": "speech",
+              "text": "ম — mô."
+            },
+            {
+              "kind": "speech",
+              "text": "nām. Say it with the mouth open on the first syllable and closed on the second, and you have the word you have been using since আমার নাম — \"my name.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the top of the three shapes. The head-line is one unbroken bar across the whole word. That bar is why a Bengali word looks like a single object rather than three, and it is also the reason a reader coming from English keeps trying to break it in the wrong places: the bar is decoration on the letters, not a boundary between them."
+            },
+            {
+              "kind": "speech",
+              "text": "One more falls out of the same nine pieces. ন + া + ক is nāk — the word for nose from the chapter on the face."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — the atoms",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"again\" and \"[a] seeing will happen\" (ābār, dækhā hôbe)",
+              "action": "READ",
+              "instruction": "নাম (nām)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"again\" and \"[a] seeing will happen\" (*ābār*, *dækhā hôbe*)]"
+              "source": "[YOU READ: নাম]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the word that means BOTH tomorrow and yesterday (kāl)",
+              "action": "READ",
+              "instruction": "নাক",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the word that means BOTH tomorrow and yesterday (*kāl*)]"
+              "source": "[YOU READ: নাক]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what's odd about dækhā hôbe (impersonal — the event is the subject)",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "নাম (nām)",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what's odd about *dækhā hôbe* (impersonal — the event is the subject)]"
+              "source": "[YOU WRITE: নাম]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built — roots you now carry",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "dækhā hôbe — \"[a] seeing will happen\"; the impersonal future."
-            },
-            {
-              "kind": "speech",
-              "text": "kāl from kāla \"time\" (Hindi kal, Punjabi akāl)."
-            },
-            {
-              "kind": "speech",
-              "text": "āshi (Ch.1) — \"I'll come [again],\" the Bengali promise-of-return goodbye."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -631,7 +139,679 @@
             },
             {
               "kind": "speech",
-              "text": "You're leaving a friend and expect to see them next week. Which goodbye fits, and how does Bengali phrase \"we'll meet\"? (Ābār dækhā hôbe; impersonally — \"a seeing will happen.\")"
+              "text": "How many new pieces were in this lesson? (None.) What does the mātrā do to the vowel a consonant already carries? (Replaces it.) And what is the bar along the top — a letter boundary, or part of the letters? (Part of the letters.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-i-matra",
+      "sequence": 260,
+      "title": "ি (-i) — the i-sign, written before the consonant it is heard after",
+      "headword": "ি",
+      "romanization": "-i",
+      "gloss": "the i-sign — written before the consonant it is heard after",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:db967f1257213d90",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read নাম (nām) aloud before adding another piece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The mātrā া replaced a consonant's vowel with ā and sat to the right of it. Here is the sign that puts i there instead:"
+            },
+            {
+              "kind": "speech",
+              "text": "ি (-i)."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound is the i of English bit — short, and never the ee of feet."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part worth slowing down for. This sign is written to the left of the consonant it belongs to, and spoken to the right of it. Take ম mô and add it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ম + ি (-i) becomes মি — said mi, not im."
+            },
+            {
+              "kind": "speech",
+              "text": "The hook sits in front on the page; the vowel lands behind in the mouth. Nothing about the shape tells you that, and nothing about the sound tells you either. It is a habit of the writing system, held on to from the Brahmi script every Indian abugida descends from, and Devanagari does exactly the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "A reader who tries to sound out the marks in the order the eye meets them will get this word backwards every time. Read the consonant first, then the sign in front of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ি (-i)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "মি",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: মি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাম (nām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাম]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which side of its consonant is ি (-i) written on? (The left.) Which side is it heard on? (The right.) And is the sound the i of bit or of feet? (Of bit.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W04-i-indep",
+      "sequence": 270,
+      "title": "ই — the independent i",
+      "headword": "ই",
+      "romanization": "i",
+      "gloss": "the independent i — the form a vowel takes with nothing to lean on",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:282bda3b6ffa199b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read নাম (nām), then write ি (-i) and say which side of its consonant it stands on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ই (i)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is i again — the same sound as ি (-i) — written as a letter in its own right instead of as a mark on somebody else."
+            },
+            {
+              "kind": "speech",
+              "text": "You have held a pair like this since the first script chapter without it being named as one. আ is the independent form; া is its sign. Now the same arrangement for i: ই is the letter, ি (-i) is the sign."
+            },
+            {
+              "kind": "speech",
+              "text": "The rule that picks between them is worth stating once for every vowel in the script: a vowel that has a consonant in front of it is written as a sign on that consonant; a vowel that does not is written as its own full letter. Beginning of a word, or straight after another vowel — those are the places with nothing to lean on."
+            },
+            {
+              "kind": "speech",
+              "text": "So ই turns up where a word starts on i, and at the end of a word after another vowel — which is where a later chapter will find it, in the word for brother."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape is unrelated to ি (-i), and that is normal here: a vowel's letter and its sign look nothing alike in Bengali, the way a capital and a lowercase A need not look alike in the Latin alphabet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ই (i)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ই]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "আ া ই ি (-i)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: আ া ই ি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাম (nām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাম]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When does a vowel get its own full letter? (When there is no consonant to lean on.) Which pair did you already hold without being told? (আ and া.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-ta",
+      "sequence": 280,
+      "title": "ত (tô) — the consonant ta, the dental one",
+      "headword": "ত",
+      "romanization": "tô",
+      "gloss": "the consonant ta — the dental one, and English has no letter for it",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ab5b8cf2575614f7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read নাম (nām) aloud, then write ই and ি (-i) and say which is which."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ত (tô)."
+            },
+            {
+              "kind": "speech",
+              "text": "tô — and the tongue goes somewhere an English speaker does not put it. Press the tip flat against the back of the top front teeth, so the contact is on enamel, and release. That is this letter."
+            },
+            {
+              "kind": "speech",
+              "text": "The English t of top is made a centimetre further back, on the ridge behind the teeth. Bengali has a separate letter for that further-back sound, and it arrives later in this chapter's family. The two are not accents of one letter: they spell different words. So an English t dropped into a Bengali word is not a slight accent — it is the other letter, and the listener hears it as one."
+            },
+            {
+              "kind": "speech",
+              "text": "The test is physical, not auditory. Say English top and feel where the tongue lands. Slide it forward onto the teeth and say it again. The second one is ত (tô)."
+            },
+            {
+              "kind": "speech",
+              "text": "With the mātrā:"
+            },
+            {
+              "kind": "speech",
+              "text": "ত (tô) + া becomes তা."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ত (tô)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ত]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "তা",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: তা]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাম (nām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাম]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the tongue touch for ত (tô) — the teeth or the ridge behind them? (The teeth.) Does Bengali have a second, further-back t? (Yes, a separate letter.) And is using the English one a small accent, or a different letter? (A different letter.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-u-matra",
+      "sequence": 290,
+      "title": "ু (-u) — the u-sign, hanging below the line",
+      "headword": "ু",
+      "romanization": "-u",
+      "gloss": "the u-sign — the first mark that hangs below the line",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d99302a3b94c2943",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ত (tô) from memory, and say where the tongue touches for it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two vowel signs so far: া to the right, ি (-i) to the left. Here is the third direction."
+            },
+            {
+              "kind": "speech",
+              "text": "ু (-u)."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound is the u of English put, short and rounded — never the oo of food."
+            },
+            {
+              "kind": "speech",
+              "text": "It is written underneath its consonant, tucked into the bottom of the shape:"
+            },
+            {
+              "kind": "speech",
+              "text": "ত (tô) + ু (-u) becomes তু — said tu."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole of the news, and it matters more than it sounds. A script whose marks go above, below, left and right of a letter cannot be read as a line of beads. The consonant is the anchor; everything else is furniture arranged around it. Find the anchor first, then look around it, and the reading order stops being a guess."
+            },
+            {
+              "kind": "speech",
+              "text": "The hand has to learn it too: the stroke starts at the foot of the consonant and curls, and it must not drift so far left that it looks like it belongs to the letter before."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ু (-u)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ু]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "তু",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: তু]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাম (nām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাম]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which side of its consonant does ু (-u) sit on? (Underneath.) Is the sound the u of put or the oo of food? (Of put.) And which piece of a written syllable is the anchor? (The consonant.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-tumi-read",
+      "sequence": 300,
+      "title": "তুমি (tumi) — the familiar you, read",
+      "headword": "তুমি",
+      "romanization": "tumi",
+      "gloss": "the familiar you — one word, two vowel signs, two directions",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bd76732a2a32853c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ু (-u) and ি (-i), and say which way each of them faces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ত (tô) + ু (-u) + ম + ি (-i) becomes তুমি (tumi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces, and the two vowel signs go to two different places:"
+            },
+            {
+              "kind": "speech",
+              "text": "ত (tô) with ু (-u) slung underneath it — tu."
+            },
+            {
+              "kind": "speech",
+              "text": "ম with ি (-i) standing in front of it — mi."
+            },
+            {
+              "kind": "speech",
+              "text": "tumi — the middle rung of Bengali's three-way you: tui for a child or a brother, tumi for a friend, āpni for a stranger or an elder. This is the one a learner uses most and the one that will be used back at them."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what the word looks like as an object. Above the letters runs the head-line; below the first letter hangs the u-sign; between the letters stands the i-hook. Three levels on one word. The eye that only scans along the head-line will miss half of it — Bengali reading is a scan of a band, not of a line."
+            },
+            {
+              "kind": "speech",
+              "text": "Say তুমি (tumi) aloud and hear two light syllables with no stress worth speaking of. Bengali does not lean on one syllable the way English does — and the next lesson puts the other pronoun of the pair on the page beside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "তুমি (tumi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: তুমি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "তুমি (tumi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: তুমি]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In তুমি (tumi), where is the u-sign? (Under the first letter.) Where is the i-sign? (In front of the second.) And which of the three yous is তুমি (tumi)? (The familiar one — for a friend.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
             }
           ]
         }

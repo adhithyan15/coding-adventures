@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W02-tumi-read
 spine_node: SPINE-MEET-GREET
-sequence: 1780
+sequence: 300
 delivery: script
-chapter: 17
+chapter: 4
 type: writing
 headword: তুমি
 romanization: "tumi"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-SCRIPT-TUMI-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-TA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-MA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-AMI-READ-01, BN-SCRIPT-TUMI-READ-01]
+  knowledge: [BN-SCRIPT-TA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-MA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-TUMI-READ-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -55,15 +55,14 @@ the i-hook. Three levels on one word. The eye that only scans along the
 head-line will miss half of it — Bengali reading is a scan of a **band**, not of
 a line.
 
-Say **আমি তুমি** aloud, the two pronouns together, and hear that each is two
-light syllables with no stress worth speaking of. Bengali does not lean on one
-syllable the way English does.
+Say **তুমি** aloud and hear two light syllables with no stress worth speaking
+of. Bengali does not lean on one syllable the way English does — and the next
+lesson puts the other pronoun of the pair on the page beside it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-TUMI-READ-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-AMI-READ-01, BN-SCRIPT-TA-01, BN-SCRIPT-MA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-TUMI-READ-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-TA-01, BN-SCRIPT-MA-01] -->
 
 - [YOU READ: তুমি]
-- [YOU READ: আমি]
 - [YOU WRITE: তুমি]
 
 ## Wrap-up Recall

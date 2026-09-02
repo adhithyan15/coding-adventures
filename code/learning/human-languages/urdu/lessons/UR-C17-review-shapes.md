@@ -29,7 +29,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-C17-yih, UR-C17-kaam, UR-C17-kahan, UR-W17-he, UR-C16-practice, UR-C13-kala, UR-C13-nila]
+reviews_of: [UR-C17-yih, UR-C17-kaam, UR-C17-kahan, UR-W05-he, UR-C16-practice, UR-C13-kala, UR-C13-nila]
 ---
 
 # Eight letters — read them, hear them, write them back

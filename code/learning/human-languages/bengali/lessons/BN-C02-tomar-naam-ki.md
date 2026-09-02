@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C02-tomar-naam-ki
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 130
-chapter: 2
+sequence: 230
+chapter: 3
 type: phrase
 headword: তোমার নাম কি?
+romanization: "tomār nām ki?"
 gloss: what's your name?
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [BN-C02-tumi-apni, BN-C02-ki, BN-C02-naam]

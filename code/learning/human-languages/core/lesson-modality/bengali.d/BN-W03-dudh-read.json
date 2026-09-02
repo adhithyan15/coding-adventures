@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W03-dudh-read",
     "language": "bengali",
-    "chapter": 18,
-    "sequence": 1920,
+    "chapter": 15,
+    "sequence": 840,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:411fc062be32d426",
+    "sourceHash": "fnv1a64:b4bf53cf49760df9",
     "detachableSegments": [
       "Script"
     ],

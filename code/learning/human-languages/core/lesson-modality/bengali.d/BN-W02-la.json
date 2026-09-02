@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W02-la",
     "language": "bengali",
-    "chapter": 17,
-    "sequence": 1730,
+    "chapter": 6,
+    "sequence": 380,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:44c09a50738fec5f",
+    "sourceHash": "fnv1a64:2f9e547141c33fbd",
     "detachableSegments": [
       "Script"
     ],

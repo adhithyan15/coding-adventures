@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W02-lal-read
 spine_node: SPINE-MEET-GREET
-sequence: 1740
+sequence: 1050
 delivery: script
-chapter: 17
+chapter: 21
 type: writing
 headword: লাল
 romanization: "lāl"
 gloss: "red, and the day-word that runs both ways"
-prerequisites: [BN-W02-la]
+prerequisites: [BN-W03-mukh-read]
 sounds: []
 roots: []
 etymology_hook: "The same three-piece frame that spells red also spells the word that means both yesterday and tomorrow, so a reader who can build one can build the other by swapping a single shape."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W02-la, BN-C14-lal]
+reviews_of: [BN-W03-mukh-read, BN-C14-lal]
 ---
 # লাল — red, and the day-word that runs both ways
 

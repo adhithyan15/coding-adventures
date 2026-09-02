@@ -29,7 +29,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-C18-purana, UR-W18-alif-madda, UR-C18-aam, UR-C18-aasmaan, UR-C17-practice]
+reviews_of: [UR-C18-purana, UR-W07-alif-madda, UR-C18-aam, UR-C18-aasmaan, UR-C17-practice]
 ---
 
 # Eleven letters, and two kinds of answer

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C12-nak
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 920
-chapter: 12
+sequence: 930
+chapter: 18
 type: word
 headword: নাক
 romanization: nāk

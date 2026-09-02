@@ -1,0 +1,22 @@
+{
+  "language": "bengali",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:82390ebc24d64c58",
+  "lessonIds": [
+    "BN-W03-mukh-read",
+    "BN-W02-lal-read",
+    "BN-W03-kalo-read",
+    "BN-W03-shada-read",
+    "BN-W04-ii-matra",
+    "BN-W04-nil-read",
+    "BN-W02-tin-read",
+    "BN-W04-ek-read"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch21.txt",
+  "json": "bengali/narration/ch21.json",
+  "textHash": "fnv1a64:515f27536c400793",
+  "jsonHash": "fnv1a64:62568598598e6333",
+  "findings": []
+}

@@ -3,8 +3,8 @@
   "language": "urdu",
   "chapter": 4,
   "title": "How Are You?",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:58f0006f88e92482",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b7d090d6fee67411",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -60,7 +60,7 @@
             },
             {
               "kind": "speech",
-              "text": "Both begin ک k + ی carrying the ai sound. At the left edge, کیسے ends in broad ے e, while کیسی ends in ی long ī. Read the whole word before isolating the final shape."
+              "text": "Both begin ک (kāf) k + ی carrying the ai sound. At the left edge, کیسے ends in broad ے e, while کیسی ends in ی long ī. Read the whole word before isolating the final shape."
             }
           ]
         },
@@ -139,6 +139,181 @@
               "feedback": {
                 "correct": "Right: کیسی kaisī agrees with a woman being addressed.",
                 "incorrect": "Use کیسی kaisī for a woman; کیسے kaise is the corresponding form for a man."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W04-joining",
+      "sequence": 115,
+      "title": "Letters that hold hands, and the one that will not",
+      "headword": "سلام",
+      "romanization": "salām",
+      "gloss": "letters hold hands and slide downhill — and alif refuses to hold the next one",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bf570992b5287099",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the running, falling line",
+          "Script — and the letter that refuses",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the running, falling line, Script — and the letter that refuses and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write س, then م. Four letters are now yours."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the running, falling line",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Urdu letters join. They run into one another along a single connected line, and because this is Nastaliq that line is also falling — each joined letter sits a little lower and further left than the one before it."
+            },
+            {
+              "kind": "speech",
+              "text": "Because they join, most letters change shape by position. A letter opening a joined run, one buried in the middle, one closing it, and one standing alone can all look different. They are the same letter."
+            },
+            {
+              "kind": "speech",
+              "text": "That sounds like four times the work and it is not, because the change is almost always the same trimming: the part that identifies the letter stays, and the finishing flourish is cut short so the next letter can start. You saw it already in mīm, where joining costs the tail and keeps the head."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — and the letter that refuses",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the rule that saves the most confusion."
+            },
+            {
+              "kind": "speech",
+              "text": "Some letters take the hand of the letter on their right and offer nothing to the left. The run stops dead after them, and the next letter begins as though starting a fresh word."
+            },
+            {
+              "kind": "speech",
+              "text": "alif is one of these. So a gap in the middle of an Urdu word is usually not a word break at all — it is a non-joining letter doing exactly what it always does. Without that fact a page of Urdu looks like it has been spaced at random."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four letters, and they spell the word this book opened with:"
+            },
+            {
+              "kind": "speech",
+              "text": "سلام (salām)."
+            },
+            {
+              "kind": "speech",
+              "text": "From the right: س s, ل l, ا ā, م m. Say it: salām."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things to see. The short vowel between s and l is not written — Urdu prints the long vowels and leaves the short ones to the reader. And the break before the final م is alif refusing to join, exactly as promised."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "سلام (salām) — name each letter from the right, then say the word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: سلام — name each letter from the right, then say the word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سلام (salām) — let the line fall as it goes, and let it break after alif",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: سلام — let the line fall as it goes, and let it break after alif]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **salām**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does mīm lose when it joins? (Its tail.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W04-joining-gap",
+              "prompt": "You see a gap in the middle of an Urdu word. What is the likeliest reason?",
+              "assesses": [
+                "UR-SCRIPT-JOINING-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "a letter that does not join to the left",
+                "a non-joining letter",
+                "alif or another non-joiner",
+                "a letter that only joins on the right",
+                "a letter that refuses to join"
+              ],
+              "feedback": {
+                "correct": "A non-joining letter -- it joins on the right and refuses on the left.",
+                "incorrect": "A NON-JOINING letter such as alif: it joins rightward only, so the run breaks."
               }
             }
           ]
@@ -414,6 +589,145 @@
       ]
     },
     {
+      "id": "UR-W04-kaf",
+      "sequence": 135,
+      "title": "ک (kāf) — a bowl with a slash laid over it",
+      "headword": "ک",
+      "romanization": "kāf",
+      "gloss": "a stem, a flat bowl, a hook — and a long slash laid across it",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:028b61756e5c44da",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write سلام (salām). Four letters, one break."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ک (kāf)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two movements, and exactly one lift between them."
+            },
+            {
+              "kind": "speech",
+              "text": "a stem down, flowing right to left through a flatter bowl and finishing with a pronounced hook — all without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "lift once, then a long slash drawn down from the upper right towards the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "The slash is not a dot and not decoration; it is part of the letter, and leaving it off writes nothing at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is kāf and it says k."
+            },
+            {
+              "kind": "speech",
+              "text": "Worth knowing: this is the Urdu kāf. Arabic writes the same sound with a different shape, and if you have seen Arabic you will notice the difference immediately. Urdu keeps the Perso-Arabic alphabet and does not keep every Arabic shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ک (kāf) — stem, bowl and hook in one movement, then lift and lay the slash across",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ک — stem, bowl and hook in one movement, then lift and lay the slash across]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "k",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **k**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Is the slash optional? (No — without it the letter is not written.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W04-kaf-lifts",
+              "prompt": "How many times do you lift the pen when writing kāf?",
+              "assesses": [
+                "UR-SCRIPT-KAF-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "1",
+                "once",
+                "one",
+                "one lift",
+                "1 time"
+              ],
+              "feedback": {
+                "correct": "Once -- before the long slash.",
+                "incorrect": "ONCE, just before the slash."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C04-thik",
       "sequence": 140,
       "title": "ٹھیک (ṭhīk) — “fine,” “well,” and “correct”",
@@ -457,7 +771,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first sound is retroflex and aspirated: curl the tongue slightly back for ٹ ṭ, then release a puff marked by ھ. A plain English t is a useful first approximation while the contrast settles. ی carries long ī before final ک k."
+              "text": "The first sound is retroflex and aspirated: curl the tongue slightly back for ٹ ṭ, then release a puff marked by ھ. A plain English t is a useful first approximation while the contrast settles. ی carries long ī before final ک (kāf) k."
             }
           ]
         },
@@ -682,6 +996,134 @@
       ]
     },
     {
+      "id": "UR-W04-nun",
+      "sequence": 155,
+      "title": "ن (nūn) — a deep bowl, and one dot",
+      "headword": "ن",
+      "romanization": "nūn",
+      "gloss": "a bowl below the line with a single dot inside it",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7d946a978b89fd18",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ک (kāf). Bowl and hook, lift, slash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ن (nūn)."
+            },
+            {
+              "kind": "speech",
+              "text": "A bowl swept from right to left, dropping well below the baseline and rising again — then one lift, and a single dot placed near the baseline, inside the curve."
+            },
+            {
+              "kind": "speech",
+              "text": "Two parts, one lift. The bowl is deeper and rounder than the flatter one you drew in kāf, and the dot sits low rather than floating above."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is nūn and it says n."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ن (nūn) — the deep bowl, then lift and place the dot low inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ن — the deep bowl, then lift and place the dot low inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "n",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **n**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which bowl is deeper, nūn's or kāf's? (nūn's.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W04-nun-dot",
+              "prompt": "Where does the dot of nūn sit — above the bowl or low inside it?",
+              "assesses": [
+                "UR-SCRIPT-NUN-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "low inside it",
+                "inside",
+                "low inside the bowl",
+                "near the baseline",
+                "inside the curve",
+                "below"
+              ],
+              "feedback": {
+                "correct": "Low inside the curve, near the baseline.",
+                "incorrect": "LOW INSIDE the bowl, near the baseline."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C04-practice",
       "sequence": 160,
       "title": "Practice — an Urdu wellbeing exchange",
@@ -721,7 +1163,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A to a man: سلام! آپ کیسے ہیں؟ Salām! Āp kaise haiṅ? A to a woman: سلام! آپ کیسی ہیں؟ Salām! Āp kaisī haiṅ? B: میں ٹھیک ہوں، شکریہ (maiṅ ṭhīk hūṅ, shukriyā)۔ Maiṅ ṭhīk hūṅ, shukriyā."
+              "text": "A to a man: سلام (salām)! آپ کیسے ہیں؟ Salām! Āp kaise haiṅ? A to a woman: سلام (salām)! آپ کیسی ہیں؟ Salām! Āp kaisī haiṅ? B: میں ٹھیک ہوں، شکریہ (maiṅ ṭhīk hūṅ, shukriyā)۔ Maiṅ ṭhīk hūṅ, shukriyā."
             },
             {
               "kind": "speech",

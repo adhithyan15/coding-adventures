@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:97c656d71a46eac9",
+  "sourceHash": "fnv1a64:db74fa568b022a95",
   "lessons": [
     {
       "id": "TA-C25-iniya-iravu",
@@ -301,7 +301,7 @@
       "sequence": 790,
       "title": "நல்ல இரவு and இரவு வணக்கம் — old roots recombined",
       "headword": "நல்ல இரவு / இரவு வணக்கம்",
-      "romanization": "",
+      "romanization": "nalla iravu / iravu vaṇakkam",
       "gloss": "Tamil repeats its native greeting loyalty with good-night alternatives built from known roots",
       "script": "tamil",
       "modality": "voice",
@@ -309,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:614ee145f16a1bf3",
+      "sourceHash": "fnv1a64:7c5fc07b96c0cf76",
       "notice": null,
       "blocks": [
         {

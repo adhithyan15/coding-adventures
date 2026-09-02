@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C03-bhalo",
     "language": "bengali",
-    "chapter": 3,
-    "sequence": 180,
+    "chapter": 5,
+    "sequence": 340,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2e7d420f3903b0fe",
+    "sourceHash": "fnv1a64:81d844bc8789c21d",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -421,3 +421,110 @@ in the same pass (a `wasm-validator` funcref-assignability bug wiping out
    exactly one `module` directive in the whole corpus) — investigate the
    actual assertion type in `table.wast` around this case before deciding
    whether it's a bug.
+
+---
+
+## Addendum 2 (2026-09-02) — path to literal 100% corpus conformance
+
+Prompted directly by a user question ("what's preventing 100%?") after the
+W35 epic closed (PRs #13900/#13908/#13915/#13924) and the three items in
+Addendum 1 were resolved or dispatched. This addendum is the first
+genuine, per-file-grounded survey of what "the remaining `not_yet_
+supported` directives" actually consist of — Addendum 1 only ever dealt
+with real, gradable FAILURES; this one is about the much larger bucket of
+directives this interpreter has never attempted at all.
+
+### The real numbers (regenerate before trusting — this drifts fast)
+
+`cargo run --release --bin wasm_conformance_report -p wasm-conformance --`
+as of the PR immediately following #13924:
+
+```
+module               1982/1983 (99.9%), 270 not yet supported
+register             73/73 (100.0%), 5 not yet supported
+action               357/357 (100.0%), 58 not yet supported
+assert_return        51778/51779 (100.0%), 985 not yet supported
+assert_trap          2970/2970 (100.0%), 1998 not yet supported
+assert_exhaustion    5/5 (100.0%), 10 not yet supported
+assert_invalid       2667/2667 (100.0%), 95 not yet supported
+assert_malformed     1313/1313 (100.0%), 627 not yet supported
+assert_unlinkable    254/254 (100.0%)
+assert_exception     18/18 (100.0%)
+```
+
+**4048 total `not_yet_supported` directives across 79 of 257 files** (a
+Python one-liner summing `not_yet_supported` per file across `tests/
+fixtures/testsuite-status.json`'s own `files` dict — reproduce this
+yourself before trusting the count below, it moves with every merge).
+Every 100.0% figure above still has a nonzero NYS count hiding inside
+it — "100%" here means "100% of what was actually GRADED," never "100%
+of the file."
+
+### Per-file NYS breakdown, sorted by weight (the actual backlog)
+
+The single most important finding: **this is NOT dominated by whole
+undelivered proposals** (contra what a naive read of "SIMD/GC/exceptions
+still incomplete" might suggest) — most `simd_*.wast` files carry exactly
+**one** NYS directive each. The weight is concentrated in a small number
+of files gated by a SMALL number of shared root causes, discovered by
+direct probing (`wasm_conformance::run_wast_source` on each file, reading
+every distinct `DirectiveOutcome::NotYetSupported` message):
+
+| Files | NYS directives | Shared root cause (verified by direct probe, not guessed) |
+|---|---|---|
+| `table_copy.wast`, `table_copy64.wast`, `table_init.wast`, `table_init64.wast` | 566+566+499+499 = **2130** (53% of ALL remaining NYS) | **The "exprs-list" active/declarative element-segment form** — both a TEXT-grammar gap (`wasm-wast-parser`: "expected an active segment to use a plain function-index list instead (exprs-list is only supported for passive segments)") and a BINARY-decoding gap (`wasm-module-parser`: "unsupported element segment mode flags 3/4/6/7 (only 0/1/2/5 supported)" — flag bits 3/4/6/7 are exactly the bulk-memory-proposal's `exprs`-typed active/declarative segment encodings). These 4 files' own top-of-file modules use this form pervasively for setting up their bulk-copy/bulk-init test fixtures — ONE module failing to parse cascades into hundreds of downstream `assert_trap`/`assert_return` NYS. **This is the single highest-leverage item in the entire remaining backlog.**
+| `elem.wast` | 67 (down from more before Addendum 1's fixes) | The SAME exprs-list gap (most of its own NYS module failures cite the identical error strings), plus a smaller, distinct "table with an explicit init expression (function-references proposal) is not yet supported" gap, plus a couple of unrelated `unknown table identifier "$e"` cases worth a second look once the exprs-list fix lands (they may just be a downstream symptom of the same root parse failure, or a real second bug — undetermined). |
+| `select.wast` | 126 | A SINGLE contained text-parser gap — `wasm-wast-parser` doesn't recognize `result` as a valid folded-instruction-position token for `select`'s own typed form (`(select (result funcref) ...)`), confirmed via probe ("unknown instruction 'result'"). Only 2 actual parse failures in the whole file, but they gate ~124 downstream `invoke`/`assert_return`/`assert_trap` directives that reference the broken modules. High leverage-to-effort ratio — likely a small, self-contained `wasm-wast-parser` grammar fix. |
+| `global.wast` | 71 | Two DISTINCT causes: (1) an unresolved `spectest.global_i32` import (this corpus's harness doesn't wire up the informal `spectest` host module some upstream testsuite files assume — check whether OTHER already-100%-passing files already solve this via a real `spectest` host stub `wasm-conformance` provides, or whether this is a new, small piece of harness work), and (2) the SAME exprs-list active-segment gap as above. |
+| `imports.wast`, `imports1-4.wast` | 75+5+11+6+5 = 102 | Not yet individually probed — grouped here as "linking/import edge cases," needs its own investigation pass before sizing. |
+| GC proposal remainder: `ref_eq.wast`, `ref_test.wast`, `ref_cast.wast`, `i31.wast`, `br_on_cast.wast`, `br_on_cast_fail.wast`, `br_on_null.wast`, `br_on_non_null.wast`, `array*.wast` (7 files), `struct.wast`, `type-subtyping.wast`, `type-rec.wast`, `table-sub.wast`, `ref.wast`, `ref_func.wast`, `ref_is_null.wast`, `ref_as_non_null.wast`, `call_ref.wast`, `return_call_ref.wast` | ~500 combined | The genuinely-remaining slice of the GC proposal beyond what W20/W32-W35 already closed — likely still gated significantly by the SAME exprs-list gap for these files' own elem-segment-heavy GC test fixtures (unconfirmed — re-probe each file AFTER the exprs-list fix lands before scoping further GC-specific work, since a large fraction of this bucket may simply evaporate). |
+| `return_call.wast`, `return_call_indirect.wast` | 35+64 = 99 | Tail-call (W11) remainder — not yet individually probed. |
+| `bulk.wast`, `memory_copy0/1.wast` | 42+29+14 = 85 | Bulk-memory-proposal edge cases — not yet individually probed, may also share the exprs-list root cause given the family resemblance to `table_copy`/`table_init`. |
+| `utf8-invalid-encoding.wast` | 176 (100% of the file) | A genuinely separate, self-contained gap: this file's `assert_malformed` cases test INVALID UTF-8 byte sequences in name/custom-section strings specifically — needs real UTF-8 validation somewhere in `wasm-module-parser`'s string-decoding path (a well-defined, standalone **S**-sized item, no dependency on anything else in this table). |
+| `simd_const.wast`, `simd_align.wast`, various `simd_load*_lane.wast`, `float_literals.wast`, `int_literals.wast`, `const.wast`, `if.wast`, `loop.wast`, `block.wast`, `align.wast`, `align64.wast`, `token.wast`, `annotations.wast`, `func.wast`, `call_indirect.wast` | ~500 combined, mostly 1-46 each | Long tail of small, mostly `assert_malformed`/`assert_invalid` text-format-parser edge cases (custom annotations syntax, specific numeric-literal malformed forms, alignment-immediate malformed forms) — each individually small, S-sized, not yet triaged for shared root causes.
+| Everything else (~60 files) | ≤20 each, mostly ≤5 | Long tail, not worth a table row — re-probe individually if pursuing literal 100%.
+
+### Recommended sequencing
+
+1. **The exprs-list active/declarative element-segment form** (text
+   grammar in `wasm-wast-parser` + binary flag-bit decoding in
+   `wasm-module-parser`, likely also touching `wasm_types::Element`'s
+   representation to carry inline expressions rather than bare function
+   indices, which would then ripple into the elem-segment-application
+   code W35 just finished building in `wasm-runtime`/`wasm-execution`).
+   **Do this first** — it's the single highest-leverage item by a wide
+   margin (a plausible 2000+ of the 4048 total NYS directives gate on
+   it, once `table_copy*`/`table_init*`/`elem.wast`/likely-`bulk.wast`
+   and a meaningful fraction of the GC-remainder bucket are re-probed
+   after the fix lands). Sized **L** (a real grammar/binary-format
+   extension plus a representation change touching multiple crates,
+   comparable to W32/W33's own sizing) — warrants its own spec-first PR
+   (next free W-number) given the surface area, following this
+   campaign's established convention.
+2. **`select.wast`'s typed-result folded-form parsing gap.** Small,
+   contained, high leverage-to-effort ratio. Sized **S**.
+3. **`utf8-invalid-encoding.wast`'s real UTF-8 validation gap.**
+   Self-contained, no dependency on item 1. Sized **S**.
+4. **`global.wast`'s `spectest.global_i32` import gap** — check first
+   whether this is actually a missing, cheap, one-time host-stub
+   addition to `wasm-conformance`'s own test harness (likely) rather
+   than an interpreter capability gap at all.
+5. **Re-probe everything** after items 1-4 land — several of the
+   still-untriaged buckets above (GC remainder, bulk-memory, imports)
+   may substantially shrink once the exprs-list fix removes their
+   shared upstream blocker, and re-probing BEFORE writing new specs
+   for them avoids scoping work against a stale picture.
+6. **Long-tail S-sized text-format-parser gaps** (numeric literals,
+   annotations, alignment immediates) — pick off individually once the
+   high-leverage items are closed; each is small enough not to need its
+   own spec, per this repo's own proportionality principle.
+
+### An honest caveat literal 100% will still not clear
+
+Even closing every item above only gets the corpus to "100% of what
+this interpreter attempts to grade." A handful of `assert_exhaustion`/
+`assert_invalid` NYS entries (e.g. `skip-stack-guard-page.wast`'s 10
+`assert_exhaustion` cases) may depend on this interpreter's own stack-
+depth/resource-limit architecture in ways that are legitimately harder
+than a parser/grammar fix — re-scope those individually when reached
+rather than assuming this table's sizing guesses hold all the way down.

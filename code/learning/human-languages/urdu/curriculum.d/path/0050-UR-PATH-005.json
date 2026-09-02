@@ -3,10 +3,13 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "UR-C04-kaise-kaisi",
+    "UR-W04-joining",
     "UR-C04-aap-kaise-hain",
     "UR-C04-main-hun",
+    "UR-W04-kaf",
     "UR-C04-thik",
     "UR-C04-main-thik-hun",
+    "UR-W04-nun",
     "UR-C04-practice"
   ],
   "before": [],
@@ -18,5 +21,7 @@
     "UR-EXT-011-WELLBEING-WORD-ORDER",
     "UR-EXT-012-WELLBEING-CONSOLIDATION"
   ],
-  "after": []
+  "after": [
+    "UR-EXT-009B-SCRIPT-JOINING"
+  ]
 }

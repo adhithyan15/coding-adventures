@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C11-poribar
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 810
-chapter: 11
+sequence: 860
+chapter: 16
 type: word
 headword: পরিবার
 romanization: pôribār

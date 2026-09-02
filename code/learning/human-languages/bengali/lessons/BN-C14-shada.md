@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C14-shada
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1130
-chapter: 14
+sequence: 1020
+chapter: 20
 type: word
 headword: সাদা
 romanization: shada

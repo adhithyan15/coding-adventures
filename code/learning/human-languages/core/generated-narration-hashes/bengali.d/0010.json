@@ -1,18 +1,15 @@
 {
   "language": "bengali",
   "chapter": 10,
-  "sourceHash": "fnv1a64:522e9ad053b71b7f",
+  "sourceHash": "fnv1a64:f455a8426e72c35f",
   "lessonIds": [
-    "BN-C10-cha",
-    "BN-C10-jol",
-    "BN-C10-dudh",
-    "BN-C10-bhat"
+    "BN-C06-numbers-1-5"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "bengali/narration/ch10.txt",
   "json": "bengali/narration/ch10.json",
-  "textHash": "fnv1a64:eea9fbb90287eb68",
-  "jsonHash": "fnv1a64:2429dc14cf122ad4",
+  "textHash": "fnv1a64:3a3c4a77cf733517",
+  "jsonHash": "fnv1a64:1263767822e2c071",
   "findings": []
 }

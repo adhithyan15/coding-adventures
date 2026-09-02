@@ -6,6 +6,7 @@ sequence: 590
 chapter: 15
 type: word
 headword: தண்ணீர் அரிசி சாதம்
+romanization: "taṇṇīr arisi sātam"
 gloss: water, and rice — the actual staple food here, not bread — with a widely-cited (if not fully certain) link from arisi to the English word "rice" itself
 concept_tag: TA-FOOD-BASIC
 prerequisites: [TA-C14-kaalangal]

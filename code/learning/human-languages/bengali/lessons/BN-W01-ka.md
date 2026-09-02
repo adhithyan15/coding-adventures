@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W01-ka
 spine_node: SPINE-MEET-GREET
-sequence: 1660
+sequence: 130
 delivery: script
-chapter: 16
+chapter: 2
 type: writing
 headword: ক
 romanization: "kô"

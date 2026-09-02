@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C15-jama
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1210
-chapter: 15
+sequence: 1130
+chapter: 22
 type: word
 headword: জামা
 romanization: jama

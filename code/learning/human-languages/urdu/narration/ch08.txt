@@ -1,8 +1,51 @@
 Urdu, chapter 8: Four Verbs Between People.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
+و (vāʾo) — a head, a tail, and no hand to the left.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Name the letter that takes the hand of what is on its right and offers nothing to the left, so that a gap opens inside a word. (ا.)
+
+Script — the shape.
+و (vāʾo).
+A small round head at the top, closed like a tiny loop, and then a tail that sweeps down and away to the left, dropping below the baseline. One movement, no dots.
+Its name is و vāʾo.
+Now the part that matters more than the shape. vāʾo is a non-joiner, the second one you have met. Like alif, it accepts the letter on its right and hands nothing to the letter on its left, so the run stops after it and whatever follows begins as if starting fresh. When you see a break inside an Urdu word, you now have two suspects instead of one.
+With nothing ever attached on its left, vāʾo has no separate middle face to learn. It looks the same wherever it stands; only whether something is joined to its right changes.
+And it carries more than one sound. Vāʾo does four jobs:
+the consonant v or w.
+the long vowel ū.
+the long vowel o.
+and in some Persian borrowings, nothing at all — a letter written and not said.
+Which one it is comes from the word, not the shape, exactly as with ye. Having heard the word is what tells you.
+
+The letters in this word.
+Three words, three of vāʾo's values. Copy each with the model in front of you.
+وکیل ہوں کون.
+وکیل vakīl "lawyer" — vāʾo opens it as a consonant, and because it hands nothing leftward, ک begins a fresh run right after it. The gap you see inside the word is the letter refusing to join, not a space.
+ہوں hūṅ — "I am." Vāʾo is the long ū here, and the break after it is the same non-joining behaviour, with ں starting clean.
+کون kaun — "who." Vāʾo is the o of the diphthong.
+One letter, three sounds, in three words you already say.
+
+Guided Practice.
+[once you have stopped driving — write: و (vāʾo) — the closed head, then the tail sweeping down and left]
+[once you have stopped driving — write: وکیل, then ہوں, then کون]
+[once you have stopped driving — write: میں... ہوں۔ — and say it with something true about yourself]
+[once you have stopped driving — point: at the break after vāʾo in ہوں and say why it is there]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Write "I am." (میں... ہوں۔) How many sounds can vāʾo carry? (Four, counting the silent one.) What tells you which? (Having heard the word.)
+[question — say your answer, then pause 12 seconds]
+Which two letters so far refuse to join to the letter on their left?
+
+
+Lesson 2 of 5.
 لینا (lenā) — “to take,” and the letter that will not sit still.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -47,7 +90,7 @@ What sound does ی carry in lenā, and name one other value it takes elsewhere. 
 Sources: Wiktionary: لینا (lenā); Zero Zabar: The Urdu alphabet.
 
 
-Lesson 2 of 4.
+Lesson 3 of 5.
 پوچھنا (pūchhnā) — “to ask,” a word Urdu inherited and borrowed at the same time.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -61,7 +104,7 @@ You'll want to know first — one word.
 Strip the -nā and the stem is pūchh-. It covers both asking a question and asking after someone.
 
 The letters in this word.
-From the right edge: پ p, then و carrying long ū, then چ ch, then ھ, then ن n, then ا long ā.
+From the right edge: پ p, then و (vāʾo) carrying long ū, then چ ch, then ھ, then ن n, then ا long ā.
 Every shape is already earned, and two are the dot-counting pair: پ has three dots below a low scoop, چ three below the taller jīm body. Then ھ aspirates the چ into چھ chh — its job in samajhnā and paṛhnā too.
 A written question still ends in the mirrored ؟, closing آپ کا نام کیا ہے؟ at the left-hand end of the line.
 
@@ -91,7 +134,7 @@ Which English word for praying shares a root with pūchhnā, and are Persian por
 Sources: Wiktionary: پوچھنا (pūchhnā); Wiktionary: پرسیدن; Rekhta Dictionary: pursish.
 
 
-Lesson 3 of 4.
+Lesson 4 of 5.
 مدد کرنا (madad karnā) — “to help,” and the join that built half of Urdu.
 
 Warm-up.
@@ -128,7 +171,7 @@ Which half of madad karnā takes the endings, and what does m-d-d mean underneat
 Sources: Wiktionary: مدد; Wiktionary: مد (Arabic).
 
 
-Lesson 4 of 4.
+Lesson 5 of 5.
 پسند (pasand) — Urdu does not like things; things please Urdu.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.

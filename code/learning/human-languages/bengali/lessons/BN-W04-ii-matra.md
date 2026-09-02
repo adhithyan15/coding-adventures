@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W04-ii-matra
 spine_node: SPINE-MEET-GREET
-sequence: 1990
+sequence: 1080
 delivery: script
-chapter: 19
+chapter: 21
 type: writing
 headword: ী
 romanization: "-i (long)"
 gloss: "the second i-sign — a different shape for a sound Bengali no longer distinguishes"
-prerequisites: [BN-W04-jol-read]
+prerequisites: [BN-W03-shada-read]
 sounds: []
 roots: []
 etymology_hook: "Sanskrit had a short i and a long one and Bengali merged them, so the script now carries two signs for one sound: a spelling that remembers a distinction the mouth has given up."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W04-jol-read, BN-W02-i-matra]
+reviews_of: [BN-W03-shada-read, BN-W02-i-matra]
 ---
 # ী — the second i-sign
 

@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W02-ami-read
 spine_node: SPINE-MEET-GREET
-sequence: 1720
+sequence: 370
 delivery: script
-chapter: 17
+chapter: 6
 type: writing
 headword: আমি
 romanization: "āmi"
 gloss: "the word for I, and two more that come free with it"
-prerequisites: [BN-W02-i-matra]
+prerequisites: [BN-W02-tumi-read]
 sounds: []
 roots: []
 etymology_hook: "One sign bought three words at once: the pronoun, the question word, and the goodbye that means I am coming back — all of them already spoken, none of them needing a tenth letter."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W02-i-matra, BN-C03-ami]
+reviews_of: [BN-W02-tumi-read, BN-C03-ami]
 ---
 # আমি — the word for I, and two more that come free with it
 
@@ -45,7 +45,7 @@ reviews_of: [BN-W02-i-matra, BN-C03-ami]
 - **ম** — *mô*
 - **ি** — written in front of that **ম**, heard after it
 
-**āmi** — *I*. The word from the third chapter, the one that came down from
+**āmi** — *I*. The word from the chapter before this one, the one that came down from
 Sanskrit *asmi* and is cousin to English *am*.
 
 Watch what the sign does to the eye. On the page the order runs আ, then the

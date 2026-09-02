@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-bhalo-read
 spine_node: SPINE-MEET-GREET
-sequence: 1860
+sequence: 510
 delivery: script
-chapter: 18
+chapter: 8
 type: writing
 headword: ভালো
 romanization: "bhālo"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-SCRIPT-BHALO-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-BHA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-LA-01, BN-SCRIPT-O-MATRA-01, BN-SCRIPT-KALO-READ-01, BN-SCRIPT-BHALO-READ-01]
+  knowledge: [BN-SCRIPT-BHA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-LA-01, BN-SCRIPT-O-MATRA-01, BN-SCRIPT-ABAR-READ-01, BN-SCRIPT-BHALO-READ-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -47,31 +47,35 @@ reviews_of: [BN-W03-bha, BN-C03-bhalo]
 of the phrase for liking something; it is the first half of the verb for loving
 someone. No word in this track turns up in more sentences.
 
-Now put it next to the word from four lessons ago:
+Now put it next to the word from two lessons ago, and beside the possessive from
+the introductions chapter:
 
-> **কালো** — *kālo*, black
-> **ভালো** — *bhālo*, good
+> **আবার** — *ābār*, again
+> **আমার** — *āmār*, my
 
-Identical except for the first letter. Both are consonant plus **া**, then **ল**
-wearing **ো**. A learner who can build one has built the other, and a learner who
-cannot yet tell **ক** from **ভ** at a glance has now been handed the exercise
-that fixes it.
+Identical except for the middle letter. A learner who can build one has built the
+other, and a learner who cannot yet tell **ব** from **ম** at a glance has now
+been handed the exercise that fixes it. **ভালো** sets the same trap with its own
+first letter, and a later chapter will spring it on a colour word built to the
+same pattern.
 
 That near-miss is worth taking seriously rather than enjoying. Bengali is full of
 pairs like this, and the reader who slows down for the first letter is the reader
 who stops guessing words from their silhouette.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-BHALO-READ-01, BN-SCRIPT-KALO-READ-01, BN-SCRIPT-BHA-01, BN-SCRIPT-LA-01, BN-SCRIPT-O-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-BHALO-READ-01, BN-SCRIPT-ABAR-READ-01, BN-SCRIPT-BHA-01, BN-SCRIPT-LA-01, BN-SCRIPT-O-MATRA-01] -->
 
 - [YOU READ: ভালো]
-- [YOU READ: কালো ভালো]
+- [YOU READ: আবার আমার]
 - [YOU WRITE: ভালো]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-BHALO-READ-01, BN-SCRIPT-KALO-READ-01, BN-SCRIPT-BHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-BHALO-READ-01, BN-SCRIPT-ABAR-READ-01, BN-SCRIPT-BHA-01] -->
 
-[PAUSE 3s] What is the only difference on the page between **কালো** and **ভালো**? (**The
-first letter**.) And which of them means *good*? (**ভালো**.)
+[PAUSE 3s] What is the only difference on the page between **আবার** and **আমার**? (**The
+middle letter**.) And which piece of **ভালো** would you have to change to get a
+different word? (**The first letter** — every one of these near-pairs turns on a
+single shape.)
 
 Source: [Unicode Bengali chart](https://www.unicode.org/charts/PDF/U0980.pdf).

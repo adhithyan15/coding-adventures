@@ -1,375 +1,150 @@
-Bengali, chapter 19: Both Bodies of a Vowel.
-12 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Bengali, chapter 19: Please, Sorry, and Welcome.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 12.
-চ (chô) — the consonant cha.
+Lesson 1 of 4.
+দয়া করে (doya kore) — "please," a kindness done.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Read দুধ aloud, and say which of its two letters lets the breath out.
+The heart word closed the last chapter. A new one opens on a feeling that starts in the same place — and a word this book has never taught you before now.
 
-Script.
-চ (chô).
-chô — the ch of English cheap, with no puff of air after it.
-The tongue is somewhere new. Not on the teeth, where ত and দ are made, and not at the back, where ক is: the body of the tongue comes up flat against the hard roof of the mouth, a little behind the ridge. English spells that place with two letters, ch, because its alphabet has no single sign for it. Bengali has one letter, and — following the square from the last chapter — a breathy partner and two voiced cells to go with it.
-That is the fourth place of articulation this book has named: teeth, roof, throat, and lips. The list is not long. Everything the script writes is one of those places with the voice and breath switches set.
-With the mātrā:
-চ (chô) + া becomes চা (chā).
-That is already a word, and it gets its own lesson next.
+You'll want to know: দয়া করে.
+দয়া করে — doya kore — please.
+দয়া করে বসুন (doya kore bôshun) — please, sit.
+
+The letters in this word.
+দয়া is দ (dô) plus য় (the glide already met inside হৃদয়) with the vowel sign া (ā): doyā. করে is ক (kô) plus র (r) with the vowel sign ে (e): kôre.
+
+The word, taken apart.
+দয়া is Sanskrit দয়া (dayā), "compassion, pity." Most Indo-Europeanists trace its root back to PIE deh₂-, "to divide, to apportion" — the same root proposed for Greek daíomai, "to divide," and dêmos, "a portion of land, the people," which English holds without inheriting it directly: democracy, epidemic, demographic. If the comparison is right, compassion and sharing are the same idea at the root — you feel দয়া for someone by dividing your own good fortune with them, the warmth this book already located in হৃদয়, the heart.
+
+Grammar Lens: করা wears a new outfit.
+Noun plus করা already builds a verb — কাজ করা, "to work"; জিজ্ঞাসা করা, "to ask." Here করা takes a different shape, করে, "having done": not a full sentence on its own, but a piece that leans on the next word.
+[a table of 2 rows, read aloud]
+shape of করা: a finite ending (করি, করে, করেন…) job: states an action. example: আমি কাজ করি — I work.
+shape of করা: করে, unchanged. job: "having done," leaning forward. example: দয়া করে (doya kore) বসুন — please, sit.
+দয়া করে (doya kore) literally says "having done a kindness, [now do this]" — the kindness is named, then the actual request follows.
 
 Guided Practice.
-[once you have stopped driving — write: চ (chô)]
-[once you have stopped driving — write: চা (chā)]
-[your turn — read: দুধ]
+[pause 1 second]
+[your turn — say: "doya" — compassion, then "kore" — having done]
+[pause 8 seconds for the answer]
+[your turn — say: "doya kore bôshun" — please, sit]
+[pause 8 seconds for the answer]
+[your turn — say: the family this word joins — "kāj kôrā … jijñāsā kôrā … doya kore"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where in the mouth is চ (chô) made? (Against the roof, behind the ridge.) How many letters does English need for that sound? (Two.) And Bengali? (One.)
-Source: Unicode Bengali chart.
+What does দয়া করে (doya kore) mean literally, piece by piece? ("Having done a kindness" — দয়া "compassion" + করে "having done.") Is করে here a full sentence by itself? (No — it leans forward onto the request that follows it.) One quick reach back: what root does দয়া share with a very old disputed argument about democracy? (PIE deh₂-, "to divide" — the same proposed root behind Greek dêmos, and behind the warmth হৃদয়, the heart, already carries — two lessons after নাক, the nose, which shares none of it.)
 
 
-Lesson 2 of 12.
-চা (chā) — tea, read.
+Lesson 2 of 4.
+দুঃখিত (dukkhito) — "sorry," and a prefix that reaches Greek.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write চ (chô), and say where in the mouth it is made.
-
-Script.
-চ (chô) + া becomes চা (chā).
-One consonant and one sign. chā — tea, and the shortest word this book will ask anyone to read.
-It is also a loanword, and the shape of the loan is visible in the sound. Chinese chá travelled overland through Persian čā and arrived in Bengali as চা (chā). The same leaf travelled by sea, through Hokkien and Dutch traders, and arrived in English as tea. One plant, two roads, two words — and which word a language uses tells you which road the leaf took to get there.
-Now that the word for milk is also readable, a whole request is on the page:
-দুধ চা — dudh chā, milk tea.
-Two words the mouth has had since the tenth chapter, side by side, in script.
-
-Guided Practice.
-[your turn — read: চা (chā)]
-[pause 8 seconds for the answer]
-[your turn — read: দুধ চা (chā)]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: চা (chā)]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How many pieces are in চা? (Two.) And why does English say tea where Bengali says chā? (The word came by sea, not overland.)
-Source: Unicode Bengali chart.
-
-
-Lesson 3 of 12.
-প (pô) — the consonant pa.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Read চা (chā) and দুধ চা (chā) aloud before adding a new shape.
+Last lesson's kindness gets a request said politely. This lesson is what you say when the kindness came too late.
 
-Script.
-প (pô).
-pô — the p of English spin, lips shut, no puff of air after the release.
-The place is the lips, which is where ব was made too. So the two of them fill two cells of one square:
-প (pô) — lips, voice off.
-ব — lips, voice on.
-The English p of pin is the breathy one and belongs to a different letter, the same trap ক and খ laid in the last chapter. Palm in front of the mouth: spin gives no air, and that is this letter.
-With the lips named, the map is complete. Every consonant this book has taught is made at one of four places — lips, teeth, roof, throat — and every one of them is one of four cells at that place. A reader who has that grid is not memorising forty unrelated shapes. They are filling in a table.
-With the mātrā:
-প (pô) + া becomes পা.
+You'll want to know: দুঃখিত.
+দুঃখিত — dukkhito — sorry.
+আমি দুঃখিত (āmi dukkhito) — I'm sorry.
+
+The letters in this word.
+দুঃখিত is দ (dô) with the vowel sign ু (u), then ঃ — a new mark, the visarga, two small stacked dots that add a light breath after the vowel — then খ (kh) with the vowel sign ি (i), then ত (t, silent at the end). Spelled duḥkhita, said dukkhito: the breath mark softens toward the consonant that follows it rather than staying a separate sound.
+
+The word, taken apart.
+দুঃখিত (dukkhito) is built on Sanskrit দুঃখ (duḥkha), "sorrow, suffering" — the word Buddhism made famous as dukkha. Take it apart and one half is certain: দুঃ/দুস্ (dus-) means "bad, difficult," from PIE dus-, the very prefix inside Greek dys-: dystopia, dysfunctional. The other half, খ (kha), is where the certainty ends. Sanskrit's own grammatical tradition explains it as "an axle-hole" — a duḥkha journey is a bad axle-hole, a rough ride, set against সুখ (sukha), "a good axle-hole," comfort. It is a vivid story, and it is repeated everywhere. It is also, by the account of modern Sanskritists including Mayrhofer, not a story to trust: the axle-hole reading may be a later folk explanation grafted onto a word whose real root is lost. দুঃ's cousin is real; খ's is a story, reported and not settled.
 
 Guided Practice.
-[once you have stopped driving — write: প (pô)]
-[once you have stopped driving — write: প (pô) ব]
-[your turn — read: চা (chā)]
+[pause 1 second]
+[your turn — say: "dukkhito" — sorry]
+[pause 8 seconds for the answer]
+[your turn — say: "āmi dukkhito" — I'm sorry]
+[pause 8 seconds for the answer]
+[your turn — say: the secure half and its Greek cousin — "dus- … dystopia"]
+[pause 8 seconds for the answer]
+[your turn — say: last lesson's request again — "doya kore bôshun"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where is প (pô) made? (At the lips.) Which other letter is made there? (ব.) And what separates them? (The voice.)
-Source: Unicode Bengali chart.
+Say "I'm sorry" in Bengali. (আমি দুঃখিত (dukkhito).) Which half of দুঃখ is a secure PIE prefix, and which English word shares it? (দুঃ/dus-, "bad" — dystopia, by way of Greek dys-.) Is the "bad axle-hole" story of খ settled fact? (No — a repeated tradition, treated with real skepticism by modern Sanskritists.) Sorrow, like compassion, can weigh somewhere specific — where? (হৃদয়, the heart.)
 
 
-Lesson 4 of 12.
-পরিবার (pôribār) — family, read.
+Lesson 3 of 4.
+মাফ করবেন (maf korben) — "excuse me," borrowed and softened.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write প (pô), then write ি and say which side of a consonant it goes on.
-
-Script.
-প + র + ি + ব + া + র becomes পরিবার (pôribār).
-Six pieces — the longest word this book has asked anyone to assemble.
-প — bare, so it carries its own inherent vowel: pô.
-র with ি in front of it — ri.
-ব with া — bā.
-র — rô, worn away at the end.
-pôribār — family, the tatsama from the eleventh chapter: pari- "around" plus a root meaning "to cover." What surrounds you.
-The first letter is the lesson here. প wears no sign at all, and a reader who has spent two chapters looking for marks will skate over it and say pri. It is pô. A consonant with nothing on it is not silent — it is carrying the vowel this whole script is named for.
-That inherent ô was the very first thing the script chapters taught, back on ন, and this is the first word long enough to make it matter in the middle of a reading rather than at the start of a letter.
-
-Guided Practice.
-[your turn — read: পরিবার (pôribār)]
-[pause 8 seconds for the answer]
-[your turn — read: চা (chā)]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: পরিবার (pôribār)]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What vowel does the bare প carry? (ô.) How many pieces are in পরিবার (pôribār)? (Six.) And what does the word mean? (Family.)
-Source: Unicode Bengali chart.
-
-
-Lesson 5 of 12.
-জ (jô) — the consonant ja.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Read পরিবার (pôribār), and say what vowel its bare first letter carries.
+Last lesson's word for "sorry" was a native Sanskrit word. This one is a loanword — the very same loanword Hindi uses in its own "sorry" phrase — and it softens a request in a way you have not met yet.
 
-Script.
-জ (jô).
-jô — the j of English jam. Same place as চ (chô), the flat of the tongue on the roof of the mouth, with the voice on.
-Another two cells of another square, and by now the move should be predictable: meet a consonant, ask where it is made and whether the voice is running, and the letter has a family rather than being a shape on its own.
-This letter carries a root worth knowing. Sanskrit jñā, "to know," is spelled with it, and the verbs chapter followed that root out to English know and to the k that English still writes and no longer says. The Bengali verb for knowing facts opens on this shape.
-With the mātrā:
-জ (jô) + া becomes জা.
+You'll want to know: মাফ করবেন.
+মাফ করবেন — maf korben — excuse me.
+মাফ করবেন, একটু জায়গা দেবেন? (maf korben, êktu jāygā debên?) — excuse me, could you make a little room?
+
+The letters in this word.
+মাফ is ম (mô) with া (ā) plus ফ (ph, the puffed p). Notice what is missing: Hindi marks this same borrowed sound with a small dot under its own letter for pha, a nuqtā, to write a dedicated letter for f. Bengali's script has no such mark at all — ফ alone serves for both the native puffed p and this borrowed f, and only habit tells a reader which one a given word means.
+
+The word, taken apart.
+মাফ is not Bengali, and not Sanskrit: it is borrowed, by way of Persian, from Arabic 'afw, "to pardon, to wipe a wrong away." Hindi borrowed the identical word for the identical job. Bengali also keeps a formal, Sanskritic cousin for the same idea, ক্ষমা করবেন, from ক্ষমা (kṣamā), "patience, forbearance" — the everyday loan and the bookish native word side by side, the same split Hindi keeps.
+
+Grammar Lens: the future, asked to be gentle.
+The tea-offering pattern you already own reuses a present verb — আপনি খান — to make a request. করবেন does the same job with a different tense: it is the plain future, "you will do," not a command at all by its grammar, and yet its job here is exactly a request — a third shape for করা, beside last lesson's participle করে.
+[a table of 2 rows, read aloud]
+tense used: present habitual. what it does: states, and doubles as a request. example: আপনি খান — you eat / please eat.
+tense used: future. what it does: states, and doubles as a softer request. example: মাফ করবেন (maf korben) — you will excuse / please excuse.
+The future's distance is what buys the softness: asking rather than telling, even grammatically.
 
 Guided Practice.
-[once you have stopped driving — write: জ (jô)]
-[once you have stopped driving — write: চ (chô) জ (jô)]
-[your turn — read: পরিবার (pôribār)]
+[pause 1 second]
+[your turn — say: "maf korben" — excuse me]
+[pause 8 seconds for the answer]
+[your turn — say: the two soft requests compared — "chā khān … maf korben"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What separates জ (jô) from চ (chô)? (The voice.) And which Sanskrit root for knowing opens on this letter? (jñā.)
-Source: Unicode Bengali chart.
+Where does মাফ come from? (Arabic 'afw, "to pardon," by way of Persian — the same loan Hindi's own "sorry" phrase uses.) What tense is করবেন, and why does that make it gentler than a command? (Future — "you will do," asking rather than telling.)
 
 
-Lesson 6 of 12.
-জল (jôl) — water, read.
+Lesson 4 of 4.
+স্বাগতম (shbagotom) — "welcome," a good arrival.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write জ (jô), and say what separates it from চ (chô).
-
-Script.
-জ + ল becomes জল (jôl).
-Two letters. No signs at all.
-jôl — water. And the vowel in the middle of it, the ô you can plainly hear, is written nowhere. It is on the page because জ carries it, the way every bare Bengali consonant does.
-This is the shortest possible demonstration of the word abugida, which the very first script lesson used and this word finally earns. An alphabet writes every vowel. An abugida writes a consonant that already has one, and marks only the vowels that are different. জল (jôl) is what that looks like when nothing is different.
-Set it beside the drink from earlier in this chapter:
-চা (chā) — one consonant, one sign জল (jôl) — two consonants, no signs.
-Both are two syllables in the mouth and neither spells them the way an English reader would expect. The tenth chapter noted that Bengali eats its drinks — jôl khāwā, "to eat water" — so these two words keep company in more than one way.
-
-Guided Practice.
-[your turn — read: জল (jôl)]
-[pause 8 seconds for the answer]
-[your turn — read: চা (chā) জল (jôl) পরিবার (pôribār)]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: জল (jôl)]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How many vowel signs are in জল (jôl)? (None.) So where does the ô come from? (The consonant carries it.) And what does the word mean? (Water.)
-Source: Unicode Bengali chart.
-
-
-Lesson 7 of 12.
-ী (-i (long)) — the second i-sign.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Read জল (jôl), then write ি and say which side it goes on.
+This chapter has taught what to say after a mistake. It closes on what to say before anything goes wrong at all — a word built on the same "hither" you have carried since the verb for coming.
 
-Script.
-ী (-i (long)).
-A second sign for i — and in modern Bengali speech it sounds exactly like the first one.
-Sanskrit distinguished a short i from a long ī, and held words apart by that length alone. Bengali gave the distinction up. The two signs survive because the spellings survive: a word inherited from Sanskrit keeps whichever sign it always had, and the reader learns it word by word rather than by ear.
-That is worth stating plainly rather than apologising for. A script records the history of a language as well as its present, and the cost of that is a handful of spellings a listener could never have guessed. English readers know the arrangement well — the k in know, the gh in night.
-The two signs sit on opposite sides:
-ি goes before its consonant ী (-i (long)) goes after it, like া.
-So they are hard to confuse on the page even while being impossible to tell apart in the ear.
-ন + ী (-i (long)) becomes নী.
+You'll want to know: স্বাগতম.
+স্বাগতম — shbagotom — welcome.
+আমাদের বাড়িতে স্বাগতম (āmāder bāṛite shbagotom) — welcome to our house.
+
+The letters in this word.
+স্বাগতম (shbagotom) is স্ব (a conjunct, স joined straight to ব with no vowel between — sbô, tilted by the same s becomes sh habit every Sanskrit word in this book has shown) plus া (ā), then গ (gô), ত (tô), and ম (mô, keeping its own inherent vowel at the very end): shbā-go-to-m.
+
+The word, taken apart.
+স্বাগতম (shbagotom) is Sanskrit স্বাগতম (shbagotom) (svāgatam), built from two pieces fused together. The second piece, আগত (āgata), "arrived, come," opens with the very same আ-, "hither," that আসা's own lesson already named — except here it rides a different verb, √গম্ (√gam, "to go, to come"), not আসা's own unsettled stem. √gam is PIE gʷem-, and this root is about as secure as roots get: it is the direct ancestor of English come, and, by way of Latin venīre, of advent and convene too. The first piece, সু- (su-, "good"), loses its vowel to the glide ব when the next syllable also opens with a vowel — ordinary Sanskrit sandhi, the same trade সু- plus আগত makes every time: svāgata. সু- is PIE h₁su-, cousin of Greek eu-, the "good" inside eulogy and euphoria. Put the pieces back together: স্বাগতম (shbagotom) is, literally, "a good coming."
 
 Guided Practice.
-[once you have stopped driving — write: ী (-i (long))]
-[once you have stopped driving — write: নী]
-[your turn — read: জল (jôl)]
+[pause 1 second]
+[your turn — say: "shbagotom" — welcome]
+[pause 8 seconds for the answer]
+[your turn — say: "āmāder bāṛite shbagotom" — welcome to our house]
+[pause 8 seconds for the answer]
+[your turn — say: the shared prefix — "ā-, hither" — on āsā, then on āgata]
+[pause 8 seconds for the answer]
+[your turn — say: the two secure cousins — "gam … come" and "su- … eu-"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Do ি and ী (-i (long)) sound different in Bengali today? (No.) Did they in Sanskrit? (Yes — short and long.) And which side does ী (-i (long)) go on? (After its consonant.)
-Source: Unicode Bengali chart.
-
-
-Lesson 8 of 12.
-নীল (nīl) — blue, read.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write ী (-i (long)), and say which side of its consonant it goes on.
-
-Script.
-ন + ী (-i (long)) + ল becomes নীল (nīl).
-nīl — blue, the colour from Sanskrit nīla, the dye that gave English indigo its trade and gave the Bengal countryside its indigo plantations.
-The sign in the middle is the long one, and that is not a choice a speaker could make. Sanskrit nīla had a long ī, so Bengali writes ী (-i (long)) — even though a Bengali speaker says it no differently from the short sign. The spelling is inherited, and the previous lesson's point is now something you have to act on rather than agree with.
-Four colours are now readable:
-লাল — red কালো — black সাদা — white নীল (nīl) — blue.
-Of these, blue is the one whose spelling carries a fact about Sanskrit rather than about Bengali. Red is a Persian gem-name; black is the word for time; white is the homegrown one Hindi replaced. Four words, four different histories, and the page shows one of them.
-
-Guided Practice.
-[your turn — read: নীল (nīl)]
-[pause 8 seconds for the answer]
-[your turn — read: লাল কালো সাদা নীল (nīl)]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: নীল (nīl)]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Why does নীল take the long i-sign? (Because Sanskrit nīla had a long i.) Can a speaker hear the difference? (No.) And how many colours can you read now? (Four.)
-Source: Unicode Bengali chart.
-
-
-Lesson 9 of 12.
-ই — the independent i.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Read নীল (nīl), and say which of the two i-signs it uses.
-
-Script.
-ই (i).
-This is i again — the same sound as ি — written as a letter in its own right instead of as a mark on somebody else.
-You have held a pair like this since the first script chapter without it being named as one. আ is the independent form; া is its sign. Now the same arrangement for i: ই is the letter, ি is the sign.
-The rule that picks between them was met on আবার and is worth stating once for every vowel in the script: a vowel that has a consonant in front of it is written as a sign on that consonant; a vowel that does not is written as its own full letter. Beginning of a word, or straight after another vowel — those are the places with nothing to lean on.
-So ই turns up where a word starts on i, and at the end of a word after another vowel, which is where the next lesson will find it.
-The shape is unrelated to ি, and that is normal here: a vowel's letter and its sign look nothing alike in Bengali, the way a capital and a lowercase A need not look alike in the Latin alphabet.
-
-Guided Practice.
-[once you have stopped driving — write: ই (i)]
-[once you have stopped driving — write: আ া ই (i) ি]
-[your turn — read: নীল (nīl)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-When does a vowel get its own full letter? (When there is no consonant to lean on.) Which pair did you already hold without being told? (আ and া.)
-Source: Unicode Bengali chart.
-
-
-Lesson 10 of 12.
-ভাই (bhāi) — brother, read.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write ই, and say when a vowel gets its own letter instead of a sign.
-
-Script.
-ভ + া + ই becomes ভাই (bhāi).
-ভ with া — bhā, breath and all.
-ই — the full letter, standing on its own.
-bhāi — brother. And the last piece is the rule from the previous lesson doing work in an unexpected place: the i here is not at the start of the word, yet it still takes its full letter. Why? Because the thing in front of it is া, a vowel. There is no consonant for a sign to sit on.
-"Nothing to lean on" does not mean "start of word." It means what it says.
-The word itself is worth a line. The eleventh chapter set it out: this is not a cousin of English brother, it is that word, worn down through Prakrit from the same ancestor — a tadbhava rather than a tatsama. Its sister বোন, from the same chapter, is not related to English sister at all.
-Put it beside the good from the last chapter and the shared first letter is obvious:
-ভালো and ভাই (bhāi).
-
-Guided Practice.
-[your turn — read: ভাই (bhāi)]
-[pause 8 seconds for the answer]
-[your turn — read: ভালো ভাই (bhāi)]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: ভাই (bhāi)]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Why does ভাই (bhāi) end in the full letter ই rather than the sign? (The piece before it is a vowel — nothing to lean on.) And is ভাই (bhāi) a cousin of English brother, or the same word? (The same word.)
-Source: Unicode Bengali chart.
-
-
-Lesson 11 of 12.
-এ — the independent e.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Read ভাই (bhāi), and say why its last piece is a full letter.
-
-Script.
-এ (e).
-The vowel of pet, written as its own letter. ে is its sign; this is its body.
-Three pairs are now in hand:
-আ and া.
-ই (i) and ি.
-এ (e) and ে.
-The third one is what turns a list of facts into something you can predict. Meeting a new vowel from here on, the question is no longer what does this do but which of its two forms am I looking at — and the answer is always decided by whether there is a consonant in front of it.
-That is the last piece of machinery in this book. Consonants carrying a vowel; signs that replace it; a mark that deletes it; full letters where there is nothing to hang a sign on. Everything else Bengali will ask of a reader is more shapes, and the script chapters have said from the beginning that shapes are the cheap part.
-
-Guided Practice.
-[once you have stopped driving — write: এ (e)]
-[once you have stopped driving — write: আ ই (i) এ (e)]
-[your turn — read: ভাই (bhāi)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is the sign that goes with এ? (ে.) And what decides which of a vowel's two forms you write? (Whether there is a consonant in front of it.)
-Source: Unicode Bengali chart.
-
-
-Lesson 12 of 12.
-এক (ek) — one, and the words this reader can now take off a page.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write এ and ই, and say what decides when a vowel gets its own letter.
-
-Script.
-এ + ক becomes এক (ek).
-ek — one. Two pieces, and the first of them is a vowel standing on its own because a word cannot open on a sign.
-The numbers chapter made a remark that could not be checked at the time: it said those five numerals were no good for showing off the inherent ô, because এক (ek) opens on an independent vowel. Here is what that meant. There is no consonant at the front of this word to carry a vowel, so there is no inherent vowel to hear. The claim is now something you can see rather than take on trust.
-And তিন from the seventeenth chapter is readable too, so two of the five numerals are on the page.
-Count the whole holding. Nine pieces came from the first script chapter, five from the seventeenth, six from the eighteenth, and six from this one: চ (chô), প (pô), জ (jô), ী (-i (long)), ই, এ. Twenty-six pieces. And with them, eighteen words:
-নাম name, আমি I, লাল red, তিন three, তুমি you, কেমন how.
-কালো black, আবার again, ভালো good, মুখ mouth, সাদা white, দুধ milk.
-চা (chā) tea, পরিবার (pôribār) family, জল (jôl) water, নীল (nīl) blue, ভাই (bhāi) brother, এক (ek) one.
-with নাক, কি, আসি and কাল riding along free.
-Every one of them was in the mouth before it was on the page. That order was the whole design: hear a word, use it, and only then be shown what it looks like. A reader who had been handed the alphabet first would have spent twenty-six lessons decoding shapes that meant nothing yet.
-
-Guided Practice.
-[your turn — read: চা (chā) পরিবার (pôribār) জল (jôl) নীল (nīl) ভাই (bhāi) এক (ek)]
-[pause 8 seconds for the answer]
-[your turn — read: এক (ek) তিন]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: এক (ek)]
-[once you have stopped driving — write: ভালো চা (chā)]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Why is there no inherent vowel to hear at the start of এক (ek)? (It opens on an independent vowel, not a consonant.) How many pieces do you hold now? (Twenty-six.) And which came first for every one of these words — the sound or the shape? (The sound.)
-Source: Unicode Bengali chart.
+Give "welcome" in Bengali. (স্বাগতম (shbagotom).) What does স্বাগতম (shbagotom) mean, piece by piece? ("Good" plus "come" — a good arrival.) Which prefix does it share with আসা, and on a different verb this time? (আ-, "hither" — on √gam here, not আসা's own uncertain stem.) Run this chapter's three other new words back: a kindness done, a word for sorrow, and a borrowed pardon. (দয়া করে (doya kore), দুঃখিত (dukkhito), মাফ করবেন (maf korben).) One more reach: what tense softened that pardon into a request? (Future — করবেন, "you will do.")

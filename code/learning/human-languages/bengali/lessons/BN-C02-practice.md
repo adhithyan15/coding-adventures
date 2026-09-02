@@ -2,11 +2,11 @@
 schema_version: 2
 id: BN-C02-practice
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 140
-chapter: 2
+sequence: 240
+chapter: 3
 type: practice
 headword: (dialogue)
-gloss: Chapter 2 recap — the introduction exchange
+gloss: Chapter 3 recap — the introduction exchange
 concept_tag: REVIEW
 prerequisites: [BN-C02-amar-naam, BN-C02-tomar-naam-ki, BN-C02-alaap]
 sounds: []
@@ -27,7 +27,7 @@ variety: standard-bengali
 reviews_of: [BN-C02-naam, BN-C02-amar, BN-C02-amar-naam, BN-C02-tumi-apni, BN-C02-ki, BN-C02-tomar-naam-ki, BN-C02-alaap]
 ---
 
-# Chapter 2 — The introduction exchange
+# Chapter 3 — The introduction exchange
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-ALAAP-01, BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-AMARNAAM-01, BN-CONCEPT-C02-KI-01, BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C02-TOMARNAAMKI-01, BN-CONCEPT-C02-TUMIAPNI-01] -->

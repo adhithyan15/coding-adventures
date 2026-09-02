@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C10-jol",
     "language": "bengali",
-    "chapter": 10,
-    "sequence": 710,
+    "chapter": 14,
+    "sequence": 790,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a824d2e918679d3f",
+    "sourceHash": "fnv1a64:89faca546eca2fc3",
     "detachableSegments": [
       "The letters in this word"
     ]

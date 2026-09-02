@@ -6,6 +6,7 @@ sequence: 700
 chapter: 20
 type: word
 headword: பதினொன்று — இருபது
+romanization: "patiṉoṉḏṟu — irupathu"
 gloss: 11-20 — additive "ten-echo" compounds for the teens, then இருபது (20), transparently "two-tens" — closing out the arc: all four Dravidian languages build twenty compositionally, unlike Sanskrit, Latin, or Arabic's opaque special words
 concept_tag: TA-NUM-11-20
 prerequisites: [TA-C19-age-register-grammar]

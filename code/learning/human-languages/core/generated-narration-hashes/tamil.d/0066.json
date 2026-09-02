@@ -1,0 +1,22 @@
+{
+  "language": "tamil",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:a168004a453e491b",
+  "lessonIds": [
+    "TA-C66-up",
+    "TA-C66-down",
+    "TA-W22-read-mele",
+    "TA-C66-inside",
+    "TA-C66-outside",
+    "TA-C66-right",
+    "TA-C66-left",
+    "TA-C66-whichway-recall"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch66.txt",
+  "json": "tamil/narration/ch66.json",
+  "textHash": "fnv1a64:7277bbedca22d445",
+  "jsonHash": "fnv1a64:4627bb6fea0a428e",
+  "findings": []
+}

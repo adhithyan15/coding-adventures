@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:1bdd0441b69c6cba",
+  "lessonIds": [
+    "TA-C66-up",
+    "TA-C66-down",
+    "TA-W22-read-mele",
+    "TA-C66-inside",
+    "TA-C66-outside",
+    "TA-C66-right",
+    "TA-C66-left",
+    "TA-C66-whichway-recall"
+  ],
+  "tex": "tamil/book/chapters/ch66-which-way.tex"
+}

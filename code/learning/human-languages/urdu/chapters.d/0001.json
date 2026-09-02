@@ -2,7 +2,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "label": "ch:urdu-greetings",
-  "canDo": "I can greet someone in Urdu, respond courteously, and close the exchange naturally.",
+  "canDo": "I can greet someone in Urdu, respond courteously, and close the exchange naturally. I can also write the three shapes inside shukriyā and the letter sīn from memory.",
   "spineNodes": [
     "SPINE-MEET-GREET",
     "SPINE-COURTESY-THANK",

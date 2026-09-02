@@ -1,0 +1,11 @@
+{
+  "id": "UR-EXT-018C-SCRIPT-PE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write pe in every position it takes and say why Persian had to invent the letter.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W07-pe"
+  ]
+}
