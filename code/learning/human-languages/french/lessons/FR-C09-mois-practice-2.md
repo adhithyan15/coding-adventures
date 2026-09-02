@@ -77,10 +77,12 @@ Two pairs cause almost all the trouble. Drill them alone:
 
 - **twelve month names**, and the year runs end to end.
 - **two men in a calendar of gods** — *juillet* for Julius Caesar, *août* for the
-  emperor Augustus. Each inserted a month; each kept it.
-- **why the last four miscount** — wedging those two into the middle pushed
-  *septembre* to *décembre* two places along, and their Latin names never caught
-  up.
+  emperor Augustus. Neither added a month: *Quintilis* and *Sextilis*, "the 5th"
+  and "the 6th," were already there and were **renamed**.
+- **why the last four miscount** — the Roman year began in **March**, and
+  *janvier* and *février* were later added at the **front**, sliding *septembre*
+  through *décembre* two places along. Their Latin names never caught up. The
+  emperors get blamed for this and had nothing to do with it.
 - **a number rescued** — *octō* is unrecognisable inside **huit** and perfectly
   legible inside **octobre**. When a word wears down, look for a longer relative
   that did not.
@@ -90,6 +92,7 @@ Two pairs cause almost all the trouble. Drill them alone:
 
 [PAUSE 3s] Give the twelve months without stopping. Now start from **septembre**.
 Which two are named for people, and who? (**juillet**, Julius Caesar; **août**,
-the emperor Augustus.) What did those two insertions do? (Pushed the **counting
-months two places out**.) Which month shows a number that its own French numeral
+the emperor Augustus.) Did either add a month? (**No** — both were
+**renamings**.) So what pushed the counting months two places out? (**janvier**
+and **février**, added at the **front** of a year that began in March.) Which month shows a number that its own French numeral
 has lost? (**octobre** — the *octō* that vanished from *huit*.)

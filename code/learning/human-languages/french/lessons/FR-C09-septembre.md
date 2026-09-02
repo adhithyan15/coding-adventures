@@ -53,10 +53,18 @@ seven. Now take it as a month in its own right.
 **septembre** is Latin **september**, "the **seventh**" — from **septem**, the
 seven you can already count with.
 
-You know why it sits ninth: the old Roman year began in March, and then Julius
-and Augustus wedged their two months in. The name never caught up. What is new
-here is the **word**: *septembre* is now yours as a month, not only as evidence
-about a number.
+You know why it sits ninth: the old Roman year began in **March**, so counting
+from there, *september* really was the seventh. Then **janvier and février were
+added at the front** of the year — centuries before either Caesar was born — and
+every month behind them slid two places without being renamed. The name never
+caught up.
+
+That is worth being exact about, because the story is usually told wrong. It was
+not Julius and Augustus. They renamed two months in the middle and added
+nothing; the damage was done long before them, at the **front** of the year.
+
+What is new here is the **word**: *septembre* is now yours as a month, not only
+as evidence about a number.
 
 English **September** is the identical Latin word, carrying the identical
 mistake.
@@ -67,11 +75,14 @@ mistake.
 [PAUSE 1s]
 - [YOU SAY: "septembre" — *sep-TAHM-bruh*, the *em* through the nose]
 - [YOU SAY: "sept, septembre" — the number and the month it hides in]
-- [YOU SAY: "août, septembre" — the emperor, then the miscount he caused]
+- [YOU SAY: "août, septembre" — the emperor, then the month that miscounts for an older reason]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-SEPTEMBRE-04, FR-LEX-SEPT-09] -->
 
 [PAUSE 3s] How do you say September? (**septembre**, *sep-TAHM-bruh*.) What
 number is inside it? (**sept**, seven — Latin *septem*.) Which month is it
-actually? (The **ninth**.) Next: the eighth month, which is the tenth.
+actually? (The **ninth**.) What put it two places out — the emperors, or
+something older? (**Older**: *janvier* and *février* were added at the **front**
+of a year that used to begin in March.) Next: the eighth month, which is the
+tenth.

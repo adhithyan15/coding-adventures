@@ -6,12 +6,12 @@ sequence: 239
 chapter: 10
 type: word
 headword: juillet
-gloss: July — the month Julius Caesar gave himself
+gloss: July — the month renamed for Julius Caesar
 concept_tag: FR-MONTH-JULY
 prerequisites: [FR-C09-mois-practice-1]
 sounds: [j-zh, ill-mouille]
 roots: [julius-latin]
-etymology_hook: "juillet ← Julius — Caesar rebuilt the calendar and named a month after himself; France still says it"
+etymology_hook: "juillet ← Julius — Caesar rebuilt the calendar, and the month that had been Quintilis, 'the 5th', was renamed for him"
 duration:
   max_seconds: 200
 requires:
@@ -37,7 +37,8 @@ reviews_of: [FR-C09-juin, FR-C09-mois-practice-1]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Six months named for gods and a festival. The next two are named for
-**men** — and both men put their own months into the calendar themselves.
+**men** — the only two months in the year that carry a person who actually
+lived.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[FR-LEX-JUILLET-01]; assesses=[] -->
@@ -52,9 +53,10 @@ reviews_of: [FR-C09-juin, FR-C09-mois-practice-1]
 
 **juillet** is Latin **Julius**, and the Julius in question is **Julius Caesar**.
 
-He did not merely lend his name to an existing month. He **reformed the entire
-calendar** — the Julian calendar is his, and it ran Europe for sixteen centuries
-— and while rearranging it he renamed one month after himself.
+He **reformed the entire calendar** — the Julian calendar is his, and it ran
+Europe for sixteen centuries. He did not add a month while doing it. The month
+was already there, and it was called **Quintilis**, "the 5th." After his death
+it was **renamed** in his honour, and *Quintilis* has not been heard since.
 
 English **July** is the same name, worn down a different way from the same
 *Julius*.
@@ -66,12 +68,13 @@ English **July** is the same name, worn down a different way from the same
 - [YOU SAY: "juillet" — *zhwee-YAY*; the *ill* is a **y**, never an *l*]
 - [YOU SAY: "juin, juillet" — both open with the soft *j*, and they are easy to
   confuse; say them back to back until they separate]
-- [YOU SAY: the man — "Julius Caesar, who rebuilt the calendar and kept a month"]
+- [YOU SAY: the man — "Julius Caesar: Quintilis, the 5th, renamed for him"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-JUILLET-01, FR-LEX-JUIN-07] -->
 
 [PAUSE 3s] How do you say July? (**juillet**, *zhwee-YAY*.) What sound does the
 **ill** make? (A **y**, as in *yes* — never an *l*.) Who is it named for, and
-what did he do to the calendar? (**Julius Caesar** — he **reformed** it, and
-named this month for himself.) Next: the emperor who copied him.
+what did he do to the calendar? (**Julius Caesar** — he **reformed** it.) Did he
+add this month to the year? (**No** — it already existed as **Quintilis**, "the
+5th," and was **renamed** for him.) Next: the emperor who copied him.

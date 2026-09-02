@@ -6,12 +6,12 @@ sequence: 240
 chapter: 10
 type: word
 headword: août
-gloss: August — the month the emperor Augustus gave himself
+gloss: August — the month renamed for the emperor Augustus
 concept_tag: FR-MONTH-AUGUST
 prerequisites: [FR-C09-juillet]
 sounds: [circumflex, silent-final-t]
 roots: [augustus-latin]
-etymology_hook: "août ← Augustus — the emperor took a month too, and French then wore Augustus down to two letters and a hat"
+etymology_hook: "août ← Augustus — Sextilis, 'the 6th', renamed for the emperor, and then worn down to two letters and a hat"
 duration:
   max_seconds: 210
 requires:
@@ -57,13 +57,15 @@ after the vowel and see whether an English word appears.
 
 **août** is Latin **Augustus**, the first Roman emperor.
 
-Julius Caesar took a month. His heir Augustus, not to be outdone, **took the
-next one**. Two men, two months, inserted into the middle of the year by the
-two people powerful enough to do it.
+Julius Caesar had a month renamed for him. His heir Augustus, not to be
+outdone, had **the next one** renamed for himself: **Sextilis**, "the 6th,"
+became *Augustus*.
 
-That insertion is the thing you already know the consequence of. Wedging two
-months into the middle is what pushed the counting months out of place — which
-is why the ninth month still says "seven."
+Note what neither man did. **Neither one added a month.** *Quintilis* and
+*Sextilis* were already sitting in the year; the two most powerful men in Rome
+simply took the two of them and wrote their own names over the top. The calendar
+did not get longer. Two of its months just stopped being numbers and started
+being people.
 
 ## Why it's said this way: two men in a calendar of gods
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -71,7 +73,8 @@ is why the ninth month still says "seven."
 Ten of the twelve months are a god, a festival or a number. **Two are people.**
 
 Julius and Augustus put themselves among the gods, in the most public place
-available — the calendar everybody has to say out loud. Two thousand years
+available — the calendar everybody has to say out loud. They did not need to
+build anything to do it; they only had to rename what was there. Two thousand years
 later, France still says both their names every summer, and nobody thinks of
 either man while doing it. That is what winning looks like at scale.
 
@@ -88,7 +91,7 @@ either man while doing it. That is what winning looks like at scale.
 
 [PAUSE 3s] How do you say August? (**août** — *oot*, or simply *oo*.) What does
 the circumflex mark? (A **lost letter** — here an *s*, from older *aoust*.) Who
-are the two months named for people, and what did those people do? (**Julius
-Caesar** and the emperor **Augustus** — each inserted a month and kept it.) What
-did that insertion do to the rest of the calendar? (**Pushed the counting months
-two places out.**) Next: the four that are still counting.
+are the two months named for people? (**Julius Caesar** and the emperor
+**Augustus**.) Did either of them add a month to the year? (**No** — they
+**renamed** two that already existed, *Quintilis* and *Sextilis*, "the 5th" and
+"the 6th.") Next: the four that are still counting.

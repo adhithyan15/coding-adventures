@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "The Months: Caesars and Counting",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a9cb68d2a32f7f4f",
+  "sourceHash": "fnv1a64:253b1163f8a3d827",
   "lessons": [
     {
       "id": "FR-C09-juillet",
@@ -12,14 +12,14 @@
       "title": "juillet — July",
       "headword": "juillet",
       "romanization": "juillet",
-      "gloss": "July — the month Julius Caesar gave himself",
+      "gloss": "July — the month renamed for Julius Caesar",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d552c91e08e56400",
+      "sourceHash": "fnv1a64:68f9ba425316f62c",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Six months named for gods and a festival. The next two are named for men — and both men put their own months into the calendar themselves."
+              "text": "Six months named for gods and a festival. The next two are named for men — the only two months in the year that carry a person who actually lived."
             }
           ]
         },
@@ -65,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "He did not merely lend his name to an existing month. He reformed the entire calendar — the Julian calendar is his, and it ran Europe for sixteen centuries — and while rearranging it he renamed one month after himself."
+              "text": "He reformed the entire calendar — the Julian calendar is his, and it ran Europe for sixteen centuries. He did not add a month while doing it. The month was already there, and it was called Quintilis, \"the 5th.\" After his death it was renamed in his honour, and Quintilis has not been heard since."
             },
             {
               "kind": "speech",
@@ -105,11 +105,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the man — \"Julius Caesar, who rebuilt the calendar and kept a month\"",
+              "instruction": "the man — \"Julius Caesar: Quintilis, the 5th, renamed for him\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the man — \"Julius Caesar, who rebuilt the calendar and kept a month\"]"
+              "source": "[YOU SAY: the man — \"Julius Caesar: Quintilis, the 5th, renamed for him\"]"
             }
           ]
         },
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say July? (juillet, zhwee-YAY.) What sound does the ill make? (A y, as in yes — never an l.) Who is it named for, and what did he do to the calendar? (Julius Caesar — he reformed it, and named this month for himself.) Next: the emperor who copied him."
+              "text": "How do you say July? (juillet, zhwee-YAY.) What sound does the ill make? (A y, as in yes — never an l.) Who is it named for, and what did he do to the calendar? (Julius Caesar — he reformed it.) Did he add this month to the year? (No — it already existed as Quintilis, \"the 5th,\" and was renamed for him.) Next: the emperor who copied him."
             }
           ]
         }
@@ -138,14 +138,14 @@
       "title": "août — August",
       "headword": "août",
       "romanization": "août",
-      "gloss": "August — the month the emperor Augustus gave himself",
+      "gloss": "August — the month renamed for the emperor Augustus",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f45141d25c62fa4",
+      "sourceHash": "fnv1a64:b576b3ddd64cd943",
       "notice": null,
       "blocks": [
         {
@@ -195,11 +195,11 @@
             },
             {
               "kind": "speech",
-              "text": "Julius Caesar took a month. His heir Augustus, not to be outdone, took the next one. Two men, two months, inserted into the middle of the year by the two people powerful enough to do it."
+              "text": "Julius Caesar had a month renamed for him. His heir Augustus, not to be outdone, had the next one renamed for himself: Sextilis, \"the 6th,\" became Augustus."
             },
             {
               "kind": "speech",
-              "text": "That insertion is the thing you already know the consequence of. Wedging two months into the middle is what pushed the counting months out of place — which is why the ninth month still says \"seven.\""
+              "text": "Note what neither man did. Neither one added a month. Quintilis and Sextilis were already sitting in the year; the two most powerful men in Rome simply took the two of them and wrote their own names over the top. The calendar did not get longer. Two of its months just stopped being numbers and started being people."
             }
           ]
         },
@@ -214,7 +214,7 @@
             },
             {
               "kind": "speech",
-              "text": "Julius and Augustus put themselves among the gods, in the most public place available — the calendar everybody has to say out loud. Two thousand years later, France still says both their names every summer, and nobody thinks of either man while doing it. That is what winning looks like at scale."
+              "text": "Julius and Augustus put themselves among the gods, in the most public place available — the calendar everybody has to say out loud. They did not need to build anything to do it; they only had to rename what was there. Two thousand years later, France still says both their names every summer, and nobody thinks of either man while doing it. That is what winning looks like at scale."
             }
           ]
         },
@@ -271,7 +271,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say August? (août — oot, or simply oo.) What does the circumflex mark? (A lost letter — here an s, from older aoust.) Who are the two months named for people, and what did those people do? (Julius Caesar and the emperor Augustus — each inserted a month and kept it.) What did that insertion do to the rest of the calendar? (Pushed the counting months two places out.) Next: the four that are still counting."
+              "text": "How do you say August? (août — oot, or simply oo.) What does the circumflex mark? (A lost letter — here an s, from older aoust.) Who are the two months named for people? (Julius Caesar and the emperor Augustus.) Did either of them add a month to the year? (No — they renamed two that already existed, Quintilis and Sextilis, \"the 5th\" and \"the 6th.\") Next: the four that are still counting."
             }
           ]
         }
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27ac563aa76f4921",
+      "sourceHash": "fnv1a64:1fe21d243bac0395",
       "notice": null,
       "blocks": [
         {
@@ -336,7 +336,15 @@
             },
             {
               "kind": "speech",
-              "text": "You know why it sits ninth: the old Roman year began in March, and then Julius and Augustus wedged their two months in. The name never caught up. What is new here is the word: septembre is now yours as a month, not only as evidence about a number."
+              "text": "You know why it sits ninth: the old Roman year began in March, so counting from there, september really was the seventh. Then janvier and février were added at the front of the year — centuries before either Caesar was born — and every month behind them slid two places without being renamed. The name never caught up."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth being exact about, because the story is usually told wrong. It was not Julius and Augustus. They renamed two months in the middle and added nothing; the damage was done long before them, at the front of the year."
+            },
+            {
+              "kind": "speech",
+              "text": "What is new here is the word: septembre is now yours as a month, not only as evidence about a number."
             },
             {
               "kind": "speech",
@@ -376,11 +384,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"août, septembre\" — the emperor, then the miscount he caused",
+              "instruction": "\"août, septembre\" — the emperor, then the month that miscounts for an older reason",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"août, septembre\" — the emperor, then the miscount he caused]"
+              "source": "[YOU SAY: \"août, septembre\" — the emperor, then the month that miscounts for an older reason]"
             }
           ]
         },
@@ -397,7 +405,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say September? (septembre, sep-TAHM-bruh.) What number is inside it? (sept, seven — Latin septem.) Which month is it actually? (The ninth.) Next: the eighth month, which is the tenth."
+              "text": "How do you say September? (septembre, sep-TAHM-bruh.) What number is inside it? (sept, seven — Latin septem.) Which month is it actually? (The ninth.) What put it two places out — the emperors, or something older? (Older: janvier and février were added at the front of a year that used to begin in March.) Next: the eighth month, which is the tenth."
             }
           ]
         }
@@ -794,7 +802,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d06aaf3a23dc9dfe",
+      "sourceHash": "fnv1a64:cdb0fabcb36d1952",
       "notice": null,
       "blocks": [
         {
@@ -897,11 +905,11 @@
             },
             {
               "kind": "speech",
-              "text": "two men in a calendar of gods — juillet for Julius Caesar, août for the emperor Augustus. Each inserted a month; each kept it."
+              "text": "two men in a calendar of gods — juillet for Julius Caesar, août for the emperor Augustus. Neither added a month: Quintilis and Sextilis, \"the 5th\" and \"the 6th,\" were already there and were renamed."
             },
             {
               "kind": "speech",
-              "text": "why the last four miscount — wedging those two into the middle pushed septembre to décembre two places along, and their Latin names never caught up."
+              "text": "why the last four miscount — the Roman year began in March, and janvier and février were later added at the front, sliding septembre through décembre two places along. Their Latin names never caught up. The emperors get blamed for this and had nothing to do with it."
             },
             {
               "kind": "speech",
@@ -922,7 +930,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the twelve months without stopping. Now start from septembre. Which two are named for people, and who? (juillet, Julius Caesar; août, the emperor Augustus.) What did those two insertions do? (Pushed the counting months two places out.) Which month shows a number that its own French numeral has lost? (octobre — the octō that vanished from huit.)"
+              "text": "Give the twelve months without stopping. Now start from septembre. Which two are named for people, and who? (juillet, Julius Caesar; août, the emperor Augustus.) Did either add a month? (No — both were renamings.) So what pushed the counting months two places out? (janvier and février, added at the front of a year that began in March.) Which month shows a number that its own French numeral has lost? (octobre — the octō that vanished from huit.)"
             }
           ]
         }

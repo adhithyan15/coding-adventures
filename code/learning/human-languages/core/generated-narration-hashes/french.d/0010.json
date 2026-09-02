@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 10,
-  "sourceHash": "fnv1a64:a9cb68d2a32f7f4f",
+  "sourceHash": "fnv1a64:253b1163f8a3d827",
   "lessonIds": [
     "FR-C09-juillet",
     "FR-C09-aout",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch10.txt",
   "json": "french/narration/ch10.json",
-  "textHash": "fnv1a64:64f9ef2ea4cd3e87",
-  "jsonHash": "fnv1a64:c8583e2dc8a95067",
+  "textHash": "fnv1a64:b11024ceb636dd9e",
+  "jsonHash": "fnv1a64:866b26aaddc4dfad",
   "findings": []
 }
