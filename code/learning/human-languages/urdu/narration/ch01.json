@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ac9991242d0ff753",
+  "sourceHash": "fnv1a64:a058ed97a6c4b832",
   "lessons": [
     {
       "id": "UR-C01-salam",
@@ -235,7 +235,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7c76dd62e6985ed2",
+      "sourceHash": "fnv1a64:ed80dde76a9ad630",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -302,11 +302,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سلام — salām — Hello."
+              "text": "salām — Hello. You can say it; its letters are still ahead of you, so it is printed here the way you say it."
             },
             {
               "kind": "speech",
-              "text": "شکریہ — shukriyā — Thank you."
+              "text": "شکریہ — shukriyā — Thank you. This one you can already read."
             },
             {
               "kind": "speech",
@@ -585,7 +585,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:04607597058047f4",
+      "sourceHash": "fnv1a64:668206a5d36cb0fe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -610,7 +610,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say جی ہاں (jī hā̃)، شکریہ (shukriyā) — “yes, thank you.” Now learn the answer that contrasts with yes."
+              "text": "Say jī hā̃, shukriyā — “yes, thank you.” Now learn the answer that contrasts with yes."
             }
           ]
         },
@@ -655,11 +655,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جی ہاں — jī hā̃ — yes."
+              "text": "jī hā̃ — yes. Said, not yet read: its first letter is one you have not met."
             },
             {
               "kind": "speech",
-              "text": "نہیں — nahī̃ — no."
+              "text": "نہیں — nahī̃ — no. This one you built out of known shapes a moment ago."
             }
           ]
         },

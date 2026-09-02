@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C05-thaka
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 610
-chapter: 9
+sequence: 700
+chapter: 11
 type: word
 headword: থাকা
 romanization: "thākā"
@@ -43,8 +43,8 @@ reviews_of: [BN-C05-bola, BN-C05-ami-bangla-boli]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-THAKA-01] -->
 
-**থাকা** (*thākā*, "to live, to stay, to remain") is from Sanskrit **স্থা**
-(*sthā*, "to stand, to stay") — the same PIE root **\*steh₂-** ("to stand") that
+**থাকা** (*thākā*, "to live, to stay, to remain") is from Sanskrit *sthā*
+("to stand, to stay") — the same PIE root **\*steh₂-** ("to stand") that
 gives English **stand**, **stay**, **state**, and Latin *stāre*. So Bengali's "to
 live/stay" and English's "to stand/stay" are, at the root, one word. "I live in
 Kolkata" is **আমি কলকাতায় থাকি** (*āmi Kolkātāy thāki*) — stem *thāk-* + the *-i*

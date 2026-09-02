@@ -2,6 +2,45 @@
 
 ## Unreleased
 
+**Modern `.anki21b` / `.colpkg` packages now actually import.** They previously
+decompressed and then failed with `invalid Anki V11 JSON in col.conf: EOF while
+parsing a value at line 1 column 0`.
+
+The zstd work made the payload readable; the schema underneath is a different
+database. At **schema 18** the `col` table's `conf`, `models`, `decks` and
+`dconf` columns are **empty**, and the same data lives in relational tables:
+`notetypes` + `fields` + `templates`, `decks` + `deck_config`, `config`, `tags`.
+So `col.conf` is not malformed JSON — it is the empty string, exactly as Anki
+wrote it.
+
+Dispatch is on `col.ver`, not on which archive member was found. Real Anki
+legacy exports ship **both** `collection.anki21` and `collection.anki2` in one
+archive, so the member name says how the bytes were packaged while the version
+says what they contain.
+
+Two things made this more than a parser branch. Five of the tables — `fields`,
+`templates`, `config`, `tags`, and `graves` — are `WITHOUT ROWID`, which SQLite
+stores as index b-trees; `sqlite-file` reads those, but through a different
+entry point, and calling the ordinary reader returns `unexpected b-tree page
+type`. `graves` is the trap, because its *columns* are identical to V11's, so
+it fails one level below where you look. `notes`, `cards` and `revlog` keep
+their rowids and are read by the existing code unchanged.
+
+And the configuration columns are **protobuf**, not JSON. Field numbers were
+decoded from archives produced by real Anki rather than recalled: the cloze
+discriminator was settled by exporting a collection with one Basic and one
+Cloze note and diffing the blobs, which showed `kind` is field 1 and — the part
+that matters — that a **normal note type omits it entirely**, since protobuf
+does not encode defaults. Treating absent as "unknown" would have misclassified
+every ordinary note type.
+
+Verified against the real-Anki corpus: all seven fixtures import, and the
+modern one is asserted on content — CSS from `notetypes.config`, field names in
+ordinal order, and both template formats — rather than on having parsed.
+
+Still using the repo's own zero-dependency `protobuf` crate; no third-party
+protobuf enters the graph.
+
 **Modern `.anki21b` / `.colpkg` packages now work in the browser**, and the
 `modern-format` feature is gone.
 

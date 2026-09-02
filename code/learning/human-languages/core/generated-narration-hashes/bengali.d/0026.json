@@ -1,0 +1,23 @@
+{
+  "language": "bengali",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:c20347d7f32fc73e",
+  "lessonIds": [
+    "BN-R01-tumi-again",
+    "BN-R01-ta-u-again",
+    "BN-R01-ya-again",
+    "BN-R01-chandrabindu-again",
+    "BN-R01-hyan-again",
+    "BN-R01-ami-again",
+    "BN-R01-kemon-again",
+    "BN-R01-bhalo-again",
+    "BN-R01-practice"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch26.txt",
+  "json": "bengali/narration/ch26.json",
+  "textHash": "fnv1a64:5ee1929b3e9f842a",
+  "jsonHash": "fnv1a64:40fcdcf8568da637",
+  "findings": []
+}

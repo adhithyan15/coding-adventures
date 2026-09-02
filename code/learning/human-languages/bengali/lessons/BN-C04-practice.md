@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C04-practice
 spine_node: SPINE-TAKE-LEAVE
-sequence: 470
+sequence: 500
 chapter: 7
 type: practice
 headword: (dialogue)

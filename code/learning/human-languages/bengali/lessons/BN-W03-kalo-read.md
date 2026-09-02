@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-kalo-read
 spine_node: SPINE-MEET-GREET
-sequence: 1060
+sequence: 1210
 delivery: script
-chapter: 21
+chapter: 24
 type: writing
 headword: কালো
 romanization: "kālo"

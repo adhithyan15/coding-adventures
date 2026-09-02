@@ -680,3 +680,222 @@ describe("the committed German A1 inventory", () => {
     expect(coverage.byCategory["Grundwortschatz"]!.covered).toBeGreaterThan(0);
   }, 60_000);
 });
+
+// ---------------------------------------------------------------------------
+// The first PROXY-DERIVED inventory (HL-C290).
+//
+// Spanish, French and German each restate an awarding body. Marathi has none:
+// `core/exam-levels.json` records it as `exam: "no widely-sat ladder"`,
+// `basis: "editorial"`, and the parallel Hindi effort settled the search
+// negatively against the best-placed South Asian candidate — DBHPS publishes
+// examination names and prescribed readers and no syllabus, and the Council of
+// Europe has issued no Reference Level Description for Hindi. There is no South
+// Asian equivalent of the Plan Curricular.
+//
+// So this file BORROWS A LEVEL RATHER THAN A LANGUAGE. Spanish's 273 points are
+// DELE/PCIC-sourced and therefore an attributable statement of what an A1
+// learner must handle; each is walked for what it DEMANDS, and the Marathi point
+// that carries the same load is written down with the derivation recorded. That
+// is legitimate, and it is exactly the kind of claim that decays into a fake
+// standard if nobody guards the difference.
+//
+// These tests guard the difference. They do not check that the inventory is
+// RIGHT; nothing automatable can. They check that the derivation stays total and
+// auditable, that the file never stops saying what kind of claim it is, and that
+// its probes stay executable.
+// ---------------------------------------------------------------------------
+describe("the committed Marathi A1 inventory", () => {
+  const inventory = loadExamInventory("marathi", "A1");
+  const spanish = loadExamInventory("spanish", "A1");
+
+  it("keeps every point's probe key", () => {
+    for (const point of inventory.points) {
+      expect(point, `${point.id} has no probe key`).toHaveProperty("probe");
+    }
+  });
+
+  it("refuses an empty probe, which would score as covered", () => {
+    for (const point of inventory.points) {
+      expect(Array.isArray(point.probe) ? point.probe.length : 1).toBeGreaterThan(0);
+    }
+  });
+
+  it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
+    // The same rule the French and German blocks pin, and it matters MORE here.
+    // Marathi covers 29% of its own target, so most points are uncovered; if a
+    // guessed id were allowed to sit in a probe it would be indistinguishable
+    // from the 213 honest gaps around it, and it would never flip to covered even
+    // after the lesson was written, because the suffix would not match. `null`
+    // plus a note is the only honest way to say "nothing here yet".
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "marathi");
+    const unknown: string[] = [];
+    for (const point of inventory.points) {
+      for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+    }
+    expect(unknown).toEqual([]);
+  }, 60_000);
+
+  it("never lets an unmapped point read as 'nobody has looked yet'", () => {
+    for (const point of inventory.points) {
+      if (point.probe !== null) continue;
+      expect(point.note?.trim(), `${point.id} is unmapped and must say why`).toBeTruthy();
+    }
+  }, 60_000);
+
+  it("derives from the Spanish set TOTALLY, so nothing is dropped by accident", () => {
+    // The property that makes a proxy auditable rather than a gesture. Every one
+    // of Spanish's 273 points must be either (a) named by some Marathi point's
+    // `derivedFrom`, or (b) listed in `proxy.notTransferred` with a reason. A
+    // point that is silently absent is indistinguishable from one nobody thought
+    // of — which is the failure mode the whole file exists to prevent — and
+    // writing this assertion is what caught `A1-O1-06` going missing.
+    const proxy = (inventory as unknown as {
+      proxy: { notTransferred: { spanishPoints: string[]; why: string }[] };
+    }).proxy;
+    const dropped = new Set(proxy.notTransferred.flatMap((entry) => entry.spanishPoints));
+    for (const entry of proxy.notTransferred) expect(entry.why.trim().length).toBeGreaterThan(0);
+    const derived = new Set<string>();
+    for (const point of inventory.points) {
+      for (const id of (point as unknown as { derivedFrom: string[] }).derivedFrom) derived.add(id);
+    }
+    const known = new Set(spanish.points.map((point) => point.id));
+    // No dangling references in the other direction either: a `derivedFrom`
+    // naming a Spanish point that does not exist is a typo that would quietly
+    // shrink the audit.
+    for (const id of derived) expect(known.has(id), `derivedFrom cites unknown Spanish point ${id}`).toBe(true);
+    const unaccounted = [...known].filter((id) => !derived.has(id) && !dropped.has(id));
+    expect(unaccounted).toEqual([]);
+    // Dropping and deriving the same point would let a reader believe both.
+    expect([...derived].filter((id) => dropped.has(id))).toEqual([]);
+  }, 60_000);
+
+  it("marks a point with no Spanish source as Marathi-specific, and means it", () => {
+    // Devanagari orthography, the postpositions, the ergative and the
+    // gender-marked present have no Spanish counterpart. Those points are honest
+    // additions; what they must never be is padding that hides behind an empty
+    // field. `marathiSpecific` has to agree with `derivedFrom` in both
+    // directions, and such a point must still name a non-editorial anchor or an
+    // explicit note.
+    for (const point of inventory.points) {
+      const cast = point as unknown as { derivedFrom: string[]; marathiSpecific?: boolean };
+      expect(cast.marathiSpecific === true, point.id).toBe(cast.derivedFrom.length === 0);
+    }
+    const specific = inventory.points.filter(
+      (point) => (point as unknown as { derivedFrom: string[] }).derivedFrom.length === 0,
+    );
+    // A proxy is a scaffold, not a template: some points must be Marathi's own.
+    expect(specific.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it("refuses to borrow an authority it does not have", () => {
+    // Two bodies could lend this file weight it has not earned: a real Marathi
+    // examiner, and the awarding body behind the proxy. The file must disclaim
+    // both, because "derived from the DELE A1 inventory" is one careless edit
+    // away from reading as "DELE says this about Marathi".
+    expect(inventory.about).toMatch(/PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS/);
+    expect(inventory.about).toMatch(
+      /NOTHING IN THIS FILE MAY BE ATTRIBUTED TO THE MAHARASHTRA DIRECTORATE OF LANGUAGES/,
+    );
+    expect(inventory.about).toMatch(/MAY BE ATTRIBUTED TO DELE/);
+    expect(inventory.about).toMatch(/THE SEARCH IS SETTLED, DO NOT REPEAT IT/);
+    expect(inventory.source).toMatch(/^PROJECT-DEFINED\./);
+    expect(inventory.source).toMatch(/no external Marathi A1 syllabus/i);
+    // Marathi has no timed mocks, so the file must say what it used instead of
+    // the artifact Hindi mined. An unstated substitution is an unauditable one.
+    expect(inventory.source).toMatch(/NOTE ON METHOD/);
+    expect(inventory.source).toMatch(/Marathi has no mocks/);
+    // Partial in every dimension. Neither an editorial basis nor a sourced proxy
+    // is a shortcut to `complete`; a proxy does not close a dimension.
+    expect(isExamInventoryComplete(inventory)).toBe(false);
+    for (const dimension of EXAM_CONTENT_DIMENSIONS) {
+      expect(inventory.scope[dimension].status, dimension).toBe("partial");
+    }
+  });
+
+  it("names an anchor for every point, and says what kind of anchor it is", () => {
+    // `anchorIds` answers "which of these did you read, and which did you
+    // decide?". Without the KIND, a project-owned file, a sourced proxy and the
+    // Council of Europe read the same on the page — and the weakest points, the
+    // purely editorial ones, are the ones a reader most needs flagged.
+    const anchors = (inventory as unknown as {
+      anchors: { id: string; kind: string; title: string; note: string }[];
+    }).anchors;
+    expect(Array.isArray(anchors)).toBe(true);
+    expect(new Set(anchors.map((anchor) => anchor.kind))).toEqual(
+      new Set(["sourced-proxy", "external-framework", "project-owned", "editorial"]),
+    );
+    for (const anchor of anchors) expect(anchor.note.trim().length, anchor.id).toBeGreaterThan(0);
+    const known = new Set(anchors.map((anchor) => anchor.id));
+    for (const point of inventory.points) {
+      const ids = (point as unknown as { anchorIds?: string[] }).anchorIds;
+      expect(ids?.length, `${point.id} names no anchor`).toBeGreaterThan(0);
+      for (const id of ids ?? []) expect(known.has(id), `${point.id} cites unknown anchor ${id}`).toBe(true);
+    }
+  });
+
+  it("separates a content gap from a gap in the MEASUREMENT", () => {
+    // The finding that nearly got written up wrong, twice, in two shapes. A probe
+    // reads DECLARED atoms:
+    //
+    //   SCHEMA-V1 — 26 of Marathi's 205 lessons, the whole of chapters 9 to 12,
+    //   declare no atoms while teaching mii, tuu/tumhii, maazhaM, kaay, kasaa,
+    //   "what's your name?", "how are you?", kaam karne and raahne.
+    //
+    //   EMPTY-INTRODUCES — worse, because it hides inside schema-v2 where
+    //   everything LOOKS declared. Four v2 lessons carry `introduces: []` while
+    //   teaching new material: MR-R22-request-verbs and MR-R23-wellbeing-verbs
+    //   drill five polite imperatives and a future while declaring only the
+    //   infinitive atoms they review, and MR-A1M17/18 teach the guided and
+    //   independent 30-to-40-word message — the A1 writing paper's second task —
+    //   while declaring nothing at all.
+    //
+    // The first draft recorded several of both kinds as "untaught", which would
+    // have sent an author to rewrite chapter 9 and chapter 24. No corpus-internal
+    // metric can see either class; only a target list asks the question that
+    // exposes them. This pins the marker so a future edit cannot quietly collapse
+    // the distinction back into an undifferentiated "not covered".
+    const marked = inventory.points.filter((point) => (point.note ?? "").includes("MEASUREMENT GAP"));
+    expect(marked.length).toBeGreaterThanOrEqual(13);
+    for (const point of marked) expect(point.probe, point.id).toBeNull();
+    expect(inventory.probeSemantics).toMatch(/SCHEMA-V1 MEASUREMENT GAP/);
+    expect(inventory.probeSemantics).toMatch(/EMPTY-INTRODUCES MEASUREMENT GAP/);
+  });
+
+  it("reports the gap as domain-shaped, which is the finding", () => {
+    // Pinned so a future tranche has to say which points it moved. It may rise;
+    // a fall means coverage was lost and wants explaining.
+    //
+    // The number moved 55/131 -> 88/301 when the point set was rebuilt from the
+    // Spanish proxy rather than from CEFR descriptors, and BOTH halves of that
+    // are the result. The numerator rose because the Spanish walk found taught
+    // material an editorial list had never asked about — evaluative notions,
+    // mental notions, the colon in a form label. The denominator nearly trebled
+    // because it found twenty thematic domains nobody had enumerated: education,
+    // work, leisure, media, housing, services, shopping, health, travel, money,
+    // government, the arts, religion, the natural world. The corpus covers almost
+    // none of them, and that is what an external boundary is FOR.
+    //
+    // The shape also differs from French and German, which are grammar-shaped
+    // with vocabulary as their strongest column. Marathi's strongest columns are
+    // its SCRIPT (15/24, after the previous tranche took closure 44 -> 0) and its
+    // mental- and evaluative-notion verbs; the columns that carry an exam paper
+    // are empty.
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage.enumerated).toBe(301);
+    expect(coverage.covered).toBe(88);
+    expect(coverage.unmapped).toBe(213);
+    // Zero partials is a property of the "existing atoms only" rule above, not a
+    // coincidence: with no guessed ids, a point is either fully probed or null.
+    expect(coverage.partial).toBe(0);
+    for (const empty of ["Demonstratives", "Coordination", "Temporal notions", "Housing", "Shopping"]) {
+      expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
+    }
+    expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
+    expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
+    expect(formatExamCoverage(coverage)).toContain(
+      "marathi A1 (partial inventory): 88/301 points covered (29%)",
+    );
+  }, 60_000);
+});

@@ -8,9 +8,22 @@
   ],
   "payoff": {
     "lesson": "TE-C04-practice",
-    "kind": "task",
-    "summary": "Complete TE-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Telugu conversation politely and choose a farewell that fits the situation.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "production",
+    "summary": "Telugu, like every Dravidian language, does not say a plain “goodbye.” It promises to return: వెళ్ళి వస్తాను — “having gone, I come back.”",
+    "assesses": [
+      "TE-LEX-C04-MALLI-KALUDDAAM-01",
+      "TE-ETYMON-C04-MALLI-KALUDDAAM-02",
+      "TE-LEX-C04-REEPU-KALUDDAAM-01",
+      "TE-ETYMON-C04-REEPU-KALUDDAAM-02",
+      "TE-LEX-C04-VELLI-VASTAANU-01",
+      "TE-ETYMON-C04-VELLI-VASTAANU-02",
+      "TE-GRAMMAR-C04-VELLI-VASTAANU-03",
+      "TE-LEX-C04-VELLU-01",
+      "TE-ETYMON-C04-VELLU-02",
+      "TE-SCRIPT-RECOG-113",
+      "TE-SCRIPT-RECOG-123",
+      "TE-SCRIPT-RECOG-145",
+      "TE-SCRIPT-RECOG-146"
+    ]
   }
 }

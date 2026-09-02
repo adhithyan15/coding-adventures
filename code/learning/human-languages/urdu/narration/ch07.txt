@@ -54,21 +54,21 @@ Strip the -nā and the stem is soch-. That stem is also a noun: سوچ soch, “
 
 The letters in this word.
 From the right edge: س s, then و carrying o, then چ ch, then ن n, then ا long ā.
-چ is new, and you own the trick already. It is the body of ج j — from جی jī and جانا jānā — with three dots below instead of one. Second time this has happened: ب b has one dot below the low scoop, پ p has three. Counting dots stays a reading skill.
+چ is new, and you own the trick already. It is the body of jīm, the j you say in jī and jānā, carrying three dots below instead of one. Second time this has happened: be has one dot below the low scoop, pe has three. Counting dots stays a reading skill — one you are given by ear here, a lesson before the shapes arrive.
 
 Grammar Lens: nothing new to run it.
-میں سوچتا ہوں — maiṅ sochtā hūṅ — I think (man speaking) میں سوچتی ہوں — maiṅ sochtī hūṅ — I think (woman speaking).
+maiṅ sochtā hūṅ — I think (man speaking) maiṅ sochtī hūṅ — I think (woman speaking).
 The participle takes gender, ہوں takes person. The machine is built; every new verb walks into it.
 
 The word, taken apart — thinking that started as grieving.
 sochnā comes through Prakrit soccadi from Sanskrit śocati — “burns; grieves; mourns” — on the root śuc-. The sense cooled by stages: burn becomes be consumed by something becomes brood on it becomes plain think. Urdu's everyday word for thinking is an old word for sorrow that went quiet, which is why soch is still a thought and a worry.
 State the limit plainly: śuc- has no secure English cousin. Inventing one would be worse than admitting it.
-What is worth noticing sits inside Urdu. Beside inherited soch, Urdu keeps Arabic فکر fikr, “thought, reflection,” on the root f-k-r — and fikr also means worry: koī fikr nahīṅ, “no worries.” Two words, two unrelated languages, opposite sides of Urdu's vocabulary, each sliding from thinking to fretting on its own.
+What is worth noticing sits inside Urdu. Beside inherited soch, Urdu keeps Arabic fikr, “thought, reflection,” on the root f-k-r — and fikr also means worry: koī fikr nahīṅ, “no worries.” Two words, two unrelated languages, opposite sides of Urdu's vocabulary, each sliding from thinking to fretting on its own.
 
 Guided Practice.
 [your turn — say: sochnā — to think; then the stem soch-]
 [pause 8 seconds for the answer]
-[your turn — count: ج one dot below, چ three dots below]
+[your turn — count: jīm one dot below, چ three dots below]
 [pause 8 seconds for the answer]
 [your turn — say: maiṅ sochtā hūṅ, then maiṅ sochtī hūṅ]
 [pause 8 seconds for the answer]
@@ -90,7 +90,7 @@ Before we start: this one needs your eyes, so it is not fully a driving lesson. 
 
 Warm-up.
 [pause 2 seconds]
-You can think — sochnā, three dots under the چ. You can know — jānnā. Between brooding and knowing sits the moment a thing clicks, and Urdu has a verb for exactly that.
+You can think — sochnā, three dots under its che. You can know — jānnā. Between brooding and knowing sits the moment a thing clicks, and Urdu has a verb for exactly that.
 
 You'll want to know first — one word.
 سمجھنا — samajhnā — to understand.
@@ -99,11 +99,11 @@ Strip the -nā and the stem is samajh-. The stem is a noun too: سمجھ samajh,
 The letters in this word.
 From the right edge: س s, م m, ج j, then ھ, then ن n, then ا long ā.
 ھ is do-chashmī he, “two-eyed he,” named for its two loops. It is not a consonant you pronounce. Its whole job is to grab the letter before it and add a puff of breath: ج j plus ھ gives جھ jh.
-You have used it once already. ٹھیک ṭhīk is ٹ plus this same ھ — retroflex ṭ, then the breath. One letter, one job.
-Keep it apart from ہ, gol he, “round he,” which is a real h and which you write in ہوں hūṅ and ہونا honā. Round ہ speaks; two-eyed ھ only breathes on its right-hand neighbour.
+You have used it once already. In ṭhīk, the retroflex ṭe takes this same ھ — retroflex ṭ, then the breath. One letter, one job.
+Keep it apart from ہ, gol he, “round he,” which is a real h and which you write in hūṅ and honā. Round ہ speaks; two-eyed ھ only breathes on its right-hand neighbour.
 
 Grammar Lens: into the frame.
-میں سمجھتا ہوں — maiṅ samajhtā hūṅ — I understand (man speaking) میں سمجھتی ہوں — maiṅ samajhtī hūṅ — I understand (woman speaking).
+maiṅ samajhtā hūṅ — I understand (man speaking) maiṅ samajhtī hūṅ — I understand (woman speaking).
 
 The word, taken apart — waking up, fully.
 samajhnā comes through Prakrit saṃbujjhadi from Sanskrit sambudhyate: sam-, “fully, together,” plus budh-, “to wake; to become aware.” To understand something is to come awake to it.
@@ -180,33 +180,33 @@ Say samajhnā, strip its -nā, and hear the breath the two-eyed ھ puts into the
 
 You'll want to know first — one word.
 پڑھنا — paṛhnā — to read.
-It is also the ordinary word for “to study”: the noun پڑھائی paṛhāī is “studies, schooling.” Urdu does not keep reading and studying in separate boxes. Strip the -nā and the stem is paṛh-.
+It is also the ordinary word for “to study”: the noun paṛhāī is “studies, schooling.” Urdu does not keep reading and studying in separate boxes. Strip the -nā and the stem is paṛh-.
 
 The letters in this word.
 From the right edge: پ (pe) p, then ڑ, then ھ, then ن n, then ا long ā.
-Two are yours: پ (pe), the low scoop with three dots below, from آپ āp; and ھ, the two-eyed he from سمجھنا (samajhnā) — ڑ plus ھ gives ṛh.
-ڑ is new, and built from two things you have met. Its body is ر r, from شکریہ shukriyā. On top sits the very mark that rides on ٹ in ٹھیک ṭhīk: Urdu's retroflex sign, meaning curl the tongue back. ٹ is a curled t; ڑ is a curled r, flicked rather than rolled.
+Two are yours: پ (pe), the low scoop with three dots below, from آپ āp; and ھ, the two-eyed he from samajhnā — ڑ plus ھ gives ṛh.
+ڑ is new, and built from two things you have met. Its body is ر r, from شکریہ shukriyā. On top sits the very mark that ṭe carries in ṭhīk: Urdu's retroflex sign, meaning curl the tongue back. Ṭe is a curled t; ڑ is a curled r, flicked rather than rolled. You meet the mark here, on the letter that is yours today, and meet its other bearer by ear until the shape is handed to you.
 
 Grammar Lens: into the frame.
-میں پڑھتا ہوں — maiṅ paṛhtā hūṅ — I read (man speaking) میں پڑھتی ہوں — maiṅ paṛhtī hūṅ — I read (woman speaking).
+maiṅ paṛhtā hūṅ — I read (man speaking) maiṅ paṛhtī hūṅ — I read (woman speaking).
 
 The word, taken apart — reading was always out loud.
 paṛhnā comes from Prakrit paḍhaï, from Sanskrit paṭh-, “to recite; to read aloud.” Its ṭh softened into the flapped ṛh you have just learned, and the meaning widened from reciting to reading to studying.
 Be honest about the far end: paṭh- has no secure Indo-European ancestry. There is no English cousin, and the trail stops inside India.
-The near end is better. The oldest sense — speaking a text you hold in memory — is everyday, not a fossil. To perform the Muslim ritual prayer is نماز پڑھنا namāz paṛhnā, literally “to read the prayer,” and nobody performing it holds a book. You already met the word for someone who does that with the whole Quran: a حافظ hāfiz, on the Arabic root ḥ-f-ẓ, “to guard, to preserve.” Guarding a text and reciting it are two halves of one practice — one word borrowed, one inherited.
+The near end is better. The oldest sense — speaking a text you hold in memory — is everyday, not a fossil. To perform the Muslim ritual prayer is namāz paṛhnā, literally “to read the prayer,” and nobody performing it holds a book. You already met the word for someone who does that with the whole Quran: a hāfiz, on the Arabic root ḥ-f-ẓ, “to guard, to preserve.” Guarding a text and reciting it are two halves of one practice — one word borrowed, one inherited.
 
 Guided Practice.
 [your turn — say: paṛhnā — to read, and to study; then the stem paṛh-]
 [pause 8 seconds for the answer]
 [your turn — count: پ three dots below, and name the word it opens]
 [pause 8 seconds for the answer]
-[once you have stopped driving — trace: the retroflex mark on ٹ, then the same mark on ڑ]
+[once you have stopped driving — trace: the retroflex mark on ڑ — the same mark ṭe carries]
 [your turn — say: maiṅ paṛhtā hūṅ, then maiṅ samajhtā hūṅ — I read, I understand]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name the two everyday meanings of paṛhnā. (To read; to study.) What does the mark on ڑ tell you to do, and which other letter carries it? (Curl the tongue back; ٹ.) Does paṭh- have an English cousin? (No.)
+Name the two everyday meanings of paṛhnā. (To read; to study.) What does the mark on ڑ tell you to do, and which other letter carries it? (Curl the tongue back; ṭe.) Does paṭh- have an English cousin? (No.)
 Sources: Wiktionary: پڑھنا (paṛhnā); Zero Zabar: The Urdu alphabet.
 
 
@@ -228,12 +228,12 @@ From the right edge: ل l, from سلام salām; ک k, from کیا kyā; then ھ
 Not one new shape — a whole verb you can read straight off.
 
 Grammar Lens: all four in the frame.
-میں لکھتا ہوں — maiṅ likhtā hūṅ — I write (man speaking) میں لکھتی ہوں — maiṅ likhtī hūṅ — I write (woman speaking).
-Run the chapter through that frame without changing anything but the stem: maiṅ sochtā hūṅ, maiṅ samajhtā hūṅ, maiṅ paṛhtā hūṅ, maiṅ likhtā hūṅ. One machine, four verbs, and میں ہوں holding the ends of every sentence.
+maiṅ likhtā hūṅ — I write (man speaking) maiṅ likhtī hūṅ — I write (woman speaking).
+Run the chapter through that frame without changing anything but the stem: maiṅ sochtā hūṅ, maiṅ samajhtā hūṅ, maiṅ paṛhtā hūṅ, maiṅ likhtā hūṅ. One machine, four verbs, and maiṅ … hūṅ holding the ends of every sentence.
 
 The word, taken apart — the deed is inherited, the desk is borrowed.
 likhnā is Sanskrit likhati, “scratches, scrapes.” Writing was cutting a mark into a surface. Three other families reached for that picture out of three unrelated roots: Latin scrībere “to incise,” behind scribe and script; Greek gráphein “to scratch,” behind graph; Old English wrītan “to score, to cut,” which is write. Four families, each deciding that writing is scratching.
-Now the part only Urdu can show you. All four verbs of this chapter are inherited Indo-Aryan, the plain floor of the language — but the things writing needs are borrowed to a word: قلم qalam, the pen, Arabic from Greek kálamos, “a reed”; کتاب kitāb, the book, from the Arabic root k-t-b, “to write”; and نستعلیق nastaʿlīq, the Persian name of the flowing hand Urdu is set in. The deed is inherited; the equipment came by ship.
+Now the part only Urdu can show you. All four verbs of this chapter are inherited Indo-Aryan, the plain floor of the language — but the things writing needs are borrowed to a word: qalam, the pen, Arabic from Greek kálamos, “a reed”; kitāb, the book, from the Arabic root k-t-b, “to write”; and nastaʿlīq, the Persian name of the flowing hand Urdu is set in. All three are printed the way you say them: each is spelled with letters still ahead of you. The deed is inherited; the equipment came by ship.
 
 Guided Practice.
 [your turn — say: likhnā — to write; then the stem likh-]
@@ -242,7 +242,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the four in the frame — maiṅ sochtā hūṅ … maiṅ likhtā hūṅ]
 [pause 8 seconds for the answer]
-[your turn — name: which letter is چ, which is ڑ, and what ھ does to a neighbour]
+[your turn — name: which letter is che, which is ṛe, and what ھ does to a neighbour]
 [pause 8 seconds for the answer]
 [once you have stopped driving — trace: soch- from grieving, samajh- from waking, paṛh- from reciting]
 [your turn — sort: likhnā inherited; qalam and kitāb borrowed]
@@ -251,6 +251,6 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Name the four verbs of this chapter and their four stems. What did likhati mean before it meant “write”? (Scratches.) Which layer of Urdu does qalam belong to? (The borrowed one.)
-Sources: Wiktionary: لکھنا (likhnā); Wiktionary: قلم.
+Sources: Wiktionary: لکھنا (likhnā); Wiktionary: qalam.
 [question — say your answer, then pause 9 seconds]
 Type the Urdu verb meaning 'to write'.

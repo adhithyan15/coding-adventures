@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C08-lekha
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 730
-chapter: 12
+sequence: 820
+chapter: 14
 type: word
 headword: লেখা
 romanization: lekhā
@@ -54,7 +54,7 @@ puffed *kh* you own from খাওয়া.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**লেখা** is Sanskrit **√লিখ্** (*√likh*) — and *likh* does not mean "write." It
+**লেখা** is Sanskrit *√likh* — and *likh* does not mean "write." It
 means **to scratch, to engrave**. Which is what writing was.
 
 Ask English the same. Latin *scrībere*, behind **scribe**, also began as "to

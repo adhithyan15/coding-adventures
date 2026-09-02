@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Rain, Sun, Wind, Heat, Cold",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:aaac884bae67ef81",
+  "sourceHash": "fnv1a64:9be67799a10f2144",
   "lessons": [
     {
       "id": "UR-C15-barish",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ca20e9bc98fdcbf",
+      "sourceHash": "fnv1a64:5e2abec3a3171bed",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall کوٹ, the modern English loan that closed the last chapter. This chapter gives you a reason to wear it: four words for weather, the small talk that follows almost any \"how are you.\""
+              "text": "Recall koṭ, the modern English loan that closed the last chapter. This chapter gives you a reason to wear it: four words for weather, the small talk that follows almost any \"how are you.\""
             }
           ]
         },
@@ -104,11 +104,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "آج بارش (bārish) ہے، اس لیے میرا کوٹ چاہیے۔ — \"Today there's rain, so I need my coat.\"",
+              "instruction": "āj bārish hai, is liye merā koṭ chāhiye. — \"Today there's rain, so I need my coat.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **آج بارش ہے، اس لیے میرا کوٹ چاہیے۔** — \"Today there's rain, so I need my coat.\"]"
+              "source": "[YOU SAY: *āj bārish hai, is liye merā koṭ chāhiye.* — \"Today there's rain, so I need my coat.\"]"
             }
           ]
         },
@@ -125,7 +125,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does بارش (bārish) mean, and is it masculine or feminine? (Rain; feminine.) What two Persian pieces build the word? (bār, \"load/downpour,\" plus the -eš ending.) Recall the three respect levels a single Urdu word for \"you\" once had to distinguish — name them. (āp, tum, tū.) Which letter in حافظ carries the f sound? (ف.)"
+              "text": "What does بارش (bārish) mean, and is it masculine or feminine? (Rain; feminine.) What two Persian pieces build the word? (bār, \"load/downpour,\" plus the -eš ending.) Recall the three respect levels a single Urdu word for \"you\" once had to distinguish — name them. (āp, tum, tū.) Which letter in hāfiz carries the f sound? (fe.)"
             },
             {
               "kind": "speech",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dbdf52e11cc1d79",
+      "sourceHash": "fnv1a64:e052edbcc4d96779",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall بارش (bārish) — rain, Persian, and a dead end. This word means the opposite in the sky, and reaches a dead end from the other side of the book's two layers."
+              "text": "Recall bārish — rain, Persian, and a dead end. This word means the opposite in the sky, and reaches a dead end from the other side of the book's two layers."
             }
           ]
         },
@@ -179,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "آج دھوپ ہے۔ — āj dhūp hai. — \"There's sunshine today.\""
+              "text": "āj dhūp hai. — \"There's sunshine today.\""
             },
             {
               "kind": "speech",
@@ -194,7 +194,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دھوپ (dhūp) is inherited from Ashokan Prakrit dhuppā, \"sunshine.\" No further root is documented behind that. بارش (bārish) hit its dead end on the Persian side; دھوپ (dhūp) hits the same kind of honest wall on the inherited side — the same shape کان and روٹی already showed, not every inherited word traces back to a tidy Indo-European root."
+              "text": "دھوپ (dhūp) is inherited from Ashokan Prakrit dhuppā, \"sunshine.\" No further root is documented behind that. bārish hit its dead end on the Persian side; دھوپ (dhūp) hits the same kind of honest wall on the inherited side — the same shape کان and roṭī already showed, not every inherited word traces back to a tidy Indo-European root."
             }
           ]
         },
@@ -215,29 +215,29 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "بارش (bārish), Persian dead end; دھوپ (dhūp), inherited dead end — opposite weather, same kind of etymological wall",
+              "instruction": "bārish, Persian dead end; دھوپ (dhūp), inherited dead end — opposite weather, same kind of etymological wall",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **بارش**, Persian dead end; **دھوپ**, inherited dead end — opposite weather, same kind of etymological wall]"
+              "source": "[YOU CONTRAST: *bārish*, Persian dead end; **دھوپ**, inherited dead end — opposite weather, same kind of etymological wall]"
             },
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "two other inherited dead ends already met — کان and روٹی",
+              "instruction": "two other inherited dead ends already met — کان and roṭī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: two other inherited dead ends already met — **کان** and **روٹی**]"
+              "source": "[YOU NAME: two other inherited dead ends already met — **کان** and *roṭī*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "آج بارش (bārish) ہے یا دھوپ (dhūp)؟ — \"Is it rain today, or sunshine?\"",
+              "instruction": "āj bārish hai yā dhūp? — \"Is it rain today, or sunshine?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **آج بارش ہے یا دھوپ؟** — \"Is it rain today, or sunshine?\"]"
+              "source": "[YOU SAY: *āj bārish hai yā dhūp?* — \"Is it rain today, or sunshine?\"]"
             }
           ]
         },
@@ -254,7 +254,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does دھوپ (dhūp) mean, and is it masculine or feminine? (Sunshine; feminine.) Is دھوپ (dhūp)'s root documented past Prakrit? (No — a dead end.) Recall whether خدا حافظ is written as one word or two in Urdu spelling. (Two, spaced, unlike Persian's joined form.) What does آنکھ mean? (Eye.)"
+              "text": "What does دھوپ (dhūp) mean, and is it masculine or feminine? (Sunshine; feminine.) Is دھوپ (dhūp)'s root documented past Prakrit? (No — a dead end.) Recall whether khudā hāfiz is written as one word or two in Urdu spelling. (Two, spaced, unlike Persian's joined form.) What does آنکھ mean? (Eye.)"
             },
             {
               "kind": "speech",
@@ -277,7 +277,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5340442e5f223d3f",
+      "sourceHash": "fnv1a64:a22579c2e490dfeb",
       "notice": null,
       "blocks": [
         {
@@ -293,7 +293,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall دھوپ (dhūp) — sunshine, an inherited dead end. This word moves with the sunshine and the rain both, and its history takes a shape this book has not shown yet: not two roads from one root, but one word handed across two borrowings in a row."
+              "text": "Recall dhūp — sunshine, an inherited dead end. This word moves with the sunshine and the rain both, and its history takes a shape this book has not shown yet: not two roads from one root, but one word handed across two borrowings in a row."
             }
           ]
         },
@@ -308,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "آج ہوا چل رہی ہے۔ — āj hawā chal rahī hai. — \"There's wind blowing today.\""
+              "text": "āj hawā chal rahī hai. — \"There's wind blowing today.\""
             },
             {
               "kind": "speech",
@@ -323,7 +323,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ہوا is borrowed from Classical Persian hawā — but Persian did not invent it either. Persian itself borrowed the word from Arabic هَوَاء hawā. خدا, back in the take-leave chapter, came into Urdu directly from Persian, inherited within Iranian the whole way. دل and سفید each split from one PIE root into two independent roads, Iranian and Indo-Aryan. ہوا is a different shape again: a single word passed hand to hand, Arabic to Persian, Persian to Urdu — a loan of a loan, not a shared inheritance at all."
+              "text": "ہوا is borrowed from Classical Persian hawā — but Persian did not invent it either. Persian itself borrowed the word from Arabic هَوَاء hawā. khudā, back in the take-leave chapter, came into Urdu directly from Persian, inherited within Iranian the whole way. dil and safed each split from one PIE root into two independent roads, Iranian and Indo-Aryan. ہوا is a different shape again: a single word passed hand to hand, Arabic to Persian, Persian to Urdu — a loan of a loan, not a shared inheritance at all."
             }
           ]
         },
@@ -344,20 +344,20 @@
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "three shapes a word's history can take — one root split two ways (دل), a word carried straight through one language (خدا), or borrowed twice in a row (ہوا (hawā))",
+              "instruction": "three shapes a word's history can take — one root split two ways (dil), a word carried straight through one language (khudā), or borrowed twice in a row (ہوا (hawā))",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: three shapes a word's history can take — one root split two ways (**دل**), a word carried straight through one language (**خدا**), or borrowed twice in a row (**ہوا**)]"
+              "source": "[YOU NAME: three shapes a word's history can take — one root split two ways (*dil*), a word carried straight through one language (*khudā*), or borrowed twice in a row (**ہوا**)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "بارش (bārish)، دھوپ (dhūp)، اور ہوا (hawā) — rain, sunshine, and wind",
+              "instruction": "bārish, dhūp, aur hawā — rain, sunshine, and wind",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **بارش، دھوپ، اور ہوا** — rain, sunshine, and wind]"
+              "source": "[YOU SAY: *bārish, dhūp, aur hawā* — rain, sunshine, and wind]"
             },
             {
               "kind": "prompt",
@@ -383,7 +383,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ہوا (hawā) mean, and is it masculine or feminine? (Air, wind; feminine.) How is ہوا (hawā)'s history different from دل's? (دل split from one root into two roads; ہوا (hawā) is one word borrowed twice in a row.) Name your sister and your friend in Urdu. (بہن; دوست.)"
+              "text": "What does ہوا (hawā) mean, and is it masculine or feminine? (Air, wind; feminine.) How is ہوا (hawā)'s history different from dil's? (Dil split from one root into two roads; ہوا (hawā) is one word borrowed twice in a row.) Name your sister and your friend in Urdu. (bahan; dost.)"
             },
             {
               "kind": "speech",
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9f33d3c6a56f7292",
+      "sourceHash": "fnv1a64:63f19ebcfcc84fe8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -431,7 +431,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall ہوا (hawā) — wind, a loan of a loan. This word is Persian too, but its root behaves like دل's and سفید's: it keeps going back to a shared PIE root, with a genuine cousin waiting on the other side — though this time the cousin needs a careful claim, not a confident one."
+              "text": "Recall ہوا (hawā) — wind, a loan of a loan. This word is Persian too, but its root behaves like dil's and safed's: it keeps going back to a shared PIE root, with a genuine cousin waiting on the other side — though this time the cousin needs a careful claim, not a confident one."
             }
           ]
         },
@@ -446,7 +446,7 @@
             },
             {
               "kind": "speech",
-              "text": "آج بہت گرمی ہے۔ — āj bahut garmī hai. — \"It's very hot today.\""
+              "text": "āj bahut garmī hai. — \"It's very hot today.\""
             },
             {
               "kind": "speech",
@@ -465,7 +465,7 @@
             },
             {
               "kind": "speech",
-              "text": "گ gāf is new: it is ک kāf, already known, with one extra stroke laid across the top — the same dot-count logic that separated ب from پ, except this time the letter gains a stroke rather than a dot."
+              "text": "گ gāf is new: it is ک kāf, already known, with one extra stroke laid across the top — the same dot-count logic that separated be from پ, except this time the letter gains a stroke rather than a dot."
             }
           ]
         },
@@ -515,11 +515,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "بارش (bārish)، دھوپ (dhūp)، ہوا (hawā)، گرمی (garmī) — all four weather words so far",
+              "instruction": "bārish, dhūp, hawā, garmī — all four weather words so far",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **بارش، دھوپ، ہوا، گرمی** — all four weather words so far]"
+              "source": "[YOU SAY: *bārish, dhūp, hawā, garmī* — all four weather words so far]"
             }
           ]
         },
@@ -536,7 +536,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does گرمی (garmī) mean, and is it masculine or feminine? (Heat; feminine.) Which English word is گرمی (garmī)'s secure cousin, and which is only disputed? (Secure: thermal/thermometer, via Greek thermós. Disputed: warm.) Name your family in Urdu. (خاندان.) What does منہ mean? (Mouth.)"
+              "text": "What does گرمی (garmī) mean, and is it masculine or feminine? (Heat; feminine.) Which English word is گرمی (garmī)'s secure cousin, and which is only disputed? (Secure: thermal/thermometer, via Greek thermós. Disputed: warm.) Name your family in Urdu. (khāndān.) What does منہ mean? (Mouth.)"
             },
             {
               "kind": "speech",
@@ -559,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9038b9c5e95b12c7",
+      "sourceHash": "fnv1a64:78138d4d6394058d",
       "notice": null,
       "blocks": [
         {
@@ -575,7 +575,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall گرمی (garmī) — heat, with a secure cousin in Greek thermós and only a disputed one in English warm. This chapter's last word is its exact opposite, in meaning and in how far its own root travels."
+              "text": "Recall garmī — heat, with a secure cousin in Greek thermós and only a disputed one in English warm. This chapter's last word is its exact opposite, in meaning and in how far its own root travels."
             }
           ]
         },
@@ -590,11 +590,11 @@
             },
             {
               "kind": "speech",
-              "text": "آج بہت سردی ہے۔ — āj bahut sardī hai. — \"It's very cold today.\""
+              "text": "āj bahut sardī hai. — \"It's very cold today.\""
             },
             {
               "kind": "speech",
-              "text": "سردی (sardī) is feminine, exactly like گرمی (garmī)."
+              "text": "سردی (sardī) is feminine, exactly like garmī."
             }
           ]
         },
@@ -605,7 +605,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "گرمی (garmī) and سردی (sardī) are built the same way: the plain adjective — گرم garm \"hot,\" سرد sard \"cold\" — plus the ending ی that turns it into a noun naming the weather itself. Neither word is a one-off; the ending is a small, reusable tool, the same kind of thing -نا was for verbs many chapters back."
+              "text": "garmī and سردی (sardī) are built the same way: the plain adjective — garm \"hot,\" سرد sard \"cold\" — plus the ending ی that turns it into a noun naming the weather itself. Neither word is a one-off; the ending is a small, reusable tool, the same kind of thing -نا was for verbs many chapters back."
             }
           ]
         },
@@ -616,11 +616,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سردی is borrowed from Classical Persian sardī, from sard, \"cold.\" No further root is documented for that Persian base — a dead end, the same shape as لال's and بارش (bārish)'s, and the mirror image of گرمی (garmī), whose root reaches all the way to Greek thermós."
+              "text": "سردی is borrowed from Classical Persian sardī, from sard, \"cold.\" No further root is documented for that Persian base — a dead end, the same shape as لال's and bārish's, and the mirror image of garmī, whose root reaches all the way to Greek thermós."
             },
             {
               "kind": "speech",
-              "text": "Five weather words, every shape this book's etymology has found: بارش (bārish) and سردی (sardī), Persian dead ends; دھوپ (dhūp), an inherited dead end; ہوا (hawā), a loan of a loan; گرمی (garmī), a root reaching a real if disputed cousin — the same two-roads shape دل showed on the body's most-named part."
+              "text": "Five weather words, every shape this book's etymology has found: bārish and سردی (sardī), Persian dead ends; dhūp, an inherited dead end; ہوا (hawā), a loan of a loan; garmī, a root reaching a real if disputed cousin — the same two-roads shape دل showed on the body's most-named part."
             }
           ]
         },
@@ -641,29 +641,29 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "گرمی (garmī), a root reaching Greek; سردی (sardī), a Persian dead end",
+              "instruction": "garmī, a root reaching Greek; سردی (sardī), a Persian dead end",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **گرمی**, a root reaching Greek; **سردی**, a Persian dead end]"
+              "source": "[YOU CONTRAST: *garmī*, a root reaching Greek; **سردی**, a Persian dead end]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four weather words in one breath — بارش (bārish)، دھوپ (dhūp)، ہوا (hawā)، گرمی (garmī)، سردی (sardī)",
+              "instruction": "all four weather words in one breath — bārish، dhūp، ہوا (hawā)، garmī، سردی (sardī)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four weather words in one breath — **بارش، دھوپ، ہوا، گرمی، سردی**]"
+              "source": "[YOU SAY: all four weather words in one breath — **bārish، dhūp، ہوا، garmī، سردی**]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "دل's two roads from one PIE root, and how گرمی (garmī)'s own root follows the same shape",
+              "instruction": "دل's two roads from one PIE root, and how garmī's own root follows the same shape",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: **دل**'s two roads from one PIE root, and how **گرمی**'s own root follows the same shape]"
+              "source": "[YOU RECALL: **دل**'s two roads from one PIE root, and how *garmī*'s own root follows the same shape]"
             }
           ]
         },
@@ -680,7 +680,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does سردی (sardī) mean? (Cold.) Does its root reach as far as گرمی (garmī)'s? (No — a Persian dead end.) Which letter in بھائی marks the glide between two vowels? (ئ, ye with hamza.) Which two face words share the same three letters reversed? (کان and ناک.) What job does plain ن do in آنکھ and منہ? (Marks the vowel before it as nasal.) What PIE root ties دل to Sanskrit hṛdaya? (ḱērd-, split at the Indo-Iranian fork.)"
+              "text": "What does سردی (sardī) mean? (Cold.) Does its root reach as far as garmī's? (No — a Persian dead end.) Which letter in bhāī marks the glide between two vowels? (hamza-ye, ye with hamza.) Which two face words share the same three letters reversed? (کان and ناک.) What job does plain ن do in āṅkh and منہ? (Marks the vowel before it as nasal.) What PIE root ties دل to Sanskrit hṛdaya? (ḱērd-, split at the Indo-Iranian fork.)"
             },
             {
               "kind": "speech",

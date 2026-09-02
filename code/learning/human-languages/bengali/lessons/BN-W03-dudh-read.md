@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-dudh-read
 spine_node: SPINE-MEET-GREET
-sequence: 840
+sequence: 930
 delivery: script
-chapter: 15
+chapter: 17
 type: writing
 headword: দুধ
 romanization: "dudh"

@@ -2,6 +2,13 @@
 
 Epic: [#13517](https://github.com/adhithyan15/coding-adventures/issues/13517)
 
+> **Superseded in part — 2026-09-02.** The *measurement* here stands. The
+> *working method* — finish the app, discover platform gaps as features need
+> them — is replaced by `mosaic-component-program-v1.md` ([#14011](https://github.com/adhithyan15/coding-adventures/issues/14011)),
+> which builds leaf to root. Tier A item 2 was the trigger: it turned out to be
+> a kernel gap wearing an app-shaped costume, and it was the second in one
+> session.
+
 ## Why this document exists
 
 `BACKLOG.md`'s "Next up" section stopped being able to name the next item. It
@@ -72,7 +79,13 @@ rather than letting them read as silent gaps.
 2. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692)
    — compact-window List layout.** The documented 780 px rail breakpoint is not
    implemented, so narrow windows spend scarce space on advanced navigation and
-   can clip the primary capture path.
+   can clip the primary capture path. **Blocked on a kernel gap**: Mosaic has no
+   runtime environment at all — no media queries in mosstyle, compile-time-only
+   `--variant`, no viewport or pointer observation in any of the nine emitters,
+   and no environment concept in `mosaic-app-runtime`. Specified as
+   `UI48-host-environment.md` (#14003). This is the first item in this queue
+   that turned out to be a platform gap wearing an app-shaped costume, which is
+   the risk this spec exists to surface.
 3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526)
    — Vitest on Vite's native ESM loading.** Test-infrastructure debt in the web
    host; blocks nothing, but it is the last known non-product wart in the lane

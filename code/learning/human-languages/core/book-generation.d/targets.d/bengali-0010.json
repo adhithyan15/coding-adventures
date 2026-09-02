@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 10,
-  "output": "bengali/book/chapters/ch10-numbers-1-5.tex",
+  "output": "bengali/book/chapters/ch10-two-marks-inside-a-verb.tex",
   "unicodeScript": "Bengali",
   "scriptCommand": "bn"
 }

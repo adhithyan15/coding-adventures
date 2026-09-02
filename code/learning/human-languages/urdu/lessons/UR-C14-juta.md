@@ -37,7 +37,7 @@ reviews_of: [UR-C14-qamiz]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-QAMIZ, UR-ETYMON-QAMIZ-CHEMISE] -->
 
-[PAUSE 2s] Recall **قمیض** and its long-shot cousin English **chemise**.
+[PAUSE 2s] Recall *qamīz* and its long-shot cousin English **chemise**.
 This word's English cousin is even closer, and its Sanskrit cousin is a
 word you likely already know.
 
@@ -56,9 +56,9 @@ than becoming **کالی**.
 
 From the right edge: **ج**, **و**, **ت**, **ا**.
 
-**ت** *te* is new, and it shares its base shape with **ٹ**, already known
-from **ٹھیک**: the same scoop, but **ت** carries two dots above where
-**ٹ** carries a small raised loop instead. Two dots make it plain dental
+**ت** *te* is new, and it shares its base shape with *ṭe*, already known
+from *ṭhīk*: the same scoop, but **ت** carries two dots above where
+*ṭe* carries a small raised loop instead. Two dots make it plain dental
 *t*; the loop makes it the retroflex *ṭ* the tongue curls back for.
 
 ## The word, taken apart — three words, one old root
@@ -76,11 +76,11 @@ oldest, plainest sense: a thing joined onto the foot.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-SCRIPT-TE-VS-TTE, UR-LEX-QAMIZ] -->
 
 - [YOU SAY: **jūtā** — shoe; then **merā jūtā kālā hai**]
-- [YOU CONTRAST: **ت**, two dots, plain *t*; **ٹ**, raised loop, retroflex
+- [YOU CONTRAST: **ت**, two dots, plain *t*; *ṭe*, raised loop, retroflex
   *ṭ*]
 - [YOU CONNECT: **jūtā** ← *yukta* ← PIE *\*yewg-* → English **yoke**, and
   → Sanskrit's own **yoga**]
-- [YOU SAY: **نیلی قمیض** and **کالا جوتا** together]
+- [YOU SAY: *nīlī qamīz* and **کالا جوتا** together]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-SCRIPT-TE-VS-TTE, UR-GRAMMAR-HOW-GENDER, UR-CROSSLINGUAL-THIK, UR-DIALOGUE-TAKE-LEAVE] -->
@@ -88,12 +88,12 @@ oldest, plainest sense: a thing joined onto the foot.
 [PAUSE 3s] What does **جوتا** mean, and is it masculine or feminine?
 (**Shoe**; **masculine**.) Name **جوتا**'s two English-family cousins.
 (**Yoke, and Sanskrit's own yoga.**) What marks **ت** apart from the
-already-known **ٹ**? (**Two dots above, instead of a raised loop.**) When
+already-known *ṭe*? (**Two dots above, instead of a raised loop.**) When
 asking how someone is, does **kaise**/**kaisī** agree with your own
 gender or the gender of the person you're asking? (**The person you're
-asking.**) Recall **ٹھیک**'s Hindi bridge — does it come before or after
+asking.**) Recall **ṭhīk**'s Hindi bridge — does it come before or after
 you can already read the Urdu form yourself? (**After.**) What line closes
-the take-leave dialogue this book opened early on? (**خدا حافظ, spoken by
+the take-leave dialogue this book opened early on? (**khudā hāfiz, spoken by
 both voices.**)
 
 Sources: [Wiktionary: جوتا](https://en.wiktionary.org/wiki/%D8%AC%D9%88%D8%AA%D8%A7), [Wiktionary: yukta](https://en.wiktionary.org/wiki/%E0%A4%AF%E0%A5%81%E0%A4%95%E0%A5%8D%E0%A4%A4).

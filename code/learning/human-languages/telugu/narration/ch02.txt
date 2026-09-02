@@ -16,7 +16,15 @@ The letters in this word.
 
 The word, taken apart.
 పేరు (pēru, "name") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for "name."
-Across the family: Telugu pēru, Tamil peyar, Malayalam pēr, Kannada hesaru — one Dravidian word; only Hindi nām / English name are Indo-European.
+Across the family — the same idea, six ways:
+[a table of 6 rows, read aloud]
+Language: Telugu. "Name": పేరు pēru. Source: native Dravidian (pēr).
+Language: Tamil. "Name": peyar. Source: the same Dravidian root.
+Language: Malayalam. "Name": pēr. Source: the same Dravidian root.
+Language: Kannada. "Name": hesaru. Source: Dravidian (pesar, p becomes h).
+Language: Hindi. "Name": nām. Source: Sanskrit (Indo-European).
+Language: English. "Name": name. Source: Indo-European.
+Four Dravidian tongues, one inherited word — even Kannada's hesaru, once you know the old p went soft. Only the last two rows come from somewhere else.
 
 Sounds you'll need.
 ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru). Read పే, రు becomes pēru.
@@ -145,7 +153,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the two atoms — and note, as in Tamil and Kannada, no word for "is."
 
-The phrase, assembled.
+The phrase, taken apart.
 nā (my) + pēru (name) + your name.
 నా పేరు … (nā pēru …) = "my name …" becomes "my name is…"
 Nā pēru Arun. becomes "My name is Arun."
@@ -219,7 +227,7 @@ Grammar Lens: respect by the plural.
 nuvvu (familiar) vs. mīru (respectful, and literally plural) — the same politeness-by-plural as Tamil nīṅgaḷ, Kannada nīvu, and French vous. For a first meeting, mīru.
 
 Sounds you'll need.
-నువ్వు (nuvvu); మీరు (m=i ru, మీ m=i + రు ru).
+నువ్వు (nuvvu); మీరు (mīru, మీ mī + రు ru).
 
 Guided Practice.
 [pause 1 second]
@@ -338,7 +346,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the question — your + name + what — still no "is."
 
-The phrase, assembled.
+The phrase, taken apart.
 మీ (mī, "your") = the possessive of mīru ("you," respectful).
 మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) = literally "your name what?" = "what's your name?"
 Three words, no verb — the zero copula holds for questions too.
@@ -401,7 +409,7 @@ Warm-up.
 [pause 2 seconds]
 The warm close — and, as in Kannada, a Sanskrit word.
 
-The phrase.
+You'll want to know: the full phrase.
 The full form is మిమ్మల్ని కలిసినందుకు సంతోషం (mimmalni kalisinanduku santōṣam) — "joy at having met you."
 
 The word, taken apart.
@@ -458,7 +466,11 @@ Which character is this — ◌ం (anusvara)? What does it add to the syllable 
 Lesson 15 of 15.
 Chapter 2 — the introduction, whole.
 
-The dialogue.
+Warm-up.
+[pause 2 seconds]
+No new words. Everything you have met in this chapter, said once through as the exchange it was always for.
+
+The exchange — the dialogue.
 [a table of 4 rows, read aloud]
 నా పేరు మీరా. (nā pēru Mira) means My name is Mira.
 మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) (mī pēru ēmiṭi) means What's your name?

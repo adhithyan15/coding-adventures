@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W04-hridoy-read",
+    "language": "bengali",
+    "chapter": 21,
+    "sequence": 1100,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:76a679067cbc39b7",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

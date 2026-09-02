@@ -116,6 +116,14 @@ The letters in this word.
 
 The word, taken apart.
 వెళ్ళి వస్తాను (veḷḷi vastānu) = వెళ్ళి (veḷḷi, "having gone") + వస్తాను (vastānu, "I come") — literally "having gone, I come [back]," i.e. "I'll go and come back." A Telugu speaker never signs off with a bare "I'm leaving" — that sounds final. Instead they promise return. It is the same "go-and-come-back" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, "go and come [back]").
+Across the family — the same idea, five ways:
+[a table of 5 rows, read aloud]
+Language: Telugu. "go and come back" (goodbye): veḷḷi vastānu.
+Language: Tamil. "go and come back" (goodbye): pōy varugiṟēṉ.
+Language: Kannada. "go and come back" (goodbye): hōgi baruttēne.
+Language: Malayalam. "go and come back" (goodbye): pōyi varāṁ.
+Language: Bengali (Indo-Aryan). "go and come back" (goodbye): āshi ("I come").
+The whole south — and, in Bengali, well beyond it — prefers a promise of return to a blunt farewell. The languages are not all related; the habit travelled anyway.
 
 Grammar Lens: the "having …d" participle.
 Veḷḷi is Telugu's way of chaining actions: "having gone, (then) I come." Like its sisters, Telugu strings verbs with one in the participle form and the last one fully conjugated.
@@ -272,7 +280,14 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three ways to part — none of them a blunt "goodbye."
 
-The farewells.
+The exchange — the farewells.
+All three, side by side — none of them a blunt "goodbye":
+[a table of 4 rows, read aloud]
+Telugu: వెళ్ళి వస్తాను., veḷḷi vastānu. English: I'll go and come back. (the goodbye).
+Telugu: వెళ్ళి రండి., veḷḷi raṇḍi. English: Go and come back. (the reply).
+Telugu: రేపు కలుద్దాం., rēpu kaluddām. English: See you tomorrow.
+Telugu: మళ్ళీ కలుద్దాం., maḷḷī kaluddām. English: We'll meet again.
+A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead.
 [pause 1 second after each]
 [your turn — say: the everyday goodbye — veḷḷi vastānu ("I'll go and come back")]
 [pause 8 seconds for the answer]
@@ -283,7 +298,7 @@ The farewells.
 [your turn — say: "we'll meet again" — maḷḷī kaluddām]
 [pause 8 seconds for the answer]
 
-The atoms.
+What you've built — the atoms.
 [pause 2 seconds]
 [your turn — say: the two verbs (veḷḷu go, vaccu come)]
 [pause 8 seconds for the answer]
@@ -292,8 +307,9 @@ The atoms.
 [your turn — say: the "let's ___" ending (-ddām)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+The words, taken apart — roots you now carry.
 [pause 2 seconds]
+Roots you now carry:
 veḷḷi vastānu — "having gone, I come"; the Dravidian promise-of-return goodbye.
 rēpu "tomorrow" + kalu "meet" (native, where Tamil borrowed sandi).
 maḷḷī from maral "to return".

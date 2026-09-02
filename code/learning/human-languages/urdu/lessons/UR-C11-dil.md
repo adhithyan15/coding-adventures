@@ -38,7 +38,7 @@ reviews_of: [UR-C10-munh, UR-C08-puchhna, UR-C05-khuda]
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MUNH, UR-SCRIPT-NUN-NASAL-VOWEL, UR-ETYMON-MUNH-MYTH, UR-REGISTER-TWO-ROADS-ONE-ROOT] -->
 
 [PAUSE 2s] Recall **منہ**: its plain **ن** marked a nasal vowel, and its
-possible tie to Greek *mŷthos* was held loosely. Recall also **پوچھنا**:
+possible tie to Greek *mŷthos* was held loosely. Recall also *pūchhnā*:
 one root, two roads into Urdu — inherited *pūchhnā* and borrowed
 *pursish*, cousins by two different paths. This chapter's single word runs
 that same two-roads shape one level deeper, on the body's most-named part.
@@ -56,7 +56,7 @@ that same two-roads shape one level deeper, on the body's most-named part.
 <!-- hl-knowledge: introduces=[UR-ETYMON-DIL-HEART-PIE]; assesses=[UR-LEX-DIL, UR-ETYMON-KHUDA-PERSIAN, UR-REGISTER-TWO-ROADS-ONE-ROOT] -->
 
 **دل** is Persian — borrowed into Urdu from Middle Persian *dil*, by the
-same road as **خدا** back in Chapter 5. But unlike **خدا**, whose Sanskrit
+same road as *khudā* back in Chapter 5. But unlike *khudā*, whose Sanskrit
 side this book never named, **دل** has one, and it is worth naming
 precisely.
 

@@ -1,13 +1,15 @@
 {
   "language": "bengali",
   "chapter": 9,
-  "sourceHash": "fnv1a64:52644cdc2a7ec98b",
+  "sourceHash": "fnv1a64:db6cd2f3d2ad77fa",
   "lessonIds": [
-    "BN-C05-bola",
-    "BN-C05-ami-bangla-boli",
-    "BN-C05-kaj-kora",
-    "BN-C05-thaka",
-    "BN-C05-practice"
+    "BN-W04-pa",
+    "BN-W03-da",
+    "BN-W03-dha",
+    "BN-W04-cha",
+    "BN-W04-chha",
+    "BN-W04-achhi-read",
+    "BN-W04-ja"
   ],
-  "tex": "bengali/book/chapters/ch09-first-verbs.tex"
+  "tex": "bengali/book/chapters/ch09-roof-teeth-grid.tex"
 }
