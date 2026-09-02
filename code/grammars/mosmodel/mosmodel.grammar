@@ -53,9 +53,15 @@ member = slot_decl | emit_decl ;
 
 slot_decl = KEYWORD NAME COLON slot_type [ EQUALS slot_default ] SEMICOLON ;
 
-# slot_type: a scalar keyword, a list<T>, or a named component type (NAME)
-slot_type = scalar_type
-          | list_type
+# slot_type: a list<T>, a scalar keyword, or a named component type (NAME)
+#
+# ORDER MATTERS. `scalar_type` and `list_type` both begin with KEYWORD, so
+# ordered choice must try the longer production first: with `scalar_type`
+# first, `list<text>` matches KEYWORD ("list") as a complete scalar type and
+# the parse then fails at `<`. `inner_type` below already gets this right;
+# `slot_type` did not, while the committed _grammar.rs did — see #14067.
+slot_type = list_type
+          | scalar_type
           | NAME ;
 
 # The six scalar type keywords
