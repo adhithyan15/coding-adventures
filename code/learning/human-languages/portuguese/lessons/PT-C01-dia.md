@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: PT-C01-dia
+spine_node: SPINE-TIME-OF-DAY
 sequence: 40
 chapter: 1
 type: word
@@ -9,17 +11,35 @@ concept_tag: TIME-DAY
 prerequisites: [PT-C01-o-a]
 sounds: []
 roots: [dies]
-est_minutes: 4
 reviews_of: [PT-C01-o-a]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: [PT-GRAMMAR-O-A-03]
+introduces:
+  knowledge: [PT-ETYMON-DIA-02, PT-GRAMMAR-DIA-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [PT-ETYMON-DIA-02, PT-GRAMMAR-DIA-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-contemporary
 ---
+
 
 # dia — "day"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your first noun — and a gender trap.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[PT-ETYMON-DIA-02]; assesses=[] -->
 
 **o dia** (masc.) ← Latin **dies** ("day"), taken almost straight, like Spanish
 *día*. Cousins from *dies*: **di**urnal, **di**ary; and, through the derived
@@ -28,18 +48,21 @@ and French *jour* look so different — they took the longer road, Portuguese an
 Spanish the short one).
 
 ## Grammar Lens: a gender trap
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-DIA-03]; assesses=[] -->
 
 *dia* ends in *-a* — the usual **feminine** signal — yet it is **masculine**:
 *o dia*. A fossil of its Latin origin (*dies* was masculine), and a reminder to
 learn each noun *with its article* rather than guessing gender from the ending.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-DIA-02, PT-GRAMMAR-DIA-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "o dia" (masculine, despite the *-a*)]
 - [YOU SAY: cousins — *diary*, *diurnal*, *journal*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-DIA-02, PT-GRAMMAR-DIA-03] -->
 
 [PAUSE 3s] What Latin word gave **dia**, and why is *o dia* a trap? (*dies*;
 it's masculine even though it ends in *-a*.)

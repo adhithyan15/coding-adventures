@@ -9,10 +9,10 @@ it("pins Portuguese continuity", () => expectLanguageContinuity("portuguese"));
 it("pins Portuguese modality", () => expectLanguageModality("portuguese"));
 it("pins Portuguese lesson-content budgets", () =>
   expectLanguageLessonBudgets("portuguese", {
-    lessons: 94,
+    lessons: 102,
     idioms: 7,
     senses: 7,
-    cultureClaims: 10,
+    cultureClaims: 11,
     unitPrefix: "PT",
   }));
 
