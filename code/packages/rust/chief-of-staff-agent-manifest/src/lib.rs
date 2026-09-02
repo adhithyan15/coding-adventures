@@ -4,7 +4,7 @@
 #![deny(missing_docs)]
 
 use coding_adventures_json_parser::try_parse_json;
-use coding_adventures_json_serializer::{serialize_pretty, JsonSerializerError, SerializerConfig};
+use coding_adventures_json_serializer::{serialize_pretty, SerializerConfig};
 use coding_adventures_json_value::{from_ast, JsonNumber, JsonValue};
 use core::fmt::{self, Display, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
@@ -122,7 +122,15 @@ impl AgentManifest {
     }
 
     /// Render deterministic, schema-shaped pretty JSON with a trailing newline.
-    pub fn to_json(&self) -> Result<String, JsonSerializerError> {
+    /// Render deterministic, schema-shaped pretty JSON with a trailing newline.
+    ///
+    /// Validates first. `manifest_json` emits `allowed_tools` only at v3, so
+    /// rendering an unvalidated manifest whose `version` disagrees with its
+    /// tool list would silently drop the tool surface -- a signed artifact
+    /// authorizing something other than what its author declared, with no error
+    /// raised anywhere in the pipeline. Fail closed instead.
+    pub fn to_json(&self) -> Result<String, ManifestError> {
+        self.validate()?;
         serialize_pretty(
             &manifest_json(self),
             &SerializerConfig {
@@ -131,6 +139,7 @@ impl AgentManifest {
                 ..SerializerConfig::default()
             },
         )
+        .map_err(|error| ManifestError::Serialization(error.to_string()))
     }
 
     /// Return the declared payload-schema version for one channel, if present.
@@ -260,6 +269,8 @@ pub enum ManifestError {
     UnknownField(String),
     /// The manifest uses a well-formed version this package does not understand.
     UnsupportedVersion(i64),
+    /// Rendering a validated manifest to JSON failed.
+    Serialization(String),
 }
 
 impl Display for ManifestError {
@@ -276,13 +287,16 @@ impl Display for ManifestError {
             Self::UnsupportedVersion(version) => {
                 write!(formatter, "unsupported agent manifest version: {version}")
             }
+            Self::Serialization(message) => {
+                write!(formatter, "agent manifest serialization failed: {message}")
+            }
         }
     }
 }
 
 impl std::error::Error for ManifestError {}
 
-/// Parse and validate one legacy schema-v1 or current schema-v2 agent manifest.
+/// Parse and validate one schema-v1, schema-v2, or current schema-v3 agent manifest.
 pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
     if source.len() > MAX_MANIFEST_BYTES {
         return Err(ManifestError::ManifestTooLarge);
@@ -1096,6 +1110,23 @@ mod tests {
         assert_eq!(
             manifest.validate(),
             Err(ManifestError::InvalidField("message_schema_versions"))
+        );
+    }
+
+    #[test]
+    fn to_json_refuses_to_silently_drop_a_tool_surface() {
+        // manifest_json emits allowed_tools only at v3. Without validating
+        // first, rendering a v3 manifest whose version had been set back to v2
+        // produced JSON with NO tool surface and no error -- a signed artifact
+        // authorizing something other than what its author declared. The
+        // realistic path is a generator that builds the struct, populates
+        // tools, and leaves version at the v2 constant.
+        let mut manifest = parse_manifest(V3).unwrap();
+        assert!(!manifest.allowed_tools.is_empty());
+        manifest.version = MANIFEST_V2_VERSION;
+        assert_eq!(
+            manifest.to_json(),
+            Err(ManifestError::InvalidField("allowed_tools"))
         );
     }
 
