@@ -575,11 +575,48 @@ and Ruby — **there is no inner layer to add, and there will not be one.** Thei
 agents run with Layer 7 alone, which is precisely why Layer 7 had to be the
 boundary and not this.
 
-**WASI is the interesting option.** A wasm runtime is capability-based by
-construction and many languages compile to it, so it would give one inner layer
-across languages rather than a per-runtime patchwork — including for Python and
-Ruby, which have no native facility. It is out of scope here and worth its own
-evaluation; the trade is a compilation constraint on agent authors.
+### S-I8a — wasm is the intended destination; the table above is transitional
+
+The per-runtime patchwork is a transitional state, not the target. The target is
+that **agents are wasm modules and nothing else.** This repo is already building
+toward it: W01 specifies a full WASM 1.0 runtime (~182 instructions, pluggable
+host interface), W02 specifies the complete `wasi_snapshot_preview1` ABI, and
+`wasm-runtime` implementations exist in Go, Python, Dart, Perl, and TypeScript.
+The runtimes currently ship minimal WASI stubs, so the destination is real but
+not yet reachable.
+
+Recording it here because it changes what the layers are *for*, and an
+implementer should know which way this is heading:
+
+**Today** — Layer 7 contains the agent, because the agent is a native process
+that can attempt syscalls. S-I8's inner layer is a bonus available only to
+JavaScript.
+
+**In the wasm end state** — the agent has **no syscalls at all**. A wasm module
+can only call the host functions it was given, so capability enforcement moves
+into the host interface and becomes total by construction rather than by
+enumeration. Layer 7 does not go away: it contains the **engine**, which is
+itself attack surface (wasm engines have had escape CVEs). Its role changes from
+*the* boundary to the containment around a boundary that now holds by
+construction.
+
+Two consequences worth fixing now, while the choice is still cheap:
+
+1. **An agent module must not be given `wasi_snapshot_preview1`'s file and
+   socket surface.** WASI is a *syscall* interface; handing an agent
+   `path_open` and `sock_connect` rebuilds the entire problem inside the
+   sandbox, with a less mature enforcement layer. What agents get is the
+   **broker's capability interface as the host imports** — S-K5's rules apply
+   unchanged, because the broker is still the thing on the other side. WASI's
+   value here is its module-isolation model, not its syscall surface.
+2. **The invariants in this spec are runtime-independent, and were written to
+   survive this transition.** S-B1, S-I1a, S-I2, S-I6, S-K6, S-K2 and S-P3 hold
+   whether the agent is a native process or a module; only the mechanism moves.
+   That is the payoff of separating them (see Normative Status).
+
+The cost of the end state is a compilation constraint on agent authors, which
+cuts against "any language you like" — though less each year, and it buys Python
+and Ruby the isolation they can never get natively.
 
 ---
 
