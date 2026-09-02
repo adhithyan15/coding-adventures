@@ -56,12 +56,22 @@ describe("the plan CLI", () => {
     expect(out).toMatch(/exam-point — spanish/);
     expect(out).toMatch(/human-validation — marwadi/);
     expect(out).toMatch(/human-validate 2 of 2 pre-A1 full mock\(s\) for marwadi/);
+    // Marathi joins with an A1 inventory of its own, so this is the first
+    // exam-point item on a track with no external syllabus behind it.
+    expect(out).toMatch(/exam-point — marathi/);
     // Still PARTIAL, and therefore still "0 complete": the pronunciation half
     // of phonology-orthography has no A1-only boundary in the source, so that
     // single dimension keeps the whole inventory partial. This is the HL20 rule
     // doing its job — three complete dimensions do not add up to a complete
     // file, and the inventory item is not suppressed.
-    expect(out).toMatch(/0 complete and 4 partial of 138/);
+    //
+    // 4 -> 5 partial: `exam-inventory-marathi-a1.json` is a PROJECT-DEFINED
+    // equivalent, since `exam-levels.json` records Marathi as `basis: editorial`
+    // with no widely-sat ladder. Every one of its four dimensions is partial and
+    // says why, so it lands on exactly the same side of this gate as the three
+    // externally-sourced files. An editorial basis buys no discount here, which
+    // is the property that makes the number worth pinning.
+    expect(out).toMatch(/0 complete and 5 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -80,7 +90,9 @@ describe("the plan CLI", () => {
     // It comes BACK as an inventory to write, which is what the old comment
     // falsely claimed already happened.
     expect(out).toMatch(/138\s+exam-inventory/);
-    expect(out).toMatch(/0 complete and 3 partial of 138/);
+    // 3 -> 4: Spanish A1, German A1, German A2 and Marathi A1 still parse; only
+    // the French file was corrupted by this test.
+    expect(out).toMatch(/0 complete and 4 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -121,9 +133,17 @@ describe("the plan CLI", () => {
     // and -10 are closed by the qualities rung's own lessons, and -09 needed no
     // authoring at all — its note claimed the corpus never introduces `saber`, which
     // stopped being true when chapter 389 authored it two slices earlier.
-    expect(out).toMatch(/190 uncovered point\(s\) across 4 written/);
-    expect(out).toMatch(/0 complete and 4 partial of 138/);
-    expect(out).toMatch(/the other 20 track\(s\)/);
+    // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
+    // points and the corpus covers 88, so it contributes 213. Nothing regressed:
+    // a twentieth track stopped being unmeasurable, and the backlog grew by
+    // exactly the debt that was previously invisible. The size of the jump is
+    // itself the finding — Marathi's target list is DERIVED from the Spanish
+    // one, which is the only DELE-sourced set here, so its denominator is what an
+    // attributable A1 inventory actually asks for rather than what a
+    // descriptor-led guess remembered to include.
+    expect(out).toMatch(/403 uncovered point\(s\) across 5 written/);
+    expect(out).toMatch(/0 complete and 5 partial of 138/);
+    expect(out).toMatch(/the other 19 track\(s\)/);
   }, 120_000);
 
   it("rejects a flag used as another flag's value", () => {

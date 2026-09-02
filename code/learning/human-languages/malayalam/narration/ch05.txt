@@ -26,9 +26,6 @@ nī saṁsārikkunnu — "you speak".
 avan saṁsārikkunnu — "he speaks".
 One form, all persons. Malayalam threw away person-agreement entirely — which is exactly why (Chapter 3) it can never drop the pronoun: the verb won't tell you who. Of all its Dravidian sisters, Malayalam went the furthest here.
 
-Sounds you'll need.
-സം (saṃ) + സാ (sā) + രി (ri) + ക്കുക (kkuka) becomes സംസാരിക്കുക (saṁsārikkuka).
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "saṁsārikkuka" (to speak)]
@@ -474,7 +471,7 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three verbs, one endlessly simple engine.
 
-Build the sentences.
+The exchange — build the sentences.
 [pause 1 second after each]
 [your turn — say: "I speak Malayalam" — ñān malayāḷaṁ saṁsārikkunnu]
 [pause 8 seconds for the answer]
@@ -485,7 +482,7 @@ Build the sentences.
 [your turn — say: "he speaks" — avan saṁsārikkunnu (the very same verb!)]
 [pause 8 seconds for the answer]
 
-The engine.
+Guided Practice — the engine.
 [pause 2 seconds]
 [your turn — say: the present ending on every verb (-unnu)]
 [pause 8 seconds for the answer]
@@ -494,7 +491,7 @@ The engine.
 [your turn — say: what that forces you to always keep (the pronoun ñān etc.)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+The roots, taken apart.
 [pause 2 seconds]
 saṁsārikkuka "to speak" (Sanskrit-derived; native twin paṟayuka).
 tāmasikkuka "to live" (Sanskrit-derived; where Tamil uses native vāḻ).

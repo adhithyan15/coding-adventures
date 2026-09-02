@@ -230,6 +230,11 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.material.TriStateCheckbox").unwrap();
     }
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
+    // Only when the props object is emitted -- an unused import is a warning,
+    // and Kotlin builds that treat warnings as errors would fail on it.
+    if needs_props_object(&component.slots) {
+        writeln!(out, "import androidx.compose.runtime.Immutable").unwrap();
+    }
     if uses_drag {
         writeln!(
             out,
@@ -1128,25 +1133,23 @@ fn emit_composable_function(
     }
 
     let mut out = String::new();
+    let grouped = needs_props_object(slots);
+    if grouped {
+        emit_props_data_class(&mut out, component_name, slots)?;
+    }
     writeln!(out, "@OptIn(ExperimentalFoundationApi::class)").unwrap();
     writeln!(out, "@Composable").unwrap();
     writeln!(out, "fun {component_name}(").unwrap();
-    for s in slots {
-        let field = to_camel_case_first_lower(&s.name);
-        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
-        let ty = slot_type_to_kotlin(&s.r#type);
-        let suffix = if s.required || s.default.is_some() {
-            ""
-        } else {
-            "?"
-        };
-        let default = kotlin_slot_default(s)
-            .map(|value| format!(" = {value}"))
-            .unwrap_or_default();
-        writeln!(out, "    {field}: {ty}{suffix}{default},").unwrap();
+    if grouped {
+        writeln!(out, "    props: {component_name}Props,").unwrap();
+    } else {
+        emit_composable_parameters_only(&mut out, slots)?;
     }
     writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
     writeln!(out, ") {{").unwrap();
+    if grouped {
+        emit_props_destructuring(&mut out, slots)?;
+    }
     if layout_contains_tag(layout_root, "HostDraggable")
         || layout_contains_tag(layout_root, "HostDropTarget")
     {
@@ -1215,10 +1218,22 @@ fn emit_split_composable_function(
     let (root_composable, table_context, root_text) =
         root_container_context(layout_root, part_styles);
 
+    let grouped = needs_props_object(slots);
+    if grouped {
+        emit_props_data_class(&mut out, component_name, slots)?;
+    }
     writeln!(out, "@Composable").unwrap();
     writeln!(out, "fun {component_name}(").unwrap();
-    emit_composable_parameters(&mut out, slots, component_name)?;
+    if grouped {
+        writeln!(out, "    props: {component_name}Props,").unwrap();
+        writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
+    } else {
+        emit_composable_parameters(&mut out, slots, component_name)?;
+    }
     writeln!(out, ") {{").unwrap();
+    if grouped {
+        emit_props_destructuring(&mut out, slots)?;
+    }
 
     let uses_drag = layout_contains_tag(layout_root, "HostDraggable")
         || layout_contains_tag(layout_root, "HostDropTarget");
@@ -1265,8 +1280,20 @@ fn emit_split_composable_function(
             ""
         };
         writeln!(out, "private fun {receiver}{component_name}Section{index}(").unwrap();
-        emit_composable_parameters(&mut out, slots, component_name)?;
+        // The sections carry the same arity problem as the root, and worse:
+        // there is one per top-level child, so a component that overflows once
+        // overflows eight times. Fixing only the root leaves the class
+        // unloadable, which is exactly what the first attempt at this did.
+        if grouped {
+            writeln!(out, "    props: {component_name}Props,").unwrap();
+            writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
+        } else {
+            emit_composable_parameters(&mut out, slots, component_name)?;
+        }
         writeln!(out, ") {{").unwrap();
+        if grouped {
+            emit_props_destructuring(&mut out, slots)?;
+        }
         out.push_str(&emit_children_compose(
             &layout_root.children[range],
             1,
@@ -1324,10 +1351,223 @@ fn child_section_ranges(children: &[LayoutNode]) -> Vec<std::ops::Range<usize>> 
     ranges
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// The JVM's 255-argument limit
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// The JVM's hard cap on argument slots in a method signature.
+///
+/// This is a class-file format constraint, not a compiler preference: the
+/// Kotlin compiler emits the class happily and the **JVM refuses to load it**,
+/// so the failure appears at runtime as
+/// `ClassFormatError: Too many arguments in method signature`. A component over
+/// the limit therefore compiles, packages into an installer, and dies on
+/// launch — which is why nothing caught it until Engram's desktop app was
+/// actually run.
+const JVM_MAX_SIGNATURE_SLOTS: usize = 255;
+
+/// How many argument slots one Kotlin parameter of this type occupies.
+///
+/// `Long` and `Double` take **two** slots each as JVM primitives; everything
+/// else takes one. Nullability matters and is easy to miss: `Double?` is
+/// `java.lang.Double`, a reference, so it costs one — the same type costs
+/// different amounts depending on whether the slot is optional.
+fn kotlin_type_slot_cost(kotlin_type: &str, nullable: bool) -> usize {
+    if nullable {
+        return 1;
+    }
+    match kotlin_type {
+        "Double" | "Long" => 2,
+        _ => 1,
+    }
+}
+
+/// Total argument slots the emitted composable's signature would occupy.
+///
+/// Three things beyond the author's slots consume the budget, and they are the
+/// reason the practical ceiling sits well below 255:
+///
+/// - `dispatch`, always present — 1 slot.
+/// - `$composer`, added by the Compose compiler plugin — 1 slot.
+/// - `$changed` bitmasks, one `Int` per **ten** parameters, also added by the
+///   plugin.
+///
+/// Measured rather than assumed. A probe compiling and *loading* composables of
+/// increasing arity put the boundary at exactly 229 String parameters:
+///
+/// ```text
+///   N=229  ->  229 + 2 + ceil(230/10) = 254 slots  ->  loads
+///   N=230  ->  230 + 2 + ceil(231/10) = 256 slots  ->  ClassFormatError
+/// ```
+///
+/// Note the probe had to *load* the class: `compileKotlin` succeeds either way,
+/// so a compile-only check would have reported both as fine.
+pub fn compose_signature_slot_cost(slots: &[SlotDecl]) -> usize {
+    let mut cost = 0usize;
+    for s in slots {
+        let ty = slot_type_to_kotlin(&s.r#type);
+        let nullable = !(s.required || s.default.is_some());
+        cost += kotlin_type_slot_cost(&ty, nullable);
+    }
+    // `dispatch`, then the plugin's `$composer` and `$changed` bitmasks. The
+    // bitmask count is driven by the PARAMETER count, not the slot cost.
+    let parameter_count = slots.len() + 1;
+    cost += 1; // dispatch
+    cost += 1; // $composer
+    cost += parameter_count.div_ceil(10); // $changed
+    cost
+}
+
+/// Whether this component must take its slots as a single props object.
+///
+/// Positional parameters are preferred wherever they fit, because Compose skips
+/// recomposition **per parameter**: collapsing every slot into one object means
+/// any single change recomposes the whole component. Imposing that on every
+/// component to accommodate the few that cannot load would be a real regression
+/// in output quality, so the shape is chosen by whether the signature fits.
+pub fn needs_props_object(slots: &[SlotDecl]) -> bool {
+    compose_signature_slot_cost(slots) > JVM_MAX_SIGNATURE_SLOTS
+}
+
+/// How many slots go into one props group.
+///
+/// The props object cannot simply be one data class holding every slot: **a
+/// constructor is a method signature too**, and so is the `copy()` a data class
+/// generates. A 254-property data class overflows both, which is why the first
+/// attempt at this fix moved the failure from `EngramAppKt` to
+/// `EngramAppProps` rather than removing it.
+///
+/// So the slots are chunked into groups, each comfortably inside the limit, and
+/// the top-level props class holds the groups. 64 leaves generous headroom even
+/// if every slot in a group is a `Double`, which costs two slots each.
+pub const PROPS_GROUP_SIZE: usize = 64;
+
+/// Emit the `@Immutable` props classes for a component whose signature will not
+/// fit.
+///
+/// `@Immutable` is load-bearing rather than decorative. Compose skips
+/// recomposition by comparing parameters, and it can only do that for a type it
+/// knows to be stable; an unannotated class is treated as unstable, so **every**
+/// state change would recompose the entire component. That would trade a
+/// load-time crash for a performance cliff, which is not a fix.
+///
+/// Data classes give structural `equals` for free, which is what that
+/// comparison uses — another reason not to reach for a mutable builder here.
+fn emit_props_data_class(
+    out: &mut String,
+    component_name: &str,
+    slots: &[SlotDecl],
+) -> Result<(), PipelineEmitError> {
+    let groups: Vec<&[SlotDecl]> = slots.chunks(PROPS_GROUP_SIZE).collect();
+
+    for (index, group) in groups.iter().enumerate() {
+        writeln!(
+            out,
+            "/// Slots {}..{} of [{component_name}].",
+            index * PROPS_GROUP_SIZE,
+            index * PROPS_GROUP_SIZE + group.len() - 1
+        )
+        .unwrap();
+        writeln!(out, "@Immutable").unwrap();
+        writeln!(out, "data class {component_name}Props{index}(").unwrap();
+        for s in group.iter() {
+            let field = to_camel_case_first_lower(&s.name);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            let ty = slot_type_to_kotlin(&s.r#type);
+            let suffix = if s.required || s.default.is_some() {
+                ""
+            } else {
+                "?"
+            };
+            let default = kotlin_slot_default(s)
+                .map(|value| format!(" = {value}"))
+                .unwrap_or_default();
+            writeln!(out, "    val {field}: {ty}{suffix}{default},").unwrap();
+        }
+        writeln!(out, ")").unwrap();
+        writeln!(out).unwrap();
+    }
+
+    writeln!(
+        out,
+        "/// Slots for [{component_name}], grouped so no signature exceeds the JVM limit."
+    )
+    .unwrap();
+    writeln!(out, "///").unwrap();
+    writeln!(
+        out,
+        "/// This component declares {} slots, whose positional signature would occupy",
+        slots.len()
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "/// {} JVM argument slots -- past the hard limit of {JVM_MAX_SIGNATURE_SLOTS}. The class would",
+        compose_signature_slot_cost(slots)
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "/// compile and package, then fail to load at runtime with ClassFormatError."
+    )
+    .unwrap();
+    writeln!(out, "///").unwrap();
+    writeln!(
+        out,
+        "/// The groups exist because a constructor is a method signature too: one flat"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "/// data class of {} properties would overflow its own constructor and copy().",
+        slots.len()
+    )
+    .unwrap();
+    writeln!(out, "@Immutable").unwrap();
+    writeln!(out, "data class {component_name}Props(").unwrap();
+    for index in 0..groups.len() {
+        writeln!(out, "    val group{index}: {component_name}Props{index},").unwrap();
+    }
+    writeln!(out, ")").unwrap();
+    writeln!(out).unwrap();
+    Ok(())
+}
+
+/// Bind every props field to a local `val`, so the generated body can keep
+/// referring to slots by their bare names.
+///
+/// Locals are not argument slots, so this costs nothing against the limit, and
+/// it keeps the props-object shape a change to the *signature* only. The
+/// alternative -- rewriting every reference in the body to `props.field` --
+/// would mean two code paths through all of the body emission, which is far
+/// more surface for the two shapes to drift apart.
+fn emit_props_destructuring(
+    out: &mut String,
+    slots: &[SlotDecl],
+) -> Result<(), PipelineEmitError> {
+    for (position, s) in slots.iter().enumerate() {
+        let field = to_camel_case_first_lower(&s.name);
+        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        let group = position / PROPS_GROUP_SIZE;
+        writeln!(out, "    val {field} = props.group{group}.{field}").unwrap();
+    }
+    Ok(())
+}
+
 fn emit_composable_parameters(
     out: &mut String,
     slots: &[SlotDecl],
     component_name: &str,
+) -> Result<(), PipelineEmitError> {
+    emit_composable_parameters_only(out, slots)?;
+    writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
+    Ok(())
+}
+
+/// The slot parameters alone, without `dispatch`.
+fn emit_composable_parameters_only(
+    out: &mut String,
+    slots: &[SlotDecl],
 ) -> Result<(), PipelineEmitError> {
     for s in slots {
         let field = to_camel_case_first_lower(&s.name);
@@ -1343,7 +1583,6 @@ fn emit_composable_parameters(
             .unwrap_or_default();
         writeln!(out, "    {field}: {ty}{suffix}{default},").unwrap();
     }
-    writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
     Ok(())
 }
 
@@ -1357,10 +1596,17 @@ fn write_section_call(
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     writeln!(out, "{pad}{component_name}Section{index}(").unwrap();
-    for s in slots {
-        let field = to_camel_case_first_lower(&s.name);
-        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
-        writeln!(out, "{inner}{field},").unwrap();
+    if needs_props_object(slots) {
+        // The caller destructured `props` into locals, so rebuild it rather
+        // than passing 254 locals back in -- which would reintroduce the very
+        // signature this exists to avoid.
+        writeln!(out, "{inner}props,").unwrap();
+    } else {
+        for s in slots {
+            let field = to_camel_case_first_lower(&s.name);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            writeln!(out, "{inner}{field},").unwrap();
+        }
     }
     writeln!(out, "{inner}dispatch,").unwrap();
     writeln!(out, "{pad})").unwrap();
@@ -8972,6 +9218,120 @@ mod tests {
         let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
         assert!(
             matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("not yet supported"))
+        );
+    }
+
+    // ── The JVM's 255-argument limit ────────────────────────────────────────
+
+    fn text_slot(name: &str) -> SlotDecl {
+        SlotDecl {
+            name: name.to_string(),
+            r#type: SlotType::Text,
+            required: true,
+            default: None,
+        }
+    }
+
+    fn number_slot(name: &str, required: bool) -> SlotDecl {
+        SlotDecl {
+            name: name.to_string(),
+            r#type: SlotType::Number,
+            required,
+            default: None,
+        }
+    }
+
+    #[test]
+    fn slot_cost_matches_the_measured_jvm_boundary() {
+        // Measured, not assumed. A probe that compiled AND LOADED composables
+        // of increasing arity put the boundary at exactly 229 String slots:
+        //
+        //   N=229 -> 254 slots -> loads
+        //   N=230 -> 256 slots -> ClassFormatError
+        //
+        // `compileKotlin` succeeds for both, so a compile-only probe would have
+        // reported no boundary at all.
+        let at: Vec<SlotDecl> = (0..229).map(|i| text_slot(&format!("s{i}"))).collect();
+        let over: Vec<SlotDecl> = (0..230).map(|i| text_slot(&format!("s{i}"))).collect();
+
+        assert_eq!(compose_signature_slot_cost(&at), 254);
+        assert_eq!(compose_signature_slot_cost(&over), 256);
+        assert!(!needs_props_object(&at), "229 slots fit and must stay positional");
+        assert!(needs_props_object(&over), "230 slots do not fit");
+    }
+
+    #[test]
+    fn a_non_null_double_costs_two_slots_and_a_nullable_one_costs_one() {
+        // `Double` is a JVM primitive taking two slots; `Double?` boxes to
+        // java.lang.Double, a reference taking one. So the same declared type
+        // costs different amounts depending on whether the slot is optional --
+        // easy to miss, and it lowers the real ceiling for numeric components.
+        let required = vec![number_slot("a", true)];
+        let optional = vec![number_slot("a", false)];
+        assert_eq!(compose_signature_slot_cost(&required), 5); // 2 + dispatch + composer + 1 mask
+        assert_eq!(compose_signature_slot_cost(&optional), 4); // 1 + dispatch + composer + 1 mask
+    }
+
+    #[test]
+    fn small_components_keep_positional_parameters() {
+        // Compose skips recomposition PER PARAMETER. Collapsing every component
+        // into one object would trade a load-time crash for a performance
+        // regression across the board, so the props shape is used only where
+        // the signature genuinely does not fit.
+        let slots: Vec<SlotDecl> = (0..10).map(|i| text_slot(&format!("s{i}"))).collect();
+        assert!(!needs_props_object(&slots));
+    }
+
+    #[test]
+    fn the_props_object_is_grouped_because_a_constructor_is_a_signature_too() {
+        // The first version of this fix emitted ONE data class holding every
+        // slot. That moved the failure rather than removing it: a 254-property
+        // data class overflows its own constructor and its generated copy().
+        // The emitted class is therefore chunked, and this pins that.
+        let slots: Vec<SlotDecl> = (0..254).map(|i| text_slot(&format!("s{i}"))).collect();
+        let mut out = String::new();
+        emit_props_data_class(&mut out, "Big", &slots).expect("props classes");
+
+        let groups = 254usize.div_ceil(PROPS_GROUP_SIZE);
+        for index in 0..groups {
+            assert!(
+                out.contains(&format!("data class BigProps{index}(")),
+                "expected group {index}"
+            );
+        }
+        assert!(out.contains("data class BigProps("));
+        assert!(
+            out.matches("@Immutable").count() > groups,
+            "every props class needs @Immutable, or Compose treats it as \
+             unstable and recomposes the whole component on any change"
+        );
+
+        // No emitted class may declare more properties than a constructor can take.
+        for block in out.split("data class ").skip(1) {
+            let properties = block.matches("    val ").count();
+            assert!(
+                properties <= PROPS_GROUP_SIZE,
+                "a props class declared {properties} properties, over the group size"
+            );
+        }
+    }
+
+    #[test]
+    fn destructuring_reads_through_the_group_that_holds_each_slot() {
+        // The body refers to slots by bare name, so the preamble binds locals.
+        // Locals are not argument slots, which is what keeps this a change to
+        // the signature only -- and the group index has to match where the
+        // field actually lives, or the generated Kotlin will not compile.
+        let slots: Vec<SlotDecl> = (0..PROPS_GROUP_SIZE + 2)
+            .map(|i| text_slot(&format!("s{i}")))
+            .collect();
+        let mut out = String::new();
+        emit_props_destructuring(&mut out, &slots).expect("destructuring");
+
+        assert!(out.contains("val s0 = props.group0.s0"));
+        assert!(
+            out.contains(&format!("val s{n} = props.group1.s{n}", n = PROPS_GROUP_SIZE)),
+            "the first slot past the group size must read from group1"
         );
     }
 }

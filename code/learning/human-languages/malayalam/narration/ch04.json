@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0f1bd98d2773c799",
+  "sourceHash": "fnv1a64:8e232d680dfbcef3",
   "lessons": [
     {
       "id": "ML-S110-letter-va",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:61715a319990f984",
+      "sourceHash": "fnv1a64:2d93229b37eea9a4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -394,17 +394,6 @@
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "പോ (pō) + കുക (kuka, the -uka infinitive) becomes പോകുക (pōkuka). Its partner വരിക (varika, “to come”)."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -435,7 +424,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -623,7 +612,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c4dccaea45818eda",
+      "sourceHash": "fnv1a64:db8381cd388a5f46",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -671,6 +660,10 @@
             {
               "kind": "speech",
               "text": "പോയി വരാം (pōyi varāṁ) = പോയി (pōyi, \"having gone\") + വരാം (varāṁ, \"I'll come\") — literally \"having gone, I'll come [back],\" i.e. \"I'll go and come back.\" A Malayali never signs off with a bare \"I'm leaving.\" It is the same \"go-and-come-back\" farewell across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Telugu veḷḷi vastānu). The warm reply is പോയി വരൂ (pōyi varū, \"go and come [back]\")."
+            },
+            {
+              "kind": "speech",
+              "text": "It reaches past Dravidian, too: Bengali, an Indo-Aryan language with no shared ancestor for these words, says goodbye with āshi — \"I come.\" The whole south, and beyond, prefers a promise of return to a blunt farewell."
             }
           ]
         },
@@ -757,7 +750,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2883097aeb07abd7",
+      "sourceHash": "fnv1a64:13f15c9e669f9ddd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -810,17 +803,6 @@
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "നാളെ (nāḷe): നാ (nā) + ളെ (ḷe, retroflex ള ḷ). കാണാം (kāṇāṃ) = kāṇ (“see”) + -āṃ (“let's”)."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -860,7 +842,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -891,7 +873,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dfcd736366e3d862",
+      "sourceHash": "fnv1a64:b75acbf226f4e655",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1005,7 +987,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:744252f5e430da5a",
+      "sourceHash": "fnv1a64:c696b3ce86a3303f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1036,8 +1018,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
+          "type": "input",
+          "title": "The exchange — the farewells",
           "segments": [
             {
               "kind": "pause",
@@ -1085,8 +1067,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "guided-production",
+          "title": "Guided Practice — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -1125,8 +1107,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The roots, taken apart",
           "segments": [
             {
               "kind": "pause",

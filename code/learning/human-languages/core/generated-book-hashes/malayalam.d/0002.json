@@ -1,0 +1,28 @@
+{
+  "language": "malayalam",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:1461d7f420fb8f91",
+  "lessonIds": [
+    "ML-C02-peru",
+    "ML-S112-letter-pa",
+    "ML-S134-vowel-sign-ee",
+    "ML-C02-enre",
+    "ML-S135-letter-e",
+    "ML-S136-letter-rra",
+    "ML-C02-aanu",
+    "ML-S137-letter-aa",
+    "ML-S113-letter-nna",
+    "ML-C02-enre-peru-aanu",
+    "ML-C02-nii-ningal",
+    "ML-S138-vowel-sign-ii",
+    "ML-S06-letter-chillu-ll",
+    "ML-C02-entu",
+    "ML-C02-ninre-peru-entaanu",
+    "ML-C02-santosham",
+    "ML-S07-vowel-sign-u",
+    "ML-S131-chillu-nn",
+    "ML-W02-santosham-guided-copy",
+    "ML-C02-practice"
+  ],
+  "tex": "malayalam/book/chapters/ch02-introductions.tex"
+}

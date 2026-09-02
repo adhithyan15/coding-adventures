@@ -1,0 +1,13 @@
+{
+  "id": "ML-EXT-009-CHECKPOINT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can ask whether someone is well, answer that I am, and wave away their thanks at the Chapter 3 checkpoint.",
+  "prerequisites": [
+    "ML-EXT-005-CHECKPOINT"
+  ],
+  "lessons": [
+    "ML-C03-practice"
+  ]
+}
