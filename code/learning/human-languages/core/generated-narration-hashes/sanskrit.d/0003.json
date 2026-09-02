@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 3,
-  "sourceHash": "fnv1a64:d5e1e383395cc273",
+  "sourceHash": "fnv1a64:6b4d9182bd6b37ba",
   "lessonIds": [
     "SA-C03-katham",
     "SA-C03-bhavan-katham-asti",
@@ -9,15 +9,16 @@
     "SA-C03-aham",
     "SA-C03-kushalam",
     "SA-S01-letter-ma",
+    "SA-C03-kushali-asmi",
     "SA-C03-na-cinta",
     "SA-C03-practice",
     "SA-S203-vowel-sign-u"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "voiceLessons": 7,
+  "drivablePrefix": 2,
   "text": "sanskrit/narration/ch03.txt",
   "json": "sanskrit/narration/ch03.json",
-  "textHash": "fnv1a64:a7e438d7049c29d3",
-  "jsonHash": "fnv1a64:e93189f0d87d4150",
+  "textHash": "fnv1a64:3c8779206e495c66",
+  "jsonHash": "fnv1a64:3e67c15a44d20123",
   "findings": []
 }

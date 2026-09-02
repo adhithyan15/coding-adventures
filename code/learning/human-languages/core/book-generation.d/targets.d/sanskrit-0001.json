@@ -2,9 +2,6 @@
   "language": "sanskrit",
   "chapter": 1,
   "output": "sanskrit/book/chapters/ch01-greetings.tex",
-  "embeddedLessonIds": [
-    "SA-S02-letter-na",
-    "SA-S05-sign-virama",
-    "SA-S200-letter-da"
-  ]
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
 }

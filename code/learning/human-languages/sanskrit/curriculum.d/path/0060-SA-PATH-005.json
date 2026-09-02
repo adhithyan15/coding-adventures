@@ -4,15 +4,20 @@
   "lessons": [
     "SA-C02-nama",
     "SA-C02-asti",
-    "SA-C02-bhavan-tvam",
+    "SA-C02-bhavan",
+    "SA-C02-tvam",
     "SA-C02-kim",
     "SA-C02-mama",
     "SA-C02-mama-nama-asti",
     "SA-C02-anandah",
     "SA-C02-tava-nama-kim",
+    "SA-C02-practice",
     "SA-C03-aham"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "SA-EXT-52-RESPECT",
+    "SA-EXT-56-CH2-RECAP"
+  ],
   "after": []
 }

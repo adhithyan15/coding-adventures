@@ -2,9 +2,13 @@
   "id": "SA-PATH-004",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "SA-C01-am-na"
+    "SA-C01-am",
+    "SA-C01-na",
+    "SA-C01-practice"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "SA-EXT-54-CH1-RECAP"
+  ],
   "after": []
 }

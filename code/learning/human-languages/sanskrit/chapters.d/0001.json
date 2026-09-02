@@ -12,7 +12,17 @@
     "lesson": "SA-C01-practice",
     "kind": "task",
     "summary": "Complete SA-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Sanskrit, recognize the reply, and choose an appropriate response.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "SA-LEX-NAMASTE",
+      "SA-LEX-NAMASKARA",
+      "SA-LEX-DHANYAVADA",
+      "SA-LEX-SVAGATAM",
+      "SA-LEX-AM-YES",
+      "SA-LEX-NA-NO",
+      "SA-ETYMON-NAMAS-TE",
+      "SA-ETYMON-SU-AGATA",
+      "SA-ETYMON-NA-NEGATIVE",
+      "SA-HISTORY-JONES-1786"
+    ]
   }
 }
