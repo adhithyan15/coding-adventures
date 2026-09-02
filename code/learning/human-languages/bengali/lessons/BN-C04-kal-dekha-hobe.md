@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C04-kal-dekha-hobe
 spine_node: SPINE-TAKE-LEAVE
-sequence: 460
+sequence: 490
 chapter: 7
 type: phrase
 headword: কাল দেখা হবে

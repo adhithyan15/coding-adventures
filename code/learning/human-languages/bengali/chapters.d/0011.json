@@ -1,24 +1,22 @@
 {
   "chapter": 11,
-  "title": "The Core Verbs",
-  "label": "ch:bn-core-verbs",
-  "canDo": "I can say what I do with six everyday Bengali verbs, pick the ending that matches তুই, তুমি or আপনি, and say why a Bengali verb never changes for gender and why আছে has to hand the future to হবে.",
+  "title": "The First Verbs",
+  "label": "ch:first-verbs",
+  "canDo": "I can build short present-tense Bengali sentences with the chapter's first verbs.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "BN-C07-jana",
-    "kind": "production",
-    "summary": "Say āmi jāni and āmi tāke chini, separate জানা from চেনা the way French separates savoir from connaître, hear the vowel harmony that closes chini where chæne stays open, and run the chapter's six verbs back — hôwā, jāwā, āsā, khāwā, dækhā, jānā.",
+    "lesson": "BN-C05-practice",
+    "kind": "task",
+    "summary": "Complete BN-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Bengali sentences with the chapter's first verbs.",
     "assesses": [
-      "BN-LEX-C07-HOWA-01",
-      "BN-LEX-C07-JAOWA-01",
-      "BN-LEX-C07-ASHA-01",
-      "BN-LEX-C07-KHAOWA-01",
-      "BN-LEX-C07-DEKHA-01",
-      "BN-GRAMMAR-C07-DEKHA-02",
-      "BN-LEX-C07-JANA-01",
-      "BN-GRAMMAR-C07-JANA-02"
+      "BN-CONCEPT-C03-AMI-01",
+      "BN-CONCEPT-C05-AMIBANGLABOLI-01",
+      "BN-CONCEPT-C05-BOLA-01",
+      "BN-CONCEPT-C05-KAJKORA-01",
+      "BN-CONCEPT-C05-PRACTICE-01",
+      "BN-CONCEPT-C05-THAKA-01"
     ]
   }
 }

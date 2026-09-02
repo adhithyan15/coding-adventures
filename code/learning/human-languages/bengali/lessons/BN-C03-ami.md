@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C03-ami
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 310
+sequence: 340
 chapter: 5
 type: word
 headword: আমি
@@ -44,7 +44,7 @@ word *am*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C03-AMI-01] -->
 
-**আমি** (*āmi*, "I") descends from Sanskrit **অস্মি** (*asmi*, "I am"), on the
+**আমি** (*āmi*, "I") descends from Sanskrit *asmi* ("I am"), on the
 first-person stem *asmad*. That Sanskrit *asmi* is from Proto-Indo-European
 **\*h₁es-**, the "to be" root — the very same word that gives English **am** (and
 Latin *sum*). So Bengali's word for "**I**" is, at the root, a form of "**am**":

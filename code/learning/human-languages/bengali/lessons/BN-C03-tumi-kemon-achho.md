@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C03-tumi-kemon-achho
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 330
+sequence: 360
 chapter: 5
 type: phrase
 headword: তুমি কেমন আছো?

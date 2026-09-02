@@ -1,18 +1,18 @@
 {
   "language": "bengali",
   "chapter": 16,
-  "sourceHash": "fnv1a64:6df513351634a00d",
+  "sourceHash": "fnv1a64:b0369f5dfdde1482",
   "lessonIds": [
-    "BN-C11-bondhu",
-    "BN-C11-poribar",
-    "BN-C11-bhai",
-    "BN-C11-bon"
+    "BN-C10-cha",
+    "BN-C10-jol",
+    "BN-C10-dudh",
+    "BN-C10-bhat"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch16.txt",
   "json": "bengali/narration/ch16.json",
-  "textHash": "fnv1a64:bad0e88e25a8664e",
-  "jsonHash": "fnv1a64:499e33ef654a5eda",
+  "textHash": "fnv1a64:816e9ab1935c3bd7",
+  "jsonHash": "fnv1a64:66ec8cb72add6277",
   "findings": []
 }

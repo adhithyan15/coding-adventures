@@ -1,20 +1,19 @@
 {
   "language": "bengali",
   "chapter": 11,
-  "sourceHash": "fnv1a64:327e8ad0e2eb2e54",
+  "sourceHash": "fnv1a64:f0148140c8adbb31",
   "lessonIds": [
-    "BN-C07-howa",
-    "BN-C07-jaowa",
-    "BN-C07-asha",
-    "BN-C07-khaowa",
-    "BN-C07-dekha",
-    "BN-C07-jana"
+    "BN-C05-bola",
+    "BN-C05-ami-bangla-boli",
+    "BN-C05-kaj-kora",
+    "BN-C05-thaka",
+    "BN-C05-practice"
   ],
-  "voiceLessons": 6,
-  "drivablePrefix": 6,
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
   "text": "bengali/narration/ch11.txt",
   "json": "bengali/narration/ch11.json",
-  "textHash": "fnv1a64:c9e60187387881ac",
-  "jsonHash": "fnv1a64:24cf47601a556fec",
+  "textHash": "fnv1a64:e36f5ab737cc8f6a",
+  "jsonHash": "fnv1a64:b35f83ddb411fbe2",
   "findings": []
 }

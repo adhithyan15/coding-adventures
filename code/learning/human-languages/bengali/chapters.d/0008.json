@@ -1,27 +1,22 @@
 {
   "chapter": 8,
-  "title": "The Breath That Is a Letter",
+  "title": "The Breath Is a Letter",
   "label": "ch:bn-breath-is-a-letter",
-  "canDo": "I can write eight Bengali consonants as cells of one grid — lips, teeth, roof and throat, each with the voice and the breath switched on or off — and read আবার and ভালো with them.",
+  "canDo": "I can write five Bengali consonants as cells of one grid — lips and throat, each with the voice and the breath switched on or off — read আবার and ভালো with them, and close the throat row with গ so that লাগলো becomes readable.",
   "spineNodes": [
     "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-W04-ja",
-    "kind": "production",
-    "summary": "The eighth consonant closes a grid rather than lengthening a list: the chapter's whole set written back from the four places of articulation, with the two words it made readable.",
+    "lesson": "BN-W03-ga",
+    "kind": "reading",
+    "summary": "The throat row is closed — ক, খ, গ in one place with two switches — and লাগলো, waiting since the introductions chapter, becomes readable in the same breath.",
     "assesses": [
-      "BN-SCRIPT-AA-MATRA-01",
-      "BN-SCRIPT-ABAR-READ-01",
-      "BN-SCRIPT-BA-01",
-      "BN-SCRIPT-BHA-01",
-      "BN-SCRIPT-BHALO-READ-01",
-      "BN-SCRIPT-CHA-01",
-      "BN-SCRIPT-DA-01",
-      "BN-SCRIPT-DHA-01",
-      "BN-SCRIPT-JA-01",
+      "BN-SCRIPT-GA-01",
+      "BN-SCRIPT-KA-01",
       "BN-SCRIPT-KHA-01",
-      "BN-SCRIPT-PA-01"
+      "BN-SCRIPT-LA-01",
+      "BN-SCRIPT-BHALO-READ-01",
+      "BN-SCRIPT-ABAR-READ-01"
     ]
   }
 }

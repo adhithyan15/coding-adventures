@@ -1,5 +1,104 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.96 — 2026-09-01 — fix: `table.init`/`table.copy` folded-form optional-index abbreviations
+
+W36 ("slice 0" — `code/specs/W36-wasm-element-segment-exprs-list.md`'s own
+"Correction to Addendum 2" section, landed first for leverage reasons and
+deliberately kept independent of that spec's own exprs-list subject,
+slices 1-3, which remain unimplemented).
+
+`code/specs/W07-wasm-post-mvp-epics.md`'s Addendum 2 named the element
+segment "exprs-list" text/binary form as the cause of ~2130 of the 4048
+`not_yet_supported` (NYS) conformance directives left after W35, based on
+`table_copy.wast`/`table_copy64.wast`/`table_init.wast`/`table_init64.wast`
+losing that many NYS entries. Direct re-probe (`wasm_conformance::
+run_wast_source` on the current corpus, reading each `NotYetSupported`
+message and slicing the exact source substring at its reported byte
+position) found that diagnosis wrong: every one of those files' NYS
+entries traced to the SAME small, unrelated bug in this crate's folded-
+instruction encoder, nothing to do with element-segment content at all.
+
+**Root cause**: `encode_table_init_flat`/`encode_table_copy_flat`
+unconditionally treated their first one or two S-expression arguments as
+table/elem INDEX atoms, with no arity detection for the real WASM spec's
+own optional-leading-index text-format abbreviations:
+
+```text
+'table.init' x:tableidx_I y:elemidx_I  ⟹  table.init x y
+'table.init' y:elemidx_I               ≡  table.init 0 y      (table index optional)
+
+'table.copy' x₁:tableidx_I x₂:tableidx_I  ⟹  table.copy x₁ x₂
+'table.copy'                              ≡  table.copy 0 0   (both indices optional)
+```
+
+`table_copy.wast`'s/`table_copy64.wast`'s dominant fixture shape writes
+`table.copy` with ZERO leading index atoms (`(table.copy (local.get
+$targetOffs) (local.get $srcOffs) (local.get $len))`, both tables
+defaulting to 0) — `args[0]` is actually the first STACK OPERAND, an
+`SExpr::List`, and the old code fed it straight to `resolve_idx` against
+`table_names`, producing `"expected an index or $identifier, found
+list"`. `table_init.wast`'s/`table_init64.wast`'s/`bulk.wast`'s dominant
+shape writes `table.init` with exactly ONE leading atom (`(table.init 1
+(i32.const 12) ...)`, the elem index alone, table implicit 0) — the old
+code wrongly resolved that atom against `table_names` instead of
+`elem_names`, producing either `unknown table identifier` (for a name
+like `bulk.wast`'s `$p`, which only exists in `elem_names`) or the same
+"found list" error once past the first bad resolution.
+
+**Fix**: both folded-form encoders now detect arity before resolving —
+`encode_table_init_flat` checks whether TWO leading atoms are present
+(`args[0]` and `args[1]` both atoms) before treating them as `table_idx`/
+`elem_idx`; otherwise the sole leading atom is the elem index alone, table
+implicit 0 (a `table.init` folded form can never omit the elem index
+entirely, so this is a strict "1 or 2" check, never "0"). `encode_table_
+copy_flat` checks whether `args[0]` is an atom at all; if not, both tables
+default to 0 and zero atoms are consumed (this form's only other shape is
+"both present," never "exactly one"). Every real stack operand is written
+as a parenthesized folded instruction (even a zero-operand one, e.g.
+`(nop)`), so a bare atom can never be misread as an operand or vice versa
+— the arity check is unambiguous and can't be tricked into skipping a
+real index's own `resolve_idx` existence/lookup check. Also corrected a
+stale doc comment (on the OTHER, non-folded "flat/stream" `table.init`/
+`table.copy` handling, and on `encode_flat_instr`'s own dispatcher
+comment) that cited a superseded W17 census claiming the folded syntax
+always supplies both optional index atoms — it does not, for exactly the
+modules this fix targets.
+
+**Confirmed corpus impact** (`cargo run --release --bin
+wasm_conformance_report -p wasm-conformance -- --write-baseline`, diffed
+programmatically against the pre-fix baseline across all 257 corpus
+files; see the `wasm-conformance` CHANGELOG for the full per-file
+breakdown): `bulk.wast` (42/42 NYS → Pass), `table_copy.wast`/
+`table_copy64.wast` (566/566 NYS each → Pass, zero new failures),
+`table_init.wast`/`table_init64.wast` (497/499 NYS attributable to this
+bug each → 496 Pass + 1 genuinely new real `Fail` each, a pre-existing
+`wasm-runtime` gap this fix newly exposed — see below), and `elem.wast`
+(4 previously-NYS `"unknown table identifier \"$e\""` directives — 2
+modules now build, but their own follow-on `assert_trap` directives
+newly FAIL, the same pre-existing gap). Total: ~1671 directives moved off
+NYS, ~1667 to a real `Pass`, 4 to a genuinely new, honestly-reported
+`Fail`. No file outside this expected set changed.
+
+**New real failures uncovered, NOT fixed here (out of this fix's own
+scope, a `wasm-wast-parser`-only change)**: `table_init.wast`/
+`table_init64.wast`/`elem.wast`'s "implicitly dropped elements" test
+blocks now parse and run for the first time, and expose that `wasm-
+runtime`'s `instantiate()` never marks an ACTIVE (or `declare`d) element
+segment as dropped after it's applied/validated — so a subsequent
+`table.init` reading from that segment wrongly succeeds instead of
+trapping `"out of bounds table access"`, per the real spec's own
+"active/declarative segments are implicitly dropped" rule. This is a
+`wasm-runtime` bug, unrelated to text-format parsing, tracked separately
+rather than fixed as part of this slice.
+
+Four new unit tests added directly exercising the arity-detection branch
+(`table.copy` with zero leading indices, `table.copy` with the existing
+two-index form as a regression guard, `table.init` with one leading atom,
+`table.init` with the existing two-atom form as a regression guard).
+`cargo test -p wasm-wast-parser -p wasm-conformance -p wasm-execution -p
+wasm-runtime` (`git stash` A/B): zero regressions in any pre-existing
+test. `cargo clippy` clean on all four crates.
+
 ## 0.1.95 — 2026-09-01 — fix: active element segments may use the exprs-list form
 
 Gap 1 of a two-gap `elem.wast`/`table.wast` investigation pass (`code/

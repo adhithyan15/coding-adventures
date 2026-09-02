@@ -3,7 +3,7 @@
     "id": "BN-C04-abar",
     "language": "bengali",
     "chapter": 7,
-    "sequence": 430,
+    "sequence": 460,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:436ceb00540e0dcb",
+    "sourceHash": "fnv1a64:0eb8a80ffabb5096",
     "detachableSegments": [
       "The letters in this word"
     ]
