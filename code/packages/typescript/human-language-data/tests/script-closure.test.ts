@@ -216,7 +216,18 @@ describe("the real corpus", () => {
     const paceViolations = measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations;
     expect(paceViolations).toBeGreaterThan(0);
     expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
-    // And a CEILING on the absolute debt, so it may fall and never grow.
+    // A CEILING on the absolute debt, so it may fall and never grow.
+    //
+    // **Do not tighten this number when your PR pays debt down.** A ceiling is
+    // satisfied by any smaller value, so lowering it buys nothing and costs a
+    // conflict with every sibling doing the same. Two branches independently
+    // ratcheting this line is the most common DIRTY in this corpus — one Tamil
+    // branch went DIRTY three times in a session, twice on exactly this and the
+    // handwritten counter, and arithmetic on either side would have been wrong
+    // each time because the tree had moved again underneath.
+    //
+    // Raise it only if debt genuinely grows, and write down why. Tighten it only
+    // deliberately, alone, when nothing else is in flight.
     // 498 as of the Marathi runway; 397 once Kannada's letter ladder was reseated
     // to run from chapter 1 rather than chapter 6, taking that track 30 -> 10.
     // Whoever raises it writes down why.
