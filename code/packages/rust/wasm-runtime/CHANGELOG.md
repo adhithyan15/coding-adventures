@@ -2,6 +2,91 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.31] — 2026-09-02 (fix: table imports now reject an element-type mismatch against the actual exported table, closing the exact gap 0.6.30 honestly flagged)
+
+Fixes the real bug 0.6.30's own entry below diagnosed and explicitly left
+open ("NOT fixed in this release ... implementing real runtime table-type
+tracking needs a `HostInterface::resolve_table` signature change, well
+beyond 'table declaration parsing' -- flagged as a follow-up item
+instead"). Surfaced by PR #14072 (`code/specs/
+W37-wasm-gc-reftype-tables.md`, table-DECLARATION GC-reftype acceptance):
+`linking.wast`'s own `$Mtable_ex`-exported `t-funcnull`/`t-refnull`/
+`t-extern` tables made a real, corpus-reachable table-import type
+mismatch constructible for the first time (before W37, every table in the
+corpus was funcref or externref, so a family mismatch was essentially
+unreachable via this crate's own import syntax).
+
+**Root cause, confirmed live** with a throwaway `run_wast_source` probe
+against `linking.wast` (printing every distinct `Fail` message with its
+directive index, then cross-referencing byte positions via `wasm_wast_
+parser::sexpr::parse_source`): exactly 2 `assert_unlinkable` directives
+(source lines 459-462 and 463-465) failed with `"module linked
+successfully; expected unlinkable"` --
+```text
+(assert_unlinkable
+  (module (table (import "Mtable_ex" "t-funcnull") 1 externref))
+  "incompatible import type")
+(assert_unlinkable
+  (module (table (import "Mtable_ex" "t-refnull") 1 externref))
+  "incompatible import type")
+```
+Both import a real, funcref-family table (`t-funcnull` is generic `(ref
+null func)`; `t-refnull` is concrete `(ref null $t)`, both stored with the
+`wasm_types::FUNCREF` placeholder byte per `code/specs/
+W37-wasm-gc-reftype-tables.md`'s own convention) as a declared `externref`
+table -- a genuine cross-family mismatch. `instantiate()`'s
+`ImportTypeInfo::Table` arm checked `is64` and `Limits` compatibility but
+never the element-type tag at all (a standing, self-documented gap --
+see 0.6.30's entry below, and this arm's own former doc comment). The
+OTHER 4 `assert_unlinkable` cases in the same cluster (lines 441-448,
+450-457) already "passed," but only by accident: `wasm-wast-parser`'s
+table-IMPORT site (`build_import_shell`'s `"table"` arm) only ever parses
+a bare `funcref`/`externref` atom for an imported table's declared
+reftype (no concrete/GC-typed table IMPORT syntax exists at all -- a
+separate, deliberate, already-documented W37 scope boundary) -- so
+`(table (import ...) 1 (ref null func))`/`(ref null $t)` fails to even
+PARSE, and `grade_assert_unlinkable` treats a build failure the same as a
+genuine link failure. Confirmed this is unrelated to the real fix below:
+those 4 cases' own pass/fail counts are untouched by this release.
+
+**Fix**: `wasm-execution` 0.9.94 gives `Table` a real, tracked
+`element_type` field (see that crate's own CHANGELOG) -- NOT a
+`HostInterface::resolve_table` signature change after all; since `Table`
+itself now carries its own declared element type, the existing `Option<
+Table>` return value already transports it across the host boundary for
+free. `instantiate()`'s table-import arm now compares `imported_table.
+element_type()` (the REAL exporting table's tag) against `table_type.
+element_type` (this module's own declared import type) and rejects a
+mismatch with the same `"incompatible import type"` link error every
+other import kind here already uses.
+
+**Why a plain byte-equality check is the spec-correct rule, not merely
+the simplest one**: unlike a function import (where the function-
+references proposal lets a nominal SUBTYPE satisfy the declared type),
+table types are matched INVARIANTLY on element type -- a table supports
+`table.set` as well as `table.get`, so a covariant or contravariant
+element type would let code typed against the DECLARED import type write
+a value the REAL underlying table cannot actually hold. It is also the
+only check this call site can ever need in practice: `table_type.
+element_type` here is always exactly `wasm_types::FUNCREF` or `wasm_
+types::EXTERNREF` (the import site's own two-atom-only restriction, noted
+above), never a value a subtype relation could apply to.
+
+**Verification**: regenerated `wasm-conformance`'s baseline and diffed
+programmatically (Python, `files` dict keyed by filename) against the
+pre-fix baseline across all 257 files -- exactly ONE file changed:
+`linking.wast`'s `assert_unlinkable` tally moved from `48 pass / 2 fail`
+to `50 pass / 0 fail`; every other file, including every other table-
+importing fixture in the corpus, is byte-for-byte unchanged. Four new
+regression tests added directly against `instantiate()` (mirroring the
+existing `is64`-mismatch test shapes): a declared-`externref`/actual-
+funcref mismatch (the exact `linking.wast` shape) and its mirror image
+both now correctly fail to link; a genuinely compatible externref import
+still succeeds (this fix must not start rejecting a VALID import). `cargo
+test -p wasm-runtime -p wasm-execution -p wasm-validator -p wasm-
+conformance -p wasm-wast-parser` A/B'd via `git stash` -- zero regressions
+in any pre-existing test.
+
 ## [0.6.30] — 2026-09-02 (mechanical: `call()`'s legacy arg-conversion match covers the two new W37 `ValueType` variants; a real, pre-existing, self-documented gap newly exercised and flagged, not fixed)
 
 Mechanical exhaustiveness update: `wasm-types` 0.1.25 adds `ValueType::
