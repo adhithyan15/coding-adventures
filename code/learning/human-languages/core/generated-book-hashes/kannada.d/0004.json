@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 4,
-  "sourceHash": "fnv1a64:71f029f448ab8346",
+  "sourceHash": "fnv1a64:5b52077244f300b8",
   "lessonIds": [
     "KA-C04-hoogu",
     "KA-S04-vowel-sign-i",
@@ -12,11 +12,5 @@
     "KA-S110-letter-ba",
     "KA-C04-practice"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
-  "text": "kannada/narration/ch04.txt",
-  "json": "kannada/narration/ch04.json",
-  "textHash": "fnv1a64:fb1bab3e8e8364b2",
-  "jsonHash": "fnv1a64:3d66814a812346e1",
-  "findings": []
+  "tex": "kannada/book/chapters/ch04-farewells.tex"
 }

@@ -1,0 +1,11 @@
+{
+  "id": "KA-EXT-003-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can read the chapter's five words straight off the page and say which are borrowed and which are native.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C01-practice"
+  ]
+}

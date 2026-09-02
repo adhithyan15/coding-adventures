@@ -8,9 +8,12 @@
   ],
   "payoff": {
     "lesson": "KA-C02-practice",
-    "kind": "task",
-    "summary": "Complete KA-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Kannada, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "dialogue",
+    "summary": "Run the whole introduction: give your name, ask for theirs, and close with santōṣa — then name the one Sanskrit word in it.",
+    "assesses": [
+      "KA-LEX-C02-NANNA-HESARU-01",
+      "KA-LEX-C02-NIMMA-HESARU-ENU-01",
+      "KA-LEX-C02-SANTOSHA-01"
+    ]
   }
 }

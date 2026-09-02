@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a7fb9e659bcdd175",
+  "sourceHash": "fnv1a64:a60c919edf747232",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05881d6a5a937214",
+      "sourceHash": "fnv1a64:7ae29941308a6772",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -76,12 +76,30 @@
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "cognates",
+          "title": "Across the family — the same idea, five ways",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Name\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Kannada. \"Name\": ಹೆಸರು hesaru. Source: Dravidian pesar (p becomes h).",
+                "Language: Tamil. \"Name\": peyar. Source: the same Dravidian root (kept p).",
+                "Language: Telugu. \"Name\": pēru. Source: the same Dravidian root.",
+                "Language: Malayalam. \"Name\": pēr. Source: the same Dravidian root.",
+                "Language: Hindi. \"Name\": nām. Source: Sanskrit (Indo-European).",
+                "Language: English. \"Name\": name. Source: Indo-European."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "ಹ (ha) + ೆ (the e-sign) becomes ಹೆ (he); ಸ (sa); ರು (ru). Read ಹೆ, ಸ, ರು becomes hesaru."
+              "text": "The p becomes h shift is why hesaru looks unlike its sisters — but it is the same word."
             }
           ]
         },
@@ -157,7 +175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:63758b2ac00bd6df",
+      "sourceHash": "fnv1a64:e779c39769e4027e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -204,23 +222,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನನ್ನ (nanna) means \"my.\" It belongs to Kannada's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for \"I\" in its own lesson; today you only need nanna."
+              "text": "ನನ್ನ (nanna) means \"my.\" It belongs to Kannada's native Dravidian first-person family, not to the Indo-European family behind English I/my. The stem underneath is Dravidian nān — the same one behind Tamil nāṉ / eṉ. You will meet the related word for \"I\" in its own lesson; today you only need nanna."
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ನ (na) + the conjunct ನ್ನ (nna) becomes nanna — a doubled, held nn."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -251,7 +258,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -282,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91bb2a1f860f9daf",
+      "sourceHash": "fnv1a64:16d12441945326ef",
       "notice": null,
       "blocks": [
         {
@@ -304,8 +311,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know: The phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -395,7 +402,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0e177e57b6af6045",
+      "sourceHash": "fnv1a64:cd7bab74a793d065",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -459,17 +466,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ನೀ (n=i) + ನು (nu) becomes n=i nu; ನೀ + ವು (vu) becomes n=i vu."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -491,7 +487,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -522,7 +518,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f26612a654b8b21e",
+      "sourceHash": "fnv1a64:1efabba512322276",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -575,17 +571,6 @@
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಏ (independent long ē, word-initial) + ನು (nu) becomes ēnu."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -616,7 +601,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -647,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b0c522cfa3c7c9f",
+      "sourceHash": "fnv1a64:f3872c42c1c4afab",
       "notice": null,
       "blocks": [
         {
@@ -669,8 +654,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know: The phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -911,7 +896,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bc5630bf887c4d9",
+      "sourceHash": "fnv1a64:9e77940ad2c9ab92",
       "notice": null,
       "blocks": [
         {
@@ -933,8 +918,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase",
+          "type": "input",
+          "title": "You'll want to know: The phrase",
           "segments": [
             {
               "kind": "speech",
@@ -1185,7 +1170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9bef401e1b671ae",
+      "sourceHash": "fnv1a64:3a25956ed66f7eba",
       "notice": null,
       "blocks": [
         {
@@ -1207,8 +1192,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The dialogue",
+          "type": "input",
+          "title": "You'll want to know: The dialogue",
           "segments": [
             {
               "kind": "table",
