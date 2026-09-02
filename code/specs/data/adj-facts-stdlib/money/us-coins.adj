@@ -65,4 +65,10 @@ table coin_cents {
     source "The denominations you'll see the most are the penny, nickel, dime, and quarter. The Mint makes half dollars and dollars for collecting, but you can still spend them."
     locator "https://kids.usmint.gov/about-the-mint"
     trust authoritative
+    cites "The one-cent coin ceased circulating in 2025 after 232 years of production." locator "https://kids.usmint.gov/about-the-mint/penny"
+    cites "The nickel is the United States' five-cent coin." locator "https://kids.usmint.gov/about-the-mint/nickel"
+    cites "The dime is the United States' 10-cent coin." locator "https://kids.usmint.gov/about-the-mint/dime"
+    cites "In 1804, the Mint marked the quarter with \"25c,\" meaning 25 cents." locator "https://kids.usmint.gov/about-the-mint/quarter"
+    cites "The half dollar is the United States' 50-cent coin." locator "https://kids.usmint.gov/about-the-mint/half-dollar"
+    cites "The dollar is the United States' 100-cent coin. It takes 100 pennies to equal a dollar!" locator "https://kids.usmint.gov/about-the-mint/dollar"
 }
