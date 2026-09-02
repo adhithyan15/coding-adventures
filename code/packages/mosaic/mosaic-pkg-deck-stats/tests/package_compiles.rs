@@ -121,7 +121,7 @@ fn deck_stats_layout_binds_all_stat_slots() {
         ("deck-stat-hidden", "hidden-label", "hidden-value"),
     ] {
         assert!(
-            source.contains(&format!("Box [ {part} ]")),
+            source.contains(&format!("Column [ {part} ]")),
             "DeckStatsPanel.mll must expose {part}"
         );
         assert!(
@@ -168,8 +168,10 @@ fn deck_stats_package_emitters_all_accept_deck_selector_controls() {
     let html = fs::read_to_string(tmp.path().join("html").join("DeckStatsPanel.html"))
         .expect("DeckStatsPanel HTML artifact should be readable");
     assert!(html.contains("data-mosaic-component=\"DeckStatsPanel\""));
-    assert!(html.contains("#2563eb"));
-    assert!(html.contains("#0f766e"));
+    // One surface for every count, with meaning carried by the value: amber
+    // for due (the number that asks you to do something), neutral otherwise.
+    assert!(html.contains("#1e293b"), "shared chip surface");
+    assert!(html.contains("#fbbf24"), "amber marks the due count");
 }
 
 #[test]

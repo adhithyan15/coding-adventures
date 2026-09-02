@@ -5,7 +5,7 @@ layout ReviewCard {
     Text [ deck-name ] (
       content : slot: deck-name
     )
-    Box [ prompt-panel ] {
+    Column [ prompt-panel ] {
       Text [ prompt-label ] (
         content : slot: prompt-label
       )
@@ -14,7 +14,7 @@ layout ReviewCard {
       )
     }
     If ( when: slot: type-answer-active ) {
-      Box [ type-answer-panel ] {
+      Column [ type-answer-panel ] {
         Text [ type-answer-label ] (
           content : slot: type-answer-label
         )
@@ -34,7 +34,7 @@ layout ReviewCard {
       }
     }
     If ( when: slot: answer-visible ) {
-      Box [ answer-panel ] {
+      Column [ answer-panel ] {
         Text [ answer-label ] (
           content : slot: answer-label
         )
