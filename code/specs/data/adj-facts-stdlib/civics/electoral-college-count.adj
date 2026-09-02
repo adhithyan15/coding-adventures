@@ -38,7 +38,7 @@
 %
 %     quantity (this table's atom)     count   quote (verbatim)
 %     -------------------------------  -----   -------------------------------------------------------
-%     total_electors                     538   "Including Washington, D.C.'s three electors, there are
+%     total_electors                     538   "Including Washington, D.C.’s three electors, there are
 %     district_of_columbia_electors        3      currently 538 electors in all." (one sentence states
 %                                                 both numbers)
 %     electors_needed_to_win             270   "A candidate needs the vote of at least 270 electors—
@@ -51,7 +51,11 @@
 % file (not just an AI-summarized WebFetch); the URL was reachability-
 % checked from this machine before any scoping work, and the em dashes in
 % the 270 sentence were confirmed to be U+2014 rather than hyphens so the
-% quote is byte-faithful. `trust authoritative` — USA.gov is the U.S.
+% quote is byte-faithful. THAT CHECK WAS SCOPED TO THE EM DASHES AND MISSED
+% THE APOSTROPHE TWO ROWS ABOVE IT, which shipped as ASCII where the page
+% renders U+2019 and was repaired under #14070. A byte-for-byte read that
+% only looks for the character you suspect is not a byte-for-byte read.
+% `trust authoritative` — USA.gov is the U.S.
 % General Services Administration's official guide to government
 % information, a first-party .gov publisher of exactly the fact being
 % recalled, the same tier the eight sibling civics libraries cite.

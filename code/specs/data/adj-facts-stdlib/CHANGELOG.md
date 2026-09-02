@@ -19,8 +19,10 @@ landed and why, not a semver-tracked API.
   as "not glyph issues" when they plainly were (the page opens a quoted word with U+2018, not
   U+2019).
 
-  Two of the four carried the same flattened string in their **header**, fixed in the same edit —
-  installment 1 shipped four header/data desyncs and the security review caught them.
+  **All four carried the same flattened string in their header; all four headers are fixed here.**
+  The first pass fixed only two — the security review caught the other two, whose headers wrap the
+  quote across two lines, which the screen could not see. Installment 1 shipped four header/data
+  desyncs and the security review caught those too; this is the second time.
 
   A PRE-EXISTING PIN IN `electoral-college-count` FAILED, CORRECTLY. It asserted the whole citation,
   anchored on the JSON key and closed on the terminating quote, and its own comment cites #13916 and
@@ -32,13 +34,22 @@ landed and why, not a semver-tracked API.
   Four restore-the-flattened-form mutations pass — each differs from the repaired value by **one
   character**, so a pin that survived would not be checking the glyph at all.
 
-  **The screen had a blind spot, found while shipping this: it scans `source`/`cites` lines and
-  never looked at header quotes.** `lunar-eclipse-type`'s header claims three verbatim quotes and
-  this installment initially repaired only the one that was also a `source`. Screening all 66
-  apostrophe-bearing header quotes against their own pages found **23 flattened**; the one in this
-  file is fixed here and the other 22 are filed as #14111. The same sentence repaired here in
-  `map-type-classification` still sits flattened in sibling `map-type`'s header — header text
-  propagates into derived libraries' shipped data, so this is a defect waiting to happen.
+  **The screen had two blind spots, both found while shipping this.** It scanned `source`/`cites`
+  lines and never looked at header quotes at all — `lunar-eclipse-type`'s header claims three
+  verbatim quotes and the first pass repaired only the one that was also a `source`. A header screen
+  written to close that gap then reported two of this PR's own files clean, because both wrap their
+  quote across two `%` lines and it only recognised a complete `"..."` span on a single line. The
+  security review caught both. A second, cell-based screen finds the wrapped ones; **neither screen
+  is a superset of the other**, so the union — 31 sites across 19 files — is the work list, filed as
+  #14111. Five header lines are repaired in this PR (the four matching a shipped `source`, plus
+  lunar-eclipse-type’s third verbatim quote); the union above is measured after those. The same sentence repaired here in `map-type-classification`
+  still sits flattened in sibling `map-type`'s header: header text propagates into derived libraries'
+  shipped data, so this is a defect waiting to happen.
+
+  `electoral-college-count`'s header claimed the page had been "read byte-for-byte", with the em
+  dashes specifically confirmed as U+2014 "so the quote is byte-faithful" — while an ASCII
+  apostrophe sat two rows above in the same table. **A byte-for-byte read that only looks for the
+  character you already suspect is not a byte-for-byte read.** That note is now scoped honestly.
 
   **The NASA page is mixed, and a blanket curl would have broken a correct quote.** It renders the
   total and penumbral sentences with U+2019 and the partial one with an ASCII apostrophe. Curling

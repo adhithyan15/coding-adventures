@@ -10,7 +10,7 @@
 % topographic maps as a KIND of map -- a fact the type/description schema had
 % no room for:
 %
-%     "Topographic maps are reference maps that show the shape of Earth's
+%     "Topographic maps are reference maps that show the shape of Earth’s
 %      surface."
 %
 % New `map_type_classification(type, classification)` table decodes that
