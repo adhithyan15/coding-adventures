@@ -255,6 +255,38 @@ case "$BACKEND" in
     echo ""
     echo "Built: $BIN"
     ;;
+  xaml)
+    # WinUI 3, targeting net9.0-windows10.0.19041.0. The XAML markup compiler is
+    # a Windows-native tool, so this step only runs on Windows -- `dotnet build`
+    # elsewhere gets through restore and the C# project system and then stops:
+    #
+    #     error: XamlCompiler output file "…/output.json" was not created.
+    #
+    # Refusing here with that explanation is better than letting the build fail
+    # a minute later inside a NuGet targets file.
+    if [[ "$(uname -s)" != MINGW* && "$(uname -s)" != MSYS* && "$(uname -s)" != CYGWIN* ]]; then
+      echo "error: the XAML backend builds on Windows only." >&2
+      echo "       WinUI's markup compiler is a Windows-native tool; \`dotnet\`" >&2
+      echo "       restores and type-checks elsewhere but cannot compile the XAML." >&2
+      echo "       The project is emitted at $APP with the engine in place." >&2
+      exit 3
+    fi
+
+    ( cd "$APP" && dotnet publish -c Release -r win-x64 --self-contained false -o "$APP/publish" )
+
+    # .NET probes beside the executable, so the engine goes into the publish
+    # output rather than the project directory.
+    if [[ ! -f "$APP/publish/$LIB_NAME" ]]; then
+      cp "$LIB_PATH" "$APP/publish/$LIB_NAME"
+    fi
+    if [[ ! -f "$APP/publish/$LIB_NAME" ]]; then
+      echo "error: engine not placed beside the executable in $APP/publish" >&2
+      exit 1
+    fi
+    echo "  engine placed at $APP/publish/$LIB_NAME"
+    echo ""
+    echo "Built: $APP/publish"
+    ;;
   *)
     echo "error: the $BACKEND compile step is not wired yet." >&2
     echo "       The project is emitted at $APP with the engine in place;" >&2
