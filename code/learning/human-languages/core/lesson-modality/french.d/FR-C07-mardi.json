@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C07-mardi",
+    "language": "french",
+    "chapter": 7,
+    "sequence": 216,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf58f3d7e16c351e"
+  },
+  "findings": []
+}

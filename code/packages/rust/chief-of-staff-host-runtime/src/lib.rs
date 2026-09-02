@@ -1428,7 +1428,7 @@ while (true) {
         std::fs::write(path.join("manifest.json"), b"{}").unwrap();
         std::fs::write(
             path.join("SKILL.md"),
-            b"# Weather\n\nReport forecasts.\n\n## Capabilities needed\n- none\n",
+            b"# Weather\n\nReport forecasts.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n",
         )
         .unwrap();
         let (public_key, secret_key) = generate_keypair(&[29; 32]);

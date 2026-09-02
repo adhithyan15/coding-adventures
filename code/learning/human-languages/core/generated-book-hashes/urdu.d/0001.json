@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:953f34ae3cff281a",
+  "lessonIds": [
+    "UR-C01-salam",
+    "UR-W01-shukriya-first-three",
+    "UR-C01-shukriya",
+    "UR-C01-ji-han",
+    "UR-W01-sin",
+    "UR-C01-nahin"
+  ],
+  "tex": "urdu/book/chapters/ch01-greetings-and-responses.tex"
+}

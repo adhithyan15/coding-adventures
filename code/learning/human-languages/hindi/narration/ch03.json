@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f7508e60c99f965e",
+  "sourceHash": "fnv1a64:9d600227cc52c0d1",
   "lessons": [
     {
       "id": "HI-C03-kaise",
@@ -594,7 +594,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a7340138d459d6e1",
+      "sourceHash": "fnv1a64:3dc477fdaba1a64f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -671,7 +671,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long =i) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian sound."
+              "text": "ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long ī) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian sound."
             }
           ]
         },

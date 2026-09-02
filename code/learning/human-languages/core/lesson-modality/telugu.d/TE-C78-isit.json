@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C78-isit",
+    "language": "telugu",
+    "chapter": 78,
+    "sequence": 2730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b40fb8c0bf304eb6"
+  },
+  "findings": []
+}

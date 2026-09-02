@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C25-helfen",
     "language": "german",
-    "chapter": 25,
+    "chapter": 27,
     "sequence": 770,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:89ff729ea29b01ab"
+    "sourceHash": "fnv1a64:b3843331b249b2ad"
   },
   "findings": []
 }

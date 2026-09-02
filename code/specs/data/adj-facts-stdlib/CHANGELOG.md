@@ -5,6 +5,217 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#14070 installment 2: `chemistry/mixture-types` — a joined five-clause `source` becomes one
+  `source` plus four `cites`.** Interior-ellipsis count over shipped values falls 5 → 4.
+
+  **The old value was a documented workaround, not carelessness.** The header said so outright:
+  *"An ADJ `table` carries ONE provenance envelope, so the `source` below holds the five verbatim
+  example sentences (joined with ' … ')."* That was accurate when written. `cites` now carries
+  per-row corroborations on the same envelope, so the join is unnecessary — and a joined value is a
+  span no page displays, which is what made it a #14070 defect. See #14099: **82 library headers
+  still carry that obsolete rationale**, and it produces both this issue's constructed spans and
+  #13934's evidence-left-in-comments.
+
+  Every row now has **its own** verbatim span naming both its type and its example — strictly better
+  than the joined value, which covered all five in one string. My first attempt at this library
+  (withdrawn in installment 1) replaced the join with a single block grounding **none** of the rows;
+  a per-row coverage check now guards that, and aggregate coverage would not have caught it.
+
+  ON `suspension`. The page's **first** block mentioning salad dressing calls it a *"liquid
+  mixture"* and never says "suspension"; the sentence that does is four blocks later. Encoding the
+  first match would have grounded `suspension → salad_dressing` on a sentence naming only its
+  category — the error that removed `tooth-types` from an earlier batch. **Reading every occurrence
+  rather than the first match is what separated them**, and a mutation now swaps the correct
+  sentence for that decoy: it is real verbatim page text, and the pin must still reject it.
+
+  THE PRE-EXISTING PIN IS REPOINTED, NOT DELETED. It asserted the whole joined value, anchored on the
+  JSON key and closed on the terminating quote — correct methodology, and it caught the withdrawn
+  repair. What it was faithfully defending was a constructed span. The test comment now records that,
+  because "an anchored pin defends whatever it is pointed at" is the part worth keeping.
+
+  The header is corrected in two places: the obsolete joined-source rationale, and the truth-table cue
+  column, whose quotes elided mid-sentence (*"The salt water ... is homogeneous"*) — the same
+  constructed-span shape as the data defect, sitting in a comment. Leaving it would repeat the
+  header/data desync caught in installment 1.
+
+  Four mutations pass: restoring the join reddens the envelope; truncating `suspension`'s cite reddens
+  its own pin (it sits at corroboration index 2, so a prefix pin would have missed it); a pure reorder
+  of two earlier cites reddens the whole-list pin; and the decoy swap reddens too.
+
+  *Harness note:* the first mutation run reported M2 and M4 GREEN. A plain `text.replace(…, 1)` hit
+  the sentence's **first** occurrence — in the header's provenance block — so the mutation edited a
+  comment and never touched the data. That is the identical failure the batch-4 harness had, which is
+  why a line-targeted helper exists; I reached for a plain replace anyway. The lesson only holds if
+  the tool encoding it actually gets used.
+
+  533 test binaries / 1618 tests green, clippy `-D warnings` clean; the `.query.adj` parses, runs and
+  abstains correctly.
+
+- **#14070 installment 1: four shipped `source` values repaired — citations that did not appear on
+  their own pages.** This is a different defect class from #13934: those are gaps between what a
+  header documented and what the data carried; these are **citations the engine returns to callers**
+  which are not verbatim spans.
+
+  | library | defect |
+  |---|---|
+  | `geometry/quadrilateral-secondary-property:62` | dropped subject (**propagated**) |
+  | `chemistry/subatomic-particles:79` | two-halves elision |
+  | `astronomy/space-rock-alt-name:56` | elision **+** flattened curly quotes |
+  | `astronomy/space-rock-stage:57` | flattened apostrophe (one character) |
+
+  **Two of the four carry no ellipsis and were invisible to the screen that found the rest.** Both
+  were found by accident. `quadrilateral-secondary-property` inherited `quadrilateral-types`' header
+  quote, which dropped its subject — correcting that header in batch 5a did nothing for this derived
+  copy. `space-rock-stage` surfaced while checking a suspected propagation that did not exist (the
+  two space-rock libraries quote different sentences); its apostrophe is ASCII where the page renders
+  U+2019, so the citation did not appear on its own page. That is the concrete basis for treating
+  #14070's list as a **floor** rather than an inventory.
+
+  The two space-rock libraries ship together deliberately — same page, same fetch, same class.
+  Splitting them would repeat the `rectangle` mistake in miniature: fix one location, leave an
+  equivalent one nearby, and "later" does not come.
+
+  *** `chemistry/mixture-types` WAS IN THIS INSTALLMENT AND WAS TAKEN OUT, BECAUSE MY REPAIR WAS
+  WRONG. *** Its damaged value joins five clauses with four ellipses, and **each elided clause
+  grounds a different row** (`colloid → milk`, `suspension → salad_dressing`,
+  `heterogeneous → vegetable_soup`…). I replaced it with a verbatim 230-character block that grounds
+  **none** of them — fixing the ellipsis while destroying the evidence. The page states each fact in
+  its own block, so the correct remedy is per-row `cites` (the `engineering-design-step` pattern),
+  which makes it the same shape as `mitosis-phase-order` and not a mechanical repair at all.
+
+  **A pre-existing anchored pin caught it**, and that pin deserves note: it was a correct,
+  whole-value, JSON-key-anchored assertion — exactly the discipline applied throughout this effort —
+  and what it was faithfully protecting was a **constructed span**. An anchored pin defends whatever
+  it is pointed at, including a defect. It did its job by refusing my change; the change was the
+  problem.
+
+  A `coverage_delta` check now runs over every repair, comparing how many row values the old and new
+  values each ground. A repair may improve coverage or leave it unchanged; it must never reduce it.
+  All four shipped here hold steady (2→2, 3→3, 2→2, 2→2).
+
+  Every repaired value gets its own pin — `muscle-body-aspect`'s three tests passed *identically*
+  before and after its repair last batch, because its assertions are bare `contains(…)` scans. Four
+  restore-the-defect mutations pass, including the `space-rock-stage` case where damaged and repaired
+  differ by **one character**.
+
+  The propagation screen also needed a fix: its bare-pronoun needles matched by substring, but those
+  repairs *prepended* a subject-naming sentence, so the damaged form is a suffix of the repaired one
+  and the screen flagged correct values forever. Needles now carry a match mode. All ten known header
+  defects now read `contained`. The interior-ellipsis count over 563 shipped values falls **7 → 5**
+  for this change (8 originally; `muscle-body-aspect` was fixed in batch 5e). I first wrote "8 → 4",
+  which was measured while the withdrawn `mixture-types` repair was still applied — re-running the
+  screen after reverting it corrected both numbers. `space-rock-stage`'s defect carries no ellipsis,
+  so it never appeared in this screen at all.
+
+  533 test binaries / 1616 tests green, clippy `-D warnings` clean; all five touched `.query.adj`
+  companions parse, run and abstain correctly.
+
+- **#13934 batch 5e: `anatomy/muscle-groups` +8, five header quotes corrected, and a PROPAGATED
+  copy of one of them repaired in a different library.**
+
+  *** THE PROPAGATION REPAIR IS THE POINT, NOT AN EXTRA. *** `facts_musclebodyaspect_e2e.rs` records
+  that `muscle-body-aspect` was built from "clauses already sitting unused inside
+  `muscle-groups.adj`'s own already-quoted Wikipedia source sentences". So muscle-groups' **damaged**
+  rectus_abdominis header quote was copied into `muscle-body-aspect`'s `source` — where a comment
+  defect became **a shipped citation the engine returns**.
+
+  Fixing only the header would leave the derived data broken. That is exactly what happened with
+  `rectangle`: its header was corrected in batch 5a (#14066, merged) and
+  `geometry/quadrilateral-secondary-property:62` is *still* shipping the dropped-subject form on
+  `main` today. Repeating that knowingly would be worse than having done it once by accident, so
+  `muscle-body-aspect:84` is repaired here with the same verified span. (The
+  `quadrilateral-secondary-property` copy belongs to a #14070 installment — different library,
+  different page.)
+
+  The convergence made it cheap: `muscle-body-aspect`'s three rows are `rectus_abdominis → ventral`,
+  `sartorius → anterior`, `gastrocnemius → posterior` — precisely the three muscles whose
+  muscle-groups quotes were being corrected, and all three corrected spans name their subject *and*
+  contain their row's value.
+
+  THE FIVE DEFECTIVE HEADER QUOTES, one per subtype:
+
+  | row | defect |
+  |---|---|
+  | `deltoid` | dropped a footnote marker — "is the muscle forming" for "is the muscle**[1]** forming" |
+  | `rectus_abdominis` | elided the alias list with "…" (third `\"` escape case in the stdlib) |
+  | `quadriceps` | **deleted a parenthetical with no ellipsis at all** |
+  | `sartorius` | verbatim, but began with a bare "It is", naming no subject |
+  | `gastrocnemius` | same |
+
+  `quadriceps` is the worst subtype found: the IPA-and-alias block simply vanished, so the quote
+  **reads as faithful and is not**. No text-only screen can see it — which is precisely how
+  `rectangle`'s dropped subject propagated unnoticed into another library's shipped `source`.
+
+  The last two were not wrong, only weaker than what the page offers; both pages carry a contiguous
+  block naming the muscle *and* its region. Declining to settle for the first acceptable span
+  produced better evidence for the third time, after `tape` and `spider`.
+  `triceps_brachii`, `pectoralis_major` and `gluteus_maximus` verified CLEAN and are unchanged.
+
+  **The propagated repair was unprotected until this change.** `muscle-body-aspect`'s existing
+  assertions are `contains("en.wikipedia.org")` and `contains("\"trust\":\"consensus\"")` — two bare
+  scans that pass equally well against the damaged form, which is why its three tests passed both
+  before *and* after the repair. A pin now binds the answer to the actual sentence.
+
+  A CLARIFICATION THE MUTATION CHECK FORCED: **per-row pins are NESTED PREFIXES, not independent.**
+  A contiguous pin running to corroboration index 5 necessarily *contains* indices 0–4, so damaging
+  an earlier row reddens every later pin. My first expectation assumed row-isolation and was wrong.
+  Directionality is proved the other way instead — damaging a *later* row leaves earlier pins green
+  (M2, M4) — and that is what shows a pin is bound to its own row rather than to the head of the
+  list.
+
+  Five directional mutations pass, including two that restore the old defective forms outright
+  (deltoid's dropped marker, quadriceps' unmarked deletion) and one that restores the *inherited*
+  elided source in `muscle-body-aspect`.
+
+  Both `.query.adj` companions parse, run, and abstain correctly. 533 test binaries / 1612 tests
+  green, clippy `-D warnings` clean.
+
+- **#13934 batches 5c+5d: six `cites` across three libraries, one header quote corrected.**
+  `physics/light-colors` (+1), `physics/sound-properties` (+1), `biology/animal-homes` (+4 — bird,
+  spider, rabbit, beaver).
+
+  *** A PIN OF MINE WAS UNIQUE, ANCHORED, AND BOUND TO THE WRONG EVIDENCE. *** The `spider` test
+  pinned bindings + envelope + `corroborations[0]` — but the cites were inserted bird, spider,
+  rabbit, beaver, so index 0 is **bird's** sentence. The test asserted "spider's answer carries its
+  full unelided sentence" while checking a span that did not contain spider's sentence at all.
+  Restoring the old elided spider quote left it **GREEN**.
+
+  Only the directional mutation found it, and it is the same defect as the chamber-branch pin earlier
+  in this effort: uniqueness and anchoring say nothing about *ownership*. The pin now extends through
+  `corroborations[1]`, spider's own, and the mutation reddens it.
+
+  `light-colors` and `sound-properties` were the two libraries I had used as the example of
+  "membership is not defect" — **and the exemplars were wrong**. Both are genuine members; their
+  headers explicitly document these spans as corroborations ("A second span of the same primary
+  university resource restates the primaries"; "The first two rows are ALSO corroborated by a primary
+  U.S. government / academic source"). The general point stands — a header URL absent from every
+  locator is a reason to look, not a finding — but not on the strength of these two.
+
+  ON `sound-properties`' TRUST DIRECTION. Its envelope is LibreTexts at `trust consensus`; the
+  NIH/Purves corroboration is authoritative. Since `cites` has no trust field, this puts a **stronger**
+  source under a **weaker** envelope, which *understates* the corroboration and is harmless. The gap
+  only bites the other way — a weaker cite under a stronger envelope would overstate the evidence,
+  which is `kidney-parts` and only `kidney-parts`. The library's header had already reasoned this out
+  correctly: the NIH sentence grounds only pitch and loudness, which is exactly why the envelope uses
+  the LibreTexts span that fixes all three rows and why `trust` is honestly `consensus`. Nothing to
+  correct there; the evidence simply never reached the data. The new test binds **timbre** on
+  purpose — the one row the NIH sentence does *not* ground — to show the corroboration rides the
+  table, not the row.
+
+  `animal-homes`' spider header quote read "A spider web ... is a structure created by a spider…",
+  eliding the page's whole alias list. That shortened form names its subject only if you supply the
+  elided material yourself; the full 233-character sentence names both the subject and the row's
+  value. Fourth elision found (after `tape`, `noble_gas`, `rectus_abdominis`) and the fourth where the
+  unelided sentence was strictly better evidence. The `[1]` is a real rendered footnote marker and
+  stays.
+
+  Five directional mutations pass, including two that only a whole-list pin can catch: truncating the
+  **last** corroboration reddens the whole-list pin while the prefix pin stays green, and a pure
+  **reorder** of two middle entries does the same with nothing removed.
+
+  All three `.query.adj` companions parse, run, and abstain correctly. 533 test binaries / 1608 tests
+  green, clippy `-D warnings` clean.
+
 - **#13934 batch 5b: nine `cites` across two libraries, two header quotes corrected, and one
   pre-existing assertion repaired.** `money/us-coins` (+6 — penny, nickel, dime, quarter,
   half_dollar, dollar) and `chemistry/element-groups` (+3 — alkaline_earth_metal, halogen,

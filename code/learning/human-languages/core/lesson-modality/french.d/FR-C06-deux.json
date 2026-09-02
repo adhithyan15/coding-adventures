@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C06-deux",
+    "language": "french",
+    "chapter": 6,
+    "sequence": 202,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff76417408efbffd"
+  },
+  "findings": []
+}

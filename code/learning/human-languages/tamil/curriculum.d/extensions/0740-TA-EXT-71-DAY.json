@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-71-DAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five things I do between getting up and going to bed.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C71-rise",
+    "TA-C71-sleep",
+    "TA-S126-letter-oo",
+    "TA-C71-run",
+    "TA-C71-wash",
+    "TA-C71-play"
+  ]
+}

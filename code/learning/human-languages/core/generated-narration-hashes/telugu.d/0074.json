@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:cb855651ef3cd1f7",
+  "lessonIds": [
+    "TE-C74-and",
+    "TE-C74-but",
+    "TE-C74-or",
+    "TE-C74-why",
+    "TE-C74-because"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "telugu/narration/ch74.txt",
+  "json": "telugu/narration/ch74.json",
+  "textHash": "fnv1a64:9db777db95300e1e",
+  "jsonHash": "fnv1a64:abb7be29be8ae9d3",
+  "findings": []
+}

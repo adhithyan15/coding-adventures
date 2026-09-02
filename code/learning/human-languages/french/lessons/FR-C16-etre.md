@@ -18,7 +18,7 @@ reviews_of: [FR-C14-avoir, FR-C15-passe-simple, FR-C05-parler]
 
 ## Warm-up
 
-[PAUSE 2s] Chapter 14 gave you *avoir*, “to have.” Meet its partner **être**,
+[PAUSE 2s] You have *avoir*, “to have.” Meet its partner **être**,
 the auxiliary and everyday verb “to be.”
 
 ## The six forms

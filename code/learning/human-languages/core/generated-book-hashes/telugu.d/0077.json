@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:c40750d11b4108cf",
+  "lessonIds": [
+    "TE-C77-from",
+    "TE-C77-town",
+    "TE-C77-country",
+    "TE-C77-india",
+    "TE-C77-thirty"
+  ],
+  "tex": "telugu/book/chapters/ch77-where-you-are-from.tex"
+}

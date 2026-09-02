@@ -23,6 +23,16 @@ You just read Kannada.
 The word, taken apart.
 ನಮಸ್ಕಾರ (namaskāra) came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Kannada borrowed the whole word. Tamil instead kept its native greeting, vaṇakkam.
 
+Across the family — the same idea, five ways.
+[a table of 6 rows, read aloud]
+Language: Kannada. "Hello": ನಮಸ್ಕಾರ namaskāra. Source: Sanskrit.
+Language: Telugu. "Hello": namaskāram. Source: Sanskrit.
+Language: Malayalam. "Hello": namaskāram. Source: Sanskrit.
+Language: Hindi. "Hello": namaste. Source: Sanskrit.
+Language: Tamil. "Hello": vaṇakkam. Source: native Dravidian.
+Language: English. "Hello": hello. Source: Germanic.
+Tamil alone kept its own word; the rest lean on the Sanskrit namas-.
+
 Why it's said this way.
 With palms together and a small bow, namaskāra works as hello or goodbye. It is respectful without being stiff.
 
@@ -74,9 +84,6 @@ Here the split is stark: Kannada, Telugu, and Hindi all use the Sanskrit dhanyav
 Why it's said this way.
 dhanyavāda is the formal, written "thank you." In warm everyday Kannada people often reach for the English thanks, or simply show gratitude in tone and gesture; the full dhanyavāda carries weight, for when you mean to mark it.
 
-Sounds you'll need.
-New: ಧ dha (an aspirated d — a puff of breath), and the conjunct ನ್ಯ (na stacked with ya becomes “nya”). ವಾ is vā. Read ಧ, ನ್ಯ, ವಾ, ದ becomes dhanyavāda.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: dha, nya, vā, da becomes "dhanyavāda"]
@@ -112,9 +119,6 @@ The word, taken apart.
 
 Grammar Lens: Dravidian often answers by echoing the verb.
 Like its sister Tamil, Kannada frequently answers "yes" by repeating the verb rather than using a stand-alone word: asked "bandiddīyā?" ("have you come?"), a natural yes is "bandiddēne" ("I have come"). Keep haudu as the simple all-purpose "yes," but expect a "yes" to come back as a whole verb — a habit shared right across the Dravidian family.
-
-Sounds you'll need.
-ಹೌ is hau (ಹ ha with the “au” vowel sign hugging it); ದು is du (ದ da with the “u” sign beneath). Read ಹೌ, ದು becomes haudu.
 
 Guided Practice.
 [pause 1 second]
@@ -164,9 +168,6 @@ Language: Telugu. "No / isn't": lēdu (లేదు). Note: native Dravidian, a 
 Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European.
 Three of the four Dravidian languages share il-; only Telugu picked a different native root. Hindi, from the other family entirely, is unrelated.
 
-Sounds you'll need.
-ಇ is the independent vowel “i” (word-initial, so a full letter). ಲ್ಲ is “lla” — ಲ la vowel-stripped and stacked under another la, a held “ll.” Read ಇ, ಲ್ಲ becomes illa.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: i, lla becomes "illa"]
@@ -203,9 +204,6 @@ The word, taken apart.
 
 Grammar Lens: one shared Dravidian word, two scripts.
 sari is a small proof of how close these languages are: identical word, identical meaning, written in two different scripts — Kannada ಸರಿ, Tamil சரி. As you learn to read each script, watching a shared word change its clothes but not its sound is the fastest way to feel the family resemblance. (This "same word, different script" pattern-matching is exactly what carries you across Kannada, Telugu, and Malayalam.)
-
-Sounds you'll need.
-ಸ is sa; ರಿ is ri (ರ ra with the “i” sign). No conjunct here — two clean, round syllables. Read ಸ, ರಿ becomes sari.
 
 Guided Practice.
 [pause 1 second]
@@ -260,19 +258,22 @@ Which character is this — ನ? What sound does it carry? (na.) Name one word y
 Lesson 7 of 7.
 Chapter 1 — a five-word recap.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Read them back until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 Five words, and with them a first handful of Kannada letters read straight off the page. Let's gather only what you have already learned and make it feel easy.
 
-Read them back.
+Guided Practice: Read them back.
 Sound each out, left to right, before checking:
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Read, one with no heading, Meaning, Native or borrowed. Come back and look at it when you have stopped.
+[a table of 5 rows, read aloud]
+Read: ನಮಸ್ಕಾರ namaskāra. Meaning: hello / greetings. Native or borrowed: Sanskrit.
+Read: ಧನ್ಯವಾದ dhanyavāda. Meaning: thank you. Native or borrowed: Sanskrit.
+Read: ಹೌದು haudu. Meaning: yes. Native or borrowed: native.
+Read: ಇಲ್ಲ illa. Meaning: no / there isn't. Native or borrowed: native (= Tamil illai).
+Read: ಸರಿ sari. Meaning: okay / correct. Native or borrowed: native (= Tamil sari).
 The letters that did it: consonants carry a built-in "a"; a vowel sign swaps that vowel (ಾ for "ā," ಿ for "i," ು for "u," ೌ for "au"); a virama strips the vowel so a consonant can stack under the next as a conjunct (ottakṣara — ಸ್ಕ, ನ್ಯ, ಲ್ಲ); and a word-initial vowel gets a full letter (ಇ).
 Notice the pattern already: the two greeting/politeness words are Sanskrit loans; the three everyday grammar words are native Dravidian — and two of them (illa, sari) are shared almost unchanged with Tamil.
 
-A promise for later.
+You'll want to know: A promise for later.
 Kannada has a warm departure exchange built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part.
 
 Guided Practice.

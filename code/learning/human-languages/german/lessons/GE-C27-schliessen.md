@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C27-schliessen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 860
-chapter: 27
+chapter: 29
 type: word
 headword: schließen
 gloss: to close — the second verb in these chapters that German kept and English lost, and the one that locked up Schloss, Schlüssel and Schluss
@@ -74,7 +74,7 @@ So English closes things with borrowed and unrelated words. **Close** is Latin
 *claudere*, by way of French. **Shut** is native but a different verb entirely:
 Old English *scyttan*, to **shoot** a bolt across a door.
 
-That makes two verbs here with the same shape of story. Chapter 25 gave you
+That makes two verbs here with the same shape of story. The doing verbs gave you
 *nehmen*, which English lost to Norse *take*. This is the second.
 
 On the verb it kept, German built a household: **das Schloss**, a lock — and,

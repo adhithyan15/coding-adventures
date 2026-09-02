@@ -21,7 +21,28 @@ it("pins Marathi lesson-content budgets", () =>
     // reviewed-lesson count moves and the three content counters below are
     // unchanged. That is the evidence the runway declared nothing new against
     // those budgets rather than that nobody looked.
-    lessons: 179,
+    //
+    // 179 -> 188: chapter 9's nine schema-v1 lessons migrated to v2, the last
+    // thing standing between ch09-introductions and the generator. Not one is
+    // a new lesson -- every one was already written and already in the book;
+    // declaring their atoms is what made them MEASURABLE, so this budget can
+    // see them. Re-measured against the tree, never derived. Idioms, senses
+    // and culture claims are unchanged at 5 / 4 / 7: the migration typed the
+    // knowledge that was already on the page and authored no new vocabulary.
+    //
+    // 188 -> 194: chapter 10's six schema-v1 lessons migrated to v2. Same shape
+    // as chapter 9 -- every one was already written and already in the book, so
+    // this counts lessons that became MEASURABLE, not lessons that were added.
+    // Idioms, senses and culture claims stay at 5 / 4 / 7.
+    //
+    // 194 -> 205: chapters 11 and 12's eleven schema-v1 lessons migrated to v2,
+    // which retires the last of Marathi's hand-written chapters. Same shape
+    // again -- all eleven were already written and already in the book, so
+    // this counts lessons that became MEASURABLE. With 9, 10, 11 and 12 done,
+    // marathi/lessons holds NO schema-v1 lesson at all: 179 -> 205 is the
+    // whole v1 island, and idioms, senses and culture claims never moved off
+    // 5 / 4 / 7 across any of it.
+    lessons: 205,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,

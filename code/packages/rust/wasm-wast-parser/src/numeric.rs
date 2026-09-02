@@ -18,29 +18,100 @@
 
 use crate::WastParseError;
 
-/// Strip WAT's `_` digit-separator syntax. (The full grammar only allows
-/// `_` *between* digits, never leading/trailing/doubled; this parser is
-/// lenient about placement, which only matters for deliberately-malformed
-/// literal-syntax fixtures, none of which are in this phase's vendored
-/// slice — see `W05-wasm-conformance-harness.md` §5.)
+/// Strip WAT's `_` digit-separator syntax. Placement (only *between*
+/// digits, never leading/trailing/doubled) must already have been checked
+/// by [`valid_underscore_run`] on the RAW digit run before this runs — see
+/// that function's own doc comment for why the order matters.
 fn strip_underscores(s: &str) -> String {
     s.chars().filter(|&c| c != '_').collect()
+}
+
+/// Check WAT's `_` digit-separator placement rule for one contiguous digit
+/// run (decimal or hex digits, underscores not yet stripped): a `_` may
+/// only sit *between* two digits, never as the first or last character,
+/// and never doubled. An empty run is not this check's concern — it means
+/// there's simply nothing here to place a separator between (e.g. `1.`'s
+/// empty fractional part, or a `p`-less hex float's empty exponent) — so
+/// it passes.
+///
+/// This used to not exist at all: [`strip_underscores`] removed every `_`
+/// unconditionally, anywhere in the literal, before anything else ever
+/// looked at the text. That is not just lenient about a rare edge case --
+/// it can change what the literal even MEANS. `parse_int_magnitude` used
+/// to strip underscores from the WHOLE literal and only THEN check for an
+/// `0x`/`0X` prefix, so `0_x100` (a decimal literal starting with a
+/// digit, not a valid hex prefix at all) became `0x100` post-strip and was
+/// wrongly parsed as *hex* 256 -- the separator retroactively created a
+/// prefix that was never really there. Real corpus fixtures exercise
+/// exactly this and its siblings (`_0x100`, `0x_100`, `0x00_`,
+/// `0xff__ffff`, and the decimal/hex-float equivalents with a stray `_`
+/// beside a `.`/`e`/`p`) as `assert_malformed` — see `simd_const.wast`'s
+/// "More malformed v128.const forms" section (also shared by every other
+/// numeric-literal context: `f32.const`/`f64.const`/plain `i32.const`
+/// etc. call the very same functions this validates). Checking placement
+/// on the RAW text, before a prefix is even looked for or underscores are
+/// stripped, is what makes an obscured prefix impossible to manufacture.
+fn valid_underscore_run(run: &str) -> bool {
+    let bytes = run.as_bytes();
+    if bytes.first() == Some(&b'_') || bytes.last() == Some(&b'_') {
+        return false;
+    }
+    !bytes.windows(2).any(|w| w == b"__")
+}
+
+/// Validate a float literal's overall shape (decimal or hex mantissa, sans
+/// any leading sign — the caller already stripped that) before any
+/// underscore is removed: every digit run (integer part, fractional part,
+/// exponent) must satisfy [`valid_underscore_run`], AND — a rule
+/// `str::parse::<f32>`/`str::parse::<f64>` does NOT enforce, unlike WAT's
+/// own grammar — there must be at least one digit before an optional `.`.
+/// Rust's own float parser happily accepts `.0`/`.5` (no leading digit),
+/// which is exactly why `simd_const.wast`'s `.0`/`.0e0` lane literals used
+/// to parse successfully here even though the real spec rejects them as
+/// malformed.
+///
+/// `exp_markers` is `['e', 'E']` for a decimal literal or `['p', 'P']` for
+/// a hex one (hex floats spell their binary exponent with `p`, never `e`,
+/// since `e` is itself a valid hex digit). An exponent marker with an
+/// empty digit run after it (`1e`, `0x1p`) is deliberately NOT rejected
+/// here — the decimal case already fails Rust's own `str::parse`, and the
+/// hex case already fails in `split_hex_float`'s own `exp_str.parse::<i64>`
+/// — this function only needs to add checks those two don't already cover.
+fn valid_float_grammar(rest: &str, exp_markers: [char; 2]) -> bool {
+    let (mantissa, exp) = rest.split_once(|c: char| exp_markers.contains(&c)).unwrap_or((rest, ""));
+    if mantissa.len() != rest.len() {
+        let exp_digits = exp.strip_prefix(['+', '-']).unwrap_or(exp);
+        if !exp_digits.is_empty() && !valid_underscore_run(exp_digits) {
+            return false;
+        }
+    }
+    let (int_part, frac_part) = mantissa.split_once('.').unwrap_or((mantissa, ""));
+    if int_part.is_empty() {
+        return false; // a leading `.` with no digit before it, e.g. `.0`
+    }
+    valid_underscore_run(int_part) && valid_underscore_run(frac_part)
 }
 
 /// Parse a WAT integer literal (decimal or `0x`-hex, optionally signed)
 /// into its full-precision magnitude and sign, without any width-specific
 /// range check — [`parse_i32`]/[`parse_i64`] apply that afterward.
 fn parse_int_magnitude(text: &str, pos: usize) -> Result<(bool, u128), WastParseError> {
-    let cleaned = strip_underscores(text);
-    let (neg, rest) = match cleaned.strip_prefix('-') {
+    let (neg, rest) = match text.strip_prefix('-') {
         Some(r) => (true, r),
-        None => (false, cleaned.strip_prefix('+').unwrap_or(&cleaned)),
+        None => (false, text.strip_prefix('+').unwrap_or(text)),
     };
     let magnitude = if let Some(hex) = rest.strip_prefix("0x").or_else(|| rest.strip_prefix("0X")) {
-        u128::from_str_radix(hex, 16)
+        if !valid_underscore_run(hex) {
+            return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
+        }
+        u128::from_str_radix(&strip_underscores(hex), 16)
             .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?
     } else {
-        rest.parse::<u128>()
+        if !valid_underscore_run(rest) {
+            return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
+        }
+        strip_underscores(rest)
+            .parse::<u128>()
             .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?
     };
     Ok((neg, magnitude))
@@ -234,17 +305,40 @@ fn split_hex_float(hex: &str, text: &str, pos: usize) -> Result<(Vec<u32>, i64),
 /// the wrong nearest value for mantissas wider than f64's own 53-bit
 /// significand.
 fn parse_float_magnitude_f64_bits(text: &str, pos: usize) -> Result<u64, WastParseError> {
-    let cleaned = strip_underscores(text);
-    if let Some(hex) = cleaned.strip_prefix("0x").or_else(|| cleaned.strip_prefix("0X")) {
-        let (digits, base_exp2) = split_hex_float(hex, text, pos)?;
+    let bits = if let Some(hex) = text.strip_prefix("0x").or_else(|| text.strip_prefix("0X")) {
+        if !valid_float_grammar(hex, ['p', 'P']) {
+            return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
+        }
+        let (digits, base_exp2) = split_hex_float(&strip_underscores(hex), text, pos)?;
         let (exp_field, mantissa) = round_hex_mantissa(&digits, base_exp2, 52, 1023);
-        Ok((exp_field << 52) | mantissa)
+        (exp_field << 52) | mantissa
     } else {
-        Ok(cleaned
+        if !valid_float_grammar(text, ['e', 'E']) {
+            return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
+        }
+        strip_underscores(text)
             .parse::<f64>()
             .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?
-            .to_bits())
+            .to_bits()
+    };
+    // A magnitude literal (never the bare `inf` keyword -- `parse_f64_bits`
+    // handles that separately, before this function is ever reached) that
+    // rounds to the infinity bit pattern didn't denote infinity in the
+    // source: it denotes a finite value too large for `f64` to represent
+    // at all. That's WAT's "constant out of range" malformed rule --
+    // real corpus fixtures (`simd_const.wast`'s `f64x2` out-of-range
+    // section, shared by plain `f64.const` in `const.wast`) write it as a
+    // huge decimal/hex literal expecting a parse ERROR, not a silent
+    // round-up-to-infinity. `round_hex_mantissa` already saturates to this
+    // exact pattern on hex overflow (see its own doc comment), and
+    // `str::parse::<f64>` does the identical silent saturation for a
+    // decimal literal like `1e400` -- both need this same check, which is
+    // why it lives here, once, after both branches join rather than
+    // duplicated into each.
+    if bits == 0x7FF0_0000_0000_0000u64 {
+        return Err(WastParseError::InvalidNumericLiteralForType { pos, text: text.to_string(), ty: "f64" });
     }
+    Ok(bits)
 }
 
 /// As [`parse_float_magnitude_f64_bits`], but rounds directly to `f32`'s
@@ -261,17 +355,28 @@ fn parse_float_magnitude_f64_bits(text: &str, pos: usize) -> Result<u64, WastPar
 /// because the SECOND rounding step (the narrowing `as f32`) was the one
 /// actually producing the wrong answer.
 fn parse_float_magnitude_f32_bits(text: &str, pos: usize) -> Result<u32, WastParseError> {
-    let cleaned = strip_underscores(text);
-    if let Some(hex) = cleaned.strip_prefix("0x").or_else(|| cleaned.strip_prefix("0X")) {
-        let (digits, base_exp2) = split_hex_float(hex, text, pos)?;
+    let bits = if let Some(hex) = text.strip_prefix("0x").or_else(|| text.strip_prefix("0X")) {
+        if !valid_float_grammar(hex, ['p', 'P']) {
+            return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
+        }
+        let (digits, base_exp2) = split_hex_float(&strip_underscores(hex), text, pos)?;
         let (exp_field, mantissa) = round_hex_mantissa(&digits, base_exp2, 23, 127);
-        Ok(((exp_field as u32) << 23) | mantissa as u32)
+        ((exp_field as u32) << 23) | mantissa as u32
     } else {
-        Ok(cleaned
+        if !valid_float_grammar(text, ['e', 'E']) {
+            return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
+        }
+        strip_underscores(text)
             .parse::<f32>()
             .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?
-            .to_bits())
+            .to_bits()
+    };
+    // See the matching check in `parse_float_magnitude_f64_bits` -- same
+    // "constant out of range" rule, `f32`'s own infinity bit pattern.
+    if bits == 0x7F80_0000u32 {
+        return Err(WastParseError::InvalidNumericLiteralForType { pos, text: text.to_string(), ty: "f32" });
     }
+    Ok(bits)
 }
 
 /// Round an arbitrary-length hex-float mantissa to the nearest
@@ -714,12 +819,20 @@ mod tests {
         assert_eq!(parse_f64_bits("-0x1p-2000", 0).unwrap(), 0x8000_0000_0000_0000);
     }
 
-    /// A magnitude genuinely too large to represent must saturate to
-    /// (signed) infinity, not panic.
+    /// A magnitude genuinely too large to represent used to silently
+    /// saturate to (signed) infinity; per WAT's "constant out of range"
+    /// malformed rule (task: `simd_const.wast`/`const.wast` conformance
+    /// fix) a magnitude literal that isn't the bare `inf` keyword must now
+    /// be rejected instead -- `round_hex_mantissa`'s own internal
+    /// saturate-to-infinity behavior on overflow is still exactly right
+    /// (it's what makes this rejection possible to detect at all, from
+    /// the caller side, without duplicating its overflow math) but the
+    /// caller must no longer treat that internal signal as a successful
+    /// parse. Still no panic either way -- that invariant is unchanged.
     #[test]
-    fn hex_float_above_largest_finite_value_overflows_to_signed_infinity() {
-        assert_eq!(parse_f64_bits("0x1p+2000", 0).unwrap(), f64::INFINITY.to_bits());
-        assert_eq!(parse_f64_bits("-0x1p+2000", 0).unwrap(), f64::NEG_INFINITY.to_bits());
+    fn hex_float_above_largest_finite_value_is_rejected_not_silently_infinite() {
+        assert!(parse_f64_bits("0x1p+2000", 0).is_err());
+        assert!(parse_f64_bits("-0x1p+2000", 0).is_err());
     }
 
     /// Security review regression (task #80): `p<exponent>` is a fully
@@ -728,12 +841,14 @@ mod tests {
     /// overflow-panic computing `e = base_exp2 + bitlen - 1` in
     /// `round_hex_mantissa`, crashing the process on a ~25-byte literal,
     /// BEFORE the overflow/underflow guards in that function ever got a
-    /// chance to run. Must saturate and flush to infinity, not panic, on
-    /// a debug build (`overflow-checks = true`).
+    /// chance to run. Must return a clean `Err` (out of range, same as
+    /// `hex_float_above_largest_finite_value_is_rejected_not_silently_
+    /// infinite` above), never panic, on a debug build
+    /// (`overflow-checks = true`).
     #[test]
-    fn hex_float_extreme_positive_exponent_saturates_instead_of_overflow_panicking() {
-        assert_eq!(parse_f64_bits("0x1p9223372036854775807", 0).unwrap(), f64::INFINITY.to_bits());
-        assert_eq!(parse_f32_bits("0x1p9223372036854775807", 0).unwrap(), f32::INFINITY.to_bits());
+    fn hex_float_extreme_positive_exponent_errors_cleanly_not_panics() {
+        assert!(parse_f64_bits("0x1p9223372036854775807", 0).is_err());
+        assert!(parse_f32_bits("0x1p9223372036854775807", 0).is_err());
     }
 
     /// Security review regression (task #80): the mirror case --
@@ -777,5 +892,93 @@ mod tests {
         let bits = parse_f32_bits("0x1.00000100000008p0", 0).unwrap();
         assert_eq!(bits, 0x3f80_0001, "must round up directly, not double-round down to 1.0 via f64");
         assert_eq!(f32::from_bits(bits), 1.0f32 + 2f32.powi(-23));
+    }
+
+    // ── W05 conformance gap: `simd_const.wast` malformed literal forms ──
+    //
+    // Real corpus fixtures (`simd_const.wast`, `const.wast`,
+    // `float_literals.wast`, `int_literals.wast`) exercise all of the
+    // cases below as `assert_malformed` -- see `module.rs`'s own
+    // `v128_const_*` test cluster for the same gap exercised through the
+    // full `v128.const` literal grammar (6 shapes); these pin the bug down
+    // at the shared `numeric.rs` layer every one of those files -- and
+    // plain `f32.const`/`f64.const`/`i32.const`/etc. -- funnels through.
+
+    #[test]
+    fn decimal_float_magnitude_too_large_for_f32_is_rejected() {
+        // `1e39` is comfortably past `f32::MAX` (~3.4e38) -- WAT's
+        // "constant out of range" malformed rule, not a valid way to
+        // spell infinity (only the literal `inf` keyword may do that).
+        let err = parse_f32_bits("1e39", 0).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteralForType { ty: "f32", .. }), "{err:?}");
+    }
+
+    #[test]
+    fn hex_float_magnitude_too_large_for_f32_is_rejected() {
+        let err = parse_f32_bits("0x1p128", 0).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteralForType { ty: "f32", .. }), "{err:?}");
+    }
+
+    #[test]
+    fn decimal_float_magnitude_too_large_for_f64_is_rejected() {
+        let huge = "2".to_string() + &"9".repeat(310); // far past f64::MAX (~1.8e308)
+        let err = parse_f64_bits(&huge, 0).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteralForType { ty: "f64", .. }), "{err:?}");
+    }
+
+    #[test]
+    fn explicit_inf_keyword_still_parses_as_infinity() {
+        // The out-of-range check must not reject the ONE legitimate way
+        // to write infinity -- `parse_f32_bits`/`parse_f64_bits` handle
+        // the bare `inf` keyword before ever reaching the magnitude
+        // parser this file's new check lives in.
+        assert_eq!(parse_f32_bits("inf", 0).unwrap(), 0x7F80_0000);
+        assert_eq!(parse_f64_bits("-inf", 0).unwrap(), 0xFFF0_0000_0000_0000);
+    }
+
+    #[test]
+    fn leading_dot_float_literal_is_rejected() {
+        // WAT requires a digit before an optional `.`; Rust's own
+        // `str::parse::<f32>`/`str::parse::<f64>` are more permissive and
+        // accept `.0`/`.0e0`, which is exactly why these used to slip
+        // through uncaught.
+        assert!(parse_f32_bits(".0", 0).is_err());
+        assert!(parse_f64_bits(".0e0", 0).is_err());
+    }
+
+    #[test]
+    fn underscore_cannot_manufacture_a_hex_prefix_by_being_stripped_first() {
+        // `0_x100` is a decimal literal beginning with the digit `0`, not
+        // a hex one -- stripping its `_` before ever looking for an `0x`
+        // prefix used to turn it into the valid hex literal `0x100`
+        // (256), silently ACCEPTING a literal the real grammar rejects.
+        assert!(parse_i32("0_x100", 0).is_err());
+        assert!(parse_f32_bits("0_x1.0", 0).is_err());
+    }
+
+    #[test]
+    fn underscore_placement_rules_are_enforced() {
+        // Leading, trailing, and doubled `_` are all invalid in every
+        // digit run this crate parses -- decimal ints, hex ints, and
+        // both parts of a float's mantissa/exponent.
+        assert!(parse_i32("_100", 0).is_err(), "leading underscore");
+        assert!(parse_i32("100_", 0).is_err(), "trailing underscore");
+        assert!(parse_i32("1__000", 0).is_err(), "doubled underscore");
+        assert!(parse_i32("0x_100", 0).is_err(), "underscore right after 0x prefix");
+        assert!(parse_i32("0x100_", 0).is_err(), "trailing underscore in hex digits");
+        assert!(parse_f64_bits("1.0_e1", 0).is_err(), "underscore before exponent marker");
+        assert!(parse_f64_bits("1.0e_1", 0).is_err(), "underscore right after exponent marker");
+    }
+
+    #[test]
+    fn valid_underscore_separated_literals_are_unaffected() {
+        // The stricter placement checks must not reject anything that was
+        // correctly accepted before -- real corpus precedent: `1_000_000`
+        // (doc comment above), `0xffff_ffff` (`table.wast`'s hex limits),
+        // `0x1_0000_0000_0000` (`memory64.wast`'s 48-bit limits).
+        assert_eq!(parse_i32("1_000_000", 0).unwrap(), 1_000_000);
+        assert_eq!(parse_u32("0xffff_ffff", 0).unwrap(), 0xffff_ffff);
+        assert_eq!(parse_u64("0x1_0000_0000_0000", 0).unwrap(), 0x1_0000_0000_0000);
+        assert_eq!(f64::from_bits(parse_f64_bits("1_2.5_0e1_0", 0).unwrap()), 12.50e10);
     }
 }

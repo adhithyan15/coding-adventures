@@ -1,0 +1,24 @@
+{
+  "language": "german",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:c009d39a848ed48c",
+  "lessonIds": [
+    "GE-C04-sehen",
+    "GE-C04-wieder",
+    "GE-C04-auf",
+    "GE-C04-auf-wiedersehen",
+    "GE-C04-tschuss",
+    "GE-C04-bis",
+    "GE-C04-bald",
+    "GE-C04-bis-bald",
+    "GE-C04-spaet",
+    "GE-C04-bis-spater",
+    "GE-C04-morgen-tomorrow",
+    "GE-C04-bis-morgen",
+    "GE-W01-eszett",
+    "GE-W02-umlauts",
+    "GE-W03-capitalization",
+    "GE-C04-practice"
+  ],
+  "tex": "german/book/chapters/ch04-farewells.tex"
+}

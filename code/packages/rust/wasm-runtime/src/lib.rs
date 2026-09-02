@@ -2077,18 +2077,47 @@ impl WasmRuntime {
                         .as_ref()
                         .and_then(|h| h.resolve_table(&imp.module_name, &imp.name))
                         .ok_or_else(|| link_error("unknown import", imp))?;
-                    // `Table` doesn't track its declared element type at
-                    // runtime (WASM 1.0 only ever has funcref tables, and
-                    // this repo's reference-types slice hasn't grown a
-                    // runtime-typed Table yet either) -- only limits (and,
-                    // as of W26, `is64`) are checked here. Every table this
-                    // repo can currently construct is funcref, so this
-                    // doesn't lose real coverage against the vendored
-                    // corpus, but a table import mismatched purely on
-                    // element type (not limits) would incorrectly link
-                    // here rather than fail. Named, not silent: revisit if
-                    // a future PR gives `Table` a real element-type field.
+                    // W37 addendum: `Table` now DOES track its declared
+                    // element-type tag at runtime (`Table::element_type`,
+                    // set from the exporting module's own real
+                    // `wasm_types::TableType::element_type` at
+                    // construction time, above) -- this arm used to skip
+                    // this check entirely, with a comment explicitly
+                    // naming the gap ("a table import mismatched purely on
+                    // element type would incorrectly link here rather
+                    // than fail... revisit if a future PR gives `Table` a
+                    // real element-type field"). GC reftype table
+                    // DECLARATIONS (W37 proper) made this reachable for
+                    // real: `linking.wast`'s own `t-funcnull`/`t-refnull`
+                    // (funcref-family) tables, each incorrectly linkable
+                    // as a declared `externref` import before this fix.
                     //
+                    // A single byte-equality check (not a subtype check)
+                    // is the CORRECT real-spec rule here, not merely the
+                    // simplest one: table types are matched INVARIANTLY on
+                    // element type (unlike a function import, which the
+                    // function-references proposal lets a nominal SUBTYPE
+                    // satisfy) -- a table supports `table.set` as well as
+                    // `table.get`, so a covariant or contravariant element
+                    // type would let code typed against the DECLARED
+                    // import type read or write a value the REAL
+                    // underlying table cannot actually hold. It is also
+                    // the only check this call site's own import syntax
+                    // can ever need: `build_import_shell`'s "table" arm
+                    // (`wasm-wast-parser/src/module.rs`) only ever parses
+                    // a bare `funcref`/`externref` atom for an imported
+                    // table's declared reftype -- no concrete/GC-typed
+                    // table IMPORT syntax exists in this crate's text
+                    // format at all (a separate, deliberate, already-
+                    // documented scope boundary, `code/specs/
+                    // W37-wasm-gc-reftype-tables.md`'s own "left
+                    // unchanged, deliberately" note) -- so `table_type.
+                    // element_type` here is always exactly `wasm_types::
+                    // FUNCREF` or `wasm_types::EXTERNREF`, never anything
+                    // more specific a subtype relation could apply to.
+                    if imported_table.element_type() != table_type.element_type {
+                        return Err(link_error("incompatible import type", imp));
+                    }
                     // W26 (table64 proposal): an `is64` mismatch between
                     // the actual table and the declared import type is
                     // always incompatible, the same "real type mismatch"
@@ -2297,7 +2326,10 @@ impl WasmRuntime {
                     wasm_execution::MAX_TABLE_ELEMENTS
                 )));
             }
-            tables.push(Table::new_with_is64(table_type.limits.min, table_type.limits.max, table_type.is64)?);
+            tables.push(
+                Table::new_with_is64(table_type.limits.min, table_type.limits.max, table_type.is64)?
+                    .with_element_type(table_type.element_type),
+            );
         }
 
         // The instance's persistent v128 heap (see `code/specs/
@@ -2943,7 +2975,15 @@ impl WasmRuntime {
                 // corpus directive passes one as a top-level `invoke`
                 // argument (arrays only ever appear as params/locals/globals
                 // inside a function body in `array.wast`).
+                // W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): `Eqref`/
+                // `StructRefAny` join this same lossy-legacy-path
+                // placeholder group -- no vendored corpus directive passes
+                // one as a top-level `invoke` argument either (both only
+                // ever appear as table/global/local/param/result declared
+                // types).
                 ValueType::Anyref
+                | ValueType::Eqref
+                | ValueType::StructRefAny
                 | ValueType::I31ref
                 | ValueType::StructRef(_)
                 | ValueType::ConcreteFuncRef(_)
@@ -4833,6 +4873,16 @@ mod tests {
                 // is64-mismatch import-linking tests below -- mirrors
                 // `resolve_table`'s own plain 32-bit "tab" entry.
                 Some(Table::new_with_is64(1, Some(2), true).unwrap())
+            } else if module_name == "env" && name == "tab_externref" {
+                // W37 addendum: a real EXTERNREF table, for the
+                // element-type-mismatch import-linking tests below --
+                // mirrors `resolve_table`'s own plain funcref "tab" entry,
+                // but with `with_element_type` overriding the `Table::new`
+                // default (`wasm_types::FUNCREF`) to `wasm_types::
+                // EXTERNREF`, exactly like `wasm-runtime::instantiate()`'s
+                // own declared-table construction loop now does for a
+                // real module.
+                Some(Table::new(1, Some(2)).with_element_type(wasm_types::EXTERNREF))
             } else {
                 None
             }
@@ -5023,6 +5073,88 @@ mod tests {
                 name: "tab".to_string(),
                 kind: ExternalKind::Table,
                 type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 1, max: Some(2) }, is64: false }),
+            }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
+        assert_eq!(instance.tables.len(), 1);
+    }
+
+    // ── W37 addendum: element-type import-linking compatibility ──────────
+    //
+    // Regression coverage for the bug this addendum fixes: `linking.wast`'s
+    // own `t-funcnull`/`t-refnull` cases (both funcref-family, exported by
+    // `$Mtable_ex`) were importable as a declared `externref` table without
+    // error before this fix -- `instantiate()`'s table-import arm checked
+    // `is64` and `limits` but never the element-type tag itself. See this
+    // arm's own doc comment (`ImportTypeInfo::Table` match arm, above) for
+    // the full rationale, including why a plain byte-equality check (not a
+    // subtype check) is the spec-correct rule for tables specifically.
+
+    #[test]
+    fn test_instantiate_fails_when_a_table_import_element_type_mismatches_declared_externref_actual_funcref() {
+        // Exactly the shape of `linking.wast`'s own real, previously-
+        // undetected bug: the actual host table is funcref-family ("tab"),
+        // but the importing module declares it as `externref`.
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tab".to_string(), // actual host table is funcref
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType {
+                    element_type: wasm_types::EXTERNREF, // declared as externref -- mismatch
+                    limits: Limits { min: 1, max: Some(2) },
+                    is64: false,
+                }),
+            }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_table_import_element_type_mismatches_declared_funcref_actual_externref() {
+        // The mirror-image mismatch: the actual host table is externref,
+        // but the importing module declares it as `funcref`.
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tab_externref".to_string(), // actual host table is externref
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType {
+                    element_type: wasm_types::FUNCREF, // declared as funcref -- mismatch
+                    limits: Limits { min: 1, max: Some(2) },
+                    is64: false,
+                }),
+            }],
+            ..Default::default()
+        };
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_succeeds_when_a_table_import_element_type_matches_externref() {
+        // A genuinely compatible externref import must still succeed --
+        // this fix must not start rejecting a VALID import just because it
+        // now actually checks the element type.
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tab_externref".to_string(),
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType {
+                    element_type: wasm_types::EXTERNREF,
+                    limits: Limits { min: 1, max: Some(2) },
+                    is64: false,
+                }),
             }],
             ..Default::default()
         };

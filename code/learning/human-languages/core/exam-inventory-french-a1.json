@@ -440,7 +440,10 @@
       "id": "A1-PRON-03",
       "category": "Prononciation et orthographe",
       "label": "obligatory liaison",
-      "probe": null
+      "probe": [
+        "FR-PHON-LIAISON-NUMBERS-08"
+      ],
+      "note": "Chapter 6 teaches obligatory liaison as a rule rather than an aside: six and dix sound their final -s when counting, drop it before a consonant and bring it back as a z before a vowel (six ans), and neuf softens its f to a v in neuf ans."
     },
     {
       "id": "A1-PRON-04",
@@ -510,7 +513,16 @@
       "id": "A1-LEX-07",
       "category": "Lexique de base",
       "label": "telling the time",
-      "probe": null
+      "probe": [
+        "FR-LEX-HEURE-01",
+        "FR-GRAM-IL-EST-HEURES-03",
+        "FR-LEX-MIDI-05",
+        "FR-LEX-MINUIT-07",
+        "FR-LEX-QUART-09",
+        "FR-LEX-DEMIE-10",
+        "FR-LEX-MOINS-11"
+      ],
+      "note": "Chapter 8 teaches the whole clock rather than the whole hour: the il est ... heures frame, the two hours that take a name instead of a number, and the three additions -- et quart, et demie, moins le quart -- that the hand-written chapter named in one sentence and deferred. All seven atoms are listed because a candidate asked for half past does not get partial credit for o'clock."
     },
     {
       "id": "A1-LEX-08",

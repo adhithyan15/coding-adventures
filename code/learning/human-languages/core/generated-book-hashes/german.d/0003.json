@@ -1,0 +1,26 @@
+{
+  "language": "german",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:9e35be40383283c1",
+  "lessonIds": [
+    "GE-C03-danke",
+    "GE-C03-schoen",
+    "GE-C03-vielen-dank",
+    "GE-C03-bitte",
+    "GE-C03-gehen",
+    "GE-C03-es",
+    "GE-C03-mir",
+    "GE-C03-dir",
+    "GE-C03-wie-geht-es",
+    "GE-C03-ihnen",
+    "GE-C03-wie-geht-register",
+    "GE-C03-sehr",
+    "GE-C03-nicht",
+    "GE-C03-so-lala",
+    "GE-C03-es-geht",
+    "GE-C03-und",
+    "GE-C03-practice",
+    "GE-C03-formal-practice"
+  ],
+  "tex": "german/book/chapters/ch03-how-are-you.tex"
+}

@@ -70,7 +70,7 @@ dhanyavād.* And the whole exchange stands:
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 ठ (*ṭha*, a **retroflex** *th* — tongue curled to the
-roof of the mouth) + ी (long *\=\i*) + क (*ka*) →
+roof of the mouth) + ी (long *ī*) + क (*ka*) →
 ठीक. The retroflex ट-ठ-ड series is a hallmark of Indian
 sound.
 

@@ -3,7 +3,7 @@
     "id": "FR-C08-heure",
     "language": "french",
     "chapter": 8,
-    "sequence": 225,
+    "sequence": 223,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:93a082b1f4ec4ef7"
+    "sourceHash": "fnv1a64:ef24c0dfb48eb611"
   },
   "findings": []
 }

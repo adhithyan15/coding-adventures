@@ -38,7 +38,7 @@ So saying *enchanté* on meeting someone means, gallantly, "I'm **enchanted**
 
 ## Grammar Lens: it agrees with *you*
 
-*enchanté* follows the gender-agreement rule of *bon/bonne* from Chapter 1: it
+*enchanté* follows the gender-agreement rule you met in *bon/bonne*: it
 reports the **speaker's own gender**.
 
 - A man says **enchanté**.

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:8e2bea048c1f8c50",
+  "lessonIds": [
+    "TE-C80-want",
+    "TE-C80-that",
+    "TE-C80-may",
+    "TE-C80-comein",
+    "TE-C80-congratulations"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch80.txt",
+  "json": "telugu/narration/ch80.json",
+  "textHash": "fnv1a64:e0b87fdefafb5435",
+  "jsonHash": "fnv1a64:7d0373734296ff54",
+  "findings": []
+}

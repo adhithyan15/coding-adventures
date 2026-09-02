@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C08-minuit",
+    "language": "french",
+    "chapter": 8,
+    "sequence": 227,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5f17aa44ecd5427"
+  },
+  "findings": []
+}

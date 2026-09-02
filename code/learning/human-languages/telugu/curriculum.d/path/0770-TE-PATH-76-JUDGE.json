@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-76-JUDGE",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TE-C76-very",
+    "TE-C76-bad",
+    "TE-C76-itisgood",
+    "TE-C76-easy",
+    "TE-C76-difficult"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-76-JUDGE"
+  ],
+  "after": []
+}

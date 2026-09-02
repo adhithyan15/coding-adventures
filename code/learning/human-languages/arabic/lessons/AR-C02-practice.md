@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: AR-C02-practice
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 220
 chapter: 2
 type: practice
@@ -9,13 +11,36 @@ concept_tag: REVIEW
 prerequisites: [AR-C02-ismii, AR-C02-maa-ismuka, AR-C02-tasharrafna]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C02-ism, AR-C02-ii-my, AR-C02-ismii, AR-C02-anta-anti, AR-C02-maa, AR-C02-maa-ismuka, AR-C02-tasharrafna]
 ---
 
 # Chapter 2 — the introduction, whole
 
-## The dialogue
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You could already greet someone. Every lesson since has been building
+one short exchange: give your name, ask for theirs, close warmly. Here it is
+whole.
+
+## The exchange
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C02-PRACTICE-01]; assesses=[] -->
 
 Read right to left:
 
@@ -25,6 +50,9 @@ Read right to left:
 | ما اسمك؟ (*mā ismuka*) | What's your name? |
 | اسمي أرون. (*ismī Arun*) | My name is Arun. |
 | تشرفنا. (*tasharrafnā*) | Pleased to meet you. |
+
+## You'll want to know — the pieces
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C02-PRACTICE-02]; assesses=[] -->
 
 Every piece from the root-and-suffix engine:
 
@@ -37,6 +65,7 @@ Dravidian languages), and it marks "you" by **gender** (*anta*/*anti*), not
 register.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the whole exchange, right to left]
@@ -44,6 +73,7 @@ register.
 - [YOU SAY: ask it back — "mā ismuka?" (to a man) / "mā ismuki?" (to a woman)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02] -->
 
 [PAUSE 3s] Give your name, ask someone else's, say you're pleased. (*Ismī …. /
 Mā ismuka? / Tasharrafnā.*) Two things Arabic does differently from the European

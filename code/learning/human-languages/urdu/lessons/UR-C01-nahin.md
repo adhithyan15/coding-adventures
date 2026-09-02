@@ -57,8 +57,10 @@ As a complete answer, **nahī̃** means “no.” Inside a sentence it commonly 
 “not.” That second job will matter when the track introduces verbs. Today you
 only need the complete answer.
 
-This is inherited Indo-Aryan vocabulary and is shared with Hindi **नहीं**
-*nahī̃*. The scripts differ, but the spoken word and grammar align closely.
+Unlike the Persian-Arabic vocabulary that opened this chapter, this word is
+inherited Indo-Aryan, part of Urdu's own core. Hindi says the same spoken word,
+*nahī̃*, and writes it in a different script — which you do not need here.
+The page looks different; the word and its grammar align closely.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-LEX-SHUKRIYA] -->

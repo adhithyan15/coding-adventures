@@ -1,5 +1,253 @@
 # Changelog — wasm-conformance
 
+## 0.1.124 — 2026-09-02 — regenerated baseline: `wasm-wast-parser`'s malformed-numeric-literal fix (225 directives)
+
+No code changes in this crate — regenerated
+`tests/fixtures/testsuite-status.json` (`--write-baseline`) after
+`wasm-wast-parser` 0.1.101 fixed the numeric-literal grammar gap that made
+`simd_const.wast` the single largest "not yet supported" file in the
+report (see that crate's own CHANGELOG entry for the root cause and fix).
+
+`assert_malformed` moved from 1489/1940 (451 NYS) to 1714/1940 (226 NYS)
+aggregate. Exactly 4 files' tallies changed, each to a clean 100%/0-NYS
+across every directive category — confirmed programmatically, comparing
+this file's `files` dict key-by-key against the pre-fix baseline, not just
+eyeballing the printed report:
+
+- `simd_const.wast` (this task's target): `assert_malformed` 72/181 (was
+  72/181 with 109 NYS) — 109 → 0 not-yet-supported.
+- `const.wast`: `assert_malformed` 56/76 → 76/76 — 20 → 0.
+- `float_literals.wast`: `assert_malformed` 2/78 → 78/78 — 76 → 0.
+- `int_literals.wast`: `assert_malformed` 0/20 → 20/20 — 20 → 0.
+
+Every other file's tally (all 253 others) is byte-for-byte identical to
+the pre-fix baseline — the fix lives in numeric-literal parsing shared by
+plain `i32.const`/`f32.const`/`f64.const`/etc. and `v128.const` alike, so
+this was checked deliberately rather than assumed: a shared-code change
+like this could plausibly have shifted an already-100% SIMD file's tally
+too, and it didn't.
+
+## 0.1.123 — 2026-09-02 — built-in `spectest` host module (W07 addendum 2 item 4)
+
+Added a small, always-available `spectest` host-module stub directly to
+`RegistryHost` (this crate's `HostInterface` implementation), closing the
+gap `code/specs/W07-wasm-post-mvp-epics.md`'s "Addendum 2" item 4
+predicted was likely: "check first whether this is actually a missing,
+cheap, one-time host-stub addition to `wasm-conformance`'s own test
+harness (likely) rather than an interpreter capability gap at all." It
+was exactly that — no changes needed in `wasm-wast-parser`,
+`wasm-module-parser`, `wasm-validator`, `wasm-execution`, or
+`wasm-runtime`.
+
+**Background**: the official upstream `WebAssembly/spec` testsuite has an
+informal convention (documented in that repo's own interpreter test
+harness, `interpreter/host/spectest.ml`) where many `.wast` files assume
+a host module literally named `"spectest"` is available to import from —
+a fixed set of no-op print functions, constant globals, a funcref table,
+and a linear memory, used purely as test fixtures. The real reference
+interpreter registers this module once, unconditionally, before running
+any script. This crate's `RegistryHost` never had that registration —
+before this change, EVERY `spectest` import genuinely failed to link,
+correctly graded `NotYetSupported` (an honest capability gap), not
+`Fail`.
+
+**Census** (`grep -oh '(import "spectest" "[a-zA-Z0-9_]*"'
+tests/fixtures/testsuite/*.wast`, confirmed live via a throwaway probe
+against `wasm_conformance::run_wast_source` before implementing anything):
+23 corpus files reference `spectest`, using exactly 13 real exports —
+`memory` (63x), `table` (33x), `global_i32` (31x), `print_i32` (24x),
+`print` (4x), `print_i32_f32` (3x), `print_i64`/`print_f64`/`global_i64`
+(2x each), `table64`/`print_f64_f64`/`print_f32`/`global_f64`/`global_f32`
+(1x each) — i.e. the ENTIRE real upstream `spectest` module, not just
+`global_i32` as the addendum's own headline case named. A 14th name,
+`"unknown"` (5x), is used ONLY inside deliberate `assert_unlinkable`
+cases whose whole point is that `"unknown"` is NOT a real `spectest`
+export — implementing it would have made those 5 directives regress from
+`Pass` to `Fail`, so it is deliberately absent from the stub.
+
+**Implementation** (`src/lib.rs`): a new `SpectestModule` struct holds
+the fixed exports, backed by real `wasm-execution` primitives
+(`LinearMemory::new(1, Some(2))`, `Table::new(10, Some(20))` /
+`Table::new_with_is64(10, Some(20), true)` for `table64`, and
+`Rc<RefCell<GlobalStorage>>` cells for the four globals) — never a real
+parsed WASM module or a full `WasmInstance`. Values are taken verbatim
+from the real upstream `spectest.ml` source (fetched and read directly,
+not guessed): `global_i32`/`global_i64` = `666`, `global_f32`/`global_f64`
+= `666.6`, `table`/`table64` = min 10 / max 20 funcref, `memory` = min 1 /
+max 2 pages. `print*` functions are no-ops (`Ok(Vec::new())`) — no corpus
+directive ever asserts on printed output, only on the import resolving
+and the call succeeding. `Executor` constructs exactly ONE
+`SpectestModule` for its whole run; every `RegistryHost` it builds clones
+it cheaply (`LinearMemory`/`Table` already share storage via an internal
+`Rc`, and each global cell already IS an `Rc<RefCell<..>>`), so
+`spectest.table`/`spectest.memory` behave like a real, persistently-
+registered module shared across an entire script's multiple `(module
+...)` directives — matching the real upstream interpreter's own
+"register once, before the script runs" behavior. Registry lookups
+(`register`ed sibling modules) are tried FIRST in every `resolve_*`
+method, with the `spectest` stub as a fallback only when `module_name ==
+"spectest"` — no corpus file actually shadows the name, but this keeps
+the precedence honest relative to how the real interpreter shares one
+namespace between host- and script-registered modules.
+
+**Diffed programmatically against the pre-fix baseline across all 257
+files** (Python, comparing the `files` dict keyed by filename) — 18
+files improved, summing to **272 `not_yet_supported` directives closed**
+(1552 → 1280 corpus-wide), zero regressions (no file's `fail`/`trap`
+counts changed):
+
+| File | pass before → after | NYS before → after |
+|---|---|---|
+| `global.wast` | 53 → 117 | 71 → 7 |
+| `imports.wast` | 143 → 194 | 75 → 24 |
+| `return_call_indirect.wast` | 18 → 69 | 63 → 12 |
+| `elem.wast` | 104 → 119 | 47 → 32 |
+| `return_call.wast` | 14 → 49 | 35 → 0 |
+| `data.wast` | 48 → 64 | 17 → 1 |
+| `token.wast` | 46 → 47 | 15 → 14 |
+| `table.wast` | 34 → 35 | 12 → 11 |
+| `imports2.wast` | 9 → 19 | 11 → 1 |
+| `annotations.wast` | 67 → 69 | 7 → 5 |
+| `imports4.wast` | 10 → 16 | 6 → 0 |
+| `data0.wast` | 1 → 5 | 6 → 2 |
+| `linking.wast` | 157 → 159 | 6 → 4 |
+| `start.wast` | 14 → 17 | 6 → 3 |
+| `func_ptrs.wast` | 31 → 36 | 5 → 0 |
+| `binary-leb128.wast` | 88 → 91 | 3 → 0 |
+| `names.wast` | 484 → 486 | 2 → 0 |
+| `table64.wast` | 13 → 14 | 1 → 0 |
+
+`binary-leb128.wast` was NOT in the text-grep census (its `spectest`
+import is binary-encoded LEB128 bytes, not a quoted `"spectest"` string
+literal) — caught only by the full baseline diff, confirming the value
+of verifying against the real corpus rather than trusting a single grep.
+
+New tests directly exercise the stub: resolving `global_i32`/`global_i64`/
+`global_f32`/`global_f64` to their real upstream values, calling
+`print`/`print_i32_f32` as no-ops, resolving `memory`/`table`/`table64`
+with the right limits and confirming they're genuinely usable
+(`memory.size`/`table.size`), and confirming `spectest.unknown` still
+correctly fails to link. The one pre-existing test that documented the
+OLD "no `spectest` support" behavior
+(`module_with_unresolved_import_marks_invoke_not_yet_supported`) now uses
+a genuinely-unknown module name instead, preserving its original intent
+(testing the `NotYetSupported`-cascade mechanism) without asserting a
+now-false claim about `spectest` itself.
+
+## 0.1.122 — 2026-09-02 — baseline regen: table-import element-type check (W37 addendum)
+
+Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`)
+after `wasm-execution` 0.9.94 / `wasm-runtime` 0.6.31 fixed the table-
+import element-type-mismatch gap 0.1.121's own baseline-regen entry
+below reported as a real, un-fixed `Fail` (surfaced by W37's table-
+declaration GC-reftype acceptance, PR #14072). No code changes in this
+crate itself.
+
+**Diffed programmatically against the pre-fix baseline across all 257
+files** (Python, comparing the `files` dict keyed by filename) -- exactly
+ONE file changed:
+
+| File | assert_unlinkable before | after |
+|---|---|---|
+| `linking.wast` | 48 pass / 2 fail | 50 pass / 0 fail |
+
+Both of `linking.wast`'s previously-`Fail` `assert_unlinkable` directives
+(importing `$Mtable_ex`'s real funcref-family `t-funcnull`/`t-refnull`
+tables as a declared `externref` import) now correctly reject at link
+time. Every other file's tally, including every other table-importing
+fixture in the corpus, is byte-for-byte unchanged -- confirming the fix is
+exactly as narrow as intended.
+
+## 0.1.121 — 2026-09-02 — baseline regen: GC reftype tables (W37)
+
+Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`)
+after `wasm-types` 0.1.25 / `wasm-wast-parser` 0.1.100 / `wasm-validator`
+0.2.88 / `wasm-execution` 0.9.93 / `wasm-runtime` 0.6.30 landed
+`code/specs/W37-wasm-gc-reftype-tables.md`'s table-declaration
+reftype-acceptance fix (including a security-review-caught fix to
+`call_indirect`/`return_call_indirect`'s own missing funcref-table check
+-- see `wasm-validator` 0.2.88's own CHANGELOG). No code changes in this
+crate itself.
+
+**Diffed programmatically against the pre-fix baseline across all 257
+files** (Python, comparing the `files` dict keyed by filename) -- 6 files
+changed:
+
+| File | Pass/Fail/Trap/NYS before | after |
+|---|---|---|
+| `table-sub.wast` | 0/0/0/3 | 1/0/0/2 |
+| `call_indirect.wast` | 160/0/0/12 | 161/0/0/11 |
+| `return_call_indirect.wast` | 17/0/0/64 | 18/0/0/63 |
+| `ref.wast` | 10/0/0/3 | 9/0/0/4 |
+| `table.wast` | 35/0/0/11 | 34/0/0/12 |
+| `linking.wast` | 155/0/0/8 | 155/2/0/6 |
+
+**Matches the spec's own prediction for exactly one file**:
+`table-sub.wast`'s table-decl-attributable NYS closes (0 -> 1 real Pass),
+as predicted. **Two additional, unplanned real improvements** came from
+the security-review-caught `call_indirect`/`return_call_indirect` fix (not
+part of the spec's own design, found during this PR's mandatory security
+review round): `call_indirect.wast`'s and `return_call_indirect.wast`'s
+own "expects funcref type but receives externref" `assert_invalid` cases,
+previously misclassified `NotYetSupported` ("structurally validates")
+since nothing checked a table's element type at all for these two
+opcodes, now correctly `Fail` the module as the real spec requires.
+
+**Diverges from the spec's own prediction for `ref_cast.wast`**: the spec
+predicted this file (45 NYS) was "the most likely to reach real Pass."
+Live re-probe (`run_wast_source`, the same throwaway-probe method the spec
+itself used) found its total NYS count is UNCHANGED (45 before and after)
+-- every one of its table declarations now parses, but the file's two
+modules each hit a SEPARATE, real, pre-existing blocker the spec's own
+per-file prediction did not anticipate: module 1 ("Abstract Types") calls
+`any.convert_extern` (confirmed entirely unimplemented, the same
+instruction the spec itself already flagged as a `ref_test.wast` blocker,
+just not cross-checked against `ref_cast.wast`'s own source); module 2
+("Concrete Types") casts to a concrete STRUCT type via `ref.cast`, which
+hits `wasm-wast-parser`'s own pre-existing restriction to concrete FUNC-
+family type immediates only (`module.rs:4397-4406` -- the spec's own
+"Explicitly out of scope" section already flags this restriction as stale,
+but attributed it to i31.wast's ABSTRACT-heap-type case, not to
+ref_cast.wast's CONCRETE-struct-type case, which trips the identical
+restriction for a different reason).
+
+`ref_eq.wast`/`ref_test.wast`/`i31.wast`/`br_on_cast.wast`/`br_on_cast_
+fail.wast` all show IDENTICAL pass/fail/NYS totals pre- and post-fix,
+matching the spec's own prediction that these would "parse further but
+reveal genuinely separate, already-identified" blockers rather than close.
+`i31.wast` in particular: live re-probe shows the VAST MAJORITY of its
+directives (all `$..._table_of_i31ref`-shaped modules) now fail with
+`"expected an index, found \"i31ref\""` -- exactly the spec's own
+"Correction 2" elem-segment bare-reftype-keyword gap (`i31ref` in an
+`(elem ...)` reftype position), already flagged there as real but
+out-of-scope. The spec's own rough "~38 of 46 resolving" estimate for this
+file does not hold once this dominant elem-segment gap is accounted for --
+0 of its 46 close.
+
+`ref.wast`/`table.wast` show a small number of `Pass` -> `NotYetSupported`
+shifts (never `Fail`) -- see `wasm-wast-parser` 0.1.100's own CHANGELOG for
+the root cause (pre-existing "no instruction-level type-checker"/non-null-
+abstract-heap-type gaps becoming reachable in a table-declaration position
+for the first time, not a new class of gap).
+
+`linking.wast` shows 2 genuine new `Fail`s -- see `wasm-runtime` 0.6.30's
+own CHANGELOG: a pre-existing, already-self-documented table-import
+element-type-checking gap in `wasm-runtime::instantiate`, newly reachable
+because the one corpus fixture exercising it needed this exact release to
+parse at all. Flagged as a follow-up, not fixed here.
+
+**Bottom line**: of the cluster's 550 NYS this spec's own motivating
+document cited, the REALIZED improvement from this release is 1 directive
+(`table-sub.wast`) closing to real `Pass` -- smaller than the spec's own
+"~45-46" prediction, entirely explained by two things the spec's own
+per-file research did not fully cross-check: `ref_cast.wast`'s `any.
+convert_extern`/concrete-struct-`ref.cast`-restriction blockers, and
+`i31.wast`'s dominant elem-segment gap. The fix itself is correct and
+matches the real GC/function-references proposal grammar exactly; the
+corpus impact is simply smaller than hoped because other, separate,
+already-identified gaps dominate the downstream path for every other file
+in the cluster.
+
 ## 0.1.120 — 2026-09-02 — baseline regen: typed `select` (0x1C) closes `select.wast` (126 not-yet-supported → 0)
 
 Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`)

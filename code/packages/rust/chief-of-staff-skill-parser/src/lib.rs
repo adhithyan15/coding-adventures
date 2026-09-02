@@ -4,7 +4,7 @@
 #![deny(missing_docs)]
 
 pub use chief_of_staff_agent_manifest::{
-    AgentManifest, Capability, ChannelAccess, MANIFEST_V2_VERSION,
+    AgentManifest, Capability, ChannelAccess, MANIFEST_VERSION, MAX_ALLOWED_TOOLS,
 };
 use document_ast::{BlockNode, InlineNode, ListChildNode};
 use std::collections::{BTreeMap, BTreeSet};
@@ -58,6 +58,16 @@ pub enum SkillParseError {
     AmbiguousCapabilitiesSection,
     /// A capability bullet is malformed or outside the taxonomy.
     InvalidCapability(String),
+    /// The required tool section is absent.
+    MissingToolsSection,
+    /// The tool section has no list.
+    MissingToolsList,
+    /// The tool section appears more than once, or holds more than one list.
+    AmbiguousToolsSection,
+    /// A tool bullet is not a namespaced D18D tool identifier.
+    InvalidTool(String),
+    /// The same tool was declared more than once.
+    DuplicateTool(String),
     /// The same capability was declared more than once.
     DuplicateCapability(String),
 }
@@ -102,6 +112,19 @@ impl Display for SkillParseError {
             }
             Self::AmbiguousCapabilitiesSection => {
                 formatter.write_str("SKILL.md capabilities section is ambiguous")
+            }
+            Self::MissingToolsSection => {
+                formatter.write_str("SKILL.md requires a Tools needed section")
+            }
+            Self::MissingToolsList => formatter.write_str("SKILL.md tools section requires a list"),
+            Self::AmbiguousToolsSection => {
+                formatter.write_str("SKILL.md tools section is ambiguous")
+            }
+            Self::InvalidTool(value) => {
+                write!(formatter, "invalid SKILL.md tool: {value}")
+            }
+            Self::DuplicateTool(value) => {
+                write!(formatter, "duplicate SKILL.md tool: {value}")
             }
             Self::InvalidCapability(value) => {
                 write!(formatter, "invalid SKILL.md capability: {value}")
@@ -174,14 +197,10 @@ pub fn parse_skill(source: &str) -> Result<ParsedSkill, SkillParseError> {
     let channels = parse_channels(&metadata)?;
     let message_schema_versions = parse_message_schema_versions(&metadata, &channels)?;
     let capabilities = parse_capabilities(&document.children, &agent)?;
+    let allowed_tools = parse_allowed_tools(&document.children)?;
     let deno_permissions = deno_permissions(&capabilities);
     let manifest = AgentManifest {
-        // Pinned to v2 rather than tracking MANIFEST_VERSION. SKILL.md has no
-        // `## Tools needed` section yet, and v3 requires `allowed_tools` to be
-        // declared -- so following the constant would have silently changed
-        // what this parser emits the moment the constant moved. Emitting v3
-        // becomes correct when SKILL.md can express a tool surface.
-        version: MANIFEST_V2_VERSION,
+        version: MANIFEST_VERSION,
         agent: agent.clone(),
         description,
         privilege_tier,
@@ -189,7 +208,7 @@ pub fn parse_skill(source: &str) -> Result<ParsedSkill, SkillParseError> {
         message_schema_versions,
         vault_access: None,
         capabilities,
-        allowed_tools: Vec::new(),
+        allowed_tools,
         restart_policy,
         justification: format!(
             "Level 1 agent {agent} requests only the access declared in its SKILL.md."
@@ -353,6 +372,109 @@ fn parse_list(value: Option<&String>) -> Result<Vec<String>, SkillParseError> {
     Ok(inner.split(',').map(|part| unquote(part.trim())).collect())
 }
 
+/// Parse the required `## Tools needed` section into sorted D18D tool ids.
+///
+/// Required rather than optional, and `- none` is the way to say "calls no
+/// tools" -- the same shape `## Capabilities needed` already uses. Manifest
+/// schema v3 requires `allowed_tools` precisely so that "calls no tools" is
+/// declared instead of defaulted into; letting an absent section mean an empty
+/// list here would put the default back one layer up and undo that.
+fn parse_allowed_tools(nodes: &[BlockNode]) -> Result<Vec<String>, SkillParseError> {
+    // Counted across nested blocks too, so a decoy section in a block quote
+    // makes the document ambiguous instead of being silently ignored.
+    if count_tools_headings(nodes) > 1 {
+        return Err(SkillParseError::AmbiguousToolsSection);
+    }
+    let sections = nodes
+        .iter()
+        .enumerate()
+        .filter_map(|(index, node)| match node {
+            BlockNode::Heading(heading) if heading.level == 2 => {
+                literal_inline_text(&heading.children)
+                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("tools needed"))
+                    .then_some(index)
+            }
+            _ => None,
+        })
+        .collect::<Vec<_>>();
+    let section = match sections.as_slice() {
+        [] => return Err(SkillParseError::MissingToolsSection),
+        [section] => *section,
+        _ => return Err(SkillParseError::AmbiguousToolsSection),
+    };
+    let lists = nodes[section + 1..]
+        .iter()
+        .take_while(|node| !matches!(node, BlockNode::Heading(_)))
+        .filter_map(|node| match node {
+            BlockNode::List(list) => Some(list),
+            _ => None,
+        })
+        .collect::<Vec<_>>();
+    let list = match lists.as_slice() {
+        [] => return Err(SkillParseError::MissingToolsList),
+        [list] => *list,
+        _ => return Err(SkillParseError::AmbiguousToolsSection),
+    };
+    let mut tools = Vec::new();
+    let mut seen = BTreeSet::new();
+    for child in &list.children {
+        let blocks = match child {
+            ListChildNode::ListItem(item) => &item.children,
+            ListChildNode::TaskItem(item) => &item.children,
+        };
+        // Literal only. `block_text` would resolve an image to its alt text
+        // and drop raw HTML, which authorizes a tool the rendered document
+        // does not show -- see `literal_inline_text`.
+        let Some(value) = literal_item_text(blocks).map(|text| text.trim().to_string()) else {
+            return Err(SkillParseError::InvalidTool(
+                block_text(blocks).trim().to_string(),
+            ));
+        };
+        if value.eq_ignore_ascii_case("none") {
+            if list.children.len() != 1 {
+                return Err(SkillParseError::InvalidTool(value));
+            }
+            return Ok(Vec::new());
+        }
+        if !valid_tool_id(&value) || !(3..=128).contains(&value.len()) {
+            return Err(SkillParseError::InvalidTool(value));
+        }
+        if tools.len() >= MAX_ALLOWED_TOOLS {
+            return Err(SkillParseError::InvalidTool(value));
+        }
+        if !seen.insert(value.clone()) {
+            return Err(SkillParseError::DuplicateTool(value));
+        }
+        tools.push(value);
+    }
+    // The manifest stores tools sorted, and validates that invariant. Sorting
+    // here rather than relying on SKILL.md authoring order keeps the generated
+    // manifest byte-identical for two skills that list the same tools.
+    tools.sort();
+    Ok(tools)
+}
+
+/// A D18D tool identifier: two or more dot-separated segments, each starting
+/// with a lowercase letter. A bare namespace is rejected -- it names no tool,
+/// and would invite prefix matching in the broker.
+fn valid_tool_id(value: &str) -> bool {
+    let mut count = 0usize;
+    for segment in value.split('.') {
+        count += 1;
+        if !segment
+            .bytes()
+            .next()
+            .is_some_and(|byte| byte.is_ascii_lowercase())
+            || !segment
+                .bytes()
+                .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'_')
+        {
+            return false;
+        }
+    }
+    count >= 2
+}
+
 fn parse_capabilities(
     nodes: &[BlockNode],
     agent: &str,
@@ -361,10 +483,11 @@ fn parse_capabilities(
         .iter()
         .enumerate()
         .filter_map(|(index, node)| match node {
-            BlockNode::Heading(heading) if heading.level == 2 => inline_text(&heading.children)
-                .trim()
-                .eq_ignore_ascii_case("capabilities needed")
-                .then_some(index),
+            BlockNode::Heading(heading) if heading.level == 2 => {
+                literal_inline_text(&heading.children)
+                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("capabilities needed"))
+                    .then_some(index)
+            }
             _ => None,
         })
         .collect::<Vec<_>>();
@@ -393,7 +516,13 @@ fn parse_capabilities(
             ListChildNode::ListItem(item) => &item.children,
             ListChildNode::TaskItem(item) => &item.children,
         };
-        let value = block_text(blocks).trim().to_string();
+        // Literal only, for the same reason as the tools section: an image's
+        // alt text would grant `fs:write:/` while rendering as a picture.
+        let Some(value) = literal_item_text(blocks).map(|text| text.trim().to_string()) else {
+            return Err(SkillParseError::InvalidCapability(
+                block_text(blocks).trim().to_string(),
+            ));
+        };
         if value.eq_ignore_ascii_case("none") {
             if list.children.len() != 1 {
                 return Err(SkillParseError::InvalidCapability(value));
@@ -526,6 +655,83 @@ fn block_text(nodes: &[BlockNode]) -> String {
         .join(" ")
 }
 
+/// Extract inline text ONLY when every node is literal, else `None`.
+///
+/// `inline_text` is for prose. It is unsafe for anything that becomes an
+/// authorization decision, because it resolves an image to its **alt text**,
+/// drops raw inline HTML while keeping the text around it, and concatenates
+/// with no separator. Each of those lets a tool identifier be authorized that
+/// a reader cannot see:
+///
+/// ```text
+///   - ![&#97;dmin&#46;exec&#95;all](pixel.png)     -> "admin.exec_all"
+///   - context.read<span hidden>_write_all</span>  -> "context.read_write_all"
+///   - artifact<span></span>.<span></span>write    -> "artifact.write"
+/// ```
+///
+/// The first renders as a picture and the second renders as `context.read`, so
+/// the rendered document and a source diff are defeated at the same time.
+///
+/// Only `Text` and `CodeSpan` survive here. A code span is allowed because it
+/// renders as its own literal content; everything else -- images, raw HTML,
+/// links, autolinks, emphasis, breaks -- is rejected rather than flattened.
+///
+/// One residual is accepted knowingly: HTML entity references decode into
+/// `Text` before this sees them, so `admin&period;exec_all` still yields
+/// `admin.exec_all`. That case renders faithfully, so a reader of the rendered
+/// document sees the real identifier; only a raw-bytes grep is fooled. The
+/// answer to that is to scan the signed manifest's `allowed_tools` rather than
+/// the Markdown, which is what declaring it in the manifest is for.
+fn literal_inline_text(nodes: &[InlineNode]) -> Option<String> {
+    let mut text = String::new();
+    for node in nodes {
+        match node {
+            InlineNode::Text(value) => text.push_str(&value.value),
+            InlineNode::CodeSpan(value) => text.push_str(&value.value),
+            _ => return None,
+        }
+    }
+    Some(text)
+}
+
+/// A list item's literal text, if it is exactly one paragraph of literal inlines.
+fn literal_item_text(blocks: &[BlockNode]) -> Option<String> {
+    match blocks {
+        [BlockNode::Paragraph(paragraph)] => literal_inline_text(&paragraph.children),
+        _ => None,
+    }
+}
+
+/// Count level-2 "tools needed" headings ANYWHERE, including nested blocks.
+///
+/// The section scan runs over top-level children only, so a decoy
+/// `## Tools needed` inside a block quote is neither matched nor counted. That
+/// lets an author stage a document whose visible declaration is not the
+/// effective one: a prominent quoted "Tools needed / none" above a real
+/// section granting anything. Counting nested occurrences makes that
+/// ambiguous rather than silently ignored.
+fn count_tools_headings(nodes: &[BlockNode]) -> usize {
+    nodes
+        .iter()
+        .map(|node| match node {
+            BlockNode::Heading(heading) if heading.level == 2 => usize::from(
+                literal_inline_text(&heading.children)
+                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("tools needed")),
+            ),
+            BlockNode::Blockquote(value) => count_tools_headings(&value.children),
+            BlockNode::List(value) => value
+                .children
+                .iter()
+                .map(|child| match child {
+                    ListChildNode::ListItem(item) => count_tools_headings(&item.children),
+                    ListChildNode::TaskItem(item) => count_tools_headings(&item.children),
+                })
+                .sum(),
+            _ => 0,
+        })
+        .sum()
+}
+
 fn inline_text(nodes: &[InlineNode]) -> String {
     nodes
         .iter()
@@ -553,14 +759,14 @@ mod tests {
         StrikethroughNode, StrongNode, TaskItemNode, TextNode,
     };
 
-    const MINIMAL: &str = "# Weather Reporter\n\nYou are a weather reporting agent for friendly local forecasts.\n\n## Capabilities needed\n- net:connect:api.weather.gov:443\n\n## Output format\nBe brief.\n";
+    const MINIMAL: &str = "# Weather Reporter\n\nYou are a weather reporting agent for friendly local forecasts.\n\n## Capabilities needed\n- net:connect:api.weather.gov:443\n\n## Output format\nBe brief.\n\n## Tools needed\n- none\n";
 
     #[test]
     fn issue_example_infers_safe_defaults_and_permissions() {
         let skill = parse_skill(MINIMAL).unwrap();
         assert_eq!(skill.title, "Weather Reporter");
         assert_eq!(skill.manifest.agent, "weather-reporter");
-        assert_eq!(skill.manifest.version, MANIFEST_V2_VERSION);
+        assert_eq!(skill.manifest.version, MANIFEST_VERSION);
         assert_eq!(skill.manifest.privilege_tier, 0);
         assert_eq!(skill.manifest.channels, ChannelAccess::default());
         assert!(skill.manifest.message_schema_versions.is_empty());
@@ -571,7 +777,7 @@ mod tests {
 
     #[test]
     fn frontmatter_overrides_metadata_and_sorts_runtime_access() {
-        let source = "---\nagent: 'forecast-agent'\ndescription: \"Produces precise forecasts for subscribed cities.\"\nprivilege_tier: 1\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=2]\nrestart_policy: always\n---\n# Forecast\n\nIgnored description because frontmatter wins.\n\n## Capabilities needed\n- fs:write:/tmp/cache | Stores short-lived forecast cache data.\n- net:connect:api.weather.gov:443\n- fs:read:/tmp/cache\n- net:dns:api.weather.gov\n";
+        let source = "---\nagent: 'forecast-agent'\ndescription: \"Produces precise forecasts for subscribed cities.\"\nprivilege_tier: 1\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=2]\nrestart_policy: always\n---\n# Forecast\n\nIgnored description because frontmatter wins.\n\n## Capabilities needed\n- fs:write:/tmp/cache | Stores short-lived forecast cache data.\n- net:connect:api.weather.gov:443\n- fs:read:/tmp/cache\n- net:dns:api.weather.gov\n\n## Tools needed\n- none\n";
         let skill = parse_skill(source).unwrap();
         assert_eq!(skill.manifest.agent, "forecast-agent");
         assert_eq!(skill.manifest.channels.reads, ["weather-requests"]);
@@ -601,7 +807,7 @@ mod tests {
 
     #[test]
     fn explicit_none_produces_empty_profile_and_schema_json() {
-        let source = "# Greeter\n\nGreets the user without external operating-system access.\n\n## Capabilities needed\n- none\n";
+        let source = "# Greeter\n\nGreets the user without external operating-system access.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
         let skill = parse_skill(source).unwrap();
         assert!(skill.manifest.capabilities.is_empty());
         assert!(skill.deno_permissions.is_empty());
@@ -613,7 +819,7 @@ mod tests {
 
     #[test]
     fn taxonomy_permissions_cover_every_mapped_category() {
-        let source = "# Operator\n\nExercises every supported Deno permission mapping safely.\n\n## Capabilities needed\n- proc:exec:git\n- env:read:HOME\n- ffi:load:libdemo\n- stdin:read:stdin\n- stdout:write:stdout\n- time:sleep:clock\n";
+        let source = "# Operator\n\nExercises every supported Deno permission mapping safely.\n\n## Capabilities needed\n- proc:exec:git\n- env:read:HOME\n- ffi:load:libdemo\n- stdin:read:stdin\n- stdout:write:stdout\n- time:sleep:clock\n\n## Tools needed\n- none\n";
         let skill = parse_skill(source).unwrap();
         assert_eq!(
             skill.deno_permissions,
@@ -653,10 +859,10 @@ mod tests {
             Err(SkillParseError::InvalidAgent)
         );
         assert_eq!(
-            parse_skill("# Valid Name\n\nshort\n\n## Capabilities needed\n- none\n"),
+            parse_skill("# Valid Name\n\nshort\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n"),
             Err(SkillParseError::InvalidDescription)
         );
-        let bad_tier = "---\nprivilege_tier: 4\n---\n# Valid Name\n\nLong enough description.\n\n## Capabilities needed\n- none\n";
+        let bad_tier = "---\nprivilege_tier: 4\n---\n# Valid Name\n\nLong enough description.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
         assert_eq!(
             parse_skill(bad_tier),
             Err(SkillParseError::InvalidPrivilegeTier)
@@ -665,7 +871,7 @@ mod tests {
 
     #[test]
     fn rejects_invalid_channels_and_restart_policy() {
-        let both = "---\nreads: [same-channel]\nwrites: [same-channel]\n---\n# Valid Agent\n\nLong enough description.\n\n## Capabilities needed\n- none\n";
+        let both = "---\nreads: [same-channel]\nwrites: [same-channel]\n---\n# Valid Agent\n\nLong enough description.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
         assert_eq!(
             parse_skill(both),
             Err(SkillParseError::InvalidChannel("same-channel".to_string()))
@@ -714,7 +920,7 @@ mod tests {
 
     #[test]
     fn message_schema_versions_default_to_one_and_fail_closed() {
-        let base = "---\nreads: [request-channel]\nwrites: [response-channel]\n---\n# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        let base = "---\nreads: [request-channel]\nwrites: [response-channel]\n---\n# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
         let skill = parse_skill(base).unwrap();
         assert_eq!(
             skill.manifest.message_schema_version("request-channel"),
@@ -744,26 +950,208 @@ mod tests {
     }
 
     #[test]
-    fn rejects_capability_failures() {
-        let base = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n";
+    fn declares_tools_and_emits_a_schema_v3_manifest() {
+        let source = "# Weather Reporter\n\nYou are a weather reporting agent for friendly local forecasts.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- context.append_entry\n- artifact.write\n- artifact.create_v2\n";
+        let skill = parse_skill(source).unwrap();
+        assert_eq!(skill.manifest.version, MANIFEST_VERSION);
+        // Sorted here, not in SKILL.md order, so two skills listing the same
+        // tools generate byte-identical manifests.
         assert_eq!(
-            parse_skill(base),
+            skill.manifest.allowed_tools,
+            vec![
+                "artifact.create_v2".to_string(),
+                "artifact.write".to_string(),
+                "context.append_entry".to_string(),
+            ]
+        );
+        // The generated manifest must satisfy the codec that will verify it.
+        let json = skill.manifest.to_json().unwrap();
+        assert!(json.contains("\"allowed_tools\""));
+    }
+
+    #[test]
+    fn explicit_none_declares_an_empty_tool_surface() {
+        let source = "# Greeter\n\nGreets the user without external operating-system access.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
+        let skill = parse_skill(source).unwrap();
+        assert_eq!(skill.manifest.version, MANIFEST_VERSION);
+        assert!(skill.manifest.allowed_tools.is_empty());
+        // v3 requires the field, so an empty surface still renders it.
+        assert!(skill.manifest.to_json().unwrap().contains("allowed_tools"));
+    }
+
+    #[test]
+    fn rejects_tool_section_failures() {
+        let head = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        let with = |tools: &str| format!("{head}\n## Tools needed\n{tools}");
+
+        // Required, not optional. An absent section would put "calls no tools"
+        // back to a default, which is what manifest v3 exists to prevent.
+        assert_eq!(parse_skill(head), Err(SkillParseError::MissingToolsSection));
+        assert_eq!(
+            parse_skill(&format!("{head}\n## Tools needed\n")),
+            Err(SkillParseError::MissingToolsList)
+        );
+        assert_eq!(
+            parse_skill(&format!(
+                "{head}\n## Tools needed\n- artifact.write\n\n## Tools needed\n- a.b\n"
+            )),
+            Err(SkillParseError::AmbiguousToolsSection)
+        );
+        assert!(matches!(
+            parse_skill(&with("- artifact.write\n- artifact.write\n")),
+            Err(SkillParseError::DuplicateTool(_))
+        ));
+        assert!(matches!(
+            parse_skill(&with("- none\n- artifact.write\n")),
+            Err(SkillParseError::InvalidTool(_))
+        ));
+        // A bare namespace names no tool and would invite prefix matching.
+        for bad in [
+            "- artifact\n",
+            "- Artifact.create\n",
+            "- artifact..create\n",
+            "- .create\n",
+            "- artifact.\n",
+            "- artifact.create!\n",
+            "- 2artifact.create\n",
+            "- ab\n",
+        ] {
+            assert!(
+                matches!(
+                    parse_skill(&with(bad)),
+                    Err(SkillParseError::InvalidTool(_))
+                ),
+                "should have rejected {bad:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_tool_a_reader_cannot_see_is_never_authorized() {
+        // Security review, 2026-09-02. `block_text` resolved an image to its
+        // ALT TEXT, dropped raw inline HTML while keeping surrounding text, and
+        // concatenated with no separator. Each case below produced a signed
+        // `allowed_tools` entry that the rendered document does not show.
+        let head = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        let with = |tools: &str| format!("{head}\n## Tools needed\n{tools}");
+
+        for attack in [
+            // Renders as a picture. The identifier is entity-encoded, so it is
+            // absent from the source bytes AND invisible when rendered.
+            "- ![&#97;dmin&#46;exec&#95;all](https://example.com/pixel.png)\n",
+            // Renders as `context.read`; the suffix is hidden HTML.
+            "- context.read<span style=\"display:none\">_write_all</span>\n",
+            // Empty tags fuse fragments into an identifier present nowhere.
+            "- artifact<span></span>.<span></span>write\n",
+            // Alt text concatenated with following text.
+            "- ![admin.](x.png)exec_all\n",
+            // A link renders as its label, not necessarily its target.
+            "- [artifact.write](https://evil.example)\n",
+            "- <https://evil.example/artifact.write>\n",
+        ] {
+            assert!(
+                matches!(
+                    parse_skill(&with(attack)),
+                    Err(SkillParseError::InvalidTool(_))
+                ),
+                "should have rejected non-literal bullet {attack:?}"
+            );
+        }
+
+        // A code span renders as its own literal content, so it stays legal.
+        let skill = parse_skill(&with("- `artifact.write`\n")).unwrap();
+        assert_eq!(skill.manifest.allowed_tools, vec!["artifact.write"]);
+    }
+
+    #[test]
+    fn a_capability_a_reader_cannot_see_is_never_granted() {
+        // The identical hole existed in the capabilities section and was
+        // strictly worse: `- ![fs:write:/](x.png)` granted filesystem write
+        // while rendering as a picture.
+        let make = |caps: &str| {
+            format!("# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n{caps}\n## Tools needed\n- none\n")
+        };
+        for attack in [
+            "- ![fs:write:/](https://example.com/pixel.png)\n",
+            "- net:connect<span>:evil.example:443</span>\n",
+            "- [fs:write:/](https://evil.example)\n",
+        ] {
+            assert!(
+                matches!(
+                    parse_skill(&make(attack)),
+                    Err(SkillParseError::InvalidCapability(_))
+                ),
+                "should have rejected non-literal capability {attack:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_heading_that_does_not_read_as_tools_needed_does_not_declare_tools() {
+        let tail = "\n- admin.exec_all\n";
+        let head = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        // Renders as "Tools 🖼" / as a link to an attacker URL.
+        for heading in [
+            "## Tools ![needed](x.png)",
+            "## [Tools needed](https://evil.example)",
+        ] {
+            assert_eq!(
+                parse_skill(&format!("{head}\n{heading}{tail}")),
+                Err(SkillParseError::MissingToolsSection),
+                "heading {heading:?} must not match"
+            );
+        }
+    }
+
+    #[test]
+    fn a_decoy_tools_section_makes_the_document_ambiguous() {
+        // A prominent quoted "Tools needed / none" above a real section was
+        // silently ignored, so the visible declaration was not the effective
+        // one. Nested occurrences now count.
+        let source = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n\n> ## Tools needed\n>\n> - none\n\nSome prose here.\n\n## Tools needed\n- admin.exec_all\n";
+        assert_eq!(
+            parse_skill(source),
+            Err(SkillParseError::AmbiguousToolsSection)
+        );
+    }
+
+    #[test]
+    fn rejects_more_tools_than_the_manifest_bound_allows() {
+        let head = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n- none\n";
+        let bullets = (0..=MAX_ALLOWED_TOOLS)
+            .map(|index| format!("- ns.tool_{index}\n"))
+            .collect::<String>();
+        assert!(matches!(
+            parse_skill(&format!("{head}\n## Tools needed\n{bullets}")),
+            Err(SkillParseError::InvalidTool(_))
+        ));
+    }
+
+    #[test]
+    fn rejects_capability_failures() {
+        // Capability bullets are appended AFTER `base`, so the tools section
+        // has to be supplied by the closure rather than baked into `base` --
+        // otherwise the appended bullets land under `## Tools needed`.
+        let base = "# Valid Agent\n\nLong enough description for a valid agent.\n\n## Capabilities needed\n";
+        let with = |bullets: &str| format!("{base}{bullets}\n## Tools needed\n- none\n");
+        assert_eq!(
+            parse_skill(&with("")),
             Err(SkillParseError::MissingCapabilitiesList)
         );
         assert!(matches!(
-            parse_skill(&format!("{base}- net:write:example.com\n")),
+            parse_skill(&with("- net:write:example.com\n")),
             Err(SkillParseError::InvalidCapability(_))
         ));
         assert!(matches!(
-            parse_skill(&format!("{base}- net:connect:x\n- net:connect:x\n")),
+            parse_skill(&with("- net:connect:x\n- net:connect:x\n")),
             Err(SkillParseError::DuplicateCapability(_))
         ));
         assert!(matches!(
-            parse_skill(&format!("{base}- none\n- net:connect:x\n")),
+            parse_skill(&with("- none\n- net:connect:x\n")),
             Err(SkillParseError::InvalidCapability(_))
         ));
         assert!(matches!(
-            parse_skill(&format!("{base}- net:connect:x | short\n")),
+            parse_skill(&with("- net:connect:x | short\n")),
             Err(SkillParseError::InvalidCapability(_))
         ));
         assert_eq!(
@@ -771,15 +1159,17 @@ mod tests {
             Err(SkillParseError::MissingCapabilitiesSection)
         );
         assert_eq!(
-            parse_skill("# Valid Agent\n\nLong enough description for a valid agent.\n\n# Second Agent\n\n## Capabilities needed\n- none\n"),
+            parse_skill("# Valid Agent\n\nLong enough description for a valid agent.\n\n# Second Agent\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n"),
             Err(SkillParseError::MultipleTitles)
         );
         assert!(matches!(
-            parse_skill(&format!("{base}- fs:read:/tmp/one,/tmp/two\n")),
+            parse_skill(&with("- fs:read:/tmp/one,/tmp/two\n")),
             Err(SkillParseError::InvalidCapability(_))
         ));
         assert_eq!(
-            parse_skill(&format!("{base}- none\n\n## Capabilities needed\n- none\n")),
+            parse_skill(&with(
+                "- none\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n"
+            )),
             Err(SkillParseError::AmbiguousCapabilitiesSection)
         );
         assert_eq!(

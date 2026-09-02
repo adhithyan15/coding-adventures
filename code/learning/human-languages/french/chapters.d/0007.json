@@ -7,10 +7,23 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C07-jours-2",
+    "lesson": "FR-C07-practice",
     "kind": "task",
-    "summary": "Complete FR-C07-jours-2, the canonical closing checkpoint, and demonstrate the chapter promise: name the days of the week in French and use them in simple plans.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Seven day-names that are a map of the sky. Five carry a Roman planet-god and all of them carry Latin dies, \"day\" -- so half of every weekday comes free, and English names the same gods on the same days under Germanic names. Then two days where a later faith wrote over the planets entirely.",
+    "assesses": [
+      "FR-LEX-LUNE-01",
+      "FR-LEX-LUNDI-02",
+      "FR-GRAM-DI-JOUR-03",
+      "FR-LEX-MARDI-04",
+      "FR-ETYMON-MARDI-TUESDAY-05",
+      "FR-LEX-MERCREDI-06",
+      "FR-LEX-JEUDI-07",
+      "FR-LEX-VENDREDI-08",
+      "FR-LEX-SAMEDI-09",
+      "FR-ETYMON-SAMEDI-SABBAT-10",
+      "FR-LEX-DIMANCHE-11",
+      "FR-ETYMON-DIMANCHE-DOMINICA-12"
+    ],
+    "note": "Chapter 7 is schema-v2 as of the handwritten-chapter retirement, so the payoff is atom-scored: FR-C07-practice assesses every atom the chapter introduces."
   }
 }

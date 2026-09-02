@@ -1,5 +1,241 @@
 # Changelog
 
+## Unreleased — 35 headwords chosen off the exam inventory's own uncovered list
+
+Chapters 74-80 add **35 Telugu headwords, seven chapters of five, one new word
+per lesson**. They were not chosen by topic. Every one was picked off the
+uncovered list in `core/exam-inventory-telugu-a1.json`, largest cluster first,
+because an uncovered exam point names the missing word and a vocabulary count
+does not.
+
+**Telugu A1 exam coverage: 169/326 (52%) to 213/326 (65%).** 35 words closed
+**44 points**, against an unchanged denominator — no point was added, removed or
+reworded to move the number, and `partial` stayed at 0, so every probe still
+names atoms that exist.
+
+Three categories are now complete: **Prashnalu 9/9**, **Kriya visheshanamu 8/8**,
+**Nishedhamu 3/3**.
+
+### Every number re-measured against the merged tree, not derived
+
+    telugu A1 exam coverage        169/326 (52%) -> 213/326 (65%)
+    corpus exam-point backlog      686 -> 642            (-44, exactly this tranche)
+    telugu pre-A1 headwords        186/300 -> 221/300    (shortfall 114 -> 79)
+    telugu lessons                     301 -> 336
+    telugu atoms taught                404 -> 449
+    atoms never revisited               16 -> 13         (improved)
+    reinforcement window misses       1017 -> 1014       (improved)
+      of which R4 (recognition at distance) 320 -> 281
+    forward references                  10 -> 10         (held)
+    never-taught glyphs                  0 -> 0          (held)
+    script-closure violations            9 -> 9          (held)
+    distinct Telugu characters used     64 -> 64         (held)
+
+### The seven chapters, and the node that makes them count
+
+`level-gate.ts` reads a lesson's level from the **spine node** that claims it, so
+good words hung off an A1 node move the pre-A1 count by zero. All seven pre-A1
+nodes are in rotation, one per chapter, and the measured +35 confirms it.
+
+    74 And, But, Or               SPINE-RESPOND-BASIC          mariyu kaanii leedaa enduku endukantee
+    75 Today, Yesterday, When     SPINE-TAKE-LEAVE             ivaala ninna eppudu-vastaaru mundu samvatsaram
+    76 Very Good, Very Bad        SPINE-CHECK-WELLBEING        caalaa-manci cedda mancidi sulabham kashtam
+    77 Where You Are From         SPINE-EXCHANGE-NAMES         nunci pattanam deesam bhaaratadeesam muppai
+    78 Yes or No, and I Do Not Know SPINE-POLITE-REQUEST-REPAIR avunaa telusaa naaku-teliyadu artham-kaaleedu unnaaraa
+    79 He, She, and Whose         SPINE-MEET-GREET             sneehitudi maa atanu nannu gaaru
+    80 Wanting, Allowing, Wishing SPINE-COURTESY-THANK         naaku-kaavaali ani vellavaccu lopaliki-randi subhaakaankshalu
+
+### Why 35 words closed 44 points
+
+Because the list was read before the chapters were designed. The clusters that
+paid, in order:
+
+* **Joining two ideas (8 points from 5 words).** The track had no word for *and*,
+  none for *or*, none for *but*, and no way to answer *why*. That one chapter
+  closed coordination, the causal clause, disagreement, the counter-argument and
+  the two-alternative question.
+* **He, she, whose (8 from 5).** Four of Telugu's six persons were never taught.
+  `atanu`/`aame`/`vaallu` plus `maa`/`mana` closed the paradigm, the third-person
+  verb endings, the object pronoun, the accusative `-ni`, the genitive on a full
+  noun, the stem change in front of an ending, and `-gaaru`.
+* **Yes or no (6 from 5).** Every question the track taught was a wh-question.
+  The `-aa` particle closed the yes-or-no type, and with it *do you know*, *I
+  don't know*, *I didn't understand*, *is he there*, and the negative
+  conjugation.
+* **Where you are from (5 from 5).** `nunci`, a country with a name, and the tens
+  past twenty finally made the opening question of an A1 speaking paper
+  answerable: name, age and origin, which had one of its four points covered.
+
+### Eight points moved and were NOT claimed
+
+Half a pair buys nothing, which is the rule the inventory started with. Each of
+these keeps `probe: null` and had its note rewritten to say what landed and what
+did not: `TE-A1-N-03` (a country has a name now; no town or state does),
+`TE-A1-X-102` (two of four settlement words), `TE-A1-POS-02` (`maa` and `mana`
+landed; `vaari` did not), `TE-A1-P-07`, `TE-A1-CO-13`, `TE-A1-X-09`, and the two
+below.
+
+**`TE-A1-DEM-03` was left uncovered for a script reason, and it is the one worth
+naming.** The adnominal pair is `ii` and `aa`; `ii` needs the independent vowel
+letter EE (U+0C08), which occurs **zero** times anywhere in the track. Teaching
+it would put a glyph on the page the corpus has never shown and raise
+`script-closure` off zero. Every one of the 35 words is spelled from characters
+already in use, so the point stays open and `TE-A1-F-44`, which depends on it,
+stays open with it. Closing them needs a script lesson, not a vocabulary lesson.
+
+### The append that would have added debt, and what it cost to avoid
+
+Written the obvious way — each lesson requiring the one before it — the tranche
+measured **1143** reinforcement misses against a prior 1017. Decomposed: 66 on
+the 45 new atoms, and **60 on OLD atoms whose R3/R4 windows a longer track newly
+judged**. The second half was pre-existing debt becoming visible, not a
+regression.
+
+Three changes brought it to 1014:
+
+* **Grammar atoms joined the retrieval chain.** Left out of it, all ten were
+  introduced once and never retrieved — the entire R1 miss list on the first
+  pass.
+* **Each lesson retrieves at the R2 and R3 intervals**, not only the two
+  immediately before it: the word from eight lessons back and from twenty-five.
+* **Each lesson retrieves one OLD word** whose R4 window this position can fill,
+  and *names that word's lesson as a prerequisite* — which is what makes the
+  retrieval both legal and true. Telugu's prerequisite chain reaches only 148 of
+  its 336 lessons, so an atom taught in chapter 8 is not otherwise available in
+  chapter 74, and the validator was right to refuse it.
+
+Every declaration is backed by a `[YOU RECALL: ...]` line that actually asks for
+the words, so the front matter is not bookkeeping.
+
+### Three ratchets that had to be held rather than reseated
+
+* **Forward references (cap 12).** Making `vaccu`, `randi`, `teliyadu`,
+  `kaavaali`, `eppudu` and `caalaa` headwords turned every earlier passing use of
+  them into a forward reference, taking the track to 13. The fix was fuller
+  headwords that are real utterances — `vellavaccu`, `lopaliki randi`, `naaku
+  teliyadu`, `naaku kaavaali`, `eppudu vastaaru?`, `caalaa manci` — which is how
+  this track already heads lessons. Back to 10.
+* **Cross-chapter prose references (HL-C102, telugu capped at 46).** The first
+  draft named a chapter number 29 times. All 29 now name the thing instead —
+  "you already have", "your first lesson" — as that gate's own comment asks.
+* **Rule statements (HL09, corpus ceiling 30).** Two Grammar Lenses tripped it
+  with *always* and *the rule is ... every ending*. Both are now observations.
+  Fixing the second also removed a plain error: it claimed `abbaayi` and
+  `pustakam` become themselves.
+
+## Unreleased — an A1 exam inventory, so the track can finally be measured
+
+`core/exam-inventory-telugu-a1.json` enumerates **326 things an A1 Telugu
+candidate must be able to do**, each probed by the knowledge atoms whose
+presence would demonstrate that the track teaches it. Telugu is the third Indic
+track to have one, after Hindi and Marathi, and until now it was one of the
+eighteen tracks whose exam gap could not be measured at all.
+
+**The number: Telugu covers 169 of 326 points (52%).** Zero points are partly
+taught — every probe names atoms that actually exist — so the shortfall is 157
+points with nothing in the corpus corresponding to them. By category:
+
+    18/22   Kriya (the verb)
+     7/8    Kriya visheshanamu (adverbs)
+     3/4    Suchaka padalu (demonstratives and deixis)
+     7/10   Kaalam mariyu teedi (time and date)
+     6/9    Vakyamu (the sentence)
+     6/9    Prashnalu (asking questions)
+     2/3    Nishedhamu (negation)
+     5/8    Vibhakti (case endings and postpositions)
+     5/8    Sarvanamamu (pronouns)
+    36/61   Samvyavaharam (communicative functions)
+     5/9    Sankhyalu (numerals and quantity)
+     3/6    Visheshanamu (the adjective)
+    11/23   Telugu lipi (script and orthography)
+     4/9    Namavachakamu (the noun)
+    47/110  Padasampada (core lexis)
+     1/3    Nirdeshakamu (definiteness and the missing article)
+     1/4    Sambandham (possession)
+     2/13   Samuchchayamu (joining clauses)
+     0/7    Uccharana (pronunciation)
+
+### Where the point set comes from, and what it may not be used to claim
+
+No awarding body publishes a content syllabus for Telugu; `core/exam-levels.json`
+records this track as exam `no widely-sat ladder`, basis `editorial`, with no
+caveat at all — the barest entry of any Indic track in that file. The point set
+is therefore derived **structurally** from `core/exam-inventory-es-a1.json`, the
+project's restatement of the Instituto Cervantes inventories behind DELE, used as
+a proxy for **LEVEL and not for grammar**: each of its 273 points is read as a
+demand on a learner, and answered with whatever Telugu exponent carries the same
+load. All 273 are accounted for — 268 cited by some point's `derivedFrom`, and 5
+named as untransferable Spanish typography, with reasons, in `about`.
+
+**Nothing in that file may be attributed to DELE or the Instituto Cervantes about
+Telugu.** They published a Spanish syllabus and have said nothing about this
+language. The Telugu exponents are this project's editorial judgement throughout.
+
+The evidence base is **thinner than Hindi's or Marathi's**, and the file says so
+in as many words. Hindi could pin exponents against two checked-in timed A1
+mocks and Marathi against eleven paper parts of `task-shapes/a1.json`; Telugu has
+**neither** — there is no `telugu/assessment-spec.md`, no `telugu/task-shapes/`
+and no `telugu/mocks/`. Writing that contract is the single change that would
+most improve the inventory. No fresh external search for a Telugu awarding body
+was carried out either, and `about` refuses to claim one.
+
+### What the 157 unmapped points say about this track
+
+The gap is not evenly spread, and its shape is the finding. The track is
+**vocabulary-rich and sentence-poor**: 47 of 110 lexis points are covered,
+including sixteen body-part atoms and thirteen kinship atoms that are well past
+A1, while **11 of 13 subordination and coordination points have no atom at all**
+— there is no word for *and*, none for *or*, none for *but*, and no quotative
+`ani`, so nothing above a single clause can be built.
+
+The largest single clusters behind the number:
+
+* **Subordination and coordination (11 of 13 unmapped).** The whole apparatus for
+  joining two ideas is absent.
+* **Pronunciation (7 of 7 unmapped), for a structural reason.** The track's sound
+  material lives in per-lesson `sounds:` front matter and in
+  `pronunciation-reference.md`, and **neither declares an atom**, so no probe can
+  reach it. These seven are unmeasurable rather than untaught, and the file says
+  which.
+* **The script's unfinished letter set (12 of 23 unmapped).** 23 of about 36
+  consonants have a recognition lesson, 4 of about 12 independent vowels, and 10
+  of 12 everyday vowel signs. Punctuation is untouched entirely.
+
+  **This does not contradict `script-closure`, which reports Telugu at zero
+  never-taught glyphs, and the inventory says so where it makes the claim.** The
+  301 lesson files use **64 distinct Telugu characters and 49 have a dedicated
+  recognition lesson** declaring an atom of their own; the other 15 are taught
+  only inside a word, which is exactly what the closure gate counts. The
+  inventory asks the narrower question a probe can answer — does the letter have
+  an atom — and for 15 characters it does not. Counted over those same files:
+  `ma` **636** occurrences, retroflex `ta` **292**, independent `a` **248**, the
+  long `oo` sign **211**, `ba` **169**, the `o` sign **144**. `ma` is in the very
+  first word the book teaches, `namaskaaram`.
+* **Whole lexis domains with nothing in them.** Transport, media, the telephone,
+  leisure, documents, clothing and payment are empty; there is no word for a
+  *house*, a *city*, a *country* or a *year*.
+* **The verb's missing half.** Four of Telugu's six persons are never taught, the
+  negative conjugation is absent, and with it `teliyadu` — *I don't know* — which
+  is the commonest thing an A1 candidate has to say.
+
+Of the four points behind what a first-day speaking paper opens with — identify
+yourself by name, give your name, age and origin, answer with an age in years,
+say which place you are from — exactly **one** is covered.
+
+### Also changed
+
+`tests/plan-cli.test.ts` pins the completion-plan counters, which this inventory
+moves. Re-measured against the merged tree rather than derived by arithmetic:
+`0 complete and 6 partial` becomes `7 partial`, and `529 uncovered point(s)
+across 6 written` becomes **`686 uncovered point(s) across 7 written`** — exactly
+Telugu's 157 — while the unmeasurable remainder falls from 18 tracks to 17.
+
+The base moved from 530 to 529 under this branch while it was open: French
+chapter 6 was generated on main and closed one of that track's points. The
+figure above was **re-measured against the merged tree** rather than carried
+forward, which is why it is 686 and not the 687 an earlier commit message on
+this branch quotes.
+
 ## Unreleased — chapters 1-5 are generated from their lessons
 
 Telugu has **no hand-written chapters left**. `ch01`–`ch05` were the last five;

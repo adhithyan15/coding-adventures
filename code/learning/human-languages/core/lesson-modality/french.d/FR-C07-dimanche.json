@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C07-dimanche",
+    "language": "french",
+    "chapter": 7,
+    "sequence": 221,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dd69336f2f2918bc"
+  },
+  "findings": []
+}

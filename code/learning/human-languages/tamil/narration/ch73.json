@@ -1,0 +1,819 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 73,
+  "title": "Today, Yesterday, and the Year",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:20c6ed4a66f57c8b",
+  "lessons": [
+    {
+      "id": "TA-C73-today",
+      "sequence": 2970,
+      "title": "இன்று (iṉṟu) — today",
+      "headword": "இன்று",
+      "romanization": "iṉṟu",
+      "gloss": "today",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6eed0daef0c0ea90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did aḻu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இன்று",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இன்று (iṉṟu) — \"today\"."
+            },
+            {
+              "kind": "speech",
+              "text": "\"Today\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have நாள் (nāḷ), the day itself, and நாளை (nāḷai), tomorrow. இன்று (iṉṟu) is the day you are standing in, and it completes the middle of that little set."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the careful, written form, and it is the one printed on a page. In fast speech you will also hear இன்னைக்கு (iṉṉaikku) for the same thing — worth recognising, but இன்று (iṉṟu) is the one to say."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The day you are standing in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṉṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṉṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷ, then iṉṟu, then nāḷai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷ*, then *iṉṟu*, then *nāḷai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say siri, then say aḻu, then say iṉṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *siri*, then say *aḻu*, then say *iṉṟu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இன்று (iṉṟu) mean, and which word already gave you \"tomorrow\"? (\"Today\"; நாளை.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C73-yesterday",
+      "sequence": 2980,
+      "title": "நேற்று (nēṟṟu) — yesterday",
+      "headword": "நேற்று",
+      "romanization": "nēṟṟu",
+      "gloss": "yesterday",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9014f818ae50ea9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did iṉṟu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நேற்று",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேற்று (nēṟṟu) — \"yesterday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "\"Yesterday\" — the third corner of the same triangle: நேற்று (nēṟṟu), இன்று (iṉṟu), நாளை."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle is a doubled ற்ற, the hard r held long, and it is the sound that most often catches a new speaker out. Say it slowly: the first ற has a புள்ளி and no vowel, so it leans straight onto the second."
+            },
+            {
+              "kind": "speech",
+              "text": "With three words you can now place any day against the one you are in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and the days on either side of today are named."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēṟṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēṟṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēṟṟu, iṉṟu, nāḷai — the three, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēṟṟu*, *iṉṟu*, *nāḷai* — the three, in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēṟṟu once more, holding the doubled ற",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēṟṟu* once more, holding the doubled ற]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aḻu, then say iṉṟu, then say nēṟṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aḻu*, then say *iṉṟu*, then say *nēṟṟu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the three days in order, starting with yesterday. (நேற்று (nēṟṟu), இன்று (iṉṟu), நாளை.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W28-read-inru",
+      "sequence": 2990,
+      "title": "இன்று (iṉṟu) — a word that opens on a vowel",
+      "headword": "இன்று",
+      "romanization": "iṉṟu",
+      "gloss": "the word for today on the page — an independent vowel, then a leaning consonant",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:44b4d631bebfc416",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: இன்று — a word that opens on a vowel",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: இன்று — a word that opens on a vowel and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the page: you can say iṉṟu and nēṟṟu. Now read the first one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: இன்று — a word that opens on a vowel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இன்று (iṉṟu) puts together two things you have read separately: a word that begins with an independent vowel, and a புள்ளி making one consonant lean on the next."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "piece: இ, i, the free-standing letter, because the word opens on the vowel.",
+                "piece: ன், ṉ, ன with a புள்ளி — no vowel of its own.",
+                "piece: று, ṟu, ற with the ு sign."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "இ, ன், று becomes இன்று (iṉṟu)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is why the letters ஓ and உ were taught on their own. A vowel at the front of a word cannot be a sign — there is nothing for it to sit on — so Tamil keeps a separate shape for exactly this job, and இன்று (iṉṟu) is that shape doing it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "இ — then ன் — then று",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **இ** — then **ன்** — then **று**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the letter that could only ever be a free-standing one, and say why",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the letter that could only ever be a free-standing one, and say why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "இன்று (iṉṟu), then ஓடு — two words that open on a vowel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **இன்று**, then **ஓடு** — two words that open on a vowel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iṉṟu, then say nēṟṟu, then read இன்று",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iṉṟu*, then say *nēṟṟu*, then read **இன்று**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read இன்று (iṉṟu). Why is the first shape a letter and not a sign? (Because the word begins with the vowel, so there is no consonant for a sign to sit on.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C73-before",
+      "sequence": 3000,
+      "title": "முன்பு (muṉbu) — before, earlier",
+      "headword": "முன்பு",
+      "romanization": "muṉbu",
+      "gloss": "before, earlier",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02b4f08b2d1c383f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read இன்று (iṉṟu), and say what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்பு (muṉbu) — \"before, earlier\"."
+            },
+            {
+              "kind": "speech",
+              "text": "\"Before\" — the general one, for anything earlier than the moment you are standing in."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have பிறகு (piṟaku), \"afterwards\". முன்பு (muṉbu) is its opposite, and between them the two put events in order without your needing a single verb tense to do it."
+            },
+            {
+              "kind": "speech",
+              "text": "The ன் in its middle is closed by a புள்ளி and leans on the ப after it — the same joint you read a moment ago inside இன்று (iṉṟu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Before and after, and a day on each side of today."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉbu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṟaku, then muṉbu — the two directions in time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṟaku*, then *muṉbu* — the two directions in time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēṟṟu, then muṉbu — one is a day, one is any earlier moment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēṟṟu*, then *muṉbu* — one is a day, one is any earlier moment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nēṟṟu, then read இன்று (iṉṟu), then say muṉbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nēṟṟu*, then read **இன்று**, then say *muṉbu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word is the opposite of பிறகு? (முன்பு (muṉbu).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C73-month",
+      "sequence": 3010,
+      "title": "மாதம் (mādam) — a month",
+      "headword": "மாதம்",
+      "romanization": "mādam",
+      "gloss": "a month",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f929cea4d9534d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did muṉbu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மாதம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாதம் (mādam) — \"a month\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A month."
+            },
+            {
+              "kind": "speech",
+              "text": "You already know twelve of them by name — the Tamil months you met in their own chapter. This is the word for the unit itself, the one you need to say \"one month\" rather than to name a particular one."
+            },
+            {
+              "kind": "speech",
+              "text": "And another ம் ending — like கோபம், பயம் and பணம் before it — on a word whose middle vowel is the long ா."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Above the day: the month."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mādam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mādam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷ, then mādam — smaller, then bigger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷ*, then *mādam* — smaller, then bigger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read இன்று (iṉṟu), then say muṉbu, then say mādam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **இன்று**, then say *muṉbu*, then say *mādam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மாதம் (mādam) mean? (\"A month\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C73-year",
+      "sequence": 3020,
+      "title": "ஆண்டு (āṇḍu) — a year",
+      "headword": "ஆண்டு",
+      "romanization": "āṇḍu",
+      "gloss": "a year",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94399fc3a2ff9825",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mādam mean, and what did muṉbu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆண்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆண்டு (āṇḍu) — \"a year\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A year — and it is the unit hiding inside a question you can already ask."
+            },
+            {
+              "kind": "speech",
+              "text": "When you ask about someone's வயது (vayathu), their age, what is being counted is ஆண்டு (āṇḍu). The question was yours a long time ago; this is the word for what the answer is made of."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens on the free-standing ஆ, because the word begins with that vowel — the same reason இன்று (iṉṟu) opens on இ. In the middle is the ண்ட you first read in வண்டி."
+            },
+            {
+              "kind": "speech",
+              "text": "Three sizes now, each holding the one before it: நாள், மாதம் (mādam), ஆண்டு (āṇḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: today, yesterday, and the three units above the day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṇḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṇḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vayathu, then āṇḍu — the question, and what the answer counts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vayathu*, then *āṇḍu* — the question, and what the answer counts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three sizes in order — nāḷ, mādam, āṇḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three sizes in order — *nāḷ*, *mādam*, *āṇḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say muṉbu, then say mādam, then say āṇḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *muṉbu*, then say *mādam*, then say *āṇḍu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is counted when someone answers about their வயது? (ஆண்டு (āṇḍu) — years.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

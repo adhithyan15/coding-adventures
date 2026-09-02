@@ -64,7 +64,7 @@ So *à plus tard* is "until more-late" — see you at some later point.
 ## Why it's said this way — one Latin word, two everyday meanings
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Spanish inherited that identical Latin *tarde* — the word you met in Chapter 2 —
+Spanish inherited that identical Latin *tarde* — the word you met giving your name —
 but the two languages grew it in different directions. French kept it meaning
 **late** (*tard*); Spanish grew it into **afternoon** (*tarde*). One Latin word,
 two everyday meanings. And where French leans on **à** for its soft goodbyes,

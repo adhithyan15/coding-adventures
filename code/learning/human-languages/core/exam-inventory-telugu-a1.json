@@ -1,0 +1,3131 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY TELUGU EXAMINING OR LANGUAGE BODY -- not to Potti Sreeramulu Telugu University, not to the Telugu Akademi, not to any state or diaspora examination -- and nothing in it may be attributed to DELE, the Instituto Cervantes or the Plan Curricular ABOUT TELUGU. Unlike Hindi, which has a named external ladder to disclaim, and Marathi, which has a government-employee examination to disclaim, Telugu has NO named external ladder at all, so there is no body whose syllabus this could be confused with. That absence is the disclaimer. Three claims are stacked here and they have very different strengths, so read them apart. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, which restates the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE -- a real awarding body with a published syllabus, finite and split into A1 and A2 columns. That is the strongest thing in this file, and all it establishes is a LEVEL: what an A1 candidate must be able to handle, asked as a language-neutral demand rather than as a piece of Spanish grammar. (2) THE TELUGU EXPONENTS are editorial throughout and are this project's judgement and nobody else's. Deciding that Spanish's personal `a` is answered by Telugu's accusative -ni, that its `gustar` frame is answered by the dative-subject sentence, or that its four article points are answered by the single fact that Telugu has no article, is a choice made here. ATTRIBUTE NOTHING IN THIS FILE TO DELE OR THE INSTITUTO CERVANTES ABOUT TELUGU: they published a Spanish syllabus and have said nothing whatever about this language. (3) THE COVERAGE NUMBER this file produces is a measure of the corpus against this list. It is not an exam-readiness claim, and it cannot become one while every scope dimension is `partial`. WHY A PROXY AT ALL: no awarding body publishes a content syllabus for Telugu. core/exam-levels.json records this track as exam 'no widely-sat ladder', basis 'editorial', mapping 'cefr', with no caveat at all -- the barest entry of any Indic track in that file -- and that was re-read before this file was written. The parallel Hindi and Marathi inventories settled the wider negative result already and it is not repeated here: there is no South Asian equivalent of the Plan Curricular, and the Council of Europe has issued no Reference Level Description for any language of the region. WHAT THIS FILE DOES NOT CLAIM, stated plainly because the omission matters: no fresh external search for a Telugu awarding body was carried out for this file, and that was a DECISION rather than an omission. BACKLOG.d HL-C287 and HL-C290 record the search as settled and instruct in as many words: the Hindi tranche ran the sourcing question against the best-placed South Asian candidate and came back empty, there is no South Asian PCIC, and no further agent-hours are to be spent hunting one for another Indic track. This file follows that instruction and states the consequence rather than hiding it: if a Telugu syllabus does exist, this file has not ruled it out. THE EVIDENCE BASE HERE IS THINNER THAN HINDI'S OR MARATHI'S, AND THAT IS THE MOST IMPORTANT THING TO KNOW ABOUT IT. Hindi's inventory could pin exponents against two checked-in timed A1 mocks; Marathi's could pin them against the eleven paper parts of task-shapes/a1.json. Telugu has NEITHER. There is no telugu/assessment-spec.md, no telugu/task-shapes/ and no telugu/mocks/ -- the directory holds lessons, chapters, curriculum, narration, a roadmap, a session map and a pronunciation reference, and nothing that fixes what an A1 paper would ask. Every exponent choice below is therefore bounded by the proxy alone, with no project-internal contract to check it against. Writing that contract is the single change that would most improve this file. PROXY ACCOUNTING: every one of the proxy's 273 points is accounted for. 268 are cited by some point's `derivedFrom`; the remaining 5 are named here as untransferable, with the reason: A1-O1-04: capital letters -- the Telugu script is unicameral and has no case distinction to teach. A1-O1-05: initial lower-case letters -- same reason. A1-O1-06: superscript letters in frequent abbreviations -- a Spanish typographic convention with no Telugu counterpart. A1-O2-01: the general rules of written accentuation -- Telugu writes no accent; vowel length is carried by a separate sign, which TE-A1-L-05 covers instead. A1-O2-02: the diacritic tilde that separates el from el -- no Telugu counterpart. Points marked `telugu-specific` in `derivedFrom` answer no Spanish demand at all -- the suffixing morphology, the two-way negative, the dative-subject family, the self-benefactive -koo, suppletion in `raa`, the five-taste set and the register judgements on the time-of-day greetings. A proxy is a scaffold, not a template to translate, and those are why. LEVEL PURITY IS NOT A CONSTRAINT ON THIS CURRICULUM, so a point is recorded as covered when the corpus teaches it, whether or not the corpus teaches it at A1: the sixteen body-part atoms and the thirteen kinship atoms are both well past A1 and both count.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Telugu is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: NONE EXISTS. Unlike hindi/assessment-spec.md with hindi/task-shapes/a1.json and hindi/mocks/a1/, and unlike marathi/assessment-spec.md with marathi/task-shapes/a1.json, the telugu track ships no assessment spec, no task shapes and no mocks, so no project-internal contract bounds the exponent choices or the gap notes in this file. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.telugu -- exam 'no widely-sat ladder', basis 'editorial', mapping 'cefr'. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 301 lesson files in code/learning/human-languages/telugu/lessons/, which introduce 404 distinct atoms between them. The script points' counts were taken from the 49 script-recognition lessons in that same directory, one glyph each, and the letter inventory they are compared against is the Telugu block of Unicode as set out in telugu/pronunciation-reference.md. NOT SEARCHED, BY INSTRUCTION: no external search for a Telugu awarding-body syllabus was performed for this file. code/learning/human-languages/BACKLOG.d/02610-HL-C287-USE-SPANISH-AS-A-LEVEL-PROXY-WHEN-A-TRACK-HAS-NO-SYL-f1667cbc.md and 02610-HL-C290-ANCHORING-AN-EXAM-INVENTORY-WHEN-NO-SYLLABUS-EXISTS-b3f27a1e.md record that search as settled and direct that it not be repeated per track. See `about`.",
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points)",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, and here the shortfall is worse than in the parallel Hindi file: the exponent realising each function in Telugu is our choice every time, and unlike Hindi there is no checked-in mock item anywhere in the track that pins one down. All 54 proxy function points are answered, plus seven the proxy has no A1 slot for -- the register judgements on the greetings, the -andi politeness ending, and the household-visit courtesy formulas. The sixty-one points here are the least externally anchored in the file."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS MOST AND STILL DOES NOT CLOSE. No published Telugu equivalent of the PCIC grammar inventory exists, and with no mocks to mine, the proxy is the only thing bounding this column at all. Walking it surfaced demands a reading of the lessons alone would not have raised: the article points surfaced that nothing tells a learner Telugu HAS no article; the personal-`a` point surfaced the missing accusative -ni; the full-paradigm verb point surfaced that four of Telugu's six persons are never taught. It does not close, because a demand Spanish does not make can still be an A1 demand in Telugu -- the mahat/amahat noun class, the quotative `ani` and the relative participle are the obvious ones -- and nothing bounds those."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "The Telugu block of Unicode for the letter inventory, telugu/pronunciation-reference.md for the sound system, and code/learning/human-languages/core/exam-inventory-es-a1.json for the orthographic demands",
+      "note": "Two halves in very different states, and it is worth saying so rather than quietly averaging them. The SCRIPT half is nearly closed, because Telugu's letter inventory is finite and enumerable: the script points state exactly which letters have a recognition lesson and which do not, and the notes give the counts -- 23 of about 36 consonants, 4 of about 12 independent vowels, 10 of 12 everyday vowel signs, and all 10 digits. WHAT 'HAS NO LESSON' MEANS HERE, AND WHY IT DOES NOT CONTRADICT THE SCRIPT-CLOSURE GATE: the track's 301 lesson files use 64 distinct Telugu characters and 49 of them have a dedicated recognition lesson declaring an atom of their own. The other 15 are taught only inside a word, which is what `script-closure.ts` counts, and why that gate correctly reports telugu with ZERO never-taught glyphs. This inventory asks the narrower question a probe can answer -- does the letter have an atom -- and for those 15 it does not. The occurrence counts in the script notes were measured over those same 301 files, not estimated: ma 636, retroflex ta 292, independent a 248, the oo sign 211, ba 169, the o sign 144. The two measurements are asking different questions and both answers are right. The PRONUNCIATION half is closed against measurement rather than complete: the track's sound material lives in per-lesson `sounds:` front matter and in pronunciation-reference.md, and NEITHER declares an atom, so no probe can reach either and all seven points are unmapped for a structural reason rather than because nothing is taught. Drawing an A1/A2 line through Telugu phonology ourselves would be the editorial promotion the Spanish file itself declines to make, so this stays partial."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 36 general-notion and 77 specific-notion A1 points)",
+      "note": "No published A1 Telugu word list exists -- no awarding-body list, no Goethe-style Wortliste, no ranked frequency band adopted by anybody. What the proxy supplies is a bounded set of DOMAINS, which is a real improvement on domains chosen by us, and walking it is what showed that this track's lexis is shaped by a village and a household rather than by a city and a transaction: fauna, flora, tools, kitchen, body and kinship are richly covered, while transport, media, leisure, documents and payment have nothing at all. It does not close, because the proxy bounds the domains and never the words inside one, and because the domain list is Spanish-shaped: it has no slot for the five-taste set or for the courtesy abstractions this track teaches."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. Every atom named in every probe was checked mechanically against the atoms the telugu track actually introduces, by re-reading the 301 lesson files; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point. Where the corpus cannot demonstrate a point it gets `probe: null` and a note saying what is missing. ONE HABIT IS NAMED HERE SO IT IS NOT A HIDDEN GENEROSITY: several chapters declare no LEX atom at all and carry only ETYMON, PRAGMATICS or SCRIPT atoms -- C09 (sorry), C10 (the weekdays), C15 (water and rice), C20 (the teens, and the weather), C21, C22 (green and yellow), C23 to C30 (the parts of the day). Probing those points therefore names an etymology or pragmatics atom rather than a lexis one. The word IS introduced by that lesson; the track simply files it under a different atom kind, and every such probe says so in its note. A point is NOT counted as covered when only part of what it names is taught: `manci` without an antonym leaves general evaluation uncovered, `taruvaata` without `mundu` leaves the before/after contrast uncovered, and the six body-part chapters do not buy any credit for physical description. That is deliberate, because a candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or `telugu-specific` -- and is carried for auditability; no code reads it. CHAPTERS 74-80 UPDATE: a vocabulary tranche of 35 headwords was authored against this file's own uncovered list, and 44 points moved from `probe: null` to a probe. Eight more moved only PARTLY and kept `probe: null` with the note rewritten to say what landed and what did not -- half a pair buys nothing here, which is the rule this file started with and did not bend to make its own number larger. Every word in that tranche is spelled from characters the corpus already used, so no point was closed at the cost of new script debt; TE-A1-DEM-03 records the one point that could not be closed for exactly that reason.",
+  "points": [
+    {
+      "id": "TE-A1-N-01",
+      "category": "Namavachakamu (the noun)",
+      "label": "proper nouns: a personal name, dropped into the frame that carries it",
+      "probe": [
+        "TE-LEX-C02-NAA-PERU-01",
+        "TE-GRAMMAR-C02-NAA-PERU-03"
+      ],
+      "derivedFrom": "ES:A1-N-01",
+      "note": "The frame `naa peru X` is taught and is exactly the slot a name goes in, but no Telugu personal name is itself an atom: the lesson's `Arun` is an example inside the prose."
+    },
+    {
+      "id": "TE-A1-N-02",
+      "category": "Namavachakamu (the noun)",
+      "label": "forms of address: the respectful -garu suffixed to a name",
+      "probe": [
+        "TE-LEX-C79-WHO-05"
+      ],
+      "derivedFrom": "ES:A1-N-01, ES:A1-F5-03"
+    },
+    {
+      "id": "TE-A1-N-03",
+      "category": "Namavachakamu (the noun)",
+      "label": "place names: the town, district or state you live in, and the country",
+      "probe": null,
+      "derivedFrom": "ES:A1-N-01, ES:A1-NE20-02",
+      "note": "PARTLY CLOSED, WHICH IS NOT CLOSED. C77 introduces `bhaaratadeesam` (India), the track's first proper place name, along with `pattanam` (a town) and `deesam` (a country). The point also asks for the town, district or state you LIVE IN, and no settlement or state has a name here yet, so the probe stays null. TE-A1-X-10, which asks only that you can say where you are from, IS now covered."
+    },
+    {
+      "id": "TE-A1-N-04",
+      "category": "Namavachakamu (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": [
+        "TE-ETYMON-C23-ROJU-01",
+        "TE-ETYMON-C24-RATRI-01",
+        "TE-LEX-C18-GANTA-01"
+      ],
+      "derivedFrom": "ES:A1-N-02"
+    },
+    {
+      "id": "TE-A1-N-05",
+      "category": "Namavachakamu (the noun)",
+      "label": "noun class: the mahat / amahat (human / non-human) split that drives agreement",
+      "probe": null,
+      "derivedFrom": "ES:A1-N-03",
+      "note": "Telugu's counterpart to Spanish gender, and never stated. The track introduces five -du nouns whose class is precisely what -du marks (snehitudu, vaidyudu, alludu, suuryudu, candrudu) and says nothing about the category."
+    },
+    {
+      "id": "TE-A1-N-06",
+      "category": "Namavachakamu (the noun)",
+      "label": "gender by heteronymy: separate words for the male and the female of a pair",
+      "probe": [
+        "TE-LEX-C12-KUTUMBAM-01",
+        "TE-LEX-C36-KODUKU-01",
+        "TE-LEX-C36-KUUTURU-01",
+        "TE-LEX-HUSBAND",
+        "TE-LEX-WIFE"
+      ],
+      "derivedFrom": "ES:A1-N-04"
+    },
+    {
+      "id": "TE-A1-N-07",
+      "category": "Namavachakamu (the noun)",
+      "label": "number: forming the plural of a noun with -lu / -alu, as a rule a learner can apply",
+      "probe": null,
+      "derivedFrom": "ES:A1-N-05",
+      "note": "Two atoms come close and neither states the rule. C01's agglutination lens says a plural rides on `dhanyavaadamulu`; C18's time lens shows `ganta` becoming `gantalu` past one o'clock. A candidate is shown two plural forms and never told how to make a third."
+    },
+    {
+      "id": "TE-A1-N-08",
+      "category": "Namavachakamu (the noun)",
+      "label": "the stem change a noun undergoes before a case ending",
+      "probe": [
+        "TE-GRAMMAR-C79-WHO-01"
+      ],
+      "derivedFrom": "telugu-specific",
+      "note": "C79's genitive lesson states the stem change directly: the ending never lands on the dictionary form, the noun leans toward it first."
+    },
+    {
+      "id": "TE-A1-N-09",
+      "category": "Namavachakamu (the noun)",
+      "label": "verbal nouns: one form serving as both the verb and its noun",
+      "probe": [
+        "TE-GRAMMAR-C33-CADUVU-02"
+      ],
+      "derivedFrom": "telugu-specific"
+    },
+    {
+      "id": "TE-A1-ADJ-01",
+      "category": "Visheshanamu (the adjective)",
+      "label": "qualifying adjectives in attributive use, standing before the noun",
+      "probe": [
+        "TE-LEX-C42-ADJ-01",
+        "TE-GRAMMAR-C42-ADJ-SYSTEM"
+      ],
+      "derivedFrom": "ES:A1-ADJ-01, ES:A1-ADJ-05"
+    },
+    {
+      "id": "TE-A1-ADJ-02",
+      "category": "Visheshanamu (the adjective)",
+      "label": "the adjective never changes: no agreement for gender, number or case",
+      "probe": [
+        "TE-GRAMMAR-C42-ADJ-SYSTEM"
+      ],
+      "derivedFrom": "ES:A1-ADJ-03, ES:A1-ADJ-04",
+      "note": "Spanish spends two A1 points on adjective agreement. The Telugu answer is that there is none, and C42 states it in as many words -- one of the few places the track answers a proxy demand head on."
+    },
+    {
+      "id": "TE-A1-ADJ-03",
+      "category": "Visheshanamu (the adjective)",
+      "label": "predicative use: an adjective as the whole comment, with the -di / -vaadu ending it needs",
+      "probe": [
+        "TE-LEX-C76-JUDGE-03",
+        "TE-GRAMMAR-C76-JUDGE-03"
+      ],
+      "derivedFrom": "ES:A1-ADJ-01"
+    },
+    {
+      "id": "TE-A1-ADJ-04",
+      "category": "Visheshanamu (the adjective)",
+      "label": "relational adjectives: saying which place or people someone belongs to",
+      "probe": null,
+      "derivedFrom": "ES:A1-ADJ-02",
+      "note": "No gentilic, no country name and no -vaadu / -vaallu derivation. Spanish's `espanol` has no counterpart a candidate could produce."
+    },
+    {
+      "id": "TE-A1-ADJ-05",
+      "category": "Visheshanamu (the adjective)",
+      "label": "degree: 'very' with an adjective",
+      "probe": [
+        "TE-LEX-C76-JUDGE-01"
+      ],
+      "derivedFrom": "ES:A1-ADJ-06, ES:A1-SADJ-01"
+    },
+    {
+      "id": "TE-A1-ADJ-06",
+      "category": "Visheshanamu (the adjective)",
+      "label": "the everyday size and age adjectives: big, small, new, old",
+      "probe": [
+        "TE-LEX-C42-ADJ-01",
+        "TE-LEX-C42-ADJ-02",
+        "TE-LEX-C42-ADJ-04",
+        "TE-LEX-C42-ADJ-05"
+      ],
+      "derivedFrom": "ES:A1-ADJ-01"
+    },
+    {
+      "id": "TE-A1-DET-01",
+      "category": "Nirdeshakamu (definiteness and the missing article)",
+      "label": "Telugu has no article: a bare noun is definite or indefinite from context alone",
+      "probe": null,
+      "derivedFrom": "ES:A1-ART-01, ES:A1-ART-04",
+      "note": "The largest structural difference from the proxy language, and the track never states it. Spanish spends four A1 points on the article; a learner arriving from English needs telling once that Telugu has none and what does the work instead."
+    },
+    {
+      "id": "TE-A1-DET-02",
+      "category": "Nirdeshakamu (definiteness and the missing article)",
+      "label": "`oka` before a noun as the nearest thing Telugu has to 'a'",
+      "probe": null,
+      "derivedFrom": "ES:A1-ART-03",
+      "note": "`okati` is taught as the numeral one (C07) and `oka ganta` appears in C18's clock lens as 'one o'clock'. Neither teaches `oka` as an indefinite marker, which is a different job."
+    },
+    {
+      "id": "TE-A1-DET-03",
+      "category": "Nirdeshakamu (definiteness and the missing article)",
+      "label": "pointing at a definite thing with idi / adi",
+      "probe": [
+        "TE-LEX-C41-DEIXIS-01",
+        "TE-LEX-C41-DEIXIS-02"
+      ],
+      "derivedFrom": "ES:A1-ART-01, ES:A1-DEM-01"
+    },
+    {
+      "id": "TE-A1-DEM-01",
+      "category": "Suchaka padalu (demonstratives and deixis)",
+      "label": "the i- / a- / e- system: one slot changes and gives near, far and question",
+      "probe": [
+        "TE-GRAMMAR-C41-DEIXIS-SYSTEM"
+      ],
+      "derivedFrom": "ES:A1-DEM-01"
+    },
+    {
+      "id": "TE-A1-DEM-02",
+      "category": "Suchaka padalu (demonstratives and deixis)",
+      "label": "spatial deixis: here and there",
+      "probe": [
+        "TE-LEX-C41-DEIXIS-03",
+        "TE-LEX-C41-DEIXIS-04"
+      ],
+      "derivedFrom": "ES:A1-DEM-02, ES:A1-ADV-01"
+    },
+    {
+      "id": "TE-A1-DEM-03",
+      "category": "Suchaka padalu (demonstratives and deixis)",
+      "label": "the demonstrative used before its noun (ii pustakam, aa manishi)",
+      "probe": null,
+      "derivedFrom": "ES:A1-DEM-03",
+      "note": "STILL UNCOVERED, AND THE REASON IS THE SCRIPT. The adnominal pair is `ii` and `aa`, and `ii` is written with the independent vowel letter EE (U+0C08), which occurs ZERO times anywhere in the track. Teaching it would add a glyph the corpus has never shown and raise `script-closure` from zero, so the C74-C80 tranche spelled every one of its 35 words from characters already in use and left this point alone. Closing it needs a script lesson for that letter first, not a vocabulary lesson."
+    },
+    {
+      "id": "TE-A1-DEM-04",
+      "category": "Suchaka padalu (demonstratives and deixis)",
+      "label": "two spatial degrees, not Spanish's three",
+      "probe": [
+        "TE-GRAMMAR-C41-DEIXIS-SYSTEM"
+      ],
+      "derivedFrom": "ES:A1-DEM-02",
+      "note": "The proxy's three-way este/ese/aquel does not transfer: C41's lens sets out three beginnings of which only two are spatial, the third being the question word."
+    },
+    {
+      "id": "TE-A1-POS-01",
+      "category": "Sambandham (possession)",
+      "label": "naa / nii / mii before the noun",
+      "probe": [
+        "TE-LEX-C02-NAA-01",
+        "TE-LEX-C02-NAA-PERU-01",
+        "TE-GRAMMAR-C02-MII-PERU-EMITI-03"
+      ],
+      "derivedFrom": "ES:A1-POS-01, ES:A1-POS-03"
+    },
+    {
+      "id": "TE-A1-POS-02",
+      "category": "Sambandham (possession)",
+      "label": "possessives with several possessors: our (inclusive and exclusive), your, their",
+      "probe": null,
+      "derivedFrom": "ES:A1-POS-02",
+      "note": "Two of the three persons. C79 teaches `maa` and `mana`, the exclusive and inclusive `our`, which is the split Spanish does not even make; `mii` for the plural your was already taught at C02. `vaari`, their, is still not introduced, so the probe stays null."
+    },
+    {
+      "id": "TE-A1-POS-03",
+      "category": "Sambandham (possession)",
+      "label": "the genitive on a full noun, not just a pronoun",
+      "probe": [
+        "TE-LEX-C79-WHO-01",
+        "TE-GRAMMAR-C79-WHO-01"
+      ],
+      "derivedFrom": "ES:A1-SN-01"
+    },
+    {
+      "id": "TE-A1-POS-04",
+      "category": "Sambandham (possession)",
+      "label": "a possessive standing alone: 'this one is mine'",
+      "probe": null,
+      "derivedFrom": "ES:A1-POS-03"
+    },
+    {
+      "id": "TE-A1-NUM-01",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "cardinal numerals one to ten",
+      "probe": [
+        "TE-LEX-C07-NUMBERS-1-5-01",
+        "TE-LEX-C07-NUMBERS-6-10-01"
+      ],
+      "derivedFrom": "ES:A1-Q-01, ES:A1-NG2-01"
+    },
+    {
+      "id": "TE-A1-NUM-02",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "cardinal numerals eleven to twenty",
+      "probe": [
+        "TE-ETYMON-C20-PADAKONDU-IRAVAI-01"
+      ],
+      "derivedFrom": "ES:A1-Q-01",
+      "note": "C20 carries only etymon atoms, so this probe names an etymology atom rather than a lexis one. That is the only atom the lesson offers; the teens are genuinely taught."
+    },
+    {
+      "id": "TE-A1-NUM-03",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "cardinals above twenty: the tens and the hundreds, which prices and ages need",
+      "probe": [
+        "TE-LEX-C77-FROM-05"
+      ],
+      "derivedFrom": "ES:A1-Q-01, ES:A1-NG2-01",
+      "note": "C77 teaches the tens 30 to 90 and `vanda` 100 in one lesson, the way C07 taught one to five."
+    },
+    {
+      "id": "TE-A1-NUM-04",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "ordinal numerals to tenth",
+      "probe": null,
+      "derivedFrom": "ES:A1-Q-02, ES:A1-NG3-06"
+    },
+    {
+      "id": "TE-A1-NUM-05",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "relative quantity: a little, more, less",
+      "probe": [
+        "TE-LEX-C58-REPLY-01",
+        "TE-LEX-C58-REPLY-02",
+        "TE-LEX-C58-REPLY-03"
+      ],
+      "derivedFrom": "ES:A1-Q-03, ES:A1-ADV-03, ES:A1-NG2-02"
+    },
+    {
+      "id": "TE-A1-NUM-06",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "'enough', closing a quantity negotiation",
+      "probe": [
+        "TE-LEX-C49-REPLY-02"
+      ],
+      "derivedFrom": "ES:A1-Q-04"
+    },
+    {
+      "id": "TE-A1-NUM-07",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "degree words: very, quite, a bit, modifying a quantity",
+      "probe": [
+        "TE-LEX-C76-JUDGE-01"
+      ],
+      "derivedFrom": "ES:A1-NG2-03"
+    },
+    {
+      "id": "TE-A1-NUM-08",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "the Telugu digits, read as quantities",
+      "probe": [
+        "TE-SCRIPT-RECOG-140",
+        "TE-SCRIPT-RECOG-141",
+        "TE-SCRIPT-RECOG-142",
+        "TE-SCRIPT-RECOG-143",
+        "TE-SCRIPT-RECOG-144",
+        "TE-SCRIPT-RECOG-145",
+        "TE-SCRIPT-RECOG-146",
+        "TE-SCRIPT-RECOG-147",
+        "TE-SCRIPT-RECOG-148",
+        "TE-SCRIPT-RECOG-149"
+      ],
+      "derivedFrom": "ES:A1-NE16-01, ES:A1-O1-01",
+      "note": "All ten digit glyphs have a lesson each -- the one part of the writing system the track finishes."
+    },
+    {
+      "id": "TE-A1-NUM-09",
+      "category": "Sankhyalu (numerals and quantity)",
+      "label": "measures: size, distance and weight, with a unit",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG2-04",
+      "note": "`tuukam` ('weight', C72) is the only measure noun and no unit -- kilo, metre, rupee, hour of distance -- is introduced beside it."
+    },
+    {
+      "id": "TE-A1-CASE-01",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "grammar is suffixes: Telugu glues endings onto a stem, one after another",
+      "probe": [
+        "TE-GRAMMAR-C01-DHANYAVADAMULU-03"
+      ],
+      "derivedFrom": "telugu-specific",
+      "note": "No Spanish counterpart. It is the single fact that makes the rest of Telugu morphology legible, and the track states it in Chapter 1."
+    },
+    {
+      "id": "TE-A1-CASE-02",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the dative -ku, 'to / for'",
+      "probe": [
+        "TE-LEX-C06-DATIVE-KU-01",
+        "TE-GRAMMAR-C06-DATIVE-KU-02"
+      ],
+      "derivedFrom": "ES:A1-SV-05"
+    },
+    {
+      "id": "TE-A1-CASE-03",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the locative -loo, 'in', for saying where you live",
+      "probe": [
+        "TE-GRAMMAR-C05-UNDU-03"
+      ],
+      "derivedFrom": "ES:A1-NG3-01"
+    },
+    {
+      "id": "TE-A1-CASE-04",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the accusative -ni / -nu, which a human object takes and a thing does not",
+      "probe": [
+        "TE-LEX-C79-WHO-04",
+        "TE-GRAMMAR-C79-WHO-04"
+      ],
+      "derivedFrom": "ES:A1-SV-04"
+    },
+    {
+      "id": "TE-A1-CASE-05",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the comitative -too, 'with'",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG1-02"
+    },
+    {
+      "id": "TE-A1-CASE-06",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the ablative `nunchi`, 'from', which saying where you come from needs",
+      "probe": [
+        "TE-LEX-C77-FROM-01",
+        "TE-GRAMMAR-C77-FROM-01"
+      ],
+      "derivedFrom": "ES:A1-NG3-05, ES:A1-NG3-07"
+    },
+    {
+      "id": "TE-A1-CASE-07",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "sandhi: an ending fusing onto the noun in front of it",
+      "probe": [
+        "TE-GRAMMAR-C19-VAYASU-02"
+      ],
+      "derivedFrom": "ES:A1-ART-02",
+      "note": "Spanish's `a + el = al` is a contraction rule; Telugu's counterpart is regular vowel sandhi, and C19 shows it fusing `nii vayasu` + `enta` into `nii vayasenta`."
+    },
+    {
+      "id": "TE-A1-CASE-08",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the relational word follows its noun: Telugu postposes where English preposes",
+      "probe": [
+        "TE-GRAMMAR-C05-UNDU-03",
+        "TE-GRAMMAR-C06-DATIVE-KU-02"
+      ],
+      "derivedFrom": "ES:A1-SV-06"
+    },
+    {
+      "id": "TE-A1-V-01",
+      "category": "Kriya (the verb)",
+      "label": "the shape of every finite verb: stem, then tense piece, then person ending",
+      "probe": [
+        "TE-GRAMMAR-C05-MAATLAADU-03"
+      ],
+      "derivedFrom": "ES:A1-V-01"
+    },
+    {
+      "id": "TE-A1-V-02",
+      "category": "Kriya (the verb)",
+      "label": "one tense piece -ta- covering both 'I go' and 'I will go'",
+      "probe": [
+        "TE-GRAMMAR-C32-VELLU-02"
+      ],
+      "derivedFrom": "ES:A1-V-01, ES:A1-V-03"
+    },
+    {
+      "id": "TE-A1-V-03",
+      "category": "Kriya (the verb)",
+      "label": "the progressive -tunnaa-, 'I am going right now'",
+      "probe": [
+        "TE-GRAMMAR-C32-VELLU-02"
+      ],
+      "derivedFrom": "ES:A1-V-03, ES:A1-V-13"
+    },
+    {
+      "id": "TE-A1-V-04",
+      "category": "Kriya (the verb)",
+      "label": "the past piece -aa-, 'I went'",
+      "probe": [
+        "TE-GRAMMAR-C32-VELLU-02"
+      ],
+      "derivedFrom": "ES:A1-V-06, ES:A1-V-07, ES:A1-V-08",
+      "note": "One atom carries three proxy points because C32's table sets the three tense pieces out together. The past is shown for two verbs and never generalised to a paradigm."
+    },
+    {
+      "id": "TE-A1-V-05",
+      "category": "Kriya (the verb)",
+      "label": "the person endings: -nu for I, -aaru for you-respectful",
+      "probe": [
+        "TE-GRAMMAR-C03-NENU-03",
+        "TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03"
+      ],
+      "derivedFrom": "ES:A1-V-01"
+    },
+    {
+      "id": "TE-A1-V-06",
+      "category": "Kriya (the verb)",
+      "label": "no gender on the first or second person: a man and a woman say the same word",
+      "probe": [
+        "TE-GRAMMAR-C05-NENU-TELUGU-MAATLAADATAANU-03"
+      ],
+      "derivedFrom": "ES:A1-V-01"
+    },
+    {
+      "id": "TE-A1-V-07",
+      "category": "Kriya (the verb)",
+      "label": "the subject pronoun can be dropped because the ending carries it",
+      "probe": [
+        "TE-GRAMMAR-C03-NENU-03"
+      ],
+      "derivedFrom": "ES:A1-PRON-01"
+    },
+    {
+      "id": "TE-A1-V-08",
+      "category": "Kriya (the verb)",
+      "label": "undu / unnaanu: existing, staying and being somewhere",
+      "probe": [
+        "TE-LEX-C05-UNDU-01",
+        "TE-GRAMMAR-C32-UNDU-02"
+      ],
+      "derivedFrom": "ES:A1-V-02, ES:A1-OS-04, ES:A1-NG1-01"
+    },
+    {
+      "id": "TE-A1-V-09",
+      "category": "Kriya (the verb)",
+      "label": "the zero copula: 'my name is X' has no verb in it",
+      "probe": [
+        "TE-GRAMMAR-C02-NAA-PERU-03"
+      ],
+      "derivedFrom": "ES:A1-V-02, ES:A1-SV-02, ES:A1-OS-05",
+      "note": "Spanish spends two A1 points distinguishing ser from estar. The Telugu demand behind them is the opposite one -- noticing that the verb is absent -- and C02 meets it directly."
+    },
+    {
+      "id": "TE-A1-V-10",
+      "category": "Kriya (the verb)",
+      "label": "undu has no negative, so lee- is fetched from another verb to supply one",
+      "probe": [
+        "TE-GRAMMAR-C32-UNDU-02"
+      ],
+      "derivedFrom": "ES:A1-V-02"
+    },
+    {
+      "id": "TE-A1-V-11",
+      "category": "Kriya (the verb)",
+      "label": "the respectful command in -andi",
+      "probe": [
+        "TE-GRAMMAR-C32-CUUDU-02"
+      ],
+      "derivedFrom": "ES:A1-V-11, ES:A1-F4-01"
+    },
+    {
+      "id": "TE-A1-V-12",
+      "category": "Kriya (the verb)",
+      "label": "the plain command: the bare stem, to someone you address as nuvvu",
+      "probe": [
+        "TE-LEX-COME",
+        "TE-LEX-SIT",
+        "TE-LEX-STAND",
+        "TE-LEX-GIVE"
+      ],
+      "derivedFrom": "ES:A1-V-11"
+    },
+    {
+      "id": "TE-A1-V-13",
+      "category": "Kriya (the verb)",
+      "label": "suppletion: the word you name the verb by is not the word the endings attach to",
+      "probe": [
+        "TE-GRAMMAR-C32-RAA-02"
+      ],
+      "derivedFrom": "ES:A1-V-08, telugu-specific",
+      "note": "Spanish's irregular preterites are the nearest demand. Telugu's version is sharper: raa- takes no endings at all and vaccu supplies every form."
+    },
+    {
+      "id": "TE-A1-V-14",
+      "category": "Kriya (the verb)",
+      "label": "the stem's middle vowel moving between forms (cadu- / cadi- / cada-)",
+      "probe": [
+        "TE-GRAMMAR-C33-CADUVU-02"
+      ],
+      "derivedFrom": "ES:A1-V-07"
+    },
+    {
+      "id": "TE-A1-V-15",
+      "category": "Kriya (the verb)",
+      "label": "the participle chain: 'having gone, I come'",
+      "probe": [
+        "TE-GRAMMAR-C04-VELLI-VASTAANU-03"
+      ],
+      "derivedFrom": "ES:A1-V-13, ES:A1-SUB-08"
+    },
+    {
+      "id": "TE-A1-V-16",
+      "category": "Kriya (the verb)",
+      "label": "noun + ceeyu makes a new verb, which is how most borrowed vocabulary becomes verbal",
+      "probe": [
+        "TE-GRAMMAR-C05-PANI-CEYU-03"
+      ],
+      "derivedFrom": "ES:A1-V-12, ES:A1-NE07-03"
+    },
+    {
+      "id": "TE-A1-V-17",
+      "category": "Kriya (the verb)",
+      "label": "the self-benefactive -koo, Telugu's answer to the reflexive",
+      "probe": [
+        "TE-GRAMMAR-C33-ANUKO-02"
+      ],
+      "derivedFrom": "ES:A1-PRON-04"
+    },
+    {
+      "id": "TE-A1-V-18",
+      "category": "Kriya (the verb)",
+      "label": "the personless verb telusu, where the knower rides in the dative instead",
+      "probe": [
+        "TE-GRAMMAR-C32-TELUSU-02"
+      ],
+      "derivedFrom": "ES:A1-NG6-09"
+    },
+    {
+      "id": "TE-A1-V-19",
+      "category": "Kriya (the verb)",
+      "label": "the infinitive: a non-finite form a candidate can build and use",
+      "probe": null,
+      "derivedFrom": "ES:A1-V-12",
+      "note": "The track names verbs by their stem (vellu, tinu, caduvu) and never teaches the -adam / -ataniki forms that make a verb usable as a complement."
+    },
+    {
+      "id": "TE-A1-V-20",
+      "category": "Kriya (the verb)",
+      "label": "the past participle and the perfect",
+      "probe": null,
+      "derivedFrom": "ES:A1-V-09, ES:A1-V-10, ES:A1-V-14"
+    },
+    {
+      "id": "TE-A1-V-21",
+      "category": "Kriya (the verb)",
+      "label": "the habitual past: what you used to do",
+      "probe": null,
+      "derivedFrom": "ES:A1-V-04, ES:A1-V-05"
+    },
+    {
+      "id": "TE-A1-V-22",
+      "category": "Kriya (the verb)",
+      "label": "the third person endings: he, she, it, they",
+      "probe": [
+        "TE-GRAMMAR-C79-WHO-03"
+      ],
+      "derivedFrom": "ES:A1-V-01"
+    },
+    {
+      "id": "TE-A1-NEG-01",
+      "category": "Nishedhamu (negation)",
+      "label": "two negatives: leedu for existence, kaadu for identity, and choosing between them",
+      "probe": [
+        "TE-GRAMMAR-C01-LEDU-03",
+        "TE-GRAMMAR-C01-AVUNU-03"
+      ],
+      "derivedFrom": "ES:A1-OS-01, ES:A1-ADV-05",
+      "note": "A demand Spanish does not make -- `no` covers both -- and one the track meets carefully in Chapter 1."
+    },
+    {
+      "id": "TE-A1-NEG-02",
+      "category": "Nishedhamu (negation)",
+      "label": "leedu negating existence inside a sentence",
+      "probe": [
+        "TE-GRAMMAR-C03-PARAVAALEDU-03"
+      ],
+      "derivedFrom": "ES:A1-OS-01, ES:A1-NG1-02"
+    },
+    {
+      "id": "TE-A1-NEG-03",
+      "category": "Nishedhamu (negation)",
+      "label": "negating an ordinary verb: 'I do not go'",
+      "probe": [
+        "TE-GRAMMAR-C78-YESNO-03"
+      ],
+      "derivedFrom": "ES:A1-OS-01"
+    },
+    {
+      "id": "TE-A1-Q-01",
+      "category": "Prashnalu (asking questions)",
+      "label": "eemiti, 'what'",
+      "probe": [
+        "TE-LEX-C02-EMITI-01"
+      ],
+      "derivedFrom": "ES:A1-PRON-06, ES:A1-F1-02"
+    },
+    {
+      "id": "TE-A1-Q-02",
+      "category": "Prashnalu (asking questions)",
+      "label": "evaru, 'who'",
+      "probe": [
+        "TE-LEX-C41-DEIXIS-05"
+      ],
+      "derivedFrom": "ES:A1-PRON-06"
+    },
+    {
+      "id": "TE-A1-Q-03",
+      "category": "Prashnalu (asking questions)",
+      "label": "ekkada, 'where'",
+      "probe": [
+        "TE-LEX-C41-DEIXIS-06"
+      ],
+      "derivedFrom": "ES:A1-ADV-07, ES:A1-NG3-01"
+    },
+    {
+      "id": "TE-A1-Q-04",
+      "category": "Prashnalu (asking questions)",
+      "label": "elaa, 'how'",
+      "probe": [
+        "TE-LEX-C03-ELAA-01"
+      ],
+      "derivedFrom": "ES:A1-ADV-07"
+    },
+    {
+      "id": "TE-A1-Q-05",
+      "category": "Prashnalu (asking questions)",
+      "label": "enta, 'how much' -- the price question and the age question",
+      "probe": [
+        "TE-GRAMMAR-C19-VAYASU-02"
+      ],
+      "derivedFrom": "ES:A1-PRON-06, ES:A1-NG6-02"
+    },
+    {
+      "id": "TE-A1-Q-06",
+      "category": "Prashnalu (asking questions)",
+      "label": "eppudu, 'when'",
+      "probe": [
+        "TE-LEX-C75-WHEN-03"
+      ],
+      "derivedFrom": "ES:A1-NG4-01"
+    },
+    {
+      "id": "TE-A1-Q-07",
+      "category": "Prashnalu (asking questions)",
+      "label": "enduku, 'why', and answering it",
+      "probe": [
+        "TE-LEX-C74-LINK-04",
+        "TE-LEX-C74-LINK-05"
+      ],
+      "derivedFrom": "ES:A1-ADV-08, ES:A1-SUB-06",
+      "note": "Both halves: `enduku` asks and `endukantee` answers, which is what the point demands. The e- question row is complete with C75's `eppudu`."
+    },
+    {
+      "id": "TE-A1-Q-08",
+      "category": "Prashnalu (asking questions)",
+      "label": "the yes-or-no question: the -aa particle, or the same sentence said with a rise",
+      "probe": [
+        "TE-LEX-C78-YESNO-01",
+        "TE-GRAMMAR-C78-YESNO-01"
+      ],
+      "derivedFrom": "ES:A1-OS-02"
+    },
+    {
+      "id": "TE-A1-Q-09",
+      "category": "Prashnalu (asking questions)",
+      "label": "the question word sits where its answer sits, not at the front of the sentence",
+      "probe": [
+        "TE-LEX-C02-MII-PERU-EMITI-01",
+        "TE-GRAMMAR-C02-MII-PERU-EMITI-03"
+      ],
+      "derivedFrom": "ES:A1-OS-03"
+    },
+    {
+      "id": "TE-A1-ADV-01",
+      "category": "Kriya visheshanamu (adverbs)",
+      "label": "place deictics: ikkada and akkada",
+      "probe": [
+        "TE-LEX-C41-DEIXIS-03",
+        "TE-LEX-C41-DEIXIS-04"
+      ],
+      "derivedFrom": "ES:A1-ADV-01, ES:A1-NG3-01"
+    },
+    {
+      "id": "TE-A1-ADV-02",
+      "category": "Kriya visheshanamu (adverbs)",
+      "label": "time deictics forward: now, tomorrow, the day after tomorrow",
+      "probe": [
+        "TE-LEX-C50-LEAVE-01",
+        "TE-LEX-C04-REEPU-KALUDDAAM-01",
+        "TE-LEX-C50-LEAVE-02"
+      ],
+      "derivedFrom": "ES:A1-ADV-02, ES:A1-NG4-02",
+      "note": "`reepu` is introduced inside the whole farewell `reepu kaluddaam`, which is the atom that carries it."
+    },
+    {
+      "id": "TE-A1-ADV-03",
+      "category": "Kriya visheshanamu (adverbs)",
+      "label": "time deictics backward and present: today and yesterday",
+      "probe": [
+        "TE-LEX-C75-WHEN-01",
+        "TE-LEX-C75-WHEN-02"
+      ],
+      "derivedFrom": "ES:A1-ADV-02, ES:A1-NG4-02"
+    },
+    {
+      "id": "TE-A1-ADV-04",
+      "category": "Kriya visheshanamu (adverbs)",
+      "label": "quantity adverbs: koncem, ekkuva, takkuva",
+      "probe": [
+        "TE-LEX-C58-REPLY-01",
+        "TE-LEX-C58-REPLY-02",
+        "TE-LEX-C58-REPLY-03"
+      ],
+      "derivedFrom": "ES:A1-ADV-03"
+    },
+    {
+      "id": "TE-A1-ADV-05",
+      "category": "Kriya visheshanamu (adverbs)",
+      "label": "manner: baagaa, 'well', and its use as the answer to 'how are you'",
+      "probe": [
+        "TE-LEX-C03-BAAGAA-01"
+      ],
+      "derivedFrom": "ES:A1-ADV-04, ES:A1-NG6-07"
+    },
+    {
+      "id": "TE-A1-ADV-06",
+      "category": "Kriya visheshanamu (adverbs)",
+      "label": "polarity: avunu and leedu as one-word answers",
+      "probe": [
+        "TE-LEX-C01-AVUNU-01",
+        "TE-LEX-C01-LEDU-01"
+      ],
+      "derivedFrom": "ES:A1-ADV-05, ES:A1-F1-05"
+    },
+    {
+      "id": "TE-A1-ADV-07",
+      "category": "Kriya visheshanamu (adverbs)",
+      "label": "connective adverbs: 'also' and 'only'",
+      "probe": [
+        "TE-LEX-C64-JOIN-01",
+        "TE-LEX-C64-JOIN-02"
+      ],
+      "derivedFrom": "ES:A1-ADV-06"
+    },
+    {
+      "id": "TE-A1-ADV-08",
+      "category": "Kriya visheshanamu (adverbs)",
+      "label": "'still' and 'after that', ordering two things in a reply",
+      "probe": [
+        "TE-LEX-C64-JOIN-05",
+        "TE-LEX-C64-JOIN-04"
+      ],
+      "derivedFrom": "ES:A1-NG4-03"
+    },
+    {
+      "id": "TE-A1-S-01",
+      "category": "Vakyamu (the sentence)",
+      "label": "word order: the verb comes last",
+      "probe": null,
+      "derivedFrom": "ES:A1-SV-06, ES:A1-OS-06",
+      "note": "Every example sentence in the track is verb-final and no atom says so. A candidate is given the pattern by exposure and never given the rule, which is what a production task needs."
+    },
+    {
+      "id": "TE-A1-S-02",
+      "category": "Vakyamu (the sentence)",
+      "label": "the plain affirmative declarative",
+      "probe": [
+        "TE-GRAMMAR-C02-NAA-PERU-03",
+        "TE-GRAMMAR-C05-MAATLAADU-03"
+      ],
+      "derivedFrom": "ES:A1-OS-01"
+    },
+    {
+      "id": "TE-A1-S-03",
+      "category": "Vakyamu (the sentence)",
+      "label": "the attributive sentence, which in Telugu has no verb at all",
+      "probe": [
+        "TE-GRAMMAR-C02-NAA-PERU-03"
+      ],
+      "derivedFrom": "ES:A1-OS-05, ES:A1-SV-02, ES:A1-SV-03"
+    },
+    {
+      "id": "TE-A1-S-04",
+      "category": "Vakyamu (the sentence)",
+      "label": "the existential sentence: there is, there is not",
+      "probe": [
+        "TE-GRAMMAR-C32-UNDU-02",
+        "TE-GRAMMAR-C03-PARAVAALEDU-03"
+      ],
+      "derivedFrom": "ES:A1-OS-04, ES:A1-NG1-01"
+    },
+    {
+      "id": "TE-A1-S-05",
+      "category": "Vakyamu (the sentence)",
+      "label": "the dative-subject sentence: the experiencer is not the grammatical subject",
+      "probe": [
+        "TE-GRAMMAR-C06-DATIVE-SUBJECT-02",
+        "TE-GRAMMAR-C34-ISHTAM-02"
+      ],
+      "derivedFrom": "ES:A1-SV-01, ES:A1-F3-01",
+      "note": "Spanish reaches the same shape only through `gustar`. Telugu runs four sentence types on it -- a skill, a fact, a meaning that landed and a taste -- and C34's lens sets all four side by side."
+    },
+    {
+      "id": "TE-A1-S-06",
+      "category": "Vakyamu (the sentence)",
+      "label": "the transitive sentence with an unmarked direct object",
+      "probe": [
+        "TE-LEX-C05-NENU-TELUGU-MAATLAADATAANU-01"
+      ],
+      "derivedFrom": "ES:A1-OS-06"
+    },
+    {
+      "id": "TE-A1-S-07",
+      "category": "Vakyamu (the sentence)",
+      "label": "the vocative: calling or hailing somebody",
+      "probe": null,
+      "derivedFrom": "ES:A1-SN-04"
+    },
+    {
+      "id": "TE-A1-S-08",
+      "category": "Vakyamu (the sentence)",
+      "label": "subject-verb agreement, stated as a rule rather than left to be noticed",
+      "probe": [
+        "TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03"
+      ],
+      "derivedFrom": "ES:A1-SN-02, ES:A1-SN-03"
+    },
+    {
+      "id": "TE-A1-S-09",
+      "category": "Vakyamu (the sentence)",
+      "label": "noun-phrase complements: an adjective, a genitive and a relative clause",
+      "probe": null,
+      "derivedFrom": "ES:A1-SN-01",
+      "note": "The adjective slot is taught (C42); the genitive is taught only on pronouns; the relative participle is absent entirely. A point needs all three to be true and only one is."
+    },
+    {
+      "id": "TE-A1-CO-01",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "'and': joining two nouns or two clauses",
+      "probe": [
+        "TE-LEX-C74-LINK-01"
+      ],
+      "derivedFrom": "ES:A1-CO-01"
+    },
+    {
+      "id": "TE-A1-CO-02",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "'or', which offering a choice needs",
+      "probe": [
+        "TE-LEX-C74-LINK-03"
+      ],
+      "derivedFrom": "ES:A1-CO-03"
+    },
+    {
+      "id": "TE-A1-CO-03",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "'but', which qualifying anything needs",
+      "probe": [
+        "TE-LEX-C74-LINK-02"
+      ],
+      "derivedFrom": "ES:A1-CO-04, ES:A1-F2-09"
+    },
+    {
+      "id": "TE-A1-CO-04",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "negative coordination: neither this nor that",
+      "probe": null,
+      "derivedFrom": "ES:A1-CO-02"
+    },
+    {
+      "id": "TE-A1-CO-05",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "distributive coordination: one... the other",
+      "probe": null,
+      "derivedFrom": "ES:A1-CO-05"
+    },
+    {
+      "id": "TE-A1-CO-06",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "'in that case', linking a reply to what was just said",
+      "probe": [
+        "TE-LEX-C64-JOIN-03"
+      ],
+      "derivedFrom": "ES:A1-F6-01"
+    },
+    {
+      "id": "TE-A1-CO-07",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "sequencing two events with 'after that'",
+      "probe": [
+        "TE-LEX-C64-JOIN-04"
+      ],
+      "derivedFrom": "ES:A1-SUB-08"
+    },
+    {
+      "id": "TE-A1-CO-08",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "a finite clause as object: 'I think that...', with the quotative ani",
+      "probe": [
+        "TE-LEX-C80-WISH-02",
+        "TE-GRAMMAR-C80-WISH-02"
+      ],
+      "derivedFrom": "ES:A1-SUB-03, ES:A1-F2-02"
+    },
+    {
+      "id": "TE-A1-CO-09",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "a non-finite clause as subject or object",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-01, ES:A1-SUB-02"
+    },
+    {
+      "id": "TE-A1-CO-10",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "a relative clause, which Telugu builds with a participle and not a pronoun",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-04, ES:A1-SUB-05, ES:A1-PRON-05"
+    },
+    {
+      "id": "TE-A1-CO-11",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "a causal clause: because",
+      "probe": [
+        "TE-LEX-C74-LINK-05",
+        "TE-GRAMMAR-C74-LINK-05"
+      ],
+      "derivedFrom": "ES:A1-SUB-06"
+    },
+    {
+      "id": "TE-A1-CO-12",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "a purpose clause: in order to",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-07"
+    },
+    {
+      "id": "TE-A1-CO-13",
+      "category": "Samuchchayamu (joining clauses)",
+      "label": "simultaneity: when",
+      "probe": null,
+      "derivedFrom": "ES:A1-SUB-08",
+      "note": "C75 teaches `eppudu` as the QUESTION word `when?`. The subordinating `when` this point asks for is a different form (-appudu on the verb, or -tee), and no lesson teaches it."
+    },
+    {
+      "id": "TE-A1-PRON-01",
+      "category": "Sarvanamamu (pronouns)",
+      "label": "neenu, 'I'",
+      "probe": [
+        "TE-LEX-C03-NENU-01"
+      ],
+      "derivedFrom": "ES:A1-PRON-01"
+    },
+    {
+      "id": "TE-A1-PRON-02",
+      "category": "Sarvanamamu (pronouns)",
+      "label": "nuvvu and miiru, and respect carried by the plural",
+      "probe": [
+        "TE-LEX-C02-NUVVU-MIIRU-01",
+        "TE-GRAMMAR-C02-NUVVU-MIIRU-03"
+      ],
+      "derivedFrom": "ES:A1-PRON-01, ES:A1-F5-03"
+    },
+    {
+      "id": "TE-A1-PRON-03",
+      "category": "Sarvanamamu (pronouns)",
+      "label": "the rest of the paradigm: we (two kinds), he, she, they",
+      "probe": [
+        "TE-LEX-C79-WHO-02",
+        "TE-LEX-C79-WHO-03"
+      ],
+      "derivedFrom": "ES:A1-PRON-01",
+      "note": "The four missing persons in two lessons: `maa`/`mana` for the two kinds of we, and `atanu`/`aame`/`vaallu` for the third person."
+    },
+    {
+      "id": "TE-A1-PRON-04",
+      "category": "Sarvanamamu (pronouns)",
+      "label": "the object form of a pronoun: 'see me', 'ask him'",
+      "probe": [
+        "TE-LEX-C79-WHO-04"
+      ],
+      "derivedFrom": "ES:A1-PRON-02"
+    },
+    {
+      "id": "TE-A1-PRON-05",
+      "category": "Sarvanamamu (pronouns)",
+      "label": "naaku: the pronoun in the dative, as the experiencer of a state",
+      "probe": [
+        "TE-LEX-C06-DATIVE-SUBJECT-01",
+        "TE-GRAMMAR-C06-DATIVE-SUBJECT-02"
+      ],
+      "derivedFrom": "ES:A1-PRON-03"
+    },
+    {
+      "id": "TE-A1-PRON-06",
+      "category": "Sarvanamamu (pronouns)",
+      "label": "idi and adi standing in for a thing already mentioned",
+      "probe": [
+        "TE-LEX-C41-DEIXIS-01",
+        "TE-LEX-C41-DEIXIS-02"
+      ],
+      "derivedFrom": "ES:A1-DEM-01"
+    },
+    {
+      "id": "TE-A1-PRON-07",
+      "category": "Sarvanamamu (pronouns)",
+      "label": "a pronoun carrying a case ending (naa + ku = naaku)",
+      "probe": [
+        "TE-LEX-C06-DATIVE-SUBJECT-01"
+      ],
+      "derivedFrom": "ES:A1-PRON-08"
+    },
+    {
+      "id": "TE-A1-PRON-08",
+      "category": "Sarvanamamu (pronouns)",
+      "label": "the exclamative: 'how good!'",
+      "probe": null,
+      "derivedFrom": "ES:A1-PRON-07"
+    },
+    {
+      "id": "TE-A1-T-01",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "the seven weekdays",
+      "probe": [
+        "TE-ETYMON-C10-VAARAM-01",
+        "TE-PRAGMATICS-C10-VAARAM-02"
+      ],
+      "derivedFrom": "ES:A1-NG4-02",
+      "note": "C10 carries no lexis atom, so the probe names the etymology and pragmatics atoms the lesson does declare."
+    },
+    {
+      "id": "TE-A1-T-02",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "the twelve months",
+      "probe": [
+        "TE-LEX-C16-NELALU-01"
+      ],
+      "derivedFrom": "ES:A1-NG4-02",
+      "note": "The months taught are the lunisolar Caitram-to-Phaalgunam set. They are real Telugu months and they are NOT the names a form field, a ticket or a date of birth uses, which are the Gregorian ones -- so this point is covered and the writing task behind it still is not."
+    },
+    {
+      "id": "TE-A1-T-03",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "the four seasons",
+      "probe": [
+        "TE-LEX-C14-RUTUVULU-01"
+      ],
+      "derivedFrom": "ES:A1-NG4-02"
+    },
+    {
+      "id": "TE-A1-T-04",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "the parts of the day: morning, noon, afternoon, evening, night, midnight",
+      "probe": [
+        "TE-ETYMON-C26-UDAYAM-01",
+        "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+        "TE-PRAGMATICS-C28-MADHYAHNAM-WIDENED-01",
+        "TE-ETYMON-C27-SAYANTRAM-01",
+        "TE-ETYMON-C24-RATRI-01"
+      ],
+      "derivedFrom": "ES:A1-NG4-01",
+      "note": "Eight chapters (C17, C23-C31) are spent on this one notion, which is the deepest single thing the track teaches."
+    },
+    {
+      "id": "TE-A1-T-05",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "telling the clock time",
+      "probe": [
+        "TE-LEX-C18-GANTA-01",
+        "TE-GRAMMAR-C18-GANTA-03"
+      ],
+      "derivedFrom": "ES:A1-NG4-01",
+      "note": "Covered to the whole hour only, and only to twenty o'clock, because the cardinals stop at twenty and no atom teaches minutes or the half and quarter forms."
+    },
+    {
+      "id": "TE-A1-T-06",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "'day' as a unit, and 'now'",
+      "probe": [
+        "TE-ETYMON-C23-ROJU-01",
+        "TE-LEX-C50-LEAVE-01"
+      ],
+      "derivedFrom": "ES:A1-N-02, ES:A1-ADV-02"
+    },
+    {
+      "id": "TE-A1-T-07",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "giving a date: this day of this month",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG4-02",
+      "note": "Needs an ordinal or a number above twenty and a Gregorian month name; the track has none of the three."
+    },
+    {
+      "id": "TE-A1-T-08",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "asking somebody's age",
+      "probe": [
+        "TE-ETYMON-C19-VAYASU-01",
+        "TE-GRAMMAR-C19-VAYASU-02"
+      ],
+      "derivedFrom": "ES:A1-NG5-04"
+    },
+    {
+      "id": "TE-A1-T-09",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "answering with an age in years",
+      "probe": [
+        "TE-LEX-C77-FROM-05",
+        "TE-LEX-C75-WHEN-05",
+        "TE-GRAMMAR-C77-FROM-05"
+      ],
+      "derivedFrom": "ES:A1-NG5-04, ES:A1-F1-03",
+      "note": "The question was already taught at C19 and could not be answered. The tens, `samvatsaram` and the dative age frame together make the answer sayable."
+    },
+    {
+      "id": "TE-A1-T-10",
+      "category": "Kaalam mariyu teedi (time and date)",
+      "label": "before and after, ordering two events in time",
+      "probe": [
+        "TE-LEX-C75-WHEN-04",
+        "TE-LEX-C64-JOIN-04"
+      ],
+      "derivedFrom": "ES:A1-NG4-03",
+      "note": "Both ends now: `mundu` from C75 against `taruvaata` from C64."
+    },
+    {
+      "id": "TE-A1-F-01",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "identify oneself by name",
+      "probe": [
+        "TE-LEX-C02-NAA-PERU-01",
+        "TE-GRAMMAR-C02-NAA-PERU-03"
+      ],
+      "derivedFrom": "ES:A1-F1-01"
+    },
+    {
+      "id": "TE-A1-F-02",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask somebody their name",
+      "probe": [
+        "TE-LEX-C02-MII-PERU-EMITI-01"
+      ],
+      "derivedFrom": "ES:A1-F1-01, ES:A1-F1-02"
+    },
+    {
+      "id": "TE-A1-F-03",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask what a thing is, or where a place is",
+      "probe": [
+        "TE-LEX-C02-EMITI-01",
+        "TE-LEX-C41-DEIXIS-06"
+      ],
+      "derivedFrom": "ES:A1-F1-02"
+    },
+    {
+      "id": "TE-A1-F-04",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "give the standard personal information: name, age, where you are from",
+      "probe": [
+        "TE-LEX-C02-NAA-PERU-01",
+        "TE-GRAMMAR-C77-FROM-05",
+        "TE-LEX-C77-FROM-01",
+        "TE-LEX-C77-FROM-04"
+      ],
+      "derivedFrom": "ES:A1-F1-03",
+      "note": "All three parts now: the name frame from C02, the age frame from C77, and origin from `nunci` with a place that has a name."
+    },
+    {
+      "id": "TE-A1-F-05",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask for confirmation with a tag: 'isn't it?'",
+      "probe": null,
+      "derivedFrom": "ES:A1-F1-04"
+    },
+    {
+      "id": "TE-A1-F-06",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "TE-LEX-C01-AVUNU-01",
+        "TE-LEX-C01-LEDU-01",
+        "TE-GRAMMAR-C01-AVUNU-03"
+      ],
+      "derivedFrom": "ES:A1-F1-05"
+    },
+    {
+      "id": "TE-A1-F-07",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask for an opinion by handing the turn back",
+      "probe": null,
+      "derivedFrom": "ES:A1-F2-01"
+    },
+    {
+      "id": "TE-A1-F-08",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "give an opinion: 'I think that...'",
+      "probe": [
+        "TE-LEX-C80-WISH-02",
+        "TE-LEX-C33-ANUKO-01"
+      ],
+      "derivedFrom": "ES:A1-F2-02"
+    },
+    {
+      "id": "TE-A1-F-09",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask for an evaluation: 'how is it?'",
+      "probe": [
+        "TE-LEX-C03-ELAA-01"
+      ],
+      "derivedFrom": "ES:A1-F2-03"
+    },
+    {
+      "id": "TE-A1-F-10",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "evaluate something as good, or as going well",
+      "probe": [
+        "TE-LEX-C42-ADJ-03",
+        "TE-LEX-C03-BAAGAA-01"
+      ],
+      "derivedFrom": "ES:A1-F2-04, ES:A1-NG6-01"
+    },
+    {
+      "id": "TE-A1-F-11",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "express approval: that is fine",
+      "probe": [
+        "TE-LEX-C01-SARE-01",
+        "TE-LEX-C49-REPLY-05"
+      ],
+      "derivedFrom": "ES:A1-F2-05"
+    },
+    {
+      "id": "TE-A1-F-12",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "express disapproval",
+      "probe": [
+        "TE-LEX-C76-JUDGE-02"
+      ],
+      "derivedFrom": "ES:A1-F2-05"
+    },
+    {
+      "id": "TE-A1-F-13",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "express agreement with what somebody said",
+      "probe": [
+        "TE-LEX-C49-REPLY-01",
+        "TE-LEX-C49-REPLY-05"
+      ],
+      "derivedFrom": "ES:A1-F2-06"
+    },
+    {
+      "id": "TE-A1-F-14",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "express disagreement",
+      "probe": [
+        "TE-LEX-C74-LINK-02"
+      ],
+      "derivedFrom": "ES:A1-F2-07",
+      "note": "`kaanii` supplies the 'but' this needed. The negative conjugation the note used to name as the other route also landed, at TE-GRAMMAR-C78-YESNO-03."
+    },
+    {
+      "id": "TE-A1-F-15",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "show scepticism, uncertainty or possibility: 'who knows'",
+      "probe": [
+        "TE-LEX-C49-REPLY-04"
+      ],
+      "derivedFrom": "ES:A1-F2-08, ES:A1-F2-11, ES:A1-F2-12"
+    },
+    {
+      "id": "TE-A1-F-16",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "offer a counter-argument",
+      "probe": [
+        "TE-LEX-C74-LINK-02"
+      ],
+      "derivedFrom": "ES:A1-F2-09"
+    },
+    {
+      "id": "TE-A1-F-17",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "express certainty by plain assertion",
+      "probe": [
+        "TE-LEX-C49-REPLY-03",
+        "TE-LEX-C49-REPLY-01"
+      ],
+      "derivedFrom": "ES:A1-F2-10, ES:A1-NG1-05"
+    },
+    {
+      "id": "TE-A1-F-18",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask whether somebody knows something",
+      "probe": [
+        "TE-LEX-C78-YESNO-02"
+      ],
+      "derivedFrom": "ES:A1-F2-13"
+    },
+    {
+      "id": "TE-A1-F-19",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "say that you know something",
+      "probe": [
+        "TE-LEX-C32-TELUSU-01",
+        "TE-GRAMMAR-C32-TELUSU-02"
+      ],
+      "derivedFrom": "ES:A1-F2-14"
+    },
+    {
+      "id": "TE-A1-F-20",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "say that you do not know something",
+      "probe": [
+        "TE-LEX-C78-YESNO-03"
+      ],
+      "derivedFrom": "ES:A1-F2-15"
+    },
+    {
+      "id": "TE-A1-F-21",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask whether somebody can do something",
+      "probe": [
+        "TE-LEX-C80-WISH-03",
+        "TE-GRAMMAR-C78-YESNO-01"
+      ],
+      "derivedFrom": "ES:A1-F2-16"
+    },
+    {
+      "id": "TE-A1-F-22",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "say that you can do something, or have a skill",
+      "probe": [
+        "TE-LEX-C06-DATIVE-SUBJECT-01",
+        "TE-GRAMMAR-C06-DATIVE-SUBJECT-02"
+      ],
+      "derivedFrom": "ES:A1-F2-17, ES:A1-NG6-09"
+    },
+    {
+      "id": "TE-A1-F-23",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "say what you like",
+      "probe": [
+        "TE-LEX-C34-ISHTAM-01",
+        "TE-GRAMMAR-C34-ISHTAM-02"
+      ],
+      "derivedFrom": "ES:A1-F3-01, ES:A1-NG6-08"
+    },
+    {
+      "id": "TE-A1-F-24",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask about a preference by offering two alternatives",
+      "probe": [
+        "TE-LEX-C74-LINK-03"
+      ],
+      "derivedFrom": "ES:A1-F3-02"
+    },
+    {
+      "id": "TE-A1-F-25",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "state a preference",
+      "probe": null,
+      "derivedFrom": "ES:A1-F3-03"
+    },
+    {
+      "id": "TE-A1-F-26",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "say what you want or need",
+      "probe": [
+        "TE-LEX-C80-WISH-01"
+      ],
+      "derivedFrom": "ES:A1-F3-04"
+    },
+    {
+      "id": "TE-A1-F-27",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask about somebody's plans",
+      "probe": null,
+      "derivedFrom": "ES:A1-F3-05"
+    },
+    {
+      "id": "TE-A1-F-28",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "say what you are going to do",
+      "probe": [
+        "TE-GRAMMAR-C32-VELLU-02"
+      ],
+      "derivedFrom": "ES:A1-F3-06",
+      "note": "Carried by the -ta- piece, which C32 states covers 'I will go' as well as 'I go'."
+    },
+    {
+      "id": "TE-A1-F-29",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "give an order or an instruction",
+      "probe": [
+        "TE-LEX-COME",
+        "TE-LEX-SIT",
+        "TE-LEX-GIVE",
+        "TE-GRAMMAR-C32-CUUDU-02"
+      ],
+      "derivedFrom": "ES:A1-F4-01"
+    },
+    {
+      "id": "TE-A1-F-30",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask for an object, softened",
+      "probe": [
+        "TE-LEX-C39-TII-01",
+        "TE-LEX-C08-DAYACHESI-01"
+      ],
+      "derivedFrom": "ES:A1-F4-02",
+      "note": "`dayaceesi tii` is the one transactional request the track teaches as a whole utterance."
+    },
+    {
+      "id": "TE-A1-F-31",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "TE-LEX-C34-SAHAYAM-CEYU-01"
+      ],
+      "derivedFrom": "ES:A1-F4-03"
+    },
+    {
+      "id": "TE-A1-F-32",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "respond to a request or an instruction",
+      "probe": [
+        "TE-LEX-C01-SARE-01"
+      ],
+      "derivedFrom": "ES:A1-F4-04"
+    },
+    {
+      "id": "TE-A1-F-33",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "grant permission",
+      "probe": [
+        "TE-LEX-C80-WISH-03"
+      ],
+      "derivedFrom": "ES:A1-F4-05"
+    },
+    {
+      "id": "TE-A1-F-34",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "refuse permission",
+      "probe": [
+        "TE-LEX-C80-WISH-03",
+        "TE-LEX-C58-REPLY-04"
+      ],
+      "derivedFrom": "ES:A1-F4-06"
+    },
+    {
+      "id": "TE-A1-F-35",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "offer something, or invite somebody",
+      "probe": [
+        "TE-LEX-C80-WISH-04"
+      ],
+      "derivedFrom": "ES:A1-F4-07"
+    },
+    {
+      "id": "TE-A1-F-36",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "accept an offer or an invitation",
+      "probe": [
+        "TE-LEX-C49-REPLY-05",
+        "TE-LEX-C49-REPLY-03"
+      ],
+      "derivedFrom": "ES:A1-F4-08"
+    },
+    {
+      "id": "TE-A1-F-37",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "decline an offer",
+      "probe": [
+        "TE-LEX-C58-REPLY-04"
+      ],
+      "derivedFrom": "ES:A1-F4-09"
+    },
+    {
+      "id": "TE-A1-F-38",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "greet",
+      "probe": [
+        "TE-LEX-C01-NAMASKARAM-01",
+        "TE-PRAGMATICS-C01-NAMASKARAM-03"
+      ],
+      "derivedFrom": "ES:A1-F5-01"
+    },
+    {
+      "id": "TE-A1-F-39",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "respond to a greeting",
+      "probe": [
+        "TE-LEX-C01-NAMASKARAM-01",
+        "TE-LEX-C03-BAAGAA-01"
+      ],
+      "derivedFrom": "ES:A1-F5-02"
+    },
+    {
+      "id": "TE-A1-F-40",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "the time-of-day greetings: morning, afternoon, evening, night",
+      "probe": [
+        "TE-ETYMON-C29-SUBHODAYAM-01",
+        "TE-LEX-C31-SUBHA-MADHYAHNAM-01",
+        "TE-ETYMON-C30-SUBHA-SAYANTRAM-01",
+        "TE-ETYMON-C25-SHUBHA-RATRI-01"
+      ],
+      "derivedFrom": "ES:A1-F5-01"
+    },
+    {
+      "id": "TE-A1-F-41",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "judge which greeting is everyday and which is formal or dated",
+      "probe": [
+        "TE-PRAGMATICS-C29-SUBHODAYAM-02",
+        "TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02",
+        "TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-01",
+        "TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-02"
+      ],
+      "derivedFrom": "ES:A1-F5-01, telugu-specific",
+      "note": "The proxy has no A1 slot for register, and the track's strongest single stretch is exactly this: four pragmatics atoms that weigh each greeting's currency and grade the confidence of the sources behind the claim."
+    },
+    {
+      "id": "TE-A1-F-42",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "address somebody by name or title",
+      "probe": [
+        "TE-LEX-C79-WHO-05"
+      ],
+      "derivedFrom": "ES:A1-F5-03"
+    },
+    {
+      "id": "TE-A1-F-43",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "introduce yourself, and respond to being introduced",
+      "probe": [
+        "TE-LEX-C02-NAA-PERU-01",
+        "TE-LEX-C02-SANTOSHAM-01"
+      ],
+      "derivedFrom": "ES:A1-F5-04, ES:A1-F5-05"
+    },
+    {
+      "id": "TE-A1-F-44",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "introduce a third person: 'this is my friend'",
+      "probe": null,
+      "derivedFrom": "ES:A1-F5-04",
+      "note": "Still blocked by TE-A1-DEM-03, for the script reason recorded there. The genitive half arrived at C79 (`sneehitudi`); the adnominal half cannot be written without a new glyph."
+    },
+    {
+      "id": "TE-A1-F-45",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "apologise",
+      "probe": [
+        "TE-ETYMON-C09-KSHAMINCHANDI-01",
+        "TE-PRAGMATICS-C09-KSHAMINCHANDI-03"
+      ],
+      "derivedFrom": "ES:A1-F5-06",
+      "note": "C09 declares no lexis atom, so the probe names the etymology and pragmatics atoms it does declare."
+    },
+    {
+      "id": "TE-A1-F-46",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "accept an apology, and answer thanks -- one word does both",
+      "probe": [
+        "TE-LEX-C03-PARAVAALEDU-01"
+      ],
+      "derivedFrom": "ES:A1-F5-06, ES:A1-F5-07"
+    },
+    {
+      "id": "TE-A1-F-47",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "thank",
+      "probe": [
+        "TE-LEX-C01-DHANYAVADAMULU-01"
+      ],
+      "derivedFrom": "ES:A1-F5-07"
+    },
+    {
+      "id": "TE-A1-F-48",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "offer condolences",
+      "probe": null,
+      "derivedFrom": "ES:A1-F5-08"
+    },
+    {
+      "id": "TE-A1-F-49",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "propose a toast",
+      "probe": null,
+      "derivedFrom": "ES:A1-F5-09"
+    },
+    {
+      "id": "TE-A1-F-50",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "congratulate, or wish somebody well on an occasion",
+      "probe": [
+        "TE-LEX-C80-WISH-05"
+      ],
+      "derivedFrom": "ES:A1-F5-10"
+    },
+    {
+      "id": "TE-A1-F-51",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "take leave",
+      "probe": [
+        "TE-LEX-C04-VELLI-VASTAANU-01",
+        "TE-LEX-C50-LEAVE-05",
+        "TE-LEX-C04-REEPU-KALUDDAAM-01"
+      ],
+      "derivedFrom": "ES:A1-F5-11"
+    },
+    {
+      "id": "TE-A1-F-52",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "open a conversation and react",
+      "probe": [
+        "TE-LEX-C01-NAMASKARAM-01",
+        "TE-LEX-C03-MIIRU-ELAA-UNNAARU-01"
+      ],
+      "derivedFrom": "ES:A1-F6-01"
+    },
+    {
+      "id": "TE-A1-F-53",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "greet and answer within a running conversation",
+      "probe": [
+        "TE-LEX-C03-MIIRU-ELAA-UNNAARU-01",
+        "TE-LEX-C03-BAAGAA-01"
+      ],
+      "derivedFrom": "ES:A1-F6-02"
+    },
+    {
+      "id": "TE-A1-F-54",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask for a person: 'is X there?'",
+      "probe": [
+        "TE-LEX-C78-YESNO-05"
+      ],
+      "derivedFrom": "ES:A1-F6-03"
+    },
+    {
+      "id": "TE-A1-F-55",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "show that you are following what is said",
+      "probe": [
+        "TE-LEX-C01-SARE-01",
+        "TE-LEX-C33-ARTHAM-CESUKO-01"
+      ],
+      "derivedFrom": "ES:A1-F6-04"
+    },
+    {
+      "id": "TE-A1-F-56",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "say you did not understand, or ask for a repeat",
+      "probe": [
+        "TE-LEX-C78-YESNO-04"
+      ],
+      "derivedFrom": "ES:A1-F6-04"
+    },
+    {
+      "id": "TE-A1-F-57",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "derivedFrom": "ES:A1-F6-05"
+    },
+    {
+      "id": "TE-A1-F-58",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "propose closing the conversation",
+      "probe": [
+        "TE-LEX-C04-MALLI-KALUDDAAM-01",
+        "TE-LEX-C04-REEPU-KALUDDAAM-01"
+      ],
+      "derivedFrom": "ES:A1-F6-06"
+    },
+    {
+      "id": "TE-A1-F-59",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "be polite: the word for please, and the -andi ending that carries politeness day to day",
+      "probe": [
+        "TE-LEX-C08-DAYACHESI-01",
+        "TE-PRAGMATICS-C08-DAYACHESI-03",
+        "TE-GRAMMAR-C32-CUUDU-02"
+      ],
+      "derivedFrom": "ES:A1-F4-02, telugu-specific",
+      "note": "C08's pragmatics atom is explicit that the standalone `dayaceesi` is formal and that everyday politeness rides on -andi. That distinction has no Spanish counterpart and is exactly what an examiner scores."
+    },
+    {
+      "id": "TE-A1-F-60",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "say that you speak Telugu",
+      "probe": [
+        "TE-LEX-C05-NENU-TELUGU-MAATLAADATAANU-01"
+      ],
+      "derivedFrom": "ES:A1-F2-17"
+    },
+    {
+      "id": "TE-A1-F-61",
+      "category": "Samvyavaharam (communicative functions)",
+      "label": "the courtesy formulas of a household visit: welcome, respects, a blessing",
+      "probe": [
+        "TE-LEX-C65-MANNERS-01",
+        "TE-LEX-C51-COURTESY-05",
+        "TE-LEX-C51-COURTESY-04"
+      ],
+      "derivedFrom": "ES:A1-F5-10, telugu-specific"
+    },
+    {
+      "id": "TE-A1-L-01",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the script runs left to right, one syllable block at a time",
+      "probe": [
+        "TE-SCRIPT-RECOG-03",
+        "TE-SCRIPT-RECOG-07"
+      ],
+      "derivedFrom": "ES:A1-O1-01"
+    },
+    {
+      "id": "TE-A1-L-02",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "a consonant letter carries a built-in short a",
+      "probe": [
+        "TE-SCRIPT-RECOG-03"
+      ],
+      "derivedFrom": "ES:A1-O1-03"
+    },
+    {
+      "id": "TE-A1-L-03",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "a vowel sign rides on the consonant and changes the vowel's quality and length",
+      "probe": [
+        "TE-SCRIPT-C08-DAYACHESI-04"
+      ],
+      "derivedFrom": "ES:A1-O1-02"
+    },
+    {
+      "id": "TE-A1-L-04",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "every vowel sign an everyday word needs",
+      "probe": null,
+      "derivedFrom": "ES:A1-O1-02",
+      "note": "Ten of Telugu's twelve everyday vowel signs have a recognition lesson of their own. The two that do not are the o and oo signs, and both are used by the track's own pages -- the oo sign 211 times and the o sign 144, counted over the 301 lesson files -- in roju, nooru, gooda, koodi, dooma and bhoojanam among others. See the scope note for why this is not a contradiction of the script-closure gate."
+    },
+    {
+      "id": "TE-A1-L-05",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the ten vowel signs that do have a lesson",
+      "probe": [
+        "TE-SCRIPT-RECOG-07",
+        "TE-SCRIPT-RECOG-08",
+        "TE-SCRIPT-RECOG-119",
+        "TE-SCRIPT-RECOG-02",
+        "TE-SCRIPT-RECOG-134",
+        "TE-SCRIPT-RECOG-115",
+        "TE-SCRIPT-RECOG-120",
+        "TE-SCRIPT-RECOG-136",
+        "TE-SCRIPT-RECOG-133",
+        "TE-SCRIPT-RECOG-131"
+      ],
+      "derivedFrom": "ES:A1-O1-02"
+    },
+    {
+      "id": "TE-A1-L-06",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the virama, and the conjunct that stacks one consonant under the next",
+      "probe": [
+        "TE-SCRIPT-RECOG-05"
+      ],
+      "derivedFrom": "ES:A1-O1-07"
+    },
+    {
+      "id": "TE-A1-L-07",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the anusvara for a word-final nasal",
+      "probe": [
+        "TE-SCRIPT-RECOG-04"
+      ],
+      "derivedFrom": "ES:A1-O1-03"
+    },
+    {
+      "id": "TE-A1-L-08",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the independent vowel letters, for a vowel that starts a word",
+      "probe": null,
+      "derivedFrom": "ES:A1-O1-02",
+      "note": "Four have a recognition lesson: i, u, e and vocalic r. Of the twelve that telugu/pronunciation-reference.md sets out, nine have none -- including `a` and `aa`, the two commonest, and `ee`, `o`, `oo` and `ai`. `a` alone is used 248 times across the track's own pages."
+    },
+    {
+      "id": "TE-A1-L-09",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the four independent vowel letters that do have a lesson",
+      "probe": [
+        "TE-SCRIPT-RECOG-135",
+        "TE-SCRIPT-RECOG-122",
+        "TE-SCRIPT-RECOG-124",
+        "TE-SCRIPT-RECOG-129"
+      ],
+      "derivedFrom": "ES:A1-O1-02"
+    },
+    {
+      "id": "TE-A1-L-10",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the consonant letters, as a set a reader can finish a page with",
+      "probe": null,
+      "derivedFrom": "ES:A1-O1-03",
+      "note": "Twenty-three of about thirty-six have a recognition lesson. Of the thirteen that do not, seven are used by the track's own pages and were counted there: ma 636 times, ta 292, ba 169, sha 105, dha 100, ssa 59 and pha 4. `ma` is in the very first word the book teaches, namaskaaram."
+    },
+    {
+      "id": "TE-A1-L-11",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the twenty-three consonant letters that do have a lesson",
+      "probe": [
+        "TE-SCRIPT-RECOG-03",
+        "TE-SCRIPT-RECOG-137",
+        "TE-SCRIPT-RECOG-118",
+        "TE-SCRIPT-RECOG-138",
+        "TE-SCRIPT-RECOG-112",
+        "TE-SCRIPT-RECOG-127",
+        "TE-SCRIPT-RECOG-132",
+        "TE-SCRIPT-RECOG-123",
+        "TE-SCRIPT-RECOG-139",
+        "TE-SCRIPT-RECOG-126",
+        "TE-SCRIPT-RECOG-01",
+        "TE-SCRIPT-RECOG-130",
+        "TE-SCRIPT-RECOG-116",
+        "TE-SCRIPT-RECOG-109",
+        "TE-SCRIPT-RECOG-113",
+        "TE-SCRIPT-RECOG-128",
+        "TE-SCRIPT-RECOG-110",
+        "TE-SCRIPT-RECOG-06",
+        "TE-SCRIPT-RECOG-114",
+        "TE-SCRIPT-RECOG-117",
+        "TE-SCRIPT-RECOG-111",
+        "TE-SCRIPT-RECOG-125",
+        "TE-SCRIPT-RECOG-121"
+      ],
+      "derivedFrom": "ES:A1-O1-03"
+    },
+    {
+      "id": "TE-A1-L-12",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the retroflex series, which Telugu spells out and English does not distinguish",
+      "probe": null,
+      "derivedFrom": "ES:A1-O1-03",
+      "note": "dda, ddha and nna have recognition lessons; ta and tha do not. Retroflex ta is used 292 times across the track's pages -- in eemiti, maatlaadu, ganta, paata and baata, every one of them taught as a word."
+    },
+    {
+      "id": "TE-A1-L-13",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the aspirate pairs Telugu writes with separate letters",
+      "probe": [
+        "TE-SCRIPT-RECOG-03",
+        "TE-SCRIPT-RECOG-137",
+        "TE-SCRIPT-RECOG-118",
+        "TE-SCRIPT-RECOG-138",
+        "TE-SCRIPT-RECOG-01",
+        "TE-SCRIPT-RECOG-130"
+      ],
+      "derivedFrom": "ES:A1-O1-03"
+    },
+    {
+      "id": "TE-A1-L-14",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "spelling a word out syllable by syllable",
+      "probe": [
+        "TE-SCRIPT-C08-DAYACHESI-04",
+        "TE-SCRIPT-RECOG-05"
+      ],
+      "derivedFrom": "ES:A1-O1-07"
+    },
+    {
+      "id": "TE-A1-L-15",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the alphabet in its traditional order, and the names of the letters",
+      "probe": null,
+      "derivedFrom": "ES:A1-O1-01",
+      "note": "Letters are introduced in the order words happen to need them, which is deliberate. Nothing gives the varnamaala order or the letter names, which is what dictating a spelling requires."
+    },
+    {
+      "id": "TE-A1-L-16",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the full stop",
+      "probe": null,
+      "derivedFrom": "ES:A1-O3-01",
+      "note": "No atom addresses punctuation at all. Telugu today writes the Latin full stop, and older text uses the danda; the track does not say which the reader should expect."
+    },
+    {
+      "id": "TE-A1-L-17",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the comma",
+      "probe": null,
+      "derivedFrom": "ES:A1-O3-02"
+    },
+    {
+      "id": "TE-A1-L-18",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the question mark and the exclamation mark, written once at the end",
+      "probe": null,
+      "derivedFrom": "ES:A1-O3-04",
+      "note": "Spanish's demand includes its inverted opening marks, which have no Telugu counterpart; the closing marks do transfer and are still not taught."
+    },
+    {
+      "id": "TE-A1-L-19",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the colon, parentheses and quotation marks",
+      "probe": null,
+      "derivedFrom": "ES:A1-O3-03, ES:A1-O3-05, ES:A1-O3-06"
+    },
+    {
+      "id": "TE-A1-L-20",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "the hyphen, the dash and the slash",
+      "probe": null,
+      "derivedFrom": "ES:A1-O3-07, ES:A1-O3-08, ES:A1-O3-09"
+    },
+    {
+      "id": "TE-A1-L-21",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "abbreviations, initialisms and acronyms",
+      "probe": null,
+      "derivedFrom": "ES:A1-O4-01, ES:A1-O4-02"
+    },
+    {
+      "id": "TE-A1-L-22",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "symbols: the rupee sign, and reading a written price",
+      "probe": null,
+      "derivedFrom": "ES:A1-O4-03"
+    },
+    {
+      "id": "TE-A1-L-23",
+      "category": "Telugu lipi (script and orthography)",
+      "label": "reading the Telugu digits off a sign or a price ticket",
+      "probe": [
+        "TE-SCRIPT-RECOG-140",
+        "TE-SCRIPT-RECOG-141",
+        "TE-SCRIPT-RECOG-142",
+        "TE-SCRIPT-RECOG-143",
+        "TE-SCRIPT-RECOG-144",
+        "TE-SCRIPT-RECOG-145",
+        "TE-SCRIPT-RECOG-146",
+        "TE-SCRIPT-RECOG-147",
+        "TE-SCRIPT-RECOG-148",
+        "TE-SCRIPT-RECOG-149",
+        "TE-SCRIPT-C07-NUMBERS-1-5-03"
+      ],
+      "derivedFrom": "ES:A1-O1-01",
+      "note": "Covered as recognition. Whether a candidate meets Telugu digits in the wild is a separate question this file does not answer."
+    },
+    {
+      "id": "TE-A1-P-01",
+      "category": "Uccharana (pronunciation)",
+      "label": "the vowel length contrast, which distinguishes words",
+      "probe": null,
+      "derivedFrom": "telugu-specific",
+      "note": "The track carries a `sounds:` list in every lesson's front matter and a whole pronunciation-reference.md, and NEITHER is an atom, so no probe can reach either. Every point in this category is unmapped for that one structural reason and not because the material is absent."
+    },
+    {
+      "id": "TE-A1-P-02",
+      "category": "Uccharana (pronunciation)",
+      "label": "retroflex against dental consonants",
+      "probe": null,
+      "derivedFrom": "telugu-specific"
+    },
+    {
+      "id": "TE-A1-P-03",
+      "category": "Uccharana (pronunciation)",
+      "label": "aspirated against unaspirated stops",
+      "probe": null,
+      "derivedFrom": "telugu-specific",
+      "note": "pronunciation-reference.md states the contrast in prose. No lesson declares an atom for it."
+    },
+    {
+      "id": "TE-A1-P-04",
+      "category": "Uccharana (pronunciation)",
+      "label": "the anusvara's nasal, and where it assimilates",
+      "probe": null,
+      "derivedFrom": "telugu-specific"
+    },
+    {
+      "id": "TE-A1-P-05",
+      "category": "Uccharana (pronunciation)",
+      "label": "geminate consonants against single ones",
+      "probe": null,
+      "derivedFrom": "telugu-specific"
+    },
+    {
+      "id": "TE-A1-P-06",
+      "category": "Uccharana (pronunciation)",
+      "label": "word stress",
+      "probe": null,
+      "derivedFrom": "telugu-specific"
+    },
+    {
+      "id": "TE-A1-P-07",
+      "category": "Uccharana (pronunciation)",
+      "label": "the intonation that separates a statement from a question",
+      "probe": null,
+      "derivedFrom": "telugu-specific",
+      "note": "Half of the obstacle is gone: the yes-or-no question the intonation would apply to is now taught (TE-A1-Q-08, C78). The point stays unmapped for the reason the whole category does -- the track declares no phonology atom anywhere, so no probe can reach the intonation itself."
+    },
+    {
+      "id": "TE-A1-X-01",
+      "category": "Padasampada (core lexis)",
+      "label": "existence and non-existence",
+      "probe": [
+        "TE-GRAMMAR-C32-UNDU-02"
+      ],
+      "derivedFrom": "ES:A1-NG1-01, ES:A1-NG1-02"
+    },
+    {
+      "id": "TE-A1-X-02",
+      "category": "Padasampada (core lexis)",
+      "label": "stating a general quality of something",
+      "probe": [
+        "TE-GRAMMAR-C02-NAA-PERU-03"
+      ],
+      "derivedFrom": "ES:A1-NG1-03"
+    },
+    {
+      "id": "TE-A1-X-03",
+      "category": "Padasampada (core lexis)",
+      "label": "locating an event in time: the meeting is on Monday",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG1-04",
+      "note": "The weekday names are taught (C10) and nothing lets a candidate attach one to an event -- no locative on a time word, no verb of appointment."
+    },
+    {
+      "id": "TE-A1-X-04",
+      "category": "Padasampada (core lexis)",
+      "label": "certainty and uncertainty as lexical items",
+      "probe": [
+        "TE-LEX-C49-REPLY-03",
+        "TE-LEX-C49-REPLY-04"
+      ],
+      "derivedFrom": "ES:A1-NG1-05"
+    },
+    {
+      "id": "TE-A1-X-05",
+      "category": "Padasampada (core lexis)",
+      "label": "relative position: near, far, right, left, in the middle",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG3-02",
+      "note": "None of the five is introduced. A candidate who is told `ekkada?` cannot answer with anything but ikkada or akkada."
+    },
+    {
+      "id": "TE-A1-X-06",
+      "category": "Padasampada (core lexis)",
+      "label": "distance",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG3-03"
+    },
+    {
+      "id": "TE-A1-X-07",
+      "category": "Padasampada (core lexis)",
+      "label": "movement and rest: go, come, sit, stand",
+      "probe": [
+        "TE-LEX-C32-VELLU-01",
+        "TE-LEX-C32-RAA-01",
+        "TE-LEX-SIT",
+        "TE-LEX-STAND"
+      ],
+      "derivedFrom": "ES:A1-NG3-04"
+    },
+    {
+      "id": "TE-A1-X-08",
+      "category": "Padasampada (core lexis)",
+      "label": "orientation and direction",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG3-05"
+    },
+    {
+      "id": "TE-A1-X-09",
+      "category": "Padasampada (core lexis)",
+      "label": "order: first, next, last",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG3-06",
+      "note": "C75's `mundu` gives `before` and C64's `taruvaata` gives `after`, which closed TE-A1-T-10. Ordinal position -- first, next, last -- still needs the ordinals of TE-A1-NUM-04, which are absent."
+    },
+    {
+      "id": "TE-A1-X-10",
+      "category": "Padasampada (core lexis)",
+      "label": "origin: saying which place you are from",
+      "probe": [
+        "TE-LEX-C77-FROM-01",
+        "TE-LEX-C77-FROM-04"
+      ],
+      "derivedFrom": "ES:A1-NG3-07"
+    },
+    {
+      "id": "TE-A1-X-11",
+      "category": "Padasampada (core lexis)",
+      "label": "visibility and sight",
+      "probe": [
+        "TE-LEX-C32-CUUDU-01",
+        "TE-LEX-LOOK",
+        "TE-LEX-C37-KANNU-01"
+      ],
+      "derivedFrom": "ES:A1-NG5-01"
+    },
+    {
+      "id": "TE-A1-X-12",
+      "category": "Padasampada (core lexis)",
+      "label": "audibility and hearing",
+      "probe": [
+        "TE-LEX-LISTEN",
+        "TE-LEX-C37-CEVI-01",
+        "TE-LEX-C68-SOUND-01"
+      ],
+      "derivedFrom": "ES:A1-NG5-02"
+    },
+    {
+      "id": "TE-A1-X-13",
+      "category": "Padasampada (core lexis)",
+      "label": "colour",
+      "probe": [
+        "TE-LEX-C11-RANGULU-01",
+        "TE-ETYMON-C22-PACHA-PASUPU-01"
+      ],
+      "derivedFrom": "ES:A1-NG5-03",
+      "note": "Six colours across two chapters. C22 declares only etymology atoms, so the probe names one of those."
+    },
+    {
+      "id": "TE-A1-X-14",
+      "category": "Padasampada (core lexis)",
+      "label": "age and old age as a property of a person",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG5-04",
+      "note": "`paata` (C42) is explicitly glossed 'old -- of a thing, not of a person', so the track states the gap itself."
+    },
+    {
+      "id": "TE-A1-X-15",
+      "category": "Padasampada (core lexis)",
+      "label": "accessibility: open and closed, the way in and the way out",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG5-05",
+      "note": "`talupu` (door) and `gadapa` (threshold) are taught as nouns; no verb opens or closes either."
+    },
+    {
+      "id": "TE-A1-X-16",
+      "category": "Padasampada (core lexis)",
+      "label": "general evaluation: good, bad, so-so",
+      "probe": [
+        "TE-LEX-C42-ADJ-03",
+        "TE-LEX-C76-JUDGE-02"
+      ],
+      "derivedFrom": "ES:A1-NG6-01",
+      "note": "`ceddaa` closes the pair `manci` opened in C42. 'So-so' is still not a single word, but the good/bad axis the point turns on is now sayable at both ends."
+    },
+    {
+      "id": "TE-A1-X-17",
+      "category": "Padasampada (core lexis)",
+      "label": "value and price",
+      "probe": [
+        "TE-LEX-C72-MARKET-03",
+        "TE-LEX-C72-MARKET-02"
+      ],
+      "derivedFrom": "ES:A1-NG6-02"
+    },
+    {
+      "id": "TE-A1-X-18",
+      "category": "Padasampada (core lexis)",
+      "label": "attractiveness: handsome, pretty, ugly",
+      "probe": null,
+      "derivedFrom": "ES:A1-NG6-03"
+    },
+    {
+      "id": "TE-A1-X-19",
+      "category": "Padasampada (core lexis)",
+      "label": "saying a thing is a good one",
+      "probe": [
+        "TE-LEX-C42-ADJ-03"
+      ],
+      "derivedFrom": "ES:A1-NG6-04"
+    },
+    {
+      "id": "TE-A1-X-20",
+      "category": "Padasampada (core lexis)",
+      "label": "acceptability: that will do",
+      "probe": [
+        "TE-LEX-C49-REPLY-02"
+      ],
+      "derivedFrom": "ES:A1-NG6-05"
+    },
+    {
+      "id": "TE-A1-X-21",
+      "category": "Padasampada (core lexis)",
+      "label": "conformity: agreed, just so",
+      "probe": [
+        "TE-LEX-C01-SARE-01",
+        "TE-LEX-C49-REPLY-05"
+      ],
+      "derivedFrom": "ES:A1-NG6-06"
+    },
+    {
+      "id": "TE-A1-X-22",
+      "category": "Padasampada (core lexis)",
+      "label": "correctness: that is true",
+      "probe": [
+        "TE-LEX-C49-REPLY-01"
+      ],
+      "derivedFrom": "ES:A1-NG6-07"
+    },
+    {
+      "id": "TE-A1-X-23",
+      "category": "Padasampada (core lexis)",
+      "label": "ease and difficulty",
+      "probe": [
+        "TE-LEX-C76-JUDGE-04",
+        "TE-LEX-C76-JUDGE-05"
+      ],
+      "derivedFrom": "ES:A1-NG6-10"
+    },
+    {
+      "id": "TE-A1-X-24",
+      "category": "Padasampada (core lexis)",
+      "label": "reflection and knowledge: think, understand, know",
+      "probe": [
+        "TE-LEX-C33-ANUKO-01",
+        "TE-LEX-C33-ARTHAM-CESUKO-01",
+        "TE-LEX-C32-TELUSU-01"
+      ],
+      "derivedFrom": "ES:A1-NG7-01"
+    },
+    {
+      "id": "TE-A1-X-25",
+      "category": "Padasampada (core lexis)",
+      "label": "verbal expression: speak, read, write, ask",
+      "probe": [
+        "TE-LEX-C05-MAATLAADU-01",
+        "TE-LEX-C33-CADUVU-01",
+        "TE-LEX-C33-RAAYU-01",
+        "TE-LEX-C34-ADUGU-01"
+      ],
+      "derivedFrom": "ES:A1-NG7-02"
+    },
+    {
+      "id": "TE-A1-X-26",
+      "category": "Padasampada (core lexis)",
+      "label": "parts of the body",
+      "probe": [
+        "TE-LEX-C13-SHARIRA-BHAGALU-01",
+        "TE-LEX-C37-KANNU-01",
+        "TE-LEX-C37-CEVI-01",
+        "TE-LEX-C37-MUKKU-01",
+        "TE-LEX-C37-NORU-01",
+        "TE-LEX-C47-BODY-01",
+        "TE-LEX-C47-BODY-02",
+        "TE-LEX-C47-BODY-03",
+        "TE-LEX-C47-BODY-04",
+        "TE-LEX-C47-BODY-05",
+        "TE-LEX-C57-BODY-01",
+        "TE-LEX-C57-BODY-02",
+        "TE-LEX-C57-BODY-03",
+        "TE-LEX-C57-BODY-04",
+        "TE-LEX-C57-BODY-05",
+        "TE-LEX-C38-GUNDE-01"
+      ],
+      "derivedFrom": "ES:A1-NE01-01",
+      "note": "Sixteen body-part atoms across five chapters -- far past what A1 asks, and one of the clearest places the track overshoots the level rather than missing it."
+    },
+    {
+      "id": "TE-A1-X-27",
+      "category": "Padasampada (core lexis)",
+      "label": "physical characteristics: tall, short, thin, fat",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE01-02"
+    },
+    {
+      "id": "TE-A1-X-28",
+      "category": "Padasampada (core lexis)",
+      "label": "actions and positions of the body",
+      "probe": [
+        "TE-LEX-SIT",
+        "TE-LEX-STAND",
+        "TE-LEX-COME",
+        "TE-LEX-C32-VELLU-01"
+      ],
+      "derivedFrom": "ES:A1-NE01-03"
+    },
+    {
+      "id": "TE-A1-X-29",
+      "category": "Padasampada (core lexis)",
+      "label": "character and personality adjectives",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE02-01"
+    },
+    {
+      "id": "TE-A1-X-30",
+      "category": "Padasampada (core lexis)",
+      "label": "personal data: surname, address, telephone number",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE03-01",
+      "note": "Only `peeru` exists. Every A1 writing paper is a form, and no field on one beyond the name can be filled."
+    },
+    {
+      "id": "TE-A1-X-31",
+      "category": "Padasampada (core lexis)",
+      "label": "documents: passport, identity card, ticket",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE03-02"
+    },
+    {
+      "id": "TE-A1-X-32",
+      "category": "Padasampada (core lexis)",
+      "label": "personal objects",
+      "probe": [
+        "TE-LEX-C46-ASK-05",
+        "TE-LEX-C62-MADE-04",
+        "TE-LEX-C62-MADE-05"
+      ],
+      "derivedFrom": "ES:A1-NE03-03"
+    },
+    {
+      "id": "TE-A1-X-33",
+      "category": "Padasampada (core lexis)",
+      "label": "family relationships",
+      "probe": [
+        "TE-LEX-C12-KUTUMBAM-01",
+        "TE-LEX-C35-KUTUMBAM-01",
+        "TE-LEX-C36-KODUKU-01",
+        "TE-LEX-C36-KUUTURU-01",
+        "TE-LEX-GRANDFATHER",
+        "TE-LEX-GRANDMOTHER",
+        "TE-LEX-HUSBAND",
+        "TE-LEX-WIFE",
+        "TE-LEX-C71-KIN-01",
+        "TE-LEX-C71-KIN-02",
+        "TE-LEX-C71-KIN-03",
+        "TE-LEX-C71-KIN-04",
+        "TE-LEX-C71-KIN-05"
+      ],
+      "derivedFrom": "ES:A1-NE04-01",
+      "note": "Thirteen atoms including the age-graded sibling set and the affinal terms, which is well past A1 and is the track's other clear overshoot."
+    },
+    {
+      "id": "TE-A1-X-34",
+      "category": "Padasampada (core lexis)",
+      "label": "friend, and guest",
+      "probe": [
+        "TE-LEX-C35-SNEHITUDU-01",
+        "TE-LEX-C48-ROLE-05"
+      ],
+      "derivedFrom": "ES:A1-NE04-02"
+    },
+    {
+      "id": "TE-A1-X-35",
+      "category": "Padasampada (core lexis)",
+      "label": "the other social relations: colleague, neighbour, boss",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE04-02"
+    },
+    {
+      "id": "TE-A1-X-36",
+      "category": "Padasampada (core lexis)",
+      "label": "the objects of a household occasion: a garland, a doorstep design, a blessing",
+      "probe": [
+        "TE-LEX-C52-WELCOME-05",
+        "TE-LEX-C52-WELCOME-03",
+        "TE-LEX-C51-COURTESY-04"
+      ],
+      "derivedFrom": "ES:A1-NE04-03"
+    },
+    {
+      "id": "TE-A1-X-37",
+      "category": "Padasampada (core lexis)",
+      "label": "the names of the festivals and family occasions themselves",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE04-03"
+    },
+    {
+      "id": "TE-A1-X-38",
+      "category": "Padasampada (core lexis)",
+      "label": "the word for a meal",
+      "probe": [
+        "TE-LEX-C40-BHOJANAM-01"
+      ],
+      "derivedFrom": "ES:A1-NE05-01"
+    },
+    {
+      "id": "TE-A1-X-39",
+      "category": "Padasampada (core lexis)",
+      "label": "the meals of the day: breakfast, lunch, dinner",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE05-01"
+    },
+    {
+      "id": "TE-A1-X-40",
+      "category": "Padasampada (core lexis)",
+      "label": "drink",
+      "probe": [
+        "TE-LEX-C39-TII-01",
+        "TE-LEX-C39-PAALU-01",
+        "TE-ETYMON-C15-NEELLU-BIYYAM-01"
+      ],
+      "derivedFrom": "ES:A1-NE05-02",
+      "note": "C15 declares only etymology atoms, so water is probed through one of those."
+    },
+    {
+      "id": "TE-A1-X-41",
+      "category": "Padasampada (core lexis)",
+      "label": "foodstuffs",
+      "probe": [
+        "TE-ETYMON-C15-NEELLU-BIYYAM-02",
+        "TE-LEX-C46-ASK-04",
+        "TE-LEX-C46-ASK-01",
+        "TE-LEX-C61-KITCHEN-01",
+        "TE-LEX-C61-KITCHEN-02",
+        "TE-LEX-C61-KITCHEN-03",
+        "TE-LEX-C61-KITCHEN-04",
+        "TE-LEX-C61-KITCHEN-05"
+      ],
+      "derivedFrom": "ES:A1-NE05-03"
+    },
+    {
+      "id": "TE-A1-X-42",
+      "category": "Padasampada (core lexis)",
+      "label": "the taste words",
+      "probe": [
+        "TE-LEX-C73-TASTE-01",
+        "TE-LEX-C73-TASTE-02",
+        "TE-LEX-C73-TASTE-03",
+        "TE-LEX-C73-TASTE-04",
+        "TE-LEX-C73-TASTE-05"
+      ],
+      "derivedFrom": "ES:A1-NE05-03, telugu-specific",
+      "note": "The full five-taste set the Indian food vocabulary turns on. No Spanish A1 slot asks for it."
+    },
+    {
+      "id": "TE-A1-X-43",
+      "category": "Padasampada (core lexis)",
+      "label": "dishes and courses",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE05-04"
+    },
+    {
+      "id": "TE-A1-X-44",
+      "category": "Padasampada (core lexis)",
+      "label": "the restaurant: ordering, the bill, the waiter",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE05-05",
+      "note": "`dayaceesi tii` (C39) is the only transactional food utterance, and nothing around it -- no bill, no price question, no ordering frame."
+    },
+    {
+      "id": "TE-A1-X-45",
+      "category": "Padasampada (core lexis)",
+      "label": "educational institutions",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE06-01"
+    },
+    {
+      "id": "TE-A1-X-46",
+      "category": "Padasampada (core lexis)",
+      "label": "teaching staff and students",
+      "probe": [
+        "TE-LEX-C48-ROLE-01",
+        "TE-LEX-C48-ROLE-02"
+      ],
+      "derivedFrom": "ES:A1-NE06-02"
+    },
+    {
+      "id": "TE-A1-X-47",
+      "category": "Padasampada (core lexis)",
+      "label": "the timetable, the examination and the marks",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE06-03, ES:A1-NE06-05"
+    },
+    {
+      "id": "TE-A1-X-48",
+      "category": "Padasampada (core lexis)",
+      "label": "learning and studying",
+      "probe": [
+        "TE-LEX-C33-CADUVU-01",
+        "TE-GRAMMAR-C33-CADUVU-02"
+      ],
+      "derivedFrom": "ES:A1-NE06-04"
+    },
+    {
+      "id": "TE-A1-X-49",
+      "category": "Padasampada (core lexis)",
+      "label": "classroom language: look, listen, write, sit",
+      "probe": [
+        "TE-LEX-LOOK",
+        "TE-LEX-LISTEN",
+        "TE-LEX-WRITE",
+        "TE-LEX-SIT"
+      ],
+      "derivedFrom": "ES:A1-NE06-06"
+    },
+    {
+      "id": "TE-A1-X-50",
+      "category": "Padasampada (core lexis)",
+      "label": "teaching materials and classroom furniture",
+      "probe": [
+        "TE-LEX-C46-ASK-05",
+        "TE-LEX-C52-WELCOME-02"
+      ],
+      "derivedFrom": "ES:A1-NE06-07"
+    },
+    {
+      "id": "TE-A1-X-51",
+      "category": "Padasampada (core lexis)",
+      "label": "professions and posts",
+      "probe": [
+        "TE-LEX-C48-ROLE-01",
+        "TE-LEX-C48-ROLE-02",
+        "TE-LEX-C48-ROLE-03",
+        "TE-LEX-C48-ROLE-04"
+      ],
+      "derivedFrom": "ES:A1-NE07-01"
+    },
+    {
+      "id": "TE-A1-X-52",
+      "category": "Padasampada (core lexis)",
+      "label": "tools and the place of work",
+      "probe": [
+        "TE-LEX-C69-TOOL-01",
+        "TE-LEX-C69-TOOL-02",
+        "TE-LEX-C69-TOOL-03",
+        "TE-LEX-C69-TOOL-04",
+        "TE-LEX-C69-TOOL-05",
+        "TE-LEX-C66-FIELD-01"
+      ],
+      "derivedFrom": "ES:A1-NE07-02",
+      "note": "The tools are an axe, a saw, a spade, a hammer and a stick, and the workplace is a field. That is a village working life, which is a real answer to the proxy's demand and not the office one a city A1 paper would set."
+    },
+    {
+      "id": "TE-A1-X-53",
+      "category": "Padasampada (core lexis)",
+      "label": "working activity",
+      "probe": [
+        "TE-LEX-C05-PANI-CEYU-01"
+      ],
+      "derivedFrom": "ES:A1-NE07-03"
+    },
+    {
+      "id": "TE-A1-X-54",
+      "category": "Padasampada (core lexis)",
+      "label": "unemployment and looking for work",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE07-04"
+    },
+    {
+      "id": "TE-A1-X-55",
+      "category": "Padasampada (core lexis)",
+      "label": "rights and obligations at work",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE07-05"
+    },
+    {
+      "id": "TE-A1-X-56",
+      "category": "Padasampada (core lexis)",
+      "label": "what makes a good worker",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE07-06"
+    },
+    {
+      "id": "TE-A1-X-57",
+      "category": "Padasampada (core lexis)",
+      "label": "free time and entertainment",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE08-01",
+      "note": "Nothing in the whole track names a leisure activity, which is the domain most A1 speaking prompts choose."
+    },
+    {
+      "id": "TE-A1-X-58",
+      "category": "Padasampada (core lexis)",
+      "label": "shows and exhibitions",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE08-02"
+    },
+    {
+      "id": "TE-A1-X-59",
+      "category": "Padasampada (core lexis)",
+      "label": "sport",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE08-03"
+    },
+    {
+      "id": "TE-A1-X-60",
+      "category": "Padasampada (core lexis)",
+      "label": "games",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE08-04"
+    },
+    {
+      "id": "TE-A1-X-61",
+      "category": "Padasampada (core lexis)",
+      "label": "information and communication media",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE09-01"
+    },
+    {
+      "id": "TE-A1-X-62",
+      "category": "Padasampada (core lexis)",
+      "label": "written correspondence: a letter, a message, an address",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE09-02",
+      "note": "`kaburu` (C68) is oral news, which is the nearest the track comes."
+    },
+    {
+      "id": "TE-A1-X-63",
+      "category": "Padasampada (core lexis)",
+      "label": "the telephone",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE09-03"
+    },
+    {
+      "id": "TE-A1-X-64",
+      "category": "Padasampada (core lexis)",
+      "label": "the printed press",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE09-04"
+    },
+    {
+      "id": "TE-A1-X-65",
+      "category": "Padasampada (core lexis)",
+      "label": "television and radio",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE09-05"
+    },
+    {
+      "id": "TE-A1-X-66",
+      "category": "Padasampada (core lexis)",
+      "label": "the internet, and dictating an e-mail address",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE09-06"
+    },
+    {
+      "id": "TE-A1-X-67",
+      "category": "Padasampada (core lexis)",
+      "label": "buying, selling or renting a dwelling",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE10-01"
+    },
+    {
+      "id": "TE-A1-X-68",
+      "category": "Padasampada (core lexis)",
+      "label": "the parts of a dwelling",
+      "probe": [
+        "TE-LEX-C67-WALL-01",
+        "TE-LEX-C67-WALL-02",
+        "TE-LEX-C67-WALL-03",
+        "TE-LEX-C67-WALL-04",
+        "TE-LEX-C67-WALL-05",
+        "TE-LEX-C52-WELCOME-01"
+      ],
+      "derivedFrom": "ES:A1-NE10-02"
+    },
+    {
+      "id": "TE-A1-X-69",
+      "category": "Padasampada (core lexis)",
+      "label": "the word for a house or a home",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE10-02",
+      "note": "The wall, the roof, the threshold, the step, the window and the door are each taught and `illu` is not. Saying where you live needs the noun, not its parts."
+    },
+    {
+      "id": "TE-A1-X-70",
+      "category": "Padasampada (core lexis)",
+      "label": "domestic activities: cooking, cleaning, washing",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE10-03",
+      "note": "`ciipuru` (a broom) is the only trace, and it is a noun."
+    },
+    {
+      "id": "TE-A1-X-71",
+      "category": "Padasampada (core lexis)",
+      "label": "household objects and furniture",
+      "probe": [
+        "TE-LEX-C56-HOUSE-01",
+        "TE-LEX-C56-HOUSE-02",
+        "TE-LEX-C56-HOUSE-03",
+        "TE-LEX-C56-HOUSE-04",
+        "TE-LEX-C56-HOUSE-05",
+        "TE-LEX-C52-WELCOME-02",
+        "TE-LEX-C62-MADE-05"
+      ],
+      "derivedFrom": "ES:A1-NE10-04"
+    },
+    {
+      "id": "TE-A1-X-72",
+      "category": "Padasampada (core lexis)",
+      "label": "the postal service",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE11-01"
+    },
+    {
+      "id": "TE-A1-X-73",
+      "category": "Padasampada (core lexis)",
+      "label": "financial services",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE11-02"
+    },
+    {
+      "id": "TE-A1-X-74",
+      "category": "Padasampada (core lexis)",
+      "label": "health services: the hospital, the clinic, the appointment",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE11-03",
+      "note": "`vaidyudu` (a doctor) is taught and no place to find one is."
+    },
+    {
+      "id": "TE-A1-X-75",
+      "category": "Padasampada (core lexis)",
+      "label": "protection and security services",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE11-04"
+    },
+    {
+      "id": "TE-A1-X-76",
+      "category": "Padasampada (core lexis)",
+      "label": "the places and people of shopping",
+      "probe": [
+        "TE-LEX-C72-MARKET-01",
+        "TE-LEX-C72-MARKET-05"
+      ],
+      "derivedFrom": "ES:A1-NE12-01"
+    },
+    {
+      "id": "TE-A1-X-77",
+      "category": "Padasampada (core lexis)",
+      "label": "clothing, footwear and accessories",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE12-02",
+      "note": "`batta` ('cloth', C46) is the only textile word, and no garment is named."
+    },
+    {
+      "id": "TE-A1-X-78",
+      "category": "Padasampada (core lexis)",
+      "label": "paying: the currency, and the verb",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE12-03",
+      "note": "`dabbu` (money) and `dhara` (price) are taught; there is no word for a rupee and no verb for paying, so the price turn cannot be completed."
+    },
+    {
+      "id": "TE-A1-X-79",
+      "category": "Padasampada (core lexis)",
+      "label": "health and illness",
+      "probe": [
+        "TE-LEX-C63-HEALTH-01",
+        "TE-LEX-C63-HEALTH-02",
+        "TE-LEX-C63-HEALTH-03",
+        "TE-LEX-C63-HEALTH-04",
+        "TE-LEX-C63-HEALTH-05"
+      ],
+      "derivedFrom": "ES:A1-NE13-01"
+    },
+    {
+      "id": "TE-A1-X-80",
+      "category": "Padasampada (core lexis)",
+      "label": "centres of health care",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE13-02"
+    },
+    {
+      "id": "TE-A1-X-81",
+      "category": "Padasampada (core lexis)",
+      "label": "medicine and medicines",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE13-03"
+    },
+    {
+      "id": "TE-A1-X-82",
+      "category": "Padasampada (core lexis)",
+      "label": "hygiene",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE13-04"
+    },
+    {
+      "id": "TE-A1-X-83",
+      "category": "Padasampada (core lexis)",
+      "label": "travel objects and documents",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE14-01"
+    },
+    {
+      "id": "TE-A1-X-84",
+      "category": "Padasampada (core lexis)",
+      "label": "setting out on a journey",
+      "probe": [
+        "TE-LEX-C50-LEAVE-03",
+        "TE-LEX-C50-LEAVE-04"
+      ],
+      "derivedFrom": "ES:A1-NE14-01"
+    },
+    {
+      "id": "TE-A1-X-85",
+      "category": "Padasampada (core lexis)",
+      "label": "accommodation",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE14-02"
+    },
+    {
+      "id": "TE-A1-X-86",
+      "category": "Padasampada (core lexis)",
+      "label": "the transport system: the vehicles and the station",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE14-03",
+      "note": "`baata` (a path) is the only word in the domain. No bus, train, ticket or stop."
+    },
+    {
+      "id": "TE-A1-X-87",
+      "category": "Padasampada (core lexis)",
+      "label": "money as a notion",
+      "probe": [
+        "TE-LEX-C72-MARKET-02"
+      ],
+      "derivedFrom": "ES:A1-NE15-01"
+    },
+    {
+      "id": "TE-A1-X-88",
+      "category": "Padasampada (core lexis)",
+      "label": "commerce: the buyer and the seller",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE15-02"
+    },
+    {
+      "id": "TE-A1-X-89",
+      "category": "Padasampada (core lexis)",
+      "label": "businesses and organisations",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE15-03"
+    },
+    {
+      "id": "TE-A1-X-90",
+      "category": "Padasampada (core lexis)",
+      "label": "industry and energy",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE15-04"
+    },
+    {
+      "id": "TE-A1-X-91",
+      "category": "Padasampada (core lexis)",
+      "label": "computing and new technology",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE16-02"
+    },
+    {
+      "id": "TE-A1-X-92",
+      "category": "Padasampada (core lexis)",
+      "label": "political institutions and government",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE17-01"
+    },
+    {
+      "id": "TE-A1-X-93",
+      "category": "Padasampada (core lexis)",
+      "label": "law and justice",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE17-02"
+    },
+    {
+      "id": "TE-A1-X-94",
+      "category": "Padasampada (core lexis)",
+      "label": "artistic disciplines",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE18-01"
+    },
+    {
+      "id": "TE-A1-X-95",
+      "category": "Padasampada (core lexis)",
+      "label": "music and dance",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE18-02",
+      "note": "`paata` (a song, C68) is the only word, and neither the art nor the verb for performing it is named."
+    },
+    {
+      "id": "TE-A1-X-96",
+      "category": "Padasampada (core lexis)",
+      "label": "architecture, sculpture and painting",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE18-03"
+    },
+    {
+      "id": "TE-A1-X-97",
+      "category": "Padasampada (core lexis)",
+      "label": "literature",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE18-04"
+    },
+    {
+      "id": "TE-A1-X-98",
+      "category": "Padasampada (core lexis)",
+      "label": "photography",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE18-05"
+    },
+    {
+      "id": "TE-A1-X-99",
+      "category": "Padasampada (core lexis)",
+      "label": "cinema and theatre",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE18-06"
+    },
+    {
+      "id": "TE-A1-X-100",
+      "category": "Padasampada (core lexis)",
+      "label": "religion: the lamp, the garland, the doorstep design, the blessing",
+      "probe": [
+        "TE-LEX-C46-ASK-03",
+        "TE-LEX-C52-WELCOME-05",
+        "TE-LEX-C52-WELCOME-03",
+        "TE-LEX-C51-COURTESY-04"
+      ],
+      "derivedFrom": "ES:A1-NE19-01"
+    },
+    {
+      "id": "TE-A1-X-101",
+      "category": "Padasampada (core lexis)",
+      "label": "the universe and space",
+      "probe": [
+        "TE-LEX-C53-SKY-01",
+        "TE-LEX-C53-SKY-02",
+        "TE-LEX-C53-SKY-03",
+        "TE-LEX-C53-SKY-04"
+      ],
+      "derivedFrom": "ES:A1-NE20-01"
+    },
+    {
+      "id": "TE-A1-X-102",
+      "category": "Padasampada (core lexis)",
+      "label": "geography: the country, the town, the city, the capital",
+      "probe": null,
+      "derivedFrom": "ES:A1-NE20-02",
+      "note": "Two of the four named. C77 adds `pattanam` (town) and `deesam` (country) to C55's `graamam` (village); `nagaram` (city) and `raajadhaani` (capital) are still absent, and a point needs all of what it names."
+    },
+    {
+      "id": "TE-A1-X-103",
+      "category": "Padasampada (core lexis)",
+      "label": "rural space: the village, the field, the tank, the path",
+      "probe": [
+        "TE-LEX-C55-ROAD-04",
+        "TE-LEX-C66-FIELD-01",
+        "TE-LEX-C55-ROAD-02",
+        "TE-LEX-C55-ROAD-05"
+      ],
+      "derivedFrom": "ES:A1-NE20-03",
+      "note": "The rural half of the proxy's point is well covered and the urban half has nothing at all -- no street, no shop front beyond `angadi`, no building."
+    },
+    {
+      "id": "TE-A1-X-104",
+      "category": "Padasampada (core lexis)",
+      "label": "climate and weather",
+      "probe": [
+        "TE-ETYMON-C20-VATAVARANAM-01",
+        "TE-GRAMMAR-C20-VATAVARANAM-02",
+        "TE-LEX-C59-WEATHER-01",
+        "TE-LEX-C59-WEATHER-02",
+        "TE-LEX-C53-SKY-05"
+      ],
+      "derivedFrom": "ES:A1-NE20-04",
+      "note": "C20's grammar atom teaches `varsham padutoondi`, which is the one full weather sentence the track can produce."
+    },
+    {
+      "id": "TE-A1-X-105",
+      "category": "Padasampada (core lexis)",
+      "label": "fauna",
+      "probe": [
+        "TE-ETYMON-C21-KUKKA-PILLI-01",
+        "TE-LEX-C60-ANIMAL-01",
+        "TE-LEX-C60-ANIMAL-02",
+        "TE-LEX-C60-ANIMAL-03",
+        "TE-LEX-C60-ANIMAL-04",
+        "TE-LEX-C60-ANIMAL-05",
+        "TE-LEX-C70-CREATURE-01",
+        "TE-LEX-C70-CREATURE-02",
+        "TE-LEX-C70-CREATURE-03",
+        "TE-LEX-C70-CREATURE-04",
+        "TE-LEX-C70-CREATURE-05"
+      ],
+      "derivedFrom": "ES:A1-NE20-05"
+    },
+    {
+      "id": "TE-A1-X-106",
+      "category": "Padasampada (core lexis)",
+      "label": "flora",
+      "probe": [
+        "TE-LEX-C54-TREE-01",
+        "TE-LEX-C54-TREE-02",
+        "TE-LEX-C54-TREE-03",
+        "TE-LEX-C54-TREE-04",
+        "TE-LEX-C54-TREE-05",
+        "TE-LEX-C52-WELCOME-04",
+        "TE-LEX-C66-FIELD-02",
+        "TE-LEX-C66-FIELD-03"
+      ],
+      "derivedFrom": "ES:A1-NE20-06"
+    },
+    {
+      "id": "TE-A1-X-107",
+      "category": "Padasampada (core lexis)",
+      "label": "natural materials: sand, mud, fire",
+      "probe": [
+        "TE-LEX-C59-WEATHER-03",
+        "TE-LEX-C59-WEATHER-04",
+        "TE-LEX-C59-WEATHER-05"
+      ],
+      "derivedFrom": "ES:A1-NE20-03"
+    },
+    {
+      "id": "TE-A1-X-108",
+      "category": "Padasampada (core lexis)",
+      "label": "farming and the harvest",
+      "probe": [
+        "TE-LEX-C66-FIELD-02",
+        "TE-LEX-C66-FIELD-03",
+        "TE-LEX-C66-FIELD-04",
+        "TE-LEX-C66-FIELD-05",
+        "TE-LEX-C48-ROLE-04"
+      ],
+      "derivedFrom": "ES:A1-NE15-04, telugu-specific",
+      "note": "The proxy's industry slot has no A1 answer in Telugu here; what the track teaches instead is the agricultural cycle, on its own merits."
+    },
+    {
+      "id": "TE-A1-X-109",
+      "category": "Padasampada (core lexis)",
+      "label": "sounds and the voice",
+      "probe": [
+        "TE-LEX-C68-SOUND-01",
+        "TE-LEX-C68-SOUND-02",
+        "TE-LEX-C68-SOUND-03",
+        "TE-LEX-C68-SOUND-04",
+        "TE-LEX-C68-SOUND-05"
+      ],
+      "derivedFrom": "ES:A1-NG5-02, telugu-specific"
+    },
+    {
+      "id": "TE-A1-X-110",
+      "category": "Padasampada (core lexis)",
+      "label": "the abstract courtesy nouns: gratitude, respect, manners, trust",
+      "probe": [
+        "TE-LEX-C51-COURTESY-01",
+        "TE-LEX-C51-COURTESY-03",
+        "TE-LEX-C65-MANNERS-02",
+        "TE-LEX-C65-MANNERS-05",
+        "TE-LEX-C51-COURTESY-02",
+        "TE-LEX-C65-MANNERS-03"
+      ],
+      "derivedFrom": "ES:A1-NE04-03, telugu-specific",
+      "note": "Six abstract nouns of courtesy, which is above A1 in register and taught anyway. Level purity is not a constraint on this curriculum, so they are recorded as coverage rather than as overshoot."
+    }
+  ]
+}

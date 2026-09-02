@@ -1,6 +1,211 @@
 # Changelog — wasm-wast-parser
 
-## 0.1.99 — 2026-09-02 — fix: parse `select`'s typed `(result t)` folded/flat form (0x1C)
+## 0.1.101 — 2026-09-02 — fix: reject malformed numeric-literal grammar instead of silently accepting it
+
+`simd_const.wast` was the single largest "not yet supported" file in the
+conformance report (109 `assert_malformed` directives, all a `v128.const`
+text literal this crate wrongly *accepted* instead of rejecting). Root
+cause, confirmed via a throwaway probe against
+`wasm_conformance::run_wast_source` (byte-offset-annotated `NotYetSupported`
+dump, then read against the actual `.wast` source): `numeric.rs`'s shared
+magnitude parsers — used by `i32.const`/`i64.const`/`f32.const`/
+`f64.const`/plain integer literals AND every `v128.const` lane, not just
+SIMD's own — had three real gaps, none of them SIMD-specific:
+
+1. **`_` digit separators were stripped from the whole literal before
+   anything else looked at it.** `parse_int_magnitude` and both float
+   magnitude parsers called `strip_underscores` first, then checked for an
+   `0x`/`0X` prefix on the ALREADY-STRIPPED text. That order can change
+   what a literal even means: `0_x100` (a decimal literal starting with
+   digit `0`, not a hex prefix at all) stripped to `0x100` and was then
+   parsed as hex 256 — the separator retroactively manufactured a prefix
+   that was never really there. It also meant placement was never checked
+   at all: leading/trailing/doubled `_` (`_100`, `100_`, `1__000`,
+   `0x_100`, `0x00_`, `0xff__ffff`, and the same beside a float's `.`/`e`/
+   `p`) all silently parsed as if the `_` were never there, instead of
+   being rejected. Fixed by checking for the prefix on the RAW text first,
+   then validating placement (new `valid_underscore_run`) on the exact
+   raw digit run before ever stripping anything.
+2. **An out-of-range float magnitude silently rounded to infinity.**
+   `0x1p128`/`1e39`/a huge decimal literal for `f32x4` (or the `f64`
+   equivalents) are all mathematically too large to represent — WAT's
+   "constant out of range" malformed rule. `round_hex_mantissa` already
+   saturates to the infinity bit pattern on hex overflow (by design — see
+   its own doc comment, that's correct FOR THAT FUNCTION), and
+   `str::parse::<f32>`/`str::parse::<f64>` do the identical silent
+   saturation for decimal overflow; neither magnitude parser used to check
+   for that afterward, so a magnitude literal that was never the `inf`
+   keyword ended up indistinguishable from one that was. Fixed with one
+   post-parse check per magnitude function (after both the hex and decimal
+   branches join): a result equal to the raw infinity bit pattern is now
+   `InvalidNumericLiteralForType`, not `Ok`.
+3. **`.0`/`.0e0`-style leading-dot literals parsed successfully.** WAT
+   requires at least one digit before an optional `.`; Rust's own
+   `str::parse::<f32>`/`str::parse::<f64>` are more permissive and accept
+   a leading `.` with no digit before it. New `valid_float_grammar` checks
+   this (and reuses the same underscore-placement check for the
+   mantissa/exponent digit runs) before delegating to Rust's parser.
+4. **`parse_v128_const`'s folded form silently accepted extra trailing
+   lane literals** (`(v128.const i32x4 1 2 3 4 5)`, one too many for a
+   4-lane shape) — it only ever checked for TOO FEW (`lanes.len() <
+   lane_count`), and simply ignored anything past `lane_count` rather than
+   erroring. The two FOLDED call sites (`module.rs`'s instruction encoder,
+   `script.rs`'s `assert_return`/`invoke` const-expression parser) now
+   both check that the whole bounded operand list was consumed; the
+   STREAM/flat call site is intentionally unchanged (its trailing tokens
+   are legitimately the rest of the instruction stream, not extra lanes).
+
+**Changes:**
+
+- `numeric.rs`: new `valid_underscore_run` (one digit run's `_` placement)
+  and `valid_float_grammar` (a float literal's overall mantissa/exponent
+  shape, including the leading-dot rule) helpers. `parse_int_magnitude`,
+  `parse_float_magnitude_f64_bits`, and `parse_float_magnitude_f32_bits`
+  all now check the prefix/validate placement on the RAW text before
+  stripping underscores, instead of stripping first and inspecting after.
+  Both float magnitude functions also now reject a result equal to the
+  raw infinity bit pattern.
+- `module.rs`: the folded `v128.const` instruction-encoder arm now checks
+  `parse_v128_const`'s `consumed` count against the operand list length,
+  rejecting extra lane literals.
+- `script.rs`: the `v128.const` const-expression arm (used by
+  `assert_return`/`invoke` arguments and expected values) gets the
+  identical extra-lane-literal check, for the same reason at the sibling
+  call site.
+- 6 new tests in `module.rs`'s `v128_const_*` cluster (one per bug class
+  above, through the full instruction-literal grammar) and 8 in
+  `numeric.rs` (the same bugs at the shared-function layer, plus explicit
+  regression coverage that `inf`/valid `_`-separated literals are
+  unaffected). 2 pre-existing `numeric.rs` tests
+  (`hex_float_above_largest_finite_value_*`,
+  `hex_float_extreme_positive_exponent_*`) had their assertions updated:
+  they were security-review regression tests for "must not panic on an
+  attacker-controlled extreme exponent," and their asserted VALUE
+  (silently-saturated infinity) was the old, now-fixed, incorrect
+  behavior — the invariant they actually guard (no panic) is unchanged and
+  still holds; a rejected-with-Err result satisfies it too.
+
+**Corpus impact** (`wasm-conformance`'s conformance report, before/after
+diff over all 257 files' `tests/fixtures/testsuite-status.json`, restricted
+to files whose tally moved at all — zero others changed): `simd_const.wast`
+`assert_malformed` 72/181 (100%) NYS 109→0 (the target file, now fully
+resolved — no other category in that file had any NYS to begin with);
+`const.wast` 56/76 (100%) NYS 20→0; `float_literals.wast` 2/78 (100%) NYS
+76→0; `int_literals.wast` 0/20 (100%) NYS 20→0 — all four files now sit at
+literal 100% pass, 0 not-yet-supported, in EVERY directive category, not
+just `assert_malformed`. Every other file's tally is byte-for-byte
+unchanged. Aggregate `assert_malformed`: 1489/1940 (451 NYS) → 1714/1940
+(226 NYS).
+
+## 0.1.100 — 2026-09-02 — feat: accept GC reftypes in table declarations (W37)
+
+Per `code/specs/W37-wasm-gc-reftype-tables.md`. Before this release, a
+table declaration accepted only `funcref`/`externref` (and, since W32, a
+concrete function reference type) at its "limits reftype" call site
+(`build_table_limits_and_elements`) -- every other reference type
+(`anyref`/`eqref`/`i31ref`/`structref`/`(ref null eq)`/`(ref null struct)`,
+and any concrete struct/array type) was rejected with `"expected funcref
+or externref"` before `parse_value_type` was ever consulted, even though
+the real GC/function-references proposal's own text-format grammar places
+**no restriction** on which reference type a table may hold
+(`tabletype ::= limits reftype`, verified directly against
+`https://webassembly.github.io/gc/core/syntax/types.html`).
+
+**Changes:**
+
+- `parse_value_type`'s atom match gains `"eqref"`/`"structref"`; its
+  3-item `(ref null <heaptype>)` compound branch gains `"eq"`/`"struct"`
+  alongside the existing `"func"`/`"extern"`/`"i31"` -- the SAME function
+  every other value-type-typed position (params/results/locals/globals/
+  `ref.test`/`ref.cast`) already shares, so every one of those benefits
+  identically, not just tables.
+- `parse_ref_null_heap_type` (the SEPARATE function backing `ref.null
+  <heaptype>`'s own instruction immediate) gains `"eq"` (`0x6D`) and
+  `"struct"` (`0x6B`) -- needed independently: `ref_eq.wast`'s `(ref.null
+  eq)` and `ref_cast.wast`/`ref_test.wast`/`br_on_cast*.wast`'s `(ref.null
+  struct)` calls use this function as an ordinary stack operand, not a
+  table declaration.
+- `build_table_limits_and_elements`'s "limits reftype" branch (the form
+  EVERY table in this cluster's own corpus uses -- `(table 20 (ref null
+  eq))`, `(table $ta 10 anyref)`, `(table 20 structref)`) now dispatches
+  through `parse_value_type` and accepts ANY successfully-parsed
+  `ValueType`, not just `Funcref`/`Externref`/`ConcreteFuncRef`/
+  `NonNullConcreteFuncRef` -- a strict simplification (one match arm
+  covering every case) versus the previous binary allowlist. The inline-
+  shorthand `(table reftype (elem e*))` site's own narrower allowlist is
+  generalized identically, for consistency (no corpus fixture currently
+  exercises that combination with a non-func-family reftype -- this half
+  is a cleanup, not a corpus-driven fix). The imported-table site is
+  deliberately left unchanged: no file in the pinned corpus imports a
+  GC-reftype table, and this crate's text format has no concrete-typed
+  table IMPORT syntax at all (`table_concrete_element_types` is
+  module-defined-tables-only, per its own doc comment).
+
+**A real regression found and fixed during this slice's own
+implementation** (security-review-caught, not corpus-cited by the spec):
+the "limits reftype" branch's own trailing-content handling. The function-
+references proposal's THIRD table form, `limits reftype init_expr` (an
+inline non-`elem`-wrapped initializer right after the reftype -- already
+flagged out of scope by W36 for `elem.wast`'s own 6 NYS of this shape, and
+by W37 for `i31.wast`'s own 4), was previously reachable ONLY with a bare
+`funcref`/`externref` reftype (anything else failed to parse on its own),
+and no corpus fixture that used it ever read the table's content back --
+so silently discarding the trailing content there (falling through without
+consuming it) never surfaced as an observable bug. Generalizing the
+reftype dispatch newly let a CONCRETE reftype (e.g. `(ref $dummy)`) reach
+this same silent-discard path too, and `table.wast`'s own `$t3`/`$t5`
+(`(table $t3 10 (ref $dummy) (ref.func $dummy))`) DO read their content
+back via `table.get` -- silently discarding the initializer there would
+have flipped an honest `NotYetSupported` into a confidently WRONG `Fail`
+(`table.get` returning a null reference instead of the declared one).
+Fixed by explicitly rejecting trailing content after a richer (non-
+`Funcref`/non-`Externref`) reftype -- scoped to exactly the newly-reachable
+combination, so the long-standing, harmless `funcref`/`externref` +
+trailing-content silent-discard behavior (used all over the corpus, e.g.
+`instance.wast`'s `(table (export "tab") 10 funcref (ref.null func))`,
+never read back) is completely unaffected.
+
+**New unit tests** (`src/module.rs`, mirroring
+`declared_table_reads_its_own_reftype_not_a_hardcoded_funcref_default`'s
+own two-part "parses AND `table_concrete_element_types` holds the right
+value" shape): `declared_table_accepts_each_bare_gc_reftype_atom`,
+`declared_table_accepts_compound_ref_null_eq_and_ref_null_struct`,
+`declared_table_still_accepts_a_concrete_function_reference_type`,
+`declared_funcref_and_externref_tables_are_completely_unaffected`,
+`ref_null_eq_and_ref_null_struct_parse_as_instruction_immediates`.
+
+**Corpus impact** (re-verified live, `wasm_conformance_report
+--write-baseline`, diffed programmatically against the pre-slice baseline
+across all 257 files): only 4 files changed. `table-sub.wast` (the
+`table-decl`-attributable share of its 3 NYS) closes as predicted: 0/3
+pass -> 1/3 pass. `ref_cast.wast`/`ref_eq.wast`/`ref_test.wast`/`i31.wast`/
+`br_on_cast.wast`/`br_on_cast_fail.wast` show IDENTICAL pass/fail/NYS
+counts pre- and post-fix (confirmed via direct `run_wast_source` probe:
+their table declarations now parse, but every one hits a SEPARATE,
+already-identified, out-of-scope blocker moving the failure point rather
+than closing it -- `any.convert_extern`/`ref.eq`/`br_on_cast`/an elem-
+segment bare-reftype-keyword gap/`ref.cast`'s own pre-existing concrete-
+func-only restriction). `ref.wast` and `table.wast` each show a small,
+honestly-diagnosed number of `Pass` -> `NotYetSupported` shifts (never
+`Fail`) -- pre-existing, permanently-deferred gaps (`code/specs/
+W05-wasm-conformance-harness.md` §4.3's "no instruction-level type-
+checker", and the non-null-abstract-heap-type gap this crate's own
+`parse_value_type` doc comment already documents) becoming reachable in a
+table-declaration POSITION for the first time now that this dispatch is
+shared infrastructure -- not a new class of gap. `linking.wast` shows 2
+new, real `Fail`s (`assert_unlinkable` cases expecting an "incompatible
+import type" rejection that now links successfully) tracing to a
+DIFFERENT, pre-existing, already-self-documented gap in `wasm-runtime`'s
+own table-import linking (`instantiate`'s own comment: "`Table` doesn't
+track its declared element type at runtime... a table import mismatched
+purely on element type... would incorrectly link here rather than fail...
+revisit if a future PR gives `Table` a real element-type field") -- newly
+EXERCISABLE for the first time because the ONE corpus fixture that tests
+table-import type-checking (`linking.wast`'s own `$Mtable_ex`-based tests)
+itself needed this exact slice to parse at all. Flagged as a follow-up,
+not fixed here (implementing real runtime table-type tracking is a
+`wasm-runtime`/`wasm-execution` `HostInterface` API change, well beyond
+"table declaration parsing").
 
 Closes `code/packages/rust/wasm-conformance/tests/fixtures/testsuite/
 select.wast`, which had 126 `not_yet_supported` directives (mostly

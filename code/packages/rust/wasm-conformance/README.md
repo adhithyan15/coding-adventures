@@ -58,10 +58,13 @@ Every directive in a `.wast` script is graded one of four ways:
   - `assert_unlinkable`/any module import: `WasmRuntime::instantiate`
     genuinely fails on an unresolved or type-mismatched import (WASM05),
     and `wasm-conformance`'s own `RegistryHost` resolves imports from a
-    `register`ed sibling module in the same script for real — but there's
-    no real `spectest` host module (the official test harness's own
-    fixture module), so an import from it still correctly grades
-    `NotYetSupported`, not `Fail`.
+    `register`ed sibling module in the same script for real. It ALSO
+    resolves the well-known `spectest` fixture module (the official test
+    harness's own convention, `interpreter/host/spectest.ml` upstream) via
+    a small built-in `SpectestModule` stub — see `RegistryHost`'s own doc
+    comment in `src/lib.rs`. An import from any OTHER module name this
+    crate has never `register`ed still correctly grades `NotYetSupported`,
+    not `Fail`.
   - `assert_exhaustion` USED to be a third case (never executed at all,
     since `wasm-execution` had no call-depth guard) — WASM01 added one,
     so it's graded for real now, the same way `assert_trap` is.

@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-75-WHEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say today, yesterday and before in Telugu, ask when something happens, and name a year.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C75-today",
+    "TE-C75-yesterday",
+    "TE-C75-when",
+    "TE-C75-before",
+    "TE-C75-year"
+  ]
+}

@@ -1,23 +1,30 @@
 {
   "language": "german",
   "chapter": 4,
-  "sourceHash": "fnv1a64:93f7fa99a45c99fc",
+  "sourceHash": "fnv1a64:5d8c4e77a7032a8b",
   "lessonIds": [
+    "GE-C04-sehen",
+    "GE-C04-wieder",
+    "GE-C04-auf",
     "GE-C04-auf-wiedersehen",
     "GE-C04-tschuss",
+    "GE-C04-bis",
+    "GE-C04-bald",
     "GE-C04-bis-bald",
-    "GE-C04-bis-morgen",
+    "GE-C04-spaet",
     "GE-C04-bis-spater",
-    "GE-C04-practice",
+    "GE-C04-morgen-tomorrow",
+    "GE-C04-bis-morgen",
     "GE-W01-eszett",
     "GE-W02-umlauts",
-    "GE-W03-capitalization"
+    "GE-W03-capitalization",
+    "GE-C04-practice"
   ],
-  "voiceLessons": 6,
-  "drivablePrefix": 6,
+  "voiceLessons": 12,
+  "drivablePrefix": 7,
   "text": "german/narration/ch04.txt",
   "json": "german/narration/ch04.json",
-  "textHash": "fnv1a64:f41ea9e71ef8d25e",
-  "jsonHash": "fnv1a64:3c08b91a13ce7eb8",
+  "textHash": "fnv1a64:c595e8a098ab2b39",
+  "jsonHash": "fnv1a64:1558ffbad9b2db03",
   "findings": []
 }

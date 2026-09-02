@@ -1,9 +1,9 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:ca0f45c1530d618a",
+  "sourceHash": "fnv1a64:aba28617f531cab2",
   "lessonIds": [
-    "GE-C21-das-wetter"
+    "GE-C19-bitte-requests"
   ],
-  "tex": "german/book/chapters/ch21-weather.tex"
+  "tex": "german/book/chapters/ch21-please.tex"
 }

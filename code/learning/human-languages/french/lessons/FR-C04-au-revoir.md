@@ -44,7 +44,7 @@ French makes a promise to **see you again**.
 <!-- hl-knowledge: introduces=[FR-LEX-AUREVOIR-01]; assesses=[] -->
 
 - `r-uvular` — two guttural French *r*'s: *oh ruh-VWAHR*.
-- `vowel-oi` — **-voir** = *vwahr* (the *oi* = *wa*, as in *soir* from Chapter 1).
+- `vowel-oi` — **-voir** = *vwahr* (the *oi* = *wa*, as in *soir*, the evening).
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FR-ETYMON-VOIR-02]; assesses=[] -->

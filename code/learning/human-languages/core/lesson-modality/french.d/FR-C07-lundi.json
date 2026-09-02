@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C07-lundi",
+    "language": "french",
+    "chapter": 7,
+    "sequence": 215,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55fd0ddf6f47a688"
+  },
+  "findings": []
+}

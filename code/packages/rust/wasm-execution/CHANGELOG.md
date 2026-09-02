@@ -2,6 +2,71 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.94] - 2026-09-02 - `Table` gains a real, tracked element-type tag (W37 addendum)
+
+Companion fix to `wasm-runtime` 0.6.31 -- see that crate's own CHANGELOG
+for the full root-cause writeup and the corpus diff. This release supplies
+the missing piece `wasm-runtime`'s table-import link check needed:
+`Table` (this crate) never tracked its own declared element type at
+runtime at all, only `is64`/limits -- a standing, self-documented gap
+("`Table` doesn't track its declared element type at runtime ... a table
+import mismatched purely on element type would incorrectly link here
+rather than fail. Named, not silent: revisit if a future PR gives `Table`
+a real element-type field," `wasm-runtime`'s own `instantiate()`, removed
+by this release).
+
+**`Table` gains one new field, `element_type: u8`** (`wasm_types::FUNCREF`/
+`wasm_types::EXTERNREF` -- the same single-byte placeholder `wasm_types::
+TableType::element_type` already uses for every table this repo can
+construct, funcref-family or not), living outside the `Rc<RefCell<
+TableStorage>>` payload, immutable after construction -- exactly mirroring
+the existing `is64` field's own shape and doc-comment precedent. Two new
+methods:
+- `Table::with_element_type(self, u8) -> Self` -- a builder-style setter,
+  deliberately NOT a third constructor parameter: this crate and its
+  consumers already have dozens of pre-existing `Table::new`/
+  `new_with_is64` call sites, every one constructing an ordinary funcref
+  table, that would otherwise all need an unrelated mechanical edit for a
+  field they never need to set.
+- `Table::element_type(&self) -> u8` -- the accessor `wasm-runtime`'s
+  table-import arm now calls on the resolved EXPORTING table to compare
+  against the IMPORTING module's own declared byte.
+
+`Table::new`/`Table::new_with_is64` both default `element_type` to
+`wasm_types::FUNCREF` -- correct for every pre-existing call site (every
+WASM 1.0 table, and every one of this crate's own existing tests, none of
+which need to override it) and consistent with `wasm_types::TableType`'s
+own "concrete-func-family keeps FUNCREF as a placeholder" convention
+(`code/specs/W37-wasm-gc-reftype-tables.md` design section 3).
+
+No opcode/instruction-execution behavior changes: `table.get`/`table.set`/
+`table.fill`/`table.copy`/`call_indirect` etc. never consulted this field
+before and still don't -- `TableElement`'s own existing two-variant shape
+(`Raw`/`Func`) already made `Table`/`TableStorage` fully reference-type-
+agnostic at the storage level (W35). This field exists purely to make a
+table's DECLARED type inspectable at link time, the one place that was
+missing it.
+
+**Tests**: `table_new_defaults_to_funcref_element_type`,
+`table_new_with_is64_defaults_to_funcref_element_type`,
+`table_with_element_type_overrides_the_default`,
+`table_clone_preserves_element_type` -- mirroring this crate's own
+existing `is64` test shapes exactly.
+
+## [0.9.93] - 2026-09-02 - `WasmValue::default_for` covers the two new W37 `ValueType` variants
+
+Mechanical exhaustiveness update only, per `code/specs/
+W37-wasm-gc-reftype-tables.md`: `wasm-types` 0.1.25 adds `ValueType::Eqref`/
+`ValueType::StructRefAny`, and `default_for`'s match is exhaustive over
+`ValueType`. Both join the existing `Anyref`/`StructRef(_)`/... group that
+defaults to the null reference (`WasmValue::Ref(None)`) -- the correct
+WasmGC zero value for any nullable reference type, exactly like every
+other GC/funcref/externref reference type already in that arm. No new
+runtime behavior: `Table`/`TableStorage`/`TableElement` were already
+reference-type-agnostic by design (W35), needing no changes for this spec
+at all -- this is the one place `ValueType`'s own exhaustiveness required
+a one-line touch.
+
 ## [0.9.92] - 2026-09-02 - runtime support for typed `select` (0x1C)
 
 Companion fix to `wasm-wast-parser` 0.1.99 (parses `select`'s typed

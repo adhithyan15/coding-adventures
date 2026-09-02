@@ -497,7 +497,7 @@ mod tests {
         fs::write(path.join("manifest.json"), b"{\"runtime\":\"skill\"}").unwrap();
         fs::write(
             path.join(SKILL_ENTRYPOINT),
-            b"# Weather\n\nReport friendly forecasts.\n\n## Capabilities needed\n- none\n",
+            b"# Weather\n\nReport friendly forecasts.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n",
         )
         .unwrap();
         sign_agent_package(path, key_id, secret_key).unwrap();

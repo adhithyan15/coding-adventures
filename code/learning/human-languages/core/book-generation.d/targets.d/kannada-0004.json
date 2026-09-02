@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 4,
+  "output": "kannada/book/chapters/ch04-farewells.tex",
+  "scriptSet": "kannada-comparisons"
+}

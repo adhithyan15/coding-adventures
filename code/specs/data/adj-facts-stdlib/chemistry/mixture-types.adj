@@ -27,13 +27,22 @@
 %
 %     mixture_type    example          what the source says
 %     -------------   --------------   -------------------------------------
-%     homogeneous     salt_water       "The salt water ... is homogeneous"
-%     solution        salt_water       salt mixed into water "will form a
-%                                       solution"
+%     homogeneous     salt_water       "The salt water described above is
+%                                       homogeneous because the dissolved salt
+%                                       is evenly distributed..."
+%     solution        salt_water       "...it will form a solution."
 %     heterogeneous   vegetable_soup   "Vegetable soup is a heterogeneous
 %                                       mixture."
-%     suspension      salad_dressing   "The salad dressing ... is a suspension."
+%     suspension      salad_dressing   "The salad dressing in this bottle is a
+%                                       suspension."
 %     colloid         milk             "Homogenized milk is a colloid."
+%
+%     (cue column only -- the FULL verbatim spans are listed below and shipped
+%      as source + cites. The previous cues elided with "..." mid-quote, the
+%      same constructed-span shape as the data defect this change repairs.
+%      NOTE on `suspension`: the page's FIRST mention of salad dressing calls
+%      it a "liquid mixture" and never says suspension; the sentence that does
+%      is four blocks later. Reading every occurrence is what caught that.)
 %
 % Note that `salt_water` appears TWICE — as the example for both `homogeneous`
 % and `solution`. That is not a mistake but the source's own point: a solution IS
@@ -70,10 +79,16 @@
 %   colloid → milk
 %       "Homogenized milk is a colloid."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source` below holds the
-% five verbatim example sentences (joined with " … "), the `locator` the page
-% URL, and `trust`. Every example word above therefore remains independently
-% checkable against the quoted sentence it was copied from. LibreTexts is a
+% The `source` below holds ONE of those blocks verbatim and the other four ride
+% as `cites` corroborations on the same envelope, so every row's evidence is
+% independently checkable AS THE PAGE DISPLAYS IT.
+%
+% (This previously read "An ADJ `table` carries ONE provenance envelope, so the
+%  `source` below holds the five verbatim example sentences (joined with …)".
+%  The first clause is still true -- a table has one source/locator/trust -- but
+%  the conclusion is not: `cites` carries the rest. The joined value was a span
+%  no page displays, which is what made it a #14070 defect. See #14099: 82
+%  library headers still carry that obsolete rationale.) LibreTexts is a
 % SECONDARY teaching reference (a college course text, not a primary standards
 % body), so `trust consensus` — the honest tier for a teaching summary, per the
 % standard-library trust convention. (See ../README.md;
@@ -89,7 +104,11 @@ table mixture_example {
     row (suspension, salad_dressing)
     row (colloid, milk)
 
-    source "The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample. … When the salt is thoroughly mixed into the water in this glass, it will form a solution. … Vegetable soup is a heterogeneous mixture. … The salad dressing in this bottle is a suspension. … Homogenized milk is a colloid."
+    source "A homogeneous mixture is a mixture in which the composition is uniform throughout the mixture. The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample."
     locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
     trust consensus
+    cites "When the salt is thoroughly mixed into the water in this glass, it will form a solution." locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
+    cites "A heterogeneous mixture is a mixture in which the composition is not uniform throughout the mixture. Vegetable soup is a heterogeneous mixture." locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
+    cites "The salad dressing in this bottle is a suspension." locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
+    cites "Homogenized milk is a colloid." locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
 }

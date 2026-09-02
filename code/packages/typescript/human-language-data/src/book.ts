@@ -1042,6 +1042,18 @@ function renderMarkdown(
       quote.push(line.slice(2));
       continue;
     }
+    // A line that is just `>` is markdown's blank line INSIDE a blockquote: it
+    // separates two quoted paragraphs. It does not start with "> ", so without
+    // this branch it fell through to the paragraph path and was emitted as a
+    // literal `>` between two `quote` environments -- a stray character that
+    // reached readers in 67 generated chapters across 13 books before anyone
+    // read a compiled page and saw it. Treat it as the separator it is.
+    if (line.trim() === ">") {
+      flushParagraph();
+      closeList();
+      flushQuote();
+      continue;
+    }
     if (quote.length > 0 && /^\s+/.test(line)) {
       quote.push(line.trim());
       continue;
@@ -1125,6 +1137,21 @@ function renderBlock(block: LessonBodyBlock, options?: InlineRenderOptionsInput)
   const title = renderInlineMarkdown(bookBlockTitle(block.title), options);
   if (block.type === "pronunciation") return `\\begin{sounds}\n${content}\n\\end{sounds}`;
   if (block.type === "etymology") return `\\begin{cousinweb}\n${content}\n\\end{cousinweb}`;
+  if (block.type === "cognates") {
+    // Deliberately an INLINE tcolorbox rather than `\\begin{cognates}`. The four
+    // Dravidian preambles define a `cognates` environment and the other nineteen
+    // do not, so emitting the named environment would compile here and break the
+    // moment any other track authored the heading. `tcolorbox` is loaded by every
+    // preamble, so the colours are carried in the emitted LaTeX instead -- and
+    // they are the same violet the hand-written Kannada chapters used, so the
+    // page is unchanged.
+    return [
+      "\\begin{tcolorbox}[breakable,skin=enhanced,colback=violet!6,colframe=violet!45!black," +
+        `boxrule=0.5pt,arc=1mm,left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\\bfseries,title={${title}}]`,
+      content,
+      "\\end{tcolorbox}",
+    ].join("\n");
+  }
   if (block.type === "grammar" || block.type === "notice") {
     return `\\begin{grammarlens}[title={${title}}]\n${content}\n\\end{grammarlens}`;
   }
@@ -1592,6 +1619,7 @@ const INDEX_BLOCK_FACETS = new Map<LessonBodyBlock["type"], string>([
   ["writing", "writing"],
   ["grammar", "grammar"],
   ["etymology", "etymology"],
+  ["cognates", "family and cognates"],
   ["culture-pragmatics", "usage and culture"],
 ]);
 
@@ -1601,6 +1629,7 @@ const INDEX_FACET_ORDER = [
   "writing",
   "grammar",
   "etymology",
+  "family and cognates",
   "usage and culture",
 ];
 

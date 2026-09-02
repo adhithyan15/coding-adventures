@@ -1,5 +1,270 @@
 # Changelog
 
+## German chapter 16 becomes three chapters, and leaves the hand-written set
+
+`ch16-sein.tex` — the top of the German hand-written range — is now generated,
+as **chapters 16, 17 and 18**. German's hand-written chapters: **12 -> 11**.
+Old chapters 17-31 renumbered to 19-33.
+
+### Sizing it four ways, and only the fourth was right
+
+- `handwritten_parity.py` scored it at a gap of **8 blocks**.
+- `grep -l '^chapter: 16$' lessons/*.md` said **3 lessons**, and the `.tex`
+  rendered **2 sections**. No hidden writing lessons this time.
+- Counting the German words it teaches gave six new ones: *sein*, *müde*,
+  *kommen*, *fahren*, *werden*, *bleiben*.
+
+None of those is the real size, because chapter 16's cost is **grammar, not
+vocabulary**. It carries two paradigms — the present of *sein* and its past —
+and a cell is one filled slot, not a table. Six present cells plus four past
+cells plus six lexical, sound and rule atoms is **twenty-four atoms**, against a
+`maxNewAtomsPerChapter` of twelve.
+
+Length is never a cost here, so it became **three chapters of 9, 7 and 8 atoms**
+rather than one chapter at twice the ceiling. Three lessons became **twenty-six**.
+
+### The paradigm grid appears only as a recap
+
+HL10's rule is that no paradigm table may be printed until every cell in it has
+been taught individually, at which point the table is a recap rather than an
+introduction. So `sein` is met one form per lesson — *bin*, *bist*, *ist*,
+*sind*, *seid*, *sind* — and the grid the hand-written chapter opened with now
+sits in `GE-C16-praesens-practice`, at the end, where it is the ninth thing the
+reader sees rather than the first.
+
+The past does the same across chapter 17, and by chapter 18 the
+*ich bin gegangen* table is a recap twice over: every cell of *sein*'s present is
+owned, and the participle does not inflect.
+
+### Lesson ids did not move
+
+All twenty-six lessons keep the `GE-C16-*` prefix and live across chapters 16,
+17 and 18 — the Spanish convention, where `ES-C03-*` lessons sit in chapters 4,
+5 and 6. An id names the chapter a lesson was written for; chapter numbers move
+and ids do not.
+
+### German joins the tracks whose chapters move
+
+Fifteen chapters renumbered at once, and **36 of German's 65 cross-chapter prose
+references pointed into that range** — every one of them would have rotted on
+this single commit. `chapter-references.test.ts` says what to do: name the thing,
+never the number. All **65 -> 0**, and German is now pinned at zero beside
+Spanish and French. The pass used "the food lesson", "the doing verbs", "the
+*Hand* table", "your first verbs", "the eszett rule", and for the purely
+decorative ones the thing itself: "**hören** showed", "**Hund** showed".
+
+### Counters, re-measured against the tree rather than derived
+
+| Measure | Before | After |
+|---|---|---|
+| German hand-written chapters | 12 | **11** |
+| `handwritten_parity.py german` | 63 | **55** blocks at risk |
+| lessons (schema-v2) | 98 | 124 |
+| atoms taught | 243 | 267 |
+| atom-measurement-blind lessons | 29 | 26 |
+| chapters over the 12-atom budget | 4 | 4 |
+| culture claims | 12 | 14 |
+| atoms never revisited | 75 | 73 |
+| forward references | 39 | **40** |
+| cross-chapter prose references | 65 | **0** |
+
+Forward references went **up** by one, and the direction is the point. Teaching
+*ich bin* made `GE-C14-alter`'s existing *ich bin zwanzig Jahre alt* visible as a
+preview for the first time — the gate cannot see a reference to a word no lesson
+teaches. Two rose that way, one fell (`nein` was cut from a dialogue that did not
+need it), and one is deliberate: *die eingeschlafene Katze* is the hand-written
+chapter's own example of a participle taking an adjective ending, and it is kept
+with a note rather than swapped for a duller noun.
+
+### Two defects the gates caught
+
+1. **A capital eszett's cousin.** `GE-C16-muede` wrote the stress as *MÜ-duh*.
+   Capital **Ü** is in neither `core/main-font-charset.json` nor `book.ts`'s
+   escape map — free while the chapter was hand-written, a hard `glyph-coverage`
+   failure once generated. Lowercase *mü-duh* with the stress stated in words.
+2. **Two dialogues read as paradigms.** `info-dump.ts` calls a table with three
+   or more person-labelled first cells a paradigm table, and a German exchange
+   whose lines open *Ich…*, *Du…*, *Wir…* looks exactly like one. Rewritten so
+   the speakers open with something other than a pronoun; corpus `paradigmTables`
+   back to 95 and `lessonsWithFindings` to 121, both unchanged from before.
+
+Also fixed on the way past: `GE-C16-ich-war` said "look at the shape of it",
+which is a `sight-cue`, and that one phrase cost chapter 17 its hands-free start.
+It says "hear" now, and all three chapters open drivable.
+
+### Verification
+
+124/124 test files, 1739 tests; every `check:*` gate; language-ladder 39/39
+files, 442 tests; the German book compiles under XeLaTeX with zero errors and
+zero overfull or underfull boxes (279 pages), and chapters 16, 17 and 18 were
+read on the page. All 70 teaching claims in `ch16-sein.tex` were checked across
+into the new lessons.
+
+## German chapter 4 leaves the hand-written set
+
+Chapter 4 — the farewells chapter — is now generated from its lessons. German's
+hand-written chapters: **13 -> 12**.
+
+### Sizing by the .tex found most of the hole, but not all of it
+
+Counting what `ch04-farewells.tex` actually teaches against the lessons that own
+it predicted the work well: *auf Wiedersehen* is welded from **auf**, **wieder**
+and **sehen**, and none of the three had a lesson; *bis*, *bald* and *spät* were
+all taught inside phrase lessons rather than owned by one. Seven new lessons.
+
+What the `.tex` could **not** show is that chapter 4 also owns three **writing**
+lessons — `GE-W01-eszett`, `GE-W02-umlauts`, `GE-W03-capitalization` — which are
+staged separately and appear nowhere in that file. They surfaced only when
+`book.ts` refused to generate:
+
+```
+Error: GE-W01-eszett: generated books require schema version 2
+```
+
+So the sizing rule needs one more clause: **count the lessons the chapter owns,
+not only the ones its `.tex` renders.** `grep -l '^chapter: N$' lessons/*.md` is
+the honest denominator. Chapter 4 went from 9 lessons to 16.
+
+### What moved
+
+- `handwritten.d/german-0004.json` is now a `targets.d/` entry.
+- Sixteen lessons: seven new (*sehen*, *wieder*, *auf*, *bis*, *bald*, *spät*,
+  *morgen* as "tomorrow"), six migrated, and the three writing lessons migrated
+  from schema v1.
+- `handwritten_parity.py german`: **69 -> 63** blocks at risk.
+- Chapter 4's lessons now sit in `GE-PATH-013` with three extension nodes, one
+  of them a writing kit.
+
+### Counters, re-measured rather than derived
+
+| Measure | Before | After |
+|---|---|---|
+| atoms taught | 213 | 243 |
+| lessons with measured budgets | 82 | 98 |
+| atom-measurement-blind lessons | 38 | 29 |
+| chapters over the 12-atom budget | 3 | 4 |
+| culture claims | 8 | 12 |
+| senses | 4 | 5 |
+| forward references | 42 | **39** |
+
+Forward references went *down*: teaching *sehen*, *wieder* and *auf* removed
+three previews that earlier chapters had been making.
+
+### Four defects the gates caught, and one they did not
+
+1. **A payoff that quietly fell below the floor.** Claiming 14 atoms looked
+   generous against the thirteen farewell lessons — but the chapter introduces
+   **30** atoms once the writing lessons are counted, so 14/30 = 0.47 sat under
+   the 0.5 representativeness floor and `payoffSurprises` went 1 -> 2. The fix
+   was to claim the writing kit's three transferable rules as well, and to widen
+   the chapter's `canDo` to admit that chapter 4 teaches writing too. Now 17/30.
+2. **A writing stage four steps too early.** `GE-W03` was authored as
+   `controlled-composition`; German has only `guided-copy` evidence at this
+   point, so the cumulative HL19 ledger rejected it. Its task is a copy with the
+   model in view — `guided-copy` was the honest label all along.
+3. **A 327-second lesson.** `GE-W03` exceeded the computed five-minute ceiling.
+   Prose came out; the declared number was not touched.
+4. **Two glyphs that had never had to render.** The v1 eszett lesson used the
+   long s and the capital eszett. Neither is in `main-font-charset.json` nor in
+   `book.ts`'s escape map — harmless while the chapter was hand-written LaTeX,
+   fatal the moment it is generated. Both are now described in words. Adding
+   `\newunicodechar` mappings to all 24 book preambles would be the alternative,
+   and is not worth it for two decorative glyphs.
+
+### One JSON-writing trap worth recording
+
+`json.dumps` defaults to `ensure_ascii=True`, which wrote `—` into
+`chapters.d/0004.json`. The canonical re-shard writes literal UTF-8, so
+`chapters-shards.test.ts` failed on bytes that *looked* identical in every
+diff view. Always pass `ensure_ascii=False` when writing these files by hand.
+
+
+## German chapter 3 leaves the hand-written set
+
+Chapter 3 — the *Wie geht es dir?* chapter — was hand-written LaTeX. It is now
+generated from its lessons, and generating it turned out to require real
+authoring rather than a format flip.
+
+### The chapter had a hole, and the flip exposed it
+
+Eight lessons carried a chapter whose LaTeX taught roughly twenty things. The
+gap was not padding: *es*, *mir*, *dir*, *Ihnen*, *sehr*, *nicht*, *und*, *so
+lala*, *schön* and *vielen Dank* were all taught in the book and owned by no
+lesson. `GE-C03-gehen` alone introduced *gehen*, *es*, *mir* and the dative in
+one sitting — four new things in a lesson budgeted for three.
+
+So the chapter was authored out to **18 lessons**, one new word each:
+
+- **Ten new lessons** — `schoen`, `vielen-dank`, `es`, `mir`, `dir`, `ihnen`,
+  `sehr`, `nicht`, `so-lala`, `und`.
+- **Eight migrated** from schema v1 to v2, with the material that now has its
+  own lesson removed from them. `GE-C03-gehen` keeps only *gehen*; the "dressing
+  it up" list left `danke` for the three lessons that own its parts.
+
+Every lesson is within `maxNewAtomsPerLesson: 3`, and the chapter introduces
+**36 atoms**.
+
+### What moved
+
+- `core/book-generation.d/handwritten.d/german-0003.json` is now a `targets.d/`
+  entry. German's hand-written chapters: **14 -> 13**; corpus-wide **38 -> 37**.
+- `handwritten_parity.py german`: **77 -> 69** blocks at risk. Chapter 3's own
+  gap went 8 -> 0 by being generated; before the flip it had already fallen 8 ->
+  3 as the prose was carried into lessons. The residue was two `morphologybox`
+  environments and one `grammarlens`, none of which the generator can emit —
+  their content was re-homed into `cousinweb` tables (the *ich/mich/mir* and
+  *doer/to-whom* grids) and a `grammarlens` on returning the question.
+- The payoff is atom-scored instead of authored boilerplate: 23 of the 36 atoms
+  — the lexical spine, the dative, and the two pragmatic rules. Per-word sound
+  and etymology atoms are deliberately not claimed.
+- Chapter 3's lessons are now in the curriculum path (`GE-PATH-010`,
+  `GE-PATH-012`) and three new extension nodes carry the language-specific and
+  consolidation lessons.
+
+### Counters, re-measured rather than derived
+
+All of these were regenerated against the merged tree, not adjusted by
+arithmetic:
+
+| Measure | Before | After |
+|---|---|---|
+| atoms taught | 177 | 213 |
+| lessons with measured budgets | 64 | 82 |
+| atom-measurement-blind lessons | 46 | 38 |
+| chapters over the 12-atom budget | 2 | 3 |
+| culture claims | 6 | 8 |
+
+Chapter 3 joining the over-budget list is a **measurement, not a regression** —
+the same debt chapters 1 and 2 surfaced. The honest fix stays a chapter split,
+which renumbers every later German chapter, and is still deliberately left open
+as HL-C242.
+
+### Two defects caught by reading the rendered page
+
+A block count cannot see either of these, and both were found by compiling the
+book and looking at it.
+
+1. **The dialogue ran on.** Both practice lessons wrote their four-line exchange
+   as consecutive `>` lines. Markdown joins those into one paragraph, so
+   *Hallo! Wie geht's? — Gut, danke, und dir? — Es geht.* printed as a single
+   run-on line instead of an exchange. Chapter 2 already had the answer — a
+   two-column German/English table, one line per row — and both chapter 3
+   dialogues now use it.
+2. **A wrong sound tag.** `GE-C03-gehen` declared `h-pronounced` while its own
+   prose said the *h* "merely lengthens the vowel." The registry has the right
+   tag, `h-silent-lengthening`, and the lesson now uses it and teaches the rule
+   as transferable — *sehr*, *Ihnen* and *Jahr* all hide the same silent *h*.
+
+### One deliberate wart
+
+Chapter 3 introduces *gehen* first, but `GE-C27-gehen` already owned
+`GE-LEX-GEHEN-02` and three chapter-27 lessons require it. Rather than
+re-point a generated chapter's atoms, chapter 3 mints `GE-LEX-GEHEN-01` for the
+wellbeing verb and chapter 27 keeps `GE-LEX-GEHEN-02` for the motion verb. Two
+atoms for one headword is not ideal; folding them belongs with the chapter-27
+work, not here.
+
+
 ## German chapters 1 and 2 leave the hand-written set
 
 The book's two opening chapters were hand-written LaTeX. Nothing built them from

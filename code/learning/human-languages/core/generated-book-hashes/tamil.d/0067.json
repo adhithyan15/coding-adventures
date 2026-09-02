@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:23b5944c5003886b",
+  "lessonIds": [
+    "TA-C67-shirt",
+    "TA-C67-veshti",
+    "TA-W23-read-sattai",
+    "TA-C67-sari",
+    "TA-C67-sandal",
+    "TA-C67-cap"
+  ],
+  "tex": "tamil/book/chapters/ch67-what-you-wear.tex"
+}

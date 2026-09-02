@@ -625,7 +625,21 @@ describe("the committed French A1 inventory", () => {
     // gap, the inventory naming the five points, nine lessons teaching them, and
     // the probes then resolving against real atoms. The number moved because the
     // CORPUS changed, not because the target was edited.
-    expect(coverage.covered).toBe(25);
+    //
+    // 25 -> 26: retiring hand-written chapter 6 closed A1-PRON-03, obligatory
+    // liaison. The hand-written chapter mentioned the six/dix -s and the neuf
+    // f-to-v in passing inside two `sounds` blocks; the generated chapter teaches
+    // liaison as a named rule with its own atom, which is what a probe can
+    // resolve against. Same rule here: the corpus changed, not the target.
+    //
+    // 26 -> 27: retiring hand-written chapter 8 closed A1-LEX-07, telling the
+    // time. The hand-written chapter stopped at whole hours and named et quart,
+    // et demie and moins le quart in one sentence while deferring them, so the
+    // corpus could not have satisfied the point however the probe was written.
+    // The chapter now teaches all three, and the probe lists all seven atoms
+    // rather than a sample: a candidate asked for half past does not get partial
+    // credit for o'clock.
+    expect(coverage.covered).toBe(27);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
     // The shape, not the score: vocabulary is still a strong column and the
     // sentence-level categories are still empty. No quantity of headwords moves
@@ -896,6 +910,155 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
       "marathi A1 (partial inventory): 88/301 points covered (29%)",
+    );
+  }, 60_000);
+});
+
+// ---------------------------------------------------------------------------
+// Tamil (HL-C290 again, and the first Dravidian track to get one).
+//
+// The method is Marathi's and these tests are deliberately its tests, because
+// the value of a method is that the second use is cheaper than the first. Two
+// things differ and both are properties of the LANGUAGE rather than of the
+// derivation:
+//
+//   1. Tamil is DIGLOSSIC, and `core/exam-levels.json` says so in the caveat it
+//      carries for this track and for no other Dravidian one. The written and
+//      spoken registers diverge sharply and this curriculum teaches spoken
+//      Tamil first, which is a fact about what an exam could even ask. So the
+//      inventory has a register column that no proxy-derived file has had, and
+//      its first point — that the corpus never tells the learner any of this —
+//      is uncovered.
+//   2. Tamil's SCRIPT column is nearly closed rather than nearly empty. All 18
+//      core consonants and 10 of 12 independent vowels are taught, and walking
+//      every Tamil character the track prints against the set its script
+//      lessons teach returns zero shown-but-untaught. That is the opposite of
+//      the Marathi result and it is why the shape assertions below name
+//      different empty columns.
+// ---------------------------------------------------------------------------
+describe("the committed Tamil A1 inventory", () => {
+  const inventory = loadExamInventory("tamil", "A1");
+  const spanish = loadExamInventory("spanish", "A1");
+
+  it("keeps every point's probe key, and never an empty probe", () => {
+    for (const point of inventory.points) {
+      expect(point, `${point.id} has no probe key`).toHaveProperty("probe");
+      expect(Array.isArray(point.probe) ? point.probe.length : 1, point.id).toBeGreaterThan(0);
+    }
+  });
+
+  it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
+    // The rule HL-C290 calls out by name. A probe pointing at an id somebody
+    // expects a future lesson to introduce resolves to "not introduced" forever
+    // and sits in the report indistinguishable from the honest gaps around it.
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "tamil");
+    const unknown: string[] = [];
+    for (const point of inventory.points) {
+      for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+    }
+    expect(unknown).toEqual([]);
+  }, 60_000);
+
+  it("keeps the derivation total in both directions", () => {
+    // Every Spanish point either derives into some Tamil point or is dropped
+    // with a reason, and no point may be both. A source point that is silently
+    // absent is indistinguishable from one nobody thought of, which is the
+    // failure the whole exercise exists to prevent.
+    const proxy = (inventory as unknown as {
+      proxy: { notTransferred: { spanishPoints: string[]; why: string }[] };
+    }).proxy;
+    const dropped = new Set(proxy.notTransferred.flatMap((entry) => entry.spanishPoints));
+    for (const entry of proxy.notTransferred) expect(entry.why.trim().length).toBeGreaterThan(0);
+    const derived = new Set(
+      inventory.points.flatMap((point) => (point as unknown as { derivedFrom: string[] }).derivedFrom),
+    );
+    const sourceIds = new Set(spanish.points.map((point) => point.id));
+    for (const id of derived) expect(sourceIds.has(id), `derivedFrom names unknown ${id}`).toBe(true);
+    for (const id of dropped) expect(sourceIds.has(id), `notTransferred names unknown ${id}`).toBe(true);
+    expect([...derived].filter((id) => dropped.has(id)), "derived AND dropped").toEqual([]);
+    const unaccounted = [...sourceIds].filter((id) => !derived.has(id) && !dropped.has(id));
+    expect(unaccounted, "Spanish points that went missing from the walk").toEqual([]);
+  });
+
+  it("marks its own points as its own, in both directions", () => {
+    for (const point of inventory.points) {
+      const cast = point as unknown as { derivedFrom: string[]; tamilSpecific?: boolean };
+      expect(cast.tamilSpecific === true, point.id).toBe(cast.derivedFrom.length === 0);
+    }
+    const specific = inventory.points.filter(
+      (point) => (point as unknown as { derivedFrom: string[] }).derivedFrom.length === 0,
+    );
+    // A proxy is a scaffold, not a template. Tamil's own points include the
+    // rational/irrational split that governs all its agreement, the stacking
+    // case suffix, the strong/weak verb sort, the two-way negative, the three
+    // n letters, and the whole register column.
+    expect(specific.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it("refuses to borrow an authority it does not have", () => {
+    // Three bodies could lend this file weight it has not earned: the two the
+    // proficiency backbone names as the nearest thing to a Tamil ladder, and
+    // the awarding body behind the proxy.
+    expect(inventory.about).toMatch(/PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS/);
+    expect(inventory.about).toMatch(/Singapore Ministry of Education/);
+    expect(inventory.about).toMatch(/Tamil Nadu state syllabi/);
+    expect(inventory.about).toMatch(/MAY BE ATTRIBUTED TO DELE/);
+    // The search is settled per HL-C287/HL-C290 and was deliberately not redone.
+    // Saying so is what keeps "we did not look" from reading as "there is
+    // nothing to find".
+    expect(inventory.about).toMatch(/NOT SEARCHED, BY INSTRUCTION/);
+    expect(inventory.source).toMatch(/^PROJECT-DEFINED\./);
+    // Tamil has neither mocks nor task shapes, so the file must say what it
+    // used instead of the artifacts Hindi and Marathi mined. An unstated
+    // substitution is an unauditable one.
+    expect(inventory.source).toMatch(/EXAM ENVELOPE: NONE EXISTS/);
+    expect(inventory.about).toMatch(/no tamil\/task-shapes\/ and no tamil\/mocks\//);
+    expect(isExamInventoryComplete(inventory)).toBe(false);
+    for (const dimension of EXAM_CONTENT_DIMENSIONS) {
+      expect(inventory.scope[dimension].status, dimension).toBe("partial");
+    }
+  });
+
+  it("names an anchor for every point, and says what kind of anchor it is", () => {
+    const anchors = (inventory as unknown as {
+      anchors: { id: string; kind: string; title: string; note: string }[];
+    }).anchors;
+    expect(Array.isArray(anchors)).toBe(true);
+    expect(new Set(anchors.map((anchor) => anchor.kind))).toEqual(
+      new Set(["sourced-proxy", "external-framework", "project-owned", "editorial"]),
+    );
+    for (const anchor of anchors) expect(anchor.note.trim().length, anchor.id).toBeGreaterThan(0);
+    const known = new Set(anchors.map((anchor) => anchor.id));
+    for (const point of inventory.points) {
+      const ids = (point as unknown as { anchorIds?: string[] }).anchorIds;
+      expect(ids?.length, `${point.id} names no anchor`).toBeGreaterThan(0);
+      for (const id of ids ?? []) expect(known.has(id), `${point.id} cites unknown anchor ${id}`).toBe(true);
+    }
+  });
+
+  it("reports a gap that is GRAMMAR-shaped, with the script column nearly closed", () => {
+    // Pinned so a future tranche has to say which points it moved. It may rise;
+    // a fall means coverage was lost and wants explaining.
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage.enumerated).toBe(262);
+    expect(coverage.covered).toBe(155);
+    expect(coverage.unmapped).toBe(107);
+    // Zero partials is a property of the "existing atoms only" rule, not a
+    // coincidence: with no guessed ids, a point is either fully probed or null.
+    expect(coverage.partial).toBe(0);
+    // THE FINDING. Tamil cannot join two clauses at all — no `-um ... -um`, no
+    // `aanaal`, no `alladu`, no quotative `enru` — which is the same empty
+    // column Hindi and Telugu reported, and it is what stops the well-taught
+    // verb and lexis columns from becoming sentences.
+    expect(coverage.byCategory["Iṇaittoḍar (joining clauses)"]).toEqual({ enumerated: 7, covered: 0 });
+    // The two columns that carry this track, and they are not the ones French
+    // and German lead on.
+    expect(coverage.byCategory["Vinaiccol (the verb)"]!.covered).toBeGreaterThan(15);
+    expect(coverage.byCategory["Tamiḻ eḻuttu (script and orthography)"]!.covered).toBeGreaterThan(5);
+    expect(formatExamCoverage(coverage)).toContain(
+      "tamil A1 (partial inventory): 155/262 points covered (59%)",
     );
   }, 60_000);
 });

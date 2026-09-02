@@ -1,0 +1,13 @@
+{
+  "id": "GE-EXT-021-B-ETYMOLOGY",
+  "stage": "A2",
+  "kind": "required",
+  "category": "etymology",
+  "canDo": "I can name the three Proto-Indo-European verbs German's verb for “to be” is assembled from, call that assembly suppletion, and explain why the commonest words are the last to be regularised.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C16-drei-wurzeln",
+    "GE-C16-suppletion",
+    "GE-C16-haeufig-unregelmaessig"
+  ]
+}

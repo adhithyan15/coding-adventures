@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:107d31089b513d3d",
+  "lessonIds": [
+    "TE-C74-and",
+    "TE-C74-but",
+    "TE-C74-or",
+    "TE-C74-why",
+    "TE-C74-because"
+  ],
+  "tex": "telugu/book/chapters/ch74-and-but-or.tex"
+}

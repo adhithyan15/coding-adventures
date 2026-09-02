@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-75-WHEN",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TE-C75-today",
+    "TE-C75-yesterday",
+    "TE-C75-when",
+    "TE-C75-before",
+    "TE-C75-year"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-75-WHEN"
+  ],
+  "after": []
+}

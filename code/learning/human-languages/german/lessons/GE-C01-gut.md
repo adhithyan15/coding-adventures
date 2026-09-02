@@ -76,9 +76,10 @@ vice-versa) on sight. More rules of the shift as we go.
 
 English splits *good* (adjective) from *well* (adverb); Spanish splits
 *bueno* from *bien*; French splits *bon* from *bien*. **German does not** —
-*gut* is *both*. "A good day" is *ein guter Tag*; "I'm doing well" is *mir
-geht's gut*. One word covers the whole job. So the Romance *bien/bueno* pair
-collapses back into a single German word.
+*gut* is *both*. "A good day" is *ein guter Tag* — and the very same *gut*
+is how you say you are doing well, which is what the wellbeing exchange is built on. One
+word covers the whole job, so the Romance *bien/bueno* pair collapses back into
+a single German word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GUT-02, GE-SOUND-GUT-01, GE-ETYMON-GUT-SHIFT-03] -->

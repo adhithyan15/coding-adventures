@@ -1,18 +1,18 @@
 {
   "language": "german",
   "chapter": 26,
-  "sourceHash": "fnv1a64:fccaf6f5902135ae",
+  "sourceHash": "fnv1a64:97bd382b6178ea48",
   "lessonIds": [
-    "GE-C26-sitzen",
-    "GE-C26-stehen",
-    "GE-C26-schlafen",
-    "GE-C26-hoeren"
+    "GE-C24-denken",
+    "GE-C24-verstehen",
+    "GE-C24-lesen",
+    "GE-C24-schreiben"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "german/narration/ch26.txt",
   "json": "german/narration/ch26.json",
-  "textHash": "fnv1a64:85ffccdf04545476",
-  "jsonHash": "fnv1a64:ed08af6ae69ff5f1",
+  "textHash": "fnv1a64:a6ad73f1d01ca5e6",
+  "jsonHash": "fnv1a64:22a31a07091323f7",
   "findings": []
 }

@@ -1,5 +1,260 @@
 # Changelog
 
+## Chapter 8 is generated, and the clock is finished rather than promised
+
+Chapter 8 was hand-written LaTeX built from two schema-v1 lessons that owned
+**three words between them** — *heure*, *midi*, *minuit* — for a chapter whose
+`.tex` taught considerably more than three things.
+
+It is now **nine** schema-v2 lessons.
+
+### What the block gap could not see
+
+`handwritten_parity.py` scored chapter 8 at a gap of **one block**. Counting the
+French the `.tex` actually teaches against the lessons that own it tells a
+different story. Owned by **no lesson at all**:
+
+- **`il est … heures`** — the frame the whole chapter runs on, taught in a
+  `grammarlens` and owned nowhere.
+- **`une heure` against `deux heures`** — the gender and number agreement, taught
+  in a table's `note` column.
+- **`et quart`, `et demie`, `moins le quart`** — named in one sentence of that
+  same lens and explicitly deferred: *"add … later."*
+
+None of those cost a prose block. Every one of them costs a lesson. A chapter
+called *Telling the Time* that stops at whole hours has not taught the reader to
+tell the time, so the deferred three are now taught here rather than promised.
+
+### One new word per lesson
+
+`heure`, `il est … heures`, `une heure`, `midi`, `minuit`, `et quart`,
+`et demie`, `moins le quart`, then the chapter practice. The etymology is
+carried whole and several strands now close on each other:
+
+- **`heure` and `hour` are one word** — Latin *hōra* from Greek *hōrā*, "a
+  season, the right time." Both languages keep a silent *h* neither ever said,
+  and that silent *h* is precisely **why** *deux heures* liaises to *deu-z-eur* —
+  which the reader met as a rule two chapters earlier.
+- **`midi` = `mi-` + `-di`** — the *diēs* of *lundi*, come round to the front of
+  a different word. **`minuit` = `mi-` + `nuit`**, the *nuit* of Chapter 1.
+  One idea used twice.
+- **agreement you cannot hear** — the plural *-s* of *heures* and the feminine
+  *-e* of *demie* are both silent, which is why the number in front is
+  load-bearing rather than decorative.
+- **`moins le quart` subtracts from the hour that is coming**, and *quart* is
+  *quatre* doing a different job.
+
+### Measured
+
+- Hand-written French chapters: **11 -> 10**.
+- Chapter atoms: **11**, inside `maxNewAtomsPerChapter`; `atomChapterSpikes` 0.
+- Forward references: **50 -> 48**. The chapter contributes none, and teaching
+  *midi*/*minuit* separately retired two that existed before.
+- Measurable French lessons: **99 -> 108**.
+- Culture claims: **16 -> 17** (English *noon* is *nōna hōra*, "the ninth hour,"
+  which drifted from mid-afternoon to midday).
+- The book compiles under XeLaTeX with `missing_character = 0`, and the rendered
+  pages were read.
+
+### It closes an exam point, because it finishes the job
+
+**A1-LEX-07 (telling the time)** moves from unmapped to covered. It could not
+have been claimed before at any wording of the probe: the hand-written chapter
+stopped at whole hours. The probe lists **all seven** atoms rather than a
+sample, because a candidate asked for half past does not get partial credit for
+o'clock. French A1 exam coverage: **26/74 -> 27/74**.
+
+One gate finding worth recording. `info-dump` flagged the practice tables as
+**verb paradigms**, because every row began *Il est …* and its French person
+list contains *il*. The tables are clock times, not a paradigm — but the fix
+improves them anyway: the repeated *Il est* is now a one-line instruction above
+the table (*"put each of these into the frame"*), and the rows carry only what
+differs.
+
+## French joins Spanish at zero cross-chapter number references, before the split
+
+Three of the remaining hand-written French chapters cannot be authored inside
+`maxNewAtomsPerChapter` at one atom per new word: chapter 9 carries **twelve
+months and four seasons**, chapter 12 carries **ten numbers**, and chapter 16
+carries a **six-person paradigm plus the verb list that selects it**. Length is
+never a cost here — `chapter-policy.json` says so in its own note — so those
+become **more chapters** rather than denser ones, and every French chapter after
+a split point renumbers.
+
+`chapter-references.test.ts` says what to do about that, and says it plainly:
+
+> Spanish is held at ZERO because Spanish is the track that actually renumbers …
+> **When a track starts splitting chapters, clear it first and move it to zero.**
+
+French was at **32**. It is now at **0**, cleared *before* the first split rather
+than after the first rot.
+
+### The fix is never a fresher number
+
+A sentence like *"you learned this in Chapter 14"* is correct when written and
+wrong three renumbers later, and **nothing fails** — the reader simply follows a
+pointer into the wrong chapter. So every one of the 32 was rewritten to **name
+the thing**:
+
+| was | is |
+|---|---|
+| "from Chapter 1: **bien**" | "from your first greetings: **bien**" |
+| "the *tu/vous* choice you learned in Chapter 2" | "the *tu/vous* choice you learned when you gave your name" |
+| "in Chapter 5 you learned **habiter**" | "among your first verbs you learned **habiter**" |
+| "Chapter 28 handed you *le lait* and *le sucre*" | "the café chapter handed you *le lait* and *le sucre*" |
+| "the nasal vowel from Chapter 11's *pain*" | "the nasal vowel of *pain*, the bread" |
+| "(Chapter 17), was Roman soldiers' slang for a pot" | "was Roman soldiers' slang for a pot" |
+
+Where the number was pure decoration it is simply gone; where it was doing work,
+the work is now done by a description that cannot go stale.
+
+French is additionally pinned with its own `toBe(0)` rather than left to the
+shared ceiling. A ceiling of zero and an assertion of zero are the same number
+today and different promises: the assertion says the track is **cleared**, not
+merely not-growing.
+
+### Reading the page caught what the gate could not
+
+The gate counts `Chapter \d+` and cannot read. Two rewrites were wrong and only
+the compiled book showed it:
+
+- `FR-C31-ventre` glossed **oui** as *"(the plain no)"* — the replacement for a
+  bare "(Chapter 18)" pointer. *oui* is **yes**. The parenthetical carried no
+  information the sentence lacked and is deleted.
+- `FR-C14-avoir` read *"the aqua → eau you met with water"*, which is circular:
+  *eau* **is** water. Now "the *aqua* → **eau** behind the word for water."
+
+### Measured
+
+- French cross-chapter prose references: **32 -> 0**.
+- 26 lessons edited across chapters 2, 3, 4, 10, 12, 14, 15, 16, 17, 27, 28, 29,
+  30 and 31. No lesson ids, atoms, chapter numbers or ledger entries move: this
+  changes prose only, and is deliberately separable from the split it unblocks.
+- The book compiles under XeLaTeX with `missing_character = 0`, and the rewritten
+  pages were read.
+## Chapter 7 is generated, and the week arrives one day at a time
+
+Chapter 7 was hand-written LaTeX built from two schema-v1 lessons: one taught
+**five** day-names at once behind a four-column reveal table, the other taught
+the remaining two. Neither declared any atoms, so the chapter could not be
+generated and no lesson-level gate could see it.
+
+It is now **nine** schema-v2 lessons.
+
+### The measurement that sized this, and why the parity gap did not
+
+`handwritten_parity.py` scored chapter 7 at a gap of **one block**. That is a
+true count of LaTeX environments and a bad estimate of the work, because it
+counts *environments* and the debt is in *words*: a word taught in a paragraph
+inside a surviving `cousinweb` costs **zero blocks and a whole lesson**.
+
+So the chapter was sized a second way -- **count the French words the `.tex`
+teaches, against the lessons that own them.** Chapter 7 teaches eight: the seven
+days, and **la lune**, which the `.tex` glossed inside a parenthesis in a table
+cell and which no lesson owned at all. One block of gap; eight words with two
+lessons between them.
+
+`la lune` now has its own lesson, and it goes **first** -- so *lundi* arrives as
+a word the reader can take apart rather than a shape to memorise.
+
+### One new word per lesson
+
+`la lune`, then `lundi`, `mardi`, `mercredi`, `jeudi`, `vendredi`, `samedi`,
+`dimanche`, then the chapter practice. Every block of the hand-written prose is
+carried and several are promoted from an aside to the point of a lesson:
+
+- **the `-di` rule** -- every weekday ends in Latin *diēs*, "day" -- is now a
+  grammar lens in `FR-C07-lundi` rather than a sentence before a table. Half of
+  five words comes free, and the reader is told so before meeting them.
+- **`interpretatio germanica`** -- the Germanic peoples swapped their own gods
+  into the Roman week role for role, which is why *mardi* and *Tuesday* are the
+  same day sharing no sound -- is a typed culture claim owned by `FR-C07-mardi`,
+  and the three days after it apply the key instead of restating it.
+- **the weekend rewrite** -- *samedi* takes the **Sabbath** where English keeps
+  Saturn, *dimanche* the **Lord's day** where English keeps the Sun -- is two
+  lessons and two claims rather than one dense `cousinweb`.
+- **the `di-` that moved to the front** of *dimanche* now gets a grammar lens
+  that says the pattern flipped rather than broke.
+
+The chapter's closing French/English recap survives as a **two-column** table in
+the practice lesson, which the narrator can speak; the two four-column tables it
+replaces were refused as unspeakable.
+
+### Measured
+
+- Hand-written French chapters: **12 -> 11**.
+- Chapter atoms: **12**, exactly at `maxNewAtomsPerChapter`; French's
+  `atomChapterSpikes` stays at **0**.
+- Forward references: **50 -> 50**. The chapter contributes none.
+- Narration refusals: **54 -> 52**.
+- Measurable French lessons: **90 -> 99**.
+- Culture claims: **14 -> 16**.
+- The book compiles under XeLaTeX with `missing_character = 0`, and the rendered
+  pages were read: the day recap sets as a real two-column table, one day a row.
+
+## Chapter 6 is generated, and its ten numbers now arrive one at a time
+
+Chapter 6 was hand-written LaTeX built from two schema-v1 lessons. Each of those
+lessons taught **five numbers at once**, behind a four-column reveal table, and
+declared no atoms at all -- so `renderBookChapter` refused to generate from
+them, and every lesson-level gate reported on content no reader saw.
+
+It is now twelve schema-v2 lessons, and this is authoring rather than a format
+flip.
+
+### One new word per lesson
+
+`un`, `deux`, `trois`, `quatre`, `cinq`, `six`, `sept`, `huit`, `neuf`, `dix` --
+one number per lesson, each with its Latin parent, its English cousins and its
+own pronunciation note. Then two lessons that spend what the ten built:
+
+- **`FR-C06-mois-romains`** carries across the hand-written grammar lens that
+  explained why *septembre* to *décembre* say seven to ten and sit at nine to
+  twelve. It introduces no new French word; its job is to make four facts the
+  number lessons planted click together, so it practises those four atoms and
+  records the Roman-calendar fact as a culture claim.
+- **`FR-C06-practice`** is the chapter payoff, and it is now atom-scored against
+  every atom the chapter introduces rather than carrying the legacy schema-v1
+  note that said the payoff was authored rather than measured.
+
+### Nothing was dropped, and there is more than there was
+
+The hand-written chapter held **6 prose blocks** (2 `sounds`, 2 `cousinweb`,
+2 `grammarlens`). The generated chapter holds **26** (10 `sounds`,
+11 `cousinweb`, 5 `grammarlens`). Every block of the original writing is
+carried: the nasal *un*, the rounded *eu* and silent *x*, the *trois*/*tres*
+pair worn two ways from one Roman *trēs*, `cinque` on a die, the *six*/*dix*
+on-and-off ending, the *octō* → *oit* → *huit* road and the *oct-* that survived
+in *octobre*, the *dime* from *disme* ← *decima*, and the months two places out
+of place. French's hand-written chapter count falls **13 -> 12**; the parity
+number stays at 47 because Chapter 6's gap was already zero -- which is exactly
+why it was the safe one to take first, and why the twelve that remain are not.
+
+### Liaison is now a rule with a name, which closes an exam point
+
+The hand-written chapter mentioned the *six ans* → *see-z-ans* and *neuf ans* →
+*neu-v-ans* changes in passing, inside two `sounds` blocks. `FR-C06-six` now
+teaches liaison as a named rule with its own atom -- final consonant sounded
+when counting, silent before a consonant, back as a *z* before a vowel -- and
+`FR-C06-neuf` extends it to the *f* → *v* softening rather than minting a second
+atom for the same phenomenon.
+
+That is what a probe can resolve against, so **A1-PRON-03 (obligatory liaison)**
+moves from unmapped to covered. French A1 exam coverage: **25/74 -> 26/74**.
+
+### Measured
+
+- Chapter atoms: 12, exactly at `maxNewAtomsPerChapter`. French's
+  `atomChapterSpikes` stays at 0.
+- Forward references: **51 -> 50**. The chapter contributes none. The "Next:"
+  pointer at the end of each lesson names the next number in English rather than
+  in French, and the gender example uses *un jour* / *une nuit* from Chapter 1
+  instead of the *café* Chapter 28 owns.
+- Narration refusals: **56 -> 54**. The two wide reveal tables the narrator had
+  to refuse are gone.
+- The book compiles under XeLaTeX with `missing_character = 0`, and the rendered
+  pages were read.
+
 ## Chapters 3, 4 and 5 are generated from their lessons, not hand-written
 
 The standing directive is that no hand-written book chapter may remain: a

@@ -1,9 +1,0 @@
-{
-  "language": "kannada",
-  "chapter": 2,
-  "output": "kannada/book/chapters/ch02-introductions.tex",
-  "embeddedLessonIds": [
-    "KA-S111-vowel-sign-e",
-    "KA-S02-vowel-sign-u"
-  ]
-}

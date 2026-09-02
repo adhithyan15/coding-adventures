@@ -15,12 +15,42 @@ it("pins French modality", () => expectLanguageModality("french"));
 // 10 -> 13 culture claims: the three `culture` blocks those chapters carried only
 // in LaTeX (merci's three metaphors for gratitude, the comme ci comme ça shrug,
 // and travailler's Spanish twin) are now typed claims owned by a lesson.
+// 90 -> 99 lessons: retiring handwritten chapter 7. Its two schema-v1 lessons
+// taught five day-names and then two more, behind two wide reveal tables; they
+// are replaced by nine schema-v2 lessons -- la lune, then one day per lesson,
+// then the chapter practice. Net +7 (9 new, 2 retired). `la lune` earns a lesson
+// because the .tex taught it inside a parenthesis in a table cell and no lesson
+// owned it, which is the shape the block-gap measure cannot see.
+// 78 -> 90 lessons: retiring handwritten chapter 6. Its two schema-v1 lessons
+// each taught five numbers at once behind a wide reveal table; they are replaced
+// by twelve schema-v2 lessons -- one number per lesson, then the calendar
+// synthesis, then the chapter practice -- so the whole chapter is measurable and
+// the numbers arrive one at a time. Net +12 (14 new, 2 retired).
+// 13 -> 14 culture claims: the Roman-calendar claim (septembre to decembre still
+// count seven to ten because the old year began in March) lived only in the
+// hand-written grammarlens and is now owned by FR-C06-mois-romains.
+// 14 -> 16 culture claims: interpretatio germanica (the Germanic peoples swapped
+// their own gods into the Roman week, role for role) and the samedi/Saturday
+// swap (French kept the Roman gods on the weekdays and took the Sabbath for the
+// weekend; English did the reverse) both lived only in hand-written cousinweb
+// blocks and are now owned by FR-C07-mardi and FR-C07-samedi.
+// 99 -> 108 lessons: retiring handwritten chapter 8. Its two schema-v1 lessons
+// owned three words between them (heure, midi, minuit) for a chapter whose .tex
+// also taught `il est ... heures`, the une heure / deux heures agreement, and
+// named `et quart`, `et demie` and `moins le quart` while deferring them. None
+// of those was owned by any lesson, and none of them cost a prose block -- which
+// is the shape the block-gap measure cannot see. Nine lessons now own all of it,
+// the deferred three included: a reader who cannot say "half past" cannot tell
+// the time. Net +8 (9 new, 1 retired).
+// 16 -> 17 culture claims: English `noon` is Latin nona hora, "the ninth hour",
+// which drifted from mid-afternoon to midday; it lived only in a hand-written
+// culture block and is now owned by FR-C08-midi.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 78,
+    lessons: 108,
     idioms: 3,
     senses: 7,
-    cultureClaims: 13,
+    cultureClaims: 17,
     unitPrefix: "FR",
   }));
 
