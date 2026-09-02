@@ -7,6 +7,7 @@ chapter: 21
 type: word
 headword: ನಾಯಿ, ಬೆಕ್ಕು
 gloss: dog and cat — naayi is a solid, ancient native Dravidian root, no mystery at all; bekku is a DIFFERENT ancient Dravidian "wildcat" root, distinct from Tamil's everyday word for cat
+romanization: "nāyi, bekku"
 concept_tag: KA-ANIMALS
 prerequisites: [KA-C20-hannondu-ippattu]
 sounds: [kannada-vowel-sign-e, kannada-geminate-kk]

@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S125-letter-oo
 spine_node: SPINE-MEET-GREET
-sequence: 741
+sequence: 585
 delivery: script
-chapter: 34
+chapter: 29
 type: writing
 headword: "ಓ"
 gloss: the single character ಓ — recognised inside words you already say

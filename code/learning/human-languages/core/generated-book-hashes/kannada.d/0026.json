@@ -1,9 +1,10 @@
 {
   "language": "kannada",
   "chapter": 26,
-  "sourceHash": "fnv1a64:58d490c8ac53e31a",
+  "sourceHash": "fnv1a64:c0e7e5e384422040",
   "lessonIds": [
-    "KA-C26-belagge"
+    "KA-C26-belagge",
+    "KA-S130-letter-ii"
   ],
   "tex": "kannada/book/chapters/ch26-morning.tex"
 }

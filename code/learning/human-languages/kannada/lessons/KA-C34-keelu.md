@@ -13,7 +13,7 @@ prerequisites: [KA-C34-tegeduko]
 sounds: [kannada-vowel-sign-ee, retroflex-series]
 roots: [dravidian-keel-hear-ask]
 etymology_hook: "ಕೇಳು answers a Dravidian root reconstructed with both senses at once, 'to hear, to ask' — Tamil கேள் kēḷ, Malayalam കേൾക്കുക kēḷkkuka and Tulu kēṇuni all carry the pair, so the double job is inherited and not a Kannada quirk; Telugu is the sister that splits it, విను vinu for hearing against అడుగు aḍugu for asking, though the root does reach Telugu's own neighbours Gondi and Kui, so Telugu dropped a word rather than never having had one"
-reviews_of: [KA-C34-tegeduko, KA-C33-bare, KA-C33-oodu, KA-C07-numbers-6-10, KA-C09-kshamisi]
+reviews_of: [KA-C34-tegeduko, KA-C33-bare, KA-C33-oodu, KA-C07-hattu, KA-C09-kshamisi]
 duration:
   max_seconds: 285
 requires:

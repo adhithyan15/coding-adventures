@@ -9,7 +9,7 @@ work that had been blocked behind it could land in the same pass.
 
 ```
 hand-written chapters (tamil)     5 -> 0     (corpus 69 -> 64)
-script-closure violations        21 -> 0     (corpus 417 -> 396)
+script-closure violations        21 -> 0     (corpus 397 -> 376)
 never-taught glyphs                0 -> 0    (held)
 headwords without romanization     0 -> 0    (held)
 drivable reach                   208 -> 208  (held)
@@ -135,7 +135,7 @@ positions out. Filed as **HL-C246**; it is the next thing this track should do.
 
 * `grouped-shards.test.ts`: `handwritten.d` 69 → 64. That literal exists to see
   exactly this flip; its own comment says so.
-* `script-closure.test.ts`: the corpus ceiling, **498 → 396**. `main` had already
+* `script-closure.test.ts`: the corpus ceiling, **397 → 376**. `main` had already
   flipped this assertion from a floor to a ceiling for the same reason — the
   Marathi runway made a floor on debt fail because debt was paid — and kept a
   comparison canary (`violations > paceViolations * 5`) so the ceiling cannot
