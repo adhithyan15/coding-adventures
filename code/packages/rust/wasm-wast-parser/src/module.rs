@@ -2154,6 +2154,10 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         offset_expr: if is64 { vec![0x42, 0x00, 0x0B] } else { vec![0x41, 0x00, 0x0B] },
         function_indices,
         is_passive: false,
+        // `(table funcref (elem ...))`'s inline shorthand always desugars
+        // to an ordinary ACTIVE segment (an explicit offset of 0 into the
+        // table it just declared) -- never declarative.
+        is_declarative: false,
     });
     Ok(())
 }
@@ -2361,7 +2365,20 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
             function_indices.push(Some(resolve_idx(&ctx.func_names, f, "func")?));
         }
     }
-    ctx.module.elements.push(Element { table_index, offset_expr, function_indices, is_passive });
+    // `is_declarative` threads the `declare` keyword detected above
+    // through to `wasm-runtime::instantiate()` -- see `wasm_types::
+    // Element::is_declarative`'s own doc comment for why `is_passive`
+    // alone (true for BOTH this and a genuinely passive segment, by this
+    // struct's deliberate "no third variant" convention) isn't enough to
+    // tell `instantiate()` this segment must be marked dropped immediately
+    // rather than left resident for `table.init`.
+    ctx.module.elements.push(Element {
+        table_index,
+        offset_expr,
+        function_indices,
+        is_passive,
+        is_declarative,
+    });
     Ok(())
 }
 

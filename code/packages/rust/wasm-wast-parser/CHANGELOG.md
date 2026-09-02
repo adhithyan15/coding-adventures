@@ -1,5 +1,35 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.97 — 2026-09-01 — thread `build_elem`'s own `is_declarative` local through to `Element`
+
+Closes the exact gap this crate's own `build_elem` doc comment
+(pre-existing, see 0.1.28-ish history) already flagged as a real,
+deliberate simplification rather than an oversight: `wasm_types::Element`
+had no distinct field for "declarative" (only `is_passive: bool`, folding
+declarative segments into the same `is_passive: true` representation a
+genuinely passive segment uses), on the stated theory that "nothing in
+this repo's vendored corpus ever `table.init`s/`elem.drop`s a segment
+this parser marks declarative." That census turned out wrong: `wasm-
+wast-parser` 0.1.96 (previous entry) let `elem.wast` parse for the first
+time, and its own "Implicitly dropped elements" section does exactly
+that — `(elem $e declare func $f) ... (table.init $e ...)`, which must
+trap per spec but silently succeeded instead (see `wasm-runtime`'s own
+CHANGELOG for the full bug and fix, `wasm-types`'s for the new field
+itself).
+
+This crate's own change is purely mechanical: `build_elem` already
+computed a local `is_declarative` bool (from the `declare` keyword) to
+decide `is_passive`'s value — that same local now ALSO flows into the new
+`Element::is_declarative` field on the one real construction site
+(`ctx.module.elements.push(Element { .. })`), instead of being discarded
+after computing `is_passive`. The OTHER `Element` construction site in
+this file (`build_table_limits_and_elements`, the `(table funcref (elem
+...))` inline shorthand) always desugars to an ordinary active segment,
+so it sets `is_declarative: false` unconditionally. No parsing-shape
+change — a module that already parsed continues to parse identically;
+only the flag now threaded through actually changes any downstream
+behavior (in `wasm-runtime`, not here).
+
 ## 0.1.96 — 2026-09-01 — fix: `table.init`/`table.copy` folded-form optional-index abbreviations
 
 W36 ("slice 0" — `code/specs/W36-wasm-element-segment-exprs-list.md`'s own
