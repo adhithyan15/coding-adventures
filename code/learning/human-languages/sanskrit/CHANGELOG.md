@@ -56,10 +56,13 @@ stroke order is sourced and cited, never invented. The roadmap now says both.
 Script census, re-measured: **53 Devanagari characters shown, 48 taught, 5
 neither** (ऋ ङ ई ँ घ).
 
-Counters, re-measured by running the CLI rather than by arithmetic:
-`npm run plan` moves **8 → 9** written inventories and **792 → 830** uncovered
-points; the unmeasurable remainder falls **16 → 15** tracks. Sanskrit
-contributes exactly its 38.
+Counters, re-measured by running the CLI **on the merged tree** rather than by
+arithmetic: `npm run plan` moves **8 → 9** written inventories and **748 → 786**
+uncovered points; the unmeasurable remainder falls **16 → 15** tracks. Sanskrit
+contributes exactly its 38. The base moved under this branch while it was open —
+a Telugu tranche took the total 792 → 748 from the other direction — so the
+number was measured after the merge, not before it. This line has now moved
+529 → 686 → 793 → 792 → 748 → 786.
 
 Verified: human-language-data 124 test files / 1738 passing; all eleven
 `check:*` gates; language-ladder 39 files / 442 passing.

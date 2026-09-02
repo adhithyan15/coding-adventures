@@ -1,0 +1,21 @@
+{
+  "chapter": 80,
+  "title": "Wanting, Allowing, Wishing",
+  "label": "ch:te-wanting-allowing-wishing",
+  "canDo": "I can say what I want in Telugu, report what I think, give or refuse permission, invite somebody in, and offer congratulations.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TE-C80-congratulations",
+    "kind": "production",
+    "summary": "Complete TE-C80-congratulations and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C80-WISH-01",
+      "TE-LEX-C80-WISH-02",
+      "TE-LEX-C80-WISH-03",
+      "TE-LEX-C80-WISH-04",
+      "TE-LEX-C80-WISH-05"
+    ]
+  }
+}

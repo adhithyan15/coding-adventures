@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:17e0b7f4b711c3c2",
+  "lessonIds": [
+    "TE-C80-want",
+    "TE-C80-that",
+    "TE-C80-may",
+    "TE-C80-comein",
+    "TE-C80-congratulations"
+  ],
+  "tex": "telugu/book/chapters/ch80-wanting-allowing-wishing.tex"
+}

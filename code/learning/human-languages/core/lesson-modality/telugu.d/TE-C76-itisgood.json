@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C76-itisgood",
+    "language": "telugu",
+    "chapter": 76,
+    "sequence": 2650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d22247adcca853e"
+  },
+  "findings": []
+}

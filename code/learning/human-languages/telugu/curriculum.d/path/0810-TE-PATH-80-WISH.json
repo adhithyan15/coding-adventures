@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-80-WISH",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "TE-C80-want",
+    "TE-C80-that",
+    "TE-C80-may",
+    "TE-C80-comein",
+    "TE-C80-congratulations"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-80-WISH"
+  ],
+  "after": []
+}

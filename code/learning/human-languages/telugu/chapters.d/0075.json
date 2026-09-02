@@ -1,0 +1,21 @@
+{
+  "chapter": 75,
+  "title": "Today, Yesterday, When",
+  "label": "ch:te-today-yesterday-when",
+  "canDo": "I can say today, yesterday and before in Telugu, ask when something happens, and name a year.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TE-C75-year",
+    "kind": "production",
+    "summary": "Complete TE-C75-year and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C75-WHEN-01",
+      "TE-LEX-C75-WHEN-02",
+      "TE-LEX-C75-WHEN-03",
+      "TE-LEX-C75-WHEN-04",
+      "TE-LEX-C75-WHEN-05"
+    ]
+  }
+}
