@@ -142,4 +142,9 @@ table brain_part_function {
     source "The cerebrum is the part of the brain that receives and processes conscious sensation, generates thought, and controls conscious activity."
     locator "https://training.seer.cancer.gov/brain/tumors/anatomy/brain.html"
     trust authoritative
+    cites "The cerebellum controls the coordination of voluntary movement and receives sensory information from the brain and spinal cord to fine-tune the precision and accuracy of motor activity." locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    cites "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing." locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    cites "The hypothalamus controls hunger, thirst, and sleep." locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    cites "Sensory neurons bring sensory input from the body to the thalamus, which relays this information to the cerebrum." locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    cites "The hippocampus is the \"flash drive\" of the human brain and is often associated with memory consolidation and decision-making, but it is far more complex in structure and function than a flash drive." locator "https://www.ncbi.nlm.nih.gov/books/NBK482171/"
 }

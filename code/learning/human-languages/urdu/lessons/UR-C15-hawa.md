@@ -37,7 +37,7 @@ reviews_of: [UR-C15-dhoop, UR-C05-khuda]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT] -->
 
-[PAUSE 2s] Recall **دھوپ** — sunshine, an inherited dead end. This word
+[PAUSE 2s] Recall *dhūp* — sunshine, an inherited dead end. This word
 moves with the sunshine and the rain both, and its history takes a shape
 this book has not shown yet: not two roads from one root, but one word
 handed across two borrowings in a row.
@@ -47,7 +47,7 @@ handed across two borrowings in a row.
 
 > **ہوا** — *hawā* — **air, wind**
 
-> **آج ہوا چل رہی ہے۔** — *āj hawā chal rahī hai.* — "There's wind blowing
+> *āj hawā chal rahī hai.* — "There's wind blowing
 > today."
 
 **ہوا** is feminine.
@@ -57,9 +57,9 @@ handed across two borrowings in a row.
 
 **ہوا** is borrowed from Classical Persian *hawā* — but Persian did not
 invent it either. Persian itself borrowed the word from Arabic
-**هَوَاء** *hawā*. **خدا**, back in the take-leave chapter, came into
+**هَوَاء** *hawā*. *khudā*, back in the take-leave chapter, came into
 Urdu directly from Persian, inherited within Iranian the whole way.
-**دل** and **سفید** each split from one PIE root into two independent
+*dil* and *safed* each split from one PIE root into two independent
 roads, Iranian and Indo-Aryan. **ہوا** is a different shape again: a
 single word passed hand to hand, Arabic to Persian, Persian to Urdu — a
 loan of a loan, not a shared inheritance at all.
@@ -69,18 +69,18 @@ loan of a loan, not a shared inheritance at all.
 
 - [YOU SAY: **hawā** — wind; then **āj hawā chal rahī hai**]
 - [YOU NAME: three shapes a word's history can take — one root split two
-  ways (**دل**), a word carried straight through one language
-  (**خدا**), or borrowed twice in a row (**ہوا**)]
-- [YOU SAY: **بارش، دھوپ، اور ہوا** — rain, sunshine, and wind]
+  ways (*dil*), a word carried straight through one language
+  (*khudā*), or borrowed twice in a row (**ہوا**)]
+- [YOU SAY: *bārish, dhūp, aur hawā* — rain, sunshine, and wind]
 - [YOU CONNECT: **ہوا** ← Persian ← Arabic **hawā**, a loan of a loan]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN, UR-LEX-BAHAN, UR-LEX-DOST] -->
 
 [PAUSE 3s] What does **ہوا** mean, and is it masculine or feminine? (**Air,
-wind**; **feminine**.) How is **ہوا**'s history different from **دل**'s?
-(**دل split from one root into two roads; ہوا is one word borrowed
-twice in a row.**) Name your sister and your friend in Urdu. (**بہن**;
-**دوست**.)
+wind**; **feminine**.) How is **ہوا**'s history different from *dil*'s?
+(**Dil split from one root into two roads; ہوا is one word borrowed
+twice in a row.**) Name your sister and your friend in Urdu. (*bahan*;
+*dost*.)
 
 Sources: [Wiktionary: ہوا](https://en.wiktionary.org/wiki/%DB%81%D9%88%D8%A7).

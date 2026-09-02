@@ -65,7 +65,7 @@ history; the two words are not related.
 **\*náHs**, from Proto-Indo-European **\*néh₂s**, "nose." English **nose**
 comes from that very root. Where **کان**'s ancestry ran out unanswered —
 recall *karṇa*'s own origin was left unsettled last lesson — **ناک**'s does
-not: *nāk* and *nose* are genuine cousins, joining **بھائی** and *brother*
+not: *nāk* and *nose* are genuine cousins, joining *bhāī* and *brother*
 as this book's settled Indo-European matches.
 
 ## Guided Practice

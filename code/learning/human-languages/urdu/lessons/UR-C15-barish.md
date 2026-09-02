@@ -37,7 +37,7 @@ reviews_of: [UR-C14-koat]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KOAT, UR-REGISTER-ENGLISH-LAYER] -->
 
-[PAUSE 2s] Recall **کوٹ**, the modern English loan that closed the last
+[PAUSE 2s] Recall *koṭ*, the modern English loan that closed the last
 chapter. This chapter gives you a reason to wear it: four words for
 weather, the small talk that follows almost any "how are you."
 
@@ -67,7 +67,7 @@ as **لال**'s.
   ending]
 - [YOU CONNECT: **بارش**'s dead end is the same shape as **لال**'s —
   Persian, and no further]
-- [YOU SAY: **آج بارش ہے، اس لیے میرا کوٹ چاہیے۔** — "Today there's rain,
+- [YOU SAY: *āj bārish hai, is liye merā koṭ chāhiye.* — "Today there's rain,
   so I need my coat."]
 
 ## Wrap-up Recall
@@ -77,6 +77,6 @@ as **لال**'s.
 (**Rain**; **feminine**.) What two Persian pieces build the word? (**bār,
 "load/downpour," plus the -eš ending.**) Recall the three respect levels a
 single Urdu word for "you" once had to distinguish — name them. (**āp,
-tum, tū.**) Which letter in **حافظ** carries the *f* sound? (**ف.**)
+tum, tū.**) Which letter in **hāfiz** carries the *f* sound? (*fe*.)
 
 Sources: [Wiktionary: بارش](https://en.wiktionary.org/wiki/%D8%A8%D8%A7%D8%B1%D8%B4).

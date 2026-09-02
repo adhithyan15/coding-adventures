@@ -54,8 +54,12 @@ is **jā-**.
 
 “I go” in Urdu is two words after the pronoun, not one:
 
-> **میں جاتا ہوں** — *maiṅ jātā hūṅ* — **I go** (man speaking)
-> **میں جاتی ہوں** — *maiṅ jātī hūṅ* — **I go** (woman speaking)
+> *maiṅ jātā hūṅ* — **I go** (man speaking)
+> *maiṅ jātī hūṅ* — **I go** (woman speaking)
+
+The frame is printed the way you say it rather than the way it is spelled. The
+**t** of *jātā* and the **ū** of *hūṅ* both ride letters you have not been
+given yet, and a line you cannot decode is not reading practice.
 
 The first word is the stem **jā-** plus **-tā**. It says *going*, and it
 agrees with the **gender and number** of the person doing it: **-tā** for one

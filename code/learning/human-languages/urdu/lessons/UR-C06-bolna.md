@@ -51,18 +51,19 @@ From the right edge: **ب** *b*, then **و** carrying *o*, then **ل** *l*, then
 **ن** *n*, then **ا** long *ā*. Strip the **-nā** and the stem is **bol-**.
 
 **ب** is new, and it is worth one careful second. Its body is a single low
-scoop with **one dot below**. You have already read **پ** *p* in **آپ** *āp*,
-and **پ** is that identical scoop with **three dots below**. Same skeleton,
-different dot count, different consonant. Urdu builds much of its alphabet
-this way, so counting dots is a real reading skill and not a fussy detail.
+scoop with **one dot below**. Hold that skeleton in mind: the very next chapter
+adds *pe*, which is the identical scoop with **three dots below** — the *p* you
+already say in *āp*. Same skeleton, different dot count, different consonant.
+Urdu builds much of its alphabet this way, so counting dots is a real reading
+skill and not a fussy detail.
 
 ## Grammar Lens: put it in the frame
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-BOLNA] -->
 
 The stem takes the same two-agreement frame as before:
 
-> **میں بولتا ہوں** — *maiṅ boltā hūṅ* — **I speak** (man speaking)
-> **میں بولتی ہوں** — *maiṅ boltī hūṅ* — **I speak** (woman speaking)
+> *maiṅ boltā hūṅ* — **I speak** (man speaking)
+> *maiṅ boltī hūṅ* — **I speak** (woman speaking)
 
 Nothing new is being learned there. That is the point of a stem: the machine
 is already built, and each verb just walks into it.
@@ -77,7 +78,7 @@ settled, so treat it as a maybe rather than a fact.
 That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan
 and often short-rooted like this, while its formal and literary vocabulary
 was borrowed from Persian and Arabic and tends to be long, elegant, and easy
-to trace. Beside homely **bolnā** sits Persian-derived **گفتگو** *guftagū*,
+to trace. Beside homely **bolnā** sits Persian-derived *guftagū*,
 “conversation,” from Persian *guftan*, “to speak.” Both are fully Urdu. One
 is the floor of the house; the other is the ornament on it — and the flowing
 *nastaʿlīq* hand Urdu is traditionally written in belongs to that same
@@ -87,7 +88,7 @@ Persian inheritance.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-GRAMMAR-NA-INFINITIVE] -->
 
 - [YOU SAY: **bolnā** — to speak]
-- [YOU COUNT: **ب** one dot below, **پ** three dots below]
+- [YOU COUNT: **ب** one dot below — and say what the three-dot version will be]
 - [YOU SAY: **maiṅ boltā hūṅ**, then **maiṅ boltī hūṅ**]
 - [YOU SORT: **bolnā** inherited, **guftagū** borrowed]
 
