@@ -174,8 +174,20 @@ refuses to launch when the base policy is absent.
 ### S-I2 — the agent's channel reaches the broker, not the supervisor
 
 The channel is the agent's entire view of the outside world. It carries
-`chief-agent-stdio-v1` (S-K4) and therefore occupies stdin, stdout, and
-stderr; no fourth descriptor is inherited (S-I3). It does not reach the
+`chief-agent-stdio-v1` (S-K4) on stdin and stdout; no fourth descriptor is
+inherited (S-I3).
+
+**fd 2 is decided here rather than derived.** It is bound to a broker-side sink
+(or `/dev/null`) that is never read as protocol. It is not the protocol stream:
+runtime diagnostics — Python tracebacks, Node warnings, glibc assertion
+messages — would otherwise be injected mid-frame into the broker's input. Nor
+does it go to the supervisor, which would contradict this rule's own headline
+claim by opening an unmediated agent-to-supervisor byte channel. Nor is it left
+closed, because the runtime's first `open()` would then land on fd 2 and
+stderr writes would corrupt it.
+
+The protocol is length-framed, and a frame that fails to parse **terminates the
+channel** rather than resynchronizing. It does not reach the
 supervisor. An agent that discovers the supervisor's address, socket path, or
 PID can do nothing with the knowledge, because it has no syscall with which to
 act on it.
@@ -224,10 +236,23 @@ package. Python executes `.pth` files in `site-packages`, plus
 `NODE_OPTIONS=--require ./x.js`. Every ELF/Mach-O runtime honours `LD_PRELOAD`,
 `LD_AUDIT`, `DYLD_INSERT_LIBRARIES`, `GCONV_PATH`.
 
-The environment allowlist is therefore **deny-list-first**. Loader and
-interpreter control variables — `LD_*`, `DYLD_*`, `PYTHON*`, `NODE_OPTIONS`,
-`RUBYOPT`, `PERL5OPT`, `JAVA_TOOL_OPTIONS`, `_JAVA_OPTIONS`, `GCONV_PATH`,
-`LOCPATH` — may never be granted. A manifest naming one is rejected at sign
+The environment passed to an agent is therefore a **closed set defined by the
+supervisor**: anything not enumerated is dropped. It is not a manifest-extensible
+allowlist with a deny-list overlay, because a deny-list is an enumeration and
+this spec claims language-agnosticism by construction — a new runtime would
+need a new deny-list entry before it was safe. Grantable names are a fixed set
+containing no loader, interpreter, profiler, locale, or module-search variable.
+
+A deny-list is retained only as a redundant second check. It must name at least
+`LD_*`, `GLIBC_TUNABLES` (the CVE-2023-4911 vector), `DYLD_*`, `PYTHON*`,
+`NODE_OPTIONS`, `NODE_PATH`, `ELECTRON_RUN_AS_NODE`, `BASH_ENV`, `ENV`,
+`SHELLOPTS`, `PS4`, `RUBYOPT`, `RUBYLIB`, `GEM_HOME`, `GEM_PATH`, `PERL5OPT`,
+`PERL5LIB`, `CLASSPATH`, `JAVA_TOOL_OPTIONS`, `_JAVA_OPTIONS`,
+`JDK_JAVA_OPTIONS`, `DOTNET_STARTUP_HOOKS`, `CORECLR_PROFILER`, `COMPlus_*`,
+`DOTNET_*`, `LUA_PATH`, `LUA_CPATH`, `JULIA_LOAD_PATH`, `R_PROFILE`,
+`GCONV_PATH`, and `LOCPATH` — every one of which achieves code execution during
+runtime initialization. The list is illustrative of the closed set's necessity,
+never a substitute for it. A manifest naming one is rejected at sign
 time and again at launch. The shim runs before site and module initialization
 (`-S -I` for CPython, no preload for Node), or the runtime image is a
 supervisor-owned tree the agent cannot write. Spec 13's Layer 0b is what keeps
@@ -269,10 +294,39 @@ the launch fails.**
 
 Compiled agents (Go, Rust) require none of this and get deny-all at `exec`.
 
-**S-I4d — the shim is supervisor-owned.** A shim linked by the agent package
-is inside the agent's trust domain and may simply decline to call itself —
-the exact error S-K1 identifies for the broker. The shim is digest-pinned and
-injected by the supervisor.
+**S-I4d — the shim is supervisor-owned, and the mechanism is a pre-exec
+wrapper.** A shim linked by the agent package is inside the agent's trust
+domain and may simply decline to call itself — the exact error S-K1 identifies
+for the broker. But naming the constraint is not enough: S-I4a forbids
+`LD_PRELOAD`/`LD_AUDIT`/`DYLD_INSERT_LIBRARIES`, S-I4d forbids linking, and no
+Unix has an exec-time sandbox application — `pledge`, `cap_enter`, `seccomp`,
+and `landlock_restrict_self` are all *self*-applied. An implementer facing
+three mutually-exclusive constraints picks the convenient escape and rebuilds
+the defect.
+
+The mechanism is therefore stated, not left open. The supervisor `exec`s a
+**supervisor-owned wrapper**, passing the agent binary as a pre-opened
+descriptor. The wrapper, in its own process, in this order:
+
+1. sets `PR_SET_NO_NEW_PRIVS` (aborting on failure, per S-P1),
+2. runs `close_range` over everything but the channel (S-I4c),
+3. installs the base deny policy (S-I1a) while single-threaded (S-I4b),
+4. runs the S-P4 self-test,
+5. `fexecve`s the agent descriptor.
+
+This works because sandbox state survives `execve`:
+
+| Mechanism | Survives `execve`? |
+|---|---|
+| seccomp filter (with `NO_NEW_PRIVS`) | yes |
+| Landlock domain | yes |
+| `pledge`/`unveil` (with `execpromises`) | yes |
+| Capsicum capability mode | yes — and `execve` **by path** is then unavailable, so `fexecve` is mandatory, not preferred |
+
+"Sandboxed at `exec`" in S-I4c therefore means: **the first agent-supplied
+instruction executes with the plan already installed.** That is achievable on
+every platform here, including the BSDs where S-I4c forbids an in-process
+initialization window.
 
 ### S-I5 — the agent never holds channel keys, and principals are separated
 
@@ -285,7 +339,23 @@ Under a shared UID an agent reaches broker memory via `ptrace(PTRACE_ATTACH)`,
 supervisor, and sibling agents.
 
 Agent, broker, and supervisor are therefore distinct OS principals: distinct
-UID on Unix, distinct AppContainer SID on Windows. Broker and supervisor set
+UID on Unix, distinct AppContainer SID on Windows.
+
+**The privilege to allocate them must be provisioned, and its absence is a
+launch failure — not a downgrade.** Allocating a distinct UID needs
+`CAP_SETUID` or a delegated subuid/subgid range, which sits awkwardly beside
+S-P1's "Privilege: none" column for the sandbox primitives themselves. Those
+are different privileges at different times and the spec must say so: the
+**supervisor** runs privileged, or is given a delegated subuid/subgid range at
+install time; the **agent** needs no privilege for any S-P1 primitive. The
+allocated principal is carried in the plan as a first-class term, exactly as
+S-I1a requires of the base policy, and inability to allocate distinct
+principals for agent, broker, and supervisor fails the launch under S-P3.
+
+Without this the natural unprivileged implementation runs every agent and the
+broker under one UID, S-I5's confidentiality claim is void **by its own terms**,
+S-I7 fails wholesale, and nothing in S-P3 catches it — the launch proceeds and
+the audit record says "sandboxed". Broker and supervisor set
 `PR_SET_DUMPABLE=0`. `ptrace`, `process_vm_readv`, `process_vm_writev`, and
 `kill` are denied in every agent filter (S-I1), and `/proc` and `/sys` are
 unreachable in the agent's domain. S-I5's confidentiality claim is not restated
@@ -298,12 +368,22 @@ available only by asking. A capability may be promoted to a **direct grant**
 only where the OS can enforce it narrowly and a measurement justifies it —
 brokering per-read over a large data directory is the motivating case.
 
-**Never eligible for promotion:** any `ffi:*`, any `proc:exec`, and any
-`fs:write` whose target intersects the runtime image, the shim, the broker
-binary, the agent package directory, or the manifest. Each of those nullifies
-S-I4 — the agent rewrites what the shim will load on the next launch.
-Promotion requires an OS-level target-exact grant; wildcard targets are never
-promotable.
+**Never grantable, direct or brokered:** any `fs:write` whose target
+intersects the runtime image, the shim, the broker binary, the agent package
+directory, or the manifest. A manifest declaring one is rejected at sign time
+and again at launch.
+
+This is a bar on the *capability*, not on promotion, and the distinction is the
+whole point. Barring these from promotion alone would pin them to **brokered** —
+and brokered means the supervisor-privileged broker performs the write on the
+agent's behalf. The agent asks the broker to rewrite the shim, the broker
+consults the signed manifest, sees the capability declared, and complies. The
+harm S-I4 exists to prevent is target-dependent and mechanism-independent, so
+the bar must be too.
+
+**Never eligible for promotion to direct:** any `ffi:*` and any `proc:exec`
+(see S-K6, which governs what brokering them may mean). Promotion requires an
+OS-level target-exact grant; wildcard targets are never promotable.
 
 Every promotion is recorded in the manifest and visible in review. The default
 direction matters: brokered-by-default fails closed, and a direct-by-default
@@ -370,16 +450,79 @@ it.
 The broker acts with supervisor privilege on agent-supplied arguments. It is
 the confused deputy in this design and is reviewed as one.
 
-- **Path arguments** are resolved with `openat2` using
-  `RESOLVE_BENEATH | RESOLVE_NO_SYMLINKS | RESOLVE_NO_MAGICLINKS` against a
-  pre-opened root descriptor. A validated path is never re-resolved from a
-  string afterwards.
+- **Path arguments** are resolved beneath a pre-opened root descriptor, by the
+  platform's own primitive. A validated path is never re-resolved from a string
+  afterwards. `openat2` is Linux-only and this spec implements BSD first, so the
+  rule is stated per platform rather than left to the implementer — the default
+  reach is `realpath()` + `open()`, which is a TOCTOU on a supervisor-privileged
+  process taking agent-supplied paths, i.e. the confused deputy S-K5 exists to
+  prevent, and it fails silently.
+
+  | Platform | Primitive |
+  |---|---|
+  | Linux ≥ 5.6 | `openat2` with `RESOLVE_BENEATH \| RESOLVE_NO_SYMLINKS \| RESOLVE_NO_MAGICLINKS` |
+  | FreeBSD ≥ 13 | `O_RESOLVE_BENEATH`, or capability-mode `openat` from a rights-limited directory descriptor |
+  | OpenBSD | `unveil`-confined `openat` with `O_NOFOLLOW` on every component |
+  | macOS ≥ 12 | `openat` with `O_NOFOLLOW_ANY` |
+  | Windows | `FILE_FLAG_OPEN_REPARSE_POINT` plus a normalized-prefix check |
+
+  Absence of a beneath-resolution primitive is a launch failure under S-P3, not
+  a soft fallback.
 - **Requests are length-bounded and rate-limited**, per agent.
 - **Parsing is total.** Agent-supplied JSON and base64 are decoded by a parser
   that cannot be driven to unbounded allocation or recursion.
 - **The broker never returns a descriptor to the agent** over `SCM_RIGHTS`
-  unless that grant is itself a declared direct capability. Otherwise
-  brokered-by-default silently becomes direct.
+  unless that grant is itself a declared direct capability — and the descriptor
+  is attenuated before transfer. Passed descriptors are **regular files only,
+  never directories**: a directory descriptor hands over the whole subtree via
+  `openat`, permanently, and invisibly to Landlock, which mediates path
+  resolution rather than held descriptors. Under Capsicum that is exactly the
+  whole-filesystem escalation S-I4c warns about, reintroduced through the
+  sanctioned path. Descriptors carry the exact rights the capability names and
+  no more, never execute rights, and are `cap_rights_limit`ed before transfer
+  on FreeBSD.
+- **The broker's pre-opened roots are supervisor-chosen** and are proven
+  disjoint from S-I6's never-grantable set at broker start, before any request
+  is served. A root that *is* the agent package directory makes beneath-resolution
+  vacuous.
+
+### S-K6 — a brokered request may never yield authority the agent could not hold directly
+
+This is the invariant that makes brokering safe, and it does not hold by
+construction. S-I6 brokers by default; barring a class from *direct* grant
+therefore pins it to *brokered*, where the operation is performed by the one
+process holding the channel keys (S-I5), the vault path, and — if the broker is
+per-supervisor — every other agent's channel. For two capability classes that
+inverts the boundary completely.
+
+**`ffi:*` and every `dlopen`-shaped capability are `Unsupported` by default and
+are never executed in the broker's address space, under any circumstances.**
+Calling an agent-chosen native function with agent-chosen arguments inside a
+supervisor-privileged process is a complete Layer 7 defeat reachable through a
+declared, reviewed, hardware-key-approved capability. Where supported at all,
+such a call runs in a fresh helper launched under a plan at least as strict as
+the requesting agent's, as the **agent's** principal.
+
+**Brokered `proc:exec` spawns only through the same `spawn_verified` path used
+for agents**: supervisor-owned wrapper, the agent's principal, a sandbox plan
+that is a subset of the requester's, and targets restricted to a
+manifest-declared digest-pinned set. Never `PATH`-resolved. A broker-spawned
+child must not inherit the broker's principal or its unsandboxed state.
+
+### S-K7 — the broker is itself contained
+
+S-I3's descriptor discipline applies to **every** supervisor-launched process,
+the broker included: it does not inherit the supervisor's descriptor table —
+vault handles, audit-log descriptors, other agents' channels.
+
+The broker runs under its own sandbox plan, holding no authority beyond the
+union of the capabilities its agents declare.
+
+Whether there is one broker per agent or one per supervisor is therefore a
+**blast-radius** decision before it is a capacity one: it determines whether an
+S-K5 parsing defect compromises one agent or all of them. Per-supervisor is
+admissible only if the broker is internally compartmented per agent; otherwise
+per-agent is required.
 
 ---
 
@@ -467,7 +610,7 @@ The current lowering violates this — `lower_openbsd` maps `Category::Net` and
 `Category::Proc` to `pledge`/`Advisory`, and `lower_linux` emits `Advisory` for
 wildcard `fs` and for `time`. OpenBSD is implemented first in the build order
 and is where the lowering is most advisory, so this rule is a precondition of
-step 2, not a later cleanup.
+step 3, not a later cleanup.
 
 ### S-P3 — a platform may not silently degrade
 
@@ -486,10 +629,24 @@ S-P3 requires loud failure when a platform *cannot* enforce. This rule requires
 positive confirmation that enforcement *is* live, because the failures in
 S-I1a, S-I4b, and S-P1's return-value checks are otherwise silent.
 
-Immediately before transferring control, the shim performs a **negative
-self-test**: it attempts one operation from each denied class and requires the
-expected `EPERM`/`EACCES`/kill. Any success aborts the launch. The result is
-recorded in the launch audit record.
+The base filter's default action is `SECCOMP_RET_KILL_PROCESS` (S-P1 item 5).
+A self-test that probed such a syscall would die rather than report, so the
+launch-time and CI halves are separated rather than conflated:
+
+- **At launch**, the wrapper probes only a narrow set of classes deliberately
+  mapped to `SECCOMP_RET_ERRNO` and named in the plan, and requires the
+  expected `EPERM`/`EACCES`. Any success aborts the launch.
+- **In CI**, the full-coverage negative test runs in the Layer 6 harness, where
+  dynamic verification already lives and a killed process is an expected
+  outcome.
+
+Demoting every denied syscall to `RET_ERRNO` so a single probe can cover
+everything is not admissible: it loses the crash signal, lets an attacker
+enumerate the filter at leisure, and is dangerous wherever a caller ignores a
+return value. Forking a probe child is likewise barred by S-I4c.
+
+The audit record states which classes were verified at launch and which only in
+CI, so it does not overclaim.
 
 ---
 
@@ -588,6 +745,12 @@ through S-I3 before two weeks are spent on Windows.
 
 Steps 1-4 are the smallest useful increment: they give compiled agents a real
 OS boundary on Linux, which is where CI runs.
+
+**No step before 6 is deployable outside a single-tenant CI runner.** Principal
+separation (S-I5, S-I7) and broker hardening (S-K5, S-K6, S-K7) land at step 6;
+before it, S-I5's confidentiality claim is void by its own terms and the
+confused-deputy surface is unhardened. `spawn_verified` wiring (step 9) is the
+only supported entry point for a multi-agent deployment.
 
 ---
 
