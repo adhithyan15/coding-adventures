@@ -17,9 +17,6 @@ The letters in this word.
 The word, taken apart.
 പേര് (pēru, "name") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Telugu pēru, a cousin of Kannada hesaru (p becomes h). Being Tamil's closest sister, Malayalam keeps the native word, not Sanskrit nāma (Hindi nām, English name).
 
-Sounds you'll need.
-പ (pa) + േ (ē) (the ē-sign) becomes പേ (pē); ര് (bare r, with the chandrakkala). Read പേ, ര് becomes pēru.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "pēru"]
@@ -118,9 +115,6 @@ The letters in this word.
 
 The word, taken apart.
 എന്റെ (enṟe) means "my." It belongs to Malayalam's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for "I" in its own lesson; today you only need enṟe.
-
-Sounds you'll need.
-എ (independent e) + the conjunct ന്റെ (nṟe) becomes enṟe.
 
 Guided Practice.
 [pause 1 second]
@@ -225,9 +219,6 @@ Here's the point: Tamil, Kannada, and Telugu all use the zero copula — no word
 Grammar Lens: the verb comes last.
 Like Hindi's hai (and unlike Tamil), āṇŭ closes the sentence — Malayalam is subject–object–verb: "my name Arun is." (Malayalis sometimes drop āṇŭ in fast speech, but the full form keeps it.)
 
-Sounds you'll need.
-ആ (ā) (independent long ā) + ണ് (bare retroflex ṇ) becomes āṇŭ.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "āṇŭ"]
@@ -319,7 +310,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the three atoms — including the copula āṇŭ that Tamil lacks.
 
-The phrase, assembled.
+The phrase, taken apart.
 enṟe (my) + pēru (name) + your name + āṇŭ (is).
 എന്റെ പേര് … ആണ് (enṟe pēru … āṇŭ) = "my name … is" = "my name is…"
 Enṟe pēru Arun āṇŭ. becomes "My name is Arun."
@@ -356,9 +347,6 @@ The word, taken apart.
 
 Grammar Lens: respect by the plural.
 nī (familiar) vs. niṅṅaḷ (respectful, literally plural) — the family's shared politeness-by-plural, same idea as French vous. For a first meeting, niṅṅaḷ.
-
-Sounds you'll need.
-നീ (n=i); നിങ്ങൾ (niṅṅaḷ).
 
 Guided Practice.
 [pause 1 second]
@@ -457,9 +445,6 @@ The letters in this word.
 The word, taken apart.
 എന്ത് (entŭ, "what") is native Dravidian, on the interrogative stem yā-/e- — the same Dravidian question-root as Tamil eṉṉa and Telugu ēmiṭi, heading Malayalam's question family: entŭ (what), ār (who), eviṭe (where).
 
-Sounds you'll need.
-എ (e) + the conjunct ന്ത് (ntŭ) becomes entŭ.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "entŭ"]
@@ -479,7 +464,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the question — your + name + what-is. And notice the copula hiding in the last word.
 
-The phrase, assembled.
+The phrase, taken apart.
 നിന്റെ (ninṟe, "your") = the possessive of nī ("you").
 എന്താണ് (entāṇŭ) = entŭ (what) + āṇŭ (is), fused into one.
 നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) = literally "your name what is?"
@@ -503,14 +488,16 @@ What two words fuse into എന്താണ്, and how does this differ from th
 Lesson 16 of 20.
 സന്തോഷം (santōṣam) — "joy," and "pleased to meet you".
 
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: two new shapes to notice until you have stopped, and I will say so again when we reach it.
+
 Warm-up.
 [pause 2 seconds]
 The warm close — a Sanskrit word even in native-loving Malayalam.
 
-The word you can use.
+The exchange — the words you can use.
 സന്തോഷം (santōṣam) literally means "joy." At the end of a short introduction, it can stand by itself for "pleased to meet you." A fuller phrase exists, but it needs words and grammar you have not learned yet; the one-word version is complete and useful now.
 
-Two new shapes to notice.
+Script: two new shapes to notice.
 Keep സന്തോഷം (santōṣam) visible. Most of its shapes have already appeared in this chapter. Point to just two new ones:
 ഷ carries the ṣa sound near the end.
 ോ is the long ō vowel sign attached to the consonant before it.
@@ -631,7 +618,11 @@ Chapter 2 — the introduction, whole.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script check — the letters of this chapter until you have stopped, and I will say so again when we reach it.
 
-The dialogue.
+Warm-up.
+[pause 2 seconds]
+No new words. The whole introduction, in the order two people actually say it.
+
+The exchange.
 [a table of 4 rows, read aloud]
 എന്റെ പേര് മീരാ ആണ്. (enṟe pēru Mira āṇŭ) means My name is Mira.
 നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) (ninṟe pēru entāṇŭ) means What's your name?

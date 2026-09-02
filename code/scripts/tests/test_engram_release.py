@@ -57,14 +57,45 @@ class ValidateIdentifiersTests(unittest.TestCase):
 
 
 class ArtifactNamesTests(unittest.TestCase):
-    def test_names_the_web_payload(self) -> None:
+    def test_names_the_web_and_desktop_payloads(self) -> None:
         self.assertEqual(
-            engram_release.artifact_names("0.3.0"), ["engram-web-v0.3.0.zip"]
+            engram_release.artifact_names("0.4.0"),
+            [
+                "engram-web-v0.4.0.zip",
+                "engram-desktop-linux-v0.4.0.AppImage",
+                "engram-desktop-macos-v0.4.0.zip",
+                "engram-desktop-windows-v0.4.0.exe",
+            ],
         )
+
+    def test_desktop_names_match_the_declared_set(self) -> None:
+        # The publish job asserts the files on disk equal `artifact_names`, so
+        # a per-platform name that drifts from that list turns a successful
+        # build into a failed release -- and vice versa, a release that quietly
+        # ships less than it claims.
+        declared = set(engram_release.artifact_names("0.4.0"))
+        for platform in engram_release.DESKTOP_TARGETS:
+            self.assertIn(
+                engram_release.desktop_artifact_name("0.4.0", platform), declared
+            )
+
+    def test_macos_ships_a_zip_not_a_dmg(self) -> None:
+        # Deliberate: signing and notarisation need credentials this build does
+        # not have, and macOS refuses an unsigned dmg with an error that reads
+        # like file corruption. A zip is honest about what it is.
+        self.assertTrue(
+            engram_release.desktop_artifact_name("0.4.0", "macos").endswith(".zip")
+        )
+
+    def test_rejects_an_unknown_platform(self) -> None:
+        with self.assertRaises(ValueError):
+            engram_release.desktop_artifact_name("0.4.0", "solaris")
 
     def test_rejects_an_invalid_version(self) -> None:
         with self.assertRaises(ValueError):
             engram_release.artifact_names("0.3")
+        with self.assertRaises(ValueError):
+            engram_release.desktop_artifact_name("0.3", "linux")
 
 
 def _write_bundle(

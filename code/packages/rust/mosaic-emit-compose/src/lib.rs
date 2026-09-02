@@ -101,4 +101,7 @@
 
 pub mod pipeline;
 
-pub use pipeline::{from_pipeline, PipelineEmitError, PipelineEmitResult};
+pub use pipeline::{
+    compose_signature_slot_cost, from_pipeline, needs_props_object, PipelineEmitError,
+    PipelineEmitResult, PROPS_GROUP_SIZE,
+};

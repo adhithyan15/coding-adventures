@@ -207,11 +207,11 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
     // The handwritten count STAYS PINNED, and deliberately so — see the note
     // above on why this particular literal is not part of the write-lock.
-    // 66 -> 63: french chapters 3, 4 and 5 were retired into `targets.d`, the
-    // first three of French's sixteen handwritten chapters to be generated from
-    // their lessons. This literal is the ONLY place a retirement shows up,
-    // which is the point of pinning it.
-    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(63);
+    // This literal is the ONLY place a chapter retirement shows up, which is
+    // the point of pinning it — and so every track retiring one lands here.
+    // This branch retires french chapters 3, 4 and 5, the first three of
+    // French's sixteen, into `targets.d`.
+    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(58);
     // The total is chapter-scaled, so it is proved against the independently
     // authored `chapters.d` instead.
     expect(
@@ -249,8 +249,8 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    // 66 -> 63 for the french chapter 3, 4 and 5 retirement.
-    expect(identities.handwritten.size).toBe(63);
+    // This branch removes three of them: french chapters 3, 4 and 5.
+    expect(identities.handwritten.size).toBe(58);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
     );
