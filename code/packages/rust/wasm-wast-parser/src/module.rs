@@ -3493,9 +3493,31 @@ fn encode_stream_instr(
             // keyword list. Defaults to table 0 when absent, matching
             // every other MVP module (real corpus precedent:
             // `table_copy.wast`/`table_init.wast` use this form
-            // pervasively in FOLDED syntax; no vendored file needs it in
-            // this flat/stream form, but the parse shape is identical).
-            let has_table_token = following.first().is_some_and(|a| a.as_atom().is_some());
+            // pervasively in FOLDED syntax).
+            //
+            // Real corpus regression found (W37/`select.wast`'s own
+            // "Flat syntax" section, `unreachable select call_indirect
+            // select`): in the FLAT/STREAM form, `call_indirect` with NO
+            // table token and NO immediates at all is followed directly
+            // by the NEXT bare-atom instruction (here, a second
+            // `select`) -- and a bare atom is indistinguishable from a
+            // real table token by SHAPE alone (both are plain
+            // `SExpr::Atom`s). Unlike the folded form (where the operand
+            // list is unambiguously delimited by parens), this flat form
+            // has no such delimiter, so the previous shape-only check
+            // misidentified that trailing `select` as `call_indirect`'s
+            // own table-index token and failed trying to resolve it as
+            // one. Distinguishing "really a table token" from "the next
+            // instruction's name" needs a CONTENT check, not just a
+            // shape check: attempt the same resolution `resolve_idx`
+            // would do (a `$name` lookup or a plain numeral), and only
+            // treat it as a table token if that actually succeeds --
+            // exactly what a real token would always do, and what an
+            // arbitrary instruction name (never a `$`-prefixed
+            // identifier, never a bare numeral) never does.
+            let has_table_token = following
+                .first()
+                .is_some_and(|a| a.as_atom().is_some() && resolve_idx(&icx.module.table_names, a, "table").is_ok());
             let table_idx = if has_table_token {
                 resolve_idx(&icx.module.table_names, &following[0], "table")?
             } else {
@@ -3602,10 +3624,19 @@ fn encode_stream_instr(
             out.extend(bits.to_le_bytes());
             Ok(1)
         }
+        // Flat/stream form of the same typed-`select` shape
+        // `encode_select_folded` handles for folded syntax -- see
+        // `collect_leading_select_result_types`'s own doc comment for the
+        // real grammar and the "zero or more, concatenated" clause-count
+        // rationale, and `encode_select_stream`'s own doc comment for why
+        // this is a single function call, not inlined here (same "hot
+        // recursive path, debug-build stack frame size" reasoning as
+        // `encode_flat_instr`'s matching arm).
+        "select" => encode_select_stream(following, info, icx, out),
         // Every other opcode (control returns/unreachable/nop, parametric
-        // drop/select, and the ~150 no-immediate numeric/comparison/
-        // conversion instructions) takes no immediates at all in EITHER
-        // syntax -- just the bare opcode byte.
+        // drop, and the ~150 no-immediate numeric/comparison/conversion
+        // instructions) takes no immediates at all in EITHER syntax --
+        // just the bare opcode byte.
         _ => {
             out.push(info.opcode);
             Ok(0)
@@ -5151,11 +5182,24 @@ fn encode_flat_instr(
             out.extend(bits.to_le_bytes());
             Ok(())
         }
-        "return" | "unreachable" | "nop" | "drop" | "select" => {
+        "return" | "unreachable" | "nop" | "drop" => {
             encode_instr_list(args, icx, out)?;
             out.push(info.opcode);
             Ok(())
         }
+        // Reference-types proposal's EXPLICITLY TYPED `select` -- see
+        // `encode_select_folded`'s own doc comment for the real grammar
+        // and arity rationale. Deliberately just a single function call
+        // in this arm, no locals of its own: `encode_flat_instr` sits on
+        // the hot recursive path every folded instruction funnels
+        // through (`encode_one` -> `encode_flat_instr` -> `encode_instr_
+        // list` -> `encode_one` -> ...), and a debug build sizes ITS
+        // stack frame for the union of every match arm's own locals --
+        // see the `"i32.load" | ...` arm's own doc comment above for the
+        // identical lesson (a real SIGABRT, `deeply_nested_folded_
+        // arithmetic_errors_cleanly_not_stack_overflow`, confirmed once
+        // before) already learned for that exact reason.
+        "select" => encode_select_folded(args, info, icx, out),
         _ => {
             // Every other opcode (the ~150 no-immediate numeric/comparison/
             // conversion instructions) is: recurse into folded operands,
@@ -5363,6 +5407,94 @@ fn resolve_leading_memidx_token<'e>(args: &'e [SExpr], icx: &InstrCtx) -> Result
         }
         _ => Ok((0, false, args)),
     }
+}
+
+/// Parse `select`'s zero-or-more LEADING `(result t*)` clauses, returning
+/// `(clause_end, result_types)`: `clause_end` is how many leading elements
+/// of `clauses` were themselves `(result ...)` lists (0 means this is the
+/// untyped form), `result_types` is every valtype collected from them, in
+/// order.
+///
+/// "Zero or more" leading clauses, not "at most one", even though the
+/// FOLDED corpus only ever writes a single clause -- the flat/stream
+/// corpus (`select.wast`'s own "Flat syntax" section) has real, must-PASS
+/// cases like `select (result i32) (result)` and `select (result) (result
+/// i32)`, both of which need their clauses' valtypes concatenated (here:
+/// `[i32] ++ [] = [i32]` and `[] ++ [i32] = [i32]`, each arity 1 and so
+/// valid) -- exactly the same "any number of `(result ...)` groups,
+/// concatenated in order" convention `encode_blocktype`'s own `(param...)*
+/// (result...)*` scan and `parse_func_signature`'s `(result ...)` handling
+/// already use elsewhere in this file.
+///
+/// Arity other than exactly 1 (after concatenation) is a VALIDATION error,
+/// not a parse error (the real corpus's own `select.wast` has
+/// `assert_invalid` cases for `(result)` and `(result i32 i32)`) -- so
+/// every shape here parses successfully, leaving the actual arity check to
+/// `wasm-validator`'s `0x1C` handler.
+///
+/// A free function, not inlined into either caller's own match arm: both
+/// `encode_flat_instr` and `encode_stream_instr` sit on the hot recursive
+/// path every instruction funnels through, and a debug build sizes a
+/// function's stack frame for the union of every match arm's own locals --
+/// see the `"i32.load" | ...` arm's own doc comment in `encode_flat_instr`
+/// for the identical lesson (a real SIGABRT, not a hypothetical) already
+/// learned once for that exact reason.
+fn collect_leading_select_result_types(clauses: &[SExpr], icx: &mut InstrCtx) -> Result<(usize, Vec<ValueType>), WastParseError> {
+    let clause_end = clauses.iter().position(|a| !a.is_keyword_list("result")).unwrap_or(clauses.len());
+    let mut result_types = Vec::new();
+    for clause in &clauses[..clause_end] {
+        let items = clause.as_list().unwrap();
+        for t in &items[1..] {
+            result_types.push(parse_value_type(t, &icx.module.type_names, &icx.module.module)?);
+        }
+    }
+    Ok((clause_end, result_types))
+}
+
+/// Folded-syntax `select` -- see `collect_leading_select_result_types`'s
+/// own doc comment for the real grammar/arity rationale. Kept as its own
+/// function, deliberately called from `encode_flat_instr`'s match arm with
+/// no other locals alongside it -- see that helper's own doc comment for
+/// why.
+fn encode_select_folded(args: &[SExpr], info: &wasm_opcodes::OpcodeInfo, icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let (clause_end, result_types) = collect_leading_select_result_types(args, icx)?;
+    if clause_end == 0 {
+        encode_instr_list(args, icx, out)?;
+        out.push(info.opcode);
+    } else {
+        encode_instr_list(&args[clause_end..], icx, out)?;
+        // Typed select is a DISTINCT opcode from untyped select (`0x1C`
+        // vs `info.opcode`'s `0x1B`), not the same opcode plus an
+        // immediate -- so this deliberately does not use `info.opcode`.
+        out.push(0x1C);
+        out.extend(wasm_leb128::encode_unsigned(result_types.len() as u64));
+        for t in &result_types {
+            out.extend(t.encode());
+        }
+    }
+    Ok(())
+}
+
+/// Flat/stream-syntax `select` -- the same shape `encode_select_folded`
+/// handles for folded syntax, except the `(result t*)` clauses trail the
+/// bare `select` atom as the NEXT elements of the flat stream rather than
+/// being nested inside it (real corpus precedent: `select.wast`'s own
+/// "Flat syntax" section, e.g. `unreachable select (result i32)`).
+/// Returns how many of `following` were consumed. Kept as its own
+/// function for the same "off the hot recursive path" reason
+/// `encode_select_folded` is.
+fn encode_select_stream(following: &[SExpr], info: &wasm_opcodes::OpcodeInfo, icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<usize, WastParseError> {
+    let (clause_end, result_types) = collect_leading_select_result_types(following, icx)?;
+    if clause_end == 0 {
+        out.push(info.opcode);
+    } else {
+        out.push(0x1C);
+        out.extend(wasm_leb128::encode_unsigned(result_types.len() as u64));
+        for t in &result_types {
+            out.extend(t.encode());
+        }
+    }
+    Ok(clause_end)
 }
 
 /// `align=N` / `offset=N` attributes on a load/store, in either order,
@@ -6747,23 +6879,28 @@ mod tests {
     }
 
     #[test]
-    fn select_with_explicit_result_type_annotation_is_a_known_gap() {
+    fn select_with_explicit_result_type_annotation_is_now_supported() {
         // `select (result funcref)` -- opcode 0x1C, a SEPARATE opcode from
         // plain `select` (0x1B), added by the same reference-types
         // proposal WASM17 otherwise implements (needed because a bare
         // `select`'s type can't always be inferred from the stack alone
-        // when reference types are ambiguous). Deliberately NOT implemented
-        // here -- `select`'s existing folded-arm handling recurses into
-        // `(result funcref)` as if it were an operand sub-expression,
-        // producing a clean `UnknownInstruction` on "result" rather than a
-        // real parse. Documented honestly as a known limitation (see the
-        // real corpus's `select.wast`) rather than silently mishandled.
-        let err = parse_module(
+        // when reference types are ambiguous). Formerly a known,
+        // documented gap here -- `select`'s folded-arm handling used to
+        // recurse into `(result funcref)` as if it were an operand
+        // sub-expression, producing a clean `UnknownInstruction` on
+        // "result" instead of a real parse (this test used to assert
+        // exactly that error). Now fixed (W37, closing `select.wast`'s
+        // 126 `not_yet_supported` directives) -- see
+        // `typed_select_folded_form_funcref_encodes_0x1c_with_funcref_type`
+        // above for the byte-exact encoding check; this test is kept as
+        // the direct "the old known-gap case now really works end to
+        // end" regression guard.
+        let m = parse_module(
             r#"(module (func (param funcref funcref i32) (result funcref)
                  (select (result funcref) (local.get 0) (local.get 1) (local.get 2))))"#,
         )
-        .unwrap_err();
-        assert!(matches!(err, WastParseError::UnknownInstruction { .. }));
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x1C, 0x01, 0x70, 0x0B]);
     }
 
     // ── Security-review regressions: malformed-but-syntactically-parseable
@@ -10347,5 +10484,129 @@ mod tests {
         // same lossy-conversion bug, so both need coverage.
         let err = parse_module(r#"(module (func $f) (export "\80" (func $f)))"#).unwrap_err();
         assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    // ── Typed `select` folded/(flat) form (W37, `select.wast`) ────────────
+
+    #[test]
+    fn untyped_select_folded_form_is_unaffected() {
+        // Plain, untyped `select` (no `(result t)` clause) must still
+        // encode to the MVP opcode `0x1B` with NO immediate at all --
+        // this crate's pre-existing, already-passing behavior, which the
+        // new typed-`select` arm must not disturb.
+        let m = parse_module(
+            r#"(module (func (param i32 i32 i32) (result i32)
+                 (select (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x1B, 0x0B],
+            "local.get 0; local.get 1; local.get 2; select (0x1B, no immediate); end"
+        );
+    }
+
+    #[test]
+    fn typed_select_folded_form_i32_encodes_0x1c_with_one_result_type() {
+        let m = parse_module(
+            r#"(module (func (param i32 i32 i32) (result i32)
+                 (select (result i32) (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x1C, 0x01, 0x7F, 0x0B],
+            "operands; select_t (0x1C); vec(valtype) count=1; i32 (0x7F); end"
+        );
+    }
+
+    #[test]
+    fn typed_select_folded_form_funcref_encodes_0x1c_with_funcref_type() {
+        // The real-world reason typed `select` exists at all: reference-
+        // typed operands (funcref/externref/concrete refs), which
+        // untyped `select`'s "infer from operand type" rule can't accept
+        // (see `wasm-validator`'s own `0x1B` handler).
+        let m = parse_module(
+            r#"(module (table 1 funcref)
+                 (func (param funcref funcref i32) (result funcref)
+                   (select (result funcref) (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x1C, 0x01, 0x70, 0x0B],
+            "operands; select_t (0x1C); vec(valtype) count=1; funcref (0x70); end"
+        );
+    }
+
+    #[test]
+    fn typed_select_flat_stream_form_encodes_0x1c() {
+        // The flat/stream shape `select.wast`'s own "Flat syntax" section
+        // exercises: the `(result t)` clause trails the bare `select`
+        // atom as the next stream element, not nested inside it.
+        let m = parse_module(r#"(module (func (result i32) unreachable select (result i32)))"#).unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x00, 0x1C, 0x01, 0x7F, 0x0B],
+            "unreachable (0x00); select_t (0x1C); vec(valtype) count=1; i32 (0x7F); end"
+        );
+    }
+
+    #[test]
+    fn typed_select_multiple_leading_result_clauses_concatenate() {
+        // Real corpus precedent (`select.wast`'s own "Flat syntax"
+        // section): `select (result i32) (result)` -- TWO consecutive
+        // `(result ...)` clauses, concatenated to a single-element
+        // vector (`[i32] ++ [] = [i32]`), same "any number of `(result
+        // ...)` groups in a row" convention block/loop/if's own
+        // blocktype parsing already uses. Must NOT be misread as
+        // `select`'s immediate followed by a bogus second instruction
+        // named "result".
+        let m = parse_module(r#"(module (func (result i32) unreachable select (result i32) (result)))"#).unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x00, 0x1C, 0x01, 0x7F, 0x0B],
+            "the empty second `(result)` clause contributes zero types, so the total vector is still just [i32]"
+        );
+    }
+
+    #[test]
+    fn call_indirect_flat_form_does_not_swallow_the_next_bare_instruction() {
+        // Real corpus regression this same investigation found
+        // (`select.wast`'s own "Flat syntax" section:
+        // `unreachable select call_indirect select`): `call_indirect`'s
+        // flat-form leading-table-token heuristic used to treat ANY
+        // following bare atom as its own table index, even when that
+        // atom is actually the NEXT instruction in the stream (here,
+        // `nop`) -- failing to resolve it as a table name/index and
+        // erroring out instead of leaving it for the next `encode_one`
+        // call. A real table token (a `$name` or a bare numeral) still
+        // resolves fine and is unaffected -- see the next test.
+        let m = parse_module(r#"(module (type $t (func)) (table 1 funcref) (func unreachable call_indirect nop))"#).unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x00, 0x11, 0x00, 0x00, 0x01, 0x0B],
+            "unreachable; call_indirect (typeidx=0, tableidx=0); nop; end -- \
+             `nop` must be its own trailing instruction, not misread as call_indirect's table token"
+        );
+    }
+
+    #[test]
+    fn call_indirect_flat_form_still_resolves_a_real_leading_table_token() {
+        // The positive counterpart to the regression test above: a
+        // GENUINE leading table token (a real table name) must still be
+        // consumed as `call_indirect`'s own tableidx immediate, not
+        // dismissed as "the next instruction" now that resolution
+        // failure is how the two are told apart.
+        let m = parse_module(
+            r#"(module (type $t (func)) (table $t0 1 funcref)
+                 (func unreachable call_indirect $t0 (type $t) nop))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x00, 0x11, 0x00, 0x00, 0x01, 0x0B],
+            "unreachable; call_indirect (typeidx=0, tableidx=0, resolved from $t0); nop; end"
+        );
     }
 }

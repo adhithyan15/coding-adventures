@@ -86,4 +86,6 @@ table animal_habitat {
     source "Polar bears live along shores and on sea ice in the icy cold Arctic."
     locator "https://kids.nationalgeographic.com/animals/mammals/facts/polar-bear"
     trust consensus
+    cites "Bactrian camels are hardy animals that dwell in the deserts of Central and East Asia." locator "https://kids.nationalgeographic.com/animals/mammals/facts/bactrian-camel"
+    cites "Grassland, for example, is the habitat of the giraffe, but the animal’s range is central, eastern and southern Africa." locator "https://education.nationalgeographic.org/resource/habitat"
 }

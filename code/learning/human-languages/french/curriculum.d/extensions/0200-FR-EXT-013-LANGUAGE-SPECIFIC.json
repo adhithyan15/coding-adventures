@@ -1,0 +1,11 @@
+{
+  "id": "FR-EXT-013-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can pick the goodbye that matches when I will next see the person.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C04-practice"
+  ]
+}

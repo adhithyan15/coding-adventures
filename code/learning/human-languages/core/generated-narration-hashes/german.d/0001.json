@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 1,
-  "sourceHash": "fnv1a64:df73d98be014894e",
+  "sourceHash": "fnv1a64:5979c369960700c1",
   "lessonIds": [
     "GE-C01-hallo",
     "GE-W01-hallo-guided-copy",
@@ -15,13 +15,14 @@
     "GE-C01-guten-abend",
     "GE-C01-nacht",
     "GE-C01-gute-nacht",
+    "GE-C01-die-plural",
     "GE-C01-practice"
   ],
-  "voiceLessons": 11,
+  "voiceLessons": 12,
   "drivablePrefix": 0,
   "text": "german/narration/ch01.txt",
   "json": "german/narration/ch01.json",
-  "textHash": "fnv1a64:f37ed25e0596bf8f",
-  "jsonHash": "fnv1a64:ebbbfb429ee5c120",
+  "textHash": "fnv1a64:78fb5d36040a4404",
+  "jsonHash": "fnv1a64:b9ac48987e99144e",
   "findings": []
 }

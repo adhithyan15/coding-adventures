@@ -3820,6 +3820,48 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
                 pos - offset,
             )
         }
+        // Typed `select`'s (`0x1C`) own `vec(valtype)` immediate -- only
+        // its BYTE LENGTH matters here, never the actual type(s): unlike
+        // `vec_labelidx` above (whose decoded labels the `0x0E` handler
+        // reads back out of `DecodedOperand::BrTable`), typed select's
+        // runtime behavior is IDENTICAL to untyped select's (pop cond,
+        // pop val2, pop val1, push one of the two -- see `register_
+        // parametric`'s `0x1B`/`0x1C` handlers) regardless of what the
+        // immediate says; the immediate exists purely for `wasm-
+        // validator`'s benefit. So this just walks past `count` valtype
+        // encodings (1 byte for every plain numtype/vectype/reftype tag,
+        // 1 + LEB128(idx) for the two-byte concrete-reference tags `0x63`/
+        // `0x64`) and reports how many bytes were consumed, discarding
+        // the types themselves -- `DecodedOperand::None` is the correct
+        // result, not a new variant.
+        //
+        // Deliberately bounded by `code.len()`, NOT by the declared
+        // `count` -- `decode_function_body` runs on modules that have not
+        // necessarily gone through `wasm-validator::validate()` yet (see
+        // this function's own doc comment on `"blocktype"` above), so an
+        // attacker-controlled LEB128 `count` claiming billions of entries
+        // must not turn this into an unbounded loop the way naively
+        // mirroring `vec_labelidx`'s own `for _ in 0..count` (which
+        // defaults to consuming 1 byte even past the end of `code`, see
+        // `decode_leb_u32`'s own fallback) would.
+        "vec_valtype" => {
+            let (count, sz0) = decode_leb_u32(code, offset);
+            let mut pos = offset + sz0;
+            let mut seen: u32 = 0;
+            while seen < count && pos < code.len() {
+                let tag = code[pos];
+                let sz = match tag {
+                    0x63 | 0x64 => {
+                        let (_, idx_sz) = decode_leb_u32(code, pos + 1);
+                        1 + idx_sz
+                    }
+                    _ => 1,
+                };
+                pos += sz;
+                seen += 1;
+            }
+            (DecodedOperand::None, pos - offset)
+        }
         _ => (DecodedOperand::None, 0),
     }
 }
@@ -7512,6 +7554,23 @@ fn register_parametric(vm: &mut GenericVM) {
 
     // select (0x1B)
     vm.register_context_opcode(0x1B, |vm, _instr, _code, _ctx| {
+        let cond = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        let val2 = pop_wasm(vm)?;
+        let val1 = pop_wasm(vm)?;
+        push_wasm(vm, if cond != 0 { val1 } else { val2 });
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // select_t (0x1C, typed select -- reference-types proposal): the
+    // `vec(valtype)` immediate is purely a validation-time disambiguator
+    // (which value type is being selected, needed for reference-typed
+    // operands untyped `select` above can't accept) -- it carries no
+    // runtime meaning at all, since `WasmValue` already tags its own
+    // dynamic type. So this handler is BYTE-FOR-BYTE identical to
+    // `0x1B`'s: pop cond/val2/val1, push whichever operand the condition
+    // selects.
+    vm.register_context_opcode(0x1C, |vm, _instr, _code, _ctx| {
         let cond = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let val2 = pop_wasm(vm)?;
         let val1 = pop_wasm(vm)?;

@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C03-aller
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 115
 chapter: 3
 type: word
@@ -10,24 +12,42 @@ prerequisites: []
 sounds: [er-ending, r-uvular]
 roots: [ambulare-latin, vadere-latin, ire-latin]
 etymology_hook: "aller ← Latin ambulāre 'to walk' (→ amble, ambulance); its je vais ← vādere 'to go' (→ invade)"
-est_minutes: 4
 reviews_of: [FR-C03-merci]
+duration:
+  max_seconds: 265
+requires:
+  knowledge: []
+introduces:
+  knowledge: [FR-LEX-ALLER-06, FR-ETYMON-ALLER-07]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-ALLER-06, FR-ETYMON-ALLER-07]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 ---
 
 # aller — "to go," the verb behind "how are you?"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Spanish asks *how are you* with **estar**, "to *stand*." French asks
 it with **aller**, "to **go**" — *how does it go?* Same question, a different
 picture of a life: one language stands, the other walks. Meet **aller**.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[FR-LEX-ALLER-06]; assesses=[] -->
 
 - `er-ending` — the infinitive **-er** is a clean *ay*: **aller** = *ah-LAY*
   (the double *l* is just one *l* sound; the *r* is silent here).
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[FR-ETYMON-ALLER-07]; assesses=[] -->
 
 **aller** means "to go." Its origin is one of the great messes of French — it is
 **suppletive**, meaning it was stitched together from **three** different Latin
@@ -48,6 +68,7 @@ to conjugate it yet — just recognize one form for the next lesson:
   French small talk.
 
 ## Grammar Lens: "going" as "being"
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Lots of languages borrow a motion verb to talk about *state*: English says "how
 are you **getting on**? / how's it **going**?" French made that the standard:
@@ -55,6 +76,7 @@ are you **getting on**? / how's it **going**?" French made that the standard:
 lesson obvious.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-ALLER-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: "aller" — *ah-LAY*]
@@ -63,6 +85,7 @@ lesson obvious.
   two big families]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-ALLER-06, FR-ETYMON-ALLER-07] -->
 
 [PAUSE 3s] What does *aller* literally mean, and how many Latin verbs is it
 stitched from? (To *go*; three — *ambulāre, vādere, īre*.) Which everyday form

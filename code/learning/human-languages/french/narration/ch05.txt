@@ -24,7 +24,9 @@ Grammar Lens: the -er present tense (and its silent trap).
 Drop -er, add the ending for the person:
 There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, ending, parler, which gives:, sounds like. Come back and look at it when you have stopped.
 Here is the great French surprise: -e, -es, and -ent are all SILENT — je parle, tu parles, ils parlent all sound identical, just parl. Only nous (-ons) and vous (-ez) are audible.
-This is exactly why French keeps its subject pronouns (je, tu, il…) where Spanish and Italian drop them: in Spanish the ending tells you who (hablo vs hablas), but in French your ear can't hear the difference — so the pronoun has to carry the person. A key contrast to hold onto.
+
+Grammar Lens: why French keeps its pronouns.
+That silence has a consequence which shapes the whole language. In Spanish the ending alone tells you who is speaking — hablo ("I speak") against hablas ("you speak") — so the pronoun can be dropped. In French your ear cannot hear any difference between parle, parles and parlent, so the pronoun must stay to carry the person. Je and tu are not optional decoration in French; they are the only thing telling you who is doing the speaking.
 
 Guided Practice.
 [pause 1 second]
@@ -93,7 +95,9 @@ travailler comes from Vulgar Latin tripaliāre, "to torture" — from tripalium,
 The slide of meaning is grim and logical: torture becomes painful toil becomes work. And two English words came down the same road:
 travail — painful, laborious effort.
 travel — journeying was once such an ordeal that travail (toil) became travel (to make a journey). You are, etymologically, tortured every time you travel.
-This is the exact same word as Spanish trabajar (from the same tripaliāre) — the -al- stayed in French (travail) and softened to -aj- in Spanish (trabajo). A perfect cross-language twin, torture and all.
+
+Why it's said this way — a cross-language twin, torture and all.
+Spanish trabajar ("to work") comes from the very same tripaliāre — a perfect cross-language twin, torture and all. The middle of the word went one way in each language: the -al- stayed in French (travail, travailler) and softened to -aj- in Spanish (trabajo, trabajar).
 
 Grammar Lens: same -er template.
 [a table of 2 rows, read aloud]
@@ -123,15 +127,19 @@ Warm-up.
 [pause 2 seconds]
 The moment it all pays off: you take a verb you conjugated and a noun, and build a sentence no one handed you pre-made — Je parle français, "I speak French."
 
-The new word: français.
-français = "French" (the language, and a French person), from Francia, "land of the Franks" — the Germanic people who settled Roman Gaul and gave France its name. And here's the twist: the Franks' own name meant "free" — which is why English frank / frankly means open and unguarded, and why the coin was a franc. Say it frahn-SEH (soft-c-s: the ç-less c before nothing here is soft s; the ai is a nasal-ish eh).
+Sounds you'll need.
+soft-c-s — français = frahn-SEH. The cedilla under the ç forces a soft s where a plain c would have been hard.
+The opening fran- is nasal, and the final -ais is a plain eh.
 
-The sentence, assembled.
+The word, taken apart.
+français = "French" — both the language and a French person — from Francia, "land of the Franks": the Germanic people who settled Roman Gaul and gave France its name. And here is the twist: the Franks' own name meant "free." That is why English frank and frankly mean open and unguarded, and why the old French coin was called a franc.
+
+Grammar Lens: two rules hiding in four words.
 Snap together two things you own:
 Je (I, from ego) + parle (speak, from parler) = Je parle français.
-A complete, grammatical French sentence. Now note the contrast that defines French:
-You keep the je. Spanish drops it (hablo español), because the Spanish ending -o says "I". But French parle / parles / parlent all sound the same (parl) — the ear can't tell who — so the pronoun must stay to carry the person. This is the single biggest structural difference between French and its Iberian cousins.
-No article on the language: je parle français, not "le français" (here).
+A complete, grammatical French sentence. Two rules are hiding in it:
+You keep the je. Spanish drops its pronoun — hablo español says "I speak Spanish" with no word for "I," because the ending -o carries the person. French cannot do that: parle, parles and parlent all sound alike, so the pronoun must stay. This is the single biggest structural difference between French and its Iberian cousins.
+No article on the language here: je parle français, not je parle le français.
 Swap the pieces and it generates:
 J'habite à Paris. — "I live in Paris."
 Tu parles français? — "Do you speak French?" (just raise the tone).
@@ -157,7 +165,7 @@ Warm-up.
 [pause 2 seconds]
 For the first time you're not reciting phrases — you're building sentences from a pattern. Drill the three verbs, and burn in the French rule the whole language turns on: keep the pronoun (the endings are silent).
 
-Conjugate on command.
+Guided Practice: conjugate on command.
 [pause 1 second]
 Run each through je / tu / il:
 parler: je parle, tu parles, il parle — all parl.
@@ -165,7 +173,7 @@ habiter: j'habite, tu habites, il habite — all a-beet.
 travailler: je travaille, tu travailles, il travaille — all tra-vye.
 Every singular form (and the ils form) sounds the same — the -e/-es/-ent are silent. That's why je, tu, il stay put: they carry the person your ear can't hear.
 
-Say something real.
+Guided Practice: say something real.
 — Tu parles français? — Oui, je parle un peu. (Do you speak French? — Yes, I speak a little.) — Où habites-tu? — J'habite à Lyon. Et je travaille à Paris. — Merci! — De rien.
 
 What you've built this chapter.
