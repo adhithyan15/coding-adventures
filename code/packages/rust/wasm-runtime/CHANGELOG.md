@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.32] — 2026-09-02 (mechanical fallout of `wasm_types::ValueType::ArrayRefAny`, W38 slice 0)
+
+`wasm-types` 0.1.26 added `ValueType::ArrayRefAny` (`code/specs/
+W38-wasm-gc-array-bulk-ops.md` Correction 3, see that crate's own
+CHANGELOG). This crate's `call()`'s own lossy-legacy-`i64`-round-trip
+match (params-to-`WasmValue` conversion) joins the same "no vendored
+corpus directive passes one as a top-level `invoke` argument" placeholder
+group `Eqref`/`StructRefAny` (W37) already joined -- one new match arm,
+kept exhaustive. No behavior change in this crate.
+
 ## [0.6.31] — 2026-09-02 (fix: table imports now reject an element-type mismatch against the actual exported table, closing the exact gap 0.6.30 honestly flagged)
 
 Fixes the real bug 0.6.30's own entry below diagnosed and explicitly left

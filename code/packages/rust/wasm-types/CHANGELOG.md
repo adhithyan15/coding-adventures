@@ -2,6 +2,43 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.26] - 2026-09-02 (feat: `ArrayRefAny`/`Element::item_exprs` -- W38 slice 0, GC array bulk ops)
+
+Slice 0 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan for
+the GC array bulk-operations instruction family (`array.copy`/
+`array.fill`/`array.init_data`/`array.init_elem`/`array.new_data`/
+`array.new_elem`).
+
+- **`ValueType::ArrayRefAny`** -- `arrayref`/`(ref null array)`, the nullable
+  abstract TOP of the array hierarchy (Correction 3), the exact array-
+  hierarchy mirror of the existing `StructRefAny` (W37) one hierarchy over,
+  and distinct from both `ArrayRef(u32)` (nullable but always CONCRETE) and
+  the pre-existing `NonNullArrayAny` (W33 fourth slice; this variant's
+  non-null counterpart). Encoded as a single byte `0x6A` -- the real GC
+  proposal's own `array` abstract heap-type byte, one less than
+  `StructRefAny`'s `0x6B`, matching the real spec's own adjacent
+  assignment. `is_bottom_subtype_of` gains `NullRef <: ArrayRefAny`, and
+  `canonicalize_value_type` gains a matching arm (reusing the
+  already-existing `AbstractHeapKind::Array`).
+- **`Element::item_exprs: Vec<Vec<u8>>`** -- one raw constant-expression
+  byte sequence per element-segment item (Correction 2's data-model
+  gap), added ALONGSIDE (not replacing) the existing
+  `function_indices: Vec<Option<u32>>` so `table.init`/`table.copy`'s own
+  already-shipped funcref-only fast path stays completely undisturbed.
+  Purely additive in this slice -- always empty at every construction site
+  in this crate's own dependents (`wasm-wast-parser`, `wasm-module-parser`,
+  `wasm-module-encoder`, `wasm-validator` test fixtures); real population
+  (capturing each item's raw bytes instead of eagerly resolving a function
+  index) is a LATER W38 slice's own work (see that spec's "Recommended
+  slice decomposition" §4), not this one's.
+
+New unit tests: `arrayref_any_single_byte`,
+`arrayref_any_byte_tag_matches_encode`,
+`nullref_is_a_bottom_subtype_of_arrayref_any`,
+`arrayref_any_is_never_a_bottom_subtype_of_nullref`,
+`arrayref_any_is_distinct_from_every_other_reftype`,
+`arrayref_any_canonicalizes_deterministically`.
+
 ## [0.1.25] - 2026-09-02 (feat: `Eqref`/`StructRefAny` -- W37 GC reftype tables)
 
 Two new `ValueType` variants, per `code/specs/W37-wasm-gc-reftype-tables.md`:

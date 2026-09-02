@@ -1205,6 +1205,16 @@ fn parse_element_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), 
                 function_indices.push(Some(p.read_u32leb()?));
             }
         }
+        // W38 slice 0: `item_exprs` has no consumer in this binary decoder
+        // (binary-format encoding of the six new array bulk-ops
+        // instructions is explicitly out of scope for W38, and this
+        // field's own real population -- Layers 1-2 of the elem-segment
+        // three-layer fix -- is a later W38 slice's TEXT-parser-only work,
+        // see `wasm_types::Element::item_exprs`'s own doc comment) --
+        // always empty here, one entry per `function_indices` entry to
+        // keep the "always the same length" invariant that field's own
+        // doc comment documents.
+        let item_exprs = vec![Vec::new(); function_indices.len()];
         module.elements.push(Element {
             table_index,
             offset_expr,
@@ -1214,6 +1224,7 @@ fn parse_element_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), 
             // function's own doc comment) -- modes 3/7 (declarative) are a
             // clean parse error, never reach this push. Always `false`.
             is_declarative: false,
+            item_exprs,
         });
     }
     Ok(())

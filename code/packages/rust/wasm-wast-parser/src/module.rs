@@ -422,6 +422,17 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &Wa
         // reference that always carries a type index).
         "eqref" => Ok(ValueType::Eqref),
         "structref" => Ok(ValueType::StructRefAny),
+        // `arrayref` (W38 slice 0/1: `code/specs/
+        // W38-wasm-gc-array-bulk-ops.md`, Correction 3) -- the bare-atom
+        // abbreviation for `(ref null array)`, the array-hierarchy mirror
+        // of `structref` immediately above, one level later in the
+        // hierarchy (nullable abstract array top, distinct from the
+        // existing concrete `ValueType::ArrayRef(u32)` and from the
+        // already-shipped non-null abstract top `ValueType::
+        // NonNullArrayAny`). Needed because `array_init_elem.wast`/
+        // `array_new_elem.wast` both declare `(array (mut arrayref))`
+        // storage types (confirmed by direct corpus read).
+        "arrayref" => Ok(ValueType::ArrayRefAny),
         // `anyref` (GC proposal top reference type) and the four BOTTOM
         // reference types (`nullref`/`nullfuncref`/`nullexternref`/
         // `nullexnref`, W32 first slice: `code/specs/
@@ -2255,6 +2266,9 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         .map(|f| resolve_idx(&ctx.func_names, f, "func").map(Some))
         .collect::<Result<_, _>>()?;
     let count = function_indices.len() as u64;
+    // W38 slice 0: no consumer for this yet (see `wasm_types::Element::
+    // item_exprs`'s own doc comment) -- always empty, one per entry.
+    let item_exprs = vec![Vec::new(); function_indices.len()];
     ctx.module.tables[storage_idx as usize].limits = Limits { min: count, max: Some(count) };
     ctx.module.elements.push(Element {
         table_index: table_idx,
@@ -2278,6 +2292,7 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         // to an ordinary ACTIVE segment (an explicit offset of 0 into the
         // table it just declared) -- never declarative.
         is_declarative: false,
+        item_exprs,
     });
     Ok(())
 }
@@ -2492,12 +2507,19 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
     // struct's deliberate "no third variant" convention) isn't enough to
     // tell `instantiate()` this segment must be marked dropped immediately
     // rather than left resident for `table.init`.
+    // W38 slice 0: no consumer for this yet (see `wasm_types::Element::
+    // item_exprs`'s own doc comment) -- always empty, one per entry. Real
+    // population (capturing each item's raw constant-expression bytes
+    // instead of eagerly resolving a function index) is Layers 1-2 of the
+    // elem-segment three-layer fix, a later W38 slice's own work.
+    let item_exprs = vec![Vec::new(); function_indices.len()];
     ctx.module.elements.push(Element {
         table_index,
         offset_expr,
         function_indices,
         is_passive,
         is_declarative,
+        item_exprs,
     });
     Ok(())
 }
@@ -4157,7 +4179,16 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
 ///   0x0D  array.get_u          NEW                         0x0D (matches)
 ///   0x0E  array.set            NEW                         0x0E (matches)
 ///   0x0F  array.len            NEW                         0x0F (matches)
+///   0x10  array.fill           NEW (W38 slice 2)           0x10 (matches)
+///   0x11  array.copy           NEW (W38 slice 2)           0x11 (matches)
 /// ```
+///
+/// `0x10`/`0x11` (W38 slice 2: `code/specs/
+/// W38-wasm-gc-array-bulk-ops.md`) sit immediately after `array.len`
+/// (`0x0F`) -- real, spec-text-fetched sub-opcode values, cross-checked
+/// against the real GC proposal's own binary grammar page independently
+/// of any single automated fetch (see that spec's own "Real spec text"
+/// section for the corroboration method).
 ///
 /// This is safe PURELY because this repo's `0xFB`-prefixed bytecode never
 /// round-trips through anything OUTSIDE this crate's own text parser +
@@ -4165,12 +4196,14 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
 /// encodes to real binary for a plain `(module ...)` script directive --
 /// see `wasm-conformance`'s own pipeline doc comment) -- there is no
 /// external tool this byte-level deviation could ever desync from.
-/// `array.new_data`/`array.new_elem`/`array.copy`/`array.fill`/
-/// `array.init_data`/`array.init_elem` are deliberately NOT wired here --
-/// they need real data-/elem-segment integration this slice does not
-/// attempt (see the accompanying spec addendum) -- any module using them
-/// stays an honest parse error at this crate's boundary, `NotYetSupported`
-/// at the conformance-harness level, never a silent misencoding.
+/// `array.new_data`/`array.new_elem`/`array.init_data`/`array.init_elem`
+/// are deliberately NOT wired here -- they need real data-/elem-segment
+/// integration this slice does not attempt (see the accompanying spec
+/// addendum) -- any module using them stays an honest parse error at this
+/// crate's boundary, `NotYetSupported` at the conformance-harness level,
+/// never a silent misencoding. `array.copy`/`array.fill` (W38 slice 2:
+/// `code/specs/W38-wasm-gc-array-bulk-ops.md`) ARE wired, below -- they
+/// touch no segment at all, operating purely on already-allocated arrays.
 fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<bool, WastParseError> {
     if matches!(name, "struct.new" | "struct.new_default") {
         encode_struct_new(name, args, icx, out)?;
@@ -4194,6 +4227,22 @@ fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, 
     }
     if name == "array.len" {
         encode_array_len(args, icx, out)?;
+        return Ok(true);
+    }
+    // W38 slice 2 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): the first
+    // two of the six array bulk-ops instructions -- the only two with NO
+    // element-/data-segment interaction at all, operating purely on
+    // already-allocated arrays (mirroring how `memory.fill`/`memory.copy`
+    // already work in this codebase). `array.init_data`/`array.init_elem`/
+    // `array.new_data`/`array.new_elem` remain deliberately unwired here --
+    // see this function's own doc comment above for why, still accurate
+    // for the remaining four.
+    if name == "array.fill" {
+        encode_array_fill(args, icx, out)?;
+        return Ok(true);
+    }
+    if name == "array.copy" {
+        encode_array_copy(args, icx, out)?;
         return Ok(true);
     }
     Ok(false)
@@ -4323,6 +4372,54 @@ fn encode_array_len(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Re
     encode_instr_list(args, icx, out)?;
     out.push(0xFB);
     out.push(0x0F);
+    Ok(())
+}
+
+/// `array.fill $t <arrayref> <i32 offset> <t value> <i32 count>` (W38
+/// slice 2: `code/specs/W38-wasm-gc-array-bulk-ops.md`) -- see
+/// [`encode_struct_new`]'s doc comment for why this is its own function.
+/// Real spec text-format grammar: `"array.fill" x:typeidx_I => array.fill
+/// x`, stack `[(ref null x) i32 t i32] -> []` -- folded operand order
+/// (array, offset, value, count) matches the real vendored corpus exactly
+/// (`array_fill.wast`'s own `(array.fill $arr8_mut (ref.null $arr8_mut)
+/// (i32.const 0) (i32.const 0) (i32.const 0))`), so `args[1..]` (every
+/// operand after the leading type immediate) encodes in written order via
+/// `encode_instr_list`, identical to every other folded GC instruction in
+/// this file.
+fn encode_array_fill(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    encode_instr_list(&args[1..], icx, out)?;
+    out.push(0xFB);
+    out.push(0x10);
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    Ok(())
+}
+
+/// `array.copy $dest $src <destref> <i32 d> <srcref> <i32 s> <i32 n>` (W38
+/// slice 2) -- see [`encode_struct_new`]'s doc comment for why this is its
+/// own function. Real spec text-format grammar: `"array.copy"
+/// x:typeidx_I y:typeidx_I => array.copy x y` (`x` = DEST type, `y` = SRC
+/// type), stack `[(ref null x) i32 (ref null y) i32 i32] -> []` --
+/// confirmed against the real vendored corpus's own argument order
+/// (`array_copy.wast`'s own `(array.copy $arr8_mut $arr8 (global.get
+/// $g_arr8_mut) (local.get $1) (global.get $g_arr8) (local.get $2)
+/// (local.get $3))`: dest type, src type, dest ref, dest offset, src ref,
+/// src offset, count). `dest_idx` is encoded before `src_idx` -- matching
+/// `x y` in the grammar production above -- and `wasm-execution`'s own
+/// decode block must read them in the SAME order (see that crate's
+/// `GcOp::field_idx` doc comment for why it's repurposed to carry this
+/// second type index, not a new struct field).
+fn encode_array_copy(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let dest_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let dest_idx = resolve_idx(&icx.module.type_names, dest_expr, "type")?;
+    let src_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+    let src_idx = resolve_idx(&icx.module.type_names, src_expr, "type")?;
+    encode_instr_list(&args[2..], icx, out)?;
+    out.push(0xFB);
+    out.push(0x11);
+    out.extend(wasm_leb128::encode_unsigned(dest_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(src_idx as u64));
     Ok(())
 }
 
@@ -7848,6 +7945,20 @@ mod tests {
         assert_eq!(m.type_kinds, vec![TypeKind::Array(0)]);
     }
 
+    /// W38 slice 1 (`code/specs/W38-wasm-gc-array-bulk-ops.md`, Correction
+    /// 3): the bare `arrayref` value-type keyword in a STORAGE-TYPE
+    /// position (an array's own element type) -- previously a hard parse
+    /// error ("expected a value type, found \"arrayref\""), exactly the
+    /// shape `array_init_elem.wast:118`/`array_new_elem.wast:107` use
+    /// (`(array (mut arrayref))`), confirmed by direct corpus read.
+    #[test]
+    fn array_element_naming_bare_arrayref_keyword_is_array_ref_any() {
+        let m = parse_module("(module (type $a (array (mut arrayref))))").unwrap();
+        assert_eq!(m.array_types.len(), 1);
+        assert_eq!(m.array_types[0].element.storage, StorageType::Val(ValueType::ArrayRefAny));
+        assert!(m.array_types[0].element.mutable);
+    }
+
     /// **W34 third slice** (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
     /// a `(sub ... (struct ...))`/`(sub ... (array ...))` body used to be a
     /// hard parse error (`reject_non_func_body`'s old, unconditional
@@ -8125,6 +8236,34 @@ mod tests {
         assert_eq!(code_of(&m, 2), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x0D, 0x01, 0x0B], "array.get_u");
         assert_eq!(code_of(&m, 3), &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0xFB, 0x0E, 0x02, 0x0B], "array.set (type 2 = $mvec)");
         assert_eq!(code_of(&m, 4), &[0x20, 0x00, 0xFB, 0x0F, 0x0B], "array.len takes NO type immediate");
+    }
+
+    /// W38 slice 2 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): mirrors
+    /// `array_get_get_s_get_u_set_len_encode_correctly` immediately above,
+    /// one instruction group later.
+    #[test]
+    fn array_fill_and_copy_encode_correctly() {
+        let m = parse_module(
+            r#"(module
+                 (type $mvec (array (mut f32)))
+                 (type $svec (array f32))
+                 (func (param $v (ref $mvec)) (param $d i32) (param $y f32) (param $n i32)
+                   (array.fill $mvec (local.get $v) (local.get $d) (local.get $y) (local.get $n)))
+                 (func (param $dest (ref $mvec)) (param $d i32) (param $src (ref $svec)) (param $s i32) (param $n i32)
+                   (array.copy $mvec $svec (local.get $dest) (local.get $d) (local.get $src) (local.get $s) (local.get $n)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x20, 0x03, 0xFB, 0x10, 0x00, 0x0B],
+            "array.fill: arrayref, offset, value, count, then 0xFB 0x10 <type_idx>"
+        );
+        assert_eq!(
+            code_of(&m, 1),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x20, 0x03, 0x20, 0x04, 0xFB, 0x11, 0x00, 0x01, 0x0B],
+            "array.copy: dest_ref, d, src_ref, s, n, then 0xFB 0x11 <dest_type_idx> <src_type_idx>"
+        );
     }
 
     #[test]

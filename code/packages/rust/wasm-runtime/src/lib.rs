@@ -2992,6 +2992,10 @@ impl WasmRuntime {
                 | ValueType::ArrayRef(_)
                 | ValueType::NonNullArrayRef(_)
                 | ValueType::NonNullArrayAny
+                // W38 slice 0: `ArrayRefAny` joins this same lossy-legacy-
+                // path placeholder group -- same reasoning as `Eqref`/
+                // `StructRefAny` above.
+                | ValueType::ArrayRefAny
                 | ValueType::Funcref
                 | ValueType::Externref
                 | ValueType::Exnref
