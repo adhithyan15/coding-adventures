@@ -1,0 +1,16 @@
+{
+  "id": "HI-EXT-068-FLAT-JOINS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can join two Hindi sentences with aur, offer a choice with yaa, and contradict the first half with lekin.",
+  "prerequisites": [
+    "HI-EXT-067-A1-NAME-FIELD"
+  ],
+  "lessons": [
+    "HI-C68-aur",
+    "HI-C68-ya",
+    "HI-C68-lekin",
+    "HI-R68-three-joins"
+  ]
+}

@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 135
 requires:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -36,7 +36,7 @@ reviews_of: [TA-W07-numbers-1-5-delayed-copy]
 Cover the answer line. You will hear familiar words, never an untaught form.
 
 ## Writing — dictation
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 [YOU HEAR: *irantu — aintu — muunru*]
@@ -45,7 +45,7 @@ Write the three numeral shapes from sound alone. Then uncover: **௨ ௫ ௩**.
 Repair one shape if needed; do not rewrite the line.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 
 [PAUSE 3s] Write the numeral for *naanku* from sound alone. (**௪**.) Now the
 Dravidian family lesson can deepen forms you can already hear and read.

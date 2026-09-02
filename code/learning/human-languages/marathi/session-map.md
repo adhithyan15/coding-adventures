@@ -318,8 +318,44 @@ These four chapters sit after the A1 writing runways in book order while
 realizing **pre-A1** spine nodes. A node's level is a property of the node, not
 of where its chapter falls in the book.
 
+## Chapters 30–36 — the joining column
+
+| Session | Lesson | Job |
+|---|---|---|
+| 206 | C30-aani | **आणि** — join two clauses, change neither |
+| 207 | C30-kinva | **किंवा** — the same slot, opposite job |
+| 208 | C30-pan | **पण** — the second half pushes back |
+| 209 | R30-three-joins | one gap, three relations |
+| 210 | C31-naa-naa | **ना … ना** — a joiner said twice, in front |
+| 211 | C31-naa-tag | **… ना?** — one syllable turns a statement into a check |
+| 212 | C31-dusra | **एक … दुसरा** — sharing a pair out |
+| 213 | R31-pairs | the three shapes that need two places |
+| 214 | C32-nahi-verb | **… नाही** — deny the verb, not the question; **मला माहीत नाही** |
+| 215 | C32-nako | **नको** — refuse the offer, not the fact |
+| 216 | R32-not-so | four ways of saying no, kept apart |
+| 217 | C33-kaa-polar | **… का?** and the rising voice |
+| 218 | W33-question-mark | **?** and **!** — one mark, at the end |
+| 219 | R33-ask-and-answer | ask it, then answer it |
+| 220 | C34-kaa-why | **का …?** — the same syllable, moved to the front |
+| 221 | C34-kaaran | **कारण** — the first clause put underneath another |
+| 222 | W34-comma | **,** — the list, and the named reader |
+| 223 | R34-reasons | why, and because, in two turns |
+| 224 | C35-kii | **की** — a whole sentence as an object |
+| 225 | C35-saathi | **-ण्यासाठी** — a verb turned into a purpose |
+| 226 | R35-inside | reason, content, aim |
+| 227 | C36-jevha | **जेव्हा … तेव्हा** — Marathi keeps both halves |
+| 228 | C36-lyaavar | **-ल्यावर** — the same two events in one word |
+| 229 | C36-sudhaa | **सुद्धा** — *too*, and *not even* |
+| 230 | R36-joined | every joining word in the book, run once |
+
+Each of these seven chapters opens by retrieving the two preceding items **by
+name** and closes on a review. That is not decoration: a naive append raises the
+reinforcement-miss count because items late in a chapter have nowhere left to be
+revisited, and the fix belongs at the chapter boundary. This tranche's own
+reinforcement debt is zero.
+
 ## Next
 
-The next Marathi script tranche should teach **ग**, **घ** and **ख** — three
-consonants the book shows and never teaches — before their next load-bearing
-use. See HL-C217 for why they are not in the verb tranche.
+The next Marathi tranche should take the **oblique stem** (`MR-A1-N-09`), which
+chapter 35 teaches exactly one instance of and records as still owed, and then
+the locative **-त** / **-वर**, which four uncovered inventory points sit behind.

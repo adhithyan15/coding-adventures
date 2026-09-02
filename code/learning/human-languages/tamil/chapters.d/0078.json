@@ -1,0 +1,21 @@
+{
+  "chapter": 78,
+  "title": "Why, and Because",
+  "label": "ch:ta-why-and-because",
+  "canDo": "I can ask for a reason and give one, before or after the thing it explains.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TA-C78-for-the-sake-of",
+    "kind": "production",
+    "summary": "Complete TA-C78-for-the-sake-of and answer one why three different ways.",
+    "assesses": [
+      "TA-LEX-C78-WHY-01",
+      "TA-LEX-C78-WHY-02",
+      "TA-SCRIPT-READ-EEN-01",
+      "TA-LEX-C78-WHY-03",
+      "TA-GRAMMAR-C78-WHY-04"
+    ]
+  }
+}

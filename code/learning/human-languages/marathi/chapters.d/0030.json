@@ -1,0 +1,19 @@
+{
+  "chapter": 30,
+  "title": "Two Sentences, One Breath",
+  "label": "ch:mr-flat-joins",
+  "canDo": "I can join two Marathi sentences with aani, offer a choice with kinvaa, and take something back with pan.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "MR-R30-three-joins",
+    "kind": "production",
+    "summary": "Complete MR-R30-three-joins and fill the same slot three ways with chaha and paani: added, offered, contradicted.",
+    "assesses": [
+      "MR-JOIN-AANI",
+      "MR-JOIN-KINVA",
+      "MR-JOIN-PAN"
+    ]
+  }
+}

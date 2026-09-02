@@ -42,7 +42,15 @@ it("pins Marathi lesson-content budgets", () =>
     // marathi/lessons holds NO schema-v1 lesson at all: 179 -> 205 is the
     // whole v1 island, and idioms, senses and culture claims never moved off
     // 5 / 4 / 7 across any of it.
-    lessons: 205,
+    //
+    // 205 -> 230: the joining tranche (chapters 30-36) adds twenty-five
+    // lessons -- seventeen items, two punctuation marks and seven reviews.
+    // Unlike every movement above it, these ARE new lessons. Four movements
+    // have now met in this one number, so it was RE-MEASURED against the
+    // merged tree rather than derived by adding 9, 6, 11 and 25 to 179, which
+    // would have been right only by luck. Idioms, senses and culture claims
+    // stay at 5 / 4 / 7: a conjunction is not an idiom.
+    lessons: 230,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -199,6 +207,19 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["27", 5],
     ["28", 5],
     ["29", 4],
+    // Chapters 30-36 are the joining tranche: three flat conjunctions, three
+    // paired shapes, sentence negation, the polar particle, why and because,
+    // and clause subordination. Seven chapters rather than three, because at
+    // three new atoms per lesson the material does not fit in fewer -- and
+    // because every one of them closes on a review, which is what held the
+    // tranche's own reinforcement misses at zero while the track grew by 25.
+    ["30", 4],
+    ["31", 4],
+    ["32", 3],
+    ["33", 3],
+    ["34", 4],
+    ["35", 3],
+    ["36", 4],
   ]);
 });
 

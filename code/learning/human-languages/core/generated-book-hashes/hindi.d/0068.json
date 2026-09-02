@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:7f381b4f7c031eda",
+  "lessonIds": [
+    "HI-C68-aur",
+    "HI-C68-ya",
+    "HI-C68-lekin",
+    "HI-R68-three-joins"
+  ],
+  "tex": "hindi/book/chapters/ch68-flat-joins.tex"
+}

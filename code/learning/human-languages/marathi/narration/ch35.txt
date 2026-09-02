@@ -1,0 +1,93 @@
+Marathi, chapter 35: A Sentence Inside a Sentence.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+की (kī) — that.
+
+Warm-up.
+[pause 3 seconds]
+Retrieve the two items before this one by name: कारण, which puts a reason under a claim, and the comma that carries a written list. Then say मला वाटतं — it seems to me. You have had the verb for a long time and have never once been able to say WHAT seems.
+
+Grammar Lens: की opens the room where the thought goes.
+मला वाटतं की चहा आहे. — malā vāṭtaṁ kī chahā āhe. — I think there is tea.
+Word for word that is to-me it-seems that tea is. Everything after की (kī) is an ordinary complete Marathi sentence — चहा आहे — doing the job of an object.
+That is the trick worth seeing: you do not need a new grammar to report a thought. You need one word and a sentence you could already say. Every sentence in this book just became something you can think, know or say about.
+मला माहीत आहे की (kī) चहा आहे. — I know that there is tea.
+Negate the outer half and the inner clause survives untouched: मला माहीत नाही की (kī) चहा आहे — I don't know whether there is tea. Only the main verb was denied.
+कारण and की (kī) are cousins in shape and different in job: कारण puts a clause underneath as a REASON, की (kī) puts one underneath as the CONTENT. Both keep the main clause first, which is Marathi's steady habit.
+की (kī) comes from the same Sanskrit question stem क- that gave you का and काय. Persian does exactly the same thing with its own ke, and for the same reason: a question word is already a placeholder, so it is the natural thing to put where a whole sentence is about to arrive.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: chahā āhe on its own]
+[pause 8 seconds for the answer]
+[your turn — say: malā vāṭtaṁ kī chahā āhe]
+[pause 8 seconds for the answer]
+[your turn — say: what changed inside the second half when you put it after की (kī) — nothing]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 30 seconds]
+Say that you think there is tea, then that you know there is tea.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What goes after की (kī)? (A whole ordinary sentence, unchanged.) How does की (kī) differ from कारण? (कारण gives the reason; की (kī) gives the content.)
+Sources: Wiktionary: की (kī).
+
+
+Lesson 2 of 3.
+-ण्यासाठी (-ṇyāsāṭhī) — in order to.
+
+Warm-up.
+[pause 2 seconds]
+Every Marathi verb in this book ends in -णे: शिकणे, वाचणे, बोलणे. That ending is what makes the verb usable as a thing. Now it becomes usable as a purpose.
+
+Grammar Lens: swap -णे for -ण्यासाठी.
+मी मराठी शिकण्यासाठी वाचतो. — mī marāṭhī shikṇyāsāṭhī vācto. — I read in order to learn Marathi.
+One swap does it — take -णे off, put -ण्यासाठी (-ṇyāsāṭhī) on:
+[a table of 2 rows, read aloud]
+dictionary form: शिकणे. purpose form: शिकण्यासाठी.
+dictionary form: वाचणे. purpose form: वाचण्यासाठी.
+The purpose clause then goes BEFORE the main verb, which is where Marathi keeps everything that modifies it.
+Two honest notes. First, साठी is a postposition meaning for the sake of — it can sit after a plain noun too. Second, the -ण्या- in front of it is not decoration: Marathi bends a word into an oblique shape before any postposition, and this is one instance of a rule that runs through the whole language. That general rule is still owed to you. Learn this one swap now; the rule it belongs to comes later.
+Where कारण answers why by giving a cause, -ण्यासाठी (-ṇyāsāṭhī) answers it by giving an aim. Marathi keeps those apart and you now have both.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: shikṇe becomes shikṇyāsāṭhī, then vācṇe becomes vācṇyāsāṭhī]
+[pause 8 seconds for the answer]
+[your turn — say: mī marāṭhī shikṇyāsāṭhī vācto]
+[pause 8 seconds for the answer]
+[your turn — say: the difference between a cause and an aim — kāraṇ against -ṇyāsāṭhī]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 25 seconds]
+Turn shikṇe into a purpose and say that you read in order to learn Marathi.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do you take off the verb, and what do you put on? (Take off -णे, put on -ण्यासाठी (-ṇyāsāṭhī).) Where does the purpose clause stand? (Before the main verb.)
+Sources: Wiktionary: साठी.
+
+
+Lesson 3 of 3.
+Three clauses underneath, three jobs — the two ways a whole clause can go inside another one.
+
+Warm-up.
+[pause 5 seconds]
+Three things can now go underneath a Marathi main clause: a reason, a content, and an aim. Name the word or ending that carries each.
+Then reach further back and say the frame that shares a pair out — एक in front of one, दुसरा in front of the other — and notice that it puts its two halves side by side as equals, which is exactly what these three do not do.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the कारण sentence]
+[pause 8 seconds for the answer]
+[your turn — say: the की (kī) sentence]
+[pause 8 seconds for the answer]
+[your turn — say: the -ण्यासाठी (-ṇyāsāṭhī) sentence]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 40 seconds]
+Give a reason, a thought and an aim: because you like Marathi, that there is tea, in order to learn.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the three goes BEFORE the main verb rather than after it? (The -ण्यासाठी (-ṇyāsāṭhī) purpose clause.) Then stop.

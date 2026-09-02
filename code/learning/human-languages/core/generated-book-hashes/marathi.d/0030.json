@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:b767ee4305dec7c3",
+  "lessonIds": [
+    "MR-C30-aani",
+    "MR-C30-kinva",
+    "MR-C30-pan",
+    "MR-R30-three-joins"
+  ],
+  "tex": "marathi/book/chapters/ch30-flat-joins.tex"
+}

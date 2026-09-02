@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:ba2c3e6fa8ae5102",
+  "lessonIds": [
+    "TA-C77-say",
+    "TA-C77-quotative",
+    "TA-W32-read-sol",
+    "TA-C77-opinion"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch77.txt",
+  "json": "tamil/narration/ch77.json",
+  "textHash": "fnv1a64:9a663a86ccba825d",
+  "jsonHash": "fnv1a64:c7c7e85fccb0287b",
+  "findings": []
+}

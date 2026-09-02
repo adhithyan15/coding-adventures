@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f2d4a698070362d3",
+  "sourceHash": "fnv1a64:6e3c0be666be9c75",
   "lessons": [
     {
       "id": "TA-C18-mani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d305720b49f4f434",
+      "sourceHash": "fnv1a64:9b7e2478fc3712ef",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"maṇi\" — hour, also \"bell\" — native, NOT from Sanskrit ghaṇṭā]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "௩ மணி (maṇi) — the numeral from chapter seven and the hour word you have met, side by side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **௩ மணி** — the numeral from chapter seven and the hour word you have met, side by side]"
             }
           ]
         },

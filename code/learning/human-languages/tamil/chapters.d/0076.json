@@ -1,0 +1,20 @@
+{
+  "chapter": 76,
+  "title": "But, and Or",
+  "label": "ch:ta-but-and-or",
+  "canDo": "I can set one statement against another, offer a choice between two, and take the answer.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "TA-C76-choice",
+    "kind": "production",
+    "summary": "Complete TA-C76-choice and offer two drinks, in the long form and the short one.",
+    "assesses": [
+      "TA-LEX-C76-JOIN-01",
+      "TA-LEX-C76-JOIN-02",
+      "TA-SCRIPT-READ-AANAAL-01",
+      "TA-PRAGMATICS-C76-CHOICE-03"
+    ]
+  }
+}

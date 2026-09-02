@@ -1,0 +1,24 @@
+{
+  "chapter": 36,
+  "title": "When, After, and Too",
+  "label": "ch:mr-time-joins",
+  "canDo": "I can place two events in time with jevhaa ... tevhaa or the shorter -lyaavar, add something with sudhaa, and run every joining word in the book once.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MR-R36-joined",
+    "kind": "production",
+    "summary": "Complete MR-R36-joined and say five sentences with a clause underneath -- a reason, a content, an aim, a same-time and an after -- naming the job of each.",
+    "assesses": [
+      "MR-JOIN-JEVHA",
+      "MR-GRAMMAR-LYAAVAR",
+      "MR-JOIN-SUDHAA",
+      "MR-JOIN-SUDHAA-NEG",
+      "MR-JOIN-KII",
+      "MR-JOIN-KAARAN",
+      "MR-JOIN-SAATHI"
+    ],
+    "note": "The chapter's payoff is the whole joining column run once, not only the three items this chapter introduces."
+  }
+}

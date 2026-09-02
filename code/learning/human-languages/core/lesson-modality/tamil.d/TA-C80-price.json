@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C80-price",
+    "language": "tamil",
+    "chapter": 80,
+    "sequence": 3310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d494e374dbb66b3"
+  },
+  "findings": []
+}

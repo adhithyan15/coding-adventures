@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W35-read-marradu",
+    "language": "tamil",
+    "chapter": 80,
+    "sequence": 3300,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:14e2fa4d716565fe",
+    "detachableSegments": [
+      "Script you'll notice: மற்றது — ற standing on ற"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:2de98d9e3dae041e",
+  "lessonIds": [
+    "MR-C32-nahi-verb",
+    "MR-C32-nako",
+    "MR-R32-not-so"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch32.txt",
+  "json": "marathi/narration/ch32.json",
+  "textHash": "fnv1a64:a766ae68f085045c",
+  "jsonHash": "fnv1a64:c4d1e3f0b5740986",
+  "findings": []
+}

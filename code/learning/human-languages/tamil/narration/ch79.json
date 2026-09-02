@@ -1,0 +1,653 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 79,
+  "title": "When",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:9e92fc28f8f61a96",
+  "lessons": [
+    {
+      "id": "TA-C79-when-question",
+      "sequence": 3240,
+      "title": "எப்போது (eppōdu) — when?",
+      "headword": "எப்போது",
+      "romanization": "eppōdu",
+      "gloss": "when?",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43489bb7440fcb97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say so, therefore. Then say: tea for you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எப்போது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எப்போது (eppōdu) — \"when?\""
+            },
+            {
+              "kind": "speech",
+              "text": "You have had இப்போது, \"now\", since chapter forty-eight, and you have had the pattern behind it since chapter forty: i- for near, a- for far, e- for a question."
+            },
+            {
+              "kind": "speech",
+              "text": "So this word was already half yours:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: இப்போது, ippōdu, now — this time.",
+                "word: எப்போது, eppōdu, when? — which time."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The shared piece is போது, a word meaning a time, an occasion. Change only the front and you have walked from a statement to a question, exactly as இங்கே walked to எங்கே."
+            },
+            {
+              "kind": "speech",
+              "text": "எப்போது (eppōdu) வேண்டும்? — \"When do you want it?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The question word for time, and the small word போது that sits inside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eppōdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eppōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippōdu, then eppōdu — the statement, then the question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippōdu*, then *eppōdu* — the statement, then the question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "eppōdu vēṇḍum?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: *eppōdu vēṇḍum?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adaṉāl, then say uṅgaḷukkāga, then ask eppōdu?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adaṉāl*, then say *uṅgaḷukkāga*, then ask *eppōdu?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say -um, kaḷam and ēṉ — three distances back — then say when one of them happens",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *-um*, *kaḷam* and *ēṉ* — three distances back — then say when one of them happens]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the piece these two words share, and what does it mean? (போது — a time.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C79-then",
+      "sequence": 3250,
+      "title": "அப்போது (appōdu) — then, at that time",
+      "headword": "அப்போது",
+      "romanization": "appōdu",
+      "gloss": "then, at that time",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dde96c55d31a7b80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say for you. Then ask when?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அப்போது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அப்போது (appōdu) — \"then, at that time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The third seat was empty and now it is filled:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "இப்போது, ippōdu, now.",
+                "அப்போது, appōdu, then.",
+                "எப்போது, eppōdu, when?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Near, far, question — the same three fronts you first met on இங்கே, அங்கே, எங்கே."
+            },
+            {
+              "kind": "speech",
+              "text": "Then in Tamil means a time somebody has already named. It looks backwards, the way அதனால் does, and for the same reason: both begin on the a- that means that one, over there."
+            },
+            {
+              "kind": "speech",
+              "text": "நாளை. அப்போது (appōdu) சொல்லுங்கள். — \"Tomorrow. Tell me then.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A complete set of three, from a pattern you were given nearly forty chapters ago."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appōdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three in order — ippōdu, appōdu, eppōdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three in order — *ippōdu, appōdu, eppōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NOTICE",
+              "instruction": "the front that means that one, in அப்போது (appōdu) and in அதனால்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NOTICE: the front that means *that one*, in அப்போது and in அதனால்]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say uṅgaḷukkāga, then ask eppōdu?, then answer appōdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *uṅgaḷukkāga*, then ask *eppōdu?*, then answer *appōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say aṟuvaṭai, read பாலும் and say ēṉeṉṟāl — three distances back — then say when one of them happens",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *aṟuvaṭai*, read **பாலும்** and say *ēṉeṉṟāl* — three distances back — then say when one of them happens]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why can அப்போது (appōdu) never open a conversation? (Because a- points at a time somebody has already named.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W34-read-eppothu",
+      "sequence": 3260,
+      "title": "எப்போது (eppōdu) — the doubled letter, read across a seam",
+      "headword": "எப்போது",
+      "romanization": "eppōdu",
+      "gloss": "the question word for time on the page — four pieces, including the doubling புள்ளி",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:75fb93a5173cf23d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: எப்போது — one letter, twice, on either side of a புள்ளி",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: எப்போது — one letter, twice, on either side of a புள்ளி and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the page: say now, then, when? in that order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: எப்போது — one letter, twice, on either side of a புள்ளி",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "piece: எ, e, the free-standing short e, because the word opens on it.",
+                "piece: ப், p, ப with a புள்ளி.",
+                "piece: போ, pō, ப with the wrapping ோ sign.",
+                "piece: து, du, த with the ு sign."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "எ, ப், போ, து becomes எப்போது (eppōdu)."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle is the shape you first read in சட்டை: the same letter written twice, the first one wearing a புள்ளி and leaning on the second. Here it is ப, and the doubling is exactly what makes the pp you hear."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the seam and the word divides itself: எ is the question front from chapter forty, and போது is the time-word. அப்போது (appōdu) is the same page with one letter changed at the start."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எ — then ப் — then போ — then து",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எ** — then **ப்** — then **போ** — then **து**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது (eppōdu), then அப்போது (appōdu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**, then **அப்போது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the two ப shapes, and say which one carries no vowel",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the two ப shapes, and say which one carries no vowel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask eppōdu?, then answer appōdu, then read எப்போது",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *eppōdu?*, then answer *appōdu*, then read **எப்போது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say -um … -um illai, say kuḍi and read ஏன் — three distances back — then say when one of them happens",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *-um … -um illai*, say *kuḍi* and read **ஏன்** — three distances back — then say when one of them happens]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read எப்போது (eppōdu). Which one letter would you change to read then instead? (The first — எ becomes அ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C79-when-clause",
+      "sequence": 3270,
+      "title": "-உம் போது (-um pōdu) — when one thing happens, so does another",
+      "headword": "-உம் போது",
+      "romanization": "-um pōdu",
+      "gloss": "joining two things that happen at the same time — when X happens",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:deef13b055dff3c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read எப்போது (eppōdu). Then say then, at that time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens: the time-word does the joining",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எப்போது (eppōdu) asks about a time. போது on its own can pin one, and when a verb stands in front of it the whole thing becomes when that happens."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb takes -உம் first:"
+            },
+            {
+              "kind": "speech",
+              "text": "வா becomes வரும் becomes வரும் போது — \"at the coming time\" — \"when [you] come\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நீங்கள் வரும் போது, சொல்லுங்கள்."
+            },
+            {
+              "kind": "speech",
+              "text": "nīṅgaḷ varum pōdu, solluṅgaḷ. — \"When you come, tell me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two things happening at once, held together by a word that means time. No word for when is needed, because போது already is one."
+            },
+            {
+              "kind": "speech",
+              "text": "One warning, because it would otherwise mislead you. The -உம் here is not the joining ending from chapter seventy-four. That one sat on nouns and meant and. This one sits on verbs and marks a happening. Same two letters, two different jobs — and the word in front of them tells you which."
+            },
+            {
+              "kind": "speech",
+              "text": "Everyday speech runs it together and clips it, so you will hear varumbōdu as one word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The last of this chapter's three: a time you ask about, a time you point at, and a time you build out of a verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varum pōdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varum pōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīṅgaḷ varum pōdu, solluṅgaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīṅgaḷ varum pōdu, solluṅgaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SEPARATE",
+              "instruction": "say pālum and then varum — the same ending, two different jobs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SEPARATE: say *pālum* and then *varum* — the same ending, two different jobs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "answer appōdu, then read எப்போது (eppōdu), then say the whole varum pōdu line",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: answer *appōdu*, then read **எப்போது**, then say the whole *varum pōdu* line]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say -ā, naḍa and adaṉāl — three distances back — then say when one of them happens",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *-ā*, *naḍa* and *adaṉāl* — three distances back — then say when one of them happens]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words end in -உம்: பாலும் and வரும். What tells them apart? (What they sit on — a naming word joins, a doing word marks a happening.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
