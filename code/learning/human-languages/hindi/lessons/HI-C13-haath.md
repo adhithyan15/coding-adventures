@@ -10,6 +10,7 @@ chapter: 13
 type: word
 headword: हाथ
 gloss: the hand — from Sanskrit hasta, with a real (if non-obvious) sound-change story
+romanization: "hāth"
 concept_tag: HI-BODY-HAND
 prerequisites: [HI-C13-sir]
 sounds: [devanagari-long-aa, aspirated-tha]

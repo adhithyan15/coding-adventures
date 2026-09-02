@@ -10,6 +10,7 @@ chapter: 36
 type: word
 headword: दरवाज़ा
 gloss: door — masculine, a Persian loan whose first syllable is the same ancient word as English "door"
+romanization: "darvāzā"
 concept_tag: HI-HOME-DOOR
 prerequisites: [HI-C36-ghar, HI-W05-write-namaste, HI-C27-shubh-raatri]
 sounds: [nuqta-za, devanagari-long-aa]

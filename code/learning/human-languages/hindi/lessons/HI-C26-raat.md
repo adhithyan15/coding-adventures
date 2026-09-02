@@ -10,6 +10,7 @@ chapter: 26
 type: word
 headword: रात
 gloss: "night" — already met inside aadhi raat ("midnight"); despite meaning the same thing as Latin's nox, in a related Indo-European language, it comes from a COMPLETELY DIFFERENT PIE root — a genuine false cousin
+romanization: "raat"
 concept_tag: TIME-NIGHT
 prerequisites: [HI-C17-dopahar-aadhi-raat, HI-C25-din]
 sounds: [devanagari-long-aa, devanagari-ta]

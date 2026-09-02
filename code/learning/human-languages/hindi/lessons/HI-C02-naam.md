@@ -10,6 +10,7 @@ chapter: 2
 type: word
 headword: नाम
 gloss: name
+romanization: "nām"
 concept_tag: WORD-NAME
 prerequisites: []
 sounds: [matra-aa]

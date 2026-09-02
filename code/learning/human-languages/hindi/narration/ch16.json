@@ -4,14 +4,14 @@
   "chapter": 16,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c2f970c9c535ec05",
+  "sourceHash": "fnv1a64:48e1ff769ee7c082",
   "lessons": [
     {
       "id": "HI-C16-mahine",
       "sequence": 630,
       "title": "जनवरी to दिसंबर — borrowed names, and a second calendar underneath",
       "headword": "जनवरी फ़रवरी मार्च अप्रैल मई जून जुलाई अगस्त सितंबर अक्टूबर नवंबर दिसंबर",
-      "romanization": "",
+      "romanization": "janvarī farvarī mārc aprail maī jūn julāī agast sitambar aktūbar navambar disambar",
       "gloss": "the Gregorian months — borrowed English/international names, running ALONGSIDE the traditional Vikram Samvat calendar's own six-ritu-linked months",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbf9276b18fafe92",
+      "sourceHash": "fnv1a64:fb8534d97bedb2a8",
       "notice": null,
       "blocks": [
         {

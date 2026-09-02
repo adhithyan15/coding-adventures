@@ -10,6 +10,7 @@ chapter: 3
 type: word
 headword: ठीक
 gloss: fine, well, correct — and the reply "मैं ठीक हूँ"
+romanization: "ṭhīk"
 concept_tag: WORD-WELL
 prerequisites: [HI-C03-hun, HI-C03-main]
 sounds: [retroflex-tha, matra-i]

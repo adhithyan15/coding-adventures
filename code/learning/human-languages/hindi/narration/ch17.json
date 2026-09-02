@@ -4,14 +4,14 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cffbeb9cee6c7900",
+  "sourceHash": "fnv1a64:52df70e96f16d43a",
   "lessons": [
     {
       "id": "HI-C17-dopahar-aadhi-raat",
       "sequence": 640,
       "title": "दोपहर, आधी रात — noon by an old clock, midnight fully transparent",
       "headword": "दोपहर आधी रात",
-      "romanization": "",
+      "romanization": "dopahar ādhī rāt",
       "gloss": "noon (literally \"two pahars,\" a traditional 3-hour time unit) and midnight (\"half night,\" fully transparent)",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3416d89206b4ed7",
+      "sourceHash": "fnv1a64:c875a2c807423606",
       "notice": null,
       "blocks": [
         {

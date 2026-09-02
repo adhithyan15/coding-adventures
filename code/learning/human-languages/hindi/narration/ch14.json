@@ -4,14 +4,14 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3d6892fdeab9090f",
+  "sourceHash": "fnv1a64:dc56b4fe123719bd",
   "lessons": [
     {
       "id": "HI-C14-ritu",
       "sequence": 610,
       "title": "वसंत, ग्रीष्म, वर्षा, शरद्, हेमंत, शिशिर — six seasons, not four",
       "headword": "वसंत ग्रीष्म वर्षा शरद् हेमंत शिशिर",
-      "romanization": "",
+      "romanization": "vasant grīṣma varṣā śarad hemant śiśir",
       "gloss": "SIX traditional seasons, not four — India's own ऋतु system, which the Western four-season frame doesn't map onto cleanly",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b75978f448808762",
+      "sourceHash": "fnv1a64:53fc903ec2312b13",
       "notice": null,
       "blocks": [
         {
