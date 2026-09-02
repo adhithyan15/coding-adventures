@@ -17,9 +17,9 @@ duration:
 requires:
   knowledge: [TA-LEX-NUMBERS-6-10-01]
 introduces:
-  knowledge: []
+  knowledge: [TA-SCRIPT-W07-DIGITS-04]
 practises:
-  knowledge: [TA-LEX-NUMBERS-6-10-01]
+  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -36,7 +36,7 @@ reviews_of: [TA-W07-digits-6-8]
 [PAUSE 2s] Read **௬ ௭ ௮**. Two shapes finish the row.
 
 ## Script
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01] -->
+<!-- hl-knowledge: introduces=[TA-SCRIPT-W07-DIGITS-04]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-03] -->
 
 - **௯** means 9: *onpatu*.
 - **௰** means 10: *pattu*.
@@ -44,14 +44,14 @@ reviews_of: [TA-W07-digits-6-8]
 Point through **௬ ௭ ௮ ௯ ௰** once.
 
 ## Writing — observe and trace
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Trace **௯** once and **௰** once with their models visible. Circle the one you
 hear: [YOU HEAR: *onpatu*]. (**௯**.)
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 [PAUSE 3s] Which shape means ten? (**௰**.) Read **௯**. (***Onpatu.***) Two new
 shapes arrived.

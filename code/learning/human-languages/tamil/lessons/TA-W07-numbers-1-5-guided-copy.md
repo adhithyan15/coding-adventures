@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 120
 requires:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -36,13 +36,13 @@ reviews_of: [TA-W07-number-words-1-5]
 Point through **௧ ௨ ௩ ௪ ௫** and say the five words. Keep the row visible.
 
 ## Writing — guided copy
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 <!-- hl-writing-stage: guided-copy -->
 
 Copy the row once beneath its model. Look back after every shape if needed.
 Say *onru* through *aintu* as you check. Repair only one shape.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 
 [PAUSE 3s] Read **௪**. (***Naanku.***) No new shape was added here.

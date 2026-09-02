@@ -1,0 +1,20 @@
+{
+  "chapter": 74,
+  "title": "And, and Also",
+  "label": "ch:ta-and-and-also",
+  "canDo": "I can join two things with -um, say that one more thing applies too, and deny both at once.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-C74-neither",
+    "kind": "production",
+    "summary": "Complete TA-C74-neither and say a two-item list, then the same list denied.",
+    "assesses": [
+      "TA-GRAMMAR-C74-JOIN-01",
+      "TA-GRAMMAR-C74-JOIN-02",
+      "TA-SCRIPT-READ-PAALUM-01",
+      "TA-GRAMMAR-C74-JOIN-03"
+    ]
+  }
+}

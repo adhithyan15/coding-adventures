@@ -4,7 +4,8 @@
     "TA-PATH-026",
     "TA-PATH-200",
     "TA-PATH-201",
-    "TA-PATH-43-KIN"
+    "TA-PATH-43-KIN",
+    "TA-PATH-80-OTHER"
   ],
   "omits": [
     "GRAMMAR-THE"
