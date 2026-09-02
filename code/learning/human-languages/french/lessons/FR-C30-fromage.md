@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C30-fromage
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1050
-chapter: 32
+chapter: 33
 type: word
 headword: le fromage
 gloss: cheese — masculine, and named for its MOULD rather than for the milk it's made from

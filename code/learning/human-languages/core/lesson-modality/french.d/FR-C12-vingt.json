@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C12-vingt",
+    "language": "french",
+    "chapter": 15,
+    "sequence": 435,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a19f97b7dfaa364"
+  },
+  "findings": []
+}

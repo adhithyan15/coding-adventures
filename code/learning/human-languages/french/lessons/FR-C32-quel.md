@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C32-quel
 spine_node: SPINE-ASK-LOCATION
 sequence: 1280
-chapter: 34
+chapter: 35
 type: grammar
 headword: quel, quelle
 gloss: "which — the question word that agrees with its noun"

@@ -1,15 +1,15 @@
 {
   "language": "french",
   "chapter": 25,
-  "sourceHash": "fnv1a64:d680024161e88f82",
+  "sourceHash": "fnv1a64:8f24e0777513540d",
   "lessonIds": [
-    "FR-C23-vert-jaune"
+    "FR-C22-chien-chat"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "french/narration/ch25.txt",
   "json": "french/narration/ch25.json",
-  "textHash": "fnv1a64:73ddd75f1b3278a3",
-  "jsonHash": "fnv1a64:0127823042aa7e4f",
+  "textHash": "fnv1a64:3db884b2cb3ce4df",
+  "jsonHash": "fnv1a64:6203e8e80ee97e6e",
   "findings": []
 }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 28,
-  "title": "Hearing, Sleeping, Walking, Running",
+  "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f8b818fd298af4b3",
+  "sourceHash": "fnv1a64:03986ef5a4aa68b7",
   "lessons": [
     {
-      "id": "FR-C26-entendre",
-      "sequence": 890,
-      "title": "entendre — \"to hear,\" and the stretching inside it",
-      "headword": "entendre",
-      "romanization": "entendre",
-      "gloss": "to hear — from a Latin verb meaning \"to stretch toward,\" so English's intend is its closest surviving cousin, and French still keeps the older sense in entendu and s'entendre",
+      "id": "FR-C25-comprendre",
+      "sequence": 850,
+      "title": "comprendre — \"to understand,\" which is just taking, together",
+      "headword": "comprendre",
+      "romanization": "comprendre",
+      "gloss": "to understand — literally com- + prendre, \"to take together,\" so in French understanding IS grasping, and the verb conjugates exactly like the one it is built from",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77d575433c68fbb9",
+      "sourceHash": "fnv1a64:1f02122a45541593",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can think and understand. Now the ear — and French's word for it is English's intend."
+              "text": "This is the cheapest verb you will ever learn, because you already own all of it. Prendre was \"to take.\" Put com- in front, and French tells you what it thinks understanding actually is."
             }
           ]
         },
@@ -46,109 +46,86 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "entendre — to hear. Two nasal an sounds in a row, then the -dre of prendre: say it ahn-TAHN-druh. J'entends le chien. — I hear the dog."
+              "text": "comprendre — to understand. Said kohn-PRAHN-druh: two nasals in a row, kohn then prahn. Je comprends. — I understand. Vous comprenez? — Do you understand?"
             },
             {
               "kind": "speech",
-              "text": "The -ds of j'entends is silent, as in je prends."
+              "text": "The -ds of je comprends is silent, exactly as in je prends."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the nasal that stays put",
+          "type": "etymology",
+          "title": "The word, taken apart: taking things together",
           "segments": [
             {
               "kind": "speech",
-              "text": "Prendre's nasal dies in the plural. Entendre looks like its twin and does the opposite — the stem never moves:"
+              "text": "comprendre is com- (\"together, with\") + prendre (\"to take\"), and Latin had already built it: comprehendere, \"to grasp several things at once.\" Nothing has been added since. To understand, in French, is to get your hand around the whole of it."
             },
             {
               "kind": "speech",
-              "text": "j'entends — jahn-TAHN."
+              "text": "English took the long Latin form and the short French one both:"
             },
             {
               "kind": "speech",
-              "text": "tu entends — ahn-TAHN."
+              "text": "comprehend — the full Latin spelling, straight through."
             },
             {
               "kind": "speech",
-              "text": "il entend — ahn-TAHN (three identical to the ear)."
+              "text": "comprehensive — having taken everything in; comprehension."
             },
             {
               "kind": "speech",
-              "text": "nous entendons — ahn-tahn-DOHN, nasal still there."
+              "text": "comprise — from French compris, \"taken together\": what a thing takes in."
             },
             {
               "kind": "speech",
-              "text": "vous entendez — ahn-tahn-DAY."
-            },
-            {
-              "kind": "speech",
-              "text": "ils entendent — ahn-TAHND."
+              "text": "And you can hear the metaphor still alive in English: we say we grasp an idea, or that a point is over our heads — out of reach of the hand."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: a stretching",
+          "type": "grammar",
+          "title": "Grammar Lens: the same verb, so the same forms",
           "segments": [
             {
               "kind": "speech",
-              "text": "entendre from Latin intendere — in- \"toward\" plus tendere, \"to stretch.\" To intendere was to stretch a thing out and aim it: a bowstring, a journey, your attention. English kept the family — intend, plainest of them, plus intent, intense, tension, a tent (a stretched skin), extend and pretend."
+              "text": "Because comprendre is prendre with a prefix, it breaks in exactly the same places. Nothing new to memorise — say the six and hear the nasal die in the plural, just as before:"
             },
             {
               "kind": "speech",
-              "text": "Set your three mind-verbs together: French pictures each as a different thing the body does."
+              "text": "je comprends — kohn-PRAHN."
             },
             {
               "kind": "speech",
-              "text": "comprendre — to grasp together, built on prendre."
+              "text": "tu comprends — kohn-PRAHN."
             },
             {
               "kind": "speech",
-              "text": "penser — to weigh, from pēnsāre."
+              "text": "il comprend — kohn-PRAHN (three identical to the ear)."
             },
             {
               "kind": "speech",
-              "text": "entendre — to stretch toward."
+              "text": "nous comprenons — kohn-pruh-NOHN, nasal gone from the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "vous comprenez — kohn-pruh-NAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils comprennent — kohn-PREN, the doubled n again."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth more than one verb. Every French verb built on prendre behaves this way, so the pattern you drilled once now pays out repeatedly."
             }
           ]
         },
         {
           "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the sense that took over",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "From its oldest French records entendre already covers a span at once: to hear, to attend, to understand, to intend. Nothing arrived late. What happened since is that the other senses fell away and hearing took the word outright — because Latin's verb for hearing, audīre, wore down in French to ouïr and stopped being usable. English kept that family instead: audio, audience, audible, audition."
-            },
-            {
-              "kind": "speech",
-              "text": "The abandoned senses survive in phrases French never rebuilt:"
-            },
-            {
-              "kind": "speech",
-              "text": "entendu — \"understood,\" \"agreed.\""
-            },
-            {
-              "kind": "speech",
-              "text": "s'entendre — to hear one another, and so to get along."
-            },
-            {
-              "kind": "speech",
-              "text": "l'entente — an understanding between parties, borrowed into English whole in Entente Cordiale."
-            },
-            {
-              "kind": "speech",
-              "text": "So the two languages split one Latin pair: French hears with the verb English uses for intending, and English hears with the verb French let go."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -161,61 +138,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"entendre\" — ahn-TAHN-druh, two nasals",
+              "instruction": "\"je prends\" then \"je comprends\" — the second is the first, plus com-",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"entendre\" — *ahn-TAHN-druh*, two nasals]"
+              "source": "[YOU SAY: \"je prends\" then \"je comprends\" — the second is the first, plus *com-*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'entends le chien\"",
+              "instruction": "\"nous prenons, nous comprenons\" — both lose the nasal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'entends le chien\"]"
+              "source": "[YOU SAY: \"nous prenons, nous comprenons\" — both lose the nasal]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nous prenons\" then \"nous entendons\" — one flattens, one holds",
+              "instruction": "\"vous comprenez?\" then answer \"oui\" and then \"non\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nous prenons\" then \"nous entendons\" — one flattens, one holds]"
+              "source": "[YOU SAY: \"vous comprenez ?\" then answer \"oui\" and then \"non\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'écris, je comprends, j'entends\"",
+              "instruction": "\"comprendre, comprehend, comprise\" — one family, two spellings",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'écris, je comprends, j'entends\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three pictures — stretching, grasping, weighing",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three pictures — stretching, grasping, weighing]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"intend, tension, tent\" — all a stretching",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"intend, tension, tent\" — all a stretching]"
+              "source": "[YOU SAY: \"comprendre, comprehend, comprise\" — one family, two spellings]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -227,26 +186,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I hear the dog\" and \"we hear.\" (J'entends le chien. Nous entendons — and unlike nous prenons, nothing flattens.) What did intendere mean, and which English verb is its plainest survival? (To stretch toward; intend.) Why did French hand hearing to this verb? (Latin's audīre wore down to ouïr and fell out of use — English kept the audīre words instead.) What does s'entendre mean? (To get along.)"
+              "text": "What two pieces is comprendre made of, and what does the whole literally mean? (Com- \"together\" + prendre \"to take\" — to take together.) Say \"we understand.\" (Nous comprenons — nasal gone, like nous prenons.) Someone asks vous comprenez? — give both possible answers. (Oui or non.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C26-dormir",
-      "sequence": 900,
-      "title": "dormir — \"to sleep,\" and the room named after it",
-      "headword": "dormir",
-      "romanization": "dormir",
-      "gloss": "to sleep — Latin dormīre, unchanged in French, and the source of dormitory and dormant, though not of the dormouse",
+      "id": "FR-C25-penser",
+      "sequence": 860,
+      "title": "penser — \"to think,\" which began as weighing",
+      "headword": "penser",
+      "romanization": "penser",
+      "gloss": "to think — from a Latin verb meaning \"to weigh,\" which is why English pensive, ponder, compensate, expense and even the flower pansy all sit in one family",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dad1f8f819e3212",
+      "sourceHash": "fnv1a64:4934d8ff44b00ec4",
       "notice": null,
       "blocks": [
         {
@@ -262,7 +221,7 @@
             },
             {
               "kind": "speech",
-              "text": "After a verb that changed jobs, here is one that never changed. Dormir is Latin's word for sleeping, handed on almost untouched — and it hides one trap."
+              "text": "Understanding, you saw with comprendre, is grasping. This verb says thinking is weighing — and once you know that, half a dozen English words you use in money and medicine suddenly line up behind it."
             }
           ]
         },
@@ -273,77 +232,69 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dormir — to sleep. Said dor-MEER, with the throaty French r in the middle and at the end. Le chat dort. — The cat is sleeping."
+              "text": "penser — to think. Said pahn-SAY: the -en- is the nasal you have been making since prendre, and -er is a clean ay. Je pense. — I think. Vous pensez? — Do you think so?"
             },
             {
               "kind": "speech",
-              "text": "French has no separate \"is sleeping\" form. Il dort covers both \"he sleeps\" and \"he is sleeping\"; the plain present does all the work."
+              "text": "A completely regular -er verb after the strain of comprendre: je pense, tu penses, il pense, nous pensons, vous pensez, ils pensent. Four of the six sound identical — pahns — and only nous and vous stand out."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the m that goes missing",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "The stem is dorm-, and in the singular French throws the m away. Listen for where it comes back:"
+              "text": "Two nasals sit close together in French and beginners flatten them into one. Hold them apart by saying them back to back:"
             },
             {
               "kind": "speech",
-              "text": "je dors — dor."
+              "text": "non — the -on nasal, rounded, lips pushed forward."
             },
             {
               "kind": "speech",
-              "text": "tu dors — dor."
+              "text": "pense — the -en nasal, unrounded, mouth wider and flatter."
             },
             {
               "kind": "speech",
-              "text": "il dort — dor (three identical, the m gone)."
-            },
-            {
-              "kind": "speech",
-              "text": "nous dormons — dor-MOHN, and there it is."
-            },
-            {
-              "kind": "speech",
-              "text": "vous dormez — dor-MAY."
-            },
-            {
-              "kind": "speech",
-              "text": "ils dorment — DORM."
-            },
-            {
-              "kind": "speech",
-              "text": "One rule, and you have the whole verb: singular loses the last stem consonant, plural gets it back. A small family of -ir verbs shares the shape, so learning it once is worth more than one verb."
+              "text": "Same trick every time: your lips tell the two apart, not your tongue."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: dormīre",
+          "title": "The word, taken apart: weighing a thing",
           "segments": [
             {
               "kind": "speech",
-              "text": "dormir from Latin dormīre, \"to sleep.\" Spanish kept dormir, Italian dormire, Portuguese dormir — the verb crossed into its daughter languages untouched, which is rarer than it sounds. English has no inherited descendant; it borrowed the family later, through French:"
+              "text": "penser from Latin pēnsāre, \"to weigh carefully,\" a repeated-action form of pendere, \"to weigh, to hang.\" Roman weighing was done by hanging things from a balance, which is why one root covers both. English inherited the whole scale:"
             },
             {
               "kind": "speech",
-              "text": "dormitory from dormītōrium, a sleeping place; French wore the identical word down to dortoir."
+              "text": "pensive — weighing something in your mind."
             },
             {
               "kind": "speech",
-              "text": "dormant — Old French dormant, \"sleeping\"; a dormant volcano is asleep."
+              "text": "compensate — to weigh one thing against another until they balance; expense and expend, money weighed out; dispense, weighed apart."
             },
             {
               "kind": "speech",
-              "text": "dormer — a roof window, from Old French dormeor, because the room behind it was where you slept."
+              "text": "pension — originally a weighing-out, a payment; poise, a balance held."
             },
             {
               "kind": "speech",
-              "text": "And an honest stop. The dormouse looks like the best cousin of the lot and is not one. The story needs an Anglo-Norman word for \"sleeper\" that nobody has found in a text, and dormouse's real origin is unknown. A guess in circulation, not an etymology."
+              "text": "suspend and pendant — the hanging half of the same root."
+            },
+            {
+              "kind": "speech",
+              "text": "The prettiest cousin is a flower. French pensée means \"a thought\" — and English borrowed it, sound and all, as pansy."
+            },
+            {
+              "kind": "speech",
+              "text": "One honest note: English think is Germanic and is not related to any of this. The two words mean the same thing and share no history."
             }
           ]
         },
@@ -361,56 +312,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"dormir\" — dor-MEER, throaty r",
+              "instruction": "\"penser\" — pahn-SAY",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"dormir\" — *dor-MEER*, throaty *r*]"
+              "source": "[YOU SAY: \"penser\" — *pahn-SAY*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je dors\" then \"nous dormons\" — the m vanishes, then returns",
+              "instruction": "\"non, pense\" — the round nasal, then the flat one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je dors\" then \"nous dormons\" — the *m* vanishes, then returns]"
+              "source": "[YOU SAY: \"non, pense\" — the round nasal, then the flat one]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le chat dort\" — the cat, the travelling word out of Egypt",
+              "instruction": "\"je pense\" then \"je comprends\" — I think, I understand",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le chat dort\" — the cat, the travelling word out of Egypt]"
+              "source": "[YOU SAY: \"je pense\" then \"je comprends\" — I think, I understand]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'entends le chat\" then \"le chat dort\"",
+              "instruction": "\"penser, pensive, compensate, pansy\" — all a weighing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'entends le chat\" then \"le chat dort\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"dormir, dormitory, dormant\" — one Latin verb, borrowed back",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"dormir, dormitory, dormant\" — one Latin verb, borrowed back]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je comprends\" then \"je dors\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je comprends\" then \"je dors\"]"
+              "source": "[YOU SAY: \"penser, pensive, compensate, pansy\" — all a **weighing**]"
             }
           ]
         },
@@ -427,26 +360,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the cat is sleeping\" and \"we sleep.\" (Le chat dort. Nous dormons — the m is silent in the singular and audible in the plural.) Where does dormitory come from? (Latin dormītōrium, \"a sleeping place\" — and French wore the same word down to dortoir.) Is the dormouse in this family? (No — that is folk etymology; the word's real origin is unknown.) And chat — an inherited Latin word, or a traveller? (A traveller, from cattus, moving with the cat itself out of Egypt.)"
+              "text": "Say \"I think\" and \"do you think so.\" (Je pense. Vous pensez?) What did Latin pēnsāre mean, and name three English cousins. (To weigh — pensive, compensate, expense, pension, poise.) What flower is French for \"a thought\"? (The pansy, from pensée.) Which of non and pense has the rounded lips? (Non — pense is flat and wide.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C26-marcher",
-      "sequence": 910,
-      "title": "marcher — \"to walk,\" and the step hiding inside French negation",
-      "headword": "marcher",
-      "romanization": "marcher",
-      "gloss": "to walk — and also to work, so ça marche is the most useful two words in the chapter; its own origin is genuinely unsettled between a Frankish verb and a Latin hammer",
+      "id": "FR-C25-lire",
+      "sequence": 870,
+      "title": "lire — \"to read,\" which used to mean \"to pick up\"",
+      "headword": "lire",
+      "romanization": "lire",
+      "gloss": "to read — from a Latin verb that first meant \"to gather,\" which is why reading, electing, collecting and being elegant all turn out to be the same act",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1aa199a21e833e0e",
+      "sourceHash": "fnv1a64:f451de4a08604759",
       "notice": null,
       "blocks": [
         {
@@ -462,7 +395,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can hear and you can sleep. Now move. This verb does a second job too, used dozens of times a day."
+              "text": "A short word with an enormous family behind it. Before lire meant reading, its Latin ancestor meant gathering — and that older sense is why a dozen English words that seem unrelated turn out to be relatives."
             }
           ]
         },
@@ -473,78 +406,79 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "marcher — to walk. Said mar-SHAY: the -er is a clean ay, and the ch is sh, never k. Je marche. — I walk."
+              "text": "lire — to read. Said leer, with the throaty French r at the end. Je lis le français. — I read French."
             },
             {
               "kind": "speech",
-              "text": "After dormir's vanishing m, this one asks nothing: an ordinary -er verb. Je marche, tu marches, il marche, nous marchons, vous marchez, ils marchent — four of the six sound identical, just marsh."
+              "text": "Lire is irregular, and its stem grows an s in the plural. Say the six:"
+            },
+            {
+              "kind": "speech",
+              "text": "je lis — lee, the -s silent."
+            },
+            {
+              "kind": "speech",
+              "text": "tu lis — lee."
+            },
+            {
+              "kind": "speech",
+              "text": "il lit — lee (three identical again)."
+            },
+            {
+              "kind": "speech",
+              "text": "nous lisons — lee-ZOHN, and there is the s."
+            },
+            {
+              "kind": "speech",
+              "text": "vous lisez — lee-ZAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils lisent — LEEZ."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: ça marche",
+          "type": "etymology",
+          "title": "The word, taken apart: gathering, then reading",
           "segments": [
             {
               "kind": "speech",
-              "text": "Marcher is also the everyday verb for a thing working. A machine, a plan, an arrangement: if it functions, it walks."
+              "text": "lire from Latin legere, whose first meaning was \"to gather, to pick out.\" Reading was a later use of it: your eye picks the letters up off the page one after another. Both senses left English words behind."
             },
             {
               "kind": "speech",
-              "text": "Ça marche. — \"That works.\" Also \"Fine,\" \"Deal,\" \"Sounds good.\" Ça ne marche pas. — \"That doesn't work.\""
+              "text": "The reading half:"
             },
             {
               "kind": "speech",
-              "text": "There is your ne … pas from the answer-word non, round a real verb at last. And ça marche alone is an agreement, two words long."
+              "text": "legible, able to be picked out; lecture, \"a reading\"; lesson, from lectiō, the passage read aloud."
             },
             {
               "kind": "speech",
-              "text": "Entendre once held several jobs and shed all but hearing. Marcher holds two right now."
+              "text": "legend — literally \"things which must be read.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The gathering half, which is the surprise:"
+            },
+            {
+              "kind": "speech",
+              "text": "collect — gather together; select, gather apart; elect, pick out; neglect, fail to pick up at all."
+            },
+            {
+              "kind": "speech",
+              "text": "elegant — originally \"choosy,\" someone who picks well; diligent; intellect, what picks between things."
+            },
+            {
+              "kind": "speech",
+              "text": "One honest limit. Greek's legein — the -logy in every science name — is a cousin, not a parent: it descends from the same ancient root alongside Latin legere, rather than from it. And French le livre, \"book,\" is not in this family at all; that is Latin liber, a separate word."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: a step, or a hammer",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here the honest answer is that nobody is certain. Old French marchier first meant \"to trample, to tread on,\" and two accounts compete:"
-            },
-            {
-              "kind": "speech",
-              "text": "Frankish markōn, \"to mark, to press a step in\" — preferred by most reference works."
-            },
-            {
-              "kind": "speech",
-              "text": "Late Latin marcāre, from marcus, \"a hammer\" — a blow and a tread being one motion."
-            },
-            {
-              "kind": "speech",
-              "text": "Three consequences, in falling order of certainty:"
-            },
-            {
-              "kind": "speech",
-              "text": "English march, the verb, is borrowed straight from marcher. Secure whichever origin is right."
-            },
-            {
-              "kind": "speech",
-              "text": "English mark is Germanic, from Old English mearc. A relative only if the Frankish account holds — conditional, not a fact."
-            },
-            {
-              "kind": "speech",
-              "text": "French la marche, a borderland, with marquis and German margrave, comes from the Germanic noun marka, \"boundary\" — a separate arrival."
-            },
-            {
-              "kind": "speech",
-              "text": "And one cousin you own already. The pas in ne … pas began as Latin passus, \"a step.\" Je ne marche pas is, underneath, \"I do not walk a step.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -557,61 +491,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"marcher\" — mar-SHAY, sh not k",
+              "instruction": "\"lire\" — leer, throaty r",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"marcher\" — *mar-SHAY*, *sh* not *k*]"
+              "source": "[YOU SAY: \"lire\" — *leer*, throaty *r*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je marche\" then \"nous marchons\"",
+              "instruction": "\"je lis\" then \"nous lisons\" — the s appears",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je marche\" then \"nous marchons\"]"
+              "source": "[YOU SAY: \"je lis\" then \"nous lisons\" — the *s* appears]"
+            },
+            {
+              "kind": "speech",
+              "text": "[YOU READ ALOUD, gathering the words one by one: \"le chien, le chat\"]."
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ça marche\" — that works, that's fine",
+              "instruction": "\"je lis le français\" then \"je pense\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ça marche\" — that works, that's fine]"
+              "source": "[YOU SAY: \"je lis le français\" then \"je pense\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"non\", then \"je ne marche pas\" — and pas is a step",
+              "instruction": "\"legible, lecture, collect, elect, elegant\" — all a picking out",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"non\", then \"je ne marche pas\" — and *pas* is a **step**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"j'entends, je dors, je marche\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'entends, je dors, je marche\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"nous dormons, nous marchons\" — one stem shifts, one never does",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"nous dormons, nous marchons\" — one stem shifts, one never does]"
+              "source": "[YOU SAY: \"legible, lecture, collect, elect, elegant\" — all a **picking out**]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -623,26 +543,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I walk\" and \"that works.\" (Je marche. Ça marche.) What are the two competing origins? (Frankish markōn, \"to press a step in,\" or Latin marcus, \"a hammer.\" Genuinely unsettled.) Which English word is certainly related, and which only might be? (March, borrowed straight from marcher; mark only if the Frankish account is right.) What did pas mean before it meant \"not\"? (A step.)"
+              "text": "Say \"I read French\" and \"we read.\" (Je lis le français. Nous lisons — the s only appears in the plural.) What did Latin legere mean first? (To gather, to pick out — reading came second.) Which of collect, elegant and book is not in this family? (Book — French livre is from liber, a different word.) Now read these two aloud. (Le chien, le chat.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C26-courir",
-      "sequence": 920,
-      "title": "courir — \"to run,\" and why it is not chourir",
-      "headword": "courir",
-      "romanization": "courir",
-      "gloss": "to run — Latin currere, the root under current, course, courier and curriculum, and the verb that shows why chien palatalized its c and courir did not",
+      "id": "FR-C25-ecrire",
+      "sequence": 880,
+      "title": "écrire — \"to write,\" born from a scratch",
+      "headword": "écrire",
+      "romanization": "écrire",
+      "gloss": "to write — Latin scrībere, \"to scratch,\" with a propped-up é- that French added in front of every borrowed sc-, sp- and st- word",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be84ede06193cc4d",
+      "sourceHash": "fnv1a64:a0e98e3f1367d0f6",
       "notice": null,
       "blocks": [
         {
@@ -658,7 +578,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hearing, sleeping, walking — and now the fastest of the four. Its Latin root is one of the busiest in English, and its spelling settles a question the dog raised."
+              "text": "You can think, understand and read. The last of the four is the one that puts something back out — and its French spelling still carries a repair job the language did more than a thousand years ago."
             }
           ]
         },
@@ -669,82 +589,67 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "courir — to run. Said koo-REER, throaty at both rs. Le chien court. — The dog runs."
+              "text": "écrire — to write. Said ay-KREER: the é is a sharp ay, then the throaty r at the end, as in lire. J'écris le français. — I write French."
+            },
+            {
+              "kind": "speech",
+              "text": "Irregular, and the stem grows a v in the plural:"
+            },
+            {
+              "kind": "speech",
+              "text": "j'écris — ay-KREE."
+            },
+            {
+              "kind": "speech",
+              "text": "tu écris — ay-KREE."
+            },
+            {
+              "kind": "speech",
+              "text": "il écrit — ay-KREE."
+            },
+            {
+              "kind": "speech",
+              "text": "nous écrivons — ay-kree-VOHN, and there is the v."
+            },
+            {
+              "kind": "speech",
+              "text": "vous écrivez — ay-kree-VAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils écrivent — ay-KREEV."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the same endings, a different stem",
+          "type": "etymology",
+          "title": "The word, taken apart: scratching, and a propped-up é",
           "segments": [
             {
               "kind": "speech",
-              "text": "Courir takes dormir's singular endings — -s, -s, -t, all silent:"
+              "text": "écrire from Latin scrībere, \"to scratch, to incise.\" A Roman wrote by scratching a stylus across wax, and the verb never forgot it. English took the Latin form whole:"
             },
             {
               "kind": "speech",
-              "text": "je cours — koor."
+              "text": "scribe, script, scripture, scribble."
             },
             {
               "kind": "speech",
-              "text": "tu cours — koor."
+              "text": "describe — scratch it down; prescribe, subscribe, inscribe."
             },
             {
               "kind": "speech",
-              "text": "il court — koor."
+              "text": "Now the é. Latin scrībere began with sc-, and a French-speaking mouth could not start a word that way, so it propped one up with a vowel in front: scrībere becomes escrire becomes écrire. The same repair ran through the whole language — schola became école, spatha became épée, stella became étoile. That accent is not decoration: it is standing where an s used to be."
             },
             {
               "kind": "speech",
-              "text": "nous courons — koo-ROHN."
-            },
-            {
-              "kind": "speech",
-              "text": "vous courez — koo-RAY."
-            },
-            {
-              "kind": "speech",
-              "text": "ils courent — KOOR."
-            },
-            {
-              "kind": "speech",
-              "text": "But the resemblance stops there. Dormir sheds a consonant in the singular: dorm- becomes dor-. Courir sheds nothing — its stem cour- has nothing spare to lose."
+              "text": "And the best cousin belongs to both halves of this chapter. Manuscript is manus + scrībere — \"scratched by hand.\" La main and écrire meet inside one English word."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: currere",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Marcher left a choice between a Frankish verb and a Latin hammer. This one leaves none. courir from Latin currere, \"to run,\" which English mined harder than almost any other verb:"
-            },
-            {
-              "kind": "speech",
-              "text": "current and currency both run; a cursor runs across a screen; a course is a run, a corridor a running-place."
-            },
-            {
-              "kind": "speech",
-              "text": "courier, one who runs; curriculum, literally \"a running.\""
-            },
-            {
-              "kind": "speech",
-              "text": "concur, run together; occur, run up against; excursion."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the spelling question. Chien came from canis, and its c turned into ch — the shift that made champ and chanter. So why is this verb not chourir? Because that shift only struck c before a. Currere had c before u, untouched, so the k survived. One rule, two regular outcomes."
-            },
-            {
-              "kind": "speech",
-              "text": "One honest limit. Latin carrus, \"wagon,\" gave English car and cargo, and descends from the same very old root. But Latin borrowed carrus from Gaulish: a cousin by another road, not a word built out of currere."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -757,79 +662,70 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the chapter's four with je — \"j'entends, je dors, je marche, je cours\"",
+              "instruction": "\"écrire\" — ay-KREER",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the chapter's four with *je* — \"j'entends, je dors, je marche, je cours\"]"
+              "source": "[YOU SAY: \"écrire\" — *ay-KREER*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le chien court\" then \"le chat dort\"",
+              "instruction": "\"j'écris\" then \"nous écrivons\" — the v appears in the plural",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le chien court\" then \"le chat dort\"]"
+              "source": "[YOU SAY: \"j'écris\" then \"nous écrivons\" — the *v* appears in the plural]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"il fait chaud, je cours\"",
+              "instruction": "the four of this chapter — \"je comprends, je pense, je lis, j'écris\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"il fait chaud, je cours\"]"
+              "source": "[YOU SAY: the four of this chapter — \"je comprends, je pense, je lis, j'écris\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"il pleut, je ne cours pas\"",
+              "instruction": "\"j'écris à la main\" — I write by hand; that is manuscript, taken apart",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"il pleut, je ne cours pas\"]"
+              "source": "[YOU SAY: \"j'écris à la main\" — I write by hand; that is *manuscript*, taken apart]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je dors, nous dormons\" then \"je cours, nous courons\" — one sheds",
+              "instruction": "\"j'aime lire\" then \"j'aime écrire\" — I like reading, I like writing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je dors, nous dormons\" then \"je cours, nous courons\" — one sheds]"
+              "source": "[YOU SAY: \"j'aime lire\" then \"j'aime écrire\" — I like reading, I like writing]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"chien\" then \"courir\" — ch before a, k before u",
+              "instruction": "\"je prends le pain, et j'écris\" — the taking verb, still there",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"chien\" then \"courir\" — *ch* before *a*, *k* before *u*]"
+              "source": "[YOU SAY: \"je prends le pain, et j'écris\" — the taking verb, still there]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"current, course, courier, curriculum\" — every one a running",
+              "instruction": "\"lire, écrire\" — gathering off the page, scratching onto it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"current, course, courier, curriculum\" — every one a running]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ça marche\" — the agreement, two words",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ça marche\" — the agreement, two words]"
+              "source": "[YOU SAY: \"lire, écrire\" — gathering off the page, scratching onto it]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -841,7 +737,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the chapter's four verbs with je. (J'entends, je dors, je marche, je cours.) What does curriculum literally mean? (A running — from currere.) Why did canis become chien while currere stayed hard? (The shift only hit c before a.) Which of the four began as a stretching? (Entendre — intendere, to stretch toward.) Now: \"the dog runs\" and \"it is hot.\" (Le chien court. Il fait chaud.)"
+              "text": "Say \"I write\" and \"we write.\" (J'écris. Nous écrivons — the v arrives in the plural.) What did scrībere literally mean, and why does écrire start with an é? (To scratch; French propped a vowel in front of Latin's sc-, the same repair that made école and étoile.) Pull manuscript apart. (Manus \"hand\" — your la main — plus scrībere, \"scratched\": written by hand.) Now say the four verbs of this chapter with je. (Je comprends, je pense, je lis, j'écris.)"
             }
           ]
         }

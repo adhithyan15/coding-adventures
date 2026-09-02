@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C26-dormir",
     "language": "french",
-    "chapter": 28,
+    "chapter": 29,
     "sequence": 900,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8dad1f8f819e3212"
+    "sourceHash": "fnv1a64:2939ea28edba60f5"
   },
   "findings": []
 }

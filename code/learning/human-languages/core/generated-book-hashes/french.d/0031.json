@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 31,
-  "sourceHash": "fnv1a64:3504a1f6b98d59e9",
+  "sourceHash": "fnv1a64:1dbf9b7e65457154",
   "lessonIds": [
-    "FR-C29-ami",
-    "FR-C29-famille",
-    "FR-C29-enfant",
-    "FR-C29-personne"
+    "FR-C28-cafe",
+    "FR-C28-the",
+    "FR-C28-lait",
+    "FR-C28-sucre"
   ],
-  "tex": "french/book/chapters/ch31-the-people-you-introduce.tex"
+  "tex": "french/book/chapters/ch31-coffee-tea-milk-sugar.tex"
 }

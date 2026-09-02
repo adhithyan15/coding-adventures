@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 32,
-  "sourceHash": "fnv1a64:c09dc3fdf5db8335",
+  "sourceHash": "fnv1a64:b481576cef9acf45",
   "lessonIds": [
-    "FR-C30-fromage",
-    "FR-C30-beurre",
-    "FR-C30-sel",
-    "FR-C30-oeuf"
+    "FR-C29-ami",
+    "FR-C29-famille",
+    "FR-C29-enfant",
+    "FR-C29-personne"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch32.txt",
   "json": "french/narration/ch32.json",
-  "textHash": "fnv1a64:49de0339f3b270ad",
-  "jsonHash": "fnv1a64:dac300513cffc550",
+  "textHash": "fnv1a64:acb07762db9c5be8",
+  "jsonHash": "fnv1a64:951e72b38c7fa80e",
   "findings": []
 }

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C23-vert-jaune",
     "language": "french",
-    "chapter": 25,
+    "chapter": 26,
     "sequence": 800,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e39de836f398fd4f"
+    "sourceHash": "fnv1a64:011c0ff21fed539a"
   },
   "findings": []
 }

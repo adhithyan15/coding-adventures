@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C27-se-lever
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 940
-chapter: 29
+chapter: 30
 type: word
 headword: se lever, debout
 gloss: to stand — French has no single verb for it, so the movement is se lever ("to lighten yourself") and the state is être debout, literally "on end"

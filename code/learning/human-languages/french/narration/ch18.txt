@@ -1,148 +1,108 @@
-French, chapter 18: To Be, and the Past That Takes It.
-4 lessons. All 4 can be done entirely by ear.
+French, chapter 18: The Compound Past.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-être — “to be”.
-
-Warm-up.
-[pause 2 seconds]
-You have avoir, “to have.” Meet its partner être, the auxiliary and everyday verb “to be.”
-
-The six forms.
-[a table of 3 rows, read aloud]
-je suis, nous sommes.
-tu es, vous êtes.
-il/elle est, ils/elles sont.
-These forms are old and frequent, so sound change has worn away any neat modern pattern. Learn the row as a rhythm:
-suis, es, est — sommes, êtes, sont.
-Use the subject pronoun every time; unlike Spanish or Italian, French verb sounds often do not identify the person by themselves.
-Examples:
-Je suis français. — I am French.
-Elle est fatiguée. — She is tired.
-Nous sommes prêts. — We are ready.
-The present forms continue Latin esse, “to be”: suis beside sum, est beside est, sommes beside sumus, and sont beside sunt. Other tenses draw on different roots; the next micro-lesson maps those seams.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “je suis, tu es, il est”]
-[pause 8 seconds for the answer]
-[your turn — say: “nous sommes, vous êtes, ils sont”]
-[pause 8 seconds for the answer]
-[your turn — say: “Je suis français. Elle est fatiguée.”]
-[pause 8 seconds for the answer]
-[repeat that twice]
-“Suis, es, est — sommes, êtes, sont.”
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the six present forms. (Suis, es, est, sommes, êtes, sont.) Which pronoun goes with êtes? (Vous.) Which Latin verb supplies this row? (Esse.) Next: find the fu- and ét- pieces inside the wider paradigm.
-
-
-Lesson 2 of 4.
-suis / fus / étais — three stems.
+Lesson 1 of 2.
+j'ai parlé — the past built from "have".
 
 Warm-up.
 [pause 2 seconds]
-The present of être comes from Latin esse. Its other forms expose two more historical pieces.
-[a table of 3 rows, read aloud]
-French: suis, es, est, sommes, êtes, sont. source: Latin esse, “be”.
-French: fus, fut. source: ancient perfect stem fuī.
-French: été, étant, étais, était. source: Latin stāre, “stand”.
-Every ét- form comes from the standing verb: participle été, present participle étant, imperfect étais / était. A paradigm patched from different roots is suppletive, like English go / went.
-The fu- stem is related to the root of English be. The ét- limb is even more striking because Spanish kept the same stāre source as a separate verb, estar.
-[a table of 2 rows, read aloud]
-language: Spanish. what happened to esse and stāre: kept ser and estar separate.
-language: French. what happened to esse and stāre: kept être and absorbed a whole ét- limb.
-French also preserves stāre outside être, for example in rester, “stay.” But it no longer has a separate standing-based “to be.”
+French's everyday past tense. You already have both halves of it: the verb avoir from last chapter, and your first regular verbs.
 
-Guided Practice.
-[pause 1 second]
-[your turn — say: “suis from esse”]
-[pause 8 seconds for the answer]
-[your turn — say: “fus from fuī”]
-[pause 8 seconds for the answer]
-[your turn — say: “été, étant, étais from stāre”]
-[pause 8 seconds for the answer]
-[repeat that twice]
-“Es-, fu-, ét-: three stems, one verb.”
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which root supplies the present? (Esse.) Which supplies fus? (Fuī.) Which supplies every ét- form? (Stāre, “stand.”) What is such patching called? (Suppletion.) What did Spanish do differently? (Kept the two verbs separate.) Next: build the compound past with être.
-
-
-Lesson 3 of 4.
-Je suis allé — the past built from “be”.
-
-Warm-up.
-[pause 2 seconds]
-The compound past built j’ai parlé with avoir. A smaller family uses être, and its participle agrees with the subject.
-
-Start with aller.
-[a table of 5 rows, read aloud]
-je suis allé, I went.
-tu es allé, you went.
-il est allé, he went.
-nous sommes allés, we went.
-ils sont allés, they went.
-The family centres on arriving, leaving, and changing state: aller, venir, partir, arriver, entrer, sortir, naître, mourir, rester, tomber.
-Do not interpret that as “every verb involving movement.” Marcher, courir, nager, and danser take avoir. Some verbs switch with a direct object: je suis monté (“I went up”) but j’ai monté les valises (“I took the suitcases up”).
-
-Agreement with the subject.
+The recipe.
+avoir (conjugated) + past participle.
 [a table of 4 rows, read aloud]
-subject: il. sentence: Il est allé.
-subject: elle. sentence: Elle est allée.
-subject: ils. sentence: Ils sont allés.
-subject: elles. sentence: Elles sont allées.
-The participle takes the subject’s gender and number like an adjective. That is its history: elle est allée began as “she is gone,” with gone describing her state just as fatiguée would.
-This connects both auxiliary systems:
-with avoir, agreement can follow a preceding object;
-with être, agreement follows the subject.
-Underneath both, the participle was an adjective agreeing with what it described.
+infinitive: parler. ends in: -er. participle: parlé.
+infinitive: habiter. ends in: -er. participle: habité.
+infinitive: finir. ends in: -ir. participle: fini.
+infinitive: vendre. ends in: -re. participle: vendu.
+So:
+[a table of 5 rows, read aloud]
+j'ai parlé, I spoke / I have spoken.
+tu as parlé, you spoke.
+il a parlé, he spoke.
+nous avons parlé, we spoke.
+ils ont parlé, they spoke.
+Only avoir changes. The participle sits there unchanged.
+Note the sound: parler, parlé and parlez are all pronounced the same. Three spellings, one sound — the context tells you which.
+
+Where the endings come from.
+[a table of 3 rows, read aloud]
+French: parlé. from Latin: -ātum.
+French: fini. from Latin: -ītum.
+French: vendu. from Latin: -ūtum.
+The same -t- that English kept in finite, acute, statute.
+A footnote on the third one: -ūtus was a rare ending in Latin (minūtus, tribūtus). French and Italian took that small class and spread it over a whole conjugation. So -é and -i are straight inheritance; -u is mostly the language tidying up by analogy.
+
+The buried possessive.
+Here is why this tense exists. Latin could say:
+habeō litterās scriptās — "I have letters written."
+That is not a past tense. It is avoir in its ordinary sense — I possess some letters — with scriptās as an adjective describing them, agreeing with litterās in gender and number.
+Over centuries the phrase stopped meaning "I possess a written thing" and started meaning simply "I wrote." A possessive construction hardened into a tense.
+And the fossil is still visible: when the object comes first, the participle still agrees with it, exactly as an adjective would.
+Les lettres que j'ai écrites. — "The letters that I wrote."
+That -es is a two-thousand-year-old adjective ending doing its old job.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “je suis allé; elle est allée”]
+[your turn — say: "j'ai parlé, tu as parlé, il a parlé, nous avons parlé, ils ont parlé"]
 [pause 8 seconds for the answer]
-[your turn — say: “ils sont allés; elles sont allées”]
+[your turn — say: the three homophones — "parler, parlé, parlez"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — “j’ai parlé; je suis allé”]
+[your turn — say: "J'ai travaillé" ("I worked") — Ch. 5's verb]
+[pause 8 seconds for the answer]
+[your turn — say: the old meaning — "I have a thing spoken"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which broad family takes être? (Arriving, leaving, and change of state.) Does courir? (No: j’ai couru.) What does the participle agree with here? (The subject.) Why? (It began as an adjective.) Next: the special agreement logic of pronominal verbs.
+What two pieces make the passé composé? (Avoir + the past participle.) What is parler's participle? (Parlé from -ātum.) What did j'ai parlé originally mean? ("I have [a thing] spoken" — a possessive.) Why does the participle sometimes agree? (Because it was an adjective describing the object.) Next: what this tense pushed out of the language.
 
 
-Lesson 4 of 4.
-Elle s’est lavée — pronominal past agreement.
+Lesson 2 of 2.
+il parla — the past you read but never say.
 
 Warm-up.
 [pause 2 seconds]
-All pronominal verbs use être in the compound past: je me suis levé, elle s’est lavée. Their agreement, however, follows the direct object rather than blindly following the subject.
-[a table of 3 rows, read aloud]
-sentence: Elle s’est lavée. why: se means “herself,” a preceding direct object.
-sentence: Elle s’est lavé les mains. why: direct object les mains follows, so no agreement.
-sentence: Elles se sont parlé. why: se means “to each other,” an indirect object.
-The auxiliary looks like être, but the decision is the same one used with avoir: agree with a preceding direct object.
-Ask two questions:
-What received the action directly?
-Does that direct object come before the participle?
-In elle s’est lavée, se is direct and precedes, so add -e. In elle s’est lavé les mains, les mains is direct but follows, so leave lavé unchanged. In se parler, the person is indirect — you speak to someone — so there is no agreement.
+French has a second past tense. You will meet it in every novel and never hear it spoken. Knowing why is worth more than knowing its endings.
 
-Verbs that exist only pronominally.
-Verbs such as se souvenir (remember), s’enfuir (flee), and s’évanouir (faint) have no ordinary non-reflexive partner. They simply agree with the subject: elles se sont souvenues.
+What it looks like.
+[a table of 3 rows, read aloud]
+he spoke. passé simple: il parla. passé composé: il a parlé.
+they spoke. passé simple: ils parlèrent. passé composé: ils ont parlé.
+he had. passé simple: il eut. passé composé: il a eu.
+You do not need to produce these. You need to recognise them, because they fill the past tense of essentially all French literature.
+
+The direct inheritance.
+il parla from Vulgar Latin parabolāvit — the plain Latin perfect, handed straight down. Which means the passé simple is the same tense as:
+[a table of 4 rows, read aloud]
+language: French. "he spoke": il parla. status: books only.
+language: Spanish. "he spoke": habló. status: everyday speech.
+language: Portuguese. "he spoke": falou. status: everyday speech.
+language: Italian. "he spoke": parlò. status: regional — see below.
+Same Latin ancestor, four different fates.
+
+The retreat, three times over.
+Now the striking part. French is not alone:
+[a table of 3 rows, read aloud]
+language: French. simple past: passé simple. what replaced it in speech: passé composé (j'ai parlé).
+language: German. simple past: Präteritum. what replaced it in speech: Perfekt (ich habe gesagt).
+language: Italian. simple past: passato remoto. what replaced it in speech: passato prossimo (ho parlato).
+Three languages — two Romance, one Germanic — each built a compound past out of "have," and each let that compound push the inherited simple past out of everyday conversation and into writing.
+Not three separate inventions, though. They are neighbours: France, southern Germany and northern Italy form a connected block, and the change spread through it by contact over the same few centuries. Linguists call this an areal change — one that travels across language boundaries because the speakers do.
+And Spanish and Portuguese, out at the western edge of that block, largely didn't get it. They kept their simple past where it was. (Though Spain's Spanish has since started drifting the same way, with he hablado taking ground from habló — the change reaching the edge late.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “Elle s’est lavée.”]
+[your turn — say: the pair — "il parla … il a parlé"]
 [pause 8 seconds for the answer]
-[your turn — say: “Elle s’est lavé les mains.”]
+[your turn — say: the sisters — "il parla, habló, falou, parlò"]
 [pause 8 seconds for the answer]
-[your turn — say: “Elles se sont parlé.”]
+[your turn — say: where you'd meet it — "in a novel, not a conversation"]
+[pause 8 seconds for the answer]
+[your turn — say: the three retreats — "passé simple, Präteritum, passato remoto"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which auxiliary do pronominal verbs take? (Être.) Do they always agree with the subject? (No.) What controls ordinary pronominal agreement? (A preceding direct object.) Why no agreement in se sont parlé? (Se is indirect.) How do inherently pronominal verbs behave? (They agree with the subject.)
+Where does the passé simple live? (In writing — literature, not speech.) What is il parla descended from? (Vulgar Latin parabolāvit, the plain perfect.) Which languages still use that same tense in ordinary speech? (Spanish and Portuguese — habló, falou.) Which three languages replaced it with a compound? (French, German, Italian — a connected, contact-driven change.) Next chapter: the other auxiliary, and the verbs that refuse avoir.

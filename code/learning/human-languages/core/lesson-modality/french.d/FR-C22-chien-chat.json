@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C22-chien-chat",
     "language": "french",
-    "chapter": 24,
+    "chapter": 25,
     "sequence": 790,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0a4ea90c7f0d2e12"
+    "sourceHash": "fnv1a64:934592299439fe41"
   },
   "findings": []
 }

@@ -1,18 +1,23 @@
 {
   "language": "french",
   "chapter": 35,
-  "sourceHash": "fnv1a64:d7f94ccee9d733c3",
+  "sourceHash": "fnv1a64:dc28fd68e7e1967d",
   "lessonIds": [
-    "FR-C33-vouloir",
-    "FR-C33-pouvoir",
-    "FR-C33-devoir",
-    "FR-C33-practice"
+    "FR-C32-intonation",
+    "FR-C32-est-ce-que",
+    "FR-C32-ou",
+    "FR-C32-quand",
+    "FR-C32-comment",
+    "FR-C32-combien",
+    "FR-C32-pourquoi",
+    "FR-C32-inversion",
+    "FR-C32-quel"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
   "text": "french/narration/ch35.txt",
   "json": "french/narration/ch35.json",
-  "textHash": "fnv1a64:1a96a2a51c2a308d",
-  "jsonHash": "fnv1a64:24f546ebe9cd3201",
+  "textHash": "fnv1a64:eefce1a3fe84187d",
+  "jsonHash": "fnv1a64:1b6721e0b30012a6",
   "findings": []
 }

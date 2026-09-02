@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 27,
-  "sourceHash": "fnv1a64:44edc193519822cc",
+  "sourceHash": "fnv1a64:c445d8aa7280d6e9",
   "lessonIds": [
-    "FR-C25-comprendre",
-    "FR-C25-penser",
-    "FR-C25-lire",
-    "FR-C25-ecrire"
+    "FR-C24-prendre",
+    "FR-C24-demander",
+    "FR-C24-aider",
+    "FR-C24-aimer"
   ],
-  "tex": "french/book/chapters/ch27-verbs-of-the-mind.tex"
+  "tex": "french/book/chapters/ch27-taking-asking-helping-loving.tex"
 }

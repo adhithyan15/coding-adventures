@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C27-se-lever",
     "language": "french",
-    "chapter": 29,
+    "chapter": 30,
     "sequence": 940,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d020939918b40abe"
+    "sourceHash": "fnv1a64:ea0da58fdbf95a60"
   },
   "findings": []
 }

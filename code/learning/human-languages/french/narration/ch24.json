@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 24,
-  "title": "Dog and Cat",
+  "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3cd44833b6fdb03b",
+  "sourceHash": "fnv1a64:6a1ba4dc24863087",
   "lessons": [
     {
-      "id": "FR-C22-chien-chat",
-      "sequence": 790,
-      "title": "chien, chat — the regular one, and the well-traveled one",
-      "headword": "chien, chat",
-      "romanization": "chien, chat",
-      "gloss": "dog and cat — chien is the REGULAR, expected descendant of canis (unlike Spanish's mysterious perro); chat continues cattus, the same Egypt-to-Rome story as Spanish's gato",
+      "id": "FR-C21-le-temps",
+      "sequence": 780,
+      "title": "le temps, il pleut — the same Latin word, a different fate for \"rain\"",
+      "headword": "le temps, il pleut",
+      "romanization": "le temps, il pleut",
+      "gloss": "weather — le temps means BOTH \"time\" and \"weather,\" the SAME Latin tempus polysemy as Spanish's tiempo; il pleut keeps Latin's pl- UNCHANGED, unlike Spanish's llueve",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a4ea90c7f0d2e12",
+      "sourceHash": "fnv1a64:eeb8b3067c161a6e",
       "notice": null,
       "blocks": [
         {
@@ -35,34 +35,49 @@
             },
             {
               "kind": "speech",
-              "text": "You've met Spanish's perro, a genuine unsolved mystery, and Latin's own canis/fēlēs becomes cattus history. French's two animal words tell a cleaner story: one is perfectly regular, the other is the same well- documented word you already know."
+              "text": "You've seen Spanish's tiempo mean both \"time\" and \"weather\" at once, from Latin tempus. French has the exact same word, the exact same double meaning — because this widening happened within Latin itself, before French and Spanish went their separate ways."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: chien",
+          "type": "input",
+          "title": "The two words: le temps — time and weather",
           "segments": [
             {
               "kind": "speech",
-              "text": "chien (\"dog\") comes straight from Latin canis (accusative canem) — and unlike Spanish, French kept it. Two separate, regular changes are stacked here: the initial c becomes ch is the same ca- becomes cha- palatalization you can check against other Latin words — campus becomes champ (\"field\"), cantāre becomes chanter (\"to sing\"); the a becomes ie in the middle is a different, later shift specific to words like canem (known as Bartsch's Law — the outcome is completely regular and undisputed, even though the precise phonetic trigger is still debated). Put together, chien is a fully regular sound change, following French's own rules predictably — a genuinely different story from Spanish, where the expected descendant (can) got pushed aside by the still-unexplained perro."
+              "text": "le temps = both \"time\" and \"weather\" — from Latin tempus, same as Spanish's tiempo (English kept only the \"time\" half: temporal, tempo). So quel temps fait-il? (\"what's the weather like?\") is literally \"what time does it make?\" — the identical construction inside Spanish's ¿qué tiempo hace?."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: chat",
+          "type": "grammar",
+          "title": "Grammar Lens: il fait chaud / il fait froid",
           "segments": [
             {
               "kind": "speech",
-              "text": "chat (\"cat\") continues cattus, the same Late Latin word — most likely ultimately Afro-Asiatic (compare Nubian kadis) — that spread along Roman trade routes as domestic cats themselves spread out of Egypt. This is the identical word behind Spanish's gato and Italian's gatto — French, Spanish, and Italian all independently inherited the exact same Late Latin replacement for Classical fēlēs."
+              "text": "Il fait chaud. — \"It's hot.\" — literally \"it makes hot.\" Il fait froid. — \"It's cold.\" — literally \"it makes cold.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Same hacer-style periphrasis as Spanish, just with French's own faire (\"to make/do\")."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: il pleut",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Il pleut. — \"It's raining.\" — from pleuvoir from Latin pluere, \"to rain\" — the same Latin verb behind Spanish's llueve. But here's the honest difference: Spanish underwent the pl- becomes ll- shift (pluere becomes llover), while French kept the pl- cluster fully intact — pleuvoir still visibly starts with pl-, just like the Latin original. So the same Latin verb took two different sound-change paths in its two daughters: one eroded the cluster, one preserved it."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -75,34 +90,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"chien\" — dog, the regular descendant of canis",
+              "instruction": "\"le temps\" — time, or weather, depending on context",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"chien\" — dog, the regular descendant of canis]"
+              "source": "[YOU SAY: \"le temps\" — time, or weather, depending on context]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"champ, chanter\" — the same ca- becomes cha- shift, in field and to sing",
+              "instruction": "\"il fait chaud. il fait froid.\" — it's hot/cold",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"champ, chanter\" — the same ca- → cha- shift, in field and to sing]"
+              "source": "[YOU SAY: \"il fait chaud. il fait froid.\" — it's hot/cold]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"chat\" — cat, the same word as Spanish's gato, from Egypt via Rome",
+              "instruction": "\"il pleut\" — it's raining, pl- kept intact from Latin",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"chat\" — cat, the same word as Spanish's gato, from Egypt via Rome]"
+              "source": "[YOU SAY: \"il pleut\" — it's raining, pl- kept intact from Latin]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -114,7 +129,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is chien a regular or irregular descendant of Latin canis? (Regular — the same ca- becomes cha- shift as champ and chanter.) Does French show the same perro-style mystery Spanish does for \"dog\"? (No — French kept the expected Latin word.) What word does chat continue, and where did that word most likely originate? (Cattus, most likely Afro-Asiatic, traveling with the cat out of Egypt.)"
+              "text": "What two things does le temps mean, and where does this polysemy come from? (\"Time\" and \"weather\" — from Latin tempus, already double-sensed before French/Spanish split apart.) Does French's il pleut show the same pl- becomes ll- shift as Spanish's llueve? (No — French kept the pl- cluster intact; only Spanish underwent that shift.)"
             }
           ]
         }

@@ -71,9 +71,19 @@ it("pins French modality", () => expectLanguageModality("french"));
 // in a `culture` block, and no lesson owned the partitive. Five lessons now do:
 // one per noun, one for `de` + article, and the payoff. Net +5 measured rather
 // than +3, because the two retired lessons were schema-v1 and never counted.
+// 140 -> 156 lessons: retiring handwritten chapter 14, Numbers Eleven to
+// Twenty, which is the SECOND French chapter split. Two schema-v1 lessons owned
+// TEN numbers between them plus the formation rules, and ten numbers plus their
+// formation cannot fit `maxNewAtomsPerChapter` at one atom per word. The chapter
+// supplies its own seam: at seventeen French stops inheriting fused Latin teens
+// and starts building numbers out of parts, AND reverses the order of those
+// parts. So chapter 14 keeps the six welded ones (onze..seize, 8 atoms) and a
+// new chapter 15 takes the built ones (dix-sept..vingt, 6 atoms). Every later
+// French chapter renumbered by +1 (old 15-35 -> 16-36). Sixteen lessons replace
+// two; net +16 measured, since the retired pair were schema-v1.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 140,
+    lessons: 156,
     idioms: 3,
     senses: 7,
     cultureClaims: 19,

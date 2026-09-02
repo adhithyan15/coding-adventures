@@ -1,9 +1,9 @@
 {
   "language": "french",
   "chapter": 22,
-  "sourceHash": "fnv1a64:e4fae11ff4626eea",
+  "sourceHash": "fnv1a64:12188f685a0749fa",
   "lessonIds": [
-    "FR-C20-je-suis-desole"
+    "FR-C19-sil-vous-plait"
   ],
-  "tex": "french/book/chapters/ch22-sorry.tex"
+  "tex": "french/book/chapters/ch22-please.tex"
 }

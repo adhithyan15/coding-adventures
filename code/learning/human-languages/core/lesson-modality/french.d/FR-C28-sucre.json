@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C28-sucre",
     "language": "french",
-    "chapter": 30,
+    "chapter": 31,
     "sequence": 1000,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3992b8aaa0f6a06a"
+    "sourceHash": "fnv1a64:24c00bd2e18071df"
   },
   "findings": []
 }

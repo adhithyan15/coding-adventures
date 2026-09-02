@@ -2,25 +2,32 @@
   "version": 1,
   "language": "french",
   "chapter": 17,
-  "title": "The Compound Past",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5ad04ce701cf57ac",
+  "title": "To Have, and How Old You Are",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:64968b9eda538792",
   "lessons": [
     {
-      "id": "FR-C15-passe-compose",
-      "sequence": 395,
-      "title": "j'ai parlé — the past built from \"have\"",
-      "headword": "j'ai parlé",
-      "romanization": "j'ai parlé",
-      "gloss": "the passé composé — a past tense built out of \"have\", and a possessive that hardened",
+      "id": "FR-C14-avoir",
+      "sequence": 470,
+      "title": "avoir — \"to have\"",
+      "headword": "avoir",
+      "romanization": "avoir",
+      "gloss": "to have — the most worn-down verb in French, and a root you already met",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9668679de5bfa0e3",
-      "notice": null,
+      "sourceHash": "fnv1a64:102fae1bc773bec1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,126 +42,78 @@
             },
             {
               "kind": "speech",
-              "text": "French's everyday past tense. You already have both halves of it: the verb avoir from last chapter, and your first regular verbs."
+              "text": "The verb French leans on hardest. It's irregular, it's everywhere, and — you have already met its root without knowing it."
             }
           ]
         },
         {
           "index": 1,
           "type": "unknown",
-          "title": "The recipe",
+          "title": "The forms",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "avoir (conjugated) + past participle."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "infinitive",
-                "ends in",
-                "participle"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "infinitive: parler. ends in: -er. participle: parlé.",
-                "infinitive: habiter. ends in: -er. participle: habité.",
-                "infinitive: finir. ends in: -ir. participle: fini.",
-                "infinitive: vendre. ends in: -re. participle: vendu."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So:"
-            },
             {
               "kind": "table",
               "headers": [
                 "",
+                "",
                 ""
               ],
-              "columns": 2,
-              "rowCount": 5,
+              "columns": 3,
+              "rowCount": 3,
               "utterances": [
-                "j'ai parlé, I spoke / I have spoken.",
-                "tu as parlé, you spoke.",
-                "il a parlé, he spoke.",
-                "nous avons parlé, we spoke.",
-                "ils ont parlé, they spoke."
+                "j'ai, nous avons, blank.",
+                "tu as, vous avez, blank.",
+                "il/elle a, ils/elles ont, blank."
               ]
             },
             {
               "kind": "speech",
-              "text": "Only avoir changes. The participle sits there unchanged."
+              "text": "Say the singular column: ai, as, a — three forms, and they all sound the same. The written endings differ; your ear can't tell them apart. Only the pronoun tells you who."
             },
             {
               "kind": "speech",
-              "text": "Note the sound: parler, parlé and parlez are all pronounced the same. Three spellings, one sound — the context tells you which."
+              "text": "Note j'ai, not je ai: before a vowel, je loses its e. That's the elision you already do in l'eau (Ch. 11)."
             }
           ]
         },
         {
           "index": 2,
           "type": "unknown",
-          "title": "Where the endings come from",
+          "title": "The root you already own",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "avoir from Latin habēre. And among your first verbs you learned habiter (\"to live somewhere\") from habitāre — which is just habēre run through a \"keep doing it\" pattern: to keep having a place. Same root, both verbs."
+            },
+            {
+              "kind": "speech",
+              "text": "The family in English is large because English borrowed it whole:"
+            },
             {
               "kind": "table",
               "headers": [
-                "French",
-                "from Latin"
+                "English word",
+                "inside it"
               ],
               "columns": 2,
-              "rowCount": 3,
+              "rowCount": 4,
               "utterances": [
-                "French: parlé. from Latin: -ātum.",
-                "French: fini. from Latin: -ītum.",
-                "French: vendu. from Latin: -ūtum."
+                "English word: habit. inside it: what you have regularly.",
+                "English word: inhabit. inside it: to have a place — = habiter.",
+                "English word: exhibit. inside it: to hold out.",
+                "English word: prohibit. inside it: to hold back."
               ]
-            },
-            {
-              "kind": "speech",
-              "text": "The same -t- that English kept in finite, acute, statute."
-            },
-            {
-              "kind": "speech",
-              "text": "A footnote on the third one: -ūtus was a rare ending in Latin (minūtus, tribūtus). French and Italian took that small class and spread it over a whole conjugation. So -é and -i are straight inheritance; -u is mostly the language tidying up by analogy."
             }
           ]
         },
         {
           "index": 3,
           "type": "unknown",
-          "title": "The buried possessive",
+          "title": "How far it wore down",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is why this tense exists. Latin could say:"
-            },
-            {
-              "kind": "speech",
-              "text": "habeō litterās scriptās — \"I have letters written.\""
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a past tense. It is avoir in its ordinary sense — I possess some letters — with scriptās as an adjective describing them, agreeing with litterās in gender and number."
-            },
-            {
-              "kind": "speech",
-              "text": "Over centuries the phrase stopped meaning \"I possess a written thing\" and started meaning simply \"I wrote.\" A possessive construction hardened into a tense."
-            },
-            {
-              "kind": "speech",
-              "text": "And the fossil is still visible: when the object comes first, the participle still agrees with it, exactly as an adjective would."
-            },
-            {
-              "kind": "speech",
-              "text": "Les lettres que j'ai écrites. — \"The letters that I wrote.\""
-            },
-            {
-              "kind": "speech",
-              "text": "That -es is a two-thousand-year-old adjective ending doing its old job."
+              "text": "Latin habeō (\"I have\") becomes French j'ai. Four syllables of Latin reduced to a single vowel sound. French does this more than any of its sisters — compare Italian ho, Spanish he, and the aqua becomes eau behind the word for water."
             }
           ]
         },
@@ -172,38 +131,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'ai parlé, tu as parlé, il a parlé, nous avons parlé, ils ont parlé\"",
+              "instruction": "\"j'ai, tu as, il a, nous avons, vous avez, ils ont\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'ai parlé, tu as parlé, il a parlé, nous avons parlé, ils ont parlé\"]"
+              "source": "[YOU SAY: \"j'ai, tu as, il a, nous avons, vous avez, ils ont\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three homophones — \"parler, parlé, parlez\"",
+              "instruction": "the three that sound alike — \"ai, as, a\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three homophones — \"parler · parlé · parlez\"]"
+              "source": "[YOU SAY: the three that sound alike — \"ai · as · a\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"J'ai travaillé\" (\"I worked\") — Ch. 5's verb",
+              "instruction": "\"J'ai un frère\" (\"I have a brother\") — Ch. 10's family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"J'ai travaillé\" (\"I worked\") — Ch. 5's verb]"
+              "source": "[YOU SAY: \"J'ai un frère\" (\"I have a brother\") — Ch. 10's family]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the old meaning — \"I have a thing spoken\"",
+              "instruction": "the root pair — \"avoir, habiter\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the old meaning — \"I **have** a thing **spoken**\"]"
+              "source": "[YOU SAY: the root pair — \"avoir · habiter\"]"
             }
           ]
         },
@@ -220,26 +179,26 @@
             },
             {
               "kind": "speech",
-              "text": "What two pieces make the passé composé? (Avoir + the past participle.) What is parler's participle? (Parlé from -ātum.) What did j'ai parlé originally mean? (\"I have [a thing] spoken\" — a possessive.) Why does the participle sometimes agree? (Because it was an adjective describing the object.) Next: what this tense pushed out of the language."
+              "text": "Give the six forms of avoir. (J'ai, tu as, il a, nous avons, vous avez, ils ont.) Which three sound identical? (Ai, as, a.) What root is avoir from? (Latin habēre.) Which of your first verbs shares it? (Habiter from habitāre.) Why is it j'ai and not je ai? (Elision — je drops its e before a vowel.) Next: what French does with avoir that English would never do."
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C15-passe-simple",
-      "sequence": 400,
-      "title": "il parla — the past you read but never say",
-      "headword": "il parla",
-      "romanization": "il parla",
-      "gloss": "the passé simple — the tense the passé composé drove out of speech, alive only in books",
+      "id": "FR-C14-age",
+      "sequence": 475,
+      "title": "j'ai vingt ans — having your years",
+      "headword": "j'ai vingt ans",
+      "romanization": "j'ai vingt ans",
+      "gloss": "age — French HAS its years, it doesn't BE them",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d1f29291c878385",
+      "sourceHash": "fnv1a64:a78de6ec814987d1",
       "notice": null,
       "blocks": [
         {
@@ -255,102 +214,73 @@
             },
             {
               "kind": "speech",
-              "text": "French has a second past tense. You will meet it in every novel and never hear it spoken. Knowing why is worth more than knowing its endings."
+              "text": "Ask a French speaker their age and the answer uses avoir. Not \"I am twenty\" — \"I have twenty years.\" English can't do this; Spanish and Italian do exactly the same thing."
             }
           ]
         },
         {
           "index": 1,
           "type": "unknown",
-          "title": "What it looks like",
+          "title": "The phrase",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "passé simple",
-                "passé composé"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "he spoke. passé simple: il parla. passé composé: il a parlé.",
-                "they spoke. passé simple: ils parlèrent. passé composé: ils ont parlé.",
-                "he had. passé simple: il eut. passé composé: il a eu."
-              ]
+              "kind": "speech",
+              "text": "Quel âge as-tu? — \"What age do you have?\" J'ai vingt ans. — \"I have twenty years.\""
             },
             {
               "kind": "speech",
-              "text": "You do not need to produce these. You need to recognise them, because they fill the past tense of essentially all French literature."
+              "text": "Two things to notice:"
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is avoir, never être. Je suis vingt ans is simply wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "ans is compulsory. English drops it (\"I'm twenty\"); French cannot."
             }
           ]
         },
         {
           "index": 2,
           "type": "unknown",
-          "title": "The direct inheritance",
+          "title": "an from annus",
           "segments": [
             {
               "kind": "speech",
-              "text": "il parla from Vulgar Latin parabolāvit — the plain Latin perfect, handed straight down. Which means the passé simple is the same tense as:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "\"he spoke\"",
-                "status"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "language: French. \"he spoke\": il parla. status: books only.",
-                "language: Spanish. \"he spoke\": habló. status: everyday speech.",
-                "language: Portuguese. \"he spoke\": falou. status: everyday speech.",
-                "language: Italian. \"he spoke\": parlò. status: regional — see below."
-              ]
+              "text": "an (\"year\") from Latin annus, which gives English annual, anniversary, annals, and per annum. You have already met its descendants: the month names came from the same calendar."
             },
             {
               "kind": "speech",
-              "text": "Same Latin ancestor, four different fates."
+              "text": "Careful with the sound: an is nasal, and in vingt ans the silent t of vingt wakes up and links — vin-t-an. That's liaison, French's habit of reviving a dead consonant when a vowel follows."
             }
           ]
         },
         {
           "index": 3,
           "type": "unknown",
-          "title": "The retreat, three times over",
+          "title": "Who else does it this way",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "Now the striking part. French is not alone:"
-            },
             {
               "kind": "table",
               "headers": [
                 "language",
-                "simple past",
-                "what replaced it in speech"
+                "\"I am 20\""
               ],
-              "columns": 3,
-              "rowCount": 3,
+              "columns": 2,
+              "rowCount": 6,
               "utterances": [
-                "language: French. simple past: passé simple. what replaced it in speech: passé composé (j'ai parlé).",
-                "language: German. simple past: Präteritum. what replaced it in speech: Perfekt (ich habe gesagt).",
-                "language: Italian. simple past: passato remoto. what replaced it in speech: passato prossimo (ho parlato)."
+                "language: French. \"I am 20\": j'ai vingt ans — have.",
+                "language: Spanish. \"I am 20\": tengo veinte años — have.",
+                "language: Italian. \"I am 20\": ho venti anni — have.",
+                "language: Portuguese. \"I am 20\": tenho vinte anos — have.",
+                "language: German. \"I am 20\": ich bin zwanzig Jahre alt — be.",
+                "language: English. \"I am 20\": I am twenty — be."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three languages — two Romance, one Germanic — each built a compound past out of \"have,\" and each let that compound push the inherited simple past out of everyday conversation and into writing."
-            },
-            {
-              "kind": "speech",
-              "text": "Not three separate inventions, though. They are neighbours: France, southern Germany and northern Italy form a connected block, and the change spread through it by contact over the same few centuries. Linguists call this an areal change — one that travels across language boundaries because the speakers do."
-            },
-            {
-              "kind": "speech",
-              "text": "And Spanish and Portuguese, out at the western edge of that block, largely didn't get it. They kept their simple past where it was. (Though Spain's Spanish has since started drifting the same way, with he hablado taking ground from habló — the change reaching the edge late.)"
+              "text": "A clean split: Romance has its years; Germanic is its years. Age as something you carry versus age as something you are."
             }
           ]
         },
@@ -368,38 +298,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"il parla … il a parlé\"",
+              "instruction": "\"Quel âge as-tu?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"il **parla** … il **a parlé**\"]"
+              "source": "[YOU SAY: \"Quel âge as-tu ?\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the sisters — \"il parla, habló, falou, parlò\"",
+              "instruction": "\"J'ai vingt ans\" — with the liaison, vin-t-an",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the sisters — \"il parla · habló · falou · parlò\"]"
+              "source": "[YOU SAY: \"J'ai vingt ans\" — with the liaison, *vin-t-an*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "where you'd meet it — \"in a novel, not a conversation\"",
+              "instruction": "your own age, using Ch. 12's numbers",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: where you'd meet it — \"in a **novel**, not a conversation\"]"
+              "source": "[YOU SAY: your own age, using Ch. 12's numbers]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three retreats — \"passé simple, Präteritum, passato remoto\"",
+              "instruction": "the split — \"French a ses ans; English is its years\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three retreats — \"passé simple · Präteritum · passato remoto\"]"
+              "source": "[YOU SAY: the split — \"French **a** ses ans; English **is** its years\"]"
             }
           ]
         },
@@ -416,7 +346,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does the passé simple live? (In writing — literature, not speech.) What is il parla descended from? (Vulgar Latin parabolāvit, the plain perfect.) Which languages still use that same tense in ordinary speech? (Spanish and Portuguese — habló, falou.) Which three languages replaced it with a compound? (French, German, Italian — a connected, contact-driven change.) Next chapter: the other auxiliary, and the verbs that refuse avoir."
+              "text": "Which verb does French use for age? (Avoir — never être.) What does j'ai vingt ans literally say? (\"I have twenty years.\") Can you drop ans? (No — French requires it.) Where does an come from? (Latin annus becomes annual, anniversary.) What happens to the t of vingt before ans? (It links — liaison.) Which languages side with English here? (German — and only German, of the five.)"
             }
           ]
         }

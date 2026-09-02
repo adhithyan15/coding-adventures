@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 25,
-  "title": "Green and Yellow",
+  "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d680024161e88f82",
+  "sourceHash": "fnv1a64:8f24e0777513540d",
   "lessons": [
     {
-      "id": "FR-C23-vert-jaune",
-      "sequence": 800,
-      "title": "vert, jaune — the expected inheritance, and a hidden PIE-level cousin",
-      "headword": "vert, jaune",
-      "romanization": "vert, jaune",
-      "gloss": "green and yellow — vert is the standard, expected Latin viridis descendant shared by nearly every Romance language; jaune comes from a Latin word that literally meant \"yellow-GREEN,\" and is usually said to share its ultimate PIE root with German's gelb, though that particular link is less secure than it first appears",
+      "id": "FR-C22-chien-chat",
+      "sequence": 790,
+      "title": "chien, chat — the regular one, and the well-traveled one",
+      "headword": "chien, chat",
+      "romanization": "chien, chat",
+      "gloss": "dog and cat — chien is the REGULAR, expected descendant of canis (unlike Spanish's mysterious perro); chat continues cattus, the same Egypt-to-Rome story as Spanish's gato",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e39de836f398fd4f",
+      "sourceHash": "fnv1a64:934592299439fe41",
       "notice": null,
       "blocks": [
         {
@@ -35,29 +35,29 @@
             },
             {
               "kind": "speech",
-              "text": "French's green word is exactly what you'd expect. Its yellow word hides something you won't expect at all — a secret cousin sitting inside German."
+              "text": "You've met Spanish's perro, a genuine unsolved mystery, and Latin's own canis/fēlēs becomes cattus history. French's two animal words tell a cleaner story: one is perfectly regular, the other is the same well- documented word you already know."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: vert",
+          "title": "The word, taken apart: chien",
           "segments": [
             {
               "kind": "speech",
-              "text": "vert (\"green\") from Latin viridis — and this is genuinely the standard source of \"green\" across nearly every Romance language: Spanish verde, Italian verde, Portuguese verde, Catalan verd. No surprise here — a clean, shared inheritance."
+              "text": "chien (\"dog\") comes straight from Latin canis (accusative canem) — and unlike Spanish, French kept it. Two separate, regular changes are stacked here: the initial c becomes ch is the same ca- becomes cha- palatalization you can check against other Latin words — campus becomes champ (\"field\"), cantāre becomes chanter (\"to sing\"); the a becomes ie in the middle is a different, later shift specific to words like canem (known as Bartsch's Law — the outcome is completely regular and undisputed, even though the precise phonetic trigger is still debated). Put together, chien is a fully regular sound change, following French's own rules predictably — a genuinely different story from Spanish, where the expected descendant (can) got pushed aside by the still-unexplained perro."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: jaune",
+          "title": "The word, taken apart: chat",
           "segments": [
             {
               "kind": "speech",
-              "text": "jaune (\"yellow\") from Latin galbinus, which literally meant \"yellow-green\" — an extended form of galbus, from Proto-Indo- European ghel-, \"to shine\" (with derivatives covering green, yellow, and gold alike — the same root gives Greek khlōros, \"greenish- yellow\"). Here's the genuinely surprising part: this same PIE root, ghel-, is also usually cited as the source of German's gelb and English's yellow — by a completely separate, Germanic path (Proto- Germanic gelwaz). Honesty check, though: the galbus becomes ghel- link itself is less secure than it looks — some modern Latin scholarship treats galbus's origin as unknown rather than confirming the connection. So jaune and gelb are probably cousins at the Proto-Indo-European level, despite one reaching French through Latin and the other reaching German directly through Germanic — just don't treat that link as airtight."
+              "text": "chat (\"cat\") continues cattus, the same Late Latin word — most likely ultimately Afro-Asiatic (compare Nubian kadis) — that spread along Roman trade routes as domestic cats themselves spread out of Egypt. This is the identical word behind Spanish's gato and Italian's gatto — French, Spanish, and Italian all independently inherited the exact same Late Latin replacement for Classical fēlēs."
             }
           ]
         },
@@ -75,29 +75,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vert\" — green, the standard Romance word",
+              "instruction": "\"chien\" — dog, the regular descendant of canis",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vert\" — green, the standard Romance word]"
+              "source": "[YOU SAY: \"chien\" — dog, the regular descendant of canis]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"jaune\" — yellow, literally \"yellow-green\"",
+              "instruction": "\"champ, chanter\" — the same ca- becomes cha- shift, in field and to sing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"jaune\" — yellow, literally \"yellow-green\"]"
+              "source": "[YOU SAY: \"champ, chanter\" — the same ca- → cha- shift, in field and to sing]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the probable cousin — \"jaune, gelb\" — likely the same ancient PIE root, two completely different paths, though the link isn't airtight",
+              "instruction": "\"chat\" — cat, the same word as Spanish's gato, from Egypt via Rome",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the probable cousin — \"jaune, gelb\" — likely the same ancient PIE root, two completely different paths, though the link isn't airtight]"
+              "source": "[YOU SAY: \"chat\" — cat, the same word as Spanish's gato, from Egypt via Rome]"
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is vert a typical or unusual Romance word for \"green\"? (Typical — the standard source across nearly all Romance languages.) What did Latin galbinus, the source of jaune, literally mean? (\"Yellow-green.\") What German word is usually called jaune's deep PIE cousin, and how solid is that link? (Gelb — both usually traced to PIE ghel-, \"to shine,\" though modern Latin scholarship treats galbus's origin as genuinely unknown, so the connection is probable, not certain.)"
+              "text": "Is chien a regular or irregular descendant of Latin canis? (Regular — the same ca- becomes cha- shift as champ and chanter.) Does French show the same perro-style mystery Spanish does for \"dog\"? (No — French kept the expected Latin word.) What word does chat continue, and where did that word most likely originate? (Cattus, most likely Afro-Asiatic, traveling with the cat out of Egypt.)"
             }
           ]
         }

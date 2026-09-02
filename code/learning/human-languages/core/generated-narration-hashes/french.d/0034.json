@@ -1,23 +1,18 @@
 {
   "language": "french",
   "chapter": 34,
-  "sourceHash": "fnv1a64:5a817499723104c0",
+  "sourceHash": "fnv1a64:5091c4560c59685f",
   "lessonIds": [
-    "FR-C32-intonation",
-    "FR-C32-est-ce-que",
-    "FR-C32-ou",
-    "FR-C32-quand",
-    "FR-C32-comment",
-    "FR-C32-combien",
-    "FR-C32-pourquoi",
-    "FR-C32-inversion",
-    "FR-C32-quel"
+    "FR-C31-oeil",
+    "FR-C31-nez",
+    "FR-C31-bouche",
+    "FR-C31-ventre"
   ],
-  "voiceLessons": 9,
-  "drivablePrefix": 9,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "french/narration/ch34.txt",
   "json": "french/narration/ch34.json",
-  "textHash": "fnv1a64:5e21c99298fc1dac",
-  "jsonHash": "fnv1a64:ed2773ccf4fe7217",
+  "textHash": "fnv1a64:1581fb71c0fcc980",
+  "jsonHash": "fnv1a64:6484a4ab2d6dabad",
   "findings": []
 }

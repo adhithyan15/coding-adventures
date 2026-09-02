@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 18,
-  "title": "To Be, and the Past That Takes It",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a69ff0464c9fd29b",
+  "title": "The Compound Past",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:1527d15436114b48",
   "lessons": [
     {
-      "id": "FR-C16-etre",
-      "sequence": 405,
-      "title": "être — “to be”",
-      "headword": "être",
-      "romanization": "être",
-      "gloss": "to be — the six present forms",
+      "id": "FR-C15-passe-compose",
+      "sequence": 485,
+      "title": "j'ai parlé — the past built from \"have\"",
+      "headword": "j'ai parlé",
+      "romanization": "j'ai parlé",
+      "gloss": "the passé composé — a past tense built out of \"have\", and a possessive that hardened",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1809b8f4843cde1",
+      "sourceHash": "fnv1a64:977cb2491cffe960",
       "notice": null,
       "blocks": [
         {
@@ -35,309 +35,39 @@
             },
             {
               "kind": "speech",
-              "text": "You have avoir, “to have.” Meet its partner être, the auxiliary and everyday verb “to be.”"
+              "text": "French's everyday past tense. You already have both halves of it: the verb avoir from last chapter, and your first regular verbs."
             }
           ]
         },
         {
           "index": 1,
           "type": "unknown",
-          "title": "The six forms",
+          "title": "The recipe",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "je suis, nous sommes.",
-                "tu es, vous êtes.",
-                "il/elle est, ils/elles sont."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "These forms are old and frequent, so sound change has worn away any neat modern pattern. Learn the row as a rhythm:"
-            },
-            {
-              "kind": "speech",
-              "text": "suis, es, est — sommes, êtes, sont."
-            },
-            {
-              "kind": "speech",
-              "text": "Use the subject pronoun every time; unlike Spanish or Italian, French verb sounds often do not identify the person by themselves."
-            },
-            {
-              "kind": "speech",
-              "text": "Examples:"
-            },
-            {
-              "kind": "speech",
-              "text": "Je suis français. — I am French."
-            },
-            {
-              "kind": "speech",
-              "text": "Elle est fatiguée. — She is tired."
-            },
-            {
-              "kind": "speech",
-              "text": "Nous sommes prêts. — We are ready."
-            },
-            {
-              "kind": "speech",
-              "text": "The present forms continue Latin esse, “to be”: suis beside sum, est beside est, sommes beside sumus, and sont beside sunt. Other tenses draw on different roots; the next micro-lesson maps those seams."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“je suis, tu es, il est”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “je suis, tu es, il est”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“nous sommes, vous êtes, ils sont”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “nous sommes, vous êtes, ils sont”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Je suis français. Elle est fatiguée.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Je suis français. Elle est fatiguée.”]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“Suis, es, est — sommes, êtes, sont.”"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the six present forms. (Suis, es, est, sommes, êtes, sont.) Which pronoun goes with êtes? (Vous.) Which Latin verb supplies this row? (Esse.) Next: find the fu- and ét- pieces inside the wider paradigm."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C16-etre-roots",
-      "sequence": 410,
-      "title": "suis / fus / étais — three stems",
-      "headword": "suis / fus / étais",
-      "romanization": "suis / fus / étais",
-      "gloss": "three historical stems inside être",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:1d1d2dfc93e4aab0",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The present of être comes from Latin esse. Its other forms expose two more historical pieces."
+              "text": "avoir (conjugated) + past participle."
             },
             {
               "kind": "table",
               "headers": [
-                "French",
-                "source"
+                "infinitive",
+                "ends in",
+                "participle"
               ],
-              "columns": 2,
-              "rowCount": 3,
+              "columns": 3,
+              "rowCount": 4,
               "utterances": [
-                "French: suis, es, est, sommes, êtes, sont. source: Latin esse, “be”.",
-                "French: fus, fut. source: ancient perfect stem fuī.",
-                "French: été, étant, étais, était. source: Latin stāre, “stand”."
+                "infinitive: parler. ends in: -er. participle: parlé.",
+                "infinitive: habiter. ends in: -er. participle: habité.",
+                "infinitive: finir. ends in: -ir. participle: fini.",
+                "infinitive: vendre. ends in: -re. participle: vendu."
               ]
             },
             {
               "kind": "speech",
-              "text": "Every ét- form comes from the standing verb: participle été, present participle étant, imperfect étais / était. A paradigm patched from different roots is suppletive, like English go / went."
+              "text": "So:"
             },
-            {
-              "kind": "speech",
-              "text": "The fu- stem is related to the root of English be. The ét- limb is even more striking because Spanish kept the same stāre source as a separate verb, estar."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "what happened to esse and stāre"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "language: Spanish. what happened to esse and stāre: kept ser and estar separate.",
-                "language: French. what happened to esse and stāre: kept être and absorbed a whole ét- limb."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "French also preserves stāre outside être, for example in rester, “stay.” But it no longer has a separate standing-based “to be.”"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“suis from esse”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “suis ← esse”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“fus from fuī”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “fus ← fuī”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“été, étant, étais from stāre”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “été, étant, étais ← stāre”]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“Es-, fu-, ét-: three stems, one verb.”"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which root supplies the present? (Esse.) Which supplies fus? (Fuī.) Which supplies every ét- form? (Stāre, “stand.”) What is such patching called? (Suppletion.) What did Spanish do differently? (Kept the two verbs separate.) Next: build the compound past with être."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C16-passe-compose-etre",
-      "sequence": 415,
-      "title": "Je suis allé — the past built from “be”",
-      "headword": "je suis allé(e)",
-      "romanization": "je suis allé(e)",
-      "gloss": "the compound past with être and subject agreement",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:2c1c41c087bbc9fa",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The compound past built j’ai parlé with avoir. A smaller family uses être, and its participle agrees with the subject."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Start with aller",
-          "segments": [
             {
               "kind": "table",
               "headers": [
@@ -347,67 +77,89 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "je suis allé, I went.",
-                "tu es allé, you went.",
-                "il est allé, he went.",
-                "nous sommes allés, we went.",
-                "ils sont allés, they went."
+                "j'ai parlé, I spoke / I have spoken.",
+                "tu as parlé, you spoke.",
+                "il a parlé, he spoke.",
+                "nous avons parlé, we spoke.",
+                "ils ont parlé, they spoke."
               ]
             },
             {
               "kind": "speech",
-              "text": "The family centres on arriving, leaving, and changing state: aller, venir, partir, arriver, entrer, sortir, naître, mourir, rester, tomber."
+              "text": "Only avoir changes. The participle sits there unchanged."
             },
             {
               "kind": "speech",
-              "text": "Do not interpret that as “every verb involving movement.” Marcher, courir, nager, and danser take avoir. Some verbs switch with a direct object: je suis monté (“I went up”) but j’ai monté les valises (“I took the suitcases up”)."
+              "text": "Note the sound: parler, parlé and parlez are all pronounced the same. Three spellings, one sound — the context tells you which."
             }
           ]
         },
         {
           "index": 2,
           "type": "unknown",
-          "title": "Agreement with the subject",
+          "title": "Where the endings come from",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "subject",
-                "sentence"
+                "French",
+                "from Latin"
               ],
               "columns": 2,
-              "rowCount": 4,
+              "rowCount": 3,
               "utterances": [
-                "subject: il. sentence: Il est allé.",
-                "subject: elle. sentence: Elle est allée.",
-                "subject: ils. sentence: Ils sont allés.",
-                "subject: elles. sentence: Elles sont allées."
+                "French: parlé. from Latin: -ātum.",
+                "French: fini. from Latin: -ītum.",
+                "French: vendu. from Latin: -ūtum."
               ]
             },
             {
               "kind": "speech",
-              "text": "The participle takes the subject’s gender and number like an adjective. That is its history: elle est allée began as “she is gone,” with gone describing her state just as fatiguée would."
+              "text": "The same -t- that English kept in finite, acute, statute."
             },
             {
               "kind": "speech",
-              "text": "This connects both auxiliary systems:"
-            },
-            {
-              "kind": "speech",
-              "text": "with avoir, agreement can follow a preceding object;"
-            },
-            {
-              "kind": "speech",
-              "text": "with être, agreement follows the subject."
-            },
-            {
-              "kind": "speech",
-              "text": "Underneath both, the participle was an adjective agreeing with what it described."
+              "text": "A footnote on the third one: -ūtus was a rare ending in Latin (minūtus, tribūtus). French and Italian took that small class and spread it over a whole conjugation. So -é and -i are straight inheritance; -u is mostly the language tidying up by analogy."
             }
           ]
         },
         {
           "index": 3,
+          "type": "unknown",
+          "title": "The buried possessive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is why this tense exists. Latin could say:"
+            },
+            {
+              "kind": "speech",
+              "text": "habeō litterās scriptās — \"I have letters written.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a past tense. It is avoir in its ordinary sense — I possess some letters — with scriptās as an adjective describing them, agreeing with litterās in gender and number."
+            },
+            {
+              "kind": "speech",
+              "text": "Over centuries the phrase stopped meaning \"I possess a written thing\" and started meaning simply \"I wrote.\" A possessive construction hardened into a tense."
+            },
+            {
+              "kind": "speech",
+              "text": "And the fossil is still visible: when the object comes first, the participle still agrees with it, exactly as an adjective would."
+            },
+            {
+              "kind": "speech",
+              "text": "Les lettres que j'ai écrites. — \"The letters that I wrote.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That -es is a two-thousand-year-old adjective ending doing its old job."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,34 +172,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“je suis allé; elle est allée”",
+              "instruction": "\"j'ai parlé, tu as parlé, il a parlé, nous avons parlé, ils ont parlé\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “je suis allé; elle est allée”]"
+              "source": "[YOU SAY: \"j'ai parlé, tu as parlé, il a parlé, nous avons parlé, ils ont parlé\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“ils sont allés; elles sont allées”",
+              "instruction": "the three homophones — \"parler, parlé, parlez\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “ils sont allés; elles sont allées”]"
+              "source": "[YOU SAY: the three homophones — \"parler · parlé · parlez\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — “j’ai parlé; je suis allé”",
+              "instruction": "\"J'ai travaillé\" (\"I worked\") — Ch. 5's verb",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — “j’ai parlé; je suis allé”]"
+              "source": "[YOU SAY: \"J'ai travaillé\" (\"I worked\") — Ch. 5's verb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the old meaning — \"I have a thing spoken\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the old meaning — \"I **have** a thing **spoken**\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -459,26 +220,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which broad family takes être? (Arriving, leaving, and change of state.) Does courir? (No: j’ai couru.) What does the participle agree with here? (The subject.) Why? (It began as an adjective.) Next: the special agreement logic of pronominal verbs."
+              "text": "What two pieces make the passé composé? (Avoir + the past participle.) What is parler's participle? (Parlé from -ātum.) What did j'ai parlé originally mean? (\"I have [a thing] spoken\" — a possessive.) Why does the participle sometimes agree? (Because it was an adjective describing the object.) Next: what this tense pushed out of the language."
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C16-pronominal-past",
-      "sequence": 420,
-      "title": "Elle s’est lavée — pronominal past agreement",
-      "headword": "elle s'est lavée / lavé les mains",
-      "romanization": "elle s'est lavée / lavé les mains",
-      "gloss": "agreement in the compound past of pronominal verbs",
+      "id": "FR-C15-passe-simple",
+      "sequence": 490,
+      "title": "il parla — the past you read but never say",
+      "headword": "il parla",
+      "romanization": "il parla",
+      "gloss": "the passé simple — the tense the passé composé drove out of speech, alive only in books",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82aea081cfdc0748",
+      "sourceHash": "fnv1a64:f349a734eefbd023",
       "notice": null,
       "blocks": [
         {
@@ -494,57 +255,107 @@
             },
             {
               "kind": "speech",
-              "text": "All pronominal verbs use être in the compound past: je me suis levé, elle s’est lavée. Their agreement, however, follows the direct object rather than blindly following the subject."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "sentence",
-                "why"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "sentence: Elle s’est lavée. why: se means “herself,” a preceding direct object.",
-                "sentence: Elle s’est lavé les mains. why: direct object les mains follows, so no agreement.",
-                "sentence: Elles se sont parlé. why: se means “to each other,” an indirect object."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The auxiliary looks like être, but the decision is the same one used with avoir: agree with a preceding direct object."
-            },
-            {
-              "kind": "speech",
-              "text": "Ask two questions:"
-            },
-            {
-              "kind": "speech",
-              "text": "What received the action directly?"
-            },
-            {
-              "kind": "speech",
-              "text": "Does that direct object come before the participle?"
-            },
-            {
-              "kind": "speech",
-              "text": "In elle s’est lavée, se is direct and precedes, so add -e. In elle s’est lavé les mains, les mains is direct but follows, so leave lavé unchanged. In se parler, the person is indirect — you speak to someone — so there is no agreement."
+              "text": "French has a second past tense. You will meet it in every novel and never hear it spoken. Knowing why is worth more than knowing its endings."
             }
           ]
         },
         {
           "index": 1,
           "type": "unknown",
-          "title": "Verbs that exist only pronominally",
+          "title": "What it looks like",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "",
+                "passé simple",
+                "passé composé"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "he spoke. passé simple: il parla. passé composé: il a parlé.",
+                "they spoke. passé simple: ils parlèrent. passé composé: ils ont parlé.",
+                "he had. passé simple: il eut. passé composé: il a eu."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "Verbs such as se souvenir (remember), s’enfuir (flee), and s’évanouir (faint) have no ordinary non-reflexive partner. They simply agree with the subject: elles se sont souvenues."
+              "text": "You do not need to produce these. You need to recognise them, because they fill the past tense of essentially all French literature."
             }
           ]
         },
         {
           "index": 2,
+          "type": "unknown",
+          "title": "The direct inheritance",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il parla from Vulgar Latin parabolāvit — the plain Latin perfect, handed straight down. Which means the passé simple is the same tense as:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "\"he spoke\"",
+                "status"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "language: French. \"he spoke\": il parla. status: books only.",
+                "language: Spanish. \"he spoke\": habló. status: everyday speech.",
+                "language: Portuguese. \"he spoke\": falou. status: everyday speech.",
+                "language: Italian. \"he spoke\": parlò. status: regional — see below."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same Latin ancestor, four different fates."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "The retreat, three times over",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the striking part. French is not alone:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "simple past",
+                "what replaced it in speech"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "language: French. simple past: passé simple. what replaced it in speech: passé composé (j'ai parlé).",
+                "language: German. simple past: Präteritum. what replaced it in speech: Perfekt (ich habe gesagt).",
+                "language: Italian. simple past: passato remoto. what replaced it in speech: passato prossimo (ho parlato)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three languages — two Romance, one Germanic — each built a compound past out of \"have,\" and each let that compound push the inherited simple past out of everyday conversation and into writing."
+            },
+            {
+              "kind": "speech",
+              "text": "Not three separate inventions, though. They are neighbours: France, southern Germany and northern Italy form a connected block, and the change spread through it by contact over the same few centuries. Linguists call this an areal change — one that travels across language boundaries because the speakers do."
+            },
+            {
+              "kind": "speech",
+              "text": "And Spanish and Portuguese, out at the western edge of that block, largely didn't get it. They kept their simple past where it was. (Though Spain's Spanish has since started drifting the same way, with he hablado taking ground from habló — the change reaching the edge late.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -557,34 +368,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Elle s’est lavée.”",
+              "instruction": "the pair — \"il parla … il a parlé\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Elle s’est lavée.”]"
+              "source": "[YOU SAY: the pair — \"il **parla** … il **a parlé**\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Elle s’est lavé les mains.”",
+              "instruction": "the sisters — \"il parla, habló, falou, parlò\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Elle s’est lavé les mains.”]"
+              "source": "[YOU SAY: the sisters — \"il parla · habló · falou · parlò\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Elles se sont parlé.”",
+              "instruction": "where you'd meet it — \"in a novel, not a conversation\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Elles se sont parlé.”]"
+              "source": "[YOU SAY: where you'd meet it — \"in a **novel**, not a conversation\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three retreats — \"passé simple, Präteritum, passato remoto\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three retreats — \"passé simple · Präteritum · passato remoto\"]"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -596,7 +416,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which auxiliary do pronominal verbs take? (Être.) Do they always agree with the subject? (No.) What controls ordinary pronominal agreement? (A preceding direct object.) Why no agreement in se sont parlé? (Se is indirect.) How do inherently pronominal verbs behave? (They agree with the subject.)"
+              "text": "Where does the passé simple live? (In writing — literature, not speech.) What is il parla descended from? (Vulgar Latin parabolāvit, the plain perfect.) Which languages still use that same tense in ordinary speech? (Spanish and Portuguese — habló, falou.) Which three languages replaced it with a compound? (French, German, Italian — a connected, contact-driven change.) Next chapter: the other auxiliary, and the verbs that refuse avoir."
             }
           ]
         }

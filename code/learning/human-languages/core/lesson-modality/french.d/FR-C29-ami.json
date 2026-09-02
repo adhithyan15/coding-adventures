@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C29-ami",
     "language": "french",
-    "chapter": 31,
+    "chapter": 32,
     "sequence": 1010,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d3004212458aa0c9"
+    "sourceHash": "fnv1a64:c9ca269bfa315f42"
   },
   "findings": []
 }

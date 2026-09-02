@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C32-quand
 spine_node: SPINE-ASK-LOCATION
 sequence: 1230
-chapter: 34
+chapter: 35
 type: word
 headword: quand
 gloss: "when — and a silent d that comes back to life"

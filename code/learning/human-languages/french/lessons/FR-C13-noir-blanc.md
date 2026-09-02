@@ -1,17 +1,17 @@
 ---
 id: FR-C13-noir-blanc
-sequence: 375
-chapter: 15
+sequence: 455
+chapter: 16
 type: word
 headword: noir, blanc
 gloss: black and white — one word inherited from Latin, one borrowed from the Germanic neighbours
 concept_tag: FR-COLOUR-BLACK-WHITE
-prerequisites: [FR-C12-nombres-17-20]
+prerequisites: [FR-C12-practice-seam]
 sounds: [nasal-an, silent-c]
 roots: [latin-niger, germanic-blank]
 etymology_hook: "noir ← Latin niger, but blanc is NOT from Latin albus — it's Frankish *blank 'shining', borrowed INTO French, the reverse of the usual flow; albus survives only in aube ('dawn') and album"
 est_minutes: 4
-reviews_of: [FR-C12-nombres-17-20, FR-C11-practice]
+reviews_of: [FR-C12-practice-seam, FR-C11-practice]
 ---
 
 # noir, blanc — one inherited, one borrowed

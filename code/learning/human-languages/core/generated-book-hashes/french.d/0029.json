@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 29,
-  "sourceHash": "fnv1a64:c9c4d7ab0164f05b",
+  "sourceHash": "fnv1a64:db092e3d5803a801",
   "lessonIds": [
-    "FR-C27-sasseoir",
-    "FR-C27-se-lever",
-    "FR-C27-ouvrir",
-    "FR-C27-fermer"
+    "FR-C26-entendre",
+    "FR-C26-dormir",
+    "FR-C26-marcher",
+    "FR-C26-courir"
   ],
-  "tex": "french/book/chapters/ch29-sitting-standing-opening-closing.tex"
+  "tex": "french/book/chapters/ch29-hearing-sleeping-walking-running.tex"
 }

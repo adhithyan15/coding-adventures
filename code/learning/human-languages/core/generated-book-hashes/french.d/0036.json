@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:ab795331ecdfce13",
+  "lessonIds": [
+    "FR-C33-vouloir",
+    "FR-C33-pouvoir",
+    "FR-C33-devoir",
+    "FR-C33-practice"
+  ],
+  "tex": "french/book/chapters/ch36-modaux.tex"
+}

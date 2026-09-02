@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C21-le-temps
 spine_node: SPINE-TIME-OF-DAY
 sequence: 780
-chapter: 23
+chapter: 24
 type: phrase
 headword: le temps, il pleut
 gloss: weather — le temps means BOTH "time" and "weather," the SAME Latin tempus polysemy as Spanish's tiempo; il pleut keeps Latin's pl- UNCHANGED, unlike Spanish's llueve

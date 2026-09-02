@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C27-sasseoir",
     "language": "french",
-    "chapter": 29,
+    "chapter": 30,
     "sequence": 930,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b3c513be53d729e5"
+    "sourceHash": "fnv1a64:4babf93a9b50d6db"
   },
   "findings": []
 }

@@ -1,9 +1,10 @@
 {
   "language": "french",
   "chapter": 21,
-  "sourceHash": "fnv1a64:e6f3ab4235eef929",
+  "sourceHash": "fnv1a64:87ef2c25c2918384",
   "lessonIds": [
-    "FR-C19-sil-vous-plait"
+    "FR-C18-oui",
+    "FR-C18-non"
   ],
-  "tex": "french/book/chapters/ch21-please.tex"
+  "tex": "french/book/chapters/ch21-yes-and-no.tex"
 }
