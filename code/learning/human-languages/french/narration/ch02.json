@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ab8ecf4dad6f9ede",
+  "sourceHash": "fnv1a64:bb88403c09a75c5b",
   "lessons": [
     {
       "id": "FR-C02-je",
@@ -1018,7 +1018,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f8051de82f78d74",
+      "sourceHash": "fnv1a64:6aa8db57b93eadfe",
       "notice": null,
       "blocks": [
         {
@@ -1075,7 +1075,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "enchanté follows the gender-agreement rule of bon/bonne from Chapter 1: it reports the speaker's own gender."
+              "text": "enchanté follows the gender-agreement rule you met in bon/bonne: it reports the speaker's own gender."
             },
             {
               "kind": "speech",

@@ -36,7 +36,7 @@ Two things to notice:
 
 **an** ("year") ← Latin ***annus***, which gives English **annual**,
 **anniversary**, **annals**, and *per annum*. You have already met its
-descendants: Chapter 9's month names came from the same calendar.
+descendants: the month names came from the same calendar.
 
 Careful with the sound: **an** is **nasal**, and in *vingt ans* the silent *t* of
 *vingt* **wakes up** and links — *vin-**t**-an*. That's **liaison**, French's

@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "The People You Introduce",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5f3289320f5d0980",
+  "sourceHash": "fnv1a64:9793c99fbc1690b1",
   "lessons": [
     {
       "id": "FR-C29-ami",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c71f8a70f8667ac6",
+      "sourceHash": "fnv1a64:74f9295ba2f32596",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 28 handed you le lait and le sucre, and three more things to ask for. Now the people you'd ask them with — starting with the one whose name teaches French's most useful spelling rule."
+              "text": "The café chapter handed you le lait and le sucre, and three more things to ask for. Now the people you'd ask them with — starting with the one whose name teaches French's most useful spelling rule."
             }
           ]
         },
@@ -398,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c1115beb11838c1",
+      "sourceHash": "fnv1a64:e706ac7aac58b8db",
       "notice": null,
       "blocks": [
         {
@@ -556,7 +556,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is personne ever masculine, even describing a man? (No — always feminine, grammatically.) Why doesn't personne nasalize like non? (Double -nn- blocks it.) What does ne … personne mean, and what does that use share with ne … pas? (\"Nobody\" — the same negation frame Chapter 18 built around ne.) Is persona really built on \"sounding through\"? (Probably not — a folk etymology; the real root is likely Etruscan phersu, \"mask.\")"
+              "text": "Is personne ever masculine, even describing a man? (No — always feminine, grammatically.) Why doesn't personne nasalize like non? (Double -nn- blocks it.) What does ne … personne mean, and what does that use share with ne … pas? (\"Nobody\" — the same negation frame built around ne.) Is persona really built on \"sounding through\"? (Probably not — a folk etymology; the real root is likely Etruscan phersu, \"mask.\")"
             }
           ]
         }

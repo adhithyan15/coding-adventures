@@ -1,11 +1,11 @@
 {
-  "id": "MR-EXT-043-CLAUSE-INSIDE-CLAUSE",
+  "id": "MR-EXT-050-CLAUSE-INSIDE-CLAUSE",
   "stage": "A2",
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can report what I think or know with a whole clause after ki, and turn any verb into a purpose with -nyaasaathii.",
   "prerequisites": [
-    "MR-EXT-042-WHY-AND-BECAUSE"
+    "MR-EXT-049-WHY-AND-BECAUSE"
   ],
   "lessons": [
     "MR-C35-kii",

@@ -1125,6 +1125,21 @@ function renderBlock(block: LessonBodyBlock, options?: InlineRenderOptionsInput)
   const title = renderInlineMarkdown(bookBlockTitle(block.title), options);
   if (block.type === "pronunciation") return `\\begin{sounds}\n${content}\n\\end{sounds}`;
   if (block.type === "etymology") return `\\begin{cousinweb}\n${content}\n\\end{cousinweb}`;
+  if (block.type === "cognates") {
+    // Deliberately an INLINE tcolorbox rather than `\\begin{cognates}`. The four
+    // Dravidian preambles define a `cognates` environment and the other nineteen
+    // do not, so emitting the named environment would compile here and break the
+    // moment any other track authored the heading. `tcolorbox` is loaded by every
+    // preamble, so the colours are carried in the emitted LaTeX instead -- and
+    // they are the same violet the hand-written Kannada chapters used, so the
+    // page is unchanged.
+    return [
+      "\\begin{tcolorbox}[breakable,skin=enhanced,colback=violet!6,colframe=violet!45!black," +
+        `boxrule=0.5pt,arc=1mm,left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\\bfseries,title={${title}}]`,
+      content,
+      "\\end{tcolorbox}",
+    ].join("\n");
+  }
   if (block.type === "grammar" || block.type === "notice") {
     return `\\begin{grammarlens}[title={${title}}]\n${content}\n\\end{grammarlens}`;
   }
@@ -1592,6 +1607,7 @@ const INDEX_BLOCK_FACETS = new Map<LessonBodyBlock["type"], string>([
   ["writing", "writing"],
   ["grammar", "grammar"],
   ["etymology", "etymology"],
+  ["cognates", "family and cognates"],
   ["culture-pragmatics", "usage and culture"],
 ]);
 
@@ -1601,6 +1617,7 @@ const INDEX_FACET_ORDER = [
   "writing",
   "grammar",
   "etymology",
+  "family and cognates",
   "usage and culture",
 ];
 

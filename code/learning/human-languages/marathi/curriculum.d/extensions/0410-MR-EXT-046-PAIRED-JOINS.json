@@ -1,11 +1,11 @@
 {
-  "id": "MR-EXT-039-PAIRED-JOINS",
+  "id": "MR-EXT-046-PAIRED-JOINS",
   "stage": "A1",
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can refuse two things at once, hang a confirmation tag on a statement, and share a pair out between one and the other.",
   "prerequisites": [
-    "MR-EXT-038-FLAT-JOINS"
+    "MR-EXT-045-FLAT-JOINS"
   ],
   "lessons": [
     "MR-C31-naa-naa",

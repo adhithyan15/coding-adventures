@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Cheese, Butter, Salt, Egg",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:da6f69e8ad67d74a",
+  "sourceHash": "fnv1a64:a8464c260a68a8a4",
   "lessons": [
     {
       "id": "FR-C30-fromage",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6fc1c4809a9a4be",
+      "sourceHash": "fnv1a64:ce02f7ad1006605c",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can name la personne and l'enfant now. Chapter 28 asked politely for a drink; this chapter asks for what goes with it — starting with a word every other Romance language names completely differently."
+              "text": "You can name la personne and l'enfant now. The café chapter asked politely for a drink; this chapter asks for what goes with it — starting with a word every other Romance language names completely differently."
             }
           ]
         },
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8293a1f0f210ebcf",
+      "sourceHash": "fnv1a64:0524a1dfaa3af78d",
       "notice": null,
       "blocks": [
         {
@@ -207,7 +207,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 20's courtesy words fit right here:"
+              "text": "The courtesy words you already have fit right here:"
             },
             {
               "kind": "speech",

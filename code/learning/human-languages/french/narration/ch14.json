@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "To Have, and How Old You Are",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a3300ab0ba96729b",
+  "sourceHash": "fnv1a64:34537d5a86a25237",
   "lessons": [
     {
       "id": "FR-C14-avoir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b1e60afb5bcb5d70",
+      "sourceHash": "fnv1a64:39141d6140d500e2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -83,7 +83,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "avoir from Latin habēre. And in Chapter 5 you learned habiter (\"to live somewhere\") from habitāre — which is just habēre run through a \"keep doing it\" pattern: to keep having a place. Same root, both verbs."
+              "text": "avoir from Latin habēre. And among your first verbs you learned habiter (\"to live somewhere\") from habitāre — which is just habēre run through a \"keep doing it\" pattern: to keep having a place. Same root, both verbs."
             },
             {
               "kind": "speech",
@@ -113,7 +113,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin habeō (\"I have\") becomes French j'ai. Four syllables of Latin reduced to a single vowel sound. French does this more than any of its sisters — compare Italian ho, Spanish he, and Chapter 11's aqua becomes eau."
+              "text": "Latin habeō (\"I have\") becomes French j'ai. Four syllables of Latin reduced to a single vowel sound. French does this more than any of its sisters — compare Italian ho, Spanish he, and the aqua becomes eau behind the word for water."
             }
           ]
         },
@@ -179,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the six forms of avoir. (J'ai, tu as, il a, nous avons, vous avez, ils ont.) Which three sound identical? (Ai, as, a.) What root is avoir from? (Latin habēre.) Which verb from Chapter 5 shares it? (Habiter from habitāre.) Why is it j'ai and not je ai? (Elision — je drops its e before a vowel.) Next: what French does with avoir that English would never do."
+              "text": "Give the six forms of avoir. (J'ai, tu as, il a, nous avons, vous avez, ils ont.) Which three sound identical? (Ai, as, a.) What root is avoir from? (Latin habēre.) Which of your first verbs shares it? (Habiter from habitāre.) Why is it j'ai and not je ai? (Elision — je drops its e before a vowel.) Next: what French does with avoir that English would never do."
             }
           ]
         }
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b42ff170b9da3baa",
+      "sourceHash": "fnv1a64:e029f4ff9d301dce",
       "notice": null,
       "blocks": [
         {
@@ -248,7 +248,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "an (\"year\") from Latin annus, which gives English annual, anniversary, annals, and per annum. You have already met its descendants: Chapter 9's month names came from the same calendar."
+              "text": "an (\"year\") from Latin annus, which gives English annual, anniversary, annals, and per annum. You have already met its descendants: the month names came from the same calendar."
             },
             {
               "kind": "speech",

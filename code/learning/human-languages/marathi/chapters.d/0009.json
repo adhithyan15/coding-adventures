@@ -10,7 +10,25 @@
     "lesson": "MR-C02-practice",
     "kind": "task",
     "summary": "Complete MR-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Marathi, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "MR-PHRASE-MAJHE-NAAV-AAHE",
+      "MR-PHRASE-TUMCHE-NAAV-KAAY-AAHE",
+      "MR-PHRASE-BHETUN-ANAND-JHALA",
+      "MR-LEX-NAAV",
+      "MR-LEX-MAJHE",
+      "MR-LEX-AAHE-COPULA",
+      "MR-LEX-TU-TUMHI",
+      "MR-LEX-KAAY",
+      "MR-LEX-ANAND",
+      "MR-ETYMON-NAAV-NOMEN",
+      "MR-ETYMON-AAHE-ASTI",
+      "MR-ETYMON-TU-THOU",
+      "MR-ETYMON-KAAY-KWO",
+      "MR-GRAMMAR-POSSESSIVE-THREE-GENDERS",
+      "MR-GRAMMAR-VERB-FINAL",
+      "MR-GRAMMAR-M-TO-V-SOFTENING",
+      "MR-GRAMMAR-POSSESSIVE-RESPECT"
+    ],
+    "note": "The recap runs the four-line exchange whole, then re-banks each atom it was built from, and closes on the two Marathi distinctives the chapter exists to install: three genders on majhaṁ, and the copula āhe going last."
   }
 }

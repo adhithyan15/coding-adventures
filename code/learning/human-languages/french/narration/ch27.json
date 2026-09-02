@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Sitting, Standing, Opening, Closing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6ba5c0f753221d39",
+  "sourceHash": "fnv1a64:cc7506d89c3d7682",
   "lessons": [
     {
       "id": "FR-C27-sasseoir",
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9765b5a96abbf012",
+      "sourceHash": "fnv1a64:415a896a1af941ca",
       "notice": null,
       "blocks": [
         {
@@ -457,7 +457,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can sit and rise. Now the hand from Chapter 17. This verb is French conjugation's small trap: spelled like one family, behaving like another."
+              "text": "You can sit and rise. Now something for the hand. This verb is French conjugation's small trap: spelled like one family, behaving like another."
             }
           ]
         },

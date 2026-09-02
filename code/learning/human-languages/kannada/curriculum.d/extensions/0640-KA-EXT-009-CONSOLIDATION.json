@@ -1,0 +1,11 @@
+{
+  "id": "KA-EXT-009-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can part in three different ways, none of them a blunt goodbye.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C04-practice"
+  ]
+}

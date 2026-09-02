@@ -37,7 +37,7 @@ variety: standard-contemporary
 
 [PAUSE 2s] No new words. This chapter's atoms — *merci, de rien, aller, ça va,
 comme ci comme ça* — assemble into a real exchange, run formally and informally.
-It picks up right where the Chapter 2 introduction left off.
+It picks up right where the introduction exchange left off.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -77,7 +77,7 @@ Spanish *¿y usted? / ¿y tú?*
 [PAUSE 1s]
 - [YOU SAY: the full *formal* exchange, both voices]
 - [YOU SAY: the same *informally* — *allez-vous → ça va*, *vous → toi*]
-- [YOU SAY: chain Chapter 2 + 3 — "Je m'appelle … Comment allez-vous ?"]
+- [YOU SAY: chain the introduction onto this one — "Je m'appelle … Comment allez-vous ?"]
 
 [REPEAT x2] "Ça va ? — Ça va, et toi ?" until it's reflex.
 

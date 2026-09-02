@@ -38,7 +38,7 @@ Note **j'ai**, not *je ai*: before a vowel, *je* loses its **e**. That's the
 
 ## The root you already own
 
-**avoir** ← Latin ***habēre***. And in Chapter 5 you learned **habiter** ("to
+**avoir** ← Latin ***habēre***. And among your first verbs you learned **habiter** ("to
 live somewhere") ← ***habitāre*** — which is just *habēre* run through a
 "keep doing it" pattern: *to keep having a place*. **Same root, both verbs.**
 
@@ -55,7 +55,8 @@ The family in English is large because English borrowed it whole:
 
 Latin ***habeō*** ("I have") → French **j'ai**. Four syllables of Latin reduced
 to a **single vowel sound**. French does this more than any of its sisters —
-compare Italian *ho*, Spanish *he*, and Chapter 11's *aqua* → **eau**.
+compare Italian *ho*, Spanish *he*, and the *aqua* → **eau** behind the word
+for water.
 
 ## Guided Practice
 
@@ -69,7 +70,7 @@ compare Italian *ho*, Spanish *he*, and Chapter 11's *aqua* → **eau**.
 
 [PAUSE 3s] Give the six forms of *avoir*. (*J'ai, tu as, il a, nous avons, vous
 avez, ils ont*.) Which three sound identical? (**Ai, as, a**.) What root is
-*avoir* from? (Latin ***habēre***.) Which verb from Chapter 5 shares it?
+*avoir* from? (Latin ***habēre***.) Which of your first verbs shares it?
 (**Habiter** ← *habitāre*.) Why is it *j'ai* and not *je ai*? (**Elision** — *je*
 drops its *e* before a vowel.) Next: what French does with *avoir* that English
 would never do.

@@ -1,0 +1,4690 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY TAMIL EXAMINING OR LANGUAGE BODY -- not to the Singapore Ministry of Education, whose Tamil Language syllabus core/exam-levels.json names as one of the two nearest things to a ladder, not to the Tamil Nadu state syllabi it names as the other, not to any university, board or diaspora examination. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT TAMIL: they published a Spanish syllabus and have said nothing whatever about this language. Three claims are stacked here and they have very different strengths, so read them apart. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, which restates the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE -- a real awarding body with a published syllabus, finite and split into A1 and A2 columns. That is the strongest thing in this file, and all it establishes is a LEVEL: what an A1 candidate must be able to handle, asked as a language-neutral demand rather than as a piece of Spanish grammar. (2) THE TAMIL EXPONENTS are editorial throughout and are this project's judgement and nobody else's. Deciding that Spanish's four article points are answered by the single fact that Tamil has no article, that its gustar frame is answered by the dative-subject sentence with pidi, that its three-way este/ese/aquel is answered honestly by Tamil's two-way near/far rather than by an invented middle term, or that its nine punctuation points collapse into one -- all of that is chosen here. The CATEGORY NAMES are the project's own too: Tamil grammatical terms where a standard one exists (peyarccol, vinaiccol, vetrumai, vinaaccol, etirmarai), and a plain description where inventing a Tamil term would have been a pretence. (3) THE COVERAGE NUMBER this file produces is a measure of the corpus against this list. It is not an exam-readiness claim and cannot become one while every scope dimension is `partial`. WHY A PROXY AT ALL: no awarding body publishes a content syllabus for Tamil that this project has found. NOT SEARCHED, BY INSTRUCTION, and that was a DECISION rather than an omission: BACKLOG.d HL-C287 and HL-C290 record the sourcing question as settled -- the Hindi tranche ran it against the best-placed South Asian candidate and came back empty, there is no South Asian equivalent of the Plan Curricular, and no further agent-hours are to be spent hunting one per track. This file follows that instruction and states the consequence rather than hiding it: if a Tamil content syllabus does exist, this file has not ruled it out. What core/exam-levels.json DOES record for Tamil was re-read before this file was written, and it carries something Telugu's bare entry does not -- a caveat that Tamil's DIGLOSSIA makes no CEFR mapping clean, because the literary and spoken registers diverge sharply and this curriculum teaches spoken Tamil first. That caveat is load-bearing here: it is why there is an Iruvalakku category at all, and why its first point is the one a reader should look at before any other. THE EVIDENCE BASE IS AS THIN AS TELUGU'S AND THINNER THAN HINDI'S OR MARATHI'S, AND THAT IS THE MOST IMPORTANT THING TO KNOW ABOUT IT. Hindi's inventory could pin exponents against two checked-in timed A1 mocks and quote the item that needs each word; Marathi's could pin them against the eleven paper parts of its task-shapes/a1.json. Tamil has NEITHER. There is no tamil/assessment-spec.md, no tamil/assessment.json, no tamil/task-shapes/ and no tamil/mocks/ -- the directory holds lessons, chapters, curriculum, narration, a book, a roadmap, a session map and a pronunciation reference, and nothing that fixes what an A1 paper would ask. Every exponent choice below is bounded by the proxy alone, and every gap note says what is missing from the CORPUS rather than what some paper demands. Writing that contract is the single change that would most improve this file, and it is the reason no note here cites an item number. PROXY ACCOUNTING: every one of the proxy's 273 points is accounted for. 270 are cited by some point's `derivedFrom` and 3 are listed in `proxy.notTransferred` with a reason. Points marked `tamilSpecific` answer no Spanish demand at all -- the rational/irrational noun split that governs all Tamil agreement, the stacking case suffix, strong against weak verbs, the two-way negative, the three n letters, the retroflex series and the sound Tamil is named for, the courtesy vocabulary, and the diglossia column. A proxy is a scaffold, not a template to translate, and those are why. LEVEL PURITY IS NOT A CONSTRAINT ON THIS CURRICULUM, so a point is recorded as covered when the corpus teaches it, whether or not it teaches it at A1: the thirteen body-part atoms and the nine flora atoms are both well past A1 and both count.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Tamil is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: NONE EXISTS. Unlike hindi/assessment-spec.md with hindi/task-shapes/a1.json and hindi/mocks/a1/, and unlike marathi/assessment-spec.md with marathi/task-shapes/a1.json, the tamil track ships no assessment spec, no assessment.json, no task shapes and no mocks, so no project-internal contract bounds the exponent choices or the gap notes below. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.tamil -- exam 'no single international ladder; Singapore MOE Tamil and Tamil Nadu state syllabi are the nearest', basis 'editorial', mapping 'cefr', with a caveat naming diglossia and recording that this curriculum teaches spoken Tamil first. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 359 lesson files in code/learning/human-languages/tamil/lessons/, which introduce 442 distinct atoms between them -- 262 LEX, 88 SCRIPT, 46 ETYMON, 22 GRAMMAR, 14 PRAGMATICS, 6 SOUND, 2 ROOT, and two singletons that are spelling slips rather than kinds: one TA-PHONO- and one TA-PRAGMATIC- in the singular, both on chapter 1's greeting lesson. Those two are counted here because a probe can name them and TA-A1-F-01 does. The script points' claims were taken by walking every character in the Tamil block of Unicode that any lesson puts on a page and comparing it with the set the script lessons teach: 52 shown, 52 taught, and the letter inventory those are compared against is tamil/pronunciation-reference.md. NOT SEARCHED, BY INSTRUCTION: no external search for a Tamil awarding-body syllabus was performed for this file. code/learning/human-languages/BACKLOG.d/02610-HL-C287-USE-SPANISH-AS-A-LEVEL-PROXY-WHEN-A-TRACK-HAS-NO-SYL-f1667cbc.md and 02610-HL-C290-ANCHORING-AN-EXAM-INVENTORY-WHEN-NO-SYLLABUS-EXISTS-b3f27a1e.md record that search as settled and direct that it not be repeated per track. See `about`.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The project's restatement of the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language: nothing about Tamil is attributable to DELE, the Instituto Cervantes or the Plan Curricular."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral. It can anchor a FUNCTION -- 'can introduce himself/herself', 'can ask and answer simple questions about personal details' -- and it can never anchor a Tamil form, because it names none. Used here only where a point is a can-do rather than a structure."
+    },
+    {
+      "id": "TA-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/tamil/ -- 359 lessons, 73 chapters, curriculum.d and chapters.d",
+      "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory."
+    },
+    {
+      "id": "TA-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.tamil",
+      "note": "Records Tamil as exam 'no single international ladder; Singapore MOE Tamil and Tamil Nadu state syllabi are the nearest', basis 'editorial', mapping 'cefr', with a caveat that Tamil's diglossia makes no mapping clean and that this curriculum teaches SPOKEN Tamil first. That caveat is load-bearing here and is the origin of the Iruvaḻakku category."
+    },
+    {
+      "id": "ED-TAMIL",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Tamil",
+      "note": "Every Tamil exponent below. Deciding that Spanish's four article points are answered by the single fact that Tamil has no article, that its `gustar` frame is answered by the dative-subject sentence with piḍi, or that its written-accent points have no Tamil counterpart, is a judgement made here and nowhere else. It is a working default to be corrected, not a standard."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-O1-06"
+        ],
+        "why": "Superscript letters in frequent abbreviations. A Spanish typographic convention with no Tamil counterpart; Tamil abbreviation is covered instead, as an untaught demand, at TA-A1-L-13."
+      },
+      {
+        "spanishPoints": [
+          "A1-O2-01",
+          "A1-O2-02"
+        ],
+        "why": "The general rules of written accentuation, and the diacritic tilde that separates el from el. Tamil writes no accent at all: vowel length is carried by a different letter or a different vowel sign, which TA-A1-L-02 and TA-A1-L-03 cover instead, and there is no diacritic whose only job is to separate two spellings."
+      }
+    ]
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the Council of Europe CEFR Companion Volume A1 descriptors",
+      "note": "The proxy's functional column IS finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Tamil is our choice every time, and a function inventory without its exponents is half a source. Tamil has no checked-in mock or task shape to pin an exponent against, so unlike Hindi's file no note here can say which paper item needs a word. Two functions are enumerated that the proxy has no A1 slot for and Tamil demands anyway: asking after somebody's health through the body rather than through them, and choosing a register when you address them."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS MOST AND STILL DOES NOT CLOSE. Walking the Spanish grammar column surfaced demands no reading of the Tamil corpus alone would have named: that nothing tells a learner Tamil HAS no article, that the polar question suffix is absent, that eight separate Spanish past-tense points collapse into one Tamil gap. It does not close, because a demand Spanish does not make can still be an A1 demand in Tamil -- the rational/irrational split, the negative finite verb, the verbal participle, the two-way negative -- and no source bounds those. They are enumerated here on the project's judgement and marked tamilSpecific."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "The Tamil block of Unicode (U+0B80-U+0BFF) for the letter inventory, code/learning/human-languages/core/exam-inventory-es-a1.json for the orthographic demands, and tamil/pronunciation-reference.md",
+      "note": "The dimension where the proxy is LEAST useful, and worth saying why. Spanish's orthography column is about an alphabet the learner already has: accents, capitals, punctuation. Tamil's demand is a different writing system, so most of this column is tamilSpecific and three of the proxy's points are Spanish typography with no counterpart. The letter half is nearly closed and the measurement is unusually good news: all eighteen core consonants and ten of the twelve independent vowels are taught, and walking every Tamil character the track prints against every character its script lessons teach returns ZERO shown-but-untaught. Pronunciation is not closed: no source separates A1 Tamil phonology from A2, so the contrasts are enumerated on the project's judgement and left honestly unmapped where nothing teaches them."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 36 general-notion and 77 specific-notion A1 points) and the topic areas the tamil track's own chapters cover",
+      "note": "No published A1 Tamil word list exists that this project has found -- no Singapore MOE word list adopted here, no ranked frequency band adopted by any Tamil body. What the proxy supplies is a bounded set of DOMAINS, which is a real improvement on topic areas chosen by whoever wrote the next chapter: the walk added education, work, media, services, documents, the arts, government and religion, and Tamil holds almost none of them. A domain point claims the track has a usable foothold in that domain, NOT that it holds the domain's full A1 vocabulary. No per-word count is claimed complete and none should be inferred: this file deliberately contains no 'holds N headwords' point, because a probe cannot honestly express one."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. Every atom named in every probe was checked mechanically against the 442 atoms the tamil track actually introduces; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point, and no probe here points at a lesson somebody intends to write. ONE HABIT IS NAMED SO IT IS NOT A HIDDEN GENEROSITY: this track files a lot of vocabulary under atom kinds other than LEX. The good-afternoon greeting carries only an ETYMON atom, the parts of the day carry ETYMON and PRAGMATICS atoms, the retroflex contrast carries a SOUND atom, and the weekdays carry a GRAMMAR atom. Probing those points therefore names an etymology, pragmatics, sound or grammar atom rather than a lexis one. The word IS introduced by that lesson; the track simply files it differently, and the note on each such point says so. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT, and this is where most of the uncovered points come from rather than from total absence: `nalla` without an antonym leaves general evaluation uncovered; `inru` and `nerru` without a word for tomorrow leave the today / yesterday / tomorrow point uncovered; `vilai` and `evvalavu` are both taught and nothing joins them into a question, so asking a price is uncovered; the age QUESTION is taught and the answer needs a numeral the course does not reach. That is deliberate, because a candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `tamilSpecific: true`. `anchorIds` records which anchor each point leans on, and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "points": [
+    {
+      "id": "TA-A1-N-01",
+      "category": "Peyarccol (the noun)",
+      "label": "proper nouns: a personal name, used in address and given in an introduction",
+      "probe": [
+        "TA-LEX-C02-PEYAR-01",
+        "TA-LEX-C02-EN-PEYAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "peyar and the frame eṉ peyar … are both taught in chapter 2, and the frame is the one an introduction actually uses."
+    },
+    {
+      "id": "TA-A1-N-02",
+      "category": "Peyarccol (the noun)",
+      "label": "place names: the town you are from, and the country",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-N-01",
+        "A1-NE20-02"
+      ],
+      "note": "ūr ('town, village') is taught in chapter 37 as exactly the word a Tamil introduction reaches for, and kirāmam ('a village') in chapter 53. But not one settlement name and no country name is introduced anywhere, and there is no word for a country at all, so a learner can say WHAT KIND of place they are from and never WHICH."
+    },
+    {
+      "id": "TA-A1-N-03",
+      "category": "Peyarccol (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": [
+        "TA-ETYMON-NAAL-01",
+        "TA-LEX-C73-WHEN-04",
+        "TA-LEX-C73-WHEN-05",
+        "TA-LEX-C48-LEAVE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "nāḷ (day), mādam (month), āṇḍu (year) and nēram (time) are all taught, which is more of this point than most tracks hold."
+    },
+    {
+      "id": "TA-A1-N-04",
+      "category": "Peyarccol (the noun)",
+      "label": "gender by heteronymy: the paired kinship words",
+      "probe": [
+        "TA-ETYMON-KUDUMBAM-01",
+        "TA-LEX-SON",
+        "TA-LEX-DAUGHTER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "Chapter 12 teaches appā/ammā and four sibling words, and chapter 43 adds makaṉ/makaḷ. Tamil splits 'brother' and 'sister' by relative age as well as by sex, which is more than the Spanish point asks and is taught explicitly."
+    },
+    {
+      "id": "TA-A1-N-05",
+      "category": "Peyarccol (the noun)",
+      "label": "number: the plural suffix -kaḷ",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "TAUGHT ONLY AS A FROZEN PIECE. -kaḷ is inside nīṅgaḷ and solluṅgaḷ from chapters 2 and 8, and inside irukkiṟīrgaḷ, but no lesson names it as the plural suffix or attaches it to a noun the learner chooses. A candidate cannot pluralise a word they have just learnt."
+    },
+    {
+      "id": "TA-A1-N-06",
+      "category": "Peyarccol (the noun)",
+      "label": "the rational / irrational split that governs Tamil agreement",
+      "probe": null,
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil sorts every noun into uyartiṇai (rational: people and gods) and aḵṟiṇai (everything else), and that split, not sex, is what verb and pronoun agreement keys on. It is the first thing a Tamil grammar teaches about the noun and the corpus never mentions it. Named here because a proxy built from a gender language cannot see it."
+    },
+    {
+      "id": "TA-A1-N-07",
+      "category": "Peyarccol (the noun)",
+      "label": "the vocative: calling somebody",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SN-04"
+      ],
+      "note": "No vocative form and no address term is taught. mariyādai ('respect') is a noun about respect, not a way of showing it to a person's face."
+    },
+    {
+      "id": "TA-A1-ADJ-01",
+      "category": "Peyaruriccol (the adjective)",
+      "label": "qualifying adjectives before the noun, invariable",
+      "probe": [
+        "TA-GRAMMAR-C41-ADJ-SYSTEM",
+        "TA-LEX-C41-ADJ-01",
+        "TA-LEX-C41-ADJ-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-ADJ-03",
+        "A1-ADJ-04",
+        "A1-ADJ-05",
+        "A1-SN-02"
+      ],
+      "note": "Chapter 41 teaches five adjectives AND the rule behind them in its own atom: before the noun, unchanged. Four Spanish points collapse here, because three of them are about agreement and Tamil's adjective does not agree with anything."
+    },
+    {
+      "id": "TA-A1-ADJ-02",
+      "category": "Peyaruriccol (the adjective)",
+      "label": "the adjective used predicatively, with no copula",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-SV-03",
+        "A1-OS-05"
+      ],
+      "note": "Tamil says idu periya vīḍu for 'this is a big house' with no verb at all, and the corpus teaches the no-verb equative sentence at TA-C37-ivar-en-nanbar. It does not put an adjective in that slot, so the predicative half of this point is unevidenced."
+    },
+    {
+      "id": "TA-A1-ADJ-03",
+      "category": "Peyaruriccol (the adjective)",
+      "label": "relational adjectives naming origin or nationality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02",
+        "A1-NG3-07"
+      ],
+      "note": "No country name, so no word derived from one. tamiḻ appears only inside the taught sentence nāṉ tamiḻ pēsugiṟēṉ."
+    },
+    {
+      "id": "TA-A1-ADJ-04",
+      "category": "Peyaruriccol (the adjective)",
+      "label": "degree: intensifying an adjective",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01",
+        "A1-NG2-03"
+      ],
+      "note": "romba and mika are both untaught. niṟaiya ('a lot') and siṟitu ('a little') are taught in chapter 56 but as quantities of a thing, not as degrees of a quality, so nalla cannot be graded."
+    },
+    {
+      "id": "TA-A1-ADJ-05",
+      "category": "Peyaruriccol (the adjective)",
+      "label": "comparison: X is bigger than Y",
+      "probe": null,
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil compares with the ablative -viḍa rather than with a comparative form of the adjective, which is why this is a Tamil-specific point rather than a derived one. Untaught."
+    },
+    {
+      "id": "TA-A1-ART-01",
+      "category": "Definiteness, and the article Tamil does not have",
+      "label": "Tamil has no definite article, and the bare noun carries definiteness",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-02",
+        "A1-ART-04"
+      ],
+      "note": "THE MOST IMPORTANT UNTAUGHT FACT IN THIS COLUMN, and three Spanish points collapse into it. Every noun the course teaches is bare, so the learner is doing this correctly by imitation and has never been told the rule -- which means they cannot recognise when a bare noun is definite and when it is not. Nothing in the corpus says Tamil has no article."
+    },
+    {
+      "id": "TA-A1-ART-02",
+      "category": "Definiteness, and the article Tamil does not have",
+      "label": "oru as the indefinite marker before a noun",
+      "probe": [
+        "TA-LEX-ORU-01",
+        "TA-GRAMMAR-ORU-ATTRIBUTIVE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ART-03"
+      ],
+      "note": "Chapter 39 teaches oru and, in its own atom, that it is the form oṉṟu takes in front of a noun. That IS the Spanish indefinite-article point, answered by the only device Tamil has for it."
+    },
+    {
+      "id": "TA-A1-DEM-01",
+      "category": "Suṭṭuccol (demonstratives and deixis)",
+      "label": "the i- / a- / e- system itself: near, far, and the question",
+      "probe": [
+        "TA-GRAMMAR-C40-DEIXIS-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02"
+      ],
+      "note": "THE STRONGEST SINGLE THING IN THIS INVENTORY. Chapter 40 does not teach six words and leave the learner to notice; it declares the pattern as its own atom. Tamil's two-way near/far split answers Spanish's three-way este/ese/aquel, and the e- question series is a third arm Spanish has no counterpart for."
+    },
+    {
+      "id": "TA-A1-DEM-02",
+      "category": "Suṭṭuccol (demonstratives and deixis)",
+      "label": "idu and adu as standalone pronouns",
+      "probe": [
+        "TA-LEX-C40-DEIXIS-01",
+        "TA-LEX-C40-DEIXIS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-03"
+      ],
+      "note": "Both taught in chapter 40."
+    },
+    {
+      "id": "TA-A1-DEM-03",
+      "category": "Suṭṭuccol (demonstratives and deixis)",
+      "label": "iṅgē and aṅgē: place deixis",
+      "probe": [
+        "TA-LEX-C40-DEIXIS-03",
+        "TA-LEX-C40-DEIXIS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "note": "Spanish's three-way aquí/ahí/allí is answered by Tamil's two-way pair, which is the honest match rather than an invented middle term."
+    },
+    {
+      "id": "TA-A1-DEM-04",
+      "category": "Suṭṭuccol (demonstratives and deixis)",
+      "label": "the attributive demonstrative before a noun: inda, anda",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ],
+      "note": "idu and adu are taught as standalone pronouns only. Their attributive forms inda/anda, which is what a learner needs to say THIS book, appear nowhere."
+    },
+    {
+      "id": "TA-A1-DEM-05",
+      "category": "Suṭṭuccol (demonstratives and deixis)",
+      "label": "ivar as the respectful third person, and the respect grade it sits in",
+      "probe": [
+        "TA-LEX-IVAR-01",
+        "TA-GRAMMAR-IVAR-02"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific: the near demonstrative inflects for the respect owed to the person pointed at, a distinction Spanish's demonstratives do not carry. Chapter 37 teaches ivar with the grade named in its own grammar atom."
+    },
+    {
+      "id": "TA-A1-PRON-01",
+      "category": "Pratippeyar (pronouns)",
+      "label": "first-person nāṉ",
+      "probe": [
+        "TA-LEX-C03-NAAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ]
+    },
+    {
+      "id": "TA-A1-PRON-02",
+      "category": "Pratippeyar (pronouns)",
+      "label": "second person, and the nī / nīṅgaḷ respect choice",
+      "probe": [
+        "TA-LEX-C02-NII-NIINGAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "Taught as a CHOICE in chapter 2, which is the right shape: in Tamil picking the wrong one is not a grammar error but a social one."
+    },
+    {
+      "id": "TA-A1-PRON-03",
+      "category": "Pratippeyar (pronouns)",
+      "label": "the rest of the subject paradigm: avaṉ, avaḷ, avar, nām / nāṅgaḷ, avarkaḷ",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "Only nāṉ and nī/nīṅgaḷ are taught. The third person is missing entirely except for the demonstrative ivar, and so is the inclusive/exclusive we -- nām against nāṅgaḷ -- which is a distinction Spanish does not make and Tamil requires on every first plural."
+    },
+    {
+      "id": "TA-A1-PRON-04",
+      "category": "Pratippeyar (pronouns)",
+      "label": "the accusative object suffix -ai on a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02",
+        "A1-SV-04"
+      ],
+      "note": "Spanish's personal `a` before a human object is answered in Tamil by the accusative -ai, which is obligatory on a rational noun and optional on others. Untaught: no case suffix but the dative is named anywhere."
+    },
+    {
+      "id": "TA-A1-PRON-05",
+      "category": "Pratippeyar (pronouns)",
+      "label": "the dative experiencer as the subject of a feeling or a knowing",
+      "probe": [
+        "TA-GRAMMAR-DATIVE-SUBJECT-02",
+        "TA-LEX-DATIVE-SUBJECT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01"
+      ],
+      "note": "Spanish's unstressed indirect object with gustar is answered by Tamil's dative-subject sentence, and chapter 6 teaches it as a construction rather than as a phrase: enakkut tamiḻ teriyum, built with no subject at all."
+    },
+    {
+      "id": "TA-A1-PRON-06",
+      "category": "Pratippeyar (pronouns)",
+      "label": "reflexive and self-reference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "Tamil's tāṉ and the self-benefactive -koḷ are both untaught."
+    },
+    {
+      "id": "TA-A1-PRON-07",
+      "category": "Pratippeyar (pronouns)",
+      "label": "the relative construction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "Tamil has no relative pronoun at all: it relativises with a participle before the noun. Three Spanish points collapse here and none of them is taught -- the corpus has no participial modifier of any kind."
+    },
+    {
+      "id": "TA-A1-PRON-08",
+      "category": "Pratippeyar (pronouns)",
+      "label": "interrogative pronouns: what, who, how much",
+      "probe": [
+        "TA-LEX-C02-ENNA-01",
+        "TA-LEX-C40-DEIXIS-05",
+        "TA-LEX-EVVALAVU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "eṉṉa, yār and evvaḷavu are all taught, the last with its own grammar atom distinguishing it from ettanai."
+    },
+    {
+      "id": "TA-A1-PRON-09",
+      "category": "Pratippeyar (pronouns)",
+      "label": "the exclamative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-POS-01",
+      "category": "Urimai (possession)",
+      "label": "the possessive form of a pronoun: eṉ",
+      "probe": [
+        "TA-LEX-C02-EN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-03"
+      ],
+      "note": "eṉ is taught in chapter 2 and used again in ivar eṉ naṇbar. uṅgaḷ appears inside the taught question uṅgaḷ peyar eṉṉa? but is not itself introduced, so only the first person is securely held."
+    },
+    {
+      "id": "TA-A1-POS-02",
+      "category": "Urimai (possession)",
+      "label": "possessives for the other persons: uṅgaḷ, avaṉuḍaiya, eṅgaḷ",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-02"
+      ],
+      "note": "Untaught beyond the frozen uṅgaḷ."
+    },
+    {
+      "id": "TA-A1-POS-03",
+      "category": "Urimai (possession)",
+      "label": "the genitive suffix -uḍaiya, and possession by juxtaposition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "Tamil-adjacent point kept because Spanish's de-phrase has to land somewhere: Tamil marks a possessor either with -uḍaiya or by simply putting it first. The corpus does the second in eṉ peyar and eṉ naṇbar and never names it as a rule."
+    },
+    {
+      "id": "TA-A1-POS-04",
+      "category": "Urimai (possession)",
+      "label": "having something: the dative-plus-iru possession sentence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ],
+      "note": "Spanish's tener is answered in Tamil by enakku X irukkiṟadu, and both halves are separately taught -- the dative in chapter 6, iru in chapter 32 -- but nothing puts them together, and the combination is the point."
+    },
+    {
+      "id": "TA-A1-NUM-01",
+      "category": "Eṇṇuppeyar (numerals and quantity)",
+      "label": "the cardinals one to ten",
+      "probe": [
+        "TA-LEX-NUMBERS-1-5-01",
+        "TA-LEX-NUMBERS-6-10-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "note": "Chapters 7 teaches both halves by ear before the written forms, which is why the atoms are LEX rather than SCRIPT."
+    },
+    {
+      "id": "TA-A1-NUM-02",
+      "category": "Eṇṇuppeyar (numerals and quantity)",
+      "label": "the teens and twenty, built compositionally",
+      "probe": [
+        "TA-LEX-PATHINONDRU-IRUPATHU-01",
+        "TA-LEX-PATHINONDRU-IRUPATHU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "note": "Chapter 20 teaches 11-20 as ten-echo compounds and irupathu as transparently two-tens, so the learner gets the RULE and not twenty separate words."
+    },
+    {
+      "id": "TA-A1-NUM-03",
+      "category": "Eṇṇuppeyar (numerals and quantity)",
+      "label": "the numerals above twenty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "note": "Nothing above irupathu. A price, an age above twenty, a house number and a telephone number are all out of reach, which is what makes this point expensive rather than tidy."
+    },
+    {
+      "id": "TA-A1-NUM-04",
+      "category": "Eṇṇuppeyar (numerals and quantity)",
+      "label": "the ordinals: mudal, iraṇḍāvadu",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG2-01",
+        "A1-NG3-06"
+      ],
+      "note": "mutalil ('first of all') is taught in chapter 62 as a discourse word, not as an ordinal, and no other ordinal exists."
+    },
+    {
+      "id": "TA-A1-NUM-05",
+      "category": "Eṇṇuppeyar (numerals and quantity)",
+      "label": "quantity words: a little, a lot, enough, not enough",
+      "probe": [
+        "TA-LEX-C56-AMOUNT-01",
+        "TA-LEX-C56-AMOUNT-02",
+        "TA-LEX-C56-AMOUNT-03",
+        "TA-LEX-C47-REPLY-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-Q-04",
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "note": "Chapter 56 teaches siṟitu, niṟaiya and kuṟaivu, and pōdum ('that is enough') comes from chapter 47. Four Spanish quantity points are answered by this set."
+    },
+    {
+      "id": "TA-A1-NUM-06",
+      "category": "Eṇṇuppeyar (numerals and quantity)",
+      "label": "asking how much and how many, and the difference between them",
+      "probe": [
+        "TA-LEX-EVVALAVU-01",
+        "TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-02"
+      ],
+      "note": "Chapter 39 teaches evvaḷavu and, in its own grammar atom, why it is not ettanai -- mass against count. That distinction is exactly what a shop transaction needs."
+    },
+    {
+      "id": "TA-A1-NUM-07",
+      "category": "Eṇṇuppeyar (numerals and quantity)",
+      "label": "measures of size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "periya and siṟiya give size as a quality. No unit of any kind is taught: not a distance, not a weight, not a measure of volume."
+    },
+    {
+      "id": "TA-A1-NUM-08",
+      "category": "Eṇṇuppeyar (numerals and quantity)",
+      "label": "the Tamil digits ௧-௰ as written on a page",
+      "probe": null,
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific, and a NEAR MISS worth naming precisely. Eight lessons in chapter 7 -- TA-W07-digits-1-3, -4-5, -6-8, -9-10 and their copy and dictation lessons -- teach the Tamil digits, and every one of them declares an EMPTY introduces list. The material exists and cannot be probed. One frontmatter field per lesson would close this point without authoring a line of content."
+    },
+    {
+      "id": "TA-A1-CASE-01",
+      "category": "Vēṟṟumai (case endings and postpositions)",
+      "label": "the dative -ukku, its surface forms, and the irregular enakku",
+      "probe": [
+        "TA-GRAMMAR-DATIVE-UKKU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SV-05",
+        "A1-NG3-05"
+      ],
+      "note": "Chapter 6 is the corpus's best piece of grammar teaching: the suffix, its two surface shapes and its one irregular form, in a lesson of its own."
+    },
+    {
+      "id": "TA-A1-CASE-02",
+      "category": "Vēṟṟumai (case endings and postpositions)",
+      "label": "case as a stackable suffix, not a preposition",
+      "probe": [
+        "TA-GRAMMAR-DATIVE-STACKING-01"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific and the reason the proxy's preposition points do not transfer: Tamil stacks a visible one-purpose suffix on the end of the noun where a European language puts a separate word in front of it. Taught explicitly."
+    },
+    {
+      "id": "TA-A1-CASE-03",
+      "category": "Vēṟṟumai (case endings and postpositions)",
+      "label": "the accusative -ai",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "note": "Untaught. See TA-A1-PRON-04."
+    },
+    {
+      "id": "TA-A1-CASE-04",
+      "category": "Vēṟṟumai (case endings and postpositions)",
+      "label": "the locative -il, and saying a thing is IN a place",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-NG3-02"
+      ],
+      "note": "Untaught, and it is the case a beginner needs second. The corpus teaches vīḍu, aṟai, kaḍai, nilaiyam and ūr and cannot put anything inside any of them."
+    },
+    {
+      "id": "TA-A1-CASE-05",
+      "category": "Vēṟṟumai (case endings and postpositions)",
+      "label": "the ablative -iliruntu, and saying where you are FROM",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07",
+        "A1-F1-03"
+      ],
+      "note": "Untaught, and this is the gap that keeps the whole origin function shut: ūr is taught, the case that would attach it to a person is not."
+    },
+    {
+      "id": "TA-A1-CASE-06",
+      "category": "Vēṟṟumai (case endings and postpositions)",
+      "label": "the instrumental and the sociative: with a thing, with a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-CASE-07",
+      "category": "Vēṟṟumai (case endings and postpositions)",
+      "label": "spatial postpositions: on, under, near, behind",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "note": "Chapter 66 teaches mēlē, kīḻē, uḷḷē and veḷiyē as standalone direction words, which is a genuine foothold, but none of them is attached to a noun, so the learner can say up and never on top of the table."
+    },
+    {
+      "id": "TA-A1-CASE-08",
+      "category": "Vēṟṟumai (case endings and postpositions)",
+      "label": "up, down, in, out, right and left as bare directions",
+      "probe": [
+        "TA-LEX-C66-WHICHWAY-01",
+        "TA-LEX-C66-WHICHWAY-02",
+        "TA-LEX-C66-WHICHWAY-03",
+        "TA-LEX-C66-WHICHWAY-04",
+        "TA-LEX-C66-WHICHWAY-05",
+        "TA-LEX-C66-WHICHWAY-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-05"
+      ],
+      "note": "All six taught in chapter 66."
+    },
+    {
+      "id": "TA-A1-V-01",
+      "category": "Vinaiccol (the verb)",
+      "label": "the three-slot verb: stem, tense, person",
+      "probe": [
+        "TA-GRAMMAR-IRU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03"
+      ],
+      "note": "THE OTHER STRONG PIECE. Chapter 32 does not present a paradigm to memorise; it names the machine -- stem, then tense bead, then person ending -- and then runs five verbs through it. That is the Spanish present-paradigm point answered structurally."
+    },
+    {
+      "id": "TA-A1-V-02",
+      "category": "Vinaiccol (the verb)",
+      "label": "iru as the verb of being, existing and staying",
+      "probe": [
+        "TA-LEX-IRU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ]
+    },
+    {
+      "id": "TA-A1-V-03",
+      "category": "Vinaiccol (the verb)",
+      "label": "the equative sentence with no verb at all",
+      "probe": [
+        "TA-LEX-IVAR-EN-NANBAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SV-02",
+        "A1-OS-05"
+      ],
+      "note": "Spanish spends two points on ser against estar. Tamil's answer to the first is to use no verb: ivar eṉ naṇbar is three words and a complete sentence, and chapter 37 teaches it as such."
+    },
+    {
+      "id": "TA-A1-V-04",
+      "category": "Vinaiccol (the verb)",
+      "label": "strong and weak verbs: the doubling that sorts the whole system",
+      "probe": [
+        "TA-GRAMMAR-PAAR-02"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific. Which tense bead a verb takes depends on whether it doubles its final consonant, and chapter 32 teaches that as the sorting rule rather than as a list of exceptions."
+    },
+    {
+      "id": "TA-A1-V-05",
+      "category": "Vinaiccol (the verb)",
+      "label": "a stem that changes shape before the endings",
+      "probe": [
+        "TA-GRAMMAR-VAA-02"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific: vā is said as vā and inflects as varu-. Taught in its own atom, which is the difference between a learner who can conjugate it and one who has memorised two forms."
+    },
+    {
+      "id": "TA-A1-V-06",
+      "category": "Vinaiccol (the verb)",
+      "label": "the past tense",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "note": "EIGHT Spanish points collapse here and NONE of it is taught. Chapter 32 names the middle bead as the tense slot and shows that it can be past, present or future, but no lesson gives the past marker, and no lesson puts a verb into the past. A candidate cannot say a single thing that happened."
+    },
+    {
+      "id": "TA-A1-V-07",
+      "category": "Vinaiccol (the verb)",
+      "label": "the future tense",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "Same status as the past: the slot is named, the filler is not."
+    },
+    {
+      "id": "TA-A1-V-08",
+      "category": "Vinaiccol (the verb)",
+      "label": "the negative verb, which Tamil forms without a negative word",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "Tamil negates a verb by changing the verb, not by putting a word in front of it, and this is one of the sharpest differences from the proxy language. illai is taught as a standalone no; the negative FINITE verb is not."
+    },
+    {
+      "id": "TA-A1-V-09",
+      "category": "Vinaiccol (the verb)",
+      "label": "the imperative, plain and respectful",
+      "probe": [
+        "TA-LEX-SOLLUNGAL-01",
+        "TA-PRAGMATICS-PLEASE-REGISTER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ],
+      "note": "solluṅgaḷ is taught in chapter 8 together with the pragmatics of the -uṅgaḷ ending, which IS the respectful imperative. The plain imperative appears as the citation form of every verb in chapters 42 and 65 -- vā, uṭkār, paḍi, koḍu, kuḍi, naḍa -- so both grades are present, though only the respectful one is named as such."
+    },
+    {
+      "id": "TA-A1-V-10",
+      "category": "Vinaiccol (the verb)",
+      "label": "the infinitive and the citation form",
+      "probe": [
+        "TA-GRAMMAR-PO-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "note": "Chapter 32 teaches the stem as the thing endings attach to, which is the working equivalent of the Spanish infinitive point."
+    },
+    {
+      "id": "TA-A1-V-11",
+      "category": "Vinaiccol (the verb)",
+      "label": "the verbal participle, Tamil's everyday clause-chainer",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-13",
+        "A1-SUB-07"
+      ],
+      "note": "pōy varugiṟēṉ, the taught goodbye, IS a verbal participle plus a finite verb -- 'having gone, I come' -- and chapter 4 glosses the meaning without naming the construction. Nothing lets a learner build another one."
+    },
+    {
+      "id": "TA-A1-V-12",
+      "category": "Vinaiccol (the verb)",
+      "label": "wanting and needing with vēṇḍum",
+      "probe": [
+        "TA-LEX-VENDUM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F3-04",
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "note": "Chapter 39 teaches vēṇḍum, and Tamil builds it with no subject, which is the same dative-experiencer shape as teri and puri."
+    },
+    {
+      "id": "TA-A1-V-13",
+      "category": "Vinaiccol (the verb)",
+      "label": "refusing and not-wanting with vēṇḍām",
+      "probe": [
+        "TA-GRAMMAR-VENDAAM-NEGATION-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ],
+      "note": "Taught in the same lesson as its positive, which is the right place for it: vēṇḍām is how a Tamil speaker declines an offer."
+    },
+    {
+      "id": "TA-A1-V-14",
+      "category": "Vinaiccol (the verb)",
+      "label": "knowing: teri, and why it takes no person ending",
+      "probe": [
+        "TA-LEX-TERI-01",
+        "TA-GRAMMAR-TERI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-NG7-01"
+      ],
+      "note": "Chapter 32 teaches the verb and the reason in one lesson: knowing happens TO you, so the knower is in the dative and the verb agrees with nothing."
+    },
+    {
+      "id": "TA-A1-V-15",
+      "category": "Vinaiccol (the verb)",
+      "label": "understanding: puri, on the same dative pattern",
+      "probe": [
+        "TA-LEX-PURI-01",
+        "TA-GRAMMAR-PURI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ]
+    },
+    {
+      "id": "TA-A1-V-16",
+      "category": "Vinaiccol (the verb)",
+      "label": "liking: piḍi, with the liker in the dative",
+      "probe": [
+        "TA-LEX-PIDI-01",
+        "TA-GRAMMAR-PIDI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-SV-01",
+        "A1-NG6-08"
+      ],
+      "note": "Spanish's gustar point, answered by piḍikkum with the same argument reversal. Chapter 34 teaches it from the concrete verb 'to catch, to hold', which is where the metaphor comes from."
+    },
+    {
+      "id": "TA-A1-V-17",
+      "category": "Vinaiccol (the verb)",
+      "label": "ability: muḍiyum",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "note": "Untaught. teri covers knowing a language; nothing covers being able to do a thing."
+    },
+    {
+      "id": "TA-A1-V-18",
+      "category": "Vinaiccol (the verb)",
+      "label": "the core motion and posture verbs",
+      "probe": [
+        "TA-LEX-PO-01",
+        "TA-LEX-VAA-01",
+        "TA-LEX-SIT",
+        "TA-LEX-C71-DAY-01",
+        "TA-LEX-C71-DAY-02",
+        "TA-LEX-C71-DAY-03",
+        "TA-LEX-C65-DOING-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-NG3-04",
+        "A1-NE01-03"
+      ],
+      "note": "pō, vā, uṭkār, eḻu, tūṅgu, ōḍu and naḍa are all taught across chapters 32, 42, 65 and 71."
+    },
+    {
+      "id": "TA-A1-V-19",
+      "category": "Vinaiccol (the verb)",
+      "label": "the core transaction verbs",
+      "probe": [
+        "TA-LEX-GIVE",
+        "TA-LEX-EDU-01",
+        "TA-LEX-C68-SHOP-04",
+        "TA-LEX-UTAVU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-02",
+        "A1-F4-03"
+      ],
+      "note": "koḍu, eḍu, vāṅgu and udavu, from chapters 42, 34 and 68."
+    },
+    {
+      "id": "TA-A1-V-20",
+      "category": "Vinaiccol (the verb)",
+      "label": "the core language verbs",
+      "probe": [
+        "TA-LEX-C05-PESU-01",
+        "TA-LEX-KEL-01",
+        "TA-LEX-PADI-01",
+        "TA-LEX-EZHUTU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02",
+        "A1-NE06-04"
+      ],
+      "note": "pēsu, kēḷ, paḍi and eḻudu. kēḷ carries both asking and hearing, which the lesson names."
+    },
+    {
+      "id": "TA-A1-V-21",
+      "category": "Vinaiccol (the verb)",
+      "label": "the core mind verbs",
+      "probe": [
+        "TA-LEX-NINAI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01",
+        "A1-F2-02"
+      ],
+      "note": "ninai is taught, and the lesson notes it doubles as remembering. Nothing lets it take a clause as its object, so believing THAT something is the case is still out of reach -- see TA-A1-CJ-04."
+    },
+    {
+      "id": "TA-A1-V-22",
+      "category": "Vinaiccol (the verb)",
+      "label": "everyday physical verbs",
+      "probe": [
+        "TA-LEX-SAAPPIDU-01",
+        "TA-LEX-C65-DOING-01",
+        "TA-LEX-C71-DAY-04",
+        "TA-LEX-C71-DAY-05",
+        "TA-LEX-C72-FEEL-04",
+        "TA-LEX-C72-FEEL-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03",
+        "A1-NE10-03"
+      ],
+      "note": "sāppiḍu, kuḍi, kaḻuvu, viḷaiyāḍu, siri and aḻu."
+    },
+    {
+      "id": "TA-A1-V-23",
+      "category": "Vinaiccol (the verb)",
+      "label": "opening, closing and stopping",
+      "probe": [
+        "TA-LEX-C65-DOING-04",
+        "TA-LEX-C65-DOING-05",
+        "TA-LEX-C65-DOING-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ]
+    },
+    {
+      "id": "TA-A1-V-24",
+      "category": "Vinaiccol (the verb)",
+      "label": "seeing and looking",
+      "probe": [
+        "TA-LEX-PAAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01"
+      ]
+    },
+    {
+      "id": "TA-A1-V-25",
+      "category": "Vinaiccol (the verb)",
+      "label": "living, working and setting out",
+      "probe": [
+        "TA-LEX-C05-VAAZH-01",
+        "TA-LEX-C05-VELAI-SEY-01",
+        "TA-LEX-C48-LEAVE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "note": "vāḻ, vēlai sey and puṟappaḍu. vēlai sey is Tamil's light-verb compound, which is how a great deal of its verb vocabulary is built."
+    },
+    {
+      "id": "TA-A1-V-26",
+      "category": "Vinaiccol (the verb)",
+      "label": "the present continuous, as a productive pattern",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-03"
+      ],
+      "note": "The corpus teaches the three-slot machine but only ever fills the tense slot with the present. -kiṟ- as a distinct progressive is not separated out."
+    },
+    {
+      "id": "TA-A1-NEG-01",
+      "category": "Etirmaṟai (negation)",
+      "label": "illai as the standalone no, and as there-is-not",
+      "probe": [
+        "TA-LEX-C01-ILLAI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-OS-01",
+        "A1-NG1-01"
+      ],
+      "note": "Chapter 1 teaches both jobs at once, which is right: illai answers a question and denies existence with the same word."
+    },
+    {
+      "id": "TA-A1-NEG-02",
+      "category": "Etirmaṟai (negation)",
+      "label": "the two-way negative: illai against alla",
+      "probe": null,
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific and untaught. Tamil denies existence with illai and identity with alla, and picking the wrong one is a plain error. The corpus teaches only illai and never says there is a second."
+    },
+    {
+      "id": "TA-A1-NEG-03",
+      "category": "Etirmaṟai (negation)",
+      "label": "negating a verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "See TA-A1-V-08. Untaught."
+    },
+    {
+      "id": "TA-A1-NEG-04",
+      "category": "Etirmaṟai (negation)",
+      "label": "there is no need: tēvaiyillai",
+      "probe": [
+        "TA-LEX-C56-AMOUNT-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ],
+      "note": "Chapter 56 teaches it whole. It is also the corpus's only worked example of illai suffixed onto a noun, which is the productive pattern -- and the lesson does not say so."
+    },
+    {
+      "id": "TA-A1-NEG-05",
+      "category": "Etirmaṟai (negation)",
+      "label": "negative coordination: neither one nor the other",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-Q-01",
+      "category": "Vināccol (asking questions)",
+      "label": "the yes-or-no question, formed with -ā on the end",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-OS-02",
+        "A1-F1-04",
+        "A1-F1-05"
+      ],
+      "note": "THE MOST CONSEQUENTIAL SINGLE GAP IN THE GRAMMAR COLUMN. Tamil turns a statement into a polar question by suffixing -ā, and nothing in 359 lessons teaches it. The learner can ask the five wh- questions the course supplies and cannot ask a single question of their own devising."
+    },
+    {
+      "id": "TA-A1-Q-02",
+      "category": "Vināccol (asking questions)",
+      "label": "asking with a question word, which sits where the answer sits",
+      "probe": [
+        "TA-LEX-C02-UNGAL-PEYAR-ENNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "The taught question uṅgaḷ peyar eṉṉa? puts eṉṉa in the answer's slot rather than at the front, which is the rule -- but the corpus shows it rather than naming it."
+    },
+    {
+      "id": "TA-A1-Q-03",
+      "category": "Vināccol (asking questions)",
+      "label": "what: eṉṉa",
+      "probe": [
+        "TA-LEX-C02-ENNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ]
+    },
+    {
+      "id": "TA-A1-Q-04",
+      "category": "Vināccol (asking questions)",
+      "label": "who: yār",
+      "probe": [
+        "TA-LEX-C40-DEIXIS-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ]
+    },
+    {
+      "id": "TA-A1-Q-05",
+      "category": "Vināccol (asking questions)",
+      "label": "where: eṅgē",
+      "probe": [
+        "TA-LEX-C40-DEIXIS-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-F1-02"
+      ]
+    },
+    {
+      "id": "TA-A1-Q-06",
+      "category": "Vināccol (asking questions)",
+      "label": "how: eppaḍi",
+      "probe": [
+        "TA-LEX-C03-EPPADI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ]
+    },
+    {
+      "id": "TA-A1-Q-07",
+      "category": "Vināccol (asking questions)",
+      "label": "how much: evvaḷavu",
+      "probe": [
+        "TA-LEX-EVVALAVU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06",
+        "A1-NG6-02"
+      ]
+    },
+    {
+      "id": "TA-A1-Q-08",
+      "category": "Vināccol (asking questions)",
+      "label": "when: eppōdu",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "Untaught, and it is the one member of the e- series chapter 40 leaves out. The chapter teaches the SYSTEM -- i- near, a- far, e- question -- so a learner who was given eppōdu would have got it nearly free."
+    },
+    {
+      "id": "TA-A1-Q-09",
+      "category": "Vināccol (asking questions)",
+      "label": "why: ēṉ, and because: ēṉeṉṟāl",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "note": "Neither taught. A learner cannot ask for a reason or give one."
+    },
+    {
+      "id": "TA-A1-Q-10",
+      "category": "Vināccol (asking questions)",
+      "label": "which: enda",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "Untaught; the attributive arm of the e- series, missing for the same reason as inda and anda."
+    },
+    {
+      "id": "TA-A1-Q-11",
+      "category": "Vināccol (asking questions)",
+      "label": "asking for a person, and answering",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "note": "Untaught. yār is taught but no frame puts it to a door or a telephone."
+    },
+    {
+      "id": "TA-A1-ADV-01",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "time deictics: today and yesterday",
+      "probe": [
+        "TA-LEX-C73-WHEN-01",
+        "TA-LEX-C73-WHEN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "note": "iṉṟu and nēṟṟu, chapter 73. Tomorrow is present only inside the taught farewell nāḷai pārkkalām and is not introduced on its own."
+    },
+    {
+      "id": "TA-A1-ADV-02",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "now, soon, at once, still",
+      "probe": [
+        "TA-LEX-C48-LEAVE-01",
+        "TA-LEX-C62-JOIN-03",
+        "TA-LEX-C62-JOIN-04",
+        "TA-LEX-C62-JOIN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-03"
+      ],
+      "note": "ippōdu, sīkkiram, uṭaṉē and iṉṉum, from chapters 48 and 62."
+    },
+    {
+      "id": "TA-A1-ADV-03",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "before and afterwards",
+      "probe": [
+        "TA-LEX-C73-WHEN-03",
+        "TA-LEX-C48-LEAVE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG3-06",
+        "A1-NG4-03"
+      ],
+      "note": "muṉbu and piṟaku, and this is a genuine PAIR rather than half of one -- the corpus teaches both ends, which it does not always do."
+    },
+    {
+      "id": "TA-A1-ADV-04",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "only, and first of all",
+      "probe": [
+        "TA-LEX-C62-JOIN-01",
+        "TA-LEX-C62-JOIN-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F6-01"
+      ]
+    },
+    {
+      "id": "TA-A1-ADV-05",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "polarity: yes and no",
+      "probe": [
+        "TA-LEX-C01-AAM-01",
+        "TA-LEX-C01-ILLAI-01",
+        "TA-LEX-C01-ANSWERING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-F1-05"
+      ],
+      "note": "Chapter 1 teaches ām and illai and then a separate lesson on the HABITS of answering in Tamil, which is more than the point asks."
+    },
+    {
+      "id": "TA-A1-ADV-06",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "manner: doing something well, and doing it badly",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04",
+        "A1-NG6-01",
+        "A1-NG6-07"
+      ],
+      "note": "nalam is taught as wellness in a fixed reply, and nalla as an adjective. Neither is available as a manner adverb, and there is no word for badly at all."
+    },
+    {
+      "id": "TA-A1-ADV-07",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "certainly and perhaps",
+      "probe": [
+        "TA-LEX-C47-REPLY-03",
+        "TA-LEX-C47-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05",
+        "A1-F2-10",
+        "A1-F2-12"
+      ],
+      "note": "niccayamāka and oruvēḷai, chapter 47 -- and they are a matched pair covering certainty and possibility, which is unusual for this corpus."
+    },
+    {
+      "id": "TA-A1-ADV-08",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "also and too",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "Tamil's additive -um is a suffix rather than a word, and it is untaught. It is one of the highest-frequency morphemes in the language."
+    },
+    {
+      "id": "TA-A1-ADV-09",
+      "category": "Vinaiyaḍai (adverbs)",
+      "label": "quantity adverbs modifying a verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03"
+      ],
+      "note": "The chapter 56 quantity words are taught as amounts of a thing, not as degrees of an action."
+    },
+    {
+      "id": "TA-A1-S-01",
+      "category": "Toḍar (the sentence)",
+      "label": "subject-object-verb: Tamil's basic word order",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-OS-06"
+      ],
+      "note": "Every taught sentence obeys it and no lesson states it. That is tolerable while the learner is repeating whole sentences and stops being tolerable the moment they build one."
+    },
+    {
+      "id": "TA-A1-S-02",
+      "category": "Toḍar (the sentence)",
+      "label": "the verbless equative sentence",
+      "probe": [
+        "TA-LEX-IVAR-EN-NANBAR-01",
+        "TA-PRAGMATICS-IVAR-EN-NANBAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-OS-05",
+        "A1-SV-02",
+        "A1-SV-03"
+      ],
+      "note": "Taught in chapter 37, with the pragmatics of the ending choice as a second atom -- how you regard the person is part of the sentence."
+    },
+    {
+      "id": "TA-A1-S-03",
+      "category": "Toḍar (the sentence)",
+      "label": "the affirmative declarative with a finite verb",
+      "probe": [
+        "TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-OS-01",
+        "A1-OS-06"
+      ],
+      "note": "nāṉ tamiḻ pēsugiṟēṉ is subject, object and verb in the right order with the person ending agreeing, and chapter 5 teaches it whole."
+    },
+    {
+      "id": "TA-A1-S-04",
+      "category": "Toḍar (the sentence)",
+      "label": "the dative-subject sentence as a sentence type",
+      "probe": [
+        "TA-GRAMMAR-DATIVE-SUBJECT-02",
+        "TA-GRAMMAR-DATIVE-SUBJECT-FAMILY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SV-01",
+        "A1-SV-05"
+      ],
+      "note": "Chapter 6 teaches it as a TYPE and then chapter 32, 33 and 34 run teri, puri and piḍi through it. That is the one construction this corpus teaches to the standard the rest of it does not reach."
+    },
+    {
+      "id": "TA-A1-S-05",
+      "category": "Toḍar (the sentence)",
+      "label": "the existential sentence: there is, there is not",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "note": "iru and illai are both taught separately and never put into an existential frame."
+    },
+    {
+      "id": "TA-A1-S-06",
+      "category": "Toḍar (the sentence)",
+      "label": "subject-verb agreement, stated as a rule",
+      "probe": [
+        "TA-GRAMMAR-IRU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SN-03"
+      ],
+      "note": "The three-slot lesson names the person ending as the third slot, which is the rule stated. What it does not do is say WHICH ending goes with which person beyond the first."
+    },
+    {
+      "id": "TA-A1-S-07",
+      "category": "Toḍar (the sentence)",
+      "label": "word order is flexible because case does the work",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "The corollary of TA-A1-CASE-02 and untaught: once a noun carries its case suffix it can move, which is why Tamil word order is freer than the SOV frame suggests."
+    },
+    {
+      "id": "TA-A1-CJ-01",
+      "category": "Iṇaittoḍar (joining clauses)",
+      "label": "joining two nouns: the -um ... -um pattern",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "Tamil has no word for and between nouns; it suffixes -um to each. Untaught, and it is the first thing a learner needs to list two things they want."
+    },
+    {
+      "id": "TA-A1-CJ-02",
+      "category": "Iṇaittoḍar (joining clauses)",
+      "label": "joining with but",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "note": "ānāl is untaught."
+    },
+    {
+      "id": "TA-A1-CJ-03",
+      "category": "Iṇaittoḍar (joining clauses)",
+      "label": "joining with or",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-CO-03",
+        "A1-F3-02"
+      ],
+      "note": "alladu is untaught, so a preference cannot be offered as a choice."
+    },
+    {
+      "id": "TA-A1-CJ-04",
+      "category": "Iṇaittoḍar (joining clauses)",
+      "label": "a clause as the object of a verb of saying or thinking",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03",
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "Tamil uses the quotative eṉṟu. Untaught, which is why ninai ('to think') cannot yet take an opinion as its object."
+    },
+    {
+      "id": "TA-A1-CJ-05",
+      "category": "Iṇaittoḍar (joining clauses)",
+      "label": "causal and purpose clauses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06",
+        "A1-SUB-07"
+      ],
+      "note": "Untaught. See TA-A1-Q-09."
+    },
+    {
+      "id": "TA-A1-CJ-06",
+      "category": "Iṇaittoḍar (joining clauses)",
+      "label": "simultaneity: when",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-CJ-07",
+      "category": "Iṇaittoḍar (joining clauses)",
+      "label": "distributive: one ... the other",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-T-01",
+      "category": "Kālam maṟṟum tēdi (time and date)",
+      "label": "the parts of the day",
+      "probe": [
+        "TA-ETYMON-KAALAI-01",
+        "TA-ETYMON-MAALAI-01",
+        "TA-LEX-PIRPAKAL-01",
+        "TA-LEX-IRAVU-01",
+        "TA-ETYMON-NANPAKAL-NALLIRAVU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "kālai, mālai, piṟpakal, iravu, naṇpakal and naḷḷiravu across chapters 17 and 24 to 28. Unusually complete, and each is taught with its own etymology rather than as a list."
+    },
+    {
+      "id": "TA-A1-T-02",
+      "category": "Kālam maṟṟum tēdi (time and date)",
+      "label": "telling the clock with maṇi",
+      "probe": [
+        "TA-ETYMON-MANI-01",
+        "TA-GRAMMAR-MANI-HOMOPHONE-TIME-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "Chapter 18 teaches maṇi and, in a second atom, how it is used to tell the hour. Saying a time above twenty o'clock is not the problem; saying any minute is, because the numerals stop at twenty."
+    },
+    {
+      "id": "TA-A1-T-03",
+      "category": "Kālam maṟṟum tēdi (time and date)",
+      "label": "the seven weekdays",
+      "probe": [
+        "TA-GRAMMAR-VAARA-KIZHAMAI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "Chapter 10 teaches all seven together with the fact that they mix Tamil's own planet-words and Sanskrit borrowings."
+    },
+    {
+      "id": "TA-A1-T-04",
+      "category": "Kālam maṟṟum tēdi (time and date)",
+      "label": "the months",
+      "probe": [
+        "TA-LEX-THAMIZH-MAADANGAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "Chapter 16 teaches the twelve months of the TAMIL SOLAR calendar, which is the right choice for the language and leaves the Gregorian names untaught. A form asking for a date of birth would want the second set; the course has the first."
+    },
+    {
+      "id": "TA-A1-T-05",
+      "category": "Kālam maṟṟum tēdi (time and date)",
+      "label": "the seasons",
+      "probe": [
+        "TA-LEX-KAALANGAL-01",
+        "TA-PRAGMATICS-KAALANGAL-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "Chapter 14 teaches the four, and its pragmatics atom says plainly that the locally central season is the rains rather than a four-way Western split -- an honesty note of exactly the kind this file is trying to reward."
+    },
+    {
+      "id": "TA-A1-T-06",
+      "category": "Kālam maṟṟum tēdi (time and date)",
+      "label": "today, yesterday, tomorrow",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "note": "PARTIAL, AND THEREFORE UNCOVERED. iṉṟu and nēṟṟu are taught; nāḷai exists only inside the farewell nāḷai pārkkalām and is never introduced as a word. A candidate asked what they are doing tomorrow has no word for it."
+    },
+    {
+      "id": "TA-A1-T-07",
+      "category": "Kālam maṟṟum tēdi (time and date)",
+      "label": "the date, and the year as a number",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "āṇḍu ('a year') is taught. No numeral above twenty exists to put in front of it."
+    },
+    {
+      "id": "TA-A1-T-08",
+      "category": "Kālam maṟṟum tēdi (time and date)",
+      "label": "locating an event in time: the meeting is ON Monday",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "note": "The weekdays are taught and the locative case that would place an event on one is not. See TA-A1-CASE-04."
+    },
+    {
+      "id": "TA-A1-F-01",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "greet",
+      "probe": [
+        "TA-PHONO-VANAKKAM-01",
+        "TA-PRAGMATIC-VANAKKAM-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F6-01",
+        "A1-F6-02"
+      ],
+      "note": "vaṇakkam, with a pragmatics atom on when it is used."
+    },
+    {
+      "id": "TA-A1-F-02",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "greet by time of day",
+      "probe": [
+        "TA-LEX-KAALAI-VANAKKAM-01",
+        "TA-LEX-MAALAI-VANAKKAM-01",
+        "TA-ETYMON-MATIYA-VANAKKAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "Three separate chapters, each sourcing its greeting independently rather than assuming the pattern carries over -- chapter 30 says so explicitly."
+    },
+    {
+      "id": "TA-A1-F-03",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say good night",
+      "probe": [
+        "TA-ETYMON-INIYA-IRAVU-01",
+        "TA-PRAGMATICS-INIYA-IRAVU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F5-11"
+      ]
+    },
+    {
+      "id": "TA-A1-F-04",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "respond to a greeting",
+      "probe": [
+        "TA-LEX-C03-NALAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ],
+      "note": "nalam is taught with its reply frame nāṉ nalamāga irukkiṟēṉ."
+    },
+    {
+      "id": "TA-A1-F-05",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "identify yourself by name",
+      "probe": [
+        "TA-LEX-C02-EN-PEYAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-01",
+        "A1-F5-04"
+      ]
+    },
+    {
+      "id": "TA-A1-F-06",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask somebody's name",
+      "probe": [
+        "TA-LEX-C02-UNGAL-PEYAR-ENNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ]
+    },
+    {
+      "id": "TA-A1-F-07",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say you are pleased to meet somebody",
+      "probe": [
+        "TA-LEX-C02-MAGIZHCCI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ]
+    },
+    {
+      "id": "TA-A1-F-08",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "introduce a third person",
+      "probe": [
+        "TA-LEX-IVAR-EN-NANBAR-01",
+        "TA-PRAGMATICS-IVAR-EN-NANBAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ],
+      "note": "Chapter 37 teaches the frame AND the fact that the ending you choose says how you regard the person."
+    },
+    {
+      "id": "TA-A1-F-09",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask how somebody is",
+      "probe": [
+        "TA-LEX-C03-EPPADI-IRUKKIRIRGAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-02"
+      ]
+    },
+    {
+      "id": "TA-A1-F-10",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask after somebody's health in the everyday way",
+      "probe": [
+        "TA-LEX-UDAMBU-01",
+        "TA-LEX-SUGAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-NE13-01"
+      ],
+      "note": "Chapter 38 teaches uḍambu and sugam, which is how the question is actually put in Tamil -- 'is the body well' rather than 'how are you'."
+    },
+    {
+      "id": "TA-A1-F-11",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say it does not matter, and that it is fine",
+      "probe": [
+        "TA-LEX-C03-PARAVAYILLAI-01",
+        "TA-LEX-C01-SARI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-NG6-06"
+      ]
+    },
+    {
+      "id": "TA-A1-F-12",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "thank, and thank warmly",
+      "probe": [
+        "TA-LEX-C01-NANDRI-01",
+        "TA-LEX-C49-COURTESY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "naṉṟi in chapter 1 and mikka naṉṟi in chapter 49."
+    },
+    {
+      "id": "TA-A1-F-13",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "apologise",
+      "probe": [
+        "TA-ETYMON-MANNIKKAVUM-01",
+        "TA-PRAGMATICS-SORRY-REGISTER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "The register atom is the useful half: maṉṉikkavum leans formal and colloquial apology varies by region, which a learner needs before using it."
+    },
+    {
+      "id": "TA-A1-F-14",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say please, and know when the word is not what politeness needs",
+      "probe": [
+        "TA-LEX-TAYAVUSEYTU-01",
+        "TA-PRAGMATICS-PLEASE-REGISTER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "The pragmatics atom teaches that standalone please is emphatic in Tamil and that everyday courtesy usually lives in the respectful verb ending instead. That is the single most useful pragmatic fact in the track."
+    },
+    {
+      "id": "TA-A1-F-15",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask somebody to tell you something",
+      "probe": [
+        "TA-LEX-SOLLUNGAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-02",
+        "A1-F1-02"
+      ]
+    },
+    {
+      "id": "TA-A1-F-16",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "take your leave",
+      "probe": [
+        "TA-LEX-C04-POY-VARUGIREN-01",
+        "TA-LEX-VIDAI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-11",
+        "A1-F6-06"
+      ],
+      "note": "pōy varugiṟēṉ, with the lesson noting it literally says 'I will go and come back' -- Tamil does not say goodbye. viḍai gives the noun for it."
+    },
+    {
+      "id": "TA-A1-F-17",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "arrange to meet again",
+      "probe": [
+        "TA-LEX-C04-NAALAI-01",
+        "TA-LEX-C04-MINDUM-SANDIPPOM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ]
+    },
+    {
+      "id": "TA-A1-F-18",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say what language you speak",
+      "probe": [
+        "TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-03"
+      ]
+    },
+    {
+      "id": "TA-A1-F-19",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say that you know a language",
+      "probe": [
+        "TA-LEX-DATIVE-SUBJECT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F2-14",
+        "A1-NG6-09"
+      ]
+    },
+    {
+      "id": "TA-A1-F-20",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask somebody's age",
+      "probe": [
+        "TA-LEX-VAYATHU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-NG5-04"
+      ]
+    },
+    {
+      "id": "TA-A1-F-21",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say your own age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG5-04"
+      ],
+      "note": "The QUESTION is taught and the answer is not: giving an age needs a numeral above twenty for most adults, and the course stops at twenty."
+    },
+    {
+      "id": "TA-A1-F-22",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say where you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG3-07"
+      ],
+      "note": "ūr is taught and the ablative that would attach it to a person is not. See TA-A1-CASE-05."
+    },
+    {
+      "id": "TA-A1-F-23",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "give the rest of your personal data: address, telephone number",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "note": "No word for an address, none for a telephone, and no numeral above twenty to say either one with."
+    },
+    {
+      "id": "TA-A1-F-24",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say what you want",
+      "probe": [
+        "TA-LEX-VENDUM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F3-04",
+        "A1-F4-02"
+      ]
+    },
+    {
+      "id": "TA-A1-F-25",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "decline: say you do not want it",
+      "probe": [
+        "TA-GRAMMAR-VENDAAM-NEGATION-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ]
+    },
+    {
+      "id": "TA-A1-F-26",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say what you like",
+      "probe": [
+        "TA-LEX-PIDI-01",
+        "TA-GRAMMAR-PIDI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F3-01"
+      ]
+    },
+    {
+      "id": "TA-A1-F-27",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask a preference by offering alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F3-02",
+        "A1-F3-03"
+      ],
+      "note": "Needs alladu ('or'), which is untaught. See TA-A1-CJ-03."
+    },
+    {
+      "id": "TA-A1-F-28",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say you understand, or do not",
+      "probe": [
+        "TA-LEX-PURI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "puri is taught. Saying you do NOT understand needs the negative verb, which is not."
+    },
+    {
+      "id": "TA-A1-F-29",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "TA-LEX-UTAVU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ]
+    },
+    {
+      "id": "TA-A1-F-30",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "give a short affirmative or negative reply",
+      "probe": [
+        "TA-LEX-C01-ANSWERING-01",
+        "TA-LEX-C47-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F1-05",
+        "A1-F2-06",
+        "A1-F2-07"
+      ],
+      "note": "Chapter 1's answering lesson plus appaḍiyē from chapter 47."
+    },
+    {
+      "id": "TA-A1-F-31",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say that is enough",
+      "probe": [
+        "TA-LEX-C47-REPLY-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-04"
+      ]
+    },
+    {
+      "id": "TA-A1-F-32",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask permission, and grant it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "note": "aṉumati ('permission') is taught in chapter 63 as a NOUN. Nothing lets a learner ask for permission or give it, which needs the -alāmā question and therefore the polar -ā at TA-A1-Q-01."
+    },
+    {
+      "id": "TA-A1-F-33",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "make a request politely",
+      "probe": [
+        "TA-LEX-C63-MANNERS-01",
+        "TA-LEX-SOLLUNGAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "vēṇḍukōḷ names the request and solluṅgaḷ performs one."
+    },
+    {
+      "id": "TA-A1-F-34",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "offer and invite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F4-07",
+        "A1-F4-08"
+      ],
+      "note": "varavēṟpu ('a welcome') and viruntāḷi ('a guest') are taught as nouns; no invitation frame exists."
+    },
+    {
+      "id": "TA-A1-F-35",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "congratulate, and wish somebody well",
+      "probe": [
+        "TA-LEX-C49-COURTESY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-10",
+        "A1-F5-09"
+      ],
+      "note": "vāḻttu is the noun for a good wish; the corpus does not give a frame for delivering one."
+    },
+    {
+      "id": "TA-A1-F-36",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ],
+      "note": "varuttam ('sorrow, regret') is taught in chapter 72 as a feeling, not as something you express to somebody else."
+    },
+    {
+      "id": "TA-A1-F-37",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "express an emotion: anger, fear, sorrow, gladness",
+      "probe": [
+        "TA-LEX-C72-FEEL-01",
+        "TA-LEX-C72-FEEL-02",
+        "TA-LEX-C72-FEEL-03",
+        "TA-LEX-C49-COURTESY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "kōpam, payam, varuttam and santōṣam. Taught as nouns, which is how Tamil says them -- enakku kōpam -- though that dative frame is not built for the learner."
+    },
+    {
+      "id": "TA-A1-F-38",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say how your body feels",
+      "probe": [
+        "TA-LEX-C61-FEEL-01",
+        "TA-LEX-C61-FEEL-02",
+        "TA-LEX-C61-FEEL-03",
+        "TA-LEX-C61-FEEL-04",
+        "TA-LEX-C61-FEEL-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ],
+      "note": "pasi, tākam, tūkkam, kāyccal and vali -- the five a beginner needs, all in chapter 61, and all of them nouns that want the same dative frame."
+    },
+    {
+      "id": "TA-A1-F-39",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask what something costs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02",
+        "A1-NE12-03"
+      ],
+      "note": "vilai ('a price') and evvaḷavu ('how much') are BOTH taught, in chapters 68 and 39, and nothing puts them into a question. This is the cheapest uncovered function in the file: one lesson."
+    },
+    {
+      "id": "TA-A1-F-40",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "buy something",
+      "probe": [
+        "TA-LEX-C68-SHOP-04",
+        "TA-LEX-C68-SHOP-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01",
+        "A1-NE15-02"
+      ],
+      "note": "vāṅgu and paṇam."
+    },
+    {
+      "id": "TA-A1-F-41",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "describe a daily routine",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-03",
+        "A1-NE10-03"
+      ],
+      "note": "The verbs exist -- eḻu, kaḻuvu, sāppiḍu, vēlai sey, tūṅgu -- and the tense system to string them into a day does not."
+    },
+    {
+      "id": "TA-A1-F-42",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say what happened",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-V-06",
+        "A1-F1-01"
+      ],
+      "note": "No past tense. See TA-A1-V-06."
+    },
+    {
+      "id": "TA-A1-F-43",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "say what you are going to do",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "note": "No future tense and no way to state an intention."
+    },
+    {
+      "id": "TA-A1-F-44",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "give an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F2-01",
+        "A1-F2-02",
+        "A1-F2-04",
+        "A1-F2-05"
+      ],
+      "note": "ninai is taught and the quotative eṉṟu that would let it take an opinion is not. See TA-A1-CJ-04."
+    },
+    {
+      "id": "TA-A1-F-45",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "express doubt or ignorance",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-15"
+      ],
+      "note": "teri is taught; its negative, teriyādu, is not, and that is the form this function needs."
+    },
+    {
+      "id": "TA-A1-F-46",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "read a public sign: way in, way out, open, closed",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "tiṟa and mūḍu are taught as VERBS in chapter 65, not as the states a sign shows, and no word for an entrance or an exit is taught. vāsal is a doorway, which is the physical thing rather than the label."
+    },
+    {
+      "id": "TA-A1-F-47",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-F-48",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "open a conversation and hold the floor",
+      "probe": [
+        "TA-LEX-C47-REPLY-01",
+        "TA-LEX-C47-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-04"
+      ],
+      "note": "uṇmai and appaḍiyē are the two back-channel words the corpus teaches."
+    },
+    {
+      "id": "TA-A1-F-49",
+      "category": "Toḍarbāḍal (communicative functions)",
+      "label": "propose a specific day, time and place to meet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "note": "The weekdays, maṇi and the place nouns are all taught; the locative that would pin any of them to an event is not."
+    },
+    {
+      "id": "TA-A1-L-01",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the writing system is an abugida: a consonant carries a built-in vowel",
+      "probe": [
+        "TA-SCRIPT-ABUGIDA-VA-KA-01",
+        "TA-SCRIPT-ABUGIDA-VA-KA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "Taught in the first writing lesson rather than assumed."
+    },
+    {
+      "id": "TA-A1-L-02",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the independent vowel letters",
+      "probe": [
+        "TA-SCRIPT-INDEPENDENT-VOWEL-AA-01",
+        "TA-SCRIPT-INDEPENDENT-VOWEL-I-01",
+        "TA-SCRIPT-INDEPENDENT-VOWEL-E-01",
+        "TA-SCRIPT-O-VOWEL-01",
+        "TA-SCRIPT-U-VOWEL-01",
+        "TA-SCRIPT-UU-VOWEL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "TEN of Tamil's twelve independent vowels are taught across the W- and S- series; ஈ and ஔ are the two that are not."
+    },
+    {
+      "id": "TA-A1-L-03",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the vowel signs that replace the inherent vowel",
+      "probe": [
+        "TA-SCRIPT-AA-SIGN-01",
+        "TA-SCRIPT-I-SIGN-WRITE-NANDRI-01",
+        "TA-SCRIPT-II-SIGN-01",
+        "TA-SCRIPT-U-SIGN-01",
+        "TA-SCRIPT-UU-SIGN-01",
+        "TA-SCRIPT-E-SIGN-02",
+        "TA-SCRIPT-EE-SIGN-01",
+        "TA-SCRIPT-OO-SIGN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "Eight distinct signs, each in its own lesson, and TA-SCRIPT-SHORT-O-01 adds the short o as well."
+    },
+    {
+      "id": "TA-A1-L-04",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the consonant letters",
+      "probe": [
+        "TA-SCRIPT-CURVES-VA-KA-01",
+        "TA-SCRIPT-MA-RETROFLEX-NA-01",
+        "TA-SCRIPT-THREE-NS-01",
+        "TA-SCRIPT-PA-YA-01",
+        "TA-SCRIPT-TA-ZHA-01",
+        "TA-SCRIPT-CA-ONE-LETTER-01",
+        "TA-SCRIPT-TTA-01",
+        "TA-SCRIPT-NGA-LLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "ALL EIGHTEEN core Tamil consonants are taught. That was checked by walking the Tamil block of every script lesson rather than by counting lessons, and it is the strongest fact in this column."
+    },
+    {
+      "id": "TA-A1-L-05",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the puḷḷi, which cancels the inherent vowel",
+      "probe": [
+        "TA-SCRIPT-PULLI-VANAKKAM-01",
+        "TA-SCRIPT-PULLI-VANAKKAM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "The single most load-bearing mark in Tamil writing, taught in its own lesson on the word the reader already knows."
+    },
+    {
+      "id": "TA-A1-L-06",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the three n letters, and the three that sound alike",
+      "probe": [
+        "TA-SCRIPT-THREE-NS-01"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific. ந, ன and ண are three distinct letters where a European alphabet has one, and the corpus teaches them as a set with the contrast named."
+    },
+    {
+      "id": "TA-A1-L-07",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "reading a whole word off the page",
+      "probe": [
+        "TA-SCRIPT-WRITE-VANAKKAM-01",
+        "TA-SCRIPT-READ-PEYAR-03",
+        "TA-SCRIPT-READ-NAAN-02",
+        "TA-SCRIPT-READ-TAMIZH-02",
+        "TA-SCRIPT-READ-UUR-02",
+        "TA-SCRIPT-READ-KADAI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Seventeen recognition lessons take a word the learner already says and make them decode it."
+    },
+    {
+      "id": "TA-A1-L-08",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "writing a whole word from memory",
+      "probe": [
+        "TA-SCRIPT-WRITE-VANAKKAM-01",
+        "TA-SCRIPT-WRITE-AAM-02",
+        "TA-SCRIPT-WRITE-ILLAI-03",
+        "TA-SCRIPT-WRITE-SARI-02",
+        "TA-SCRIPT-WRITE-SOLLUNGAL-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Each with a guided copy, a delayed copy and a dictation lesson behind it."
+    },
+    {
+      "id": "TA-A1-L-09",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the script is unicameral: there is no capital letter",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "note": "Two Spanish points collapse into one fact, and the corpus never states it. It matters in one practical place: a learner who has met the Latin alphabet expects a name to start differently from a common noun, and in Tamil it does not."
+    },
+    {
+      "id": "TA-A1-L-10",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the Tamil digits",
+      "probe": null,
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "See TA-A1-NUM-08: taught across eight lessons, none of which declares an atom."
+    },
+    {
+      "id": "TA-A1-L-11",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the grantha letters used for Sanskrit and English loans",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "ஸ and ஷ are shown inside taught words -- santōṣam, āsiriyar -- and neither they nor ஜ and ஹ is ever taught as a letter. A learner will meet ஜ on the first bus they read."
+    },
+    {
+      "id": "TA-A1-L-12",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "punctuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "note": "NINE Spanish points collapse here and none is taught. Modern Tamil uses the same full stop, comma and question mark as English, which is why the collapse is legitimate rather than a dodge -- but the corpus never says so, and a reader meeting a Tamil question mark has been told nothing about it."
+    },
+    {
+      "id": "TA-A1-L-13",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-L-14",
+      "category": "Tamiḻ eḻuttu (script and orthography)",
+      "label": "the corpus asks the reader to decode no letter it has not taught",
+      "probe": [
+        "TA-SCRIPT-FIRST-VISIBLE-SHAPE-00"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific, and a RESULT rather than a demand: walking every Tamil glyph the track puts on a page against every glyph its script lessons teach returns 52 shown and 52 taught, ZERO untaught. No other Indic track in this repository is closed. The anchor is the first writing lesson because that is where the discipline starts."
+    },
+    {
+      "id": "TA-A1-P-01",
+      "category": "Oli (pronunciation)",
+      "label": "the retroflex series, and the tongue position behind it",
+      "probe": [
+        "TA-SOUND-MA-RETROFLEX-NA-03"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific: retroflex ண against dental ந is a meaning difference, and the sound lesson trains the curl rather than describing it."
+    },
+    {
+      "id": "TA-A1-P-02",
+      "category": "Oli (pronunciation)",
+      "label": "ழ, the sound Tamil is named for",
+      "probe": [
+        "TA-SOUND-EZHUTU-02"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific and the hardest single sound in the language for an outsider. Taught inside eḻudu."
+    },
+    {
+      "id": "TA-A1-P-03",
+      "category": "Oli (pronunciation)",
+      "label": "ற against ர: the hard r and the tap",
+      "probe": [
+        "TA-SOUND-ARAI-02"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true
+    },
+    {
+      "id": "TA-A1-P-04",
+      "category": "Oli (pronunciation)",
+      "label": "the inherent vowel, and what it sounds like",
+      "probe": [
+        "TA-SOUND-ABUGIDA-VA-KA-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ]
+    },
+    {
+      "id": "TA-A1-P-05",
+      "category": "Oli (pronunciation)",
+      "label": "short and long vowels as a meaning difference",
+      "probe": [
+        "TA-SOUND-I-SIGN-WRITE-NANDRI-03"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific: length is phonemic, and the i-sign lesson is where the corpus makes the point."
+    },
+    {
+      "id": "TA-A1-P-06",
+      "category": "Oli (pronunciation)",
+      "label": "how a written letter's sound changes with its position in the word",
+      "probe": null,
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific and untaught. க is read as k at the start of a word and as g between vowels, and the corpus romanises accordingly -- vaṇakkam, magiḻcci, pēsugiṟēṉ -- without ever telling the reader the rule. A learner reading aloud from the script will get this wrong on the first word."
+    },
+    {
+      "id": "TA-A1-P-07",
+      "category": "Oli (pronunciation)",
+      "label": "stress and intonation",
+      "probe": null,
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "No source separates A1 Tamil prosody from higher levels and the corpus teaches none, so this is enumerated and left honestly unmapped rather than dropped."
+    },
+    {
+      "id": "TA-A1-LEX-01",
+      "category": "Solvaḷam (core lexis)",
+      "label": "parts of the body",
+      "probe": [
+        "TA-LEX-UDAL-URUPPUGAL-01",
+        "TA-LEX-C45-BODY-01",
+        "TA-LEX-C45-BODY-02",
+        "TA-LEX-C45-BODY-03",
+        "TA-LEX-C45-BODY-04",
+        "TA-LEX-C45-BODY-05",
+        "TA-LEX-C55-BODY-01",
+        "TA-LEX-C55-BODY-02",
+        "TA-LEX-C55-BODY-03",
+        "TA-LEX-C55-BODY-04",
+        "TA-LEX-C55-BODY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "Three chapters, thirteen body words. One of the fullest domains in the track."
+    },
+    {
+      "id": "TA-A1-LEX-02",
+      "category": "Solvaḷam (core lexis)",
+      "label": "physical characteristics of a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NG6-03"
+      ],
+      "note": "periya and siṟiya are taught of things, and the paḻaiya lesson says in as many words that it is used of things and not of people. No word for tall, short, thin, heavy, beautiful or plain."
+    },
+    {
+      "id": "TA-A1-LEX-03",
+      "category": "Solvaḷam (core lexis)",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "The chapter 63 and 49 nouns -- paṇivu, nambikkai, aṉbu, mariyādai -- name qualities in the abstract. None of them can be attached to a person as a description."
+    },
+    {
+      "id": "TA-A1-LEX-04",
+      "category": "Solvaḷam (core lexis)",
+      "label": "family relationships",
+      "probe": [
+        "TA-ETYMON-KUDUMBAM-01",
+        "TA-LEX-KUDUMBAM-02",
+        "TA-LEX-FAMILY",
+        "TA-LEX-CHILD",
+        "TA-LEX-SON",
+        "TA-LEX-DAUGHTER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "Chapters 12 and 43. Tamil's four sibling words split by relative age as well as sex, and the lesson teaches that as the point rather than as a complication."
+    },
+    {
+      "id": "TA-A1-LEX-05",
+      "category": "Solvaḷam (core lexis)",
+      "label": "social relationships: friend, guest",
+      "probe": [
+        "TA-LEX-NANBAN-01",
+        "TA-LEX-C46-ROLE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "naṇbaṉ, taught with its three endings for man, woman and respect, and viruntāḷi. No word for a colleague or a boss."
+    },
+    {
+      "id": "TA-A1-LEX-06",
+      "category": "Solvaḷam (core lexis)",
+      "label": "celebrations and social occasions",
+      "probe": [
+        "TA-LEX-C50-WELCOME-01",
+        "TA-LEX-C50-WELCOME-02",
+        "TA-LEX-C50-WELCOME-04",
+        "TA-LEX-C50-WELCOME-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "Chapter 50 teaches the doorway, the kōlam drawn at it, the betel leaf and the welcome -- which is a genuinely Tamil answer to this point rather than a translated one."
+    },
+    {
+      "id": "TA-A1-LEX-07",
+      "category": "Solvaḷam (core lexis)",
+      "label": "personal data on a form: name, age",
+      "probe": [
+        "TA-LEX-C02-PEYAR-01",
+        "TA-LEX-VAYATHU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "note": "The two fields the course can fill. Address and telephone are at TA-A1-F-23."
+    },
+    {
+      "id": "TA-A1-LEX-08",
+      "category": "Solvaḷam (core lexis)",
+      "label": "documents: passport and identity card",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-LEX-09",
+      "category": "Solvaḷam (core lexis)",
+      "label": "personal objects",
+      "probe": [
+        "TA-LEX-C68-SHOP-05",
+        "TA-LEX-C60-MADE-03",
+        "TA-LEX-C60-MADE-05",
+        "TA-LEX-C44-ASK-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03"
+      ],
+      "note": "pai, kuḍai, sīppu and puttakam."
+    },
+    {
+      "id": "TA-A1-LEX-10",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the meals of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "note": "uṇavu ('food') and sāppiḍu ('to eat') are both taught and no meal is named. Breakfast, lunch and dinner are all missing."
+    },
+    {
+      "id": "TA-A1-LEX-11",
+      "category": "Solvaḷam (core lexis)",
+      "label": "drink",
+      "probe": [
+        "TA-LEX-TENEER-01",
+        "TA-LEX-PAAL-01",
+        "TA-LEX-THANNEER-ARISI-01",
+        "TA-LEX-C65-DOING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "note": "tēnīr, pāl, taṇṇīr and the verb kuḍi."
+    },
+    {
+      "id": "TA-A1-LEX-12",
+      "category": "Solvaḷam (core lexis)",
+      "label": "foodstuffs",
+      "probe": [
+        "TA-LEX-THANNEER-ARISI-02",
+        "TA-LEX-C44-ASK-01",
+        "TA-LEX-C44-ASK-04",
+        "TA-LEX-C59-KITCHEN-01",
+        "TA-LEX-C59-KITCHEN-02",
+        "TA-LEX-C59-KITCHEN-03",
+        "TA-LEX-C59-KITCHEN-04",
+        "TA-LEX-C59-KITCHEN-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ],
+      "note": "arisi and sātam, paḻam, uppu, and the five kitchen words of chapter 59. The rice lesson makes the point that rice and not bread is the staple, which is the sort of thing a translated list gets wrong."
+    },
+    {
+      "id": "TA-A1-LEX-13",
+      "category": "Solvaḷam (core lexis)",
+      "label": "dishes and courses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE05-04"
+      ],
+      "note": "Ingredients are taught; no prepared dish is named."
+    },
+    {
+      "id": "TA-A1-LEX-14",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the eating place: ordering, the server, the bill",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "note": "Untaught entirely. kaḍai is a shop, not a place to eat."
+    },
+    {
+      "id": "TA-A1-LEX-15",
+      "category": "Solvaḷam (core lexis)",
+      "label": "educational institutions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01"
+      ],
+      "note": "No word for a school. āsiriyar and māṇavaṉ are taught and the building they meet in is not."
+    },
+    {
+      "id": "TA-A1-LEX-16",
+      "category": "Solvaḷam (core lexis)",
+      "label": "teaching staff and students",
+      "probe": [
+        "TA-LEX-C46-ROLE-01",
+        "TA-LEX-C46-ROLE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE06-02"
+      ]
+    },
+    {
+      "id": "TA-A1-LEX-17",
+      "category": "Solvaḷam (core lexis)",
+      "label": "learning, teaching and study",
+      "probe": [
+        "TA-LEX-PADI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ],
+      "note": "paḍi carries both reading and studying, which the lesson names. No word for teaching."
+    },
+    {
+      "id": "TA-A1-LEX-18",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the education system: timetable, examinations and marks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE06-03",
+        "A1-NE06-05"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-LEX-19",
+      "category": "Solvaḷam (core lexis)",
+      "label": "classroom language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE06-06"
+      ],
+      "note": "The directions a candidate reads on the paper itself. Untaught, and it becomes load-bearing the moment the track has a paper."
+    },
+    {
+      "id": "TA-A1-LEX-20",
+      "category": "Solvaḷam (core lexis)",
+      "label": "teaching materials and classroom furniture",
+      "probe": [
+        "TA-LEX-C44-ASK-05",
+        "TA-LEX-C70-ROOM-01",
+        "TA-LEX-NAARKAALI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE06-07"
+      ],
+      "note": "puttakam, mēsai and nāṟkāli. The chair lesson takes the word apart into four and leg, which is how Tamil built it."
+    },
+    {
+      "id": "TA-A1-LEX-21",
+      "category": "Solvaḷam (core lexis)",
+      "label": "professions and posts",
+      "probe": [
+        "TA-LEX-C46-ROLE-01",
+        "TA-LEX-C46-ROLE-02",
+        "TA-LEX-C46-ROLE-03",
+        "TA-LEX-C46-ROLE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-06"
+      ],
+      "note": "āsiriyar, māṇavaṉ, maruttuvar and vivasāyi -- teacher, student, doctor and farmer, which is a defensible four for this language."
+    },
+    {
+      "id": "TA-A1-LEX-22",
+      "category": "Solvaḷam (core lexis)",
+      "label": "workplaces, tools and work clothing",
+      "probe": [
+        "TA-LEX-C60-MADE-01",
+        "TA-LEX-C60-MADE-02",
+        "TA-LEX-C60-MADE-04",
+        "TA-LEX-C54-HOUSE-03",
+        "TA-LEX-C64-HARVEST-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02"
+      ],
+      "note": "ūsi, kayiṟu, tuṭaippam, katti and kaḷam. Tools of a household and a farm rather than of an office, which is what this corpus is about."
+    },
+    {
+      "id": "TA-A1-LEX-23",
+      "category": "Solvaḷam (core lexis)",
+      "label": "unemployment, job-seeking, rights at work",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE07-04",
+        "A1-NE07-05"
+      ],
+      "note": "Untaught. Enumerated because the proxy places it at A1; whether it belongs there in Tamil is a judgement this file does not make."
+    },
+    {
+      "id": "TA-A1-LEX-24",
+      "category": "Solvaḷam (core lexis)",
+      "label": "free time and entertainment",
+      "probe": [
+        "TA-LEX-C71-DAY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01"
+      ],
+      "note": "viḷaiyāḍu ('to play') is the whole of it. No word for a game, a rest or an outing."
+    },
+    {
+      "id": "TA-A1-LEX-25",
+      "category": "Solvaḷam (core lexis)",
+      "label": "sport and games",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "The verb is taught and no game is named."
+    },
+    {
+      "id": "TA-A1-LEX-26",
+      "category": "Solvaḷam (core lexis)",
+      "label": "shows and exhibitions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE08-02"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-LEX-27",
+      "category": "Solvaḷam (core lexis)",
+      "label": "media, press, television and radio",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-04",
+        "A1-NE09-05"
+      ],
+      "note": "Wholly untaught."
+    },
+    {
+      "id": "TA-A1-LEX-28",
+      "category": "Solvaḷam (core lexis)",
+      "label": "written correspondence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE09-02"
+      ],
+      "note": "No word for a letter, a message or a note."
+    },
+    {
+      "id": "TA-A1-LEX-29",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the telephone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE09-03"
+      ],
+      "note": "Untaught, and it is a required field on any form the track eventually writes."
+    },
+    {
+      "id": "TA-A1-LEX-30",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the internet and new technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE09-06",
+        "A1-NE16-02"
+      ],
+      "note": "Untaught. The corpus is a deliberately village-and-household lexicon, which is a coherent choice and still leaves this A1 domain empty."
+    },
+    {
+      "id": "TA-A1-LEX-31",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the dwelling and its parts",
+      "probe": [
+        "TA-LEX-VEEDU-01",
+        "TA-LEX-KADAVU-01",
+        "TA-LEX-ARAI-01",
+        "TA-LEX-C70-ROOM-03",
+        "TA-LEX-C70-ROOM-04",
+        "TA-LEX-C70-ROOM-05",
+        "TA-LEX-C50-WELCOME-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02"
+      ],
+      "note": "vīḍu, kadavu, aṟai, suvar, tarai, kūrai and vāsal -- house, door, room, wall, floor, roof and doorway."
+    },
+    {
+      "id": "TA-A1-LEX-32",
+      "category": "Solvaḷam (core lexis)",
+      "label": "household objects and furniture",
+      "probe": [
+        "TA-LEX-C70-ROOM-01",
+        "TA-LEX-C70-ROOM-02",
+        "TA-LEX-NAARKAALI-01",
+        "TA-LEX-C54-HOUSE-01",
+        "TA-LEX-C54-HOUSE-02",
+        "TA-LEX-C54-HOUSE-04",
+        "TA-LEX-C54-HOUSE-05",
+        "TA-LEX-C44-ASK-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE10-04"
+      ],
+      "note": "mēsai, kaṭṭil, nāṟkāli, pāy, kūṭai, kiṇṇam, peṭṭi and viḷakku."
+    },
+    {
+      "id": "TA-A1-LEX-33",
+      "category": "Solvaḷam (core lexis)",
+      "label": "buying, selling and renting a home",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01"
+      ],
+      "note": "The dwelling is well taught; no transaction around it is."
+    },
+    {
+      "id": "TA-A1-LEX-34",
+      "category": "Solvaḷam (core lexis)",
+      "label": "shops, shopping and payment",
+      "probe": [
+        "TA-LEX-C68-SHOP-01",
+        "TA-LEX-C68-SHOP-02",
+        "TA-LEX-C68-SHOP-03",
+        "TA-LEX-C68-SHOP-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01",
+        "A1-NE12-03",
+        "A1-NE15-01",
+        "A1-NE15-02"
+      ],
+      "note": "kaḍai, vilai, paṇam and vāṅgu. Four Spanish points answered by one chapter -- and the transaction still cannot be COMPLETED, because no numeral above twenty exists to state a price with."
+    },
+    {
+      "id": "TA-A1-LEX-35",
+      "category": "Solvaḷam (core lexis)",
+      "label": "clothing, footwear and accessories",
+      "probe": [
+        "TA-LEX-C67-WEAR-01",
+        "TA-LEX-C67-WEAR-02",
+        "TA-LEX-C67-WEAR-03",
+        "TA-LEX-C67-WEAR-04",
+        "TA-LEX-C67-WEAR-05",
+        "TA-LEX-C44-ASK-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "note": "saṭṭai, vēṭṭi, puḍavai, seruppu, toppi and tuṇi. The veshti and the sari are named as themselves rather than glossed away, which is the right call."
+    },
+    {
+      "id": "TA-A1-LEX-36",
+      "category": "Solvaḷam (core lexis)",
+      "label": "health and illness",
+      "probe": [
+        "TA-LEX-C61-FEEL-04",
+        "TA-LEX-C61-FEEL-05",
+        "TA-LEX-UDAMBU-01",
+        "TA-LEX-SUGAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ],
+      "note": "kāyccal, vali, uḍambu and sugam -- fever, pain, the body and wellbeing."
+    },
+    {
+      "id": "TA-A1-LEX-37",
+      "category": "Solvaḷam (core lexis)",
+      "label": "health services, centres and medicines",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE11-03"
+      ],
+      "note": "maruttuvar ('a doctor') is taught and nothing around them is: no hospital, no clinic, no medicine. The vocabulary stops exactly where a learner would need to act on it."
+    },
+    {
+      "id": "TA-A1-LEX-38",
+      "category": "Solvaḷam (core lexis)",
+      "label": "hygiene",
+      "probe": [
+        "TA-LEX-C71-DAY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE13-04"
+      ],
+      "note": "kaḻuvu ('to wash') and nothing else -- no soap, no water for washing as distinct from drinking."
+    },
+    {
+      "id": "TA-A1-LEX-39",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the transport system",
+      "probe": [
+        "TA-LEX-C69-GOING-01",
+        "TA-LEX-C69-GOING-02",
+        "TA-LEX-C69-GOING-03",
+        "TA-LEX-C69-GOING-04",
+        "TA-LEX-C69-GOING-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE14-03"
+      ],
+      "note": "vaṇḍi, pērundu, rayil, sālai and nilaiyam -- vehicle, bus, train, road and station, all in chapter 69. A strong domain."
+    },
+    {
+      "id": "TA-A1-LEX-40",
+      "category": "Solvaḷam (core lexis)",
+      "label": "travel objects, documents and accommodation",
+      "probe": [
+        "TA-LEX-C48-LEAVE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02"
+      ],
+      "note": "payaṇam ('a journey') is taught as an abstraction. Nothing packs, books or stays anywhere, and no ticket is named."
+    },
+    {
+      "id": "TA-A1-LEX-41",
+      "category": "Solvaḷam (core lexis)",
+      "label": "postal, financial, protection and security services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-04"
+      ],
+      "note": "Untaught. These are the everyday errands an A1 learner in-country actually runs."
+    },
+    {
+      "id": "TA-A1-LEX-42",
+      "category": "Solvaḷam (core lexis)",
+      "label": "businesses, industry and energy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "note": "Untaught, and plausibly above A1 in practice; enumerated because the proxy places it at A1."
+    },
+    {
+      "id": "TA-A1-LEX-43",
+      "category": "Solvaḷam (core lexis)",
+      "label": "government, politics and the law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "Untaught."
+    },
+    {
+      "id": "TA-A1-LEX-44",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the arts: music, dance, image, literature, stage and screen",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "SIX Spanish points and the corpus has puttakam. Untaught, in a track whose own etymology lessons are steeped in classical Tamil literature."
+    },
+    {
+      "id": "TA-A1-LEX-45",
+      "category": "Solvaḷam (core lexis)",
+      "label": "religion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "Untaught as vocabulary. vaṇakkam's etymology lesson explains it as reverence and homage, which is adjacent and not the same thing."
+    },
+    {
+      "id": "TA-A1-LEX-46",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the sky and space",
+      "probe": [
+        "TA-LEX-C51-SKY-01",
+        "TA-LEX-C51-SKY-02",
+        "TA-LEX-C51-SKY-03",
+        "TA-LEX-C51-SKY-04",
+        "TA-LEX-C51-SKY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "note": "ākāyam, sūriyaṉ, nilā, viṇmīṉ and mēkam."
+    },
+    {
+      "id": "TA-A1-LEX-47",
+      "category": "Solvaḷam (core lexis)",
+      "label": "geography: country, town, city, capital",
+      "probe": [
+        "TA-LEX-UUR-01",
+        "TA-LEX-C53-LAND-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "note": "PARTIAL AND THEREFORE HONEST: ūr and kirāmam are taught, and there is no word for a country and none for a city as distinct from a town. A learner can place themselves in a settlement and not in a nation."
+    },
+    {
+      "id": "TA-A1-LEX-48",
+      "category": "Solvaḷam (core lexis)",
+      "label": "urban and rural spaces",
+      "probe": [
+        "TA-LEX-C53-LAND-03",
+        "TA-LEX-C53-LAND-04",
+        "TA-LEX-C64-HARVEST-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "note": "vayal, pātai and kaḷam -- paddy field, path and threshing floor. Rural is well served; urban is not served at all."
+    },
+    {
+      "id": "TA-A1-LEX-49",
+      "category": "Solvaḷam (core lexis)",
+      "label": "climate and weather",
+      "probe": [
+        "TA-LEX-VAANILAI-01",
+        "TA-LEX-C57-FIRE-01",
+        "TA-LEX-KAALANGAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "note": "vāṉilai, kāṟṟu and the four seasons."
+    },
+    {
+      "id": "TA-A1-LEX-50",
+      "category": "Solvaḷam (core lexis)",
+      "label": "fauna",
+      "probe": [
+        "TA-LEX-NAAY-POONAI-01",
+        "TA-LEX-C58-ANIMAL-01",
+        "TA-LEX-C58-ANIMAL-02",
+        "TA-LEX-C58-ANIMAL-03",
+        "TA-LEX-C58-ANIMAL-04",
+        "TA-LEX-C58-ANIMAL-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "note": "nāy and pūnai, then pasu, āṭu, kōḻi, kākkai and paṟavai."
+    },
+    {
+      "id": "TA-A1-LEX-51",
+      "category": "Solvaḷam (core lexis)",
+      "label": "flora",
+      "probe": [
+        "TA-LEX-C52-TREE-01",
+        "TA-LEX-C52-TREE-02",
+        "TA-LEX-C52-TREE-03",
+        "TA-LEX-C52-TREE-04",
+        "TA-LEX-C52-TREE-05",
+        "TA-LEX-C50-WELCOME-03",
+        "TA-LEX-C64-HARVEST-01",
+        "TA-LEX-C64-HARVEST-02",
+        "TA-LEX-C64-HARVEST-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "note": "A whole tree taken apart in chapter 52, plus malar, nel, pul and payir."
+    },
+    {
+      "id": "TA-A1-LEX-52",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the land and water",
+      "probe": [
+        "TA-LEX-C53-LAND-01",
+        "TA-LEX-C53-LAND-02",
+        "TA-LEX-C57-FIRE-02",
+        "TA-LEX-C57-FIRE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "note": "nadi, malai, maṇal and sēṟu."
+    },
+    {
+      "id": "TA-A1-LEX-53",
+      "category": "Solvaḷam (core lexis)",
+      "label": "fire, smoke and air",
+      "probe": [
+        "TA-LEX-C57-FIRE-04",
+        "TA-LEX-C57-FIRE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ]
+    },
+    {
+      "id": "TA-A1-LEX-54",
+      "category": "Solvaḷam (core lexis)",
+      "label": "colour",
+      "probe": [
+        "TA-ETYMON-NIRANGAL-01",
+        "TA-LEX-PACCAI-MANJAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "Six colours across chapters 11 and 22, with the native/borrowed split named."
+    },
+    {
+      "id": "TA-A1-LEX-55",
+      "category": "Solvaḷam (core lexis)",
+      "label": "seeing and hearing as notions",
+      "probe": [
+        "TA-LEX-PAAR-01",
+        "TA-LEX-KEL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "note": "pār and kēḷ, the second of which carries both hearing and asking."
+    },
+    {
+      "id": "TA-A1-LEX-56",
+      "category": "Solvaḷam (core lexis)",
+      "label": "age as a notion",
+      "probe": [
+        "TA-LEX-VAYATHU-01",
+        "TA-LEX-C41-ADJ-04",
+        "TA-LEX-C41-ADJ-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "note": "The age question, plus pudiya and paḻaiya -- and the paḻaiya lesson says explicitly that it is used of things and not of people, which is the kind of boundary a word list does not give you."
+    },
+    {
+      "id": "TA-A1-LEX-57",
+      "category": "Solvaḷam (core lexis)",
+      "label": "general quality and general evaluation",
+      "probe": [
+        "TA-LEX-C41-ADJ-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG1-03",
+        "A1-NG6-01",
+        "A1-NG6-04"
+      ],
+      "note": "PARTIAL. nalla is taught and has no antonym anywhere in the corpus. A candidate asked to say something is bad has no word for it, so evaluation is half a system."
+    },
+    {
+      "id": "TA-A1-LEX-58",
+      "category": "Solvaḷam (core lexis)",
+      "label": "acceptability and conformity",
+      "probe": [
+        "TA-LEX-C01-SARI-01",
+        "TA-LEX-C47-REPLY-05",
+        "TA-LEX-C56-AMOUNT-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG6-05",
+        "A1-NG6-06"
+      ],
+      "note": "sari, appaḍiyē and ākaṭṭum -- three ways of accepting, which is more than the point asks."
+    },
+    {
+      "id": "TA-A1-LEX-59",
+      "category": "Solvaḷam (core lexis)",
+      "label": "truth, and being right",
+      "probe": [
+        "TA-LEX-C47-REPLY-01",
+        "TA-LEX-C01-SARI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG6-07",
+        "A1-F2-03"
+      ],
+      "note": "uṇmai and sari. tavaṟu ('a mistake') is taught in chapter 36 as the noun that finishes an apology."
+    },
+    {
+      "id": "TA-A1-LEX-60",
+      "category": "Solvaḷam (core lexis)",
+      "label": "making a mistake",
+      "probe": [
+        "TA-LEX-TAVARU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG6-07"
+      ]
+    },
+    {
+      "id": "TA-A1-LEX-61",
+      "category": "Solvaḷam (core lexis)",
+      "label": "interest, ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-NG6-08",
+        "A1-NG6-10"
+      ],
+      "note": "Nothing expresses finding something interesting or dull, easy or hard. piḍi covers liking and stops there."
+    },
+    {
+      "id": "TA-A1-LEX-62",
+      "category": "Solvaḷam (core lexis)",
+      "label": "courtesy as a vocabulary in its own right",
+      "probe": [
+        "TA-LEX-C49-COURTESY-01",
+        "TA-LEX-C49-COURTESY-02",
+        "TA-LEX-C63-MANNERS-02",
+        "TA-LEX-C63-MANNERS-03",
+        "TA-LEX-C63-MANNERS-04",
+        "TA-LEX-C63-MANNERS-05"
+      ],
+      "anchorIds": [
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil-specific, and one of the corpus's real strengths: two whole chapters on aṉbu, mariyādai, aṉumati, tayakkam, nambikkai and paṇivu. No European A1 syllabus has a slot for this and Tamil interaction needs it."
+    },
+    {
+      "id": "TA-A1-LEX-63",
+      "category": "Solvaḷam (core lexis)",
+      "label": "addressing somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-F5-03",
+        "A1-N-03"
+      ],
+      "note": "Tamil marks respect with the -ar / -aṉ ending, and the naṇbaṉ and ivar lessons both show it without giving the learner a term of address to use. There is no equivalent of the -ji or the sir a beginner would actually reach for."
+    },
+    {
+      "id": "TA-A1-LEX-64",
+      "category": "Solvaḷam (core lexis)",
+      "label": "the word for a language, and for Tamil itself",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [
+        "A1-PRON-08"
+      ],
+      "note": "tamiḻ occurs inside two taught sentences and is never introduced as a word, and there is no word for a language. Both are form fields."
+    },
+    {
+      "id": "TA-A1-REG-01",
+      "category": "Iruvaḻakku (the two registers)",
+      "label": "Tamil is diglossic: the written language and the spoken language are different languages",
+      "probe": null,
+      "anchorIds": [
+        "TA-EXAM-LEVELS",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "THE SINGLE MOST TAMIL-SPECIFIC POINT IN THIS FILE, and it is untaught. core/exam-levels.json names diglossia as the reason no CEFR mapping for Tamil is clean and records that this curriculum teaches SPOKEN Tamil first. No lesson tells the learner that. A reader who studies these 359 lessons and then opens a Tamil newspaper will not recognise the verb endings."
+    },
+    {
+      "id": "TA-A1-REG-02",
+      "category": "Iruvaḻakku (the two registers)",
+      "label": "the -uṅgaḷ ending as the everyday carrier of politeness",
+      "probe": [
+        "TA-PRAGMATICS-PLEASE-REGISTER-01"
+      ],
+      "anchorIds": [
+        "TA-EXAM-LEVELS",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Taught, and taught as a register fact rather than a form."
+    },
+    {
+      "id": "TA-A1-REG-03",
+      "category": "Iruvaḻakku (the two registers)",
+      "label": "the nī / nīṅgaḷ choice as a social act",
+      "probe": [
+        "TA-LEX-C02-NII-NIINGAL-01"
+      ],
+      "anchorIds": [
+        "TA-EXAM-LEVELS",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true
+    },
+    {
+      "id": "TA-A1-REG-04",
+      "category": "Iruvaḻakku (the two registers)",
+      "label": "which apology belongs to which register",
+      "probe": [
+        "TA-PRAGMATICS-SORRY-REGISTER-01"
+      ],
+      "anchorIds": [
+        "TA-EXAM-LEVELS",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true
+    },
+    {
+      "id": "TA-A1-REG-05",
+      "category": "Iruvaḻakku (the two registers)",
+      "label": "the two grammars of the age question",
+      "probe": [
+        "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01",
+        "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02"
+      ],
+      "anchorIds": [
+        "TA-EXAM-LEVELS",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Chapter 19 teaches BOTH shapes -- the casual possessive question and the formal dative-plus-become one -- and names which is which. That is the diglossia point done properly, once, for one question."
+    },
+    {
+      "id": "TA-A1-REG-06",
+      "category": "Iruvaḻakku (the two registers)",
+      "label": "the native word against the Sanskrit borrowing",
+      "probe": [
+        "TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01",
+        "TA-ROOT-C01-NANDRI-FAMILY-REGISTER-01",
+        "TA-LEX-DAY-FAMILY-REGISTER-01"
+      ],
+      "anchorIds": [
+        "TA-EXAM-LEVELS",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "Tamil kept native words where its neighbours borrowed, and the corpus tracks this deliberately across vaṇakkam, naṉṟi and nāḷ. It is a register axis as much as an etymological one."
+    },
+    {
+      "id": "TA-A1-REG-07",
+      "category": "Iruvaḻakku (the two registers)",
+      "label": "the colloquial forms a learner will actually hear",
+      "probe": [
+        "TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01"
+      ],
+      "anchorIds": [
+        "TA-EXAM-LEVELS",
+        "TA-CORPUS",
+        "ED-TAMIL"
+      ],
+      "derivedFrom": [],
+      "tamilSpecific": true,
+      "note": "One lesson does this -- rāttiri against iravu -- and flags its own source as a claim to test. Nothing else in the track gives the spoken form of anything."
+    }
+  ]
+}

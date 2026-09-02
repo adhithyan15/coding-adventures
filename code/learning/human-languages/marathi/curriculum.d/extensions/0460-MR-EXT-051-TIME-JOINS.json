@@ -1,11 +1,11 @@
 {
-  "id": "MR-EXT-044-TIME-JOINS",
+  "id": "MR-EXT-051-TIME-JOINS",
   "stage": "A2",
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can place two events in time with the jevhaa/tevhaa frame or the shorter -lyaavar form, add something with sudhaa, and run every joining word in the book once.",
   "prerequisites": [
-    "MR-EXT-043-CLAUSE-INSIDE-CLAUSE"
+    "MR-EXT-050-CLAUSE-INSIDE-CLAUSE"
   ],
   "lessons": [
     "MR-C36-jevha",

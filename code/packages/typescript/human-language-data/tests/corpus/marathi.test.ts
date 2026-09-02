@@ -21,11 +21,23 @@ it("pins Marathi lesson-content budgets", () =>
     // reviewed-lesson count moves and the three content counters below are
     // unchanged. That is the evidence the runway declared nothing new against
     // those budgets rather than that nobody looked.
-    // 179 -> 204: the joining tranche (chapters 30-36) adds twenty-five
-    // lessons -- seventeen items, two punctuation marks and seven reviews. Not
-    // one declares an idiom, a sense or a culture claim, so only the
-    // reviewed-lesson count moves and the three counters below are unchanged.
-    lessons: 204,
+    //
+    // 179 -> 188: chapter 9's nine schema-v1 lessons migrated to v2, the last
+    // thing standing between ch09-introductions and the generator. Not one is
+    // a new lesson -- every one was already written and already in the book;
+    // declaring their atoms is what made them MEASURABLE, so this budget can
+    // see them. Re-measured against the tree, never derived. Idioms, senses
+    // and culture claims are unchanged at 5 / 4 / 7: the migration typed the
+    // knowledge that was already on the page and authored no new vocabulary.
+    //
+    // 188 -> 213: the joining tranche (chapters 30-36) adds twenty-five
+    // lessons -- seventeen items, two punctuation marks and seven reviews.
+    // These two movements met in one merge, so this number was RE-MEASURED
+    // against the merged tree rather than derived by adding 9 and 25 to 179,
+    // which would have been right only by luck. Idioms, senses and culture
+    // claims stay at 5 / 4 / 7 for the same reason as above: a conjunction is
+    // not an idiom.
+    lessons: 213,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
