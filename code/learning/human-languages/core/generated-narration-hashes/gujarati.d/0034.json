@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:3f9a479d6a206495",
+  "lessonIds": [
+    "GU-C30-hear-chhokro",
+    "GU-C30-hear-chhokri",
+    "GU-C30-hear-maanas",
+    "GU-C30-hear-pustak",
+    "GU-C30-hear-kaagal",
+    "GU-C30-people-five",
+    "GU-C30-kaagal",
+    "GU-R30-people-five-r1"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch34.txt",
+  "json": "gujarati/narration/ch34.json",
+  "textHash": "fnv1a64:b01d24e7cdd48e3a",
+  "jsonHash": "fnv1a64:62b9c477895557e2",
+  "findings": []
+}

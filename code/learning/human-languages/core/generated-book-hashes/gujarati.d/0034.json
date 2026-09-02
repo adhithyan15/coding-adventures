@@ -1,0 +1,16 @@
+{
+  "language": "gujarati",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:6bce9c113db2a0b4",
+  "lessonIds": [
+    "GU-C30-hear-chhokro",
+    "GU-C30-hear-chhokri",
+    "GU-C30-hear-maanas",
+    "GU-C30-hear-pustak",
+    "GU-C30-hear-kaagal",
+    "GU-C30-people-five",
+    "GU-C30-kaagal",
+    "GU-R30-people-five-r1"
+  ],
+  "tex": "gujarati/book/chapters/ch34-people-paper-book.tex"
+}

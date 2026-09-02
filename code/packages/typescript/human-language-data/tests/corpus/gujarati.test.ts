@@ -15,12 +15,13 @@ it("pins Gujarati continuity", () => expectLanguageContinuity("gujarati"));
 it("pins Gujarati modality", () => expectLanguageModality("gujarati"));
 it("pins Gujarati lesson-content budgets", () =>
   expectLanguageLessonBudgets("gujarati", {
-    // HL-C271: 165 -> 179. Chapter 28 adds fourteen lessons -- eight ear-first
-    // time words, one oral checkpoint, two familiar-script writing returns, a
-    // four-skill payoff, its R1 return, and one distant R3 return of the map
-    // words. None of them declares an idiom, sense, or culture claim, so only
-    // the lesson total moves.
-    lessons: 179,
+    // HL-C286: 179 -> 228. Six chapters. Chapter 29 writes the six time words
+    // chapter 28 left oral; chapter 30 is the fifth-return slab the previous
+    // tranche filed rather than smuggled into a vocabulary chapter; chapters
+    // 31-34 each teach five new pre-A1 headwords one lesson at a time, ear
+    // first, and write exactly one of them. None declares an idiom, sense, or
+    // culture claim, so only the lesson total moves.
+    lessons: 228,
     idioms: 12,
     senses: 6,
     cultureClaims: 15,
@@ -154,6 +155,18 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     // of them ear-first: the eight new headwords are heard and said before any
     // of them is shown, and only two ever reach the page in this chapter.
     ["28", 14],
+    // HL-C286. Chapter 29 writes six words already known by ear, so it teaches
+    // no new headword at all. Chapter 30 introduces nothing: nine zero-new-atom
+    // lessons returning the numbers and the fifteen core verbs at R4. Chapters
+    // 31-34 are the vocabulary tranche -- eight lessons each, five of them one
+    // new headword apiece, then an oral checkpoint, one word to the page, and
+    // an R1 return that also carries a named distant band.
+    ["29", 8],
+    ["30", 9],
+    ["31", 8],
+    ["32", 8],
+    ["33", 8],
+    ["34", 8],
   ]);
 });
 
@@ -162,6 +175,11 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
   expect(gujarati.defects).toEqual([]);
   expect(gujarati.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
   expect(gujarati.validEvidence.map((entry) => entry.stage)).toEqual([
+    // HL-C286: 158 -> 189 entries. Chapter 29 adds eight (five guided copies of
+    // the time words, one delayed copy, the payoff's delayed copy, its R1
+    // dictation), chapter 30 nine dictations, and chapters 31-34 two apiece.
+    // The distant bands that return already-written words do so by COLD READING
+    // rather than a second pen block, because a lesson may carry only one.
     "observe-trace",
     "observe-trace",
     "observe-trace",
@@ -321,16 +339,35 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "guided-copy",
     "dictation-transcription",
     "dictation-transcription",
-    // HL-C271, chapter 28. Five entries out of fourteen lessons, and the ratio
-    // is the point: the chapter teaches eight words by ear and asks the hand
-    // for two of them. The two guided copies are the words for night and
-    // today, both spelled entirely from signs taught before chapter 8; the
-    // delayed copy is the chapter payoff, and the two dictations are its R1
-    // return and the distant R3 return of the map words.
     "guided-copy",
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    "dictation-transcription",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "guided-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "guided-copy",
+    "dictation-transcription",
+    "guided-copy",
+    "dictation-transcription",
+    "guided-copy",
+    "dictation-transcription",
+    "guided-copy",
     "dictation-transcription",
   ]);
 });
@@ -662,19 +699,17 @@ it("closes Gujarati doorway R4 at position 134", () => {
   const beforeCheckpoint = measureContinuity(ordered.slice(0, 134));
   const afterCheckpoint = measureContinuity(lessons);
   expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(248);
-  // HL-C271: 299 -> 339. The whole-track figure rose because the TRACK GOT
-  // LONGER, not because chapter 28 skipped a return: every atom the new
-  // chapter introduces is serviced inside it, and the chapter also closes R3
-  // for the map words and gives GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01 its first
-  // revisit ever. What moved is R4 eligibility. R4 opens 80 lessons after an
-  // atom appears, so a 165-lesson track could only ever measure atoms
-  // introduced at or before position 84; at 179 lessons it can measure up to
-  // position 98, and the thirty-six atoms of the core-verb chapters (13-16)
-  // became measurable in the same breath as they were found wanting. That debt
-  // was always there and is now visible, which is the direction this number is
-  // supposed to move. Clearing it needs its own fifth-return slab, filed in
-  // BACKLOG.d rather than smuggled into a vocabulary chapter.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(339);
+  // HL-C286: 339 -> 283, and DOWN even though the track grew by 49 lessons.
+  // The previous tranche's rise was eligibility, not neglect, and this one pays
+  // that eligibility off: chapter 30 is the fifth-return slab HL-C271 filed,
+  // and chapters 29 and 31-34 carry named distant bands (the chapter-16 table,
+  // the chapter-17 household, the chapter-18 face, the chapter-24 map, hand and
+  // money) at the exact windows a 228-lesson track makes measurable. R4 misses
+  // alone fall 101 -> 43. R3 rose 115 -> 117 because the new chapters' own
+  // atoms are now measurable at their third window and the last two chapters
+  // sit too close to the end of the book to service theirs; that residue is
+  // filed rather than hidden.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(283);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
@@ -791,6 +826,64 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C24-time-eight-reading",
     "GU-C24-time-eight-speaking",
     "GU-C24-time-eight-writing",
+    "GU-C25-atyaare-guided-copy",
+    "GU-C25-atyaare-reading",
+    "GU-C25-bapor-guided-copy",
+    "GU-C25-bapor-reading",
+    "GU-C25-divas-guided-copy",
+    "GU-C25-divas-reading",
+    "GU-C25-mahino-delayed-copy",
+    "GU-C25-mahino-reading",
+    "GU-C25-saanj-guided-copy",
+    "GU-C25-saanj-reading",
+    "GU-C25-savaar-guided-copy",
+    "GU-C25-savaar-reading",
+    "GU-C25-time-written-reading",
+    "GU-C25-time-written-speaking",
+    "GU-C25-time-written-writing",
+    "GU-C27-bhaat-guided-copy",
+    "GU-C27-bhaat-reading",
+    "GU-C27-hear-bhaat-recall",
+    "GU-C27-hear-daal-recall",
+    "GU-C27-hear-keri-recall",
+    "GU-C27-hear-shaak-recall",
+    "GU-C27-hear-tel-recall",
+    "GU-C27-plate-five-carryover",
+    "GU-C27-plate-five-listening",
+    "GU-C27-plate-five-speaking",
+    "GU-C28-baari-guided-copy",
+    "GU-C28-baari-reading",
+    "GU-C28-baari-time-r3",
+    "GU-C28-hear-baari-recall",
+    "GU-C28-hear-baarnun-recall",
+    "GU-C28-hear-chaavi-recall",
+    "GU-C28-hear-divo-recall",
+    "GU-C28-hear-khurshi-recall",
+    "GU-C28-house-five-carryover",
+    "GU-C28-house-five-listening",
+    "GU-C28-house-five-speaking",
+    "GU-C29-hear-aakaash-recall",
+    "GU-C29-hear-chandra-recall",
+    "GU-C29-hear-nadi-recall",
+    "GU-C29-hear-sooraj-recall",
+    "GU-C29-hear-varsaad-recall",
+    "GU-C29-nadi-guided-copy",
+    "GU-C29-nadi-reading",
+    "GU-C29-sky-five-carryover",
+    "GU-C29-sky-five-listening",
+    "GU-C29-sky-five-speaking",
+    "GU-C30-hear-chhokri-recall",
+    "GU-C30-hear-chhokro-recall",
+    "GU-C30-hear-kaagal-recall",
+    "GU-C30-hear-maanas-recall",
+    "GU-C30-hear-pustak-recall",
+    "GU-C30-kaagal-guided-copy",
+    "GU-C30-kaagal-map-r4",
+    "GU-C30-kaagal-nadi-r2",
+    "GU-C30-kaagal-reading",
+    "GU-C30-people-five-carryover",
+    "GU-C30-people-five-listening",
+    "GU-C30-people-five-speaking",
     "GU-R03-doorway-three-r1-dictation",
     "GU-R03-doorway-three-r1-reading",
     "GU-R04-doorway-nine-r2-dictation",
@@ -871,6 +964,46 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R24-time-eight-r1-listening",
     "GU-R24-time-eight-r1-speaking",
     "GU-R24-time-eight-r1-writing",
+    "GU-R25-time-written-r1-listening",
+    "GU-R25-time-written-r1-writing",
+    "GU-R26-aavvun-khaavun-r4-listening",
+    "GU-R26-aavvun-khaavun-r4-writing",
+    "GU-R26-hovun-javun-r4-listening",
+    "GU-R26-hovun-javun-r4-writing",
+    "GU-R26-jovun-jaanvun-r4-listening",
+    "GU-R26-jovun-jaanvun-r4-writing",
+    "GU-R26-levun-puchhvun-r4-listening",
+    "GU-R26-levun-puchhvun-r4-writing",
+    "GU-R26-madad-gamvun-paani-r4-listening",
+    "GU-R26-madad-gamvun-paani-r4-writing",
+    "GU-R26-numbers-r4-listening",
+    "GU-R26-numbers-r4-writing",
+    "GU-R26-time-written-r2-listening",
+    "GU-R26-time-written-r2-map-writing",
+    "GU-R26-time-written-r2-writing",
+    "GU-R26-vanchvun-lakhvun-r4-listening",
+    "GU-R26-vanchvun-lakhvun-r4-writing",
+    "GU-R26-vicharvun-samajvun-r4-listening",
+    "GU-R26-vicharvun-samajvun-r4-writing",
+    "GU-R27-plate-five-r1-distant",
+    "GU-R27-plate-five-r1-listening",
+    "GU-R27-plate-five-r1-speaking",
+    "GU-R27-plate-five-r1-writing",
+    "GU-R28-house-five-r1-distant",
+    "GU-R28-house-five-r1-listening",
+    "GU-R28-house-five-r1-plate-r2",
+    "GU-R28-house-five-r1-speaking",
+    "GU-R28-house-five-r1-writing",
+    "GU-R29-sky-five-r1-distant",
+    "GU-R29-sky-five-r1-house-r2",
+    "GU-R29-sky-five-r1-listening",
+    "GU-R29-sky-five-r1-speaking",
+    "GU-R29-sky-five-r1-writing",
+    "GU-R30-people-five-r1-distant",
+    "GU-R30-people-five-r1-listening",
+    "GU-R30-people-five-r1-speaking",
+    "GU-R30-people-five-r1-travel-r4",
+    "GU-R30-people-five-r1-writing",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",
