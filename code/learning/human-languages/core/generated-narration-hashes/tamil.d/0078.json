@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:8f3b7986dff32528",
+  "lessonIds": [
+    "TA-C78-why",
+    "TA-C78-because",
+    "TA-W33-read-een",
+    "TA-C78-therefore",
+    "TA-C78-for-the-sake-of"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch78.txt",
+  "json": "tamil/narration/ch78.json",
+  "textHash": "fnv1a64:e21f854ec2442bf6",
+  "jsonHash": "fnv1a64:b66880f42551218f",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 31,
+  "title": "Words That Need Two Places",
+  "label": "ch:mr-paired-joins",
+  "canDo": "I can refuse two things at once with naa ... naa, check a statement with a final naa, and share a pair out with ek ... dusraa.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "MR-R31-pairs",
+    "kind": "production",
+    "summary": "Complete MR-R31-pairs and run chaha and dudh three ways: refuse both, share them out, and check a statement about tea.",
+    "assesses": [
+      "MR-JOIN-NAA-NAA",
+      "MR-JOIN-TAG-NAA",
+      "MR-JOIN-EK-DUSRA",
+      "MR-LEX-DUSRA"
+    ]
+  }
+}

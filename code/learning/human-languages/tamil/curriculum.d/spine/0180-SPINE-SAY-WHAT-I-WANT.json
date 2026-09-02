@@ -1,6 +1,7 @@
 {
   "segments": [
-    "TA-PATH-036"
+    "TA-PATH-036",
+    "TA-PATH-76-CHOICE"
   ],
   "omits": [],
   "relocates": {}

@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:4a07c4de48fd9679",
+  "lessonIds": [
+    "TA-C79-when-question",
+    "TA-C79-then",
+    "TA-W34-read-eppothu",
+    "TA-C79-when-clause"
+  ],
+  "tex": "tamil/book/chapters/ch79-when.tex"
+}

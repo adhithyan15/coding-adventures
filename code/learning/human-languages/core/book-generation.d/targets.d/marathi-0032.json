@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 32,
+  "output": "marathi/book/chapters/ch32-sentence-negation.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

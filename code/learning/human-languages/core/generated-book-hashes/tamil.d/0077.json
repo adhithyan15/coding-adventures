@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:917e90757bfa92e7",
+  "lessonIds": [
+    "TA-C77-say",
+    "TA-C77-quotative",
+    "TA-W32-read-sol",
+    "TA-C77-opinion"
+  ],
+  "tex": "tamil/book/chapters/ch77-saying-and-thinking.tex"
+}

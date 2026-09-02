@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C76-or",
+    "language": "tamil",
+    "chapter": 76,
+    "sequence": 3120,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cb37bb4bf62000e1"
+  },
+  "findings": []
+}

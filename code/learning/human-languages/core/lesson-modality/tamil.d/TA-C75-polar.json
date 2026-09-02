@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C75-polar",
+    "language": "tamil",
+    "chapter": 75,
+    "sequence": 3070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f495ed1f8df9e51"
+  },
+  "findings": []
+}

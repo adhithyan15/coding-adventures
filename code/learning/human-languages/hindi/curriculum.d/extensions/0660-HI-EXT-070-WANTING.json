@@ -1,0 +1,13 @@
+{
+  "id": "HI-EXT-070-WANTING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I want to do, keeping the full -naa form that chaahna requires.",
+  "prerequisites": [
+    "HI-EXT-070-ABILITY"
+  ],
+  "lessons": [
+    "HI-C70-chahna"
+  ]
+}

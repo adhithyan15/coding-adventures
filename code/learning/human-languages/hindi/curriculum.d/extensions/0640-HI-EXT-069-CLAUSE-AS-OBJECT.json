@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-069-CLAUSE-AS-OBJECT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say where a Hindi clause ends, and hang a whole second clause on a thinking verb with ki.",
+  "prerequisites": [
+    "HI-EXT-068-FLAT-JOINS"
+  ],
+  "lessons": [
+    "HI-C69-verb-last",
+    "HI-C69-ki",
+    "HI-R69-reported"
+  ]
+}

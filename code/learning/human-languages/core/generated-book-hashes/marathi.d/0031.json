@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:2733d56e824c2bf6",
+  "lessonIds": [
+    "MR-C31-naa-naa",
+    "MR-C31-naa-tag",
+    "MR-C31-dusra",
+    "MR-R31-pairs"
+  ],
+  "tex": "marathi/book/chapters/ch31-paired-joins.tex"
+}

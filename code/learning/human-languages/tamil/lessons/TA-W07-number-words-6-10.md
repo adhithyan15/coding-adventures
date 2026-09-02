@@ -15,11 +15,11 @@ roots: [proto-dravidian-numbers]
 duration:
   max_seconds: 180
 requires:
-  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02]
+  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02]
+  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -37,7 +37,7 @@ reviews_of: [TA-C07-numbers-6-10, TA-W07-digits-9-10]
 appears below.
 
 ## Script
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 | numeral | word | said |
 |---|---|---|
@@ -51,14 +51,14 @@ The curled sound you heard in *eezhu* is **ழ**. Follow **ஏழு** with your
 while saying it; every shape has had earlier support.
 
 ## Writing — observe and trace
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Trace **ஏழு — ௭** once with the model visible. Read the remaining rows without
 copying the whole table.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 [PAUSE 3s] Which letter carries the curled sound? (**ழ**.) Read **௭ — ஏழு**.
 (***Eezhu**, seven.*) No new shape was added.

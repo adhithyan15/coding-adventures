@@ -1,8 +1,9 @@
 {
-  "segments": [],
+  "segments": [
+    "TA-PATH-75-YESNO"
+  ],
   "omits": [
-    "VERB-NEGATE",
-    "QUESTION-POLAR"
+    "VERB-NEGATE"
   ],
   "relocates": {}
 }

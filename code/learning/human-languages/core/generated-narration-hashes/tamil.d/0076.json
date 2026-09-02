@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:c23103fb22511fa9",
+  "lessonIds": [
+    "TA-C76-but",
+    "TA-C76-or",
+    "TA-W31-read-aanaal",
+    "TA-C76-choice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch76.txt",
+  "json": "tamil/narration/ch76.json",
+  "textHash": "fnv1a64:afda7ace08439e0d",
+  "jsonHash": "fnv1a64:763a25e0da4429e6",
+  "findings": []
+}

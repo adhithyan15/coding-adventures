@@ -120,6 +120,20 @@ lesson is `coreVoice` and both chapters stay fully drivable.
   above has since taught **ग**, so the debt that shape was recording is paid.
   **Authored.**
 
+## Chapters 30–36 — the joining column
+
+- **Authored.** Seventeen items across seven chapters: **आणि · किंवा · पण**;
+  **ना … ना · … ना? · दुसरा**; sentence-final **नाही** and **नको**; the polar
+  **… का?** with **?** and **!**; **का …? · कारण · ,**; **की · -ण्यासाठी**;
+  **जेव्हा … तेव्हा · -ल्यावर · सुद्धा**. A1 exam coverage 88/301 → 111/301,
+  with Coordination 0/5 → 5/5 and Subordination 1/7 → 5/7.
+
+  The shape is deliberate in two ways. Every item was chosen **against the
+  exam inventory rather than by topic**, which is why seventeen words closed
+  twenty-three points rather than seventeen. And every item was checked against
+  the track's taught-glyph set **before** it was written, so the tranche adds no
+  script-closure debt at all.
+
 ## Planned
 
 | Chapter | Theme |
@@ -127,7 +141,8 @@ lesson is `coreVoice` and both chapters stay fully drivable.
 | 6 continuation | Numbers 6–10 (native words + Devanagari digits १२३), counting, age |
 | 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
-| 12+ | The rest of `SPINE-SAY-WHAT-I-DO` — *aikṇe* and the remaining core verbs now that *deṇe*, *sāṅgṇe* and *shikṇe* are authored — then negation and questions, past and future tenses (where gender returns on the verb), always with the Hindi/Dravidian contrast thread |
+| 12+ | The rest of `SPINE-SAY-WHAT-I-DO` — *aikṇe* and the remaining core verbs now that *deṇe*, *sāṅgṇe* and *shikṇe* are authored — then past and future tenses (where gender returns on the verb), always with the Hindi/Dravidian contrast thread. Negation and yes-or-no questions are done: chapters 32 and 33 |
+| next | The **oblique stem** (`MR-A1-N-09`), which chapter 35 teaches one instance of and explicitly records as still owed; then the locative *-t* / *-var*, which four uncovered inventory points are blocked behind |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,
 also plural) — like the other Indo-Aryan and Romance tracks. Its signature is

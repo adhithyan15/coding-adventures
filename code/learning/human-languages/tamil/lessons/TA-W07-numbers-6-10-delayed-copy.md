@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 120
 requires:
-  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02]
+  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02]
+  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -36,14 +36,14 @@ reviews_of: [TA-W07-numbers-6-10-guided-copy]
 Study **ஏழு — ௭** for five seconds. Say *eezhu*, then cover both forms.
 
 ## Writing — delayed copy
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 <!-- hl-writing-stage: delayed-copy -->
 
 Write the word and numeral while the model is hidden. Peek once if needed,
 cover again, and finish. Uncover and repair one shape.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-02, TA-SCRIPT-W07-DIGITS-03, TA-SCRIPT-W07-DIGITS-04] -->
 
 [PAUSE 3s] Which letter carries the curled sound? (**ழ**.) What changed from
 guided copy? (**The model was hidden before writing.**)

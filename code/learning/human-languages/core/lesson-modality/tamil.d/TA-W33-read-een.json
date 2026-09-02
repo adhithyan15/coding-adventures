@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W33-read-een",
+    "language": "tamil",
+    "chapter": 78,
+    "sequence": 3210,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:81537d3bd139948a",
+    "detachableSegments": [
+      "Script you'll notice: ஏன் — two shapes, and one of them is a whole letter"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

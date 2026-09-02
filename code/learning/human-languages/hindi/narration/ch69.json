@@ -1,0 +1,408 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 69,
+  "title": "Where a Clause Ends, and What Goes Inside One",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8ecb36039601d5e6",
+  "lessons": [
+    {
+      "id": "HI-C69-verb-last",
+      "sequence": 2650,
+      "title": "The verb goes last",
+      "headword": "… क्रिया अंत में",
+      "romanization": "kriyā ant meṁ",
+      "gloss": "the verb comes last — a rule every sentence in this book has already obeyed and no lesson has ever said",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:687f3f4091ab36c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say two sentences you have had since chapter two and chapter five: मेरा नाम मीरा है, and मैं हिंदी बोलता हूँ. Now listen to where each one ENDS."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a rule you have been obeying for sixty-eight chapters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Hindi sentence in this book puts its verb at the end:"
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा नाम मीरा है — my name Mira is."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं हिंदी बोलता हूँ — I Hindi speak."
+            },
+            {
+              "kind": "speech",
+              "text": "यह किताब है — this book is."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen this a hundred times and no lesson has ever said it out loud. It is being said now because you are about to start joining clauses, and the moment a sentence has two halves you need to know where each half stops. The verb is the boundary marker. In चाय है लेकिन दूध नहीं है, the first है is what tells the ear the first clause has ended."
+            },
+            {
+              "kind": "speech",
+              "text": "English is the odd one here, not Hindi. Hindi's order is subject, object, verb — so is Japanese's, so is Turkish's, and so is roughly half the world's. English puts the verb in the middle and makes it look normal."
+            },
+            {
+              "kind": "speech",
+              "text": "The practical form of the rule: when you build a Hindi sentence, decide the verb first and then say it last. A learner who starts translating word by word from English will hit the verb too early, every time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three sentences, and stop hard on the last word of each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three sentences, and stop hard on the last word of each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where the first clause of the lekin sentence ends — at the first है",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where the first clause of the *lekin* sentence ends — **at the first है**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the order Hindi uses — subject, object, verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the order Hindi uses — **subject, object, verb**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C69-verb-last-r1",
+              "prompt": "Name the last word of each of the three sentences, and say what all three have in common.",
+              "assesses": [
+                "HI-GRAMMAR-VERB-FINAL-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "hai; hūṁ; hai — every one ends on its verb",
+                "है हूँ है the verb comes last"
+              ],
+              "feedback": {
+                "correct": "The verb is the boundary.",
+                "incorrect": "Read to the end of each sentence: the last word is the verb."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the verb of a Hindi sentence go? (Last.) Why does that matter more now than it did in chapter two? (Because a joined sentence has two halves, and the verb is what marks the end of each.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C69-ki",
+      "sequence": 2660,
+      "title": "कि (ki) — \"that\"",
+      "headword": "कि",
+      "romanization": "ki",
+      "gloss": "that — two letters that let a whole sentence become the thing you think, know or say",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f59e85d1fbe1886",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the two items before this one by name: लेकिन, which sets two clauses against each other, and the rule that the verb comes last. Then say मैं सोचता हूँ — I think. You have had that verb for a long time and have never once been able to say WHAT you think."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: कि opens the room the thought goes into",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैं सोचता हूँ कि चाय ठीक है. — maiṁ sochtā hūṁ ki chāy ṭhīk hai. — I think that the tea is fine."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word: I think that tea fine is. Everything after कि (ki) is an ordinary complete Hindi sentence — चाय ठीक है — with its verb in the ordinary last place, doing the job of an object."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the trick worth seeing, and it is why the last lesson came first: you do not need any new grammar to report a thought. You need one word and a sentence you could already say. Every sentence in this book just became something you can think, know or say about."
+            },
+            {
+              "kind": "speech",
+              "text": "लेकिन joins two halves as EQUALS. कि (ki) does something different: it puts one clause INSIDE the other, as the second verb's object. Hindi keeps the main clause first — सोचता हूँ comes before what is thought, never after — so the word order is the one you would say anyway."
+            },
+            {
+              "kind": "speech",
+              "text": "कि (ki) is not an inherited word. It is Persian که (ke), taken whole, and it pushed aside the older Sanskrit-derived form in exactly this slot. Marathi imported the same word as की. Two languages, one borrowing, the same job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāy ṭhīk hai on its own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāy ṭhīk hai* on its own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ sochtā hūṁ ki chāy ṭhīk hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ sochtā hūṁ ki chāy ṭhīk hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what changed inside the second half when you put it after कि (ki) — nothing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what changed inside the second half when you put it after **कि** — **nothing**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C69-ki-r1",
+              "prompt": "Say the tea is fine, then say that you think the tea is fine.",
+              "assesses": [
+                "HI-JOIN-KI-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "chāy ṭhīk hai; maiṁ sochtā hūṁ ki chāy ṭhīk hai",
+                "चाय ठीक है, मैं सोचता हूँ कि चाय ठीक है"
+              ],
+              "feedback": {
+                "correct": "One word, and a sentence becomes an object.",
+                "incorrect": "Main clause first, then ki, then the whole second sentence unchanged."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What goes after कि (ki)? (A whole ordinary sentence, verb last, unchanged.) How is कि (ki) unlike लेकिन? (लेकिन joins two equals; कि (ki) puts one clause inside the other.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: कि (ki)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R69-reported",
+      "sequence": 2670,
+      "title": "Two clauses, two verbs, two ends",
+      "headword": "… कि …",
+      "romanization": "… ki …",
+      "gloss": "the verb at the end of each half, and a whole clause inside another",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:818f9d70ac5d7d89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A joined Hindi sentence has two verbs in it, and each one is the last word of its own half. Say the lekin sentence and point at both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ sochtā hūṁ ki chāy ṭhīk hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ sochtā hūṁ ki chāy ṭhīk hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two verbs in it, in order — hūṁ, hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two verbs in it, in order — *hūṁ*, *hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāy aur dūdh — and notice aur joins two THINGS while कि (ki) joins two CLAUSES",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāy aur dūdh* — and notice **aur** joins two THINGS while **कि** joins two CLAUSES]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-R69-reported-run",
+              "prompt": "Say that you think the tea is fine, then name the last word of each of its two halves.",
+              "assesses": [
+                "HI-JOIN-KI-01",
+                "HI-GRAMMAR-VERB-FINAL-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "maiṁ sochtā hūṁ ki chāy ṭhīk hai — hūṁ, then hai",
+                "मैं सोचता हूँ कि चाय ठीक है; हूँ, है"
+              ],
+              "feedback": {
+                "correct": "Two clauses, two verbs, two ends.",
+                "incorrect": "Each half ends on its own verb: hūṁ, then hai."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many verbs does a कि (ki) sentence have, and where are they? (Two — each at the end of its own half.) Then stop."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

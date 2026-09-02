@@ -1,0 +1,10 @@
+{
+  "language": "hindi",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:65ea01f477129cea",
+  "lessonIds": [
+    "HI-C73-kar",
+    "HI-R73-chain"
+  ],
+  "tex": "hindi/book/chapters/ch73-chained-actions.tex"
+}

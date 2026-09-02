@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:43c005e9b6c0aab5",
+  "lessonIds": [
+    "TA-C81-two-tamils",
+    "TA-C81-which-tamil"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch81.txt",
+  "json": "tamil/narration/ch81.json",
+  "textHash": "fnv1a64:cbfbbfa542c03e47",
+  "jsonHash": "fnv1a64:da1600732c6ff0e6",
+  "findings": []
+}

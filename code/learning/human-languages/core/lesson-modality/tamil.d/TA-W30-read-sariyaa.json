@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W30-read-sariyaa",
+    "language": "tamil",
+    "chapter": 75,
+    "sequence": 3090,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8dd743ae272beab0",
+    "detachableSegments": [
+      "Script you'll notice: சரியா — the ending is a sign, not a letter"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

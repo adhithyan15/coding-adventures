@@ -1,0 +1,24 @@
+{
+  "chapter": 74,
+  "title": "Asking Without a Question Word",
+  "label": "ch:hi-polar-question",
+  "canDo": "I can turn any statement I own into a yes-or-no question with a fronted kya, ask the same question with the voice alone, and check a fact with the naa tag.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "HI-R74-ask",
+    "kind": "production",
+    "summary": "Complete HI-R74-ask and run every joining word in the book once, then both question shapes: the one that does not know the answer and the one that expects agreement.",
+    "assesses": [
+      "HI-GRAMMAR-KYA-POLAR-01",
+      "HI-SOUND-QUESTION-RISE-01",
+      "HI-JOIN-TAG-NA-01",
+      "HI-JOIN-KI-01",
+      "HI-JOIN-KYONKI-01",
+      "HI-JOIN-JAB-TAB-01",
+      "HI-GRAMMAR-KAR-01"
+    ],
+    "note": "The payoff is the whole joining column run once, not only the two items this chapter introduces."
+  }
+}

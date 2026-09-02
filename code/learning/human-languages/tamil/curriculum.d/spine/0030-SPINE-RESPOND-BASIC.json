@@ -6,7 +6,8 @@
     "TA-PATH-47-REPLY",
     "TA-PATH-56-AMOUNT",
     "TA-PATH-62-JOIN",
-    "TA-PATH-68-SHOP"
+    "TA-PATH-68-SHOP",
+    "TA-PATH-74-JOIN"
   ],
   "omits": [],
   "relocates": {}
