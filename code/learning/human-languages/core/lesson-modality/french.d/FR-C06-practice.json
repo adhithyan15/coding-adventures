@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C06-practice",
+    "language": "french",
+    "chapter": 6,
+    "sequence": 212,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e8b605a6e47d946"
+  },
+  "findings": []
+}

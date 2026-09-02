@@ -10,9 +10,33 @@
   ],
   "payoff": {
     "lesson": "GE-C03-formal-practice",
-    "kind": "task",
-    "summary": "Complete GE-C03-formal-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in German, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "dialogue",
+    "summary": "German asks after someone with a verb of motion — Wie geht es dir?, \"how goes it to you?\" — so this chapter builds that question one word at a time and then answers it across a full ladder, from Sehr gut! down through Es geht and So lala to Nicht so gut. Around it sit the two courtesies that hold every German conversation together, danke and bitte, each an English word in disguise. GE-C03-formal-practice runs the finished exchange in the formal register, where only the listener word changes.",
+    "assesses": [
+      "GE-LEX-DANKE-01",
+      "GE-LEX-SCHOEN-01",
+      "GE-LEX-DANKE-SCHOEN-02",
+      "GE-LEX-DANK-NOUN-01",
+      "GE-LEX-VIELEN-DANK-02",
+      "GE-LEX-BITTE-01",
+      "GE-LEX-GEHEN-01",
+      "GE-LEX-ES-01",
+      "GE-LEX-MIR-01",
+      "GE-LEX-DIR-01",
+      "GE-LEX-IHNEN-01",
+      "GE-LEX-WIE-GEHT-ES-DIR-01",
+      "GE-LEX-WIE-GEHTS-02",
+      "GE-LEX-WIE-GEHT-ES-IHNEN-01",
+      "GE-LEX-SEHR-01",
+      "GE-LEX-NICHT-01",
+      "GE-LEX-SO-LALA-01",
+      "GE-LEX-ES-GEHT-01",
+      "GE-LEX-UND-01",
+      "GE-LEX-UND-DIR-02",
+      "GE-GRAMMAR-DATIVE-01",
+      "GE-PRAGMATICS-ES-GEHT-SHRUG-02",
+      "GE-PRAGMATICS-WELLBEING-REGISTER-02"
+    ],
+    "note": "Chapter 3 is now generated from schema-v2 lessons, so the payoff is atom-scored rather than authored: it claims the twenty lexical atoms of the question and its answer ladder, the one transferable grammar rule the chapter teaches (the dative), and the two pragmatic rules — what a bare es geht means, and where German keeps its politeness. The per-word pronunciation and etymology atoms are drilled in their own lessons and are deliberately not claimed here."
   }
 }

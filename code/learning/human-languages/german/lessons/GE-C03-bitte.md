@@ -1,67 +1,100 @@
 ---
+schema_version: 2
 id: GE-C03-bitte
+spine_node: SPINE-COURTESY-THANK
 sequence: 110
 chapter: 3
 type: word
 headword: bitte
-gloss: please — and also "you're welcome" (and "here you go," and "pardon?")
+gloss: please — and also "you're welcome," "here you go," and "pardon?"
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [GE-C03-danke]
-sounds: []
+sounds: [i-short, final-te]
 roots: [bitten-german]
-etymology_hook: "bitte ← bitten 'to ask, to pray' — cognate of English bid and bead (prayer-beads)"
-est_minutes: 3
+etymology_hook: "bitte is the asking-form of bitten, to ask or pray, and cousin to English bid and to bead, once a prayer itself"
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [GE-LEX-DANKE-01]
+introduces:
+  knowledge: [GE-LEX-BITTE-01, GE-SOUND-BITTE-01, GE-ETYMON-BITTE-BITTEN-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GE-CULTURE-DANKE-BITTE-LOOP-01]
+practises:
+  knowledge: [GE-LEX-BITTE-01, GE-SOUND-BITTE-01, GE-ETYMON-BITTE-BITTEN-02, GE-LEX-DANKE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [GE-C03-danke]
 ---
 
-# bitte — the Swiss-army word: please *and* you're welcome
+# bitte — the Swiss-army word: "please" *and* "you're welcome"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-DANKE-01] -->
 
-[PAUSE 2s] If German gives you one word to overwork, it's **bitte**. It's
-"please." It's also "you're welcome." Also "here you go," and even "pardon?"
-One word, and it comes straight from **asking**.
+[PAUSE 2s] Every *danke* wants an answer. German's answer is a word that also
+means "please" — and three other things besides, all from one idea.
+
+## You'll want to know: bitte
+<!-- hl-knowledge: introduces=[GE-LEX-BITTE-01]; assesses=[] -->
+
+> **bitte** — "please," and "you're welcome."
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[GE-SOUND-BITTE-01]; assesses=[GE-LEX-BITTE-01] -->
 
-- **bitte** = *BIT-tuh* — short crisp *i*, a clear double-*t*, soft *-uh* end.
+- `i-short` — *BIT-tuh*: a short crisp *i* as in English *bit*, a clearly
+  doubled *t*, and the soft *-uh* ending you already met on *danke*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[GE-ETYMON-BITTE-BITTEN-02]; assesses=[GE-LEX-BITTE-01] -->
 
-**bitte** is the plea-form of **bitten**, *"to ask, to request, to pray."* When
-you say *bitte* you are, at root, **making a request** — "I ask (this of you)."
+**bitte** is the asking-form of **bitten**, "to ask, to request, to pray." When
+you say *bitte* you are, at root, **making a request** — "I ask this of you."
 
-That verb **bitten** is a close cousin of two English words:
+That verb is a close cousin of two English words:
 
-- **bid** — as in "I *bid* you welcome," "do as you're *bidden*" — to ask/command.
-- **bead** — astonishingly, yes: a *bead* was originally a **prayer**. People
-  counted their *prayers* (Old English *gebed*) on a string, and the *name of
-  the prayer* slid onto the little ball you counted it with. So a rosary
-  **bead** is a frozen **request** — exactly what *bitte* still is.
+- **bid** — as in "I *bid* you welcome," "do as you are *bidden*": to ask or
+  command.
+- **bead** — astonishingly, yes. A *bead* was originally a **prayer**. People
+  counted their prayers (Old English *gebed*) on a string, and the name of the
+  prayer slid onto the little ball it was counted on. A rosary **bead** is a
+  frozen request — exactly what *bitte* still is.
 
-### How one word covers so much
+That single idea, *I ask*, is what lets one word cover so much ground:
 
-| you say *bitte* when… | it means | why (it's all "I ask") |
+| You say *bitte* when… | It means | Why it is all "I ask" |
 |---|---|---|
 | making a request | **please** | "I ask you…" |
-| answering *danke* | **you're welcome** | "(don't mention it,) I ask nothing back" |
+| answering *danke* | **you're welcome** | "I ask nothing back" |
 | handing something over | **here you go** | "I offer, at your request" |
-| you didn't hear | **pardon?** | "I ask you to repeat" |
+| you did not hear | **pardon?** | "I ask you to repeat" |
 
-For this chapter, the key pairing is the courtesy loop: **Danke. — Bitte.**
-("Thanks." — "You're welcome.") — the German twin of *de nada* / *de rien*.
+Tone does the sorting. The word never changes.
+
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BITTE-01, GE-LEX-DANKE-01] -->
+
+The courtesy loop closes every small favour in German: **Danke.** — **Bitte.**
+It is the twin of Spanish *de nada* and French *de rien*, and leaving off the
+*bitte* sounds curt in a way English "no problem" does not.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BITTE-01, GE-SOUND-BITTE-01, GE-ETYMON-BITTE-BITTEN-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "danke" … "bitte" — the full thanks/you're-welcome exchange]
-- [YOU SAY: "bitte" as *please*, then as *you're welcome* — same word, tone does
-  the work]
-- [YOU SAY: German *bitte* ↔ English *bid* / *bead* — a prayer you can hold]
+- [YOU SAY: "bitte" — *BIT-tuh*, doubled *t*]
+- [YOU SAY: the loop — "danke" … "bitte"]
+- [YOU SAY: "bitte" as *please*, then as *you're welcome* — same word, new tone]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BITTE-01, GE-ETYMON-BITTE-BITTEN-02] -->
 
-[PAUSE 3s] What verb is *bitte* from? (*bitten*, "to ask / to pray.") What two
-English words are its cousins? (*Bid* and *bead* — a bead was a prayer.) Name two
-different jobs *bitte* does. (please; you're welcome; here-you-go; pardon.) Next:
-the verb behind "how are you?" — and like French, it's **to go**.
+[PAUSE 3s] What verb is *bitte* from? (*Bitten*, "to ask, to pray.") What two
+English words are its cousins? (*Bid*, and *bead* — a bead was a prayer.) Name
+two jobs *bitte* does. (Please; you're welcome; here you go; pardon?) What
+answers *danke*? (*Bitte*.)

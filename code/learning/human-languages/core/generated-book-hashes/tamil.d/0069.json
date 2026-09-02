@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:840cc974f1c53efd",
+  "lessonIds": [
+    "TA-C69-vehicle",
+    "TA-C69-bus",
+    "TA-W25-read-vandi",
+    "TA-C69-train",
+    "TA-C69-road",
+    "TA-C69-station"
+  ],
+  "tex": "tamil/book/chapters/ch69-getting-there.tex"
+}

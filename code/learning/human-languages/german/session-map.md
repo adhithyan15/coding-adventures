@@ -47,8 +47,36 @@ taught.
 
 Reviews of earlier words fold into each session per the interval schedule.
 
+## Chapter 3 — How Are You?
+
+| # | Session | What it adds |
+|---|---|---|
+| 21 | danke | thanks (← *denken*; English *thank* = *think*) |
+| 22 | schön | beautiful (= English *sheen*); unlocks *danke schön*; the **ö** vowel |
+| 23 | vielen Dank | the noun *der Dank*; *viel* = English *full* |
+| 24 | bitte | please / you're welcome / here you go / pardon (← *bitten*; *bid*, *bead*) |
+| 25 | gehen | to go (= English *go*); the silent lengthening *h* |
+| 26 | es | it (= English *it*, by the *that/das* t-to-s swap) |
+| 27 | mir | to me — the dative, the "to-whom" form |
+| 28 | dir | to you (= English *thee*) |
+| 29 | Wie geht es dir? | assembled from four owned words; the *geht's* contraction |
+| 30 | Ihnen | formal "to you" (literally "to them") |
+| 31 | Wie geht es Ihnen? | the register swap; politeness lives in the pronoun |
+| 32 | sehr | very (= English *sore*, as in *sorely missed*) |
+| 33 | nicht | not (= English *not* / *naught*; the *gh* ↔ *ch* fossil) |
+| 34 | so lala | so-so; the cross-track shrug collection |
+| 35 | es geht | the shrug — the missing *gut* is the message; the answer ladder |
+| 36 | und | and; final *d* hardens to *t*; *und dir?* / *und Ihnen?* |
+| 37 | practice | the casual exchange |
+| 38 | formal practice | the same exchange, formally — the chapter payoff |
+
+*es*, *mir* and the dative were lifted out of *gehen*, which had been teaching
+four new things at once; *schön*, *sehr* and *vielen Dank* were lifted out of
+*danke*, which had listed all three as an aside without teaching any of them.
+
+Reviews of earlier words fold into each session per the interval schedule.
+
 ## Next
 
-Chapter 3 — *Wie geht's?* ("how's it going?") and answering with *gut* again —
-the responding cycle. Chapters 3–16 are still hand-written LaTeX; see
-`../BACKLOG.d/` for the retirement queue.
+Chapter 4 — farewells: *auf Wiedersehen*, *tschüss*, *bis bald*. Chapters 4–16
+are still hand-written LaTeX; see `../BACKLOG.d/` for the retirement queue.

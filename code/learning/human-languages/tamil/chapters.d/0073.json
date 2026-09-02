@@ -1,0 +1,21 @@
+{
+  "chapter": 73,
+  "title": "Today, Yesterday, and the Year",
+  "label": "ch:ta-today-yesterday-and-the-year",
+  "canDo": "I can say today, yesterday and before in Tamil, and name a month and a year.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C73-year",
+    "kind": "production",
+    "summary": "Complete TA-C73-year and say all five words of the chapter in order.",
+    "assesses": [
+      "TA-LEX-C73-WHEN-01",
+      "TA-LEX-C73-WHEN-02",
+      "TA-LEX-C73-WHEN-03",
+      "TA-LEX-C73-WHEN-04",
+      "TA-LEX-C73-WHEN-05"
+    ]
+  }
+}

@@ -1,23 +1,21 @@
 {
   "lesson": {
-    "id": "FR-C06-nombres-1-5",
-    "language": "french",
-    "chapter": 6,
-    "sequence": 205,
+    "id": "TA-C71-rise",
+    "language": "tamil",
+    "chapter": 71,
+    "sequence": 2850,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "sight-cue",
-      "wide-table"
+      "sight-cue"
     ],
     "coreModality": "sight",
     "coreReasons": [
-      "sight-cue",
-      "wide-table"
+      "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:8c9f0cdcece630b7"
+    "sourceHash": "fnv1a64:0b27b2aacc6c76e1"
   },
   "findings": []
 }

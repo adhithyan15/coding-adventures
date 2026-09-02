@@ -2,10 +2,25 @@
   "id": "GE-PATH-012",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
+    "GE-C03-es",
+    "GE-C03-mir",
+    "GE-C03-dir",
     "GE-C03-wie-geht-es",
-    "GE-C03-es-geht"
+    "GE-C03-ihnen",
+    "GE-C03-wie-geht-register",
+    "GE-C03-sehr",
+    "GE-C03-nicht",
+    "GE-C03-so-lala",
+    "GE-C03-es-geht",
+    "GE-C03-und",
+    "GE-C03-practice",
+    "GE-C03-formal-practice"
   ],
-  "before": [],
+  "before": [
+    "GE-EXT-012-LANGUAGE-SPECIFIC"
+  ],
   "inline": [],
-  "after": []
+  "after": [
+    "GE-EXT-012-CONSOLIDATION"
+  ]
 }

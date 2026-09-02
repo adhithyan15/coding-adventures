@@ -70,3 +70,93 @@ fn anatomy_muscle_groups_recall_binds_region_with_citation() {
     // location.
     assert!(out.contains("\"abstained\":true"), "unknown muscle abstains: {out}");
 }
+
+const MG_DELT_PIN: &str = r#""bindings":{"R":"shoulder"},"citations":[{"source":"The biceps or biceps brachii is a large muscle that lies on the front of the upper arm between the shoulder and the elbow.","locator":"https://en.wikipedia.org/wiki/Biceps","trust":"consensus","corroborations":[{"source":"The triceps, or triceps brachii (Latin for \"three-headed muscle of the arm\"), is a large muscle on the back of the upper limb of many vertebrates.","locator":"https://en.wikipedia.org/wiki/Triceps"},{"source":"The deltoid muscle (or musculus deltoideus) is the muscle[1] forming the rounded contour of the human shoulder.","locator":"https://en.wikipedia.org/wiki/Deltoid_muscle""#;
+
+const MG_QUAD_PIN: &str = r#""bindings":{"R":"thigh"},"citations":[{"source":"The biceps or biceps brachii is a large muscle that lies on the front of the upper arm between the shoulder and the elbow.","locator":"https://en.wikipedia.org/wiki/Biceps","trust":"consensus","corroborations":[{"source":"The triceps, or triceps brachii (Latin for \"three-headed muscle of the arm\"), is a large muscle on the back of the upper limb of many vertebrates.","locator":"https://en.wikipedia.org/wiki/Triceps"},{"source":"The deltoid muscle (or musculus deltoideus) is the muscle[1] forming the rounded contour of the human shoulder.","locator":"https://en.wikipedia.org/wiki/Deltoid_muscle"},{"source":"The pectoralis major (from Latin pectus 'breast') is a thick, fan-shaped or triangular convergent muscle of the human chest.","locator":"https://en.wikipedia.org/wiki/Pectoralis_major"},{"source":"The rectus abdominis, (Latin: straight abdominal) also known as the \"abdominal muscle\" or simply better known as the \"abs\", and sometimes informally referred to as the \"six-pack\", is a pair of segmented skeletal muscle on the ventral aspect of a person's abdomen.","locator":"https://en.wikipedia.org/wiki/Rectus_abdominis_muscle"},{"source":"The gluteus maximus is the main extensor muscle of the hip in humans.","locator":"https://en.wikipedia.org/wiki/Gluteus_maximus_muscle"},{"source":"The quadriceps femoris muscle (/ˈkwɒdrɪsɛps ˈfɛmərɪs/, also called the quadriceps extensor, quadriceps or quads) is a large muscle group that includes the four prevailing muscles on the front of the thigh.","locator":"https://en.wikipedia.org/wiki/Quadriceps""#;
+
+const MG_ALL_PIN: &str = r#""bindings":{"M":"biceps_brachii"},"citations":[{"source":"The biceps or biceps brachii is a large muscle that lies on the front of the upper arm between the shoulder and the elbow.","locator":"https://en.wikipedia.org/wiki/Biceps","trust":"consensus","corroborations":[{"source":"The triceps, or triceps brachii (Latin for \"three-headed muscle of the arm\"), is a large muscle on the back of the upper limb of many vertebrates.","locator":"https://en.wikipedia.org/wiki/Triceps"},{"source":"The deltoid muscle (or musculus deltoideus) is the muscle[1] forming the rounded contour of the human shoulder.","locator":"https://en.wikipedia.org/wiki/Deltoid_muscle"},{"source":"The pectoralis major (from Latin pectus 'breast') is a thick, fan-shaped or triangular convergent muscle of the human chest.","locator":"https://en.wikipedia.org/wiki/Pectoralis_major"},{"source":"The rectus abdominis, (Latin: straight abdominal) also known as the \"abdominal muscle\" or simply better known as the \"abs\", and sometimes informally referred to as the \"six-pack\", is a pair of segmented skeletal muscle on the ventral aspect of a person's abdomen.","locator":"https://en.wikipedia.org/wiki/Rectus_abdominis_muscle"},{"source":"The gluteus maximus is the main extensor muscle of the hip in humans.","locator":"https://en.wikipedia.org/wiki/Gluteus_maximus_muscle"},{"source":"The quadriceps femoris muscle (/ˈkwɒdrɪsɛps ˈfɛmərɪs/, also called the quadriceps extensor, quadriceps or quads) is a large muscle group that includes the four prevailing muscles on the front of the thigh.","locator":"https://en.wikipedia.org/wiki/Quadriceps"},{"source":"The sartorius muscle (/sɑːrˈtɔːriəs/), historically known as couturier (French for \"tailor\"), is the longest muscle in the human body.[2] It is a long, thin, superficial muscle that runs down the length of the thigh in the anterior compartment.","locator":"https://en.wikipedia.org/wiki/Sartorius_muscle"},{"source":"The gastrocnemius muscle (plural gastrocnemii) is a superficial two-headed muscle. It is located superficial to the soleus in the posterior (back) compartment of the leg.","locator":"https://en.wikipedia.org/wiki/Gastrocnemius_muscle""#;
+
+#[test]
+fn muscle_groups_deltoid_answer_keeps_its_footnote_marker() {
+    let dir = scratch("cite_delt");
+    std::fs::copy(
+        facts_stdlib().join("anatomy/muscle-groups.adj"),
+        dir.join("muscle-groups.adj"),
+    )
+    .expect("copy shipped muscle-groups.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"muscle-groups.adj\"\n? muscle_region(deltoid, $R)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The library header quoted this as "is the muscle forming the rounded
+    // contour", dropping the page's "[1]" footnote marker -- real rendered
+    // text. The pin runs to DELTOID'S OWN corroboration (index 1), not
+    // index 0, so it fails if deltoid's cite specifically is damaged.
+    assert!(
+        out.contains(MG_DELT_PIN),
+        "deltoid's answer keeps the page's footnote marker: {out}"
+    );
+}
+
+#[test]
+fn muscle_groups_quadriceps_answer_keeps_the_parenthetical_its_header_had_deleted() {
+    let dir = scratch("cite_quad");
+    std::fs::copy(
+        facts_stdlib().join("anatomy/muscle-groups.adj"),
+        dir.join("muscle-groups.adj"),
+    )
+    .expect("copy shipped muscle-groups.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"muscle-groups.adj\"\n? muscle_region(quadriceps, $R)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // THE WORST HEADER-QUOTE SUBTYPE FOUND. The shipped header read "The
+    // quadriceps femoris muscle is a large muscle group..." -- the page's
+    // IPA-and-alias parenthetical had been deleted WITH NO ELLIPSIS AT ALL,
+    // so the quote read as faithful and was not.
+    //
+    // That is the same shape as the defect that propagated unnoticed from
+    // quadrilateral-types' header into another library's shipped `source`:
+    // marked elisions announce themselves, unmarked ones are found only by
+    // fetching the page. This pin is the standing check for it.
+    //
+    // Runs to QUADRICEPS' OWN corroboration (index 5).
+    assert!(
+        out.contains(MG_QUAD_PIN),
+        "quadriceps' answer keeps the parenthetical its header had deleted: {out}"
+    );
+}
+
+#[test]
+fn muscle_groups_reverse_answer_carries_all_eight_corroborations_in_order() {
+    let dir = scratch("cite_all");
+    std::fs::copy(
+        facts_stdlib().join("anatomy/muscle-groups.adj"),
+        dir.join("muscle-groups.adj"),
+    )
+    .expect("copy shipped muscle-groups.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"muscle-groups.adj\"\n? muscle_region($M, arm)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Spans the WHOLE eight-entry corroboration list. A pure reorder, or a
+    // dropped middle entry, fails here while every sentence is still present
+    // somewhere in the blob -- invisible to any per-sentence check.
+    assert!(
+        out.contains(MG_ALL_PIN),
+        "the reverse answer carries all eight corroborations in order: {out}"
+    );
+}

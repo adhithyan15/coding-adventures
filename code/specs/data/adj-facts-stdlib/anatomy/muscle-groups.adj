@@ -71,8 +71,10 @@
 %
 %   deltoid → shoulder
 %     https://en.wikipedia.org/wiki/Deltoid_muscle
-%     "The deltoid muscle (or musculus deltoideus) is the muscle forming the
-%      rounded contour of the human shoulder."
+%     "The deltoid muscle (or musculus deltoideus) is the muscle[1] forming
+%      the rounded contour of the human shoulder."
+%     (the previous form DROPPED THE FOOTNOTE MARKER "[1]", which is real
+%      rendered text on the page)
 %
 %   pectoralis_major → chest
 %     https://en.wikipedia.org/wiki/Pectoralis_major
@@ -81,8 +83,14 @@
 %
 %   rectus_abdominis → abdomen
 %     https://en.wikipedia.org/wiki/Rectus_abdominis_muscle
-%     "The rectus abdominis ... is a pair of segmented skeletal muscle on the
-%      ventral aspect of a person's abdomen."
+%     "The rectus abdominis, (Latin: straight abdominal) also known as the
+%      "abdominal muscle" or simply better known as the "abs", and sometimes
+%      informally referred to as the "six-pack", is a pair of segmented
+%      skeletal muscle on the ventral aspect of a person's abdomen."
+%     (the previous form ELIDED the alias list with "..." -- a constructed
+%      span. THIS DAMAGED FORM WAS COPIED INTO muscle-body-aspect.adj's
+%      `source`, where a comment defect became a shipped citation; that copy
+%      is repaired in the same change.)
 %
 %   gluteus_maximus → hip
 %     https://en.wikipedia.org/wiki/Gluteus_maximus_muscle
@@ -90,18 +98,29 @@
 %
 %   quadriceps → thigh
 %     https://en.wikipedia.org/wiki/Quadriceps
-%     "The quadriceps femoris muscle is a large muscle group that includes the
-%      four prevailing muscles on the front of the thigh."
+%     "The quadriceps femoris muscle (/ˈkwɒdrɪsɛps ˈfɛmərɪs/, also called the
+%      quadriceps extensor, quadriceps or quads) is a large muscle group that
+%      includes the four prevailing muscles on the front of the thigh."
+%     (the previous form DELETED THE PARENTHETICAL WITH NO ELLIPSIS AT ALL --
+%      an UNMARKED deletion, which reads as a faithful quote and is not. No
+%      text-only screen can detect this subtype.)
 %
 %   sartorius → thigh
 %     https://en.wikipedia.org/wiki/Sartorius_muscle
-%     "It is a long, thin, superficial muscle that runs down the length of the
-%      thigh in the anterior compartment."
+%     "The sartorius muscle (/sɑːrˈtɔːriəs/), historically known as couturier
+%      (French for "tailor"), is the longest muscle in the human body.[2] It is
+%      a long, thin, superficial muscle that runs down the length of the thigh
+%      in the anterior compartment."
+%     (the previous form was VERBATIM but began with a bare "It is", naming no
+%      subject. This contiguous block names the muscle AND its region.)
 %
 %   gastrocnemius → leg
 %     https://en.wikipedia.org/wiki/Gastrocnemius_muscle
-%     "It is located superficial to the soleus in the posterior (back)
-%      compartment of the leg."
+%     "The gastrocnemius muscle (plural gastrocnemii) is a superficial
+%      two-headed muscle. It is located superficial to the soleus in the
+%      posterior (back) compartment of the leg."
+%     (the previous form was VERBATIM but began with a bare "It is", naming
+%      no subject. This contiguous block names the muscle AND its region.)
 %
 % An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
 % `trust` below hold the single cleanest span: the Wikipedia sentence that fixes
@@ -129,4 +148,12 @@ table muscle_region {
     source "The biceps or biceps brachii is a large muscle that lies on the front of the upper arm between the shoulder and the elbow."
     locator "https://en.wikipedia.org/wiki/Biceps"
     trust consensus
+    cites "The triceps, or triceps brachii (Latin for \"three-headed muscle of the arm\"), is a large muscle on the back of the upper limb of many vertebrates." locator "https://en.wikipedia.org/wiki/Triceps"
+    cites "The deltoid muscle (or musculus deltoideus) is the muscle[1] forming the rounded contour of the human shoulder." locator "https://en.wikipedia.org/wiki/Deltoid_muscle"
+    cites "The pectoralis major (from Latin pectus 'breast') is a thick, fan-shaped or triangular convergent muscle of the human chest." locator "https://en.wikipedia.org/wiki/Pectoralis_major"
+    cites "The rectus abdominis, (Latin: straight abdominal) also known as the \"abdominal muscle\" or simply better known as the \"abs\", and sometimes informally referred to as the \"six-pack\", is a pair of segmented skeletal muscle on the ventral aspect of a person's abdomen." locator "https://en.wikipedia.org/wiki/Rectus_abdominis_muscle"
+    cites "The gluteus maximus is the main extensor muscle of the hip in humans." locator "https://en.wikipedia.org/wiki/Gluteus_maximus_muscle"
+    cites "The quadriceps femoris muscle (/ˈkwɒdrɪsɛps ˈfɛmərɪs/, also called the quadriceps extensor, quadriceps or quads) is a large muscle group that includes the four prevailing muscles on the front of the thigh." locator "https://en.wikipedia.org/wiki/Quadriceps"
+    cites "The sartorius muscle (/sɑːrˈtɔːriəs/), historically known as couturier (French for \"tailor\"), is the longest muscle in the human body.[2] It is a long, thin, superficial muscle that runs down the length of the thigh in the anterior compartment." locator "https://en.wikipedia.org/wiki/Sartorius_muscle"
+    cites "The gastrocnemius muscle (plural gastrocnemii) is a superficial two-headed muscle. It is located superficial to the soleus in the posterior (back) compartment of the leg." locator "https://en.wikipedia.org/wiki/Gastrocnemius_muscle"
 }

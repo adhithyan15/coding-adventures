@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W25-read-vandi",
+    "language": "tamil",
+    "chapter": 69,
+    "sequence": 2750,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c565dd6a77e2d4f4",
+    "detachableSegments": [
+      "Script you'll notice: வண்டி — a dot joining two letters"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

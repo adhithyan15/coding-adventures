@@ -1,0 +1,17 @@
+{
+  "id": "TA-PATH-69-GOING",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TA-C69-vehicle",
+    "TA-C69-bus",
+    "TA-W25-read-vandi",
+    "TA-C69-train",
+    "TA-C69-road",
+    "TA-C69-station"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-69-GOING"
+  ],
+  "after": []
+}

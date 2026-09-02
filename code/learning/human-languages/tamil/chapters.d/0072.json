@@ -1,0 +1,21 @@
+{
+  "chapter": 72,
+  "title": "How It Feels",
+  "label": "ch:ta-how-it-feels",
+  "canDo": "I can name anger, fear and sorrow in Tamil, and say to laugh and to cry.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C72-cry",
+    "kind": "production",
+    "summary": "Complete TA-C72-cry and say all five words of the chapter in order.",
+    "assesses": [
+      "TA-LEX-C72-FEEL-01",
+      "TA-LEX-C72-FEEL-02",
+      "TA-LEX-C72-FEEL-03",
+      "TA-LEX-C72-FEEL-04",
+      "TA-LEX-C72-FEEL-05"
+    ]
+  }
+}

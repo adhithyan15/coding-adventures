@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C70-table",
+    "language": "tamil",
+    "chapter": 70,
+    "sequence": 2790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0e7e5f0e4e147a6"
+  },
+  "findings": []
+}

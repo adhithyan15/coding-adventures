@@ -157,10 +157,17 @@ describe("the plan CLI", () => {
     // enumerated -- `apna`, object-marking `ko`, transport, payment, `aaj` --
     // and the honest figure fell to 55%. A ruler drawn too short flatters the
     // corpus, so the bigger denominator is the point, not a side effect.
-    // 530 -> 512: the Hindi pre-A1 vocabulary round-four tranche (chapters
-    // 68-74) filled 18 probes that were `null`, so 18 enumerated points
-    // stopped being uncovered. The denominator did not move.
-    expect(out).toMatch(/512 uncovered point\(s\) across 6 written/);
+    // 530 -> 511, from two independent closures that met in this merge
+    // and MUST NOT be added together by hand -- the merged figure below was
+    // re-measured with `npm run plan`, not derived:
+    //   -1  retiring hand-written French chapter 6 closed A1-PRON-03, obligatory
+    //       liaison, which the generated chapter teaches as a named rule with
+    //       its own atom instead of two passing mentions inside `sounds` blocks.
+    //  -18  the Hindi pre-A1 vocabulary round-four tranche (chapters 68-74)
+    //       filled 18 probes that were `null`, so 18 enumerated points stopped
+    //       being uncovered.
+    // The denominator did not move for either.
+    expect(out).toMatch(/511 uncovered point\(s\) across 6 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -169,7 +176,7 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/512 uncovered point\(s\) across 6 written/);
+    expect(out).toMatch(/511 uncovered point\(s\) across 6 written/);
     expect(out).toMatch(/0 complete and 6 partial of 138/);
     expect(out).toMatch(/the other 18 track\(s\)/);
   }, 120_000);
