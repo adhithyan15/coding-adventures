@@ -4,6 +4,27 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Documented - platform completion plan across all nine Mosaic backends (#13517)
+
+The backlog's "next up" section had emptied its own queue and deferred the next
+choice to a fresh pass over the super-app roadmap. That pass is now written down
+in `code/specs/task-app-platform-completion-v1.md`, and it asks a different
+question than the roadmap does: not which features Trestle should have, but
+which of Mosaic's nine backends it is actually finished on.
+
+Six backends are gated and shipped (`react`, `qt`, `flutter`, `compose`,
+`swiftui`, `xaml`). Three contain zero TaskApp references — no test, no CI step,
+no artifact: `html`, `webcomponent`, and `paint`. The portable-input-label work
+in #13717 exercised the html and webcomponent emitters from emitter-local
+fixtures, never from TaskApp's own sources, so those backends were never covered
+despite reading as though they were. iOS compiles the generated SwiftUI sources
+but nothing runs them, and Android has no Mosaic backend at all.
+
+The resulting queue is ordered in three tiers: finish the platforms TaskApp
+already claims (#13695, #13692, #13526, #13625), close the three unexercised
+backends, then state the reach items — iOS execution, Android, and
+signing/notarization/installers — as decisions rather than silent gaps.
+
 ### Fixed - visible local-storage and recovery status (#13690)
 
 Trestle now keeps its local-only persistence model and data location visible in

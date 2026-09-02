@@ -102,9 +102,40 @@ the next item is selected. Only one TaskApp completion-loop PR is active at a ti
 The design-fidelity gap (see `CHANGELOG.md`'s "re-closed the design-fidelity gap"
 entry, and Resolved below for icon/SVG assets, Board, richer Gantt, and Calendar) is
 now closed except for one low-priority polish item — see the Backlog section below.
-Picking this session's next-highest-priority item needs a fresh pass over
-`code/specs/task-app-super-app.md`'s remaining phases rather than continuing to work
-off this now-mostly-resolved list.
+
+The fresh pass this section used to defer to is now written down:
+[`code/specs/task-app-platform-completion-v1.md`](../../../specs/task-app-platform-completion-v1.md).
+It measures TaskApp against all nine Mosaic backends rather than against the
+super-app feature roadmap, and it found that three backends — `html`,
+`webcomponent`, and `paint` — contain **zero** TaskApp references: no test, no CI
+step, no artifact. The ordered queue below comes from that spec.
+
+**Tier A — finish the platforms TaskApp already claims.**
+
+1. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
+   replace blank startup with loading and failure states. Highest-severity
+   remaining product defect — every other item assumes the app started.
+2. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
+   make the List-first shell usable in compact windows.
+3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+   move the Vitest config to Vite's native ESM loading contract.
+4. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+   roll the changelog forward after each published release and gate against a
+   published version still marked Unreleased. `0.1.0` is in exactly that state
+   today.
+
+**Tier B — close the three unexercised backends.** Filed as work is picked up;
+see the spec for the completion bar each one has to clear.
+
+5. Static HTML snapshot gate (cheapest — no runtime, no interaction claim).
+6. Web Components host — the last *interactive* backend with no TaskApp presence.
+7. Paint visual-regression gate — the only mechanism that would catch a purely
+   visual regression.
+
+**Tier C — reach, stated rather than silently missing.** iOS compiles but does
+not run; Android has no Mosaic backend and belongs to #12017; signing,
+notarization, and installers stay open under #13522 because they need
+credentials this repository does not hold.
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
