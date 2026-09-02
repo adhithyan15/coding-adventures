@@ -70,8 +70,7 @@ than no list, so: write the level above before believing the level below.
 
 Chapter 2 — *Introducing Yourself* — was hand-written LaTeX over nine schema-v1
 lessons. It is now nine schema-v2 lessons and generated from them. **French has
-eight hand-written chapters left, all in the 9–16 range**; the corpus has
-nineteen.
+eight hand-written chapters left, all in the 9–16 range.**
 
 ### Four ways of sizing it
 
@@ -157,8 +156,14 @@ teaching order.
 
 ### Measured, against the merged tree
 
-- Hand-written French chapters: **9 -> 8**; corpus **20 -> 19**. Every French
-  chapter that remains is in the 9–16 range.
+- Hand-written French chapters: **9 -> 8**. Every French chapter that remains is
+  in the 9–16 range.
+- Corpus hand-written chapters: **18** on this branch after merging `main`, and
+  the figure is stated rather than differenced on purpose. It was 20 when the
+  branch was cut and 19 after this chapter; German chapter 5 landed from a
+  sibling in the same window and took it to 18 without this branch touching
+  German. A corpus counter is not this change's to compose — it is measured on
+  the tree that exists, or it is wrong.
 - `handwritten_parity.py french`: **45 -> 45** blocks at risk — chapter 2
   contributed none of them.
 - Schema-v2 French lessons: **119 -> 128**.
