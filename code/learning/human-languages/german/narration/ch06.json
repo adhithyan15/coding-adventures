@@ -3,33 +3,24 @@
   "language": "german",
   "chapter": 6,
   "title": "Numbers One to Ten",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6866acd0f8171296",
+  "drivablePrefix": 16,
+  "sourceHash": "fnv1a64:d50f6c0ac4fa6ed5",
   "lessons": [
     {
-      "id": "GE-C06-zahlen-1-5",
-      "sequence": 215,
-      "title": "eins, zwei, drei, vier, fünf — counting to five",
-      "headword": "eins, zwei, drei, vier, fünf",
-      "romanization": "eins, zwei, drei, vier, fünf",
-      "gloss": "the numbers 1–5",
+      "id": "GE-C06-eins",
+      "sequence": 211,
+      "title": "eins — \"one,\" and the German ei",
+      "headword": "eins",
+      "romanization": "eins",
+      "gloss": "one — and the ei that is always the English word \"eye\"",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:709327fa212ffb51",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The numbers, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The numbers, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:163b5b7f0c58faf7",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,57 +35,52 @@
             },
             {
               "kind": "speech",
-              "text": "Here's where German feels closer to English than any Romance language does. German numbers aren't borrowed from Latin like Spanish or French — they're German's own Germanic words, and they're the near-twins of English one, two, three, four, five. The reason is a single sound-law."
+              "text": "Here is where German is closer to English than any Romance language gets. Its numbers are not borrowed from Latin — they are German's own, and they are the near-twins of the English ones. Start with the first."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "You'll want to know: eins",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ei — eins, zwei, drei all carry the ei = English \"eye\" sound: eyns, tsvy, dry."
-            },
-            {
-              "kind": "speech",
-              "text": "umlaut-ue — fünf: the ü is \"ee\" said with rounded lips; fünf ≈ fewnf."
+              "text": "eins — \"one,\" the number you say when you are counting."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The numbers, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "German",
-                "English twin",
-                "shared ancestor",
-                "Latin cousin"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: German, English twin, shared ancestor, Latin cousin. Come back and look at it when you have stopped."
+              "kind": "speech",
+              "text": "diphthong-ei — German ei is the English word eye. Always, in every word, with no exceptions to remember."
             },
             {
               "kind": "speech",
-              "text": "German and English are siblings; Latin is a cousin. So drei isn't from Latin trēs — both descend from one prehistoric word, and Grimm's Law is the recipe for the differences: an old t became Germanic th/d (trēs becomes three becomes drei), and an old p became f (pénkʷe becomes five / fünf, while Latin kept it as quīnque). Say fünf and five back to back — same word, one p-turned-f apart."
+              "text": "So eins is eyns. You already own this one: heißen is HY-ssen, and Wiedersehen has an ie, which is the other way round and says ee. ei says eye; ie says ee. The second letter tells you which."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: eins becomes ein / eine (one = a/an)",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Like English one/an and Spanish uno/un, German eins becomes the article ein (masc./neut.) / eine (fem.) before a noun: ein Kaffee \"a/one coffee,\" eine Katze \"a/one cat.\" The counting form is eins; the article drops the -s. The other numbers don't change for the article."
+              "text": "eins is English one. Not borrowed from it, not similar to it — the same inherited word, which is why it needs no story to make it stick."
+            },
+            {
+              "kind": "speech",
+              "text": "English hides the relationship in its spelling. One is written as though it rhymed with bone, and it did once; the w-sound at the front (wun) crept in later. Strip that off and one and ein are the same shape."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word is also sitting inside English a and an — an apple is one apple, worn down. German does exactly the same thing with eins, and once the first five are learned there is a lesson on it."
             }
           ]
         },
@@ -112,29 +98,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"eins, zwei, drei, vier, fünf\" — count up",
+              "instruction": "\"eins\" — eyns, with the English word eye inside it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"eins, zwei, drei, vier, fünf\" — count up]"
+              "source": "[YOU SAY: \"eins\" — *eyns*, with the English word *eye* inside it]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each with its English twin — \"zwei/two, drei/three, fünf/five\"",
+              "instruction": "\"eins\" then \"one\" — the same old word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each with its English twin — \"zwei/two, drei/three, fünf/five\"]"
+              "source": "[YOU SAY: \"eins\" then \"one\" — the same old word]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"fünf\" then \"five\" — hear the p becomes f of Grimm's Law in pénkʷe",
+              "instruction": "\"ei\" as eye, \"ie\" as ee — the second letter decides",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"fünf\" then \"five\" — hear the *p→f* of Grimm's Law in *pénkʷe*]"
+              "source": "[YOU SAY: \"ei\" as *eye*, \"ie\" as *ee* — the second letter decides]"
             }
           ]
         },
@@ -151,7 +137,1697 @@
             },
             {
               "kind": "speech",
-              "text": "Give 1–5 in German. (Eins, zwei, drei, vier, fünf.) Are these borrowed from Latin? (No — Germanic twins of English, cousins of Latin via Grimm's Law.) What sound-change links fünf and five to Latin quīnque? (Old p becomes Germanic f.) Next: 6–10."
+              "text": "What is \"one\" in German? (Eins.) How is ei said? (Like the English word eye.) And ie? (Ee.) Which English word is eins? (One — and a/an underneath it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-zwei",
+      "sequence": 212,
+      "title": "zwei — \"two,\" and the z that is a ts",
+      "headword": "zwei",
+      "romanization": "zwei",
+      "gloss": "two — English two with its t turned into the ts of z",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:537d4f48d472db8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One down. The second number has the same ei you just learned, and one letter that does not say what an English reader expects."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zwei",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zwei — \"two.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Said tsvy. The z is the ts of English cats — never the buzz of English zoo. That is the whole of the German z: it has one job and it never does anything else."
+            },
+            {
+              "kind": "speech",
+              "text": "The other two letters you already own. The w is a v, as in wohnen, and the ei is eye, as in eins. So zwei is three rules you have and one that is new."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zwei is English two, with the tw- opening turned into zw-."
+            },
+            {
+              "kind": "speech",
+              "text": "English still says the tw- out loud in the words two grew from — twin (two born together), between (in the space of two), twice, twenty. It only lost the w in the number itself, which is why two is spelt with a letter nobody pronounces. German kept the pair and shifted the t to ts:"
+            },
+            {
+              "kind": "speech",
+              "text": "tw- becomes zw-: two / zwei, twin / Zwilling, twelve / zwölf."
+            },
+            {
+              "kind": "speech",
+              "text": "So the silent w in English two is not a spelling accident. It is the w that German still says."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"zwei\" — tsvy, the z like the end of cats",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"zwei\" — *tsvy*, the *z* like the end of *cats*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eins, zwei\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eins, zwei\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"two\", \"twin\", \"between\" — then \"zwei\", and hear the w come back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"two\", \"twin\", \"between\" — then \"zwei\", and hear the *w* come back]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"two\"? (Zwei.) How is German z said? (Ts, as in cats.) Which English words still say the w that two dropped? (Twin, between, twice.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-drei",
+      "sequence": 213,
+      "title": "drei — \"three,\" and German's missing th",
+      "headword": "drei",
+      "romanization": "drei",
+      "gloss": "three — the same word, with th worn down to d",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcbda45adc0ac85c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Third number, third ei. And it shows you something that will keep paying: German has no th sound at all, and you can predict what it uses instead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: drei",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "drei — \"three.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Said dry: the scraped r you met in lernen, and the ei saying eye."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "drei is English three. German simply has no th, and where English says one, German says d. That is not a fact about numbers — it is a fact about the whole language, and you have been using it since your first danke:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "German"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "English: three. German: drei.",
+                "English: the. German: der, die, das.",
+                "English: thank. German: danke.",
+                "English: that. German: das."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Five words, one swap. Whenever an English word starts with th, try a d and you will often land on the German."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"drei\" — dry, scrape the r",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"drei\" — *dry*, scrape the *r*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eins, zwei, drei\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eins, zwei, drei\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — \"three/drei\", \"the/der\", \"thank/danke\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — \"three/drei\", \"the/der\", \"thank/danke\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"three\"? (Drei.) What does German use where English has th? (D.) Give three pairs. (Three/drei, the/der, thank/danke.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-grimm",
+      "sequence": 214,
+      "title": "Siblings, not borrowings",
+      "headword": "(siblings, not borrowings)",
+      "romanization": "(siblings, not borrowings)",
+      "gloss": "why German and English numbers match and the Latin ones only rhyme",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c65044e88bbe428f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Drei, three, and Latin tres all mean three and all start with a different sound. Before the next seven numbers, it is worth knowing why — because the answer makes each of them cheaper to learn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: siblings and cousins",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "German and English are siblings. Latin is a cousin."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a figure of speech. All three grew out of one older language, and Germanic — the parent of English and German — split off from the rest first. So drei did not come from tres, and English three did not either. All three are what one prehistoric word became along three different roads."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is why the German numbers are the easy ones and the Romance numbers are the hard ones, for an English speaker: three and drei are the same word two doors apart, while tres is the same word across the street."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The differences are not random. A sound law is a change that happened to every word in a language at once, so once you know one you can predict the rest."
+            },
+            {
+              "kind": "speech",
+              "text": "You have already met one of these. Gut is good with the d turned to a t, and machen is make with the k turned to a ch — one shift, two words, and it caught every word in German that had those sounds."
+            },
+            {
+              "kind": "speech",
+              "text": "The shift that separates Germanic from Latin is older and works the same way. The two turns worth carrying into the next lessons are:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Older sound",
+                "Germanic sound",
+                "Seen in"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "Older sound: t. Germanic sound: th, and German d. Seen in: Latin tres, English three, German drei.",
+                "Older sound: p. Germanic sound: f. Seen in: Latin pes \"foot\", English foot."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So when a Latin word and a German one sound nothing alike, try the first consonant before deciding they are unrelated. Often they are the same word, one law apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tres\", \"three\", \"drei\" — one word, three roads",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tres\", \"three\", \"drei\" — one word, three roads]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two turns — \"t becomes th\", \"p becomes f\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two turns — \"t becomes th\", \"p becomes f\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"good/gut\", \"make/machen\" — the shift you already knew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"good/gut\", \"make/machen\" — the shift you already knew]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is drei borrowed from Latin tres? (No — they are cousins, both from one older word.) What is a sound law? (A change that hit every word in the language at once, so it is predictable.) Which two turns should you carry forward? (Old t to th/d, old p to f.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-vier",
+      "sequence": 215,
+      "title": "vier — \"four,\" written with a v and said with an f",
+      "headword": "vier",
+      "romanization": "vier",
+      "gloss": "four — spelt with a v, said with an f",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a35bfdf8d2d6453",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth number is the easiest one yet — as long as you do not trust the first letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vier",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vier — \"four.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "v-as-f — German v is said as an f. It is not a v sound; that job belongs to w."
+            },
+            {
+              "kind": "speech",
+              "text": "ie-long-ee — ie is a long ee, the mirror of ei."
+            },
+            {
+              "kind": "speech",
+              "text": "So vier is feer. Put the two vowel rules side by side and the pair is settled for good:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spelling",
+                "Sound",
+                "Example"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "Spelling: ei. Sound: eye. Example: eins, zwei, drei.",
+                "Spelling: ie. Sound: ee. Example: vier, wieder."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both times, the second letter is the one you say."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vier is English four, and once you know the v is an f you can hear it: feer, four. Latin's cousin is quattuor, which is where Spanish cuatro and French quatre come from — so this is a number where English sides with German and not with the Romance languages at all."
+            },
+            {
+              "kind": "speech",
+              "text": "The v-said-as-f is not special to this word. German writes v in a handful of its oldest words — vier, Vater, von, voll — and says every one of them with an f, which is exactly the letter English uses in four, father, from, full."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vier\" — feer, the v said as an f",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vier\" — *feer*, the *v* said as an *f*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eins, zwei, drei, vier\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eins, zwei, drei, vier\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the vowel pair — \"ei\" as eye, \"ie\" as ee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the vowel pair — \"ei\" as *eye*, \"ie\" as *ee*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"four\"? (Vier, said feer.) How is German v said? (As an f.) Which letter carries the v sound instead? (W.) And how do you tell ei from ie? (Say the second letter.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-fuenf",
+      "sequence": 216,
+      "title": "fünf — \"five,\" and the law you can hear",
+      "headword": "fünf",
+      "romanization": "fünf",
+      "gloss": "five — and the p-to-f law caught in one word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c6a4f42ba22cc6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fifth number closes the first hand — and it is the clearest example of a sound law anywhere in the language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fünf",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fünf — \"five.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "umlaut-ue — ü is an ee said with your lips rounded for an oo. Say ee, hold the tongue exactly where it is, and push your lips forward."
+            },
+            {
+              "kind": "speech",
+              "text": "So fünf is roughly fewnf, in one syllable. This is the umlaut doing what you learned it does: it takes the back vowel u and drags it to the front of the mouth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fünf is English five, and the two of them are the sound law from the last lesson caught in the act."
+            },
+            {
+              "kind": "speech",
+              "text": "The older word for five began with a p. Latin kept it — quinque still has one in the middle — and Germanic turned every one of those ps into an f. So English got five and German got fünf, both starting with the letter that was once a p:"
+            },
+            {
+              "kind": "speech",
+              "text": "old p becomes Germanic f: five / fünf, against Latin's quinque."
+            },
+            {
+              "kind": "speech",
+              "text": "Say fünf and five one after the other. They are the same word, and the whole distance between them and the Latin one is that single turn."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fünf\" — say ee, then round your lips without moving your tongue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fünf\" — say *ee*, then round your lips without moving your tongue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fünf\" then \"five\" — one word, one law apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fünf\" then \"five\" — one word, one law apart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eins, zwei, drei, vier, fünf\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eins, zwei, drei, vier, fünf\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"five\"? (Fünf.) How do you make ü? (Say ee and round your lips.) Which sound turned into the f of five and fünf? (An older p — the one Latin kept.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-zahlen-1-5",
+      "sequence": 217,
+      "title": "eins bis fünf — counting to five",
+      "headword": "eins bis fünf",
+      "romanization": "eins bis fünf",
+      "gloss": "the first five as one run — counting, not reciting five separate words",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5f0a40a91e42a1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five words, one at a time. Counting is something else: it is the five of them running together without a pause to think. That is what this lesson is for, and nothing in it is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the run",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "eins, zwei, drei, vier, fünf."
+            },
+            {
+              "kind": "speech",
+              "text": "Said straight through: eyns, tsvy, dry, feer, fewnf."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one is the English number with a German coat on:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English",
+                "What changed"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "German: eins. English: one. What changed: nothing — English hid it in the spelling.",
+                "German: zwei. English: two. What changed: the tw- German still says.",
+                "German: drei. English: three. What changed: th flattened to d.",
+                "German: vier. English: four. What changed: the v is said as an f.",
+                "German: fünf. English: five. What changed: an older p, now an f in both."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Not one of them is borrowed from Latin. All five are what an English speaker already half knows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eins, zwei, drei, vier, fünf\" — straight through, no gaps",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eins, zwei, drei, vier, fünf\" — straight through, no gaps]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, faster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, faster]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it backwards — \"fünf, vier, drei, zwei, eins\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it backwards — \"fünf, vier, drei, zwei, eins\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"eins, zwei, drei, vier, fünf\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to five. (Eins, zwei, drei, vier, fünf.) Now backwards. (Fünf, vier, drei, zwei, eins.) Which of the five is borrowed from Latin? (None of them.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-ein-eine",
+      "sequence": 218,
+      "title": "ein und eine — when \"one\" becomes \"a\"",
+      "headword": "ein / eine",
+      "romanization": "ein / eine",
+      "gloss": "\"a\" is the number one with its counting -s taken off",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c42eb4ecf9936d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eins is what you say while counting. Put it in front of a naming word and it changes shape — and English does the very same trick, so this costs almost nothing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ein / eine",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ein / eine — \"a,\" \"an,\" and also \"one\" when it sits in front of a naming word."
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two you use follows the same three-way split you already know from der, die, das:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "The word takes",
+                "So \"a\" is"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "The word takes: der. So \"a\" is: ein.",
+                "The word takes: das. So \"a\" is: ein.",
+                "The word takes: die. So \"a\" is: eine."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two of the three groups share one form, so there is really only one thing to remember: die words take the extra -e. On the two nouns inside guten Tag and gute Nacht:"
+            },
+            {
+              "kind": "speech",
+              "text": "der Tag becomes ein Tag, \"a day\", die Nacht becomes eine Nacht, \"a night\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the counting -s drops",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Counting form: eins. In front of a naming word: ein / eine. The -s belongs to counting and to nothing else."
+            },
+            {
+              "kind": "speech",
+              "text": "English does the identical thing, and hides it just as well. One in front of a naming word wore down to a and an — an apple really is one apple, said quickly for a thousand years. So both languages have a special worn-down shape of \"one\", and both use it as the word for \"a\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The other numbers do not do this. Zwei, drei, vier and fünf look exactly the same whether you are counting or putting them in front of something. Only the first number has two shapes, in German as in English."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eins\" — then \"ein\", dropping the s",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eins\" — then \"ein\", dropping the *s*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Tag / ein Tag\", \"die Nacht / eine Nacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Tag / ein Tag\", \"die Nacht / eine Nacht\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"one apple\", then \"an apple\" — English doing the same thing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"one apple\", then \"an apple\" — English doing the same thing]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to eins in front of a naming word? (It drops the -s: ein.) Which group takes eine? (The die group.) Which English words are the same worn-down \"one\"? (A and an.) Do the other numbers change? (No — only the first.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-sechs",
+      "sequence": 219,
+      "title": "sechs — \"six,\" where chs is just an x",
+      "headword": "sechs",
+      "romanization": "sechs",
+      "gloss": "six — where chs is simply an x",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:198c45bc019dbf15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second hand starts here. And the sixth number quietly settles the last thing German ch can do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sechs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sechs — \"six.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ch-none — in chs, the ch makes no throat sound at all. The pair is a plain ks, exactly the English letter x."
+            },
+            {
+              "kind": "speech",
+              "text": "So sechs is zeks, and it rhymes with English sex — which is also, as it happens, the Latin word for six."
+            },
+            {
+              "kind": "speech",
+              "text": "That completes the ch: raspy after a as in machen, and silent-into-ks when an s follows. Nothing else to learn about it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sechs is English six, and here the two languages have barely moved apart at all — zeks against siks. Even the Latin cousin sex is close enough to hear, because this is one of the few numbers no sound law rearranged much."
+            },
+            {
+              "kind": "speech",
+              "text": "Which makes it the cheapest number in the chapter: if you can say x, you can say sechs."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sechs\" — zeks, no throat rasp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sechs\" — *zeks*, no throat rasp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"machen\" then \"sechs\" — the two jobs of ch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"machen\" then \"sechs\" — the two jobs of *ch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sechs\" then \"six\" — barely a step apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sechs\" then \"six\" — barely a step apart]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"six\"? (Sechs, said zeks.) What does ch do in front of an s? (Nothing — the pair is a plain ks.) And after an a? (The raspy throat sound, as in machen.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-sieben",
+      "sequence": 220,
+      "title": "sieben — \"seven,\" and the buzzing s",
+      "headword": "sieben",
+      "romanization": "sieben",
+      "gloss": "seven — and the s that buzzes at the front of a word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df024730af833e56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have been saying sechs as zeks without being told why. Here is the rule, on the number that needs it most."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sieben",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sieben — \"seven.\" Two syllables: ZEE-ben."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "s-voiced — a German s in front of a vowel buzzes, like the English letter z. At the end of a word it goes back to a plain hiss."
+            },
+            {
+              "kind": "speech",
+              "text": "ie-long-ee — the long ee again, as in vier."
+            },
+            {
+              "kind": "speech",
+              "text": "So sieben is ZEE-ben, not SEE-ben. And it explains the two numbers before it: sechs is zeks and not seks for the same reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sieben is English seven, with the middle consonant softened from a v to a b — a swap those two letters make in each other's direction constantly, because they are made with the same lips."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the one number where the Latin cousin is also unmistakable: septem, which English still uses in September and in septet. Seven is the number almost nobody's language disguised."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sieben\" — ZEE-ben, buzz the s",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sieben\" — *ZEE-ben*, buzz the *s*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sechs, sieben\" — both start with the buzz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sechs, sieben\" — both start with the buzz]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sieben\" then \"seven\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sieben\" then \"seven\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"seven\"? (Sieben, said ZEE-ben.) What does a German s do in front of a vowel? (It buzzes, like z.) And at the end of a word? (It hisses.) Which English word is sieben? (Seven — the v softened to a b.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-acht",
+      "sequence": 221,
+      "title": "acht — \"eight,\" on a rasp you already have",
+      "headword": "acht",
+      "romanization": "acht",
+      "gloss": "eight — the rasp you already own, on a number you already know",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ef3cfd7d2548443",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new in the mouth for this one. You met its sound on the very first Gute Nacht."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: acht",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acht — \"eight.\" Said akht."
+            },
+            {
+              "kind": "speech",
+              "text": "The ch is the raspy back-of-the-throat sound from Nacht and machen: a clean open ah, then the scrape. One syllable, no vowel after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acht is English eight — and the pairing is easier to believe once you notice that English still writes the missing sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight has a gh in it that nobody says. It is not decoration. English used to make a real throat scrape there, exactly the one German still makes, and the spelling is the fossil left behind after the sound fell out."
+            },
+            {
+              "kind": "speech",
+              "text": "So German -cht- answers English -ght-, and it does it every single time:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "acht means eight.",
+                "Nacht means night.",
+                "Licht means light.",
+                "recht means right."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nacht and night you already own. The pattern is worth more than the number: whenever you see a German word with cht, try the English one with ght."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"acht\" — akht, open ah then the scrape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"acht\" — *akht*, open *ah* then the scrape]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Nacht\" then \"acht\" — the same ending twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Nacht\" then \"acht\" — the same ending twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pairs — \"acht/eight\", \"Nacht/night\", \"Licht/light\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pairs — \"acht/eight\", \"Nacht/night\", \"Licht/light\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"eight\"? (Acht.) What does German -cht- answer in English? (-ght-.) Why does eight have a silent gh? (English used to say the same scrape German still says.) Give another pair. (Nacht/night.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-neun",
+      "sequence": 222,
+      "title": "neun — \"nine,\" in the vowel of Deutsch",
+      "headword": "neun",
+      "romanization": "neun",
+      "gloss": "nine — the oy vowel from Deutsch, twice in one word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfe86b848b9181eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ninth number, and again nothing new to learn in the mouth — you got this vowel from the name of the language itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: neun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "neun — \"nine.\" Said noyn."
+            },
+            {
+              "kind": "speech",
+              "text": "The eu is the oy of English boy, which is exactly what it does in Deutsch. So neun rhymes with English coin, and it is one syllable with an n at each end."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not let the spelling talk you into new-n. German eu is never two separate vowels."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "neun is English nine, and the two have kept the same skeleton: n, a vowel, n. Only the vowel wandered — German to oy, English to eye."
+            },
+            {
+              "kind": "speech",
+              "text": "The Latin cousin is the odd one out here. Novem has a v where the Germanic words have nothing, which is why Spanish nueve and French neuf look like a different word. Between neun and nine there is nothing to explain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"neun\" — noyn, rhyming with coin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"neun\" — *noyn*, rhyming with *coin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Deutsch\" then \"neun\" — the same eu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Deutsch\" then \"neun\" — the same *eu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sieben, acht, neun\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sieben, acht, neun\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"nine\"? (Neun, said noyn.) How is eu said? (Like the oy of boy, as in Deutsch.) What do neun and nine share? (N, a vowel, n — only the vowel moved.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-zehn",
+      "sequence": 223,
+      "title": "zehn — \"ten,\" and one consonant in three photographs",
+      "headword": "zehn",
+      "romanization": "zehn",
+      "gloss": "ten — one consonant photographed three times",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:182e5c2ea5aa20f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last one. And it is the number that shows both of German's sound laws working, one after the other, on the same letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zehn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zehn — \"ten.\" Said tsayn."
+            },
+            {
+              "kind": "speech",
+              "text": "The z is the ts you met in zwei, and the h does what it did in wohnen and gehen: it says nothing and stretches the vowel in front of it. So: ts, a long ay, and an n."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin decem, English ten, German zehn. One word, photographed at three moments of the same consonant walking:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Stage",
+                "Word",
+                "The sound"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Stage: what Latin kept. Word: decem. The sound: d.",
+                "Stage: the first law. Word: ten. The sound: d became t.",
+                "Stage: the second law. Word: zehn. The sound: t became ts."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first step is the law from the drei lesson, the one that separated Germanic from Latin. The second is the later shift you already know from gut and machen — the one that only German went through, which is why English stopped at ten and German carried on to zehn."
+            },
+            {
+              "kind": "speech",
+              "text": "So the distance between ten and zehn is not a different word. It is one extra step down a road English stopped walking."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"zehn\" — tsayn, long vowel, silent h",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"zehn\" — *tsayn*, long vowel, silent *h*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"decem, ten, zehn\" — the same consonant, three times",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"decem, ten, zehn\" — the same consonant, three times]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"acht, neun, zehn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"acht, neun, zehn\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"ten\"? (Zehn, said tsayn.) What does the h do? (Nothing — it lengthens the vowel.) Walk decem to zehn. (D became t, and German took the t on to ts.)"
             }
           ]
         }
@@ -159,28 +1835,19 @@
     },
     {
       "id": "GE-C06-zahlen-6-10",
-      "sequence": 220,
-      "title": "sechs, sieben, acht, neun, zehn — finishing the count",
-      "headword": "sechs, sieben, acht, neun, zehn",
-      "romanization": "sechs, sieben, acht, neun, zehn",
-      "gloss": "the numbers 6–10",
+      "sequence": 224,
+      "title": "sechs bis zehn — finishing the count",
+      "headword": "sechs bis zehn",
+      "romanization": "sechs bis zehn",
+      "gloss": "the second five as one run, and then the whole ten",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79b90ac4f55c4080",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The numbers, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The numbers, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:1fc21d7824beef5a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -195,70 +1862,48 @@
             },
             {
               "kind": "speech",
-              "text": "The rest of the way to ten — and again, each is the twin of its English number, with Latin as the cousin one sound-shift away. Two of them show Grimm's Law beautifully."
+              "text": "Five more words learned one at a time. Same job as before: make them one run, then join the two runs together."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "You'll want to know: the second run",
           "segments": [
             {
               "kind": "speech",
-              "text": "ch-ach — acht: the ch is the raspy back-of-throat sound (as in Bach): akht. It matches the gh in English eight — both once a real throat sound."
+              "text": "sechs, sieben, acht, neun, zehn."
             },
             {
               "kind": "speech",
-              "text": "diphthong-eu — neun = noyn (the eu = \"oy\")."
+              "text": "Said straight through: zeks, ZEE-ben, akht, noyn, tsayn."
+            },
+            {
+              "kind": "speech",
+              "text": "And the second five are the same story as the first — English twins, Latin only a cousin:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English",
+                "What changed"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "German: sechs. English: six. What changed: almost nothing; chs is x.",
+                "German: sieben. English: seven. What changed: the v softened to a b.",
+                "German: acht. English: eight. What changed: German still says the scrape English writes as gh.",
+                "German: neun. English: nine. What changed: only the vowel moved.",
+                "German: zehn. English: ten. What changed: an old d to t, then t to ts."
+              ]
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The numbers, taken apart",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "German",
-                "English twin",
-                "shared ancestor",
-                "Latin cousin"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: German, English twin, shared ancestor, Latin cousin. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Two showpieces of Grimm's Law:"
-            },
-            {
-              "kind": "speech",
-              "text": "zehn corresponds to ten corresponds to decem: an old d became Germanic t — so Latin kept decem, English shifted to ten, and German went one hop further (t becomes z) to zehn. Same number, three snapshots of one consonant drifting."
-            },
-            {
-              "kind": "speech",
-              "text": "acht corresponds to eight corresponds to Nacht/night: the German -cht- answers English -ght- every time (acht/eight, Nacht/night, Licht/light) — a fossil of a throat sound both languages once had."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: German borrowed the months, not the numbers",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English and German both took their month names straight from Latin — September, Oktober, November, Dezember in German too. So the same \"off by two\" trick works: those months mean Latin 7, 8, 9, 10 (the Roman year began in March), even though German's own numbers sieben/acht/neun/zehn look nothing like them. The numbers are homegrown; the month labels are Latin imports."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -271,34 +1916,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sechs, sieben, acht, neun, zehn\" — finish the count",
+              "instruction": "\"sechs, sieben, acht, neun, zehn\" — straight through",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sechs, sieben, acht, neun, zehn\" — finish the count]"
+              "source": "[YOU SAY: \"sechs, sieben, acht, neun, zehn\" — straight through]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"zehn/ten/decem\" — the d becomes t becomes z drift; \"acht/eight, Nacht/night\"",
+              "instruction": "all ten from the start, in one breath if you can",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"zehn/ten/decem\" — the *d→t→z* drift; \"acht/eight, Nacht/night\"]"
+              "source": "[YOU SAY: all ten from the start, in one breath if you can]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "full count \"eins … zehn\" once through",
+              "instruction": "the ten backwards, from \"zehn\" down to \"eins\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: full count \"eins … zehn\" once through]"
+              "source": "[YOU SAY: the ten backwards, from \"zehn\" down to \"eins\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn\"."
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -310,7 +1964,325 @@
             },
             {
               "kind": "speech",
-              "text": "Give 6–10 in German. (Sechs, sieben, acht, neun, zehn.) What consonant-drift connects zehn, ten, and decem? (Old d becomes Germanic t becomes German z.) Where do German's month names come from, unlike its numbers? (Latin — September etc.) Next chapter builds on this toward telling the time."
+              "text": "Count from six to ten. (Sechs, sieben, acht, neun, zehn.) Now all ten. Which of the ten is borrowed from Latin? (None — every one is the English number's twin.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-monate-latein",
+      "sequence": 225,
+      "title": "Homegrown numbers, imported months",
+      "headword": "(homegrown numbers, imported months)",
+      "romanization": "(homegrown numbers, imported months)",
+      "gloss": "German kept its own numbers and borrowed its month names, and the seams show",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f86709caaf6daf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have ten numbers and not one of them came from Latin. That is worth holding onto, because the very next thing German counts with did come from Latin — and you can hear the join."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a language keeps some words and buys others",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A language does not import evenly. The words people use every hour of every day are the hardest to displace, and the words that arrive with an institution come in whole."
+            },
+            {
+              "kind": "speech",
+              "text": "Numbers are the first kind. German counts with its own inherited words, and so does English. Month names are the second kind: they arrived with the Roman calendar, and both languages simply took them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Roman year began in March. Count from there and the last four months of the year land on the Latin words for seven, eight, nine and ten — which is why those four month names are numbers wearing a disguise, in German exactly as in English."
+            },
+            {
+              "kind": "speech",
+              "text": "Say each Latin number and then the German one that means the same thing:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "The Latin number inside",
+                "German counts it"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "The Latin number inside: septem — seven. German counts it: sieben.",
+                "The Latin number inside: octo — eight. German counts it: acht.",
+                "The Latin number inside: novem — nine. German counts it: neun.",
+                "The Latin number inside: decem — ten. German counts it: zehn."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Not one pair sounds like a pair. The month names came from one language and the counting words from another, and German never reconciled them — because there was never any reason to."
+            },
+            {
+              "kind": "speech",
+              "text": "You will meet the German month names themselves in a later chapter. What matters now is that when you get there, they will look Latin, and the numbers you have just learned will still be German."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sieben, acht, neun, zehn\" — the German four",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sieben, acht, neun, zehn\" — the German four]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"septem, octo, novem, decem\" — the Latin four",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"septem, octo, novem, decem\" — the Latin four]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which kind of word a language keeps, and which it buys",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which kind of word a language keeps, and which it buys]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Did German borrow its numbers? (No — they are its own.) Did it borrow its month names? (Yes, from Latin, with the calendar.) Why do four of them carry the wrong number? (The Roman year began in March, so septem was the seventh month.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-practice",
+      "sequence": 226,
+      "title": "Practice — counting, and asking for one",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "Chapter 6 payoff — counting out loud, and asking for one of something",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f3cbb6642d16298",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ten numbers, one article, and one fact about which words a language keeps. Put them to work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the ten, and what each one cost",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "Said",
+                "English twin"
+              ],
+              "columns": 3,
+              "rowCount": 10,
+              "utterances": [
+                "German: eins. Said: eyns. English twin: one.",
+                "German: zwei. Said: tsvy. English twin: two.",
+                "German: drei. Said: dry. English twin: three.",
+                "German: vier. Said: feer. English twin: four.",
+                "German: fünf. Said: fewnf. English twin: five.",
+                "German: sechs. Said: zeks. English twin: six.",
+                "German: sieben. Said: ZEE-ben. English twin: seven.",
+                "German: acht. Said: akht. English twin: eight.",
+                "German: neun. Said: noyn. English twin: nine.",
+                "German: zehn. Said: tsayn. English twin: ten."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Ten numbers and not one of them borrowed. Every one is the English word with a predictable coat on, which is the whole reason this chapter was cheap."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "Eins, zwei, drei … means One, two, three…",
+                "Und? means And?",
+                "… vier, fünf, sechs, sieben, acht, neun, zehn! means …four, five, six, seven, eight, nine, ten!",
+                "Sehr gut! means Very good!",
+                "Danke! — Bitte. means Thanks! — You're welcome."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every word in that exchange is one you already own, and seven of them you learned this chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the article, on the two nouns guten Tag and gute Nacht are built from:"
+            },
+            {
+              "kind": "speech",
+              "text": "der Tag becomes ein Tag, die Nacht becomes eine Nacht."
+            },
+            {
+              "kind": "speech",
+              "text": "Eins on its own keeps its -s, because nothing follows it. The moment a naming word arrives, the -s comes off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all ten, straight through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all ten, straight through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exchange, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exchange, both voices]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eins\" as a count, then \"ein\" as an article — the -s comes off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eins\" as a count, then \"ein\" as an article — the *-s* comes off]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to ten. When does eins become ein? (In front of a naming word.) Are the German numbers borrowed from Latin? (No — they are the English numbers' twins.) Which German words were borrowed from Latin? (The month names.)"
             }
           ]
         }

@@ -3,7 +3,7 @@
     "id": "GE-C07-wochentage-1",
     "language": "german",
     "chapter": 7,
-    "sequence": 225,
+    "sequence": 227,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "wide-table"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:b343e18a7a666572"
+    "sourceHash": "fnv1a64:8ff145ecded2aa7c"
   },
   "findings": []
 }

@@ -2,15 +2,33 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "label": "ch:numbers-1-10",
-  "canDo": "I can count from one to ten in German and use the numbers in a short exchange.",
+  "canDo": "I can count from one to ten in German, say why every one of those numbers is the English number's twin rather than a Latin borrowing, and use ein and eine for \"a\".",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C06-zahlen-6-10",
+    "lesson": "GE-C06-practice",
     "kind": "task",
-    "summary": "Complete GE-C06-zahlen-6-10, the canonical closing checkpoint, and demonstrate the chapter promise: count from one to ten in German and use the numbers in a short exchange.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "German's numbers are the one place the language is closer to English than any Romance language gets: they were never borrowed from Latin, they are German's own inherited words, and they are the near-twins of one to ten. This chapter teaches them one at a time, with the sound law that explains every difference between drei and three and between zehn and ten, and it collects each five into a run so that counting is one motion rather than ten remembered words. It closes with the article ein / eine, which is eins with its counting -s taken off exactly as English a and an are one worn down, and with the seam between words a language keeps and words it buys: the numbers are homegrown, the month names are Latin.",
+    "assesses": [
+      "GE-LEX-EINS-01",
+      "GE-LEX-ZWEI-01",
+      "GE-LEX-DREI-01",
+      "GE-LEX-VIER-01",
+      "GE-LEX-FUENF-01",
+      "GE-LEX-SECHS-01",
+      "GE-LEX-SIEBEN-01",
+      "GE-LEX-ACHT-01",
+      "GE-LEX-NEUN-01",
+      "GE-LEX-ZEHN-01",
+      "GE-LEX-ZAEHLEN-1-5-01",
+      "GE-LEX-ZAEHLEN-6-10-01",
+      "GE-LEX-EIN-EINE-01",
+      "GE-GRAMMAR-COUNTING-S-DROPS-02",
+      "GE-GRAMMAR-SOUND-LAW-01",
+      "GE-GRAMMAR-NATIVE-VS-LOAN-01",
+      "GE-ETYMON-GERMANIC-SIBLINGS-02"
+    ],
+    "note": "Chapter 6 is now generated from schema-v2 lessons, so the payoff is atom-scored rather than authored. It claims all ten number words, both counting runs, the article, and the four transferable rules -- that the counting -s drops before a noun, that a sound law is predictable rather than random, that German and English are siblings while Latin is a cousin, and that a language keeps its everyday words and buys its institutional ones. That is 17 of the chapter's 32 atoms. The per-number pronunciation and etymology atoms are drilled in their own lessons and are deliberately not claimed here: knowing that vier's v is said as an f is a lesson objective, not a test of whether the reader can count."
   }
 }

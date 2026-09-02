@@ -1,4 +1,4 @@
-# Session Map — German Chapters 1–5 and 14–21
+# Session Map — German Chapters 1–6 and 14–21
 
 How the lessons compose into commute sessions. Mechanics in
 [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md); same
@@ -130,6 +130,35 @@ The six-row conjugation grid was split: each pronoun gets its own session with
 the one ending it takes, so no lesson introduces more than one paradigm cell.
 *wo*, *was* and *in* were used in the chapter's dialogue and taught nowhere, and
 now come before the sentences that need them.
+
+Reviews of earlier words fold into each session per the interval schedule.
+
+## Chapter 6 — Numbers One to Ten
+
+| # | Session | What it adds |
+|---|---|---|
+| 70 | eins | one; **ei** is the English word *eye*, always |
+| 71 | zwei | two; **z** is *ts*, and the *w* English dropped from *two* |
+| 72 | drei | three; German has no *th* and puts **d** there |
+| 73 | (siblings, not borrowings) | a sound law is predictable; Latin is a cousin |
+| 74 | vier | four; **v** is said as an *f*, and **ie** is *ee* |
+| 75 | fünf | five; **ü**, and the old *p* that became *f* |
+| 76 | eins bis fünf | the first five as one run, forwards and backwards |
+| 77 | ein / eine | "a" is *eins* with its counting *-s* taken off |
+| 78 | sechs | six; **chs** is a plain *ks* |
+| 79 | sieben | seven; a German **s** buzzes before a vowel |
+| 80 | acht | eight; German *-cht-* is the *-ght-* English stopped saying |
+| 81 | neun | nine; the *oy* of *Deutsch* |
+| 82 | zehn | ten; *decem* to *ten* to *zehn*, one consonant walking |
+| 83 | sechs bis zehn | the second five, then all ten |
+| 84 | (homegrown numbers, imported months) | what a language keeps and what it buys |
+| 85 | practice | counting out loud, and the article on two known nouns |
+
+The two four-column reveal tables are gone: each number now carries its own
+English twin in its own lesson, and the two runs are what the recaps are for.
+The ten Proto-Indo-European reconstructions went with the tables; the rule they
+were evidence for became session 73. *ein Kaffee* and *eine Katze* became
+*ein Tag* and *eine Nacht*, which the reader has owned since the greetings.
 
 Reviews of earlier words fold into each session per the interval schedule.
 

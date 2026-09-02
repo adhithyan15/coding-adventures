@@ -1,68 +1,78 @@
 ---
+schema_version: 2
 id: GE-C06-zahlen-1-5
-sequence: 215
+spine_node: SPINE-TIME-OF-DAY
+sequence: 217
 chapter: 6
-type: word
-headword: eins, zwei, drei, vier, fünf
-gloss: the numbers 1–5
+type: practice
+headword: eins bis fünf
+gloss: the first five as one run — counting, not reciting five separate words
 concept_tag: GE-NUM-1-5
-prerequisites: []
-sounds: [diphthong-ei, umlaut-ue]
-roots: [germanic-numerals, grimms-law]
-etymology_hook: "eins/zwei/drei/vier/fünf are Germanic twins of English one/two/three/four/five — NOT borrowed from Latin, but cousins of it through Grimm's Law"
-est_minutes: 4
-reviews_of: [GE-C05-practice]
+prerequisites: [GE-C06-eins, GE-C06-zwei, GE-C06-drei, GE-C06-vier, GE-C06-fuenf]
+sounds: []
+roots: []
+etymology_hook: "five words learned one at a time only become counting when they run together, so the run is its own thing to practise"
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [GE-LEX-EINS-01, GE-LEX-ZWEI-01, GE-LEX-DREI-01, GE-LEX-VIER-01, GE-LEX-FUENF-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-V-AS-F-01, GE-SOUND-FUENF-UE-01]
+introduces:
+  knowledge: [GE-LEX-ZAEHLEN-1-5-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-EINS-01, GE-LEX-FUENF-01, GE-LEX-ZWEI-01, GE-LEX-DREI-01, GE-LEX-VIER-01, GE-LEX-ZAEHLEN-1-5-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-V-AS-F-01, GE-SOUND-FUENF-UE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C06-eins, GE-C06-zwei, GE-C06-drei, GE-C06-vier, GE-C06-fuenf]
 ---
 
-# eins, zwei, drei, vier, fünf — counting to five
+# eins bis fünf — counting to five
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-EINS-01, GE-LEX-FUENF-01] -->
 
-[PAUSE 2s] Here's where German feels **closer to English than any Romance
-language** does. German numbers aren't borrowed from Latin like Spanish or French
-— they're German's own Germanic words, and they're the near-twins of English
-*one, two, three, four, five*. The reason is a single sound-law.
+[PAUSE 2s] Five words, one at a time. Counting is something else: it is the five
+of them running together without a pause to think. That is what this lesson is
+for, and nothing in it is new.
 
-## Sounds you'll need
+## You'll want to know: the run
+<!-- hl-knowledge: introduces=[GE-LEX-ZAEHLEN-1-5-01]; assesses=[GE-LEX-EINS-01, GE-LEX-ZWEI-01, GE-LEX-DREI-01, GE-LEX-VIER-01, GE-LEX-FUENF-01] -->
 
-- `diphthong-ei` — **eins**, **zwei**, **drei** all carry the *ei* = English
-  "eye" sound: *eyns, tsvy, dry*.
-- `umlaut-ue` — **fünf**: the *ü* is "ee" said with rounded lips; *fünf* ≈ *fewnf*.
+> **eins, zwei, drei, vier, fünf**
 
-## The numbers, taken apart
+Said straight through: *eyns, tsvy, dry, feer, fewnf*.
 
-| German | English twin | shared ancestor | Latin cousin |
-|---|---|---|---|
-| **eins** (1) | **one** (and *a/an*) | PIE *\*óynos* | *ūnus* |
-| **zwei** (2) | **two** (*tw-* → *zw-*) | *\*dwóh₁* | *duo* |
-| **drei** (3) | **three** (*th-* → *d-*) | *\*tréyes* | *trēs* |
-| **vier** (4) | **four** | *\*kʷetwóres* | *quattuor* |
-| **fünf** (5) | **five** (*f… f*) | *\*pénkʷe* | *quīnque* |
+Every one is the English number with a German coat on:
 
-German and English are **siblings**; Latin is a **cousin**. So *drei* isn't from
-Latin *trēs* — both descend from one prehistoric word, and **Grimm's Law** is the
-recipe for the differences: an old ***t*** became Germanic ***th/d*** (*trēs* →
-*three* → *drei*), and an old ***p*** became ***f*** (*\*pénkʷe* → *five* /
-*fünf*, while Latin kept it as *quīnque*). Say *fünf* and *five* back to back —
-same word, one *p*-turned-*f* apart.
+| German | English | What changed |
+|---|---|---|
+| *eins* | one | nothing — English hid it in the spelling |
+| *zwei* | two | the *tw-* German still says |
+| *drei* | three | **th** flattened to **d** |
+| *vier* | four | the **v** is said as an **f** |
+| *fünf* | five | an older **p**, now an **f** in both |
 
-## Grammar Lens: eins → ein / eine (one = a/an)
-
-Like English *one/an* and Spanish *uno/un*, German **eins** becomes the article
-**ein** (masc./neut.) / **eine** (fem.) before a noun: *ein Kaffee* "a/one
-coffee," *eine Katze* "a/one cat." The counting form is *eins*; the article drops
-the *-s*. The other numbers don't change for the article.
+Not one of them is borrowed from Latin. All five are what an English speaker
+already half knows.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ZAEHLEN-1-5-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-V-AS-F-01, GE-SOUND-FUENF-UE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "eins, zwei, drei, vier, fünf" — count up]
-- [YOU SAY: each with its English twin — "zwei/two, drei/three, fünf/five"]
-- [YOU SAY: "fünf" then "five" — hear the *p→f* of Grimm's Law in *pénkʷe*]
+- [YOU SAY: "eins, zwei, drei, vier, fünf" — straight through, no gaps]
+- [YOU SAY: it again, faster]
+- [YOU SAY: it backwards — "fünf, vier, drei, zwei, eins"]
+
+[REPEAT x2] "eins, zwei, drei, vier, fünf"
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ZAEHLEN-1-5-01] -->
 
-[PAUSE 3s] Give 1–5 in German. (*Eins, zwei, drei, vier, fünf*.) Are these
-borrowed from Latin? (No — Germanic **twins** of English, cousins of Latin via
-**Grimm's Law**.) What sound-change links *fünf* and *five* to Latin *quīnque*?
-(Old *p* → Germanic *f*.) Next: **6–10**.
+[PAUSE 3s] Count to five. (*Eins, zwei, drei, vier, fünf*.) Now backwards.
+(*Fünf, vier, drei, zwei, eins*.) Which of the five is borrowed from Latin?
+(None of them.)

@@ -1,5 +1,129 @@
 # Changelog
 
+## German chapter 6 leaves the hand-written set
+
+Chapter 6 — the numbers one to ten — is now generated from its lessons.
+German's hand-written chapters: **8 -> 7**.
+
+### Two lessons were holding ten numbers
+
+| Method | Said |
+|---|---|
+| `handwritten_parity.py german` | a gap of **1 block** (5 in the `.tex`, 6 in the lessons) |
+| `grep -l '^chapter: 6$' lessons/*.md` | **2 lessons**, and the `.tex` renders **2 sections** |
+| the German the `.tex` teaches vs. the lessons that own it | **ten numbers owned by two lessons, five each**, plus *ein*/*eine*, the sound law, the *-cht-*/*-ght-* correspondence and the Latin-months observation owned by nobody — **fourteen items, two owners** |
+| **reading the tables** | two **four-column** tables, five rows each, against a `maxLinearisableTableColumns` of **3** |
+
+The first two methods were the misleading ones again, and for a new reason:
+this chapter's `.tex` is honest about its own size. Five blocks, two sections,
+two lessons — everything agrees, and everything is wrong, because *one lesson
+teaching five numbers* is five items in one sitting no matter how tidy the
+prose around it looks. The rule is one new item per lesson, and length is never
+a cost.
+
+**2 lessons became 16**: one per number, the sound law that makes the
+differences predictable rather than random, the article *ein*/*eine*, a run for
+each five, the seam between homegrown numbers and imported month names, and a
+closing exchange. All sixteen are `voice` and drivable.
+
+### The four-column tables are gone, and the narrator notices
+
+Both of the old tables were `German | English twin | shared ancestor | Latin
+cousin` — four columns, which `chapter-policy.json` calls unspeakable and the
+narration lineariser refuses outright. `narration.test.ts` counts corpus-wide
+refusals and it moves **51 -> 49**, the same shape and the same cause as the
+French chapter 6 entry sitting beside it in that pin.
+
+What replaced them is not a narrower version of the same grid. Each number now
+carries its own English twin in its own lesson, and the two recap tables are
+three-column runs (*German | Said | English twin*) that a narrator can read
+aloud.
+
+### The reconstructions went; the sound law stayed
+
+The `shared ancestor` column held ten Proto-Indo-European reconstructions.
+Every one is gone, and none of the teaching went with them. A beginner counting
+to ten cannot use a reconstruction; what they can use is the *rule* the
+reconstructions were evidence for, which now has a lesson of its own — German
+and English are siblings, Latin is a cousin, and a sound law is a change that
+caught every word at once, which is why *drei*/*three*/*tres* differ
+predictably.
+
+That lesson also connects to something the reader already owns: *gut* from
+*good* and *machen* from *make* are the **later**, German-only shift, and
+*zehn* is the one number where both shifts are visible in sequence — an old
+**d** to **t**, which is where English stopped, and then **t** to **ts**, which
+is where German went on.
+
+### Two examples were swapped for words the reader has
+
+*ein Kaffee* and *eine Katze* illustrated the article with two nouns the book
+does not teach until chapters 28 and 22. They are now *ein Tag* and *eine
+Nacht*, from *guten Tag* and *gute Nacht*, which the reader has owned since the
+greetings. Same point, no forward reference, and the *der/die* split it depends
+on is already theirs.
+
+### What moved
+
+- `handwritten.d/german-0006.json` is now a `targets.d/` entry.
+- `handwritten_parity.py german`: **40 -> 39** blocks at risk.
+- **No path shard was renumbered.** All sixteen lessons sit on the existing
+  `GE-PATH-015`, so `curriculum.d/path/` is untouched apart from that node's
+  own lesson list.
+- One sequence moved outside the chapter: `GE-C07-wochentage-1` from 225 to
+  227, because sixteen lessons need 211-226 and chapter 7 was sitting at 225.
+  Its lesson id did not move.
+- Both old lesson ids were **kept**, as the two recap lessons.
+  `GE-C06-zahlen-1-5` and `GE-C06-zahlen-6-10` are referenced as prerequisites
+  or reviews by six lessons in chapters 7, 8, 9, 12 and 31; retiring the ids
+  would have broken every one of them, and a run of five numbers is a real
+  thing to practise rather than a placeholder.
+
+### Counters, re-measured against the merged tree rather than composed
+
+| Measure | Before | After |
+|---|---|---|
+| German hand-written chapters | 8 | **7** |
+| atoms taught | 335 | **367** |
+| lessons with measured budgets | 181 | **197** |
+| atom-measurement-blind lessons | 16 | **14** |
+| chapters over the 12-atom budget | 5 | **6** |
+| culture claims | 18 | **19** |
+| forward references | 36 | **33** |
+| atoms never revisited | 78 | **83** |
+| reinforcement window misses | 687 | **800** |
+| `handwritten_parity.py` german | 40 | **39** blocks at risk |
+| corpus narration refusals | 51 | **49** |
+| book pages | 346 | **363** |
+
+RE-MEASURED ON RETRIEVAL. This chapter was authored before German chapters 14,
+15, 16, 17 and 19 landed, so every "before" above was recomputed against the
+merged tree rather than carried over from the original commit. `paradigmTables`
+(95), `lessonsWithFindings` (121), `ruleStatements` (30) and `fullParadigmGrids`
+(21) are all unchanged.
+
+Chapter 6 introduces **32** atoms, and is one chapter rather than two for the
+same reason chapter 5 was: German's opening chapters run 31, 23, 36, 30, 30 and
+now 32, because every word lesson here carries a sound atom and an etymon atom
+beside the word. Splitting the sixth chapter of six would break the pattern of
+the five before it and renumber everything after it. `atomChapterSpikes` moves
+5 -> 6 and records the debt where the opening range already sits.
+
+German stays pinned at **zero** cross-chapter prose references. Three drafts
+said "since chapter one"; all three now name the thing instead — "since your
+first *danke*", "the two nouns *guten Tag* and *gute Nacht* are built from".
+
+### Deliberately not carried over
+
+The ten PIE reconstructions, and Latin *unus* and *duo*, which added a fourth
+column without adding a claim the reader can use. Everything else the
+hand-written chapter taught is present: all ten numbers with their English
+twins, both sound-law showpieces, the *-cht-*/*-ght-* fossil, the article, and
+the Roman calendar's off-by-two months. The German month spellings themselves
+stay in chapter 9, where they are taught, and the lesson says so rather than
+previewing them.
+
+
 ## German chapter 14 leaves the hand-written set, and its age half moves to where the copula is
 
 `ch14-haben-alter.tex` is now generated — as **chapter 14, *To Have***, plus a
