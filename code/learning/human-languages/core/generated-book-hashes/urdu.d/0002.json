@@ -1,9 +1,10 @@
 {
   "language": "urdu",
   "chapter": 2,
-  "sourceHash": "fnv1a64:761ed729abf69b89",
+  "sourceHash": "fnv1a64:9e19cf8ad181db2b",
   "lessonIds": [
-    "UR-C02-mera-naam"
+    "UR-C02-mera-naam",
+    "UR-W02-alef"
   ],
   "tex": "urdu/book/chapters/ch02-give-your-name.tex"
 }

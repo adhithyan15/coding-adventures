@@ -1,0 +1,12 @@
+{
+  "id": "UR-EXT-014B-SCRIPT-YE-HE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write choti ye and gol he, and name the face gol he wears in each position of a word.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W05-ye",
+    "UR-W05-he"
+  ]
+}

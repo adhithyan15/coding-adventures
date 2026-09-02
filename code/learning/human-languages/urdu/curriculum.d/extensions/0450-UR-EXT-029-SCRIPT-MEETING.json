@@ -1,0 +1,19 @@
+{
+  "id": "UR-EXT-029-SCRIPT-MEETING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read aam, aasmaan, purana, aap, voh and hun off the page, and write the opening meeting exchange from dictation.",
+  "prerequisites": [
+    "UR-EXT-028-SCRIPT-COPULA"
+  ],
+  "lessons": [
+    "UR-C18-aam",
+    "UR-C18-aasmaan",
+    "UR-C18-purana",
+    "UR-C18-review-madda",
+    "UR-C18-voh",
+    "UR-C18-review-aap",
+    "UR-C18-practice"
+  ]
+}

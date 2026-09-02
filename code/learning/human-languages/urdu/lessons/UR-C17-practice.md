@@ -9,7 +9,7 @@ headword: "ہے میں نہیں ماں"
 romanization: "hai, maiṅ, nahīṅ, māṅ"
 gloss: "three letters, and the sentence the book opened with becomes a sentence you can write"
 concept_tag: UR-C17-PRACTICE
-prerequisites: [UR-W17-nun-ghunna]
+prerequisites: [UR-C17-review-hai, UR-W06-nun-ghunna]
 sounds: [rtl, short-vowels-unwritten, nasal-vowel]
 roots: []
 etymology_hook: "Nothing new is taught here. Three letters were added to seven, and a sentence the reader has been saying since the second chapter of their life in Urdu comes off the page whole."
@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-W17-he, UR-W17-bari-ye, UR-W17-nun-ghunna, UR-C17-yih, UR-C17-kaam, UR-C17-kahan, UR-C17-maan, UR-C16-practice]
+reviews_of: [UR-W05-he, UR-W06-bari-ye, UR-W06-nun-ghunna, UR-C17-yih, UR-C17-kaam, UR-C17-kahan, UR-C17-maan, UR-C16-practice]
 ---
 
 # Practice — ten letters, and a sentence that comes off the page
@@ -37,8 +37,8 @@ reviews_of: [UR-W17-he, UR-W17-bari-ye, UR-W17-nun-ghunna, UR-C17-yih, UR-C17-ka
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-HE-01, UR-SCRIPT-BARI-YE-01, UR-SCRIPT-NUN-GHUNNA-WRITE-01] -->
 
-[PAUSE 2s] Write the three letters this chapter gave you and name each one:
-ہ، ے، ں.
+[PAUSE 2s] Write the three letters this chapter has been cashing in, and name
+each one: ہ، ے، ں. You learned all three in chapters five and six.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[UR-SCRIPT-READ-HAI-01]; assesses=[UR-LEX-YIH, UR-LEX-KAAM, UR-LEX-KAHAN, UR-LEX-MAAN, UR-LEX-MAIN, UR-LEX-NAHIN, UR-SCRIPT-SEVEN-READ-01] -->

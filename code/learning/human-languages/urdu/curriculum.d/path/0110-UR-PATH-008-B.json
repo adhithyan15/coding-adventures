@@ -3,11 +3,14 @@
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
     "UR-C07-parhna",
-    "UR-C07-likhna"
+    "UR-C07-likhna",
+    "UR-W08-vao"
   ],
   "before": [],
   "inline": [
     "UR-EXT-018-MIND-VERBS-B"
   ],
-  "after": []
+  "after": [
+    "UR-EXT-018D-SCRIPT-VAO"
+  ]
 }

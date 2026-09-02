@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: formal
 variety: contemporary-standard-urdu
-reviews_of: [UR-C18-voh, UR-W18-pe, UR-C03-aap-ka-naam-kya-hai, UR-C04-aap-kaise-hain, UR-C01-salam]
+reviews_of: [UR-C18-voh, UR-W07-pe, UR-C03-aap-ka-naam-kya-hai, UR-C04-aap-kaise-hain, UR-C01-salam]
 ---
 
 # The opening exchange, read off the page

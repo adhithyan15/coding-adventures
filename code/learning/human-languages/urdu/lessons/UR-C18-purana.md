@@ -9,7 +9,7 @@ headword: پرانا
 romanization: purānā
 gloss: old — inherited from Sanskrit purāṇa "belonging to former times," and a cousin of English fore and first
 concept_tag: UR-OLD
-prerequisites: [UR-W18-alif-madda]
+prerequisites: [UR-C18-aasmaan, UR-W07-alif-madda]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-purana, pie-per]
 etymology_hook: purānā descends from Sanskrit purāṇa "ancient, belonging to former times", built on purā "formerly", from Proto-Indo-European *per- / *pr̥H- "forward, before" -- the root behind Greek pró, Latin pro and prior, and English fore, former, first and before; the Sanskrit texts called the Purāṇas carry the same word, so the name of that literature means, quite literally, "the old ones".
@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-W18-alif-madda, UR-C13-kala, UR-C13-nila]
+reviews_of: [UR-W07-alif-madda, UR-C13-kala, UR-C13-nila]
 ---
 
 # پرانا — "old," and the word behind the Purāṇas

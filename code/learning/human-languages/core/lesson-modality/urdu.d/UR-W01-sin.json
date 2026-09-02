@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "UR-W01-sin",
+    "language": "urdu",
+    "chapter": 1,
+    "sequence": 35,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:336a22aac8cee790",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
