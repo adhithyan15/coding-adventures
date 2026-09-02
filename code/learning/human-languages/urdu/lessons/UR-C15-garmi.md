@@ -38,7 +38,7 @@ reviews_of: [UR-C15-hawa]
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN] -->
 
 [PAUSE 2s] Recall **ہوا** — wind, a loan of a loan. This word is Persian
-too, but its root behaves like **دل**'s and **سفید**'s: it keeps going
+too, but its root behaves like *dil*'s and *safed*'s: it keeps going
 back to a shared PIE root, with a genuine cousin waiting on the other
 side — though this time the cousin needs a careful claim, not a confident
 one.
@@ -48,7 +48,7 @@ one.
 
 > **گرمی** — *garmī* — **heat**
 
-> **آج بہت گرمی ہے۔** — *āj bahut garmī hai.* — "It's very hot today."
+> *āj bahut garmī hai.* — "It's very hot today."
 
 **گرمی** is feminine.
 
@@ -59,7 +59,7 @@ From the right edge: **گ**, **ر**, **م**, **ی**.
 
 **گ** *gāf* is new: it is **ک** *kāf*, already known, with one extra
 stroke laid across the top — the same dot-count logic that separated
-**ب** from **پ**, except this time the letter gains a stroke rather than a
+*be* from **پ**, except this time the letter gains a stroke rather than a
 dot.
 
 ## The word, taken apart — one secure cousin, one disputed
@@ -82,7 +82,7 @@ is Greek's, not English's plainest weather word.
 - [YOU NAME: **گ**'s relation to **ک** — one extra stroke, not a dot]
 - [YOU SORT: secure cousin — Greek **thermós**; disputed cousin — English
   **warm**]
-- [YOU SAY: **بارش، دھوپ، ہوا، گرمی** — all four weather words so far]
+- [YOU SAY: *bārish, dhūp, hawā, garmī* — all four weather words so far]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-GARMI, UR-ETYMON-GARMI-WARM-PIE, UR-LEX-KHANDAN, UR-LEX-MUNH] -->
@@ -90,7 +90,7 @@ is Greek's, not English's plainest weather word.
 [PAUSE 3s] What does **گرمی** mean, and is it masculine or feminine?
 (**Heat**; **feminine**.) Which English word is **گرمی**'s secure cousin,
 and which is only disputed? (**Secure: thermal/thermometer, via Greek
-thermós. Disputed: warm.**) Name your family in Urdu. (**خاندان.**) What
+thermós. Disputed: warm.**) Name your family in Urdu. (**khāndān.**) What
 does **منہ** mean? (**Mouth.**)
 
 Sources: [Wiktionary: گرمی](https://en.wiktionary.org/wiki/%DA%AF%D8%B1%D9%85%DB%8C), [Wiktionary: warm](https://en.wiktionary.org/wiki/warm).

@@ -86,4 +86,7 @@ table heart_chamber_vessel {
     source "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
     trust authoritative
+    cites "The right ventricle pumps blood through the right ventricular outflow tract, across the pulmonic valve, and into the pulmonary artery that distributes it to the lungs for oxygenation." locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
+    cites "All four of these veins open into the left atrium that acts as a collection chamber for oxygenated blood." locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
+    cites "The left ventricle is the main pumping chamber of the left heart, then pumps, sending freshly oxygenated blood to the systemic circulation through the aortic valve." locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
 }

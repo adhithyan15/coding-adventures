@@ -52,7 +52,7 @@ that phrase meant.
 ## Grammar Lens: a noun that will not pick a gender
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-DOST] -->
 
-**بھائی** was masculine and needed **merā**. **بہن** was feminine and
+*bhāī* was masculine and needed **merā**. *bahan* was feminine and
 needed **merī**. **دوست** breaks the pattern on purpose: it takes **the
 same form** for a male or a female friend, and **merā dost** works for
 either. Native Urdu nouns almost always commit to a gender; this Persian
@@ -69,7 +69,7 @@ someone **tasted and chosen**, the same picture as *lenā*'s worn-down
 "take."
 
 Persian's own word for "ask," **porsīdan**, turned out to share one root
-with Urdu's inherited **پوچھنا**. **دوست** is not that kind of cousin —
+with Urdu's inherited *pūchhnā*. **دوست** is not that kind of cousin —
 Urdu has no inherited word from *\*ǵews-* to compare it against — but it is
 the same general shape: an old Indo-European root, arriving in Urdu by the
 Persian road alone.

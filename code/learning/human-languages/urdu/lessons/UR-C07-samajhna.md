@@ -37,7 +37,7 @@ reviews_of: [UR-C07-sochna, UR-C06-janna, UR-C04-thik, UR-C04-main-hun]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SOCHNA, UR-SCRIPT-CHE-LETTER, UR-LEX-JANNA, UR-ETYMON-JANNA-KNOW, UR-GRAMMAR-NA-INFINITIVE] -->
 
-[PAUSE 2s] You can think — *sochnā*, three dots under the **چ**. You can know —
+[PAUSE 2s] You can think — *sochnā*, three dots under its *che*. You can know —
 *jānnā*. Between brooding and knowing sits the moment a thing clicks, and Urdu
 has a verb for exactly that.
 
@@ -59,18 +59,18 @@ From the right edge: **س** *s*, **م** *m*, **ج** *j*, then **ھ**, then **ن*
 a consonant you pronounce. Its whole job is to grab the letter before it and add
 a puff of breath: **ج** *j* plus **ھ** gives **جھ** *jh*.
 
-You have used it once already. **ٹھیک** *ṭhīk* is **ٹ** plus this same **ھ** —
+You have used it once already. In *ṭhīk*, the retroflex *ṭe* takes this same **ھ** —
 retroflex *ṭ*, then the breath. One letter, one job.
 
 Keep it apart from **ہ**, *gol he*, “round he,” which **is** a real *h* and which
-you write in **ہوں** *hūṅ* and **ہونا** *honā*. Round **ہ** speaks; two-eyed **ھ**
+you write in *hūṅ* and *honā*. Round **ہ** speaks; two-eyed **ھ**
 only breathes on its right-hand neighbour.
 
 ## Grammar Lens: into the frame
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-SAMAJHNA] -->
 
-> **میں سمجھتا ہوں** — *maiṅ samajhtā hūṅ* — **I understand** (man speaking)
-> **میں سمجھتی ہوں** — *maiṅ samajhtī hūṅ* — **I understand** (woman speaking)
+> *maiṅ samajhtā hūṅ* — **I understand** (man speaking)
+> *maiṅ samajhtī hūṅ* — **I understand** (woman speaking)
 
 ## The word, taken apart — waking up, fully
 <!-- hl-knowledge: introduces=[UR-ETYMON-SAMAJHNA-WAKE]; assesses=[UR-LEX-SAMAJHNA] -->

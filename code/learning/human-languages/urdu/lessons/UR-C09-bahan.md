@@ -58,7 +58,7 @@ agreement: **میرا** *merā* before a masculine noun, **میری** *merī* be
 feminine one — regardless of whether the speaker is a man or a woman. It is
 the noun's gender that decides, never the speaker's.
 
-> **میرا بھائی، میری بہن۔** — *merā bhāī, merī bahan.* — my brother, my
+> *merā bhāī, merī bahan.* — my brother, my
 > sister.
 
 **نام** in Chapter 2's **merā nām** is masculine, which is why that phrase
@@ -72,7 +72,7 @@ a feminine noun finally showed up.
 to **bhaj-**, "to share, to portion out" — a sister pictured as a co-heir,
 sharing the family's portion. Specialists flag a real problem with the sound
 history, though: the aspiration in *bhaginī* does not shift the way this
-derivation needs it to. Hold this one loosely, the way **پسند**'s *candēre*
+derivation needs it to. Hold this one loosely, the way *pasand*'s *candēre*
 link was held loosely — a plausible story, not a settled one like *bhāī*'s.
 
 ## Guided Practice

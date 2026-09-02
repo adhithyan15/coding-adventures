@@ -9,10 +9,10 @@ it("pins Italian continuity", () => expectLanguageContinuity("italian"));
 it("pins Italian modality", () => expectLanguageModality("italian"));
 it("pins Italian lesson-content budgets", () =>
   expectLanguageLessonBudgets("italian", {
-    lessons: 85,
+    lessons: 93,
     idioms: 4,
     senses: 9,
-    cultureClaims: 10,
+    cultureClaims: 11,
     unitPrefix: "IT",
   }));
 

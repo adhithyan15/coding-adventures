@@ -37,8 +37,8 @@ reviews_of: [UR-C14-topi, UR-C14-juta, UR-C14-qamiz]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-LEX-JUTA, UR-LEX-QAMIZ] -->
 
-[PAUSE 2s] Recall this chapter's three words: **قمیض**, borrowed from
-Arabic through Persian; **جوتا**, inherited all the way from Proto-Indo-
+[PAUSE 2s] Recall this chapter's three words: *qamīz*, borrowed from
+Arabic through Persian; *jūtā*, inherited all the way from Proto-Indo-
 European; **ٹوپی**, borrowed *out* of Urdu into English as *topee*. This
 chapter's last word takes the shortest road of all.
 
@@ -65,7 +65,7 @@ and the Persian-Arabic literary layer borrowed centuries ago. **کوٹ** is
 the first clear example of a **third** layer — everyday English loans,
 arriving through more recent contact. And this chapter has now shown every
 direction a loanword can travel in one small set of four: Persian and
-Arabic *into* Urdu (**قمیض**), Urdu straight *out* into English
+Arabic *into* Urdu (*qamīz*), Urdu straight *out* into English
 (**ٹوپی**), and English straight *into* Urdu (**کوٹ**).
 
 ## Guided Practice
@@ -74,9 +74,9 @@ Arabic *into* Urdu (**قمیض**), Urdu straight *out* into English
 - [YOU SAY: **koṭ** — coat; then **merā koṭ nīlā hai**]
 - [YOU NAME: three layers now — inherited, Persian-Arabic, and modern
   English]
-- [YOU SORT: **قمیض** in, **ٹوپی** out, **کوٹ** in — three loans, three
+- [YOU SORT: *qamīz* in, **ٹوپی** out, **کوٹ** in — three loans, three
   directions]
-- [YOU SAY: all four clothing words — **قمیض, جوتا, ٹوپی, کوٹ** — each
+- [YOU SAY: all four clothing words — *qamīz, jūtā, ṭopī, koṭ* — each
   with a color from the earlier chapter]
 
 ## Wrap-up Recall
@@ -86,8 +86,8 @@ Arabic *into* Urdu (**قمیض**), Urdu straight *out* into English
 **borrowed directly from English**.) Which of this chapter's four words
 was borrowed *out of* Urdu rather than into it? (**ٹوپی, into English as
 topee.**) Recall the farewell that closes almost any Urdu conversation —
-say it now. (**خدا حافظ.**) What does the standard reply to the wellbeing
-question say about the speaker? (**میں ٹھیک ہوں، شکریہ — "I am fine,
+say it now. (*khudā hāfiz.*) What does the standard reply to the wellbeing
+question say about the speaker? (**میں *ṭhīk* ہوں، شکریہ — "I am fine,
 thank you."**)
 
 Sources: [Wiktionary: کوٹ](https://en.wiktionary.org/wiki/%DA%A9%D9%88%D9%B9).
