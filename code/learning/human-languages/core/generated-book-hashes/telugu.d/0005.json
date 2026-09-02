@@ -1,0 +1,18 @@
+{
+  "language": "telugu",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:48344604a6ce3cbf",
+  "lessonIds": [
+    "TE-S01-letter-ta",
+    "TE-C05-maatlaadu",
+    "TE-S147-digit-8",
+    "TE-C05-nenu-telugu-maatlaadataanu",
+    "TE-S111-letter-sa",
+    "TE-C05-undu",
+    "TE-S125-letter-ha",
+    "TE-C05-pani-ceyu",
+    "TE-S148-digit-9",
+    "TE-C05-practice"
+  ],
+  "tex": "telugu/book/chapters/ch05-first-verbs.tex"
+}

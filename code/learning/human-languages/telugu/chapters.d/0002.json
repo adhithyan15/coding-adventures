@@ -8,9 +8,33 @@
   ],
   "payoff": {
     "lesson": "TE-C02-practice",
-    "kind": "task",
-    "summary": "Complete TE-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Telugu, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "production",
+    "summary": "A first real exchange — give your name, ask for someone else's, say you are glad to meet them. Built the same way as the greetings: each piece taken apart, its letters and its root, then assembled. నా పేరు అరుణ్. / మీ పేరు ఏమిటి?",
+    "assesses": [
+      "TE-LEX-C02-EMITI-01",
+      "TE-ETYMON-C02-EMITI-02",
+      "TE-LEX-C02-MII-PERU-EMITI-01",
+      "TE-ETYMON-C02-MII-PERU-EMITI-02",
+      "TE-GRAMMAR-C02-MII-PERU-EMITI-03",
+      "TE-LEX-C02-NAA-PERU-01",
+      "TE-ETYMON-C02-NAA-PERU-02",
+      "TE-GRAMMAR-C02-NAA-PERU-03",
+      "TE-LEX-C02-NAA-01",
+      "TE-ETYMON-C02-NAA-02",
+      "TE-LEX-C02-NUVVU-MIIRU-01",
+      "TE-ETYMON-C02-NUVVU-MIIRU-02",
+      "TE-GRAMMAR-C02-NUVVU-MIIRU-03",
+      "TE-LEX-C02-PERU-01",
+      "TE-ETYMON-C02-PERU-02",
+      "TE-LEX-C02-SANTOSHAM-01",
+      "TE-ETYMON-C02-SANTOSHAM-02",
+      "TE-SCRIPT-RECOG-02",
+      "TE-SCRIPT-RECOG-04",
+      "TE-SCRIPT-RECOG-05",
+      "TE-SCRIPT-RECOG-08",
+      "TE-SCRIPT-RECOG-109",
+      "TE-SCRIPT-RECOG-140",
+      "TE-SCRIPT-RECOG-141"
+    ]
   }
 }
