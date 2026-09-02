@@ -7,6 +7,7 @@ chapter: 9
 type: word
 headword: ಕ್ಷಮಿಸಿ
 gloss: forgive me / sorry (kṣamisi — imperative of kṣamisu, "to forgive," from Sanskrit kṣamā)
+romanization: "kṣamisi"
 concept_tag: COURTESY-SORRY
 prerequisites: [KA-C08-dayavittu]
 sounds: [kannada-conjunct-kssa, kannada-vowel-sign-i]

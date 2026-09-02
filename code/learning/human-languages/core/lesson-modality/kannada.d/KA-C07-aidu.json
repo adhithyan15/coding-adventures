@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C07-aidu",
+    "language": "kannada",
+    "chapter": 7,
+    "sequence": 340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04ccfb2c820f9438"
+  },
+  "findings": []
+}

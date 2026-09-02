@@ -9,26 +9,26 @@ headword: ਠੀਕ
 romanization: "ṭhīk"
 gloss: "fine, well — and the reply maiṁ ṭhīk hāṁ"
 concept_tag: WORD-WELL
-prerequisites: [PA-C03-main, PA-C03-tusi-kivein-ho]
+prerequisites: [PA-C03-main, PA-C03-tusi-kivein-ho, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava, PA-S03-retroflex-row]
 sounds: [retroflex-tha, bihari-ii]
 roots: []
 duration:
   max_seconds: 220
 requires:
-  knowledge: [PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-PHRASE-HOW-ARE-YOU-03]
+  knowledge: [PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-PHRASE-HOW-ARE-YOU-03, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-DDA-01, PA-SCRIPT-RECOG-DULAVA-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-TAINKA-01, PA-SCRIPT-RECOG-TTHA-01]
 introduces:
   knowledge: [PA-LEX-THIK-03, PA-PHRASE-I-AM-FINE-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-PHRASE-HOW-ARE-YOU-03, PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-LEX-THIK-03, PA-PHRASE-I-AM-FINE-03]
+  knowledge: [PA-PHRASE-HOW-ARE-YOU-03, PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-LEX-THIK-03, PA-PHRASE-I-AM-FINE-03, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-DDA-01, PA-SCRIPT-RECOG-DULAVA-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-TAINKA-01, PA-SCRIPT-RECOG-TTHA-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C03-main, PA-C03-tusi-kivein-ho]
+reviews_of: [PA-C03-main, PA-C03-tusi-kivein-ho, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava, PA-S03-retroflex-row]
 ---
 
 # ਠੀਕ (ṭhīk) — "fine," and how to answer
@@ -39,7 +39,7 @@ reviews_of: [PA-C03-main, PA-C03-tusi-kivein-ho]
 [PAUSE 2s] The word that answers "how are you?" — and does a dozen other jobs.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-DDA-01, PA-SCRIPT-RECOG-DULAVA-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-TAINKA-01, PA-SCRIPT-RECOG-TTHA-01] -->
 
 **ਠ** (*ṭha*, a **retroflex** *th* — tongue curled to the roof of the mouth) +
 **ੀ** (long *ī*) + **ਕ** (*ka*) → **ਠੀਕ** (*ṭhīk*). The retroflex ਟ-ਠ-ਡ series is

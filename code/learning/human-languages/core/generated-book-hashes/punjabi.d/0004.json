@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:f226bda91d8d36f8",
+  "lessonIds": [
+    "PA-C04-phir",
+    "PA-C04-milaange",
+    "PA-C04-phir-milaange",
+    "PA-R04-wellbeing-r2",
+    "PA-C04-rab-raakha",
+    "PA-S04-phappha-gagga",
+    "PA-C04-practice"
+  ],
+  "tex": "punjabi/book/chapters/ch04-farewells.tex"
+}

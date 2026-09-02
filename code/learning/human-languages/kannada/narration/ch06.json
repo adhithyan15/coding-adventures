@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:74b2dfa28b1756f7",
+  "sourceHash": "fnv1a64:0e6b822e6fabc31e",
   "lessons": [
     {
       "id": "KA-C06-dative-ge",
@@ -165,6 +165,171 @@
             {
               "kind": "speech",
               "text": "What does -ಗೆ (-ge) mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun.) What is \"to me\"? (ನನಗೆ nanage.) Why does Kannada have g where its sisters have k? (Kannada voiced the k between vowels; doubled -kke resisted and kept the old hard form.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-S06-letter-da",
+      "sequence": 315,
+      "title": "ದ (da) — one character, met inside words you already say",
+      "headword": "ದ",
+      "romanization": "da",
+      "gloss": "the single character ದ — recognised inside words you already say",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c16e5f9d3632f91d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ದ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ದ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ತ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ದ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದ — da."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not d, it is da."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ದ (da) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಧನ್ಯವಾದ dhanyavāda — thank you (dhanyavāda — \"an utterance of 'worthy'\")."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೌದು haudu — yes (haudu)."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? nīvu hēgiddīrā — how are you? (respectful)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ದ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ದ (da) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ದ (da) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ದ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ಧನ್ಯವಾದ, ಹೌದು, ನಮಸ್ಕಾರ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ದ three times, saying da as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ದ three times, saying *da* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ದ (da) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ದ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ದ? What sound does it carry? (da.) Name one word you already say that contains it."
             }
           ]
         }
@@ -506,12 +671,12 @@
       ]
     },
     {
-      "id": "KA-S01-letter-na",
-      "sequence": 335,
-      "title": "ನ (na) — one character, met inside words you already say",
-      "headword": "ನ",
-      "romanization": "na",
-      "gloss": "the single character ನ — recognised inside words you already say",
+      "id": "KA-S114-vowel-sign-o",
+      "sequence": 332,
+      "title": "◌ೊ — one character, met inside words you already say",
+      "headword": "ೊ",
+      "romanization": "o",
+      "gloss": "the single character ೊ — recognised inside words you already say",
       "script": "kannada",
       "modality": "pen",
       "derivedModality": "pen",
@@ -520,7 +685,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d67a503abb84fdee",
+      "sourceHash": "fnv1a64:00417b571dacee15",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -528,10 +693,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ನ",
+          "Script you'll notice: ◌ೊ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ನ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ೊ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -547,7 +712,7 @@
             },
             {
               "kind": "speech",
-              "text": "Rounded and looping like Telugu (its sister script), most letters topped by a small curved headstroke; no continuous top line."
+              "text": "Before the new one: ಬ — what does it do?"
             },
             {
               "kind": "pause",
@@ -564,46 +729,34 @@
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice: ನ",
+          "title": "Script you'll notice: ◌ೊ",
           "segments": [
             {
               "kind": "speech",
-              "text": "ನ — na."
+              "text": "◌ೊ — o."
             },
             {
               "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not n, it is na."
+              "text": "It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with o. Replaces, not adds — the a is gone."
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ನ (na) somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ೊ somewhere inside it:"
             },
             {
               "kind": "speech",
-              "text": "ನಮಸ್ಕಾರ namaskāra — hello / greetings (namaskāra — \"a making of a bow\")."
-            },
-            {
-              "kind": "speech",
-              "text": "ಧನ್ಯವಾದ dhanyavāda — thank you (dhanyavāda — \"an utterance of 'worthy'\")."
-            },
-            {
-              "kind": "speech",
-              "text": "ನನ್ನ nanna — my."
-            },
-            {
-              "kind": "speech",
-              "text": "ನೀನು / ನೀವು nīnu / nīvu — you (familiar / respectful)."
+              "text": "ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು nanage kannaḍa gottu — 'I know Kannada'."
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ನ — copy what you see",
+          "title": "Writing: ◌ೊ — copy what you see",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ನ (na) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ೊ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -625,168 +778,11 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ನ (na) in the ones that have it",
+              "instruction": "at these words, and find ◌ೊ in the ones that have it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find ನ in the ones that have it]"
-            },
-            {
-              "kind": "speech",
-              "text": "ನಮಸ್ಕಾರ, ಧನ್ಯವಾದ, ಹೌದು."
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "ನ three times, saying na as you finish each one",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: ನ three times, saying *na* as you finish each one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ನ (na) once more",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ನ once more]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which character is this — ನ? What sound does it carry? (na.) Name one word you already say that contains it."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "KA-S110-letter-ba",
-      "sequence": 336,
-      "title": "ಬ (ba) — one character, met inside words you already say",
-      "headword": "ಬ",
-      "romanization": "ba",
-      "gloss": "the single character ಬ — recognised inside words you already say",
-      "script": "kannada",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:f2b4c7dd8f011b76",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script you'll notice: ಬ",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಬ and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Rounded and looping like Telugu (its sister script), most letters topped by a small curved headstroke; no continuous top line."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script you'll notice: ಬ",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಬ — ba."
-            },
-            {
-              "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not b, it is ba."
-            },
-            {
-              "kind": "speech",
-              "text": "You already say these, and every one of them has ಬ (ba) somewhere inside it:"
-            },
-            {
-              "kind": "speech",
-              "text": "ಹೋಗಿ ಬರುತ್ತೇನೆ hōgi baruttēne — goodbye (lit. \"I'll go and come back\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing: ಬ — copy what you see",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Put your pen on ಬ (ba) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
-            },
-            {
-              "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "at these words, and find ಬ (ba) in the ones that have it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find ಬ in the ones that have it]"
+              "source": "[YOU LOOK: at these words, and find ◌ೊ in the ones that have it]"
             },
             {
               "kind": "speech",
@@ -795,20 +791,20 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ಬ three times, saying ba as you finish each one",
+              "instruction": "◌ೊ three times, saying o as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ಬ three times, saying *ba* as you finish each one]"
+              "source": "[YOU TRACE: ◌ೊ three times, saying *o* as you finish each one]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ಬ once more",
+              "instruction": "back at any page of this chapter and find ◌ೊ once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ಬ once more]"
+              "source": "[YOU LOOK: back at any page of this chapter and find ◌ೊ once more]"
             }
           ]
         },
@@ -825,7 +821,168 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ಬ? What sound does it carry? (ba.) Name one word you already say that contains it."
+              "text": "Which character is this — ◌ೊ? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts o on; takes the built-in a off.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-S115-letter-i",
+      "sequence": 333,
+      "title": "ಇ — one character, met inside words you already say",
+      "headword": "ಇ",
+      "romanization": "i",
+      "gloss": "the single character ಇ — recognised inside words you already say",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6f5da689eddd4186",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ಇ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಇ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ◌ೊ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ಇ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇ — i."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape the vowel i takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ಇ somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಇಲ್ಲ illa — no / there isn't (illa — the negative)."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇರು iru — to be, to stay, to live."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ಇ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ಇ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ಇ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ಇ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ಇಲ್ಲ, ಇರು, ನಮಸ್ಕಾರ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ಇ three times, saying i as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ಇ three times, saying *i* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ಇ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ಇ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ಇ? What sound does it carry? (i.) Name one word you already say that contains it."
             }
           ]
         }

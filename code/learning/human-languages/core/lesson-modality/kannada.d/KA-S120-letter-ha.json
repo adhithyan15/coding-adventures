@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S120-letter-ha",
     "language": "kannada",
-    "chapter": 16,
-    "sequence": 441,
+    "chapter": 11,
+    "sequence": 395,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:2b7ed341b78dd87d",
+    "sourceHash": "fnv1a64:37fa701dc1160a9a",
     "detachableSegments": [
       "Script you'll notice: ಹ",
       "Writing: ಹ — copy what you see"

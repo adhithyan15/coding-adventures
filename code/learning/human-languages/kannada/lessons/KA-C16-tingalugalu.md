@@ -7,6 +7,7 @@ chapter: 16
 type: word
 headword: ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತೀಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ
 gloss: the twelve lunisolar months — NOT Kannada's own calendar like Tamil/Malayalam's, but the same pan-Indian Sanskritic system Hindi's Vikram Samvat uses
+romanization: "caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa"
 concept_tag: KA-MONTHS
 prerequisites: [KA-C15-niiru-akki]
 sounds: [kannada-conjunct-shtha, kannada-anusvara]

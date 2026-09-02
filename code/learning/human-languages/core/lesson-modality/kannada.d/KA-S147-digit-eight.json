@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S147-digit-eight",
+    "language": "kannada",
+    "chapter": 16,
+    "sequence": 447,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1430fab2a3d7ac5e",
+    "detachableSegments": [
+      "Script you'll notice: ೮",
+      "Writing: ೮ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

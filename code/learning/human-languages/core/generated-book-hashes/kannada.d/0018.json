@@ -1,10 +1,11 @@
 {
   "language": "kannada",
   "chapter": 18,
-  "sourceHash": "fnv1a64:cd2c2292e36f87ad",
+  "sourceHash": "fnv1a64:23dea0cf003151ab",
   "lessonIds": [
     "KA-C18-gante",
-    "KA-S122-letter-ca"
+    "KA-S127-letter-uu",
+    "KA-S149-digit-zero"
   ],
   "tex": "kannada/book/chapters/ch18-telling-time.tex"
 }

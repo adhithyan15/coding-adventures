@@ -1,10 +1,10 @@
 {
   "language": "kannada",
   "chapter": 17,
-  "sourceHash": "fnv1a64:c2391200d4315147",
+  "sourceHash": "fnv1a64:fce15c2d5d8b6191",
   "lessonIds": [
     "KA-C17-madhyaahna-madhyaraatri",
-    "KA-S121-letter-sa"
+    "KA-S148-digit-nine"
   ],
   "tex": "kannada/book/chapters/ch17-noon-and-midnight.tex"
 }

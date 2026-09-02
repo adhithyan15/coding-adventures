@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S127-letter-uu
 spine_node: SPINE-MEET-GREET
-sequence: 521
+sequence: 465
 delivery: script
-chapter: 23
+chapter: 18
 type: writing
 headword: "ಊ"
 gloss: the single character ಊ — the long partner of the vowel you met two chapters ago

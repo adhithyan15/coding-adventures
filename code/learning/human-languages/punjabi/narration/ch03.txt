@@ -1,8 +1,50 @@
 Punjabi, chapter 3: How Are You?.
-7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 7.
+Lesson 1 of 9.
+ਨ, ੀ, ੈ — three pieces met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਨ, ੀ, ੈ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Nahī̃ and maiṁ are already in your mouth. Today they arrive on the page.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: tuhāḍā nāṁ kī hai?, khushī hoī]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਨ, ੀ, ੈ.
+ਨ.
+nannā — na. A consonant, the dental n: the tongue touches the teeth, not the ridge behind them.
+ੀ.
+bihārī — -ī. A mātrā for the long ee of see. It stands to the right and hooks back over the head-line.
+ੈ.
+dulāvā̃ — -ai. A mātrā built from two strokes above the line — dulāvā̃ means “the double lāvā̃.”
+Now put them where you have already heard them:
+ਨ + ਹ + ੀ + ਂ becomes ਨਹੀਂ (nahī̃) ਮ + ੈ + ਂ becomes ਮੈਂ (maiṁ, “I”) ਨਹੀਂ — nahī̃ — no.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਨ, ੀ, ੈ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਨਹੀਂ and point to each of today's pieces in turn]
+[pause 8 seconds for the answer]
+[your turn — say: na, -ī, -ai, then the whole word — nahī̃]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's pieces: nannā, bihārī, dulāvā̃. Which of them is a mātrā or a mark rather than a letter, and what does ਨਹੀਂ say? (nahī̃, “no”.)
+Source: Unicode Gurmukhi chart.
+
+
+Lesson 2 of 9.
 ਕਿਵੇਂ (kivēṁ) — "how," another of the k- questions.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -31,7 +73,7 @@ What root do Punjabi's question-words share, and its English family? (The interr
 You hear kivēṁ. Type its meaning and the question-family sound it shares with kī.
 
 
-Lesson 2 of 7.
+Lesson 3 of 9.
 ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) — "how are you?"
 
 Warm-up.
@@ -42,7 +84,7 @@ The phrase, taken apart.
 ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) = ਤੁਸੀਂ (tusī̃, respectful "you") + ਕਿਵੇਂ (kivēṁ, "how") + ਹੋ (ho, "are") — literally "you how are?" Punjabi keeps the verb last, as in Chapter 2. The copula ho is the respectful "are" that goes with tusī̃ — its whole set is maiṁ hāṁ (I am), tū̃ haiṁ (you are, familiar), oh hai (he is), tusī̃ ho (you are, respectful).
 
 Grammar Lens: match the "you" to the verb.
-To an elder or stranger: ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) To a friend (tū̃): ਤੂੰ ਕਿਵੇਂ ਹੈਂ? (tū̃ kivēṁ haiṁ?). Respect takes the plural-shaped tusī̃ … ho.
+To an elder or stranger: tusī̃ kivēṁ ho? To a friend: tū̃ kivēṁ haiṁ? Respect takes the plural-shaped tusī̃ … ho.
 
 Guided Practice.
 [pause 1 second]
@@ -60,7 +102,7 @@ Ask "how are you?" respectfully, and say where the verb goes. (Tusī̃ kivēṁ 
 Ask how someone is respectfully aloud, then type the romanized words you said.
 
 
-Lesson 3 of 7.
+Lesson 4 of 9.
 The respectful question returns at R1 — retrieve the respectful copula and question-family sound at R1.
 
 Warm-up.
@@ -83,7 +125,7 @@ Wrap-up Recall.
 Complete tusī̃ kivēṁ...? (ho) and name the question-family sound (k-).
 
 
-Lesson 4 of 7.
+Lesson 5 of 9.
 ਮੈਂ (maiṁ) — "I," the m- of the first person.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -117,7 +159,49 @@ What root links maiṁ, merā, and English me, and what copula does maiṁ take?
 Say Punjabi I, then complete the spoken frame I am: maiṁ...
 
 
-Lesson 5 of 7.
+Lesson 6 of 9.
+ਟ, ਠ, ਡ — three pieces met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਟ, ਠ, ਡ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+English has no letter for any of these. The tongue curls back to the roof of the mouth for all three.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: tusī̃ kivēṁ ho?, tusī̃ kivēṁ ho — k-, maiṁ]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਟ, ਠ, ਡ.
+ਟ.
+ṭaiṅkā — ṭa. A retroflex t, with no breath: the tongue curls back and taps the roof of the mouth.
+ਠ.
+ṭhaṭṭhā — ṭha. A retroflex t with a puff of breath: tongue curled back to the roof of the mouth.
+ਡ.
+ḍaḍḍā — ḍa. A retroflex d, the voiced partner of ṭaiṅkā.
+Now put them where you have already heard them:
+ਟ ਠ ਡ — one row, one tongue position, three degrees of breath and voice ਠ + ੀ + ਕ becomes ਠੀਕ (ṭhīk) ਠੀਕ — ṭhīk — fine, all right.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਟ, ਠ, ਡ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਠੀਕ (ṭhīk) and point to each of today's pieces in turn]
+[pause 8 seconds for the answer]
+[your turn — say: ṭa, ṭha, ḍa, then the whole word — ṭhīk]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's pieces: ṭaiṅkā, ṭhaṭṭhā, ḍaḍḍā. Which of them is a mātrā or a mark rather than a letter, and what does ਠੀਕ say? (ṭhīk, “fine, all right”.)
+Source: Unicode Gurmukhi chart.
+
+
+Lesson 7 of 9.
 ਠੀਕ (ṭhīk) — "fine," and how to answer.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -152,7 +236,7 @@ Give the reply to tusī̃ kivēṁ ho? aloud. (Maiṁ ṭhīk hāṁ.)
 Reply I am fine aloud in Punjabi, then type the romanized words you said.
 
 
-Lesson 6 of 7.
+Lesson 8 of 9.
 ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) — "it's nothing".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -183,7 +267,7 @@ What does koī gall nahīṁ literally say, and which Chapter-1 word does it reu
 Someone says dhannavād. Give the gracious Punjabi reply aloud, then type its romanization.
 
 
-Lesson 7 of 7.
+Lesson 9 of 9.
 Chapter 3 — The how-are-you exchange.
 
 Warm-up.

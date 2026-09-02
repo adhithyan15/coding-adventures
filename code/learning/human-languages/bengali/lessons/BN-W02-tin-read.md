@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W02-tin-read
 spine_node: SPINE-MEET-GREET
-sequence: 1100
+sequence: 1250
 delivery: script
-chapter: 21
+chapter: 24
 type: writing
 headword: তিন
 romanization: "tin"

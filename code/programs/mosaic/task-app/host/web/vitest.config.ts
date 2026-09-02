@@ -7,14 +7,23 @@ export default defineConfig({
     // fallback — precisely the path we want these tests to cover.
     environment: "jsdom",
     globals: true,
-    include: ["__tests__/**/*.test.ts"],
+    // .tsx is listed explicitly: the previous glob was .test.ts only, so a
+    // component test would have been collected by nobody and reported as a
+    // pass. Startup states are components, so this had to widen with them.
+    include: ["__tests__/**/*.test.ts", "__tests__/**/*.test.tsx"],
     coverage: {
       provider: "v8",
-      // The host's own logic seams — persistence and theme selection. main.tsx is DOM
-      // boot glue verified live in a browser, and TaskApp.{light,dark}.tsx are
-      // generated. A module with tests but missing from this list is silently exempt
-      // from the threshold below, so add new seams here as they appear.
-      include: ["src/persistence.ts", "src/theme.ts", "src/timeline.ts"],
+      // The host's own logic seams — persistence, theme selection, and the
+      // startup states. main.tsx is DOM boot glue verified live in a browser,
+      // and TaskApp.{light,dark}.tsx are generated. A module with tests but
+      // missing from this list is silently exempt from the threshold below, so
+      // add new seams here as they appear.
+      include: [
+        "src/persistence.ts",
+        "src/startup.tsx",
+        "src/theme.ts",
+        "src/timeline.ts",
+      ],
       thresholds: { lines: 90 },
     },
   },

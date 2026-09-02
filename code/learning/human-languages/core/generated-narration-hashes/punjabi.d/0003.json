@@ -1,12 +1,14 @@
 {
   "language": "punjabi",
   "chapter": 3,
-  "sourceHash": "fnv1a64:ebeecd6f957ef6a1",
+  "sourceHash": "fnv1a64:02516c475339e8f5",
   "lessonIds": [
+    "PA-S03-nanna-bihari-dulava",
     "PA-C03-kivein",
     "PA-C03-tusi-kivein-ho",
     "PA-R03-wellbeing-r1",
     "PA-C03-main",
+    "PA-S03-retroflex-row",
     "PA-C03-thik",
     "PA-C03-koi-gall-nahin",
     "PA-C03-practice"
@@ -15,7 +17,7 @@
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch03.txt",
   "json": "punjabi/narration/ch03.json",
-  "textHash": "fnv1a64:25ed2f7ee4db57d0",
-  "jsonHash": "fnv1a64:c882ec974bf1d4b5",
+  "textHash": "fnv1a64:ebb654de25127a59",
+  "jsonHash": "fnv1a64:724c360a3e608f8d",
   "findings": []
 }

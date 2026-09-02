@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S130-letter-ii
 spine_node: SPINE-MEET-GREET
-sequence: 601
+sequence: 555
 delivery: script
-chapter: 31
+chapter: 26
 type: writing
 headword: "ಈ"
 gloss: the single character ಈ — the standing form of a long vowel you have read since chapter one

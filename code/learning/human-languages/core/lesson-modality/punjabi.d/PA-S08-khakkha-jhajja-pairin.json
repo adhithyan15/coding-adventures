@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S08-khakkha-jhajja-pairin",
+    "language": "punjabi",
+    "chapter": 8,
+    "sequence": 425,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4408c3c6625927fc",
+    "detachableSegments": [
+      "Script you'll notice: ਖ · ਝ · ੍",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

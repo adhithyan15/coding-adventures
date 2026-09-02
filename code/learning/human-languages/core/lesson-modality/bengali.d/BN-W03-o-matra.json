@@ -3,7 +3,7 @@
     "id": "BN-W03-o-matra",
     "language": "bengali",
     "chapter": 6,
-    "sequence": 410,
+    "sequence": 440,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:8550ac8cfc3e550d",
+    "sourceHash": "fnv1a64:669165fdc238b4be",
     "detachableSegments": [
       "Script"
     ],

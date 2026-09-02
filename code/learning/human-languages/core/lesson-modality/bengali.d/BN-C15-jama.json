@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C15-jama",
     "language": "bengali",
-    "chapter": 22,
-    "sequence": 1130,
+    "chapter": 25,
+    "sequence": 1280,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:41ccfc809c6fcedf",
+    "sourceHash": "fnv1a64:c87b22abd770ead6",
     "detachableSegments": [
       "The letters in this word"
     ]

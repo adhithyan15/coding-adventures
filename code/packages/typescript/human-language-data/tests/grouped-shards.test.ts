@@ -137,6 +137,12 @@ function sandbox(): string {
 //
 // So this literal stays. A number that only moves when a person deliberately
 // changes the thing it measures is a tripwire, not a maintenance tax.
+//
+// 69 -> 67: the tripwire firing as designed. Punjabi's Chapters 4 and 5 were the
+// track's last hand-written .tex, and they are now generated from their lessons.
+// Nothing was silently dropped in the flip: `handwritten_parity.py` reported
+// Punjabi under NOTHING WOULD BE LOST before it, and now reports the track as
+// having nothing hand-written left at all.
 
 /**
  * Authored-chapter identities according to each track's own `chapters.d` — the
@@ -201,11 +207,11 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
     // The handwritten count STAYS PINNED, and deliberately so — see the note
     // above on why this particular literal is not part of the write-lock.
-    // 69 -> 66: french chapters 3, 4 and 5 were retired into `targets.d`, the
-    // first three of the sixteen French handwritten chapters to be generated
-    // from their lessons. This literal is the ONLY place a retirement shows up,
+    // 67 -> 64: french chapters 3, 4 and 5 were retired into `targets.d`, the
+    // first three of French's sixteen handwritten chapters to be generated from
+    // their lessons. This literal is the ONLY place a retirement shows up,
     // which is the point of pinning it.
-    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(66);
+    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(64);
     // The total is chapter-scaled, so it is proved against the independently
     // authored `chapters.d` instead.
     expect(
@@ -243,8 +249,8 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    // 69 -> 66 for the french chapter 3, 4 and 5 retirement.
-    expect(identities.handwritten.size).toBe(66);
+    // 67 -> 64 for the french chapter 3, 4 and 5 retirement.
+    expect(identities.handwritten.size).toBe(64);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
     );

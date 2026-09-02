@@ -1,8 +1,48 @@
 Punjabi, chapter 6: Numbers One to Five.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
+ਅ, ਆ — two pieces met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਅ, ਆ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The two letters a Punjabi word uses when it opens on a vowel and has no consonant to hang a mātrā on.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: rahiṇā, kamm karnā]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਅ, ਆ.
+ਅ.
+aiṛā — a. The bare vowel carrier. On its own it is a; with a mātrā hung on it, it is whatever that mātrā says.
+ਆ.
+aiṛā + kannā — ā. The vowel carrier wearing the kannā you already know — so it is long ā, at the start of a word.
+Now put them where you have already heard them:
+ਅ alone is a; ਆ is the same carrier wearing the kannā you already know. ਆ + ਸ becomes ਆਸ (ās) ਆਸ — ās — hope.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਅ, ਆ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਆਸ and point to each of today's pieces in turn]
+[pause 8 seconds for the answer]
+[your turn — say: a, ā, then the whole word — ās]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's pieces: aiṛā, aiṛā + kannā. Which of them is a mātrā or a mark rather than a letter, and what does ਆਸ say? (ās, “hope”.)
+Source: Unicode Gurmukhi chart.
+
+
+Lesson 2 of 3.
 ਇੱਕ, ਦੋ, ਤਿੰਨ, ਚਾਰ, ਪੰਜ — one to five.
 
 Warm-up.
@@ -41,7 +81,7 @@ Wrap-up Recall.
 Count to five in Punjabi. (Ikk, do, tinn, chār, panj.) What script is this? (Gurmukhi — related to Devanagari, and it has a top line too.) What does ੱ and ੰ each do? (Addak doubles the following consonant; tippi marks a nasal.) Chapter 5 told you panjābī means "of the five rivers." What has changed now? (Panj is a number you can count with, not just a piece of a name.) Next: learn why Punjabi and Persian both say panj.
 
 
-Lesson 2 of 2.
+Lesson 3 of 3.
 Why two branches both arrived at panj — why Punjabi and Persian independently reached the same word-shape for five.
 
 Warm-up.

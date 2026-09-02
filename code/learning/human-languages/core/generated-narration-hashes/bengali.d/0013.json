@@ -1,18 +1,20 @@
 {
   "language": "bengali",
   "chapter": 13,
-  "sourceHash": "fnv1a64:bd21e0647e5f37d8",
+  "sourceHash": "fnv1a64:2f48e809f0afe858",
   "lessonIds": [
-    "BN-C09-neowa",
-    "BN-C09-jijnasa-kora",
-    "BN-C09-sahajjo-kora",
-    "BN-C09-bhalo-laga"
+    "BN-C07-howa",
+    "BN-C07-jaowa",
+    "BN-C07-asha",
+    "BN-C07-khaowa",
+    "BN-C07-dekha",
+    "BN-C07-jana"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "bengali/narration/ch13.txt",
   "json": "bengali/narration/ch13.json",
-  "textHash": "fnv1a64:07c635f77ca4d38e",
-  "jsonHash": "fnv1a64:ddae814429b0d84d",
+  "textHash": "fnv1a64:e3906fd7fec7c43c",
+  "jsonHash": "fnv1a64:fce95d521b09cd3d",
   "findings": []
 }

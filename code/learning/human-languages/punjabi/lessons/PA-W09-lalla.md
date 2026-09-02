@@ -9,32 +9,32 @@ type: writing
 headword: "ਲ"
 romanization: "la"
 gloss: "trace the Gurmukhi letter lalla"
-prerequisites: [PA-C34-salaam]
+prerequisites: [PA-C34-salaam, PA-S05-babba-lalla-hora]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [PA-SCRIPT-SA-01, PA-SCRIPT-MA-01, PA-LEX-SALAAM]
+  knowledge: [PA-SCRIPT-SA-01, PA-SCRIPT-MA-01, PA-LEX-SALAAM, PA-SCRIPT-RECOG-LA-01]
 introduces:
   knowledge: [PA-SCRIPT-LA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-SA-01, PA-SCRIPT-MA-01, PA-LEX-SALAAM, PA-SCRIPT-LA-01]
+  knowledge: [PA-SCRIPT-SA-01, PA-SCRIPT-MA-01, PA-LEX-SALAAM, PA-SCRIPT-LA-01, PA-SCRIPT-RECOG-LA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C34-salaam, PA-W01-ma, PA-W01-sa]
+reviews_of: [PA-C34-salaam, PA-W01-ma, PA-W01-sa, PA-S05-babba-lalla-hora]
 ---
 
 # ਲ — the last piece of a four-letter greeting
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-SA-01, PA-SCRIPT-MA-01, PA-LEX-SALAAM] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-SA-01, PA-SCRIPT-MA-01, PA-LEX-SALAAM, PA-SCRIPT-RECOG-LA-01] -->
 
 [PAUSE 2s] Write **ਸ** and **ਮ** once each. Say *salām* aloud. Of its four
 letters you can already write three; one is missing.

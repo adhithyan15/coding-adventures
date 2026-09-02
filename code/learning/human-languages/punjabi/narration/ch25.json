@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Requests, People, and Body Words at R4",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b7ad49fae0031d22",
+  "sourceHash": "fnv1a64:6d8663cfeffeec0c",
   "lessons": [
     {
       "id": "PA-R25-drink-request-r4",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79be6ea517d4a1f2",
+      "sourceHash": "fnv1a64:751eb5faf60194be",
       "notice": null,
       "blocks": [
         {
@@ -227,7 +227,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:644d67f354fc8404",
+      "sourceHash": "fnv1a64:1898d558c54e06ce",
       "notice": null,
       "blocks": [
         {
@@ -328,7 +328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d00abcf3ffb03e3",
+      "sourceHash": "fnv1a64:fff75406dda893c3",
       "notice": null,
       "blocks": [
         {

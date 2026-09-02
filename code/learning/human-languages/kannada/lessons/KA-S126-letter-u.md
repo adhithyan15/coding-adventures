@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S126-letter-u
 spine_node: SPINE-MEET-GREET
-sequence: 501
+sequence: 445
 delivery: script
-chapter: 21
+chapter: 16
 type: writing
 headword: "ಉ"
 gloss: the single character ಉ — the standing half of a vowel sign you already read

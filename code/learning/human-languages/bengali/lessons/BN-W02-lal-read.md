@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W02-lal-read
 spine_node: SPINE-MEET-GREET
-sequence: 1050
+sequence: 1200
 delivery: script
-chapter: 21
+chapter: 24
 type: writing
 headword: লাল
 romanization: "lāl"

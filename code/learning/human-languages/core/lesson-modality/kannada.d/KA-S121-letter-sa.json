@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S121-letter-sa",
     "language": "kannada",
-    "chapter": 17,
-    "sequence": 451,
+    "chapter": 12,
+    "sequence": 405,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:9977c25f635323c6",
+    "sourceHash": "fnv1a64:ae256210bfbc1176",
     "detachableSegments": [
       "Script you'll notice: ಸ",
       "Writing: ಸ — copy what you see"

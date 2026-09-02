@@ -3,7 +3,7 @@
     "id": "BN-W04-e-indep",
     "language": "bengali",
     "chapter": 6,
-    "sequence": 400,
+    "sequence": 430,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:2ec03cf60e92f32c",
+    "sourceHash": "fnv1a64:8fa5aaa68ba7e5cd",
     "detachableSegments": [
       "Script"
     ],

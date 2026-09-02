@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C15-kapor
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1120
-chapter: 22
+sequence: 1270
+chapter: 25
 type: word
 headword: কাপড়
 romanization: kapor
@@ -12,7 +12,7 @@ concept_tag: BN-CLOTHING-CLOTH
 prerequisites: [BN-C14-shobuj]
 sounds: [ra-flap-review]
 roots: [karpata-deshi]
-etymology_hook: "kApoR traces to Sanskrit কর্পট karpaTa, 'rag, old cloth' -- but even Sanskrit's own dictionaries label karpaTa a deshI word, homegrown vernacular vocabulary already inside classical Sanskrit rather than inherited from a reconstructed PIE root, so no further ancestor is claimed; the same word, worn down the same way, gives Hindi kapaDA, Marathi kapaDa, Gujarati kapaDuM and Punjabi kapaDA -- a genuinely pan-Indo-Aryan family sharing one root together"
+etymology_hook: "kApoR traces to Sanskrit *karpaṭa*, 'rag, old cloth' -- but even Sanskrit's own dictionaries label karpaTa a deshI word, homegrown vernacular vocabulary already inside classical Sanskrit rather than inherited from a reconstructed PIE root, so no further ancestor is claimed; the same word, worn down the same way, gives Hindi kapaDA, Marathi kapaDa, Gujarati kapaDuM and Punjabi kapaDA -- a genuinely pan-Indo-Aryan family sharing one root together"
 duration:
   max_seconds: 265
 requires:
@@ -55,7 +55,7 @@ verb needed, silent-final here: *kā-po-ṛ*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**কাপড়** traces to Sanskrit **কর্পট** (*karpaṭa*), "rag, old cloth." Here
+**কাপড়** traces to Sanskrit *karpaṭa*, "rag, old cloth." Here
 the honesty runs deeper than usual: even Sanskrit's own dictionaries label
 *karpaṭa* a **deśī** word — homegrown vernacular vocabulary that was already
 sitting inside classical Sanskrit rather than inherited from any older

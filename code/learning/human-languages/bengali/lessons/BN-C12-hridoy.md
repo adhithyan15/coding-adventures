@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C12-hridoy
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 940
-chapter: 18
+sequence: 1050
+chapter: 20
 type: word
 headword: হৃদয়
 romanization: hridoy
@@ -59,7 +59,7 @@ audibly, *-doy*, rather than falling silent the way দুধ and নাক did)
 **হৃদয়** is a **tatsama**, Sanskrit **হৃদয়** (*hṛdaya*) taken whole. A
 tadbhava twin also exists, **হিয়া** (*hiya*), but it lives in poetry and
 song rather than everyday speech — the reverse of মুখ's pair, where the
-tatsama is the everyday word. Inside হৃদয় sits **হৃদ্** (*hṛd*), and its PIE
+tatsama is the everyday word. Inside হৃদয় sits *hṛd*, and its PIE
 root is **\*ḱérd-**, "heart" — the direct ancestor of English **heart**
 itself, Greek **kardía** (English **cardiac**), and Latin **cor** (English
 **core**, **courage**). Four languages, one root, and nowhere in this book
@@ -73,7 +73,7 @@ has the family been so wide or so certain.
 - [YOU SAY: "āmār hridoy" — my heart]
 - [YOU SAY: the wide family — "hṛd … heart, kardía, cor"]
 - [YOU SAY: all four of this chapter's words — "chokh, mukh, nāk, hridoy"]
-- [YOU SAY: one more word from Chapter 16, sharing this lesson's warmth of
+- [YOU SAY: one more word from Chapter 18, sharing this lesson's warmth of
   feeling — "bhāi," brother]
 
 ## Wrap-up Recall

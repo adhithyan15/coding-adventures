@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C14-kalo",
     "language": "bengali",
-    "chapter": 20,
-    "sequence": 1010,
+    "chapter": 23,
+    "sequence": 1170,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0828c788c6373db3",
+    "sourceHash": "fnv1a64:e5ee84830540739b",
     "detachableSegments": [
       "The letters in this word"
     ]

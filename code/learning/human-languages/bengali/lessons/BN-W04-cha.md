@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W04-cha
 spine_node: SPINE-MEET-GREET
-sequence: 560
+sequence: 600
 delivery: script
-chapter: 8
+chapter: 9
 type: writing
 headword: চ
 romanization: "chô"

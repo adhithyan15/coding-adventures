@@ -4,11 +4,11 @@
   "chapter": 5,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:148fe1ca3edc71be",
+  "sourceHash": "fnv1a64:21ae27d970cf9ed1",
   "lessons": [
     {
       "id": "BN-C03-ami",
-      "sequence": 310,
+      "sequence": 340,
       "title": "আমি (āmi) — \"I,\" cousin of English am",
       "headword": "আমি",
       "romanization": "āmi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:587411728843e0ea",
+      "sourceHash": "fnv1a64:b0afcb98cef2639b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আমি (āmi, \"I\") descends from Sanskrit অস্মি (asmi, \"I am\"), on the first-person stem asmad. That Sanskrit asmi is from Proto-Indo-European h₁es-, the \"to be\" root — the very same word that gives English am (and Latin sum). So Bengali's word for \"I\" is, at the root, a form of \"am\": \"I\" and \"am\" were once one word. Its possessive is the আমার (āmār, \"my\") from Chapter 3."
+              "text": "আমি (āmi, \"I\") descends from Sanskrit asmi (\"I am\"), on the first-person stem asmad. That Sanskrit asmi is from Proto-Indo-European h₁es-, the \"to be\" root — the very same word that gives English am (and Latin sum). So Bengali's word for \"I\" is, at the root, a form of \"am\": \"I\" and \"am\" were once one word. Its possessive is the আমার (āmār, \"my\") from Chapter 3."
             }
           ]
         },
@@ -142,7 +142,7 @@
     },
     {
       "id": "BN-C03-kemon",
-      "sequence": 320,
+      "sequence": 350,
       "title": "কেমন (kēmon) — \"how,\" another of the k- questions",
       "headword": "কেমন",
       "romanization": "kēmon",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a01794fb1804c529",
+      "sourceHash": "fnv1a64:c3eab6abe25ff84c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -256,7 +256,7 @@
     },
     {
       "id": "BN-C03-tumi-kemon-achho",
-      "sequence": 330,
+      "sequence": 360,
       "title": "তুমি কেমন আছো? (tumi kēmon āchho?) — \"how are you?\"",
       "headword": "তুমি কেমন আছো?",
       "romanization": "tumi kēmon āchho?",
@@ -267,7 +267,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a619fa7cae19cbeb",
+      "sourceHash": "fnv1a64:029a4f862a96eb66",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -394,7 +394,7 @@
     },
     {
       "id": "BN-C03-bhalo",
-      "sequence": 340,
+      "sequence": 370,
       "title": "ভালো (bhālo) — \"well,\" and how to answer",
       "headword": "ভালো",
       "romanization": "bhālo",
@@ -405,7 +405,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:81d844bc8789c21d",
+      "sourceHash": "fnv1a64:fff5083682d25ebe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -452,7 +452,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ভালো (bhālo, \"good, well, fine\") is the everyday Bengali \"good\" — likely from Sanskrit ভদ্র (bhadra, \"good, auspicious, gentle\"), worn down over centuries into bhālo. It is one of the most-used words in the language: bhālo lāge (\"[I] like it\"), bhālobāsā (\"love,\" literally \"good-dwelling\")."
+              "text": "ভালো (bhālo, \"good, well, fine\") is the everyday Bengali \"good\" — likely from Sanskrit bhadra (\"good, auspicious, gentle\"), worn down over centuries into bhālo. It is one of the most-used words in the language: bhālo lāge (\"[I] like it\"), bhālobāsā (\"love,\" literally \"good-dwelling\")."
             }
           ]
         },
@@ -532,7 +532,7 @@
     },
     {
       "id": "BN-C03-kono-bepar-na",
-      "sequence": 350,
+      "sequence": 380,
       "title": "কোনো ব্যাপার না (kono bæpār nā) — \"no matter\"",
       "headword": "কোনো ব্যাপার না",
       "romanization": "kono bæpār nā",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0cfee389253d6152",
+      "sourceHash": "fnv1a64:907bde8d5558d71f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -655,7 +655,7 @@
     },
     {
       "id": "BN-C03-practice",
-      "sequence": 360,
+      "sequence": 390,
       "title": "Chapter 5 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
@@ -666,7 +666,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebd39c1db3a08cc3",
+      "sourceHash": "fnv1a64:e89b93d1c3710fe8",
       "notice": null,
       "blocks": [
         {

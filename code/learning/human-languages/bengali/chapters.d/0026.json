@@ -1,0 +1,22 @@
+{
+  "chapter": 26,
+  "title": "The Distant Band",
+  "label": "ch:bn-distant-band",
+  "canDo": "I can retrieve, with nothing uncovered, the words and letters this book taught between ninety-eight and a hundred and four lessons ago — and I can tell the difference between a word I have lost and a word I now know to go back for.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-R01-practice",
+    "kind": "speaking",
+    "summary": "Four chapter-closing practice lessons, untouched for the length of a whole book, are answered in one sitting; nothing in the chapter is new, and that is the measurement.",
+    "assesses": [
+      "BN-CONCEPT-C01-PRACTICE-01",
+      "BN-CONCEPT-C02-PRACTICE-01",
+      "BN-CONCEPT-C03-PRACTICE-01",
+      "BN-CONCEPT-C04-PRACTICE-01",
+      "BN-SCRIPT-AMI-READ-01",
+      "BN-SCRIPT-LA-01"
+    ]
+  }
+}
