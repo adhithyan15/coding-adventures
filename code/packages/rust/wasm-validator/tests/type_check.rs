@@ -256,6 +256,68 @@ fn invalid_call_indirect_references_an_out_of_bounds_table_index() {
     );
 }
 
+/// Security-review finding from W37's own review round: `call_indirect`/
+/// `return_call_indirect` must target a FUNCREF-family table only.
+/// `wasm-execution`'s own dispatch handler relies on this as a documented
+/// safety invariant -- it resolves a table slot's raw `u32` payload via
+/// `resolve_function_ref_for_dispatch`, which treats that `u32`
+/// unconditionally as a FUNCTION INDEX. Before this check existed, a
+/// non-funcref table (previously only `externref` was reachable here; W37
+/// itself widened table declarations to accept `eqref`/`anyref`/`i31ref`/
+/// `structref`/concrete struct and array types too) could be targeted by
+/// `call_indirect` with no rejection at all -- a real validator-soundness
+/// bypass, even though bounded (no memory unsafety) by
+/// `resolve_function_ref_for_dispatch`'s own bounds-check against the
+/// function index space.
+#[test]
+fn invalid_call_indirect_rejects_a_non_funcref_table() {
+    assert_invalid(
+        "(module
+           (type $t (func))
+           (table 1 externref)
+           (func (call_indirect (type $t) (i32.const 0))))",
+    );
+    assert_invalid(
+        "(module
+           (type $t (func))
+           (table 1 anyref)
+           (func (call_indirect (type $t) (i32.const 0))))",
+    );
+    assert_invalid(
+        "(module
+           (type $t (func))
+           (table 1 structref)
+           (func (call_indirect (type $t) (i32.const 0))))",
+    );
+}
+
+/// The `return_call_indirect` counterpart of the test above.
+#[test]
+fn invalid_return_call_indirect_rejects_a_non_funcref_table() {
+    assert_invalid(
+        "(module
+           (type $t (func))
+           (table 1 externref)
+           (func (return_call_indirect (type $t) (i32.const 0))))",
+    );
+}
+
+/// The positive counterpart: a table declared with a CONCRETE function
+/// reference type (`(ref null $t)`, funcref-family since W32) must still
+/// be a perfectly valid `call_indirect` target -- confirms the new check
+/// looks at the right property (funcref-family-ness), not just "equals
+/// the bare `Funcref` variant."
+#[test]
+fn valid_call_indirect_against_a_concrete_funcref_family_table() {
+    assert_valid(
+        "(module
+           (type $t (func (result i32)))
+           (func $callee (result i32) (i32.const 42))
+           (table $tbl (ref null $t) (elem $callee))
+           (func (result i32) (call_indirect $tbl (type $t) (i32.const 0))))",
+    );
+}
+
 #[test]
 fn valid_return_call_and_return_call_indirect() {
     // WASM16: same param-popping shape as call/call_indirect, but the
@@ -478,6 +540,98 @@ fn valid_table_get_on_a_concrete_funcref_table_keeps_its_concrete_type() {
              (table $t (ref null $t) (elem $tf))
              (func (export "get-as-concrete") (result (ref null $t))
                (table.get $t (i32.const 0))))"#,
+    );
+}
+
+// ── W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): GC reftype tables ──
+//
+// Before this spec, a table declaration accepted only `funcref`/`externref`
+// (and, since W32, a concrete function reference type) -- any other
+// reference type (`eqref`/`i31ref`/`anyref`/`structref`/`(ref null eq)`/
+// `(ref null struct)`) was rejected at PARSE time, before validation was
+// ever reached. These tests exercise the validator's own, already-generic
+// `table_element_types` consumption (`build_module_context`'s own doc
+// comment: it needed ZERO changes for this spec) now that the parser
+// actually writes something other than `Funcref`/`Externref`/
+// `ConcreteFuncRef`/`NonNullConcreteFuncRef` into `table_concrete_element_
+// types` for the first time.
+
+/// `eqref`/`anyref`/`i31ref`/`structref` (bare-atom abbreviations) all
+/// type-check as a table's element type -- `table.get`/`table.set` push/pop
+/// the exact declared type, not a generic placeholder.
+#[test]
+fn valid_table_declared_with_each_bare_gc_reftype_atom() {
+    for reftype in ["eqref", "anyref", "i31ref", "structref"] {
+        let wat = format!(
+            r#"(module
+                 (table $t 1 {reftype})
+                 (func (param $v {reftype})
+                   (table.set $t (i32.const 0) (local.get $v))
+                   (drop (table.get $t (i32.const 0)))))"#
+        );
+        assert_valid(&wat);
+    }
+}
+
+/// The fully-spelled-out compound forms (`(ref null eq)`/`(ref null
+/// struct)`) are semantically identical to their bare-atom abbreviations
+/// (`eqref`/`structref`) -- same round-trip shape as the bare-atom test
+/// above, proving `parse_value_type`'s compound-list branch (not just its
+/// atom match) reaches the new variants.
+#[test]
+fn valid_table_declared_with_compound_null_eq_and_null_struct_reftypes() {
+    assert_valid(
+        r#"(module
+             (table $t 1 (ref null eq))
+             (func (param $v eqref)
+               (table.set $t (i32.const 0) (local.get $v))
+               (drop (table.get $t (i32.const 0)))))"#,
+    );
+    assert_valid(
+        r#"(module
+             (table $t 1 (ref null struct))
+             (func (param $v structref)
+               (table.set $t (i32.const 0) (local.get $v))
+               (drop (table.get $t (i32.const 0)))))"#,
+    );
+}
+
+/// A concrete struct reference (`struct.new_default $t0`, a
+/// `NonNullStructRef`) flows into a `structref`-typed (`StructRefAny`)
+/// table slot -- exactly `ref_cast.wast`'s own "Concrete Types" module
+/// shape (`(table 20 (ref null struct)) ... (table.set ... (struct.new_
+/// default $t0))`). This is the one NEW `is_assignable` arm this spec's
+/// implementation found genuinely missing (a concrete struct reference was
+/// previously assignable only to `Anyref`, never to the new abstract
+/// `structref` top) and had to add -- not just reused generic
+/// infrastructure like every other case in this file.
+#[test]
+fn valid_table_set_a_concrete_struct_reference_into_a_structref_table() {
+    assert_valid(
+        r#"(module
+             (type $t0 (struct))
+             (table $t 1 structref)
+             (func
+               (table.set $t (i32.const 0) (struct.new_default $t0))))"#,
+    );
+}
+
+/// Existing `funcref`/`externref` table declarations (and their `table.get`/
+/// `table.set` type-checking) are completely unaffected by generalizing the
+/// parser's table-declaration dispatch through `parse_value_type` --
+/// confirms the fix is a strict simplification, not a behavior change for
+/// the two reftypes every pre-W37 table already used.
+#[test]
+fn valid_funcref_and_externref_tables_are_unaffected_by_the_generalized_dispatch() {
+    assert_valid(
+        r#"(module
+             (table $tf 1 funcref)
+             (table $te 1 externref)
+             (func (param $f funcref) (param $e externref)
+               (table.set $tf (i32.const 0) (local.get $f))
+               (table.set $te (i32.const 0) (local.get $e))
+               (drop (table.get $tf (i32.const 0)))
+               (drop (table.get $te (i32.const 0)))))"#,
     );
 }
 
