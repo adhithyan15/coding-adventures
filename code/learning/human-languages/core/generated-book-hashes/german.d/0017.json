@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:b97298a0892750ad",
+  "lessonIds": [
+    "GE-C11-brot",
+    "GE-C11-brot-bread",
+    "GE-C11-wasser",
+    "GE-C11-wasser-water",
+    "GE-C11-wein",
+    "GE-C11-wein-vinum",
+    "GE-C11-wasser-wein"
+  ],
+  "tex": "german/book/chapters/ch17-essen.tex"
+}

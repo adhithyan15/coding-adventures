@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C11-wein-vinum",
+    "language": "german",
+    "chapter": 17,
+    "sequence": 300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa0e710637adbcf3"
+  },
+  "findings": []
+}

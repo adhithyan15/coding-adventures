@@ -7,6 +7,14 @@ this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+- `register_into_host` now fails for a V1 agent host: `vault.request_direct`
+  requires a caller-supplied `consumer_agent_id`, and D18S S-I7 refuses a tool
+  that lets an agent name a peer. Tier and capabilities are still satisfied --
+  the refusal is about what the tool lets the caller say, not about privilege.
+- `register_lease_only_into_host` is unaffected and is what the end-to-end
+  harness already used; `register_into_host` has no remaining caller that is a
+  V1 agent surface.
+
 ### Added
 
 - `VaultToolBridge::register_lease_only_into_host`, for deployments with no

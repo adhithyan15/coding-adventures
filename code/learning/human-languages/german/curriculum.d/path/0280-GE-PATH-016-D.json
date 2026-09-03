@@ -3,6 +3,11 @@
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
     "GE-C11-brot",
+    "GE-C11-brot-bread",
+    "GE-C11-wasser",
+    "GE-C11-wasser-water",
+    "GE-C11-wein",
+    "GE-C11-wein-vinum",
     "GE-C11-wasser-wein"
   ],
   "before": [],

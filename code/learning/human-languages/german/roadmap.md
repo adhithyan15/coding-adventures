@@ -126,17 +126,33 @@ Spanish and French where a contrast helps. The recurring decoder is the
   German never split the meaning and never needed the loan. Closes on
   ***Lenz***, the older poetic spring, unneeded and unretired. **Authored.**
 
-- **Ch. 16 — Family**: the mirror of the months — **Vater/Mutter** are **inherited
-  Germanic** (NOT Latin loans), Grimm's-law twins of English *father/mother* (*V* = *f*)
-  → **Bruder/Schwester** (Germanic twins of *brother/sister*; **Geschwister** "siblings"
-  via the collective **ge-**). The standout: family is native where the months were
-  borrowed. **Authored.**
+- **Ch. 16 — The pair that proves Grimm's law**: the mirror of the months. Every
+  word here is **inherited**, where every month name was bought, and the reason is
+  the same rule the book keeps returning to: words used every hour resist
+  replacement, and Rome ran the calendar but not anybody's household. Four people
+  and one law with four verdicts — ***Vater*** against *pater*, **p → f**;
+  ***Mutter*** against *mater*, **t → th** and then German's own later shift again;
+  ***Bruder*** against *frater*, where the swap runs the **opposite** way because
+  the two words began from different ancient sounds, which is what makes the law a
+  law rather than a preference; and ***Schwester*** against *soror*, which did not
+  move at all, because Grimm's law touches stops and leaves an *s* alone. Closes on
+  the two plural-only collectives: ***die Eltern***, a comparative frozen into a
+  noun — "the older ones" — and ***die Geschwister***, gathered with the collective
+  **Ge-** on a stem meaning *sister*, covering the brothers regardless. **Authored.**
 
-- **Ch. 17 — Food (bread, water, wine)**: **Brot** (**inherited Germanic** twin of
-  English *bread*, NOT Latin *pānis*; introduces the neuter **das** + capitalized
-  nouns) → **Wasser/Wein** — the native-vs-borrowed split: **Wasser** a native
-  Germanic twin of *water*, but **Wein** an **ancient Latin loan** (← *vīnum*),
-  borrowed with the grapevine, which is why *Wein/wine/vīnum* all match. **Authored.**
+- **Ch. 17 — Bread, water, wine**: one table, two histories, and a test the
+  reader can run without being told the answer. ***Brot*** is Germanic
+  *\*braudam*, the twin of English **bread** — and the interesting part is an
+  absence: Latin *pānis* went into French, Italian and Spanish and **stopped at
+  the Germanic line**. ***Wasser*** is Germanic *\*watar*, English **water**,
+  with German's own later shift turning the *t* into *ss* — the same shift that
+  put the *tt* into *Mutter*, so it is a rule the reader can now run forwards.
+  ***Wein*** is the odd one: **Latin *vīnum***, borrowed whole when the legions
+  brought the vine north of the Alps. The tell is the closeness. Inherited words
+  **drift**, because a sound law runs through them; *Wein*, *wine* and *vīnum*
+  match too exactly to be three cousins, so they are one loan that arrived too
+  late for the law to touch. Also the chapter where the neuter ***das*** finally
+  gets nouns to sit on. **Authored.**
 
 - **Ch. 18 — Numbers 11–20**: **elf/zwölf** (← *ainlif/twalif*, *-lif* = "leave" →
   "**one/two left over**" after ten fingers — the exact inherited twins of English

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C10-bruder-frater",
+    "language": "german",
+    "chapter": 16,
+    "sequence": 288,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:380b060629e8b21a"
+  },
+  "findings": []
+}

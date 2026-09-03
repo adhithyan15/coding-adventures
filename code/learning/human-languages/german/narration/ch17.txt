@@ -1,57 +1,252 @@
 German, chapter 17: Bread, Water, Wine.
-2 lessons. All 2 can be done entirely by ear.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-das Brot — bread, and the third gender.
-
-Warm-up.
-[pause 2 seconds]
-Where the Romance sisters all say a version of Latin pānis (French pain, Italian pane), German goes its own Germanic way: Brot — the direct twin of English bread. And it brings a new grammatical face: the neuter article, das.
-
-Taken apart.
-das Brot ("bread") from old Germanic braudam — the same word that became English bread. No Latin here: this is a native word, like Vater and Wasser, from the Germanic core the two languages share.
-
-The third gender — das.
-You have met der (masculine, der Vater) and die (feminine, die Mutter). German has a third: das, the neuter — and Brot is one: das Brot. (German nouns are also always capitalized — Brot, Vater, Wasser — a rule no other language here follows.) So the article set is now complete: der / die / das.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "das Brot" — long o, the neuter das]
-[pause 8 seconds for the answer]
-[your turn — say: the twin test — "Brot / bread — both Germanic, no Latin"]
-[pause 8 seconds for the answer]
-[your turn — say: the three genders — "der Vater, die Mutter, das Brot"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give "bread" with its article. (das Brot.) Why is it not from Latin pānis like French pain? (It is inherited Germanic — the twin of English bread.) What gender does das mark, and what are the other two? (Neuter — with der masculine and die feminine.) Next: Wasser and Wein — and a split between native and borrowed.
-
-
-Lesson 2 of 2.
-das Wasser, der Wein — one word Germans always had, one Rome brought.
+Lesson 1 of 7.
+das Brot — "bread".
 
 Warm-up.
 [pause 2 seconds]
-Two drinks, two very different histories. Wasser is a word Germanic speakers have always had; Wein is one Rome carried north with the grapevine. Side by side, they show the difference between an inherited word and an ancient loan.
+Der Vater. Die Mutter. You were given a third article in the first chapter and have had no noun for it. Here it is.
 
-das Wasser (water) — native Germanic.
-das Wasser ("water") — the w is pronounced v (VAH-ser). It is the Grimm's-law twin of English water: same Germanic root watar, same core meaning, both native. Like Brot and Vater, no Latin needed — and neuter, das Wasser.
+You'll want to know: das Brot.
+das Brot — "bread."
+A das-word. That completes the set on real nouns: der Vater, die Mutter, das Brot — one of each, and now you have met all three doing their job rather than sitting in a list.
 
-der Wein (wine) — an ancient Latin loan.
-der Wein ("wine") — the ei is said "eye" (vine). Here is the twist: Wein is not a native Germanic word. It was borrowed from Latin vīnum in Roman times, when the legions brought viticulture north of the Alps. The Germanic tribes took the drink and its name — which is exactly why English wine, German Wein, and Latin vīnum all match: they are one loan, not three cousins. (Masculine: der Wein.)
-The lesson in one line: Wasser is a word Germans always had; Wein is a word Rome gave them — the vine came with a vocabulary.
+Sounds you'll need.
+long-o — a long o, the vowel of English boat, held steady.
+r-uvular — the r is made far back in the throat.
+d-t-final — and the final t is crisp.
+broht. One syllable, and capitalised on the page like every German noun, whether it names a person or a loaf.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "das Wasser" (v-), "der Wein" (-ein = "eye")]
+[your turn — say: "das Brot" — broht]
 [pause 8 seconds for the answer]
-[your turn — say: "Wasser / water — native twins"; "Wein / wine / vīnum — one Latin loan"]
+[your turn — say: one noun of each gender — "der Vater, die Mutter, das Brot"]
 [pause 8 seconds for the answer]
-[your turn — say: the split — "Wasser native, Wein borrowed with the grapevine"]
+[your turn — say: the three articles alone — "der, die, das"]
 [pause 8 seconds for the answer]
+[your turn — say: why it has a capital — "every German noun does"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"das Brot."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "water" and "wine" with articles and correct sounds. (das Wasser — v- — der Wein — "vine".) Which is inherited Germanic, and which is a Latin loan? (Wasser native — twin of water; Wein borrowed from vīnum, with the vine.) Why do Wein and English wine match so exactly? (Both borrowed the same Latin word, vīnum.) Next chapter: asking for these at the table.
+Say "bread." (Das Brot.) Which article? (Das — the neuter.) Say all three with a noun each. (Der Vater, die Mutter, das Brot.) Why the capital B? (German capitalises every noun.) Next: where the word comes from, and where it does not.
+
+
+Lesson 2 of 7.
+Brot and bread — the word Rome did not supply — where French says pain, German kept its own.
+
+Warm-up.
+[pause 2 seconds]
+A word can be interesting for what happened to it. This one is interesting for what did not.
+
+The word, taken apart.
+Brot comes from Germanic braudam, and English bread comes from the same word. No Latin anywhere in it.
+Now the other side of the line. Latin pānis went into every Romance language and stayed there:
+[a table of 3 rows, read aloud]
+language: German. the word: Brot. from: Germanic braudam.
+language: French. the word: pain. from: Latin pānis.
+language: Italian. the word: pane. from: Latin pānis.
+
+Why it's said this way.
+Rome sold German a calendar and a clock. It did not sell German bread.
+The pattern is the one you have been given four times now and it holds again here: a thing people handle every single day already has a word, and an incoming language does not get to replace it. Months were an administrative object and arrived with their labels. A loaf on a table was not waiting for a name.
+That is why Brot sits with Vater and Mutter rather than with Januar.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the Germanic pair — "Brot, bread"]
+[pause 8 seconds for the answer]
+[your turn — say: the Romance word it is not — "pain"]
+[pause 8 seconds for the answer]
+[your turn — say: which kind of word this is — "inherited, not bought"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Brot, bread."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the English twin of Brot? (Bread.) What does French say? (Pain, from Latin pānis.) Did German borrow that? (No.) Why not? (A daily thing already had a word.) Next: the second of the three.
+
+
+Lesson 3 of 7.
+das Wasser — "water".
+
+Warm-up.
+[pause 2 seconds]
+Bread, and then something to drink beside it. Its first letter you have met twice already.
+
+You'll want to know: das Wasser.
+das Wasser — "water."
+Another das-word, so it takes the same article as Brot. Two neuters in a row is a useful accident: it lets you say das Brot und das Wasser without having to decide anything.
+
+Sounds you'll need.
+w-as-v — German w is an English v. Wasser opens VAH-.
+vowel-a-german — a clean open a.
+r-final — and the soft closing r.
+VAH-ser. You have had that w on Winter, and inside the shv- of Schwester; this is the third time and the first where it sits on its own at the front of a word.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "das Wasser" — VAH-ser]
+[pause 8 seconds for the answer]
+[your turn — say: the letter and the sound — "W on the page, v in the mouth"]
+[pause 8 seconds for the answer]
+[your turn — say: the two together — "das Brot und das Wasser"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"das Wasser."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "water." (Das Wasser.) Which article? (Das, like Brot.) How is the W said? (As a v.) Where did you meet that before? (On Winter, and inside Schwester.) Next: its English twin.
+
+
+Lesson 4 of 7.
+Wasser and water — one Germanic root, and the German shift you can hear in the middle of it.
+
+Warm-up.
+[pause 2 seconds]
+Say Wasser and then water. The difference is one consonant, and you have met it before.
+
+The word, taken apart.
+Both come from Germanic watar. English kept the t. German turned it into ss.
+That is German's own later shift — the second of the two you met on Mutter, where English stopped at mother and German kept going. It ran through the vocabulary the same way, so once you have it you can predict it:
+[a table of 2 rows, read aloud]
+English: water. German: Wasser.
+English: mother. German: Mutter.
+
+Why it's said this way.
+Two chapters, four inherited words, and the same two shifts explaining every difference between the German and the English.
+That is the payoff of a sound law: you stop memorising pairs. Wasser is not a word to be learned beside water — it is water, with one predictable change applied, and the change is one you can now run yourself.
+And like Brot, nothing here was bought. Water is as everyday as a word gets.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "Wasser, water"]
+[pause 8 seconds for the answer]
+[your turn — say: what changed — "t became ss"]
+[pause 8 seconds for the answer]
+[your turn — say: the other pair with the same shift — "Mutter, mother"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Wasser, water."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the English twin? (Water.) What did German do to the t? (Made it ss.) Which other word did the same shift? (Mutter.) Inherited or borrowed? (Inherited.) Next: the one on this table that was borrowed.
+
+
+Lesson 5 of 7.
+der Wein — "wine".
+
+Warm-up.
+[pause 2 seconds]
+Two das-words so far. The third drink takes a different article, and that is the smaller of the two things different about it.
+
+You'll want to know: der Wein.
+der Wein — "wine."
+A der-word, where Brot and Wasser are both das. So the three now run one of each: das Brot, das Wasser, der Wein.
+
+Sounds you'll need.
+w-as-v — the W is a v again, as in Wasser.
+diphthong-ei — and ei is the vowel of English eye, which you were given on eins.
+Put the two together and Wein comes out sounding like English vine. Hold on to that, because the next lesson is about why.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Wein" — like English "vine"]
+[pause 8 seconds for the answer]
+[your turn — say: the two vowels you know — "ei is eye, as in eins"]
+[pause 8 seconds for the answer]
+[your turn — say: all three with their articles — "das Brot, das Wasser, der Wein"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der Wein."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "wine." (Der Wein.) Which article? (Der — not das, like the other two.) What does ei sound like? (English eye.) So what English word does it sound like? (Vine.) Next: why it does.
+
+
+Lesson 6 of 7.
+Wein and vinum — not three cousins but one loan — the vine came north and its name came with it.
+
+Warm-up.
+[pause 2 seconds]
+Wasser and water differ by a consonant. Wein and wine differ by nothing you can hear. That difference is the lesson.
+
+The word, taken apart.
+Wein is not an inherited Germanic word. It was borrowed from Latin vīnum in Roman times, when the legions brought the grapevine north of the Alps.
+Here is how you can tell without being told. Inherited words drift apart, because a sound law runs through them:
+[a table of 3 rows, read aloud]
+pair: Wasser / water. how far apart: a whole consonant — ss against t.
+pair: Mutter / mother. how far apart: two shifts of distance.
+pair: Wein / wine / vīnum. how far apart: no distance at all.
+Three words that match this closely are not three cousins who happen to look alike. They are one word, borrowed, arriving too late for the law to touch it.
+
+Why it's said this way.
+The vine did not grow north of the Alps until Rome carried it there. A people who have never had a thing have no word for it, and when the thing arrives the word arrives with it — which is the same reason Uhr is Latin and the twelve months are Latin.
+So one table holds both halves of the rule. Brot and Wasser were always here and are German's own. Wein came on a cart, and its name was in the same load.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three that match — "Wein, wine, vinum"]
+[pause 8 seconds for the answer]
+[your turn — say: what that closeness means — "one loan, not three cousins"]
+[pause 8 seconds for the answer]
+[your turn — say: what came with the word — "the vine itself"]
+[pause 8 seconds for the answer]
+[your turn — say: the two that were always here — "das Brot, das Wasser"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Wein, wine, vinum — one loan."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is Wein inherited? (No — borrowed from Latin vīnum.) How can you tell? (It is too close — a law would have moved it.) What arrived with the word? (The grapevine.) And Wasser? (Always here.)
+
+
+Lesson 7 of 7.
+Practice — one table, two histories.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Three things you could put on a table, and one of them is a different kind of word from the other two.
+
+Grammar Lens: three nouns, three articles.
+[a table of 3 rows, read aloud]
+das Brot means the bread.
+das Wasser means the water.
+der Wein means the wine.
+Two neuters and a masculine, every one of them capitalised. There is no rule behind which is which — the article comes with the noun and is learned with it, which is why every word in this book arrives wearing one.
+
+Why it's said this way.
+Now the histories, which do have a rule behind them:
+Brot — Germanic braudam, English bread. French took Latin pānis and German did not.
+Wasser — Germanic watar, English water, with German's own later shift turning the t into ss.
+Wein — Latin vīnum, borrowed whole, matching English wine and the Latin too closely to be anything else.
+Two were always here; one came north on a cart with the plant it names. You can read that off the words themselves without knowing any history: the inherited pair have drifted from their English twins, and the borrowed one has not.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all three with their articles — "das Brot, das Wasser, der Wein"]
+[pause 8 seconds for the answer]
+[your turn — say: the two with a v sound — "Wasser, Wein"]
+[pause 8 seconds for the answer]
+[your turn — say: which two are German's own — "Brot, Wasser"]
+[pause 8 seconds for the answer]
+[your turn — say: which one Rome supplied — "Wein"]
+[pause 8 seconds for the answer]
+[your turn — say: how you can tell — "it did not drift"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"das Brot, das Wasser, der Wein."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say the three with their articles. (Das Brot, das Wasser, der Wein.) Which is masculine? (Der Wein.) Which two did German inherit? (Brot and Wasser.) Which came from Latin? (Wein, from vīnum.) And what arrived with it? (The vine.)

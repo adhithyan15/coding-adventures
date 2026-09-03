@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import os
+import plistlib
+import shutil
+import struct
 import sys
 import tempfile
 import unittest
@@ -74,6 +77,7 @@ class ArtifactNamesTests(unittest.TestCase):
                 "engram-compose-linux-v0.4.0.zip",
                 "engram-compose-macos-v0.4.0.zip",
                 "engram-compose-windows-v0.4.0.zip",
+                "engram-swiftui-macos-v0.4.0.zip",
             ],
         )
 
@@ -859,6 +863,313 @@ class ArchiveComposeTests(unittest.TestCase):
                     self.assertIn(
                         output.name, engram_release.artifact_names("0.4.0")
                     )
+
+
+def _mach_o(defined: list[str], undefined: list[str] = []) -> bytes:
+    """A minimal 64-bit Mach-O carrying exactly these symbols.
+
+    Synthesised rather than compiled, so the test runs on the Linux runner too
+    -- there is no Mach-O toolchain there, and a fixture that could only be
+    built on macOS would silently skip exactly where CI runs most.
+
+    Built to the real layout (`mach_header_64`, `LC_SYMTAB`, `nlist_64`, string
+    table) because the parser reads that layout. A fixture that faked it some
+    other way would exercise nothing.
+    """
+
+    names = [(name, N_SECT) for name in defined] + [
+        (name, N_UNDF) for name in undefined
+    ]
+
+    strings = b"\x00"
+    offsets = []
+    for name, _ in names:
+        offsets.append(len(strings))
+        strings += f"_{name}".encode() + b"\x00"
+
+    header_size, cmd_size = 32, 24
+    symoff = header_size + cmd_size
+    stroff = symoff + len(names) * 16
+
+    header = struct.pack(
+        "<IiiIIIII",
+        0xFEEDFACF,  # MH_MAGIC_64
+        0x0100000C,  # CPU_TYPE_ARM64
+        0,
+        2,  # MH_EXECUTE
+        1,  # ncmds
+        cmd_size,
+        0,
+        0,
+    )
+    command = struct.pack(
+        "<IIIIII", 0x2, cmd_size, symoff, len(names), stroff, len(strings)
+    )
+    table = b"".join(
+        struct.pack("<IBBHQ", offset, kind | 0x01, 1, 0, 0x1000)
+        for offset, (_, kind) in zip(offsets, names)
+    )
+    return header + command + table + strings
+
+
+N_SECT = 0x0E
+N_UNDF = 0x00
+
+ENGINE_SYMBOLS = [
+    "eg_engram_app_props",
+    "eg_handle_engram_app_event",
+    "eg_session_new_demo",
+    "eg_snapshot",
+    "eg_load_snapshot",
+    "eg_export_anki_apkg",
+    "eg_merge_anki_apkg",
+    "eg_session_free",
+    "eg_string_free",
+]
+
+
+def _write_swiftui_bundle(
+    root: Path,
+    *,
+    symbols: int = 9,
+    undefined: int = 0,
+    executable_name: str = "Engram",
+) -> Path:
+    """A stand-in for the `.app` the SwiftUI build produces."""
+
+    bundle = root / "swiftui" / "Engram.app"
+    (bundle / "Contents" / "MacOS").mkdir(parents=True)
+    (bundle / "Contents" / "Resources").mkdir(parents=True)
+    (bundle / "Contents" / "Info.plist").write_bytes(
+        plistlib.dumps(
+            {
+                "CFBundleExecutable": executable_name,
+                "CFBundleIdentifier": "dev.mosaic.engram",
+                "CFBundlePackageType": "APPL",
+            }
+        )
+    )
+    (bundle / "Contents" / "PkgInfo").write_text("APPL????", encoding="utf-8")
+    binary = bundle / "Contents" / "MacOS" / executable_name
+    binary.write_bytes(
+        _mach_o(ENGINE_SYMBOLS[:symbols], ENGINE_SYMBOLS[symbols : symbols + undefined])
+    )
+    binary.chmod(0o755)
+    return bundle
+
+
+class ArchiveSwiftUITests(unittest.TestCase):
+    def test_archives_only_the_app_bundle(self) -> None:
+        # The bug this caught in review: archiving the SwiftPM project directory
+        # instead swept in `.build/` -- module caches, object files, the dSYM,
+        # the static archive -- turning a 3.8 MB app into a 47 MB download. The
+        # app ran perfectly either way, so only the member list showed it.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            # Litter beside the bundle, exactly as a real build leaves it.
+            (bundle.parent / ".build" / "release").mkdir(parents=True)
+            (bundle.parent / ".build" / "release" / "App").write_bytes(b"\x00" * 4096)
+            (bundle.parent / "Package.swift").write_text("// swift-tools-version:5.10\n")
+
+            output = engram_release.archive_swiftui(
+                "0.4.0", "macos", bundle, root / "out", COMMIT
+            )
+            self.assertEqual(output.name, "engram-swiftui-macos-v0.4.0.zip")
+            with zipfile.ZipFile(output) as archive:
+                names = archive.namelist()
+            self.assertEqual(
+                [n for n in names if ".build" in n or "Package.swift" in n],
+                [],
+                "build litter reached the payload",
+            )
+            self.assertIn(
+                "engram-swiftui-macos-v0.4.0/Engram.app/Contents/MacOS/Engram", names
+            )
+            self.assertIn("engram-swiftui-macos-v0.4.0/SOURCE_COMMIT", names)
+
+    def test_the_executable_stays_executable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            output = engram_release.archive_swiftui(
+                "0.4.0", "macos", bundle, root / "out", COMMIT
+            )
+            member = "engram-swiftui-macos-v0.4.0/Engram.app/Contents/MacOS/Engram"
+            with zipfile.ZipFile(output) as archive:
+                mode = archive.getinfo(member).external_attr >> 16
+            self.assertTrue(mode & 0o111, f"lost the executable bit: {mode:o}")
+
+    def test_refuses_a_binary_without_the_engine_linked(self) -> None:
+        # SwiftUI links the engine statically, so there is no library beside the
+        # binary to look for: the engine is inside the executable or every deck
+        # operation silently does nothing. This is the check that says so.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root, symbols=0)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("engine did not link", str(caught.exception))
+
+    def test_refuses_a_partially_linked_binary(self) -> None:
+        # Below the floor but not zero -- the shape a link that pulled in some
+        # objects and not others would take.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root, symbols=2)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("only 2 DEFINED engine symbols", str(caught.exception))
+
+    def test_refuses_a_bundle_with_no_info_plist(self) -> None:
+        # Without it macOS does not treat the directory as an application: it
+        # opens as a folder rather than launching.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            (bundle / "Contents" / "Info.plist").unlink()
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("Info.plist", str(caught.exception))
+
+    def test_refuses_a_bundle_with_no_executable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            (bundle / "Contents" / "MacOS" / "Engram").unlink()
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("must hold exactly", str(caught.exception))
+
+    def test_refuses_something_that_is_not_a_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            plain = root / "notanapp"
+            plain.mkdir()
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", plain, root / "out", COMMIT
+                )
+            self.assertIn(".app", str(caught.exception))
+
+    def test_refuses_a_binary_that_only_references_the_engine(self) -> None:
+        # The case a byte scan cannot see, and the reason this reads the symbol
+        # TABLE. Mach-O stores defined and undefined names identically in the
+        # string table, so searching the file for `eg_...` gives the same answer
+        # for a binary that CONTAINS the engine and one that merely expects it
+        # from a library that will not be there. Confirmed against a pair of
+        # compiled fixtures: the byte scan passed both.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root, symbols=0, undefined=9)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            message = str(caught.exception)
+            self.assertIn("0 DEFINED engine symbols", message)
+            self.assertIn("undefined: eg_", message)
+
+    def test_refuses_a_partially_linked_binary_with_undefined_symbols(self) -> None:
+        # Enough defined symbols to clear the floor, but some still undefined --
+        # the app would load part of the engine and fail on the rest.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root, symbols=6, undefined=3)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("leaves engine symbols undefined", str(caught.exception))
+
+    def test_scans_the_executable_the_plist_names(self) -> None:
+        # A sorted glob takes whichever file sorts first, so a second file in
+        # `Contents/MacOS` would be verified while the executable macOS actually
+        # launches ships unexamined -- and both get published.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root, symbols=0)  # the REAL one: empty
+            decoy = bundle / "Contents" / "MacOS" / "Assets"  # sorts before Engram
+            decoy.write_bytes(_mach_o(ENGINE_SYMBOLS))
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("must hold exactly", str(caught.exception))
+
+    def test_refuses_a_symlink_that_escapes_the_bundle(self) -> None:
+        # Staging puts the payload root ABOVE the bundle, so `_zip_tree`'s own
+        # containment check would allow a link that leaves the `.app` and lands
+        # beside it. Combined with a redirected `Contents/MacOS`, the verified
+        # binary would not be in the archive at all.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            (root / "outside").mkdir()
+            (root / "outside" / "planted").write_text("x\n", encoding="utf-8")
+            (bundle / "Contents" / "Resources" / "link").symlink_to("../../../outside")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("escapes the bundle", str(caught.exception))
+
+    def test_a_link_inside_the_bundle_is_kept(self) -> None:
+        # The false-positive direction: a `.app` may legitimately link within
+        # itself, and refusing that would break a valid build.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            (bundle / "Contents" / "Resources" / "alias").symlink_to("../PkgInfo")
+
+            output = engram_release.archive_swiftui(
+                "0.4.0", "macos", bundle, root / "out", COMMIT
+            )
+            member = (
+                "engram-swiftui-macos-v0.4.0/Engram.app/Contents/Resources/alias"
+            )
+            with zipfile.ZipFile(output) as archive:
+                self.assertEqual(archive.read(member), b"../PkgInfo")
+
+    def test_refuses_a_symlinked_macos_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            macos = bundle / "Contents" / "MacOS"
+            elsewhere = root / "elsewhere"
+            elsewhere.mkdir()
+            (elsewhere / "Engram").write_bytes(_mach_o(ENGINE_SYMBOLS))
+            shutil.rmtree(macos)
+            macos.symlink_to(elsewhere)
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("not a real directory", str(caught.exception))
+
+    def test_swiftui_name_is_in_the_declared_set(self) -> None:
+        declared = set(engram_release.artifact_names("0.4.0"))
+        for platform in engram_release.SWIFTUI_TARGETS:
+            self.assertIn(
+                engram_release.swiftui_artifact_name("0.4.0", platform), declared
+            )
+
+    def test_swiftui_is_macos_only(self) -> None:
+        # Not an oversight to be corrected later: it is a SwiftUI app, so there
+        # is nowhere else for it to run.
+        self.assertEqual(sorted(engram_release.SWIFTUI_TARGETS), ["macos"])
+        with self.assertRaises(ValueError):
+            engram_release.swiftui_artifact_name("0.4.0", "linux")
 
 
 class CommandLineTests(unittest.TestCase):

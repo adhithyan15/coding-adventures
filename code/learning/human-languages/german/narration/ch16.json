@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 16,
-  "title": "Family",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:caa53a4ddcd6d498",
+  "title": "The Pair That Proves Grimm's Law",
+  "drivablePrefix": 13,
+  "sourceHash": "fnv1a64:acf5a4dfb8fcd708",
   "lessons": [
     {
-      "id": "GE-C10-eltern",
-      "sequence": 285,
-      "title": "der Vater, die Mutter — the family that proves Grimm's law",
-      "headword": "der Vater, die Mutter",
-      "romanization": "der Vater, die Mutter",
-      "gloss": "father and mother — Grimm's law makes them twins of English father/mother",
+      "id": "GE-C10-vater",
+      "sequence": 282,
+      "title": "der Vater — \"father\"",
+      "headword": "der Vater",
+      "romanization": "der Vater",
+      "gloss": "father — spelled with a V and said with an f, which is the whole chapter in one letter",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48a6c99b58397411",
+      "sourceHash": "fnv1a64:54a6c32b98eba9e2",
       "notice": null,
       "blocks": [
         {
@@ -35,63 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "Back in the months chapter, German borrowed its calendar from Latin (Januar, März…). Family is the opposite story: Vater and Mutter are not borrowed — they are inherited Germanic words, blood cousins of English father and mother. And the sound-law that links them, Grimm's law, is written right on their faces."
+              "text": "The months were bought from Rome. Nothing in this chapter was."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "Taken apart",
+          "type": "input",
+          "title": "You'll want to know: der Vater",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Vater (\"father\") — note the spelling V, but it is pronounced f (FAH-ter). from PIE ph₂tḗr."
+              "text": "der Vater — \"father.\""
             },
             {
               "kind": "speech",
-              "text": "die Mutter (\"mother\"). from PIE méh₂tēr."
-            },
-            {
-              "kind": "speech",
-              "text": "Articles: der Vater (masculine), die Mutter (feminine)."
+              "text": "A der-word, two syllables, and the first letter is a trap for an English eye."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Grimm's law, on display",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Grimm's law is the great sound-shift that split the Germanic languages (English, German, Dutch…) off from the rest. Watch what it did to the same PIE words that Latin kept as pater/māter:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "PIE",
-                "Latin (French)",
-                "Germanic (English / German)"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "PIE: ph₂tḗr. Latin (French): pater (père). Germanic (English / German): father / Vater (V = f).",
-                "PIE: méh₂tēr. Latin (French): māter (mère). Germanic (English / German): mother / Mutter."
-              ]
+              "text": "v-as-f — German v is an f. You were given this on vier, \"four,\" and it has not changed: Vater opens FAH-, never VAH-."
             },
             {
               "kind": "speech",
-              "text": "p becomes f: Latin kept the p (pater); Germanic turned it to f — English father, German Vater (the V is just an old spelling of that f sound)."
+              "text": "vowel-a-long — the a is long and open, the ah of English father."
             },
             {
               "kind": "speech",
-              "text": "t becomes th becomes d: the middle consonant became English th (mother) and then, in German's later shift, d/t (Mutter)."
+              "text": "r-final — and it closes on the soft r you have been ending words with since Uhr."
             },
             {
               "kind": "speech",
-              "text": "So German and English agree here (both f-, both m-) precisely because they are both Germanic — while French/Latin sit on the other side of Grimm's line. The month names were Latin tourists; Vater and Mutter are natives."
+              "text": "FAH-ter. Say it beside English father and the only real difference is the middle consonant."
             }
           ]
         },
@@ -109,29 +91,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Vater, die Mutter\" — Vater with an f sound",
+              "instruction": "\"der Vater\" — FAH-ter",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Vater, die Mutter\" — *Vater* with an **f** sound]"
+              "source": "[YOU SAY: \"der Vater\" — FAH-ter]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twin test — \"Vater / father, Mutter / mother — both Germanic\"",
+              "instruction": "the letter and the sound — \"V on the page, f in the mouth\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twin test — \"**V**ater / **f**ather, **M**utter / **m**other — both Germanic\"]"
+              "source": "[YOU SAY: the letter and the sound — \"V on the page, f in the mouth\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "contrast — \"German months = Latin (Januar); German family = Germanic (Vater)\"",
+              "instruction": "it beside its English twin — \"Vater, father\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: contrast — \"German months = Latin (Januar); German family = Germanic (Vater)\"]"
+              "source": "[YOU SAY: it beside its English twin — \"Vater, father\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Vater.\""
             }
           ]
         },
@@ -148,7 +139,1574 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"father\" and \"mother\" with articles, minding the pronunciation. (der Vater — f sound — die Mutter.) Why do German Vater and English father match, while French père differs? (German & English are both Germanic — Grimm's law shifted p becomes f in both; French kept Latin's p.) How does this chapter contrast with the months chapter? (Months were borrowed from Latin; family is inherited Germanic.) Next: Bruder and Schwester."
+              "text": "Say \"father.\" (Der Vater.) Which article? (Der.) How is the V said? (As an f.) Which number gave you that? (Vier.) Next: why that f is there at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-vater-pater",
+      "sequence": 283,
+      "title": "Vater and pater",
+      "headword": "Vater und pater",
+      "romanization": "Vater und pater",
+      "gloss": "the p that became an f — Grimm's law, on the one word every family has",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26404df29dd5a4b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You were given a sound law once, on Donner and thunder. Here it is again, on the oldest word in the language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One ancient word, reconstructed as ph₂tér, went into every branch of the family. Then the Germanic branch did something the others did not."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "branch",
+                "what it did to the first sound",
+                "result"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "branch: Latin, and Romance after it. what it did to the first sound: kept the p. result: pater, French père.",
+                "branch: Germanic. what it did to the first sound: turned it into an f. result: father, Vater."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The German V is an old spelling of that f. Take the letter away and the two Germanic words are the same word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That p becomes f is one line of Grimm's law, the shift that separated the Germanic languages from the rest. It ran through the whole vocabulary at once, which is why it is a law and not an anecdote."
+            },
+            {
+              "kind": "speech",
+              "text": "And it is why German and English agree here while French sits on the other side. They agree because they are on the same side of one ancient change — not because either borrowed from the other. The month names came from Rome. This word never went anywhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two Germanic ones — \"Vater, father\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two Germanic ones — \"Vater, father\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin one — \"pater\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin one — \"pater\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the change — \"p became f\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the change — \"p became f\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"pater, Vater — p to f.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin keep? (The p — pater.) What did Germanic do with it? (Turned it into an f.) What is that shift called? (Grimm's law.) So why do German and English match? (Same side of the change.) Next: the mother, and the second leg of the same law."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-mutter",
+      "sequence": 284,
+      "title": "die Mutter — \"mother\"",
+      "headword": "die Mutter",
+      "romanization": "die Mutter",
+      "gloss": "mother — a die-word, and the one family word whose first sound nothing ever touched",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88ddb220c62c1634",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The father's first sound changed. This one held."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Mutter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Mutter — \"mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A die-word beside der Vater, and the pair is how the two articles are usually first met in a sentence about people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mund-short-u — the u is short, the vowel of English put, not the uh of English mother."
+            },
+            {
+              "kind": "speech",
+              "text": "d-t-final — and the -tt- is a crisp double t."
+            },
+            {
+              "kind": "speech",
+              "text": "MOO-ter, with the oo clipped short. Weight on the first syllable, as it is on Vater."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Mutter\" — MOO-ter, short",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Mutter\" — MOO-ter, short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair with their articles — \"der Vater, die Mutter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair with their articles — \"der Vater, die Mutter\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English pair — \"father, mother\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English pair — \"father, mother\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Vater, die Mutter.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"mother.\" (Die Mutter.) Which article? (Die.) Is the u long or short? (Short.) Say both parents together. (Der Vater, die Mutter.) Next: the consonant in the middle, which did move."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-mutter-mater",
+      "sequence": 285,
+      "title": "Mutter and mater",
+      "headword": "Mutter und mater",
+      "romanization": "Mutter und mater",
+      "gloss": "the same law, one consonant further in — t became th in English and then d or t in German",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3480d3964a0295d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The father moved at the front. The mother moves in the middle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first sound of this word never changed anywhere: m in Latin, m in English, m in German. The middle one did, twice."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "stage",
+                "the middle sound",
+                "word"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "stage: Latin, untouched. the middle sound: t. word: mater, French mère.",
+                "stage: Germanic, first shift. the middle sound: th. word: mother.",
+                "stage: German, its own later shift. the middle sound: tt. word: Mutter."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English stopped after one change. German kept going and ran a second shift of its own, which is why mother and Mutter differ where father and Vater barely do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two shifts, one after the other, both of them laws rather than accidents. The first separated Germanic from Latin; the second separated German from English."
+            },
+            {
+              "kind": "speech",
+              "text": "So the distance between any two of these words is a count of how many shifts have run between them. Mater to mother is one. Mother to Mutter is one more. That is the whole reason the family looks scattered from the outside and is perfectly orderly from the inside."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three in order — \"mater, mother, Mutter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three in order — \"mater, mother, Mutter\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the middle sound each time — \"t, th, tt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the middle sound each time — \"t, th, tt\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what never changed — \"the m\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what never changed — \"the m\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"mater, mother, Mutter.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the Latin? (Mater.) What did the first shift make of the middle t? (Th.) And the second? (The tt of Mutter.) How many shifts separate mater from Mutter? (Two.) Next: the word for both of them at once."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-eltern",
+      "sequence": 286,
+      "title": "die Eltern — \"parents\"",
+      "headword": "die Eltern",
+      "romanization": "die Eltern",
+      "gloss": "parents — a plural with no singular, and underneath it a comparative meaning \"the older ones\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b293ee3e80b8222",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have a father and a mother. German has one word for the two of them, and it only comes in the plural."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Eltern",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Eltern — \"parents.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It takes die, like every plural you have met, and there is no singular form of it. You cannot say \"one Eltern\"; a single one is der Vater or die Mutter."
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath, it is a comparative that hardened into a noun: it means \"the older ones.\" English had the same formation and kept it as elders, narrowed to people of standing rather than to the two who raised you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every word in this chapter is inherited. Not one of them was bought."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not an accident of this list. The words a language uses every hour of every day are the ones an incoming language cannot displace, and there is nothing more everyday than the people in a house. Rome ran the calendar, so German took the calendar's words. Rome did not run anybody's family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Eltern\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Eltern\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two it stands for — \"der Vater, die Mutter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two it stands for — \"der Vater, die Mutter\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it literally means — \"the older ones\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it literally means — \"the older ones\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English word from the same formation — \"elders\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English word from the same formation — \"elders\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"die Eltern.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"parents.\" (Die Eltern.) What is the singular? (There is none — use der Vater or die Mutter.) What does it mean underneath? (The older ones.) Was any word in this chapter borrowed? (No — all inherited.) Next: the brother."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-bruder",
+      "sequence": 287,
+      "title": "der Bruder — \"brother\"",
+      "headword": "der Bruder",
+      "romanization": "der Bruder",
+      "gloss": "brother — the same word as English brother with one vowel of difference",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ebfbd9d099016d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Out of the parents and into their children. This one you can almost read already."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Bruder",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Bruder — \"brother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A der-word. Set it beside English brother and one vowel is the whole distance: oo where English has uh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-u-long — a long oo, as in English food."
+            },
+            {
+              "kind": "speech",
+              "text": "r-uvular — the r after B is made at the back of the throat, a light scrape rather than a roll."
+            },
+            {
+              "kind": "speech",
+              "text": "r-final — and the ending is the soft closing r again."
+            },
+            {
+              "kind": "speech",
+              "text": "BROO-der, weight on the first, exactly the rhythm of Vater and Mutter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Bruder\" — BROO-der",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Bruder\" — BROO-der]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English twin — \"Bruder, brother\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English twin — \"Bruder, brother\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three of the family so far — \"der Vater, die Mutter, der Bruder\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three of the family so far — \"der Vater, die Mutter, der Bruder\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Bruder.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"brother.\" (Der Bruder.) Which article? (Der.) Long or short u? (Long — BROO.) Next: what Latin did to the front of it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-bruder-frater",
+      "sequence": 288,
+      "title": "Bruder and frater",
+      "headword": "Bruder und frater",
+      "romanization": "Bruder und frater",
+      "gloss": "the third line of the same law — where Latin has an f, Germanic has a b",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:380b060629e8b21a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On the father, Latin had the p and Germanic had the f. Here it is the other way round, and that is not a contradiction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ancient word is reconstructed as bʰréh₂tēr — it begins with a breathy b, a sound neither language kept."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "branch",
+                "what it did with the breathy b",
+                "result"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "branch: Latin. what it did with the breathy b: turned it into an f. result: frater, French frère.",
+                "branch: Germanic. what it did with the breathy b: flattened it to a plain b. result: brother, Bruder."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So Bruder and frater really are one word, and the b against the f is the mark of which branch you are standing in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "It looks reversed against Vater and pater, where Germanic held the f. It is not. The two words started from different ancient sounds: a plain p in one, a breathy b in the other. Grimm's law moved each of them once, in its own direction, and the results cross over."
+            },
+            {
+              "kind": "speech",
+              "text": "That is what makes it a law worth the name. It does not say \"Germanic prefers f.\" It says each old sound goes to one particular new one, every time — and you can run it forwards on a word you have never seen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"frater, Bruder\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"frater, Bruder\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which branch has which — \"Latin f, Germanic b\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which branch has which — \"Latin f, Germanic b\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the father pair beside it — \"pater, Vater\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the father pair beside it — \"pater, Vater\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"frater, Bruder.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the Latin for Bruder? (Frater.) Which branch has the b? (Germanic.) Does that contradict pater and Vater? (No — they started from different old sounds.) Next: a cluster of three letters that says two sounds."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-schw",
+      "sequence": 289,
+      "title": "schw- — three letters, two sounds",
+      "headword": "schw-",
+      "romanization": "schw-",
+      "gloss": "three letters, two sounds — sch is English sh, and the w after it is a v",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2932e7d20a496a61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One sound cluster before the next word, because the word is unreadable without it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sch-sh — sch is one sound, and it is the sh of English ship. Not s-k-h, not sk. Three letters, one consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "w-as-v — and German w is a v, the rule you were given on Winter."
+            },
+            {
+              "kind": "speech",
+              "text": "schw-cluster — put them together and schw- comes out shv-."
+            },
+            {
+              "kind": "speech",
+              "text": "English can say sh and English can say v, but it never puts them side by side at the start of a word. Say shhh, hold it, then let it fall straight into v without a vowel between: shv."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the first sound alone — \"sh\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the first sound alone — \"sh\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the second alone — \"v\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the second alone — \"v\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two joined, no vowel — \"shv\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two joined, no vowel — \"shv\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, slower — \"shv\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, slower — \"shv\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"shv.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many sounds is sch? (One — English sh.) How is German w said? (As a v.) So what does schw- sound like? (Shv-.) Is there a vowel between them? (No.) Next: the word that starts with it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-schwester",
+      "sequence": 290,
+      "title": "die Schwester — \"sister\"",
+      "headword": "die Schwester",
+      "romanization": "die Schwester",
+      "gloss": "sister — and once you strip the sch back to an s it is the English word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a109c51fd8c6bfe7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have the cluster. Here is the word it was for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Schwester",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Schwester — \"sister.\""
+            },
+            {
+              "kind": "speech",
+              "text": "SHVES-ter. A die-word, and the counterpart of der Bruder."
+            },
+            {
+              "kind": "speech",
+              "text": "On the page it looks unrelated to sister. In the mouth it is not: take the shv back to a plain s and what is left — s-e-s-t-e-r — is the English word with one vowel moved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schw-cluster — shv-, straight into the vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "herz-short-e — a short open e, the vowel of English bed."
+            },
+            {
+              "kind": "speech",
+              "text": "r-final — and the same soft ending as Vater, Mutter and Bruder."
+            },
+            {
+              "kind": "speech",
+              "text": "Four family words now, and all four end the same way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Schwester\" — SHVES-ter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Schwester\" — SHVES-ter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"der Bruder, die Schwester\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"der Bruder, die Schwester\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"der Vater, die Mutter, der Bruder, die Schwester\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"der Vater, die Mutter, der Bruder, die Schwester\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"die Schwester.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"sister.\" (Die Schwester.) How does it start? (Shv-.) Which article? (Die.) Say the brother beside it. (Der Bruder.) Next: what Latin did with the same word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-schwester-soror",
+      "sequence": 291,
+      "title": "Schwester and soror",
+      "headword": "Schwester und soror",
+      "romanization": "Schwester und soror",
+      "gloss": "one root behind Schwester, sister and soror — and the s that survived in all three",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ed56c9589ef37e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The brother's first sound split the two branches. The sister's did not split anything."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ancient word is reconstructed as swésōr, and all three descendants keep its s:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "the word",
+                "the first sound"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "language: German. the word: Schwester. the first sound: sch is a later German dressing on an s.",
+                "language: English. the word: sister. the first sound: plain s.",
+                "language: Latin. the word: soror. the first sound: plain s."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Grimm's law had nothing to do to an s. It moved the stops — the ps, ts and bs — and left this one where it stood, which is why the sister is the one family word whose front sound matches across the whole family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin soror is behind French sœur, and behind English sorority — which English borrowed back from Latin centuries after it already had sister from the same root. The two came in by different doors and nobody noticed they were relatives."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the ordinary condition of a big vocabulary: the same ancient word arriving twice, once inherited and once bought, sitting in the dictionary without recognising each other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three — \"Schwester, sister, soror\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three — \"Schwester, sister, soror\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what they share — \"the s\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what they share — \"the s\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English word borrowed back from Latin — \"sorority\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English word borrowed back from Latin — \"sorority\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Schwester, sister, soror.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the Latin? (Soror.) What do all three share? (The s.) Why did Grimm's law leave it? (It moved stops, not s.) What is the sch then? (Later German dressing on the same s.) Next: the word English does not have."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-geschwister-wort",
+      "sequence": 292,
+      "title": "die Geschwister — \"siblings\"",
+      "headword": "die Geschwister",
+      "romanization": "die Geschwister",
+      "gloss": "siblings — one word for brothers and sisters together, which English has to say in three",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:466d07305478c143",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German has one word for the brother and the sister together. English has siblings, which almost nobody says at a kitchen table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Geschwister",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Geschwister — \"siblings,\" brothers and sisters as a set."
+            },
+            {
+              "kind": "speech",
+              "text": "Consider what is inside it. Take off the Ge- at the front and -schwister is Schwester, which you own — the same shv, the same ending. A plural, so die, and like Eltern it has no singular."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The odd part is that a word built on Schwester covers the brothers too. Two boys and no girls in a house are still die Geschwister."
+            },
+            {
+              "kind": "speech",
+              "text": "German built the collective on the word that happened to be there, and the collective then outranked the piece it was made from. English never built one at all: it says brothers and sisters and reaches for the Latin-derived siblings when it needs a single term."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Geschwister\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Geschwister\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word inside it — \"Schwester\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word inside it — \"Schwester\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two it covers — \"der Bruder, die Schwester\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two it covers — \"der Bruder, die Schwester\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what English says instead — \"brothers and sisters\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what English says instead — \"brothers and sisters\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"die Geschwister.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"siblings.\" (Die Geschwister.) Which word is inside it? (Schwester.) Does it cover brothers? (Yes — all of them.) Is there a singular? (No.) Next: what that Ge- on the front is doing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C10-ge-kollektiv",
+      "sequence": 293,
+      "title": "The gathering Ge-",
+      "headword": "das sammelnde Ge-",
+      "romanization": "das sammelnde Ge-",
+      "gloss": "the prefix that turns one thing into a set of them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19480c0cf6840edf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One prefix, one job, and the last word showed you it working."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one member in, a whole set out",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put Ge- on the front of a word for one member of something, and you get a word for the whole set of them."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "in",
+                "out"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "in: Schwester, one member. out: Geschwister, the set."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is the machine. It is old, it is Germanic, and German still runs it: a mountain becomes a mountain range, a piece of luggage becomes the luggage, a vegetable becomes the vegetables — each one a bare noun with Ge- welded on."
+            },
+            {
+              "kind": "speech",
+              "text": "English had this prefix and wore it away to nothing. What is left of it in English are fossils nobody parses any more."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both plural-only family words in this chapter are made rather than borrowed, and each is made a different way."
+            },
+            {
+              "kind": "speech",
+              "text": "Eltern takes an adjective and freezes it: the older ones. Geschwister takes a noun and gathers it: the set of them."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither has a singular, because neither was ever about one person. They name a group directly, and German got both of them out of parts it already had."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the prefix does — \"one member in, the set out\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the prefix does — \"one member in, the set out\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair it made — \"Schwester, Geschwister\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair it made — \"Schwester, Geschwister\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two plural-only words — \"die Eltern, die Geschwister\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two plural-only words — \"die Eltern, die Geschwister\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Schwester, Geschwister.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the gathering Ge- do? (Makes a set out of one member.) Which word in this chapter was built with it? (Geschwister.) And how was Eltern built instead? (From a comparative — the older ones.) Do either of them have a singular? (No.)"
             }
           ]
         }
@@ -156,18 +1714,18 @@
     },
     {
       "id": "GE-C10-geschwister",
-      "sequence": 290,
-      "title": "der Bruder, die Schwester — and the word for \"siblings\"",
-      "headword": "der Bruder, die Schwester",
-      "romanization": "der Bruder, die Schwester",
-      "gloss": "brother and sister — again Germanic twins of the English words",
+      "sequence": 294,
+      "title": "Practice — the household, and the law that runs through it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — five people, two collectives, and a sound law that ran through all of them",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3734e6145b8caf92",
+      "sourceHash": "fnv1a64:f87bd4e06e5d90e0",
       "notice": null,
       "blocks": [
         {
@@ -183,56 +1741,84 @@
             },
             {
               "kind": "speech",
-              "text": "The parent pair proved German and English are Germanic twins. The sibling pair does it again: Bruder (\"brother\") and Schwester (\"sister\") are the near-identical cousins of the English words — no translation really needed, just an ear for the German sounds."
+              "text": "No new words. Four people, two words for groups of them, and one sound law with three lines."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "Taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the four, and their two collectives",
           "segments": [
             {
-              "kind": "speech",
-              "text": "der Bruder (\"brother\") from PIE bʰréh₂tēr — the same root as Latin frāter (French frère), but here kept with a b- (Grimm's law changed bʰ becomes b), exactly like English brother."
+              "kind": "table",
+              "headers": [
+                "one person",
+                "the set they belong to"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "one person: der Vater. the set they belong to: die Eltern.",
+                "one person: die Mutter. the set they belong to: die Eltern.",
+                "one person: der Bruder. the set they belong to: die Geschwister.",
+                "one person: die Schwester. the set they belong to: die Geschwister."
+              ]
             },
             {
               "kind": "speech",
-              "text": "die Schwester (\"sister\") from PIE swésōr. The German sch spells an sh sound; strip it back and Schwester is English sister and Latin soror, all one root."
+              "text": "Both collectives take die and neither has a singular. One was frozen out of a comparative, the other gathered with a prefix."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The collective — Geschwister",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "German has a tidy word English lacks: die Geschwister = \"siblings,\" brothers-and-sisters together. It is built with the ge- prefix, an old collective marker (\"a set of…\") on Schwester — the same ge- that bundles mountains into a Gebirge (\"range\") and lets German gather a family in one word."
+              "text": "Set the four against their Latin cousins and the law is legible in a line:"
             },
             {
               "kind": "speech",
-              "text": "The four family words now stand as a Germanic set beside the Romance ones:"
+              "text": "Vater against pater — the p became an f."
             },
             {
-              "kind": "table",
-              "headers": [
-                "German",
-                "English",
-                "(Romance cousin)"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "German: Vater / Mutter. English: father / mother. (Romance cousin): père / mère.",
-                "German: Bruder / Schwester. English: brother / sister. (Romance cousin): frère / sœur."
-              ]
+              "kind": "speech",
+              "text": "Mutter against mater — the t became th, and then German moved it again."
+            },
+            {
+              "kind": "speech",
+              "text": "Bruder against frater — a breathy b flattened one way in Germanic and turned to f in Latin, so the swap runs the opposite way."
+            },
+            {
+              "kind": "speech",
+              "text": "Schwester against soror — nothing moved. The law does not touch an s."
+            },
+            {
+              "kind": "speech",
+              "text": "Three moved and one did not, and which is which was decided by the sound, not by the word. That is what makes it predictable."
             }
           ]
         },
         {
           "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — and what the chapter is made of",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "And every word here is inherited. Not one was bought, where every month name was."
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern holds across the whole book: the words a language uses every hour resist replacement, and the words that arrive with an institution come in whole. A calendar is an institution. A household is not."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -245,34 +1831,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Bruder, die Schwester\" — Schw- = shv",
+              "instruction": "the four with their articles — \"der Vater, die Mutter, der Bruder, die Schwester\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Bruder, die Schwester\" — *Schw-* = *shv*]"
+              "source": "[YOU SAY: the four with their articles — \"der Vater, die Mutter, der Bruder, die Schwester\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twin test — \"Bruder / brother, Schwester / sister\"",
+              "instruction": "the two collectives — \"die Eltern, die Geschwister\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twin test — \"**B**ruder / **b**rother, **Schw**ester / **s**ister\"]"
+              "source": "[YOU SAY: the two collectives — \"die Eltern, die Geschwister\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die Geschwister — the ge- bundles them into 'siblings'\"",
+              "instruction": "the one that starts shv — \"die Schwester\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Geschwister — the *ge-* bundles them into 'siblings'\"]"
+              "source": "[YOU SAY: the one that starts shv — \"die Schwester\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each pair against its Latin — \"Vater, pater; Mutter, mater; Bruder, frater; Schwester, soror\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each pair against its Latin — \"Vater, pater; Mutter, mater; Bruder, frater; Schwester, soror\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one Latin word that did not move — \"soror\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one Latin word that did not move — \"soror\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Vater, die Mutter, der Bruder, die Schwester.\""
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -284,7 +1897,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"brother\" and \"sister\" with articles. (der Bruder, die Schwester.) Why do they match English so closely? (Both Germanic — same PIE roots, no Grimm's-law gap between them.) What does Geschwister mean, and what does the ge- do? (\"Siblings\"; ge- is a collective prefix, \"a set of.\") Next chapter: putting the family into sentences."
+              "text": "Name the four. (Der Vater, die Mutter, der Bruder, die Schwester.) The word for the two older ones? (Die Eltern.) For the two younger? (Die Geschwister.) Which of the four is unchanged from Latin at the front? (Schwester — the s never moved.) And how many of these words did German borrow? (None.)"
             }
           ]
         }

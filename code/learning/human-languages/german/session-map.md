@@ -9,7 +9,7 @@ authoritative order.
 Every chapter listed here is **generated from the lessons** rather than
 hand-written LaTeX, so these tables and the book are the same object seen twice:
 the order below is the `sequence:` order the generator reads. The gap between
-chapter 15 and chapter 20 is the hand-written stretch that has not been retired
+chapter 17 and chapter 20 is the hand-written stretch that has not been retired
 yet.
 
 ## Chapter 1 — Greetings
@@ -282,6 +282,46 @@ three chapters at 8, 6 and 10, cut at the seams the `.tex` itself argues.
 | der Lenz | the old poetic spring, twin of English **Lent**: the days lengthening |
 | practice | the four, and the seam between what German bought and what it kept |
 
+## Chapter 16 — The Pair That Proves Grimm's Law
+
+Two lessons become thirteen. Twelve atoms is exactly the ceiling, so the chapter
+is not split — it fits at twelve only because Grimm's law (ch. 6), the *v*-as-*f*
+rule (ch. 7) and the loan-versus-native split (ch. 9) are all already owned and
+get spent rather than re-taught.
+
+| Session | What it adds |
+|---|---|
+| der Vater | a **V** on the page and an **f** in the mouth, from *vier* |
+| Vater und pater | **p → f**: the line between Germanic and Latin |
+| die Mutter | a *die*-word beside *der Vater*; short *u* |
+| Mutter und mater | **t → th**, and then German moves it a second time |
+| die Eltern | parents: a comparative frozen into a plural-only noun |
+| der Bruder | one vowel from English *brother* |
+| Bruder und frater | the swap runs the **other** way, and that is the point |
+| schw- | three letters, two sounds: *sh* + *v*, no vowel between |
+| die Schwester | unreadable on the page, obvious in the mouth |
+| Schwester und soror | the *s* the law never touched |
+| die Geschwister | one word for the set, built on the word for a sister |
+| das sammelnde Ge- | one member in, the whole set out |
+| practice | four people, two collectives, one law with four verdicts |
+
+## Chapter 17 — Bread, Water, Wine
+
+Two lessons become seven, and only six atoms — four of the things the `.tex`
+presents as new are already owned and get spent: all three articles by name
+(ch. 1), capitalisation (ch. 4), *ei* as *eye* (ch. 6), and the loan-versus-native
+split (ch. 9, fifth use).
+
+| Session | What it adds |
+|---|---|
+| das Brot | bread — and the neuter *das* finally gets a noun to sit on |
+| Brot und bread | the absence: Latin *pānis* stopped at the Germanic line |
+| das Wasser | a second *das*-word; the *w* that is a *v*, for the third time |
+| Wasser und water | *t* → *ss*, German's own later shift, as in *Mutter* |
+| der Wein | *der*, not *das* — and it comes out sounding like *vine* |
+| Wein und vinum | too close to be cousins: one loan, arriving with the plant |
+| practice | the inherited pair drifted, the loan did not — read it off the words |
+
 ## Chapter 20 — To Have
 
 Chapter 5 taught the ending machine, so *haben* is met as the place that machine
@@ -421,5 +461,5 @@ six forms of a verb should use them for something real before meeting its past.
 
 ## Next
 
-Chapter 16 — family. Chapters 16–19 are still hand-written LaTeX;
-see `../BACKLOG.d/` for the retirement queue.
+Chapter 18 — numbers eleven to twenty. Chapters 18–19 are still hand-written
+LaTeX; see `../BACKLOG.d/` for the retirement queue.

@@ -1,53 +1,78 @@
 ---
+schema_version: 2
 id: GE-C11-brot
+spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 295
 chapter: 17
 type: word
 headword: das Brot
-gloss: bread — inherited Germanic, the twin of English bread
+gloss: bread — and the third article, das, which completes the set you were given in chapter one
 concept_tag: GE-FOOD-BREAD
-prerequisites: [GE-C10-geschwister, GE-C01-hallo]
-sounds: [long-o, r-uvular]
+prerequisites: [GE-C10-geschwister, GE-W03-capitalization]
+sounds: [long-o, r-uvular, d-t-final]
 roots: [germanic-braudam]
-etymology_hook: "Brot is INHERITED Germanic (← *braudam), the direct twin of English bread — NOT the Latin pānis the Romance sisters use; and it introduces the third gender, das (neuter)"
-est_minutes: 4
-reviews_of: [GE-C10-geschwister, GE-C01-hallo]
+etymology_hook: "Brot is a das-word, and das is the article you were shown in the first chapter and have not needed until now — the neuter has been waiting for a noun"
+duration:
+  max_seconds: 170
+requires:
+  knowledge: [GE-LEX-DER-DIE-DAS-02, GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-LEX-VATER-01, GE-LEX-MUTTER-01]
+introduces:
+  knowledge: [GE-LEX-BROT-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-BROT-01, GE-LEX-DER-DIE-DAS-02, GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-LEX-VATER-01, GE-LEX-MUTTER-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C01-der-die-das, GE-W03-capitalization, GE-C10-vater]
 ---
 
-# das Brot — bread, and the third gender
+# das Brot — "bread"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-VATER-01, GE-LEX-MUTTER-01, GE-LEX-DER-DIE-DAS-02] -->
 
-[PAUSE 2s] Where the Romance sisters all say a version of Latin *pānis* (French
-*pain*, Italian *pane*), German goes its **own Germanic way**: **Brot** — the
-direct twin of English **bread**. And it brings a new grammatical face: the
-**neuter** article, **das**.
+[PAUSE 2s] *Der Vater*. *Die Mutter*. You were given a third article in the
+first chapter and have had no noun for it. Here it is.
 
-## Taken apart
+## You'll want to know: das Brot
+<!-- hl-knowledge: introduces=[GE-LEX-BROT-01]; assesses=[GE-LEX-DER-DIE-DAS-02] -->
 
-- **das Brot** ("bread") ← old Germanic **\*braudam** — the same word that became
-  English **bread**. No Latin here: this is a **native** word, like *Vater* and
-  *Wasser*, from the Germanic core the two languages share.
+> **das Brot** — "bread."
 
-## The third gender — das
+A ***das***-word. That completes the set on real nouns: *der Vater*, *die
+Mutter*, *das Brot* — one of each, and now you have met all three doing their
+job rather than sitting in a list.
 
-You have met **der** (masculine, *der Vater*) and **die** (feminine, *die
-Mutter*). German has a **third**: **das**, the **neuter** — and *Brot* is one:
-**das Brot**. (German nouns are also always **capitalized** — *Brot*, *Vater*,
-*Wasser* — a rule no other language here follows.) So the article set is now
-complete: **der / die / das**.
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BROT-01, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
+
+- `long-o` — a long *o*, the vowel of English *boat*, held steady.
+- `r-uvular` — the *r* is made far back in the throat.
+- `d-t-final` — and the final *t* is crisp.
+
+*broht*. One syllable, and capitalised on the page like every German noun,
+whether it names a person or a loaf.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BROT-01, GE-LEX-DER-DIE-DAS-02, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "das Brot" — long *o*, the neuter *das*]
-- [YOU SAY: the twin test — "**Brot / bread** — both Germanic, no Latin"]
-- [YOU SAY: the three genders — "der Vater, die Mutter, das Brot"]
+- [YOU SAY: "das Brot" — broht]
+- [YOU SAY: one noun of each gender — "der Vater, die Mutter, das Brot"]
+- [YOU SAY: the three articles alone — "der, die, das"]
+- [YOU SAY: why it has a capital — "every German noun does"]
+
+[REPEAT x2] "das Brot."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BROT-01, GE-LEX-DER-DIE-DAS-02, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
 
-[PAUSE 3s] Give "bread" with its article. (**das Brot**.) Why is it *not* from
-Latin *pānis* like French *pain*? (It is **inherited Germanic** — the twin of
-English **bread**.) What gender does *das* mark, and what are the other two?
-(**Neuter** — with *der* masculine and *die* feminine.) Next: **Wasser** and
-**Wein** — and a split between native and borrowed.
+[PAUSE 3s] Say "bread." (**Das Brot**.) Which article? (***Das*** — the
+neuter.) Say all three with a noun each. (**Der Vater, die Mutter, das Brot**.)
+Why the capital *B*? (**German capitalises every noun**.) Next: where the word
+comes from, and where it does not.

@@ -12,9 +12,9 @@ pub use package::{
 
 use chief_of_staff_agent_manifest::AgentManifest;
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, validate_tool_id, InMemoryToolRuntime, PrivilegeTier, RequestedBy,
-    ToolApiError, ToolApprovalGrant, ToolDefinition, ToolExecutionTrace, ToolHandler,
-    ToolInvocationRequest, ToolPolicyEngine,
+    builtin_tool_definition, tools_naming_another_agent, validate_tool_id, InMemoryToolRuntime,
+    PrivilegeTier, RequestedBy, ToolApiError, ToolApprovalGrant, ToolDefinition,
+    ToolExecutionTrace, ToolHandler, ToolInvocationRequest, ToolPolicyEngine,
 };
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
@@ -87,6 +87,14 @@ impl HostProfile {
             allowed_tools: manifest.allowed_tools.clone(),
             capabilities: manifest.tool_capabilities.clone(),
         };
+        // S-I7 is NOT enforced here. A first attempt put it on this
+        // constructor, which has no production callers -- every profile that
+        // reaches a live agent comes from `OrchestratorProfile::from_json`,
+        // which builds `HostProfile` struct-literally, or from
+        // `HostProfileRuntime::new`. A boundary on a path nothing takes is the
+        // same "a test is not a boundary" error one type down. It lives in
+        // `check_registration` instead, which every registration crosses.
+        //
         // Validate the profile's own bounds too. The manifest check above
         // covers the version-to-field binding this type knows nothing about;
         // this covers label shapes, the empty-catalog rule, and duplicates.
@@ -396,6 +404,23 @@ impl HostProfileRuntime {
     pub fn check_registration(&self, definition: &ToolDefinition) -> Result<(), HostRuntimeError> {
         if !self.profile.allows_tool(&definition.tool_id) {
             return Err(HostRuntimeError::ToolNotAllowed(definition.tool_id.clone()));
+        }
+        // D18S S-I7: a V1 agent's view contains no agent identity and the agent
+        // cannot supply one.
+        //
+        // Checked HERE, on the definition in hand, rather than at profile
+        // construction. Resolving ids through `builtin_tool_definition` would
+        // have covered 34 built-ins and silently skipped everything else --
+        // including the ten `smart_home.*` tools this repo already pins as
+        // naming a peer through `principal_id`, none of which is a built-in.
+        // A registration path sees the real definition whatever catalog it
+        // came from, so the resolver, and therefore the gap, disappears.
+        let named = tools_naming_another_agent(std::slice::from_ref(definition));
+        if let Some((tool_id, properties)) = named.into_iter().next() {
+            return Err(HostRuntimeError::ToolNamesAnotherAgent {
+                tool_id,
+                properties,
+            });
         }
         if definition.required_tier > self.profile.max_tier {
             return Err(HostRuntimeError::PrivilegeCeilingExceeded {
@@ -1022,6 +1047,11 @@ impl ActiveHostToolRuntime {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HostRuntimeError {
+    /// A tool's schema names an agent other than the caller (D18S S-I7).
+    ToolNamesAnotherAgent {
+        tool_id: String,
+        properties: Vec<String>,
+    },
     InvalidJson(String),
     MissingField(String),
     InvalidField {
@@ -1085,6 +1115,14 @@ pub enum HostRuntimeError {
 impl Display for HostRuntimeError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
+            Self::ToolNamesAnotherAgent {
+                tool_id,
+                properties,
+            } => write!(
+                f,
+                "tool '{tool_id}' names another agent ({}) and may not be offered to a V1 agent",
+                properties.join(", ")
+            ),
             Self::InvalidJson(message) => write!(f, "invalid host profile JSON: {message}"),
             Self::MissingField(field) => write!(f, "host profile is missing '{field}'"),
             Self::InvalidField { field, message } => {
@@ -1379,6 +1417,98 @@ mod tests {
             .contains(&"smart_home.discover".to_string()));
         assert!(!profile.has_capability("smart_home:read"));
         assert_eq!(profile.max_tier, PrivilegeTier::Tier0);
+    }
+
+    #[test]
+    fn registering_a_peer_naming_tool_into_an_agent_host_is_refused() {
+        // D18S S-I7 at the boundary every registration crosses. A first
+        // attempt gated `HostProfile::from_manifest`, which has NO production
+        // callers -- every profile reaching a live agent comes from
+        // `OrchestratorProfile::from_json` (which builds HostProfile
+        // struct-literally) or `HostProfileRuntime::new`. A boundary on a path
+        // nothing takes is the same "a test is not a boundary" error one type
+        // down.
+        let profile = HostProfile::from_json(
+            r#"{
+              "profile_id": "orchestrator-1",
+              "host_id": "curious-agent",
+              "max_tier": "tier3",
+              "allowed_tools": ["vault.request_direct"],
+              "capabilities": ["vault:direct"]
+            }"#,
+        )
+        .expect("profile parses");
+        let runtime = HostProfileRuntime::new(profile).expect("runtime builds");
+
+        let definition = builtin_tool_definition("vault.request_direct")
+            .expect("vault.request_direct is a built-in");
+        match runtime.check_registration(&definition) {
+            Err(HostRuntimeError::ToolNamesAnotherAgent {
+                tool_id,
+                properties,
+            }) => {
+                assert_eq!(tool_id, "vault.request_direct");
+                assert_eq!(properties, vec!["consumer_agent_id".to_string()]);
+            }
+            other => panic!("expected ToolNamesAnotherAgent, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn a_peer_naming_tool_outside_the_builtin_catalog_is_also_refused() {
+        // This is the case the resolver-based check would have missed. Ten
+        // `smart_home.*` tools name a peer through `principal_id` and NONE is
+        // a built-in, so resolving ids through `builtin_tool_definition` would
+        // have reported them clean. Checking the definition in hand at
+        // registration removes the resolver, and with it the gap.
+        let profile = HostProfile::from_json(
+            r#"{
+              "profile_id": "orchestrator-1",
+              "host_id": "curious-agent",
+              "max_tier": "tier3",
+              "allowed_tools": ["plugin.reads_a_peer"],
+              "capabilities": []
+            }"#,
+        )
+        .expect("profile parses");
+        let runtime = HostProfileRuntime::new(profile).expect("runtime builds");
+
+        // Take a real peer-naming definition and give it an id this crate has
+        // no knowledge of. If the check still fires, it is reading the
+        // definition rather than resolving the id -- which is the whole point.
+        let mut definition = builtin_tool_definition("vault.request_direct")
+            .expect("vault.request_direct is a built-in");
+        definition.tool_id = "plugin.reads_a_peer".to_string();
+        assert!(
+            builtin_tool_definition(&definition.tool_id).is_none(),
+            "the fixture must be outside the built-in catalog"
+        );
+
+        assert!(matches!(
+            runtime.check_registration(&definition),
+            Err(HostRuntimeError::ToolNamesAnotherAgent { .. })
+        ));
+    }
+
+    #[test]
+    fn the_lease_path_still_registers() {
+        // The refusal must be narrow: `vault.request_lease` returns a bearer
+        // capability for the caller itself and names no peer, so the useful
+        // half of vault access has to keep working.
+        let profile = HostProfile::from_json(
+            r#"{
+              "profile_id": "orchestrator-1",
+              "host_id": "leasing-agent",
+              "max_tier": "tier3",
+              "allowed_tools": ["vault.request_lease"],
+              "capabilities": ["vault:lease"]
+            }"#,
+        )
+        .expect("profile parses");
+        let runtime = HostProfileRuntime::new(profile).expect("runtime builds");
+        let definition =
+            builtin_tool_definition("vault.request_lease").expect("lease tool is a built-in");
+        assert!(runtime.check_registration(&definition).is_ok());
     }
 
     #[test]

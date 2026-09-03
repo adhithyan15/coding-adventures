@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C11-wasser",
+    "language": "german",
+    "chapter": 17,
+    "sequence": 297,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a211d4d0c0d5be70"
+  },
+  "findings": []
+}

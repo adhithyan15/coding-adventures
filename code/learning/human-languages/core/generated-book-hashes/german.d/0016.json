@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:b98a27fc7d4c29fa",
+  "lessonIds": [
+    "GE-C10-vater",
+    "GE-C10-vater-pater",
+    "GE-C10-mutter",
+    "GE-C10-mutter-mater",
+    "GE-C10-eltern",
+    "GE-C10-bruder",
+    "GE-C10-bruder-frater",
+    "GE-C10-schw",
+    "GE-C10-schwester",
+    "GE-C10-schwester-soror",
+    "GE-C10-geschwister-wort",
+    "GE-C10-ge-kollektiv",
+    "GE-C10-geschwister"
+  ],
+  "tex": "german/book/chapters/ch16-familie.tex"
+}

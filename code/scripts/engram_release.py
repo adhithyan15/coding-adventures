@@ -18,10 +18,13 @@ from __future__ import annotations
 
 import argparse
 import os
+import plistlib
 import posixpath
 import re
 import shutil
+import struct
 import sys
+import tempfile
 import unicodedata
 import zipfile
 from pathlib import Path
@@ -95,6 +98,126 @@ def compose_artifact_name(version: str, platform: str) -> str:
     return f"engram-compose-{platform}-v{version}.{COMPOSE_TARGETS[platform]}"
 
 
+# The SwiftUI backend, macOS only -- it is a SwiftUI app, so there is nowhere
+# else for it to go. Unsigned zip rather than a dmg for the same reason the
+# Electron macOS build is: signing needs credentials this project does not have,
+# and macOS refuses an unsigned dmg with an error that reads like corruption.
+SWIFTUI_TARGETS = {"macos": "zip"}
+
+# Distinct DEFINED `eg_*` symbols that must be present in the packaged binary.
+# Five, not the ~47 the cdylib exports: SwiftUI is the one backend that LINKS
+# the engine statically, and a static link pulls in only the objects actually
+# referenced, so a correct build carries the nine the host calls and nothing
+# else. A check written against the full export list would fail on a working
+# app.
+MIN_LINKED_ENGINE_SYMBOLS = 5
+
+# Mach-O constants, from <mach-o/loader.h> and <mach-o/nlist.h>.
+MH_MAGIC_64 = 0xFEEDFACF
+MH_CIGAM_64 = 0xCFFAEDFE
+FAT_MAGIC = 0xCAFEBABE
+FAT_MAGIC_64 = 0xCAFEBABF
+LC_SYMTAB = 0x2
+N_STAB = 0xE0  # debug entries, which reuse the type field for other meanings
+N_TYPE = 0x0E
+N_SECT = 0x0E  # defined in a section of THIS file -- the bit that matters
+N_UNDF = 0x00  # undefined: expected from somewhere else at load time
+
+
+def linked_engine_symbols(binary: bytes) -> tuple[set[str], set[str]]:
+    """The `eg_*` symbols a Mach-O file defines, and the ones it leaves undefined.
+
+    The symbol TABLE, not a string search. That distinction is the whole point:
+    Mach-O stores defined and undefined names identically in the string table,
+    so scanning bytes for `eg_...` passes a binary that merely *references* the
+    engine and does not contain it -- which is exactly the broken build this
+    check exists to catch. Verified against a pair of fixtures compiled both
+    ways; a byte scan gave the same verdict for both.
+
+    Parsed by hand rather than shelling out to `nm`, because a toolchain check
+    is one that can be absent -- the `nm` assertion in `build-native.sh`
+    silently degrades to "unknown" on the Windows runner, and that is how a
+    platform ships unverified.
+    """
+
+    if len(binary) < 8:
+        raise ValueError("file is too short to be a Mach-O binary")
+
+    magic = struct.unpack_from(">I", binary, 0)[0]
+    if magic in (FAT_MAGIC, FAT_MAGIC_64):
+        # A universal binary: every slice must carry the engine, since we do
+        # not know which one the user's machine will run.
+        count = struct.unpack_from(">I", binary, 4)[0]
+        width = 32 if magic == FAT_MAGIC_64 else 20
+        defined: set[str] = set()
+        undefined: set[str] = set()
+        for index in range(count):
+            base = 8 + index * width
+            if magic == FAT_MAGIC_64:
+                offset, size = struct.unpack_from(">QQ", binary, base + 8)
+            else:
+                offset, size = struct.unpack_from(">II", binary, base + 8)
+            slice_defined, slice_undefined = linked_engine_symbols(
+                binary[offset : offset + size]
+            )
+            defined = slice_defined if index == 0 else defined & slice_defined
+            undefined |= slice_undefined
+        return defined, undefined
+
+    little = struct.unpack_from("<I", binary, 0)[0]
+    if little != MH_MAGIC_64 and magic != MH_CIGAM_64:
+        raise ValueError(f"not a 64-bit Mach-O binary (magic {little:#x})")
+
+    ncmds = struct.unpack_from("<I", binary, 16)[0]
+    offset = 32  # past mach_header_64
+    for _ in range(ncmds):
+        cmd, cmdsize = struct.unpack_from("<II", binary, offset)
+        if cmd == LC_SYMTAB:
+            symoff, nsyms, stroff, strsize = struct.unpack_from(
+                "<IIII", binary, offset + 8
+            )
+            return _read_symtab(binary, symoff, nsyms, stroff, strsize)
+        offset += cmdsize
+    raise ValueError("Mach-O binary has no symbol table")
+
+
+def _read_symtab(
+    binary: bytes, symoff: int, nsyms: int, stroff: int, strsize: int
+) -> tuple[set[str], set[str]]:
+    """Walk `nlist_64` entries, splitting `eg_*` names by defined vs undefined."""
+
+    strings = binary[stroff : stroff + strsize]
+    defined: set[str] = set()
+    undefined: set[str] = set()
+    for index in range(nsyms):
+        entry = symoff + index * 16
+        if entry + 16 > len(binary):
+            break
+        n_strx, n_type = struct.unpack_from("<IB", binary, entry)
+        if n_type & N_STAB:
+            continue
+        end = strings.find(b"\x00", n_strx)
+        if end < 0:
+            continue
+        name = strings[n_strx:end].decode("utf-8", "replace").lstrip("_")
+        if not name.startswith("eg_"):
+            continue
+        if n_type & N_TYPE == N_SECT:
+            defined.add(name)
+        elif n_type & N_TYPE == N_UNDF:
+            undefined.add(name)
+    return defined, undefined
+
+
+def swiftui_artifact_name(version: str, platform: str) -> str:
+    """The published name for the SwiftUI build."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}")
+    if platform not in SWIFTUI_TARGETS:
+        raise ValueError(f"unknown SwiftUI platform: {platform}")
+    return f"engram-swiftui-{platform}-v{version}.{SWIFTUI_TARGETS[platform]}"
+
+
 def artifact_names(version: str) -> list[str]:
     """Every payload this release publishes.
 
@@ -113,6 +236,10 @@ def artifact_names(version: str) -> list[str]:
     names.extend(
         compose_artifact_name(version, platform)
         for platform in sorted(COMPOSE_TARGETS)
+    )
+    names.extend(
+        swiftui_artifact_name(version, platform)
+        for platform in sorted(SWIFTUI_TARGETS)
     )
     return names
 
@@ -613,6 +740,127 @@ def _cmd_archive_compose(args: argparse.Namespace) -> int:
     return 0
 
 
+def archive_swiftui(
+    version: str, platform: str, source: Path, output_dir: Path, commit: str
+) -> Path:
+    """Archive the SwiftUI `.app` bundle for publication.
+
+    The engine check differs from every other backend's, because SwiftUI is the
+    one that links `engram-capi` statically instead of loading it at runtime.
+    There is no library file to look for beside the binary -- the engine either
+    is inside the executable or the app launches into a UI where every deck
+    operation silently does nothing.
+
+    So the packaged executable is scanned for engine symbol *names*, by reading
+    its bytes. Deliberately not `nm`: a toolchain check is one that can be
+    absent, and this repository has already shipped a platform unverified
+    exactly that way -- the `nm` assertion in `build-native.sh` silently
+    degrades to "unknown" on the Windows runner. Reading bytes works wherever
+    Python does, so it cannot skip.
+    """
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if not source.is_dir():
+        raise ValueError(f"SwiftUI bundle does not exist: {source}")
+    if source.suffix != ".app":
+        raise ValueError(f"expected a .app bundle, got: {source.name}")
+
+    info_plist = source / "Contents" / "Info.plist"
+    if not info_plist.is_file():
+        # Without it macOS does not treat the directory as an application at
+        # all: it opens as a folder rather than launching.
+        raise ValueError(f"bundle has no Info.plist: {source}")
+
+    # By NAME, from the plist. Taking the first entry of a sorted glob instead
+    # verifies whichever file happens to sort first -- so a bundle carrying a
+    # second file in `Contents/MacOS` would have that one scanned while the
+    # executable macOS actually launches shipped unexamined. Both get published.
+    try:
+        declared = plistlib.loads(info_plist.read_bytes()).get("CFBundleExecutable")
+    except Exception as error:  # noqa: BLE001 - any malformed plist is a refusal
+        raise ValueError(f"bundle has an unreadable Info.plist: {error}") from error
+    if not declared or "/" in declared or declared in {".", ".."}:
+        raise ValueError(f"bundle has no usable CFBundleExecutable: {source}")
+
+    macos = source / "Contents" / "MacOS"
+    if macos.is_symlink() or not macos.is_dir():
+        raise ValueError(f"Contents/MacOS is not a real directory: {source}")
+    present = sorted(path.name for path in macos.iterdir())
+    if present != [declared]:
+        raise ValueError(
+            f"Contents/MacOS must hold exactly {declared!r}, found {present}"
+        )
+
+    binary = macos / declared
+    if binary.is_symlink() or not binary.is_file():
+        raise ValueError(f"bundle executable is not a regular file: {binary}")
+
+    defined, undefined = linked_engine_symbols(binary.read_bytes())
+    if len(defined) < MIN_LINKED_ENGINE_SYMBOLS:
+        raise ValueError(
+            f"only {len(defined)} DEFINED engine symbols in {binary.name}; the "
+            f"engine did not link, so the app would launch with every deck "
+            f"operation silently unavailable "
+            f"(defined: {', '.join(sorted(defined)) or 'none'}; "
+            f"undefined: {', '.join(sorted(undefined)) or 'none'})"
+        )
+    if undefined:
+        raise ValueError(
+            f"{binary.name} leaves engine symbols undefined, so it expects them "
+            f"from a library that will not be there: {', '.join(sorted(undefined))}"
+        )
+
+    name = swiftui_artifact_name(version, platform)
+    output = output_dir / name
+
+    # Staged rather than archiving `source.parent`, which is the SwiftPM
+    # project directory: that shipped `.build/` too -- module caches, object
+    # files, the dSYM, and the static archive -- turning a 3.8 MB app into a
+    # 47 MB download of build litter. The app ran perfectly, so nothing but
+    # reading the member list would have caught it.
+    with tempfile.TemporaryDirectory() as staging:
+        staged = Path(staging) / source.name
+        shutil.copytree(source, staged, symlinks=True)
+
+        # `_zip_tree` confines symlinks to the payload ROOT, which after
+        # staging is the directory *above* the bundle -- so a link out of the
+        # `.app` and into that directory would satisfy it, and a bundle whose
+        # `Contents/MacOS` pointed sideways could ship with the verified binary
+        # not in the archive at all. Containment is re-asserted here against
+        # the bundle itself, which is the boundary that actually matters.
+        _reject_links_out_of(staged)
+
+        _zip_tree(
+            Path(staging), output, f"engram-swiftui-{platform}-v{version}", commit
+        )
+    return output
+
+
+def _reject_links_out_of(bundle: Path) -> None:
+    """Refuse any symlink inside ``bundle`` that resolves outside it."""
+
+    root = bundle.resolve()
+    for path in bundle.rglob("*"):
+        if not path.is_symlink():
+            continue
+        target = os.readlink(path)
+        landing = (path.parent / target).resolve()
+        if landing != root and not landing.is_relative_to(root):
+            raise ValueError(f"symlink escapes the bundle: {path} -> {target}")
+
+
+def _cmd_archive_swiftui(args: argparse.Namespace) -> int:
+    output = archive_swiftui(
+        args.version,
+        args.platform,
+        Path(args.source),
+        Path(args.output_dir),
+        args.commit,
+    )
+    print(output)
+    return 0
+
+
 def _cmd_validate(args: argparse.Namespace) -> int:
     validate_identifiers(args.version, args.tag, args.commit)
     print(f"version={args.version}")
@@ -663,6 +911,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     names.add_argument("--version", required=True)
     names.set_defaults(handler=_cmd_artifact_names)
+
+    archive_swiftui_cmd = subcommands.add_parser(
+        "archive-swiftui", help="Archive the SwiftUI .app bundle for publication"
+    )
+    archive_swiftui_cmd.add_argument("--version", required=True)
+    archive_swiftui_cmd.add_argument("--platform", required=True)
+    archive_swiftui_cmd.add_argument("--source", required=True)
+    archive_swiftui_cmd.add_argument("--output-dir", required=True)
+    archive_swiftui_cmd.add_argument("--commit", required=True)
+    archive_swiftui_cmd.set_defaults(handler=_cmd_archive_swiftui)
 
     archive_compose_cmd = subcommands.add_parser(
         "archive-compose", help="Archive a Compose distribution for publication"

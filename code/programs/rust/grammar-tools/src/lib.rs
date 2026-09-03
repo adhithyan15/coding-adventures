@@ -446,6 +446,56 @@ pub fn compile_tokens_command(tokens_path: &str, output_path: Option<&str>, forc
 /// (#14067).
 ///
 /// Returns `0` on success, `1` on error.
+/// Parse, validate, and render a `.tokens` + `.grammar` pair as one module.
+///
+/// Shared by the `compile-combined` command and by
+/// `generate-rust-compiled-grammars`, so the sweep and the one-off command
+/// cannot produce different bytes for the same inputs.
+fn combined_source(tokens_path: &str, grammar_path: &str, force: bool) -> Result<String, String> {
+    let tokens_source = std::fs::read_to_string(tokens_path)
+        .map_err(|e| format!("Failed to read {}: {}", tokens_path, e))?;
+    let grammar_source = std::fs::read_to_string(grammar_path)
+        .map_err(|e| format!("Failed to read {}: {}", grammar_path, e))?;
+
+    let tokens = parse_token_grammar(&tokens_source)
+        .map_err(|e| format!("Failed to parse {}: {}", tokens_path, e))?;
+    let parser = parse_parser_grammar(&grammar_source)
+        .map_err(|e| format!("Failed to parse {}: {}", grammar_path, e))?;
+
+    if !force {
+        // Validate the parser grammar against the token grammar's real name
+        // set rather than standalone, so a rule referencing an undefined token
+        // is caught -- and so a legitimate KEYWORD reference is not, now that
+        // `token_names` reports the token a `keywords:` block synthesizes.
+        let names = token_names(&tokens);
+        let mut issues = validate_token_grammar(&tokens);
+        issues.extend(validate_parser_grammar(&parser, Some(&names)));
+        issues.extend(cross_validate(&tokens, &parser));
+        if count_errors(&issues) > 0 {
+            return Err(format!(
+                "Validation failed for {} + {}:\n{}",
+                tokens_path,
+                grammar_path,
+                format_issue_block(&issues)
+            ));
+        }
+    }
+
+    let name_of = |p: &str| {
+        Path::new(p)
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or(p)
+            .to_string()
+    };
+    Ok(compile_combined_grammar(
+        &tokens,
+        &parser,
+        &name_of(tokens_path),
+        &name_of(grammar_path),
+    ))
+}
+
 pub fn compile_combined_command(
     tokens_path: &str,
     grammar_path: &str,
@@ -515,6 +565,7 @@ pub fn compile_combined_command(
 
     let code = compile_combined_grammar(&tokens, &parser, tokens_name, grammar_name);
 
+    #[allow(clippy::needless_return)]
     match output_path {
         Some(out) => match std::fs::write(out, &code) {
             Ok(()) => {
@@ -573,6 +624,9 @@ pub fn compile_grammar_command(grammar_path: &str, output_path: Option<&str>, fo
 enum RustGrammarKind {
     Tokens,
     Grammar,
+    /// Both grammars in one `_grammar.rs`, as the three Mosaic language
+    /// compilers ship them. See `compile_combined_grammar` (#14067).
+    Combined,
 }
 
 impl RustGrammarKind {
@@ -580,6 +634,10 @@ impl RustGrammarKind {
         match self {
             Self::Tokens => "tokens",
             Self::Grammar => "grammar",
+            // Discovery anchors on the .tokens file; the sibling .grammar is
+            // derived from it, since both live in code/grammars/<stem>/ under
+            // the same stem.
+            Self::Combined => "tokens",
         }
     }
 
@@ -587,6 +645,7 @@ impl RustGrammarKind {
         match self {
             Self::Tokens => "-lexer",
             Self::Grammar => "-parser",
+            Self::Combined => "-compiler",
         }
     }
 }
@@ -885,6 +944,15 @@ fn find_rust_compile_targets(
             RustGrammarKind::Tokens
         } else if package_name.ends_with("-parser") {
             RustGrammarKind::Grammar
+        } else if package_name.ends_with("-compiler") {
+            // The three Mosaic language compilers keep both grammars in one
+            // _grammar.rs. They were the only 3 of 88 _grammar.rs files that
+            // no sweep covered, so nothing regenerated them and nothing
+            // noticed when their sources drifted (#14067). A `-compiler`
+            // crate with no matching code/grammars/<stem>/ entry is skipped
+            // by the existence check below, so this does not claim every
+            // compiler crate in the repository.
+            RustGrammarKind::Combined
         } else {
             continue;
         };
@@ -894,6 +962,17 @@ fn find_rust_compile_targets(
             .to_string();
         let output_path = entry.path().join("src").join("_grammar.rs");
         if !output_path.parent().is_some_and(|dir| dir.exists()) {
+            continue;
+        }
+
+        // Combined targets keep an EXISTING _grammar.rs in sync; they never
+        // invent one. Several `-compiler` crates have a matching grammar
+        // directory but parse at runtime or delegate to a sibling
+        // lexer/parser crate, and generating an unused module into them would
+        // be noise at best. Restricting to crates that already ship the file
+        // makes this exactly "the three that nothing could regenerate", and
+        // lets a fourth opt in simply by committing one.
+        if kind == RustGrammarKind::Combined && !output_path.exists() {
             continue;
         }
 
@@ -989,6 +1068,20 @@ fn compile_rust_input_source(
         RustGrammarKind::Grammar => {
             compile_grammar_source(input_path.to_string_lossy().as_ref(), force)
         }
+        RustGrammarKind::Combined => {
+            let grammar_path = input_path.with_extension("grammar");
+            if !grammar_path.exists() {
+                return Err(format!(
+                    "Combined target needs a sibling grammar file, but {} does not exist",
+                    grammar_path.display()
+                ));
+            }
+            combined_source(
+                input_path.to_string_lossy().as_ref(),
+                grammar_path.to_string_lossy().as_ref(),
+                force,
+            )
+        }
     }
 }
 
@@ -1008,6 +1101,19 @@ fn render_versioned_rust_target(
             "parser_grammar",
             "grammar_tools::parser_grammar::ParserGrammar",
         ),
+        // Versioned families exist for languages with many editions (csharp1.0,
+        // java8, ...). No combined target is versioned -- the three Mosaic
+        // languages have a single edition each, and
+        // `rust_versioned_family_for_package` returns None for them, so this
+        // renderer is never reached with Combined. Erroring rather than
+        // silently emitting a wrong module keeps that assumption checked
+        // instead of assumed.
+        RustGrammarKind::Combined => {
+            return Err(format!(
+                "Versioned families are not supported for combined targets ({})",
+                target.package_name
+            ))
+        }
     };
 
     let mut output = String::new();

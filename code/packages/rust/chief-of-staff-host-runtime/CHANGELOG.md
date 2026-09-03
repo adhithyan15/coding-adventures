@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- Enforce D18S S-I7 in `HostProfileRuntime::check_registration`: a tool whose
+  schema names another agent cannot be registered into an agent host. New
+  `HostRuntimeError::ToolNamesAnotherAgent` names the tool and the offending
+  property. `tools_naming_another_agent` had existed as a conformance test
+  since the S-I7 work and nothing consulted it.
+- Checked at REGISTRATION, on the definition in hand, not at profile
+  construction. A first attempt gated `HostProfile::from_manifest`, which has
+  no production callers -- every profile reaching a live agent comes from
+  `OrchestratorProfile::from_json`, which builds `HostProfile` struct-literally,
+  or from `HostProfileRuntime::new`. A boundary on a path nothing takes repeats
+  the error it was meant to fix.
+- Resolving ids through `builtin_tool_definition` would have covered 34
+  built-ins and silently skipped everything else, including the ten
+  `smart_home.*` tools this repo already pins as naming a peer through
+  `principal_id`. A registration sees the real definition whatever catalog it
+  came from, so the resolver and its gap disappear.
+- Only the named-identity half of S-I7 is enforced. Eleven built-ins declare a
+  `JsonSchema::Any` position that `tools_with_unverifiable_schema` reports as
+  unverifiable, and refusing those would reject `job.install`,
+  `context.append_entry` and nine others. Closing those schemas is tracked
+  separately; until then "the agent cannot supply one" holds only for tools
+  absent from that list.
 - Add `HostProfile::from_manifest`, deriving a host profile from a verified
   agent manifest so the surface a supervisor enforces comes from bytes inside
   the integrity boundary rather than operator config.
