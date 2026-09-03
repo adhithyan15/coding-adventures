@@ -1,7 +1,7 @@
 ---
 id: GE-C08-uhr
-sequence: 235
-chapter: 11
+sequence: 245
+chapter: 12
 type: word
 headword: Uhr
 gloss: clock / o'clock — and a Latin word inside German

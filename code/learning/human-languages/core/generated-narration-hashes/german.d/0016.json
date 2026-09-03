@@ -1,16 +1,16 @@
 {
   "language": "german",
   "chapter": 16,
-  "sourceHash": "fnv1a64:8de7b10af93f0e59",
+  "sourceHash": "fnv1a64:cc9604a81d11ed15",
   "lessonIds": [
-    "GE-C13-schwarz-weiss",
-    "GE-C13-rot-blau"
+    "GE-C12-elf-zwoelf",
+    "GE-C12-zahlen-13-20"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "german/narration/ch16.txt",
   "json": "german/narration/ch16.json",
-  "textHash": "fnv1a64:90c6cc2f7d385751",
-  "jsonHash": "fnv1a64:bf8ef74e6e2f9af6",
+  "textHash": "fnv1a64:1253529fe5b17110",
+  "jsonHash": "fnv1a64:45bc90eb36d1febf",
   "findings": []
 }

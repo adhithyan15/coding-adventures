@@ -1,23 +1,24 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:6c21853fd70069ae",
+  "sourceHash": "fnv1a64:5e767f8981a785c4",
   "lessonIds": [
-    "GE-C16-sein",
-    "GE-C16-ich-bin",
-    "GE-C16-du-bist",
-    "GE-C16-er-ist",
-    "GE-C16-wir-sind",
-    "GE-C16-ihr-seid",
-    "GE-C16-sie-sind",
-    "GE-C16-muede",
-    "GE-C16-praesens-practice"
+    "GE-C15-praeteritum",
+    "GE-C15-sagte",
+    "GE-C15-machte",
+    "GE-C15-dentales-praeteritum",
+    "GE-C15-hatte",
+    "GE-C15-register",
+    "GE-C15-konnte",
+    "GE-C15-hochfrequent",
+    "GE-C15-praeteritum-map",
+    "GE-C15-praeteritum-practice"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 8,
+  "voiceLessons": 10,
+  "drivablePrefix": 10,
   "text": "german/narration/ch21.txt",
   "json": "german/narration/ch21.json",
-  "textHash": "fnv1a64:94a694a779b1d655",
-  "jsonHash": "fnv1a64:e77a20d59c58df2e",
+  "textHash": "fnv1a64:6f2652243bf5c663",
+  "jsonHash": "fnv1a64:cc83d4de428fe7a4",
   "findings": []
 }

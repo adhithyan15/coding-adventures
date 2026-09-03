@@ -1,18 +1,17 @@
 {
   "language": "german",
   "chapter": 38,
-  "sourceHash": "fnv1a64:39d96fa9444f012d",
+  "sourceHash": "fnv1a64:ba7542ce38fb4163",
   "lessonIds": [
-    "GE-C30-auge",
-    "GE-C30-ohr",
-    "GE-C30-mund",
-    "GE-C30-nase"
+    "GE-C29-freund",
+    "GE-C29-freundin",
+    "GE-C29-familie"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "german/narration/ch38.txt",
   "json": "german/narration/ch38.json",
-  "textHash": "fnv1a64:90837b5430a93a93",
-  "jsonHash": "fnv1a64:00543478c361166b",
+  "textHash": "fnv1a64:73fe7914eea9ee3f",
+  "jsonHash": "fnv1a64:8c97d83b49ed417f",
   "findings": []
 }

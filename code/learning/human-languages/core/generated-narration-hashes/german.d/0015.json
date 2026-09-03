@@ -1,16 +1,16 @@
 {
   "language": "german",
   "chapter": 15,
-  "sourceHash": "fnv1a64:cc7ea892edadaf2b",
+  "sourceHash": "fnv1a64:18828e9cbf9eae91",
   "lessonIds": [
-    "GE-C12-elf-zwoelf",
-    "GE-C12-zahlen-13-20"
+    "GE-C11-brot",
+    "GE-C11-wasser-wein"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "german/narration/ch15.txt",
   "json": "german/narration/ch15.json",
-  "textHash": "fnv1a64:39e05591d50e6609",
-  "jsonHash": "fnv1a64:f2219ba19ba44da3",
+  "textHash": "fnv1a64:99d2ef912259f3e5",
+  "jsonHash": "fnv1a64:08112b2b378a7a6f",
   "findings": []
 }

@@ -1,23 +1,22 @@
 {
   "language": "german",
   "chapter": 24,
-  "sourceHash": "fnv1a64:91a8c1b71664fc2b",
+  "sourceHash": "fnv1a64:f1c410d493372609",
   "lessonIds": [
-    "GE-C16-perfekt-sein",
-    "GE-C16-kommen",
-    "GE-C16-fahren",
-    "GE-C16-werden",
-    "GE-C16-bleiben",
-    "GE-C16-perfekt-sein-ausnahmen",
-    "GE-C16-perfekt-sein-agreement",
-    "GE-C16-partizip-attributiv",
-    "GE-C16-haben-oder-sein"
+    "GE-C16-ich-war",
+    "GE-C16-du-warst",
+    "GE-C16-er-war",
+    "GE-C16-wir-waren",
+    "GE-C16-drei-wurzeln",
+    "GE-C16-suppletion",
+    "GE-C16-haeufig-unregelmaessig",
+    "GE-C16-war-practice"
   ],
   "voiceLessons": 8,
   "drivablePrefix": 8,
   "text": "german/narration/ch24.txt",
   "json": "german/narration/ch24.json",
-  "textHash": "fnv1a64:f38b375204f8ccbd",
-  "jsonHash": "fnv1a64:44ad3e90f0856c65",
+  "textHash": "fnv1a64:d59be64a2081191b",
+  "jsonHash": "fnv1a64:0925bf0abce62027",
   "findings": []
 }

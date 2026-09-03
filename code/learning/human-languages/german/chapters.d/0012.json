@@ -1,15 +1,15 @@
 {
   "chapter": 12,
-  "title": "Months and Seasons",
-  "label": "ch:months-seasons",
-  "canDo": "I can name the months and seasons in German and say when something happens.",
+  "title": "Telling the Time",
+  "label": "ch:time",
+  "canDo": "I can ask for and tell the time in German.",
   "spineNodes": [
     "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C09-jahreszeiten",
+    "lesson": "GE-C08-mittag-mitternacht",
     "kind": "task",
-    "summary": "Complete GE-C09-jahreszeiten, the canonical closing checkpoint, and demonstrate the chapter promise: name the months and seasons in German and say when something happens.",
+    "summary": "Complete GE-C08-mittag-mitternacht, the canonical closing checkpoint, and demonstrate the chapter promise: ask for and tell the time in German.",
     "assesses": [],
     "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }

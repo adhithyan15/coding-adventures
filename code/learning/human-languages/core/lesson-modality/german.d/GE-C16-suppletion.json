@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-suppletion",
     "language": "german",
-    "chapter": 23,
-    "sequence": 535,
+    "chapter": 24,
+    "sequence": 545,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:dd79484e80275407"
+    "sourceHash": "fnv1a64:a42fd5e1d2bf3421"
   },
   "findings": []
 }

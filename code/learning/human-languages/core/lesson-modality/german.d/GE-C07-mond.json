@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C07-mond",
+    "language": "german",
+    "chapter": 10,
+    "sequence": 228,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:701f9544c1d88845"
+  },
+  "findings": []
+}

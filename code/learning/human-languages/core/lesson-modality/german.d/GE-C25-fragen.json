@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C25-fragen",
     "language": "german",
-    "chapter": 33,
-    "sequence": 760,
+    "chapter": 34,
+    "sequence": 770,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:929be4ce8d9a8be9"
+    "sourceHash": "fnv1a64:c977ef6032da9bff"
   },
   "findings": []
 }

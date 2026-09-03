@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 11,
-  "title": "Telling the Time",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:43df6e6c73720ebe",
+  "title": "The German Weekend",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:761e7e109d83b508",
   "lessons": [
     {
-      "id": "GE-C08-uhr",
-      "sequence": 235,
-      "title": "Uhr — the clock, and a Roman word in the German day",
-      "headword": "Uhr",
-      "romanization": "Uhr",
-      "gloss": "clock / o'clock — and a Latin word inside German",
+      "id": "GE-C07-sonne",
+      "sequence": 236,
+      "title": "die Sonne — \"the sun\"",
+      "headword": "die Sonne",
+      "romanization": "die Sonne",
+      "gloss": "the sun — the noun behind Sunday, and a die-word where English has no gender at all",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66d523c0a0e032ab",
+      "sourceHash": "fnv1a64:db6bdf6447157697",
       "notice": null,
       "blocks": [
         {
@@ -35,71 +35,459 @@
             },
             {
               "kind": "speech",
-              "text": "Something new happens here. German's numbers were homegrown (eins, zwei), and its weekdays were Germanic gods (Donnerstag). But its word for the clock — Uhr — is borrowed from Latin. Time-keeping came to the German world with Roman and monastic clocks, and the Latin word rode in with them."
+              "text": "You have der Mond. Its opposite number comes with a surprise attached, and the surprise is the article."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "You'll want to know: die Sonne",
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-u-long — Uhr = oor, a long u then a soft r: one syllable."
+              "text": "die Sonne — \"the sun.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Same word as English sun, with the German ending. But notice the pair you now own: der Mond and die Sonne. The moon is masculine and the sun is feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That is the reverse of what the Romance languages do, where the sun is masculine and the moon feminine — French le soleil and la lune, Spanish el sol and la luna."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither is a statement about the sun. Grammatical gender is a filing system, not a description, and the two families filed the same two objects in opposite drawers. It is worth meeting early, because it is the clearest possible proof that a German noun's gender is not something you can reason out from the thing itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Sonne\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Sonne\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair with their articles — \"der Mond, die Sonne\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair with their articles — \"der Mond, die Sonne\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other way round — \"le soleil, la lune\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other way round — \"le soleil, la lune\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Mond, die Sonne.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the sun.\" (Die Sonne.) Which article does the moon take? (Der.) Which way round is French? (The opposite — le soleil, la lune.) Can you work a German noun's gender out from the thing? (No.) Next: the day named for it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C07-sonntag",
+      "sequence": 237,
+      "title": "Sonntag — \"Sunday\"",
+      "headword": "Sonntag",
+      "romanization": "Sonntag",
+      "gloss": "Sunday — the one day the Church left alone, where Romance renamed it entirely",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11a764390489f65a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern again, on the noun from a moment ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Sonntag",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sonntag — \"Sunday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Sonne plus Tag, with the e dropped in the compound. English says the same two words: sun and day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mittwoch showed the Church taking a god out of the week. This day shows where it did not."
+            },
+            {
+              "kind": "speech",
+              "text": "Romance renamed Sunday completely, for the Lord: Spanish domingo, French dimanche, both from Latin dies dominicus. The sun was pushed out entirely. German and English kept the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "So the same institution rewrote one German day and left another alone, and the week records both decisions side by side. Mittwoch is where it intervened; Sonntag is where it did not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Sonntag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Sonntag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its pieces — \"Sonne, Tag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its pieces — \"Sonne, Tag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Romance did instead — \"domingo, dimanche\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Romance did instead — \"domingo, dimanche\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two decisions — \"Mittwoch rewritten, Sonntag left alone\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two decisions — \"Mittwoch rewritten, Sonntag left alone\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Sonntag — Sunday.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"Sunday.\" (Sonntag.) What are its two pieces? (Sonne and Tag.) What did Spanish name the day for instead? (The Lord — domingo.) Which German day did the Church rewrite? (Mittwoch.) Next: a word that is not German at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C07-sabbat",
+      "sequence": 238,
+      "title": "der Sabbat — \"the Sabbath\"",
+      "headword": "der Sabbat",
+      "romanization": "der Sabbat",
+      "gloss": "the Sabbath — the only word in the week that is neither Germanic nor Latin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c00b57e02c81f0d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word in this week so far has been Germanic. Here is the one that is not — and it did not come from Latin either."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Sabbat",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Sabbat — \"the Sabbath,\" the day of rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Hebrew shabbāt means \"to rest.\" Greek-speaking Christians took it as sábbaton and carried it north, and German has it as Sabbat."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold the word on its own for a moment before the next lesson does anything with it. Its road is the point: Hebrew to Greek to German, with no Germanic ancestor and no Latin one either. It is the only word in the German week that came from outside Europe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Sabbat\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Sabbat\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the road — \"shabbāt, sábbaton, Sabbat\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the road — \"shabbāt, sábbaton, Sabbat\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it means — \"rest\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it means — \"rest\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Sabbat — the Sabbath.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the Sabbath.\" (Der Sabbat.) What does the Hebrew root mean? (To rest.) Which language carried it north? (Greek.) Is it Germanic or Latin? (Neither.) Next: the day it became."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C07-samstag",
+      "sequence": 239,
+      "title": "Samstag — the day that is not Saturn's",
+      "headword": "Samstag",
+      "romanization": "Samstag",
+      "gloss": "Saturday — the second day that breaks the pattern, and the only one German bought rather than inherited",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77e6d60c08e9a5a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second break in the pattern, and a bigger one than Mittwoch. That day lost its god. This one was never Germanic at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Samstag",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Samstag — \"Saturday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in Tag, so the shape looks intact. What sits in front of it is not a god: it is Sabbat, worn down. Sam(s)- + Tag — \"the Sabbath day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the Roman planet here. Saturday is Saturn's day, the one Roman name the Germanic swap never replaced. German did replace it, but not with a god of its own."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart — a Latin loan among Germanic natives",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Uhr comes from Latin hōra, \"hour\" — the same word that became French heure, Italian ora, and English hour. German took it in (through medieval Latin/Low German ūr(e)) and made it Uhr."
+              "text": "The road this word travelled is longer than any other in the chapter:"
             },
             {
               "kind": "speech",
-              "text": "That's the striking part: three layers of the German day, three different origins —."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "what",
-                "German",
-                "origin"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "what: the numbers. German: eins, zwei, drei. origin: native Germanic (twins of English).",
-                "what: the weekdays. German: Montag, Donnerstag. origin: Germanic gods (Latin months).",
-                "what: the clock. German: Uhr. origin: Latin loan (hōra)."
-              ]
+              "text": "Hebrew shabbāt, \"to rest,\" became Greek sábbaton, and Greek-speaking Christians carried it north into German as Sabbat. From there it wore down to the Sams- you say now."
             },
             {
               "kind": "speech",
-              "text": "German kept its own numbers and gods, but for the machine that measures hours, it reached for Rome. (German also has a native word, Stunde, \"an hour's span\" — but for clock-reading, \"o'clock,\" it's Uhr.)"
+              "text": "So German Samstag and Spanish sábado are the same word — both are the Sabbath. And English, which usually stands beside German in this chapter, is the odd one out: it alone still points at a Roman planet."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: \"Es ist … Uhr\"",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "To tell the time, German says es ist (\"it is\") + the number + Uhr:"
+              "text": "This is the distinction you were given with the months, arriving again on a different word."
             },
             {
               "kind": "speech",
-              "text": "Es ist ein Uhr. — \"It is one o'clock.\" Es ist zwei Uhr. — \"It is two o'clock.\" Es ist zehn Uhr. — \"It is ten o'clock.\""
+              "text": "The weekday names are the first kind of word: everyday, inherited, hard to displace — which is why six of them are still Germanic after fifteen hundred years. Samstag is the second kind. It came with an institution, and it came in whole, exactly as the month names did."
             },
             {
               "kind": "speech",
-              "text": "Uhr doesn't add a plural here (not \"zwei Uhren\" for the time) — it works like English o'clock: zwei Uhr = \"two o'clock.\" (Uhren, plural, means \"clocks\" the objects.)"
+              "text": "So one week contains both answers to the same question. Six days a language kept, and one it bought."
             }
           ]
         },
@@ -117,29 +505,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Uhr\" — oor",
+              "instruction": "\"Samstag\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Uhr\" — *oor*]"
+              "source": "[YOU SAY: \"Samstag\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es ist ein Uhr, zwei Uhr, drei Uhr\"",
+              "instruction": "the road — \"shabbāt, sábbaton, Sabbat, Samstag\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es ist ein Uhr, zwei Uhr, drei Uhr\"]"
+              "source": "[YOU SAY: the road — \"shabbāt, sábbaton, Sabbat, Samstag\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Uhr / heure / hour\" — all from Latin hōra",
+              "instruction": "the pair — \"Samstag, sábado: the same Sabbath\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Uhr / heure / hour\" — all from Latin *hōra*]"
+              "source": "[YOU SAY: the pair — \"Samstag, sábado: the same Sabbath\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the odd one — \"Saturday still points at Saturn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the odd one — \"Saturday still points at Saturn\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Samstag — the Sabbath, not Saturn.\""
             }
           ]
         },
@@ -156,26 +562,26 @@
             },
             {
               "kind": "speech",
-              "text": "Where does Uhr come from, and why is that notable? (Latin hōra — a loanword, unlike German's native numbers and Germanic day-gods.) Two French/English cousins of Uhr? (heure, hour.) How does German say \"it is three o'clock\"? (Es ist drei Uhr.) Next: Mittag and Mitternacht — noon and midnight."
+              "text": "Say \"Saturday.\" (Samstag.) Is it Saturn's day? (No — the Sabbath's.) Which language did it reach German through? (Greek, from Hebrew.) Which Spanish day is the same word? (Sábado.) Which kind of word is it — kept or bought? (Bought, like the month names.) Next: the day the Church left alone."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C08-mittag-mitternacht",
+      "id": "GE-C07-sonnabend",
       "sequence": 240,
-      "title": "Mittag and Mitternacht — the native middle of day and night",
-      "headword": "Mittag, Mitternacht",
-      "romanization": "Mittag, Mitternacht",
-      "gloss": "noon and midnight — native \"mid-day\" and \"mid-night\"",
+      "title": "Sonnabend — Saturday, in the north",
+      "headword": "Sonnabend",
+      "romanization": "Sonnabend",
+      "gloss": "Saturday in the north — Sun-eve, built from two words you already own",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c40cc2fc525d4b5f",
+      "sourceHash": "fnv1a64:1fc7bd56a1f39eea",
       "notice": null,
       "blocks": [
         {
@@ -191,52 +597,171 @@
             },
             {
               "kind": "speech",
-              "text": "The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — \"the day's middle\" and \"the night's middle\" — built from words you can already almost read."
+              "text": "One more Saturday. This one you can read before you are told what it means, because both halves are already yours."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The two words, taken apart",
+          "type": "input",
+          "title": "You'll want to know: Sonnabend",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both start with Mitte, \"middle\" (cousin of English mid, middle, and of Latin medius):"
+              "text": "Sonnabend — \"Saturday,\" in northern Germany."
             },
+            {
+              "kind": "speech",
+              "text": "Sonn- is the sun and -abend is the evening, both of which you own. It is \"Sun-eve\": the evening before Sunday, standing in for the whole day."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same reckoning English keeps in Christmas Eve and New Year's Eve — the day taking its name from the night that runs up to it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both words are correct German and a speaker will use one or the other by where they are from: Sonnabend in the north, Samstag in the south and west, with Samstag the more widely used of the two."
+            },
+            {
+              "kind": "speech",
+              "text": "So Saturday has two names in German and neither is a mistake — which is worth knowing before you hear the one you did not learn and assume you misheard it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Sonnabend\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Sonnabend\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its two halves — \"Sonne, Abend\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its two halves — \"Sonne, Abend\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both Saturdays — \"Samstag, Sonnabend\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both Saturdays — \"Samstag, Sonnabend\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Sonnabend — Sun-eve.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the northern word for Saturday. (Sonnabend.) What are its two halves? (Sonne and Abend.) What does it literally mean? (Sun-eve.) Which word is used more widely? (Samstag.) Next: the whole week, said through."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C07-wochentage-2",
+      "sequence": 241,
+      "title": "Practice — all seven",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — all seven days, and the two places the pattern broke",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8912cda3c560391",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Seven days, five gods, and two places where something else got in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the whole week",
+          "segments": [
             {
               "kind": "table",
               "headers": [
                 "German",
-                "=",
-                "literally"
+                "what is in it"
               ],
-              "columns": 3,
-              "rowCount": 2,
+              "columns": 2,
+              "rowCount": 7,
               "utterances": [
-                "German: Mittag. =: Mitte + Tag. literally: \"mid-day\" (noon).",
-                "German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: \"mid-night\" (midnight)."
+                "German: Montag. what is in it: the moon.",
+                "German: Dienstag. what is in it: Tiw.",
+                "German: Mittwoch. what is in it: mid-week — the Church took the god out.",
+                "German: Donnerstag. what is in it: Donar.",
+                "German: Freitag. what is in it: Frija.",
+                "German: Samstag. what is in it: the Sabbath — bought, not inherited.",
+                "German: Sonntag. what is in it: the sun."
               ]
             },
             {
               "kind": "speech",
-              "text": "Mittag = \"mid-day.\" Tag (\"day\") you met in Montag, Dienstag; put \"middle\" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one."
-            },
-            {
-              "kind": "speech",
-              "text": "Mitternacht = \"mid-night.\" Nacht (\"night\") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues."
-            },
-            {
-              "kind": "speech",
-              "text": "To tell the time with them:"
-            },
-            {
-              "kind": "speech",
-              "text": "Es ist Mittag. — \"It is noon.\" Es ist Mitternacht. — \"It is midnight.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots."
+              "text": "Five gods, one edit, one import. Run them in order until the list is one motion rather than seven remembered words."
             }
           ]
         },
@@ -254,29 +779,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mittag\" (noon), \"Mitternacht\" (midnight)",
+              "instruction": "all seven in order, from Montag to Sonntag",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mittag\" (noon), \"Mitternacht\" (midnight)]"
+              "source": "[YOU SAY: all seven in order, from *Montag* to *Sonntag*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"",
+              "instruction": "the two Saturdays — \"Samstag, Sonnabend\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"]"
+              "source": "[YOU SAY: the two Saturdays — \"Samstag, Sonnabend\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mitternacht / mid-night\" — the same Germanic compound",
+              "instruction": "the two breaks — \"Mittwoch: no god. Samstag: not Germanic.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mitternacht / mid-night\" — the same Germanic compound]"
+              "source": "[YOU SAY: the two breaks — \"Mittwoch: no god. Samstag: not Germanic.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shape that holds for the other five — \"a god, then Tag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shape that holds for the other five — \"a god, then Tag\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag.\""
             }
           ]
         },
@@ -293,7 +836,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do Mittag and Mitternacht literally mean, and from what native word? (\"Mid-day\" / \"mid-night\"; from Mitte \"middle\" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family."
+              "text": "Run all seven without prompting. Which day has no god? (Mittwoch.) Which is not a Germanic word at all? (Samstag — the Sabbath.) Which day did the Church rename in Romance but leave alone here? (Sonntag.) Which day has two names? (Saturday — Samstag and Sonnabend.)"
             }
           ]
         }

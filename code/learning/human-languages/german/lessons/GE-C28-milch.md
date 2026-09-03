@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C28-milch
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 890
-chapter: 36
+sequence: 900
+chapter: 37
 type: word
 headword: die Milch
 gloss: milk — the native Germanic word that closes this trio, standing beside two loanwords the way Wasser once stood beside the loanword Wein

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C07-samstag",
+    "language": "german",
+    "chapter": 11,
+    "sequence": 239,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77e6d60c08e9a5a6"
+  },
+  "findings": []
+}
