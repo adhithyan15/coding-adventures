@@ -2,19 +2,25 @@
 
 ## Unreleased
 
-- Add `OrchestratorProfile::from_manifests` and
-  `SupervisedOrchestratorRuntime::spawn_deno_from_manifests`, making the
-  supervised path manifest-driven. `spawn_deno_verified` takes an
-  `OrchestratorProfile`, and the only way to build one was `from_json` --
-  operator configuration that can disagree with the signed bytes governing the
-  code it launches. Every check an agent then passed was decided by a file
-  nobody signed.
-- One host per manifest, each via `HostProfile::from_manifest`, so tier ceiling,
-  allowed tools and tool capabilities all come from inside the integrity
-  boundary. `validate` already refuses two hosts claiming the same tool, which
-  matters more here: two agents independently declaring `artifact.write` is an
-  ordinary authoring mistake and must not resolve to whichever host was seen
-  last.
+- Add `SupervisedOrchestratorRuntime::spawn_deno_from_package`, which reads the
+  agent manifest from `package.manifest_bytes()` after verifying the package
+  and derives the whole orchestrator profile from it. One package, one
+  manifest, one host.
+- Add `OrchestratorProfile::from_manifests`. It is stronger than `from_json` --
+  it runs `AgentManifest::validate` per host, including the version-to-field
+  binding `HostProfile::validate` knows nothing about, and then
+  `OrchestratorProfile::validate`, which `from_json` never calls at all -- but
+  it does **not** by itself establish integrity, and its doc comment says so.
+  `AgentManifest`'s fields are all `pub`, so binding a manifest to a verified
+  package is the caller's job; `spawn_deno_from_package` is the entry point
+  that does it.
+- `validate` refuses two hosts claiming the same tool, which matters on this
+  path: two agents independently declaring `artifact.write` is an ordinary
+  authoring mistake and must not resolve to whichever host was seen last.
+- Note that on the supervised path the tier ceiling is aggregate: the runtime
+  keeps `tool_owners` and discards per-host `max_tier`, which only
+  `HostProfileRuntime::check_registration` reads. With one package per tree the
+  max-check is equivalent, but per-host tier enforcement does not exist here.
 
 - Enforce D18S S-I7 in `HostProfileRuntime::check_registration`: a tool whose
   schema names another agent cannot be registered into an agent host. New

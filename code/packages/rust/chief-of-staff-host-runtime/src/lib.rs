@@ -162,16 +162,22 @@ pub struct OrchestratorProfile {
 impl OrchestratorProfile {
     /// Derive a whole orchestrator profile from verified agent manifests.
     ///
-    /// This is what makes the supervised path manifest-driven.
-    /// `SupervisedOrchestratorRuntime::spawn_deno_verified` takes an
-    /// `OrchestratorProfile`, and until now the only way to build one was
-    /// `from_json` -- operator configuration that can disagree with the signed
-    /// bytes governing the code it launches. Every check the agent then passes
-    /// was decided by a file nobody signed.
+    /// **This does not by itself establish integrity, and an earlier version
+    /// of this comment claimed it did.** `AgentManifest`'s fields are all
+    /// `pub` and `parse_manifest` accepts any text, so a caller passing an
+    /// operator-authored manifest here gets exactly the trust level of
+    /// [`OrchestratorProfile::from_json`]. Binding a manifest to a verified
+    /// package is the caller's job, and
+    /// [`SupervisedOrchestratorRuntime::spawn_deno_from_package`] is the entry
+    /// point that does it.
     ///
-    /// One host per manifest, each derived by [`HostProfile::from_manifest`],
-    /// so the tier ceiling, the allowed tools and the tool capabilities all
-    /// come from inside the integrity boundary.
+    /// What this DOES give over `from_json` is real: `HostProfile::from_manifest`
+    /// runs `AgentManifest::validate` per host -- including the
+    /// version-to-field binding `HostProfile::validate` knows nothing about --
+    /// and this then runs `OrchestratorProfile::validate`, which `from_json`
+    /// never calls at all.
+    ///
+    /// One host per manifest, each derived by [`HostProfile::from_manifest`].
     ///
     /// `OrchestratorProfile::validate` already refuses two hosts claiming the
     /// same tool, which matters more here than under `from_json`: two agents
@@ -651,24 +657,53 @@ pub struct SupervisedOrchestratorRuntime {
 }
 
 impl SupervisedOrchestratorRuntime {
-    /// Spawn a supervised tree whose profile came from signed agent manifests.
+    /// Spawn a supervised tree whose profile comes from the package's OWN
+    /// signed manifest.
     ///
-    /// The manifest-driven entry point: the surface each host enforces is
-    /// derived from bytes inside the integrity boundary rather than from
-    /// operator JSON that can disagree with them.
-    pub fn spawn_deno_from_manifests<'a, I>(
+    /// Takes no manifest argument, and that is the point. A first version
+    /// accepted a caller-supplied `&[AgentManifest]` alongside the package and
+    /// verified only the package -- so the surface still came from whatever
+    /// the caller passed, at byte-for-byte the same trust level as
+    /// [`OrchestratorProfile::from_json`], under a name and a doc comment
+    /// claiming the opposite. The manifest is read from
+    /// `package.manifest_bytes()` instead, which is the pattern
+    /// `chief-of-staff-agent-discovery` and `chief-of-staff-skill-package`
+    /// already use.
+    ///
+    /// One package, one manifest, one host. The earlier
+    /// N-manifests-one-package shape let a caller pair a tool-rich manifest
+    /// with an unrelated package and route that agent's tools into that
+    /// package's process.
+    pub fn spawn_deno_from_package(
         profile_id: impl Into<String>,
-        manifests: I,
         package_path: &std::path::Path,
         keyring: &PackageKeyring,
         deno_program: impl Into<String>,
         restart_policy: StdioWorkerRestartPolicy,
-    ) -> Result<Self, HostRuntimeError>
-    where
-        I: IntoIterator<Item = &'a AgentManifest>,
-    {
-        let profile = OrchestratorProfile::from_manifests(profile_id, manifests)?;
-        Self::spawn_deno_verified(profile, package_path, keyring, deno_program, restart_policy)
+    ) -> Result<Self, HostRuntimeError> {
+        let package = verify_agent_package(package_path, keyring)
+            .map_err(|error| HostRuntimeError::PackageVerification(error.to_string()))?;
+        let source = std::str::from_utf8(package.manifest_bytes()).map_err(|_| {
+            HostRuntimeError::PackageVerification("manifest bytes are not UTF-8".to_string())
+        })?;
+        let manifest = chief_of_staff_agent_manifest::parse_manifest(source).map_err(|error| {
+            HostRuntimeError::PackageVerification(format!("signed manifest is invalid: {error}"))
+        })?;
+        let profile = OrchestratorProfile::from_manifests(profile_id, [&manifest])?;
+        let deno_program = deno_program.into();
+        let specs = profile
+            .hosts
+            .iter()
+            .map(|host| {
+                HostProcessSpec::deny_all_deno(
+                    host.host_id.clone(),
+                    deno_program.clone(),
+                    &package,
+                    restart_policy.clone(),
+                )
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        Self::spawn_verified(profile, specs, &package)
     }
 
     pub fn spawn_deno_verified(
@@ -1492,18 +1527,28 @@ for line in sys.stdin:
             .unwrap()
             .expect("the spawned host answers");
         match response.result {
-            JobResult::Ok { payload } => assert!(payload.output_json.contains("served")),
+            // Assert the echoed tool id, not just a constant the script would
+            // print regardless -- that is what proves the RIGHT tool routed to
+            // the right host.
+            JobResult::Ok { payload } => {
+                assert!(payload.output_json.contains("served"));
+                assert!(payload.output_json.contains("context.append_entry"));
+            }
             other => panic!("expected the worker to answer, got {other:?}"),
         }
 
         // A tool no manifest declared has no owner, so it cannot be routed.
-        assert!(runtime
-            .submit(HostRpcRequest {
+        // Pinned to the variant: `artifact.read` is a valid tool id and
+        // `call_2` a valid label, so a bare `is_err()` would still pass if a
+        // future change to either validator started rejecting them instead.
+        assert!(matches!(
+            runtime.submit(HostRpcRequest {
                 call_id: "call_2".to_string(),
                 tool_id: "artifact.read".to_string(),
                 arguments_json: "{}".to_string(),
-            })
-            .is_err());
+            }),
+            Err(HostRuntimeError::ToolNotAllowed(ref tool)) if tool == "artifact.read"
+        ));
     }
 
     #[test]
