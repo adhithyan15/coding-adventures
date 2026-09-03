@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-fahren
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 440
-chapter: 18
+sequence: 570
+chapter: 20
 type: word
 headword: fahren
 gloss: to travel, to drive — motion with a vehicle under it, and English fare hiding inside

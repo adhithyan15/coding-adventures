@@ -639,7 +639,19 @@ describe("the committed French A1 inventory", () => {
     // The chapter now teaches all three, and the probe lists all seven atoms
     // rather than a sample: a candidate asked for half past does not get partial
     // credit for o'clock.
-    expect(coverage.covered).toBe(27);
+    //
+    // 27 -> 30: retiring hand-written chapter 1, the first chapter in the book,
+    // closed three at once -- and all three were unmapped for the same reason,
+    // which is the finding. A1-LEX-01 is "greetings and farewells" in a track
+    // whose opening chapter is called Greetings: the farewells had atoms because
+    // chapter 4 was generated, the greetings did not because chapter 1 was not,
+    // so half the point existed and the whole point read as absent. A1-D-01 (the
+    // definite article) and A1-A-01 (adjective agreement) are the two grammar
+    // rules those greetings run on -- bon versus bonne is agreement, and le/la is
+    // where the gender it agrees with becomes visible. Both were taught on page
+    // one from the beginning and neither could be probed, because a hand-written
+    // chapter's grammarlens owns no atom.
+    expect(coverage.covered).toBe(30);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
     // The shape, not the score: vocabulary is still a strong column and the
     // sentence-level categories are still empty. No quantity of headwords moves

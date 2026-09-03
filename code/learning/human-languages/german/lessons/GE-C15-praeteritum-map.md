@@ -1,58 +1,100 @@
 ---
+schema_version: 2
 id: GE-C15-praeteritum-map
-sequence: 315
-chapter: 15
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 430
+chapter: 17
 type: etymology
-headword: Präteritum north and south
-gloss: the regional and cross-language retreat of the simple past
+headword: areale Veränderung
+gloss: an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours
 concept_tag: GE-PAST-AREAL-CHANGE
-prerequisites: [GE-C15-praeteritum]
+prerequisites: [GE-C15-hochfrequent]
 sounds: []
-roots: [germanic-dental-preterite, areal-contact]
-etymology_hook: "the simple past is weakest in southern German, beside the French and northern Italian regions where compound pasts also displaced it"
-est_minutes: 4
-reviews_of: [GE-C15-praeteritum, GE-C15-perfekt]
+roots: [areal-contact]
+etymology_hook: "German, French and northern Italian all replaced a one-word past with a two-word one over the same centuries, and they are the same block of contiguous territory — a change that travels across language boundaries is called areal"
+duration:
+  max_seconds: 190
+requires:
+  knowledge: [GE-GRAMMAR-PRAETERITUM-GESPROCHEN-01, GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01, GE-GRAMMAR-PERFEKT-HABEN-01, GE-ETYMON-DENTALES-PRAETERITUM-01]
+introduces:
+  knowledge: [GE-ETYMON-AREALE-VERAENDERUNG-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GE-CULTURE-AREALE-VERAENDERUNG-01]
+practises:
+  knowledge: [GE-ETYMON-AREALE-VERAENDERUNG-01, GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01, GE-ETYMON-DENTALES-PRAETERITUM-01, GE-GRAMMAR-PERFEKT-HABEN-01, GE-GRAMMAR-PRAETERITUM-GESPROCHEN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [language-focus, meaning-input]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C15-hochfrequent, GE-C15-register, GE-C15-dentales-praeteritum]
 ---
 
-# The simple past’s regional retreat
+# The same retreat, three times over
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01] -->
 
-[PAUSE 2s] In speech, German’s *Perfekt* often replaced the *Präteritum*. The
-geography lines up with neighbouring French and Italian changes.
+[PAUSE 2s] German is not the only language that let a two-word past crowd out a
+one-word one. Two of its neighbours did the identical thing at the identical
+time.
 
-| language | inherited simple past | compound replacement in speech |
+## The word, taken apart
+<!-- hl-knowledge: introduces=[GE-ETYMON-AREALE-VERAENDERUNG-01]; assesses=[GE-GRAMMAR-PERFEKT-HABEN-01, GE-ETYMON-DENTALES-PRAETERITUM-01] -->
+
+| language | one-word past | what took it over in speech |
 |---|---|---|
 | German | *Präteritum* | *Perfekt* |
 | French | *passé simple* | *passé composé* |
 | Italian | *passato remoto* | *passato prossimo* |
 
-These are not one inherited rule: Germanic and Romance built their tenses from
-different material. The similar retreat spread through a connected region as
-speakers interacted across language boundaries. Linguists call such a shared
-regional development an **areal change**.
+Two Romance languages and one Germanic one, doing the same thing over the same
+centuries — and not by coincidence. The dental *-te* and the Romance endings
+came from completely different ancestors, so nothing inherited can account for
+three languages arriving at the same answer.
 
-The internal German map supports that story:
+Geography can. Southern Germany, France and northern Italy are one connected
+block of territory, and the change spread through it by **contact**: speakers
+who live near each other borrow habits, and a habit of speech travels across a
+language boundary as easily as across a dialect one. Linguists call a change
+that spreads that way an ***areal*** change.
 
-- strongest compound preference in the **south**, nearest France and northern
-  Italy;
-- better survival of the simple past in the **north**;
-- standard *Präteritum* throughout narrative writing.
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-AREALE-VERAENDERUNG-01, GE-GRAMMAR-PRAETERITUM-GESPROCHEN-01] -->
 
-Spanish and Portuguese, farther west, kept their simple pasts more fully in
-speech. Geography did not dictate every sentence, but it helps explain why a
-Germanic language and two Romance neighbours moved in parallel.
+Two pieces of evidence make the contact story stick rather than merely sound
+good.
+
+The first is what did **not** happen at the western edge. Spanish and
+Portuguese kept their one-word past far more fully in speech, and they are the
+two languages furthest from that connected block.
+
+The second is the map inside German itself, which you already met: the
+*Präteritum* is weakest in the **south**, nearest the centre of the change, and
+strongest in the **north**, furthest from it. A change spreading outward from a
+region should thin as it goes, and that is exactly what German shows.
+
+Geography did not dictate any single sentence. But it explains why a Germanic
+language and two Romance ones moved in step, and why one end of Germany sounds
+older than the other.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-AREALE-VERAENDERUNG-01, GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: “south — more Perfekt; north — more Präteritum”]
-- [YOU SAY: “German, French, Italian: parallel retreat”]
-- [YOU SAY: “areal change — spread by contact”]
+- [YOU SAY: the three languages — "German, French, Italian: the same retreat"]
+- [YOU SAY: the name — "an areal change, spread by contact"]
+- [YOU SAY: the inside map — "south more Perfekt, north more Präteritum"]
+
+[REPEAT x2] "areal change — it spread by contact."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-AREALE-VERAENDERUNG-01, GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01] -->
 
-[PAUSE 3s] Where is spoken *Präteritum* weakest? (The German-speaking **south**.)
-Which neighbouring languages show a similar retreat? (**French and Italian**.)
-Did German inherit that from Latin? (**No**.) What kind of change is it?
-(An **areal** change spreading through contact.)
+[PAUSE 3s] Which two neighbours made the same change? (**French** and
+**Italian**.) Did German inherit it from Latin? (**No** — the two families
+build their pasts from different material.) What is a change that spreads by
+contact called? (An ***areal*** change.) Which two languages at the western
+edge kept their one-word past? (**Spanish** and **Portuguese**.) Next: the
+chapter run through end to end.

@@ -1,0 +1,22 @@
+{
+  "id": "GE-PATH-020-B",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "GE-C15-perfekt",
+    "GE-C15-ich-habe-gesagt",
+    "GE-C15-du-hast-gesagt",
+    "GE-C15-er-hat-gemacht",
+    "GE-C15-wir-haben-gesagt",
+    "GE-C15-partizip-am-ende",
+    "GE-C15-gestern",
+    "GE-C15-perfekt-als-vergangenheit",
+    "GE-C15-perfekt-practice"
+  ],
+  "before": [
+    "GE-EXT-020-B-PERFEKT"
+  ],
+  "inline": [],
+  "after": [
+    "GE-EXT-020-B-CONSOLIDATION"
+  ]
+}

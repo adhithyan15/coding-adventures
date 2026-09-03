@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-fahren",
     "language": "german",
-    "chapter": 18,
-    "sequence": 440,
+    "chapter": 20,
+    "sequence": 570,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:655dffb5e66f1b71"
+    "sourceHash": "fnv1a64:1006fa5c78e651ae"
   },
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-020-C-CONSOLIDATION",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can say the same event in both German pasts, back to back, and hear that nothing about the meaning has moved.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C15-praeteritum-practice"
+  ]
+}

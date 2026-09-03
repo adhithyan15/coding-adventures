@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-020-C-ETYMOLOGY",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can explain that German -te and English -ed are one Germanic device, and that the retreat of the one-word past spread through German, French and Italian by contact rather than by inheritance.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C15-dentales-praeteritum",
+    "GE-C15-praeteritum-map"
+  ]
+}

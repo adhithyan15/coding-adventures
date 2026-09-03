@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C25-helfen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 770
-chapter: 27
+chapter: 29
 type: word
 headword: helfen
 gloss: to help — the same word as English help, separated by one sound law, and still strong in German the way English's help once was

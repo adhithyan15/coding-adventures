@@ -1,21 +1,19 @@
 {
   "chapter": 24,
-  "title": "Dog and Cat",
-  "label": "ch:ge-dog-and-cat",
-  "canDo": "I can name a dog and a cat in German and say which of the two words German inherited and which one it borrowed.",
+  "title": "Sorry",
+  "label": "ch:ge-sorry",
+  "canDo": "I can apologise or excuse myself in German with Entschuldigung, and reach for es tut mir leid when I mean it more.",
   "spineNodes": [
-    "SPINE-DEFINITE-REFERENCE"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C22-hund-katze",
+    "lesson": "GE-C20-entschuldigung",
     "kind": "production",
-    "summary": "Say Hund beside English hound and the unexplained dog that displaced it, then say Katze and admit it is the borrowed Late Latin cattus — widespread, but not universal: Romanian pisică and Serbian mačka went their own way. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Say Schuld, then Entschuldigung as the 'un-guilting' built on it, and switch to es tut mir leid for real regret rather than a bump in the hallway. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "GE-LEX-HUND-02",
-      "GE-ETYMON-HUND-03",
-      "GE-LEX-KATZE-04",
-      "GE-ETYMON-KATZE-05",
-      "GE-EVIDENCE-CAT-WORDS-06"
+      "GE-LEX-ENTSCHULDIGUNG-02",
+      "GE-ETYMON-ENTSCHULDIGUNG-03",
+      "GE-PRAGMATICS-SORRY-04"
     ]
   }
 }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-perfekt-sein-agreement
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 460
-chapter: 18
+sequence: 590
+chapter: 20
 type: grammar
 headword: gegangen
 gloss: no agreement in the perfect — one participle for every subject, where French has four

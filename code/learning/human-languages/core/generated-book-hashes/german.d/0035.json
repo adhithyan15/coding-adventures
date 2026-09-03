@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:12c3c8305fcdfee9",
+  "lessonIds": [
+    "GE-C31-arm",
+    "GE-C31-finger",
+    "GE-C31-fuss",
+    "GE-C31-herz"
+  ],
+  "tex": "german/book/chapters/ch35-hand-table-complete.tex"
+}

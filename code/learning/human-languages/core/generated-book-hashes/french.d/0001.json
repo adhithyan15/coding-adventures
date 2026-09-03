@@ -1,0 +1,23 @@
+{
+  "language": "french",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:cd0d9cdb45286562",
+  "lessonIds": [
+    "FR-C01-salut",
+    "FR-W01-salut-observe",
+    "FR-W01-salut-guided-copy",
+    "FR-W01-salut-delayed-copy",
+    "FR-W01-salut-dictation",
+    "FR-C01-bien",
+    "FR-C01-bon",
+    "FR-C01-le-la",
+    "FR-C01-jour",
+    "FR-C01-bonjour",
+    "FR-C01-soir",
+    "FR-C01-bonsoir",
+    "FR-C01-nuit",
+    "FR-C01-bonne-nuit",
+    "FR-C01-practice"
+  ],
+  "tex": "french/book/chapters/ch01-greetings.tex"
+}
