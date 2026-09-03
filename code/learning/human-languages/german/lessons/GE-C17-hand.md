@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C17-hand
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 630
-chapter: 21
+chapter: 22
 type: word
 headword: die Hand
 gloss: the hand — the same word as English, and unrelated to Romance manus

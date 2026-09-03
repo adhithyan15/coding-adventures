@@ -1,17 +1,17 @@
 {
   "language": "german",
   "chapter": 33,
-  "sourceHash": "fnv1a64:3694eb43b00b1452",
+  "sourceHash": "fnv1a64:a2236571e96fcc26",
   "lessonIds": [
-    "GE-C29-freund",
-    "GE-C29-freundin",
-    "GE-C29-familie"
+    "GE-C28-kaffee",
+    "GE-C28-tee",
+    "GE-C28-milch"
   ],
   "voiceLessons": 3,
   "drivablePrefix": 3,
   "text": "german/narration/ch33.txt",
   "json": "german/narration/ch33.json",
-  "textHash": "fnv1a64:c7e9173ef3326aa2",
-  "jsonHash": "fnv1a64:6ba0607fa49ab913",
+  "textHash": "fnv1a64:313f0b33961d95ac",
+  "jsonHash": "fnv1a64:ae09c64a8ce4631c",
   "findings": []
 }

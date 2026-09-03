@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C18-ja",
     "language": "german",
-    "chapter": 22,
+    "chapter": 23,
     "sequence": 640,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d536e06778867c61"
+    "sourceHash": "fnv1a64:7964b73970a4937a"
   },
   "findings": []
 }

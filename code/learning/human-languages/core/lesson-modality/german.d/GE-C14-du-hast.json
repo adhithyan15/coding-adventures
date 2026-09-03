@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C14-du-hast",
+    "language": "german",
+    "chapter": 14,
+    "sequence": 297,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3976e3237416f8a4"
+  },
+  "findings": []
+}

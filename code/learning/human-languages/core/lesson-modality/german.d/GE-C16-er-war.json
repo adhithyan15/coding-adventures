@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-er-war",
     "language": "german",
-    "chapter": 19,
+    "chapter": 20,
     "sequence": 520,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5e28a739cc448bcb"
+    "sourceHash": "fnv1a64:7d9832a79470c53f"
   },
   "findings": []
 }

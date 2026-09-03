@@ -1,18 +1,18 @@
 {
   "language": "german",
   "chapter": 30,
-  "sourceHash": "fnv1a64:f08860b8928c3592",
+  "sourceHash": "fnv1a64:0f5cf0d80fef0432",
   "lessonIds": [
-    "GE-C26-sitzen",
-    "GE-C26-stehen",
-    "GE-C26-schlafen",
-    "GE-C26-hoeren"
+    "GE-C25-nehmen",
+    "GE-C25-fragen",
+    "GE-C25-helfen",
+    "GE-C25-moegen-lieben"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "german/narration/ch30.txt",
   "json": "german/narration/ch30.json",
-  "textHash": "fnv1a64:d781dd93ea8a35b3",
-  "jsonHash": "fnv1a64:7f454bb17be8d631",
+  "textHash": "fnv1a64:007cad9bcb58f224",
+  "jsonHash": "fnv1a64:dcc5fefde685e9bf",
   "findings": []
 }

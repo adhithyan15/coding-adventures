@@ -3,9 +3,14 @@
   "stage": "A1",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can use the additional German material required at this point in the path.",
+  "canDo": "I can ask somebody's age and give my own, and say why German reaches for “to be” here where French, Spanish, Italian and Portuguese all reach for “to have”.",
   "prerequisites": [],
   "lessons": [
-    "GE-C14-alter"
+    "GE-C14-alt",
+    "GE-C14-jahr",
+    "GE-C14-jahr-alt",
+    "GE-C14-wie-alt-bist-du",
+    "GE-C14-alter",
+    "GE-C14-alter-sein-haben"
   ]
 }

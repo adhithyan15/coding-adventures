@@ -1,0 +1,20 @@
+{
+  "id": "GE-PATH-019",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "GE-C14-alt",
+    "GE-C14-jahr",
+    "GE-C14-jahr-alt",
+    "GE-C14-wie-alt-bist-du",
+    "GE-C14-alter",
+    "GE-C14-alter-sein-haben",
+    "GE-C14-alter-practice"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "GE-EXT-019-CONSOLIDATION"
+  ]
+}

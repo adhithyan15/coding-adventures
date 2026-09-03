@@ -1,79 +1,76 @@
 ---
+schema_version: 2
 id: GE-C14-haben
+spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 295
 chapter: 14
 type: word
 headword: haben
-gloss: to have — identical to Latin habēre in sound and sense, and unrelated to it
+gloss: to have — the twin of English have, and the workhorse the rest of the book leans on
 concept_tag: VERB-HAVE
-prerequisites: [GE-C13-rot-blau, GE-C05-machen]
-sounds: [long-a, final-t]
+prerequisites: [GE-C05-machen, GE-C05-verbstamm]
+sounds: [long-a, d-t-final]
 roots: [germanic-habjana]
-etymology_hook: "haben ← Germanic *habjaną (= English have), from PIE *kap- 'to seize' — the SAME root as Latin capere (capture/captive). Latin habēre only LOOKS like it: it descends from *gʰabʰ-, whose English child is GIVE. A textbook false cognate — same sound, same meaning, opposite ancestry"
-est_minutes: 4
-reviews_of: [GE-C13-rot-blau, GE-C05-machen, GE-C10-geschwister]
+etymology_hook: "haben and have are the same word; the German one still has the b that English wore out of has and hast"
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [GE-GRAMMAR-VERB-STEM-01, GE-LEX-MACHEN-01]
+introduces:
+  knowledge: [GE-LEX-HABEN-01, GE-SOUND-HABEN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-HABEN-01, GE-SOUND-HABEN-01, GE-GRAMMAR-VERB-STEM-01, GE-LEX-MACHEN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C05-machen, GE-C05-verbstamm]
 ---
 
 # haben — "to have"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-VERB-STEM-01] -->
 
-[PAUSE 2s] German's workhorse verb, the twin of English *have* — and the source
-of one of the best false cognates anywhere.
+[PAUSE 2s] German's workhorse verb, and the twin of a word you have said every
+day of your life.
 
-## The forms
+## You'll want to know: haben
+<!-- hl-knowledge: introduces=[GE-LEX-HABEN-01]; assesses=[GE-GRAMMAR-VERB-STEM-01, GE-LEX-MACHEN-01] -->
 
-| | | |
-|---|---|---|
-| ich **habe** | wir **haben** | |
-| du **hast** | ihr **habt** | |
-| er/sie **hat** | sie/Sie **haben** | |
+> **haben** — "to have."
 
-Mostly regular, with **two irregulars**: *du hast* and *er hat* **drop the b**.
-English does the identical thing — *have* but *ha**s***, *hast* in older English.
-Two languages, one shortcut, inherited together.
+Same word as English *have*, worn differently. Chop the *-en* the way you did
+with *machen* and the stem is *hab-*, which is where every form in this chapter
+starts.
 
-## The trap: haben is not habēre
+Two syllables, and the first one carries the weight: *HAH-ben*.
 
-Look at these two verbs:
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[GE-SOUND-HABEN-01]; assesses=[GE-LEX-HABEN-01] -->
 
-| | verb | meaning |
-|---|---|---|
-| German | **haben** | to have |
-| Latin | **habēre** | to have |
-
-Same consonants, same meaning. **They are not related.** It is a coincidence —
-one of the most famous in linguistics.
-
-- **haben** ← Germanic *\*habjaną* ← PIE *\*kap-* "**to seize**." That root's
-  Latin child is ***capere*** — which gives English **capture, captive,
-  capable, accept**.
-- **habēre** ← PIE *\*gʰabʰ-*, whose English descendant is… **give**.
-
-So German *haben* is a cousin of **capture**, and Latin *habēre* — the source of
-French *avoir* and Italian *avere* — is a cousin of **give**. The two words that
-look most alike come from **opposite** directions.
-
-## Using it
-
-German nouns are capitalised and take their gender (Ch. 10, 11):
-
-> **Ich habe einen Bruder.** — "I have a brother."
-> **Wir haben Brot und Wein.** — the food you already have, now possessed.
+- `long-a` — the *a* of *haben* is long and open, the vowel of English *father*,
+  not the clipped *a* of *hat*.
+- `d-t-final` — that long *a* does **not** survive into every form. Two of them
+  coming up are short and clipped, and both end in a crisp, fully released *t*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HABEN-01, GE-SOUND-HABEN-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ich habe, du hast, er hat, wir haben, ihr habt, sie haben"]
-- [YOU SAY: the dropped **b** — "habe … ha**st** … ha**t**"]
-- [YOU SAY: "Ich habe eine Schwester" — Ch. 10's family]
-- [YOU SAY: the false pair — "**haben** kin to *capture*; **habēre** kin to *give*"]
+- [YOU SAY: "haben" — long *a*, soft second syllable]
+- [YOU SAY: the stem on its own — "hab-"]
+- [YOU SAY: the twins — "haben, have"]
+
+[REPEAT x2] "haben, haben — to have."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HABEN-01, GE-SOUND-HABEN-01] -->
 
-[PAUSE 3s] Give the forms of *haben*. (*Habe, hast, hat, haben, habt, haben*.)
-Which two drop the **b**, and which English forms match? (*Du hast*, *er hat* —
-English *has/hast*.) Is *haben* related to Latin *habēre*? (**No** — a
-coincidence.) What is each one actually related to? (*Haben* → **capture** (via
-*capere*); *habēre* → **give**.) Next: the one everyday thing German **refuses**
-to use *haben* for.
+[PAUSE 3s] Say "to have." (**Haben**.) What is its stem? (***Hab-***.) Is the
+*a* long or short? (**Long** — as in *father*.) Which English verb is it?
+(***Have***.) Next: the stem through the ending machine you already own.

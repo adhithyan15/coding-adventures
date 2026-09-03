@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C28-tee",
     "language": "german",
-    "chapter": 32,
+    "chapter": 33,
     "sequence": 880,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c533e2de26041138"
+    "sourceHash": "fnv1a64:052ea6f183d033f5"
   },
   "findings": []
 }
