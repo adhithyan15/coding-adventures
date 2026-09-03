@@ -1,0 +1,4250 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY PUNJABI EXAMINING OR LANGUAGE BODY. core/exam-levels.json records punjabi as exam 'no widely-sat ladder', basis 'editorial', and it carries NO caveat. Punjab's state school syllabi and the Punjabi University examinations exist, but they are built for children schooled in Punjabi or for literary attainment rather than for an adult second-language learner against CEFR can-do descriptors, and neither was consulted. Read 'A1' here as the CEFR descriptor -- can greet, introduce oneself, and handle a short exchange in everyday spoken Punjabi -- and as a measuring stick this project built for itself.\n\nEXAM ENVELOPE: AN A1 TASK SHAPE EXISTS, AND THE MOCKS DO NOT. This is the first proxy-derived inventory that can name the paper it is measuring against: punjabi/task-shapes/a1.json is checked in and specifies eleven parts across reading, listening, writing and speaking, and punjabi/assessment.json declares the rungs. But punjabi/mocks/ DOES NOT EXIST, and 48 of the 56 paths assessment.json references are absent -- every rubric, every answer key, and every task-shape file above A1. So where Hindi and Marathi could mine a checked-in mock for the exponent a paper ITEM needs, this file can only name the paper PART a gap closes. Several points do exactly that, and where they do they cite the PA-TASK-SHAPES anchor.\n\nSEARCH FOR AN EXTERNAL SOURCE: NOT SEARCHED, BY INSTRUCTION. The project settled at HL-C287/HL-C290 that the proxy derivation is the method for tracks with no sat ladder, and the search was deliberately not redone for Punjabi. Saying so is what keeps 'we did not look' from reading as 'there is nothing to find'.\n\nTWO COLUMNS ARE PUNJABI'S OWN, AND BOTH WERE MEASURED HERE. The first is TONE: Punjabi is the only major Indo-Aryan language with lexical tone, the corpus teaches four tone atoms and the letter that writes tone without being said, and no Spanish point comes near it. The second is REGISTER, and it is a DIFFERENT axis from the one Tamil's diglossia caveat forces or the one Malayalam's inventory found: this track repeatedly teaches BOTH members of a Sanskritic / Perso-Arabic doublet in the same chapter -- dhanvaad beside shukriya, miharbani karke beside kirpa karke, shubh raat beside changa ji -- and says which tradition each belongs to. The honorific axis is separately measured and is BINARY: tu against tusi. aap appears once in 226 lessons and only as the HINDI word, so no three-way honorific is claimed.\n\nSHAHMUKHI IS OUT OF SCOPE BY THE TRACK'S OWN DECISION, and PA-A1-SCR-16 records it as a point so the exclusion is visible in the measurement rather than only in a spec file.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is the Instituto Cervantes Plan Curricular inventories. The proxy supplies the LEVEL and the shape of the columns; every Punjabi exponent is this project's choice, and every point records which Spanish point or points it was derived from.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Spanish is a proxy for LEVEL, never for grammar: each point was read as 'what must an A1 learner be able to do here', and the Punjabi exponent that carries the same load was then chosen. Where Punjabi carries the load with machinery Spanish does not have -- postpositions, a dative-liking construction, a gendered participle, lexical tone -- the point is restated around the Punjabi machinery and its Spanish origin recorded in derivedFrom."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume",
+      "note": "Supplies the meaning of 'A1' as a can-do band. It describes what a learner can DO and names no language's forms, which is why a second, language-shaped source was needed."
+    },
+    {
+      "id": "PA-CORPUS",
+      "kind": "project-owned",
+      "title": "punjabi/lessons/ as merged on main",
+      "note": "226 lessons, all schema_version 2, introducing 303 atoms. Every probe in this file names an atom drawn from that set and was checked mechanically against it before the file was written; no probe names an id a future lesson is expected to introduce."
+    },
+    {
+      "id": "PA-TASK-SHAPES",
+      "kind": "project-owned",
+      "title": "punjabi/task-shapes/a1.json",
+      "note": "The checked-in A1 paper: eleven parts across reading, listening, writing and speaking, with per-part item counts, stimulus lengths and scoring criteria. Cited by the points whose gap closes or blocks a NAMED paper part -- most sharply a1-writing-reader-purpose-message, which asks for a message the taught inventory cannot produce because the track has no coordinator, and a1-speaking-personal-interview, which asks where the candidate is from when neither the question word nor any place name is taught. mocks/ does not exist, so no point here cites an ITEM."
+    },
+    {
+      "id": "ED-PUNJABI",
+      "kind": "editorial",
+      "title": "this project's judgement about Punjabi",
+      "note": "Where a Spanish point has no single Punjabi exponent, the choice of which Punjabi form carries the load is this project's and is defended in the point's own note. The clearest cases are the dative-liking construction standing in for gustar, the noun-plus-karna pattern standing in for a whole class of verbs, and the decision to give tone and form-filling columns of their own."
+    }
+  ],
+  "proxy": {
+    "of": "core/exam-inventory-es-a1.json",
+    "notTransferred": []
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "Derived from the PCIC functional inventory by way of core/exam-inventory-es-a1.json, read against punjabi/task-shapes/a1.json.",
+      "note": "Every Spanish functional subsection was walked. Partial because the answers are this project's editorial choices rather than an examining body's list, and because although an A1 task shape exists there is no mock to check an exponent against."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "Derived from the PCIC grammar inventory by way of core/exam-inventory-es-a1.json.",
+      "note": "Every Spanish A1 grammar category was answered, including the ones whose Punjabi answer is that the category is absent from the corpus. Partial because a Punjabi-shaped grammar inventory would enumerate categories Spanish never raises -- the ergative, the full postposition series, the oblique -- and this file reaches those only where a Spanish point happened to point at them."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "Derived from the PCIC orthography inventory, plus this track's own script and tone lessons.",
+      "note": "Script closure over the CORPUS is exact -- 50 of 50 characters used in headwords are taught -- and closure over the ALPHABET is not: seven akhar and six digits are never taught. Partial for that gap, for the untaught punctuation, and because Shahmukhi is out of the track's scope entirely."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "Derived from the PCIC notional inventories by way of core/exam-inventory-es-a1.json.",
+      "note": "All twenty Spanish specific-notion areas were walked. Roughly nineteen spoken content nouns exist in the whole track, and thirteen of the areas have no Punjabi word at all. They are enumerated as uncovered rather than omitted."
+    }
+  },
+  "probeSemantics": "A probe is the set of atoms whose presence in the corpus demonstrates the point. ALL of them must be introduced for the point to count: a point covered by half its atoms is not covered, because a candidate asked for the whole of something does not get partial credit for half of it. probe: null means nothing in the corpus corresponds to the point, and every null carries a note naming what is missing -- those notes are a work queue and are written as one.",
+  "points": [
+    {
+      "id": "PA-A1-N-01",
+      "category": "Naam (the noun)",
+      "label": "proper nouns: a personal name, given in an introduction and used on a form",
+      "probe": [
+        "PA-LEX-NAAM-02",
+        "PA-PHRASE-MY-NAME-02",
+        "PA-PHRASE-YOUR-NAME-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "naam and both halves of the frame are chapter 2. The writing runway then teaches two practice names to write on a form, PA-FORM-NAME-AMAN-01 and PA-FORM-NAME-MANAN-01."
+    },
+    {
+      "id": "PA-A1-N-02",
+      "category": "Naam (the noun)",
+      "label": "place names: the town or village you live in, and the country you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-N-01",
+        "A1-NE20-02",
+        "A1-NG3-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "shahar ('city') and pind ('village') exist ONLY as form values to be copied -- PA-FORM-RESIDENCE-CITY-01 and PA-FORM-RESIDENCE-VILLAGE-01 -- and are never said in a sentence. No settlement name, no word for a country, no name of Punjab or India appears anywhere. Amritsar occurs once, as running prose inside PA-C05-rahna, with no atom. So a candidate can WRITE a residence category on a form and cannot SAY where they are from, which a1-speaking-personal-interview asks for."
+    },
+    {
+      "id": "PA-A1-N-03",
+      "category": "Naam (the noun)",
+      "label": "common nouns naming stretches of time",
+      "probe": [
+        "PA-ETYMON-RAAT-RATRI",
+        "PA-LEX-KALL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "raat, inside the good-night greeting, and kall -- which the corpus is explicit means BOTH yesterday and tomorrow. Two words, and the second is ambiguous."
+    },
+    {
+      "id": "PA-A1-N-04",
+      "category": "Naam (the noun)",
+      "label": "noun gender: masculine against feminine",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-N-03",
+        "A1-ADJ-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Gender surfaces in the corpus only on the participle (PA-GRAMMAR-PRESENT-HABITUAL-GENDER-05, bolda/boldi) and in a prose aside on mera/meri/mere. There is no atom stating that NOUNS have gender or how to tell, so a learner meets agreement without meeting the category it agrees with."
+    },
+    {
+      "id": "PA-A1-N-05",
+      "category": "Naam (the noun)",
+      "label": "natural gender by separate words: bhara against bhain",
+      "probe": [
+        "PA-LEX-BHARA",
+        "PA-LEX-BHAIN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "The Spanish padre/madre point, answered by the only kin pair the track teaches."
+    },
+    {
+      "id": "PA-A1-N-06",
+      "category": "Naam (the noun)",
+      "label": "number: forming a plural noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-N-05",
+        "A1-ADJ-04",
+        "A1-SN-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "NOT TAUGHT ANYWHERE. The word 'plural' occurs in three lessons and in all three it means the honorific plural of tusi or the possessive form mere -- never a plural noun. Three Spanish points about number and agreement rest on this and all three are open."
+    },
+    {
+      "id": "PA-A1-ADJ-01",
+      "category": "Visheshan (the adjective)",
+      "label": "qualifying adjectives: good, fine",
+      "probe": [
+        "PA-LEX-CHANGA",
+        "PA-LEX-THIK-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-NG6-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "changa and thik. They are the whole adjective stock of the track, and both are taught as replies rather than as modifiers of a noun."
+    },
+    {
+      "id": "PA-A1-ADJ-02",
+      "category": "Visheshan (the adjective)",
+      "label": "the adjective agrees with its noun in gender",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Stated for the possessive in prose (mera/meri/mere) and for the participle as an atom, and never for an adjective. changa/changi is never contrasted."
+    },
+    {
+      "id": "PA-A1-ADJ-03",
+      "category": "Visheshan (the adjective)",
+      "label": "position: the adjective stands before its noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not stated anywhere. The corpus never puts an adjective in front of a noun, because it teaches no adjective-plus-noun phrase at all."
+    },
+    {
+      "id": "PA-A1-ADJ-04",
+      "category": "Visheshan (the adjective)",
+      "label": "relational adjectives: naming where a person is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "No gentilic. panjabi is taught as the LANGUAGE (PA-LEX-PANJABI-05) and never as a person's origin."
+    },
+    {
+      "id": "PA-A1-ADJ-05",
+      "category": "Visheshan (the adjective)",
+      "label": "degree: intensifying an adjective",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01",
+        "A1-NG2-03",
+        "A1-ADV-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "bahut ('very') is not taught, nor any other degree word. Four Spanish points about degree land on one gap, and with only two adjectives in the track there is little for a degree word to modify yet."
+    },
+    {
+      "id": "PA-A1-ADJ-06",
+      "category": "Visheshan (the adjective)",
+      "label": "getting by: the reduplicated adjective",
+      "probe": [
+        "PA-LEX-THIK-THAK",
+        "PA-FORM-ECHO-REDUPLICATION"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "thik-thak, and the echo-reduplication pattern named as a pattern. A genuinely Punjabi answer to 'how are you' that Spanish has no form for."
+    },
+    {
+      "id": "PA-A1-ART-01",
+      "category": "Nirdeshak (definiteness, and the article Punjabi does not have)",
+      "label": "Punjabi has no article: a bare noun is definite or indefinite by context",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Correct for Punjabi, and never stated. The absence is worth one lesson precisely because a Spanish or English speaker will look for the article and find nothing; the corpus leaves them to notice it alone."
+    },
+    {
+      "id": "PA-A1-ART-02",
+      "category": "Nirdeshak (definiteness, and the article Punjabi does not have)",
+      "label": "no article contractions exist, because there is no article to contract",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ART-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Enumerated rather than dropped so the walk is total. Nothing in Punjabi corresponds and nothing needs teaching."
+    },
+    {
+      "id": "PA-A1-ART-03",
+      "category": "Nirdeshak (definiteness, and the article Punjabi does not have)",
+      "label": "koi: the indefinite 'any, some'",
+      "probe": [
+        "PA-PHRASE-NO-PROBLEM-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ART-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "koi is taught only inside the fixed reply koi gall nahin, never as a word. Recorded as covered because the form is in the learner's mouth, and the note is the caveat."
+    },
+    {
+      "id": "PA-A1-DEM-01",
+      "category": "Sanketak (demonstratives and deixis)",
+      "label": "eh and oh: this and that",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02",
+        "A1-DEM-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "NOT TAUGHT. Neither demonstrative appears as a standalone word anywhere in 226 lessons. Three Spanish points on one gap, and it also removes the only way to point at any of the track's nineteen nouns."
+    },
+    {
+      "id": "PA-A1-DEM-02",
+      "category": "Sanketak (demonstratives and deixis)",
+      "label": "ithe and uthe: here and there",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught. With the missing 'where' at PA-A1-Q-04, location cannot be asked about or answered."
+    },
+    {
+      "id": "PA-A1-PRON-01",
+      "category": "Panvaanch (pronouns)",
+      "label": "first person: main, and the copula that goes with it",
+      "probe": [
+        "PA-LEX-MAIN-03",
+        "PA-GRAMMAR-MAIN-HAAN-03",
+        "PA-ETYMON-FIRST-PERSON-M-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-PRON-02",
+      "category": "Panvaanch (pronouns)",
+      "label": "second person: tu and tusi, taught as one contrast",
+      "probe": [
+        "PA-LEX-YOU-REGISTER-02",
+        "PA-GRAMMAR-TUSI-HO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "The track teaches the pair as a single register choice rather than as two pronouns, with the rule 'for a first meeting, always tusi'. Punjabi's system here is BINARY -- aap is named once, only as the HINDI word, so this file does not claim a three-way honorific."
+    },
+    {
+      "id": "PA-A1-PRON-03",
+      "category": "Panvaanch (pronouns)",
+      "label": "third person: oh -- he, she, it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "NOT TAUGHT. oh hai appears exactly once, inside a prose copula paradigm in PA-C03-tusi-kivein-ho, with no atom. Nothing can be said about anyone who is not in the room, which closes a1-speaking-prepared-description as well."
+    },
+    {
+      "id": "PA-A1-PRON-04",
+      "category": "Panvaanch (pronouns)",
+      "label": "first person plural: asi -- we",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "NOT TAUGHT, and the gap is odd: the corpus teaches the 1pl FUTURE ENDING -aange four times, in milaange, phir milaange, jaldi milaange and kall milaange, so the learner says 'we will meet' constantly and has never met the word for 'we'."
+    },
+    {
+      "id": "PA-A1-PRON-05",
+      "category": "Panvaanch (pronouns)",
+      "label": "the oblique pronoun: mainu, 'to me'",
+      "probe": [
+        "PA-LEX-MAINU",
+        "PA-GRAM-NU-DATIVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-08",
+        "A1-SV-05"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-PRON-06",
+      "category": "Panvaanch (pronouns)",
+      "label": "the dative-liking construction: mainu X pasand hai",
+      "probe": [
+        "PA-GRAMMAR-DATIVE-LIKING",
+        "PA-LEX-PASAND",
+        "PA-ETYMON-PASAND-SHINE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01",
+        "A1-F3-01",
+        "A1-NG6-08"
+      ],
+      "punjabiSpecific": false,
+      "note": "Punjabi's answer to gustar, and the corpus is explicit that pasand is a Persian NOUN and not a verb, so the whole construction is 'to me X is pleasing'. Four Spanish points land here."
+    },
+    {
+      "id": "PA-A1-PRON-07",
+      "category": "Panvaanch (pronouns)",
+      "label": "interrogative pronouns: ki, and the missing kaun",
+      "probe": [
+        "PA-LEX-KI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "ki ('what') is taught. kaun ('who') is named once in a romanised prose mnemonic and never introduced, so half this point is open."
+    },
+    {
+      "id": "PA-A1-PRON-08",
+      "category": "Panvaanch (pronouns)",
+      "label": "the relative jo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero occurrences of jo in any form. Three Spanish points about relative clauses are open on one absent word."
+    },
+    {
+      "id": "PA-A1-PRON-09",
+      "category": "Panvaanch (pronouns)",
+      "label": "reflexive: aap, doing something to oneself",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "PA-A1-PRON-10",
+      "category": "Panvaanch (pronouns)",
+      "label": "exclamative: what a thing!",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "PA-A1-POS-01",
+      "category": "Sambandh (possession)",
+      "label": "mera: my",
+      "probe": [
+        "PA-LEX-MERA-02",
+        "PA-PHRASE-MY-NAME-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Taught as one word, with mera/meri/mere shown in prose but not made an atom."
+    },
+    {
+      "id": "PA-A1-POS-02",
+      "category": "Sambandh (possession)",
+      "label": "the genitive da / di / de, between two nouns",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-03",
+        "A1-SN-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "NOT TAUGHT. da, di and de never occur as free words anywhere -- every apparent hit is the participle suffix -da/-di or a syllable inside jaldi or hindi. So 'my brother's name' cannot be built although both nouns are taught, and tuhada exists only inside the memorised name question."
+    },
+    {
+      "id": "PA-A1-POS-03",
+      "category": "Sambandh (possession)",
+      "label": "having something: the dative plus a copula",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-POS-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Punjabi says 'to me a brother is'. mainu and hai are both taught and the construction that joins them is not, so possession of a thing cannot be stated."
+    },
+    {
+      "id": "PA-A1-NUM-01",
+      "category": "Ginti (numerals and quantity)",
+      "label": "cardinals one to five",
+      "probe": [
+        "PA-LEX-NUMBERS-ONE-TO-FIVE",
+        "PA-HISTORY-PANJABI-FIVE-RIVERS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "ikk do tinn chaar panj, and the lesson makes panj carry the name of the province as well."
+    },
+    {
+      "id": "PA-A1-NUM-02",
+      "category": "Ginti (numerals and quantity)",
+      "label": "cardinals six to ten",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "The count STOPS AT FIVE. chhe, satt, atth, nau and das return zero hits in script or romanisation. Everything numeric above five -- ages, prices, times, dates, quantities -- is unreachable."
+    },
+    {
+      "id": "PA-A1-NUM-03",
+      "category": "Ginti (numerals and quantity)",
+      "label": "counting past ten, and the teens",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Follows from PA-A1-NUM-02. Note the sharp edge this leaves: the form runway teaches the learner to WRITE the age 15 and 25 as Gurmukhi digit strings while there is no spoken form of either number."
+    },
+    {
+      "id": "PA-A1-NUM-04",
+      "category": "Ginti (numerals and quantity)",
+      "label": "why panj is the same word in Punjabi and in Persian",
+      "probe": [
+        "PA-ETYMON-PANJ-PANCA-INHERITANCE",
+        "PA-ETYMON-PERSIAN-PANJ-INDEPENDENT",
+        "PA-HISTORY-PANJ-CONVERGENCE",
+        "PA-EVIDENCE-PANJAH-PACAS",
+        "PA-COMPARISON-PANJ-MATCH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE16-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Five atoms on one number, because Punjabi inherited panj and Persian arrived at panj independently, and the track uses the coincidence to teach what convergence is. Unusual depth for A1 and genuinely taught."
+    },
+    {
+      "id": "PA-A1-NUM-05",
+      "category": "Ginti (numerals and quantity)",
+      "label": "ordinals: first, second, third",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "PA-A1-NUM-06",
+      "category": "Ginti (numerals and quantity)",
+      "label": "relative quantity: more, less, a little",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-NG2-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Neither zyada nor thora is taught. There is no way to answer 'how much'."
+    },
+    {
+      "id": "PA-A1-NUM-07",
+      "category": "Ginti (numerals and quantity)",
+      "label": "sufficiency: enough, that will do",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-Q-04",
+        "A1-NG6-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "PA-A1-NUM-08",
+      "category": "Ginti (numerals and quantity)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04",
+        "A1-NG3-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing. No unit, no word for near or far, no size adjective."
+    },
+    {
+      "id": "PA-A1-NUM-09",
+      "category": "Ginti (numerals and quantity)",
+      "label": "the Gurmukhi digits",
+      "probe": [
+        "PA-SCRIPT-DIGIT-ZERO-01",
+        "PA-SCRIPT-DIGIT-ONE-01",
+        "PA-SCRIPT-DIGIT-TWO-01",
+        "PA-SCRIPT-DIGIT-FIVE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O4-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "FOUR of the ten shapes are taught -- 0, 1, 2 and 5 -- chosen because they are the digits the practice ages and phone numbers need. The other six are never taught, so the digit set is closed for the corpus and open for the world."
+    },
+    {
+      "id": "PA-A1-CASE-01",
+      "category": "Sambandhak (postpositions and case)",
+      "label": "postpositions come AFTER the noun, where a preposition would come before",
+      "probe": [
+        "PA-GRAMMAR-POSTPOSITION-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Taught as a principle inside PA-C05-rahna. The atom is the PRINCIPLE; vich itself is named in passing and never taught as a word, which is why PA-A1-CASE-04 is open."
+    },
+    {
+      "id": "PA-A1-CASE-02",
+      "category": "Sambandhak (postpositions and case)",
+      "label": "nu: the dative and the marked object",
+      "probe": [
+        "PA-GRAM-NU-DATIVE",
+        "PA-LEX-MAINU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SV-04",
+        "A1-SV-05",
+        "A1-PRON-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "The one postposition the track actually teaches, and it teaches it twice -- in the welcome ji aaian nu and in mainu."
+    },
+    {
+      "id": "PA-A1-CASE-03",
+      "category": "Sambandhak (postpositions and case)",
+      "label": "ne: the ergative subject of a past transitive verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero hits. It is moot while there is no past tense (PA-A1-V-06), and it is recorded because Punjabi's past cannot be taught without it -- whoever closes the past tense closes this in the same lesson or not at all."
+    },
+    {
+      "id": "PA-A1-CASE-04",
+      "category": "Sambandhak (postpositions and case)",
+      "label": "vich: in, at",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "The principle is taught and the word is not. vich never appears in Gurmukhi anywhere in the corpus."
+    },
+    {
+      "id": "PA-A1-CASE-05",
+      "category": "Sambandhak (postpositions and case)",
+      "label": "ton: from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-05",
+        "A1-NG3-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero hits. With the missing place names this is the second half of why 'where are you from' has no answer."
+    },
+    {
+      "id": "PA-A1-CASE-06",
+      "category": "Sambandhak (postpositions and case)",
+      "label": "te: on, and the spatial postpositions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero hits as a word -- every apparent match is the script drill syllable te or the Sanskrit dative inside namas-te. No word for on, under, behind or in front of."
+    },
+    {
+      "id": "PA-A1-CASE-07",
+      "category": "Sambandhak (postpositions and case)",
+      "label": "naal: with",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught, so 'with a friend' is unsayable although dost is taught."
+    },
+    {
+      "id": "PA-A1-V-01",
+      "category": "Kiria (the verb)",
+      "label": "the -na infinitive, which is how every verb is named",
+      "probe": [
+        "PA-GRAMMAR-NA-INFINITIVE",
+        "PA-LEX-HONA",
+        "PA-ETYMON-HONA-BHU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-12",
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Punjabi's citation form and the head of every verb lesson in the track. It also carries the two Spanish infinitive-clause points."
+    },
+    {
+      "id": "PA-A1-V-02",
+      "category": "Kiria (the verb)",
+      "label": "the verb stem, and what is left when -na comes off",
+      "probe": [
+        "PA-GRAMMAR-VERB-STEM-05",
+        "PA-LEX-BOLNA-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-V-03",
+      "category": "Kiria (the verb)",
+      "label": "the present habitual: stem plus -da/-di plus the copula",
+      "probe": [
+        "PA-GRAMMAR-PRESENT-HABITUAL-GENDER-05",
+        "PA-PHRASE-I-SPEAK-PUNJABI-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03",
+        "A1-SN-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "main panjabi bolda haan, and the fact that the participle takes the speaker's gender -- bolda for a man, boldi for a woman. The one place gender agreement is genuinely taught."
+    },
+    {
+      "id": "PA-A1-V-04",
+      "category": "Kiria (the verb)",
+      "label": "the copula: hai, haan, ho",
+      "probe": [
+        "PA-LEX-HAI-02",
+        "PA-GRAMMAR-MAIN-HAAN-03",
+        "PA-GRAMMAR-TUSI-HO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-SV-03",
+        "A1-OS-05",
+        "A1-NG1-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Three forms, three atoms, three lessons. The fourth form hain has no atom and is stated only in prose, so the paradigm is taught in pieces and never as a set. Five Spanish points about ser/estar and attributes land here because Punjabi has one copula and no choice to make."
+    },
+    {
+      "id": "PA-A1-V-05",
+      "category": "Kiria (the verb)",
+      "label": "hona has two roots, and that is why 'to be' sounds nothing like 'is'",
+      "probe": [
+        "PA-GRAMMAR-BE-TWO-ROOTS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "A suppletion point Spanish also has (ser/fui) and answers differently."
+    },
+    {
+      "id": "PA-A1-V-06",
+      "category": "Kiria (the verb)",
+      "label": "the past tense",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "punjabiSpecific": false,
+      "note": "ENTIRELY ABSENT, AND IT TAKES EIGHT SPANISH POINTS WITH IT. There is no si or san copula, no perfective -ia, no participle, no perfect. A learner who finishes all 226 lessons cannot say one thing that has already happened -- which also makes a1-speaking-personal-interview and a1-writing-reader-purpose-message unanswerable in the past."
+    },
+    {
+      "id": "PA-A1-V-07",
+      "category": "Kiria (the verb)",
+      "label": "the future: the -aange ending",
+      "probe": [
+        "PA-GRAMMAR-FUTURE-AANGE-04",
+        "PA-LEX-MILAANGE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Taught for ONE person only, the first plural, and taught inside a farewell. The learner can say 'we will meet' and cannot say 'I will go'."
+    },
+    {
+      "id": "PA-A1-V-08",
+      "category": "Kiria (the verb)",
+      "label": "the progressive: I am doing it right now",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "PA-A1-V-09",
+      "category": "Kiria (the verb)",
+      "label": "the imperative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "NOT TAUGHT as a form. karo appears inside the headword maaf karo, and the word 'imperative' occurs exactly once in the whole corpus, inside that lesson's etymology_hook string. Meanwhile a1-speaking-transactional-role-play asks for a transaction, which is where an imperative is normally needed."
+    },
+    {
+      "id": "PA-A1-V-10",
+      "category": "Kiria (the verb)",
+      "label": "a noun plus karna, the way Punjabi makes new verbs",
+      "probe": [
+        "PA-GRAMMAR-NOUN-PLUS-KARNA-05",
+        "PA-GRAMMAR-NOUN-PLUS-KARNA",
+        "PA-LEX-KARNA-05",
+        "PA-ETYMON-KR-DO-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "kamm karna and madad karna. Taught twice, as a pattern both times, which makes it the most productive thing in the track: any of its Perso-Arabic nouns can become a verb this way."
+    },
+    {
+      "id": "PA-A1-V-11",
+      "category": "Kiria (the verb)",
+      "label": "verbs of motion: jana and auna",
+      "probe": [
+        "PA-LEX-JANA",
+        "PA-LEX-AUNA",
+        "PA-GRAMMAR-A-PREFIX-TOWARD"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "and the a- prefix that turns 'go' into 'come', which the corpus teaches as a rule rather than as two words."
+    },
+    {
+      "id": "PA-A1-V-12",
+      "category": "Kiria (the verb)",
+      "label": "verbs of perception and knowing: vekhna, janna",
+      "probe": [
+        "PA-LEX-VEKHNA",
+        "PA-LEX-JANNA",
+        "PA-CONTRAST-JANA-JANNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-NG7-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "and the minimal pair with jana, which is one letter away and means something else entirely."
+    },
+    {
+      "id": "PA-A1-V-13",
+      "category": "Kiria (the verb)",
+      "label": "verbs of the mind: sochna, samajhna",
+      "probe": [
+        "PA-LEX-SOCHNA",
+        "PA-LEX-SAMAJHNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01",
+        "A1-F2-02"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-V-14",
+      "category": "Kiria (the verb)",
+      "label": "verbs of the page: likhna, parhna",
+      "probe": [
+        "PA-LEX-LIKHNA",
+        "PA-LEX-PARHNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02",
+        "A1-NE06-04"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-V-15",
+      "category": "Kiria (the verb)",
+      "label": "verbs of exchange: laina, puchhna, madad karna",
+      "probe": [
+        "PA-LEX-LAINA",
+        "PA-LEX-PUCHHNA",
+        "PA-LEX-MADAD-KARNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-V-16",
+      "category": "Kiria (the verb)",
+      "label": "verbs of everyday living: khana, rahna, bolna",
+      "probe": [
+        "PA-LEX-KHANA",
+        "PA-LEX-RAHNA-05",
+        "PA-LEX-BOLNA-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-V-03",
+        "A1-NE05-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-V-17",
+      "category": "Kiria (the verb)",
+      "label": "ability: I can do it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "punjabiSpecific": false,
+      "note": "sakna is not taught. Three Spanish points about ability rest on it."
+    },
+    {
+      "id": "PA-A1-V-18",
+      "category": "Kiria (the verb)",
+      "label": "wanting and needing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F3-03",
+        "A1-F3-04",
+        "A1-F3-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "chahida is not taught. With pasand covering only liking, a learner can say what pleases them and never what they want."
+    },
+    {
+      "id": "PA-A1-NEG-01",
+      "category": "Nanh (negation)",
+      "label": "nahin: the plain no",
+      "probe": [
+        "PA-LEX-HAAN-NAHIN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-F1-05"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-NEG-02",
+      "category": "Nanh (negation)",
+      "label": "na: the bare negative, and 'don't'",
+      "probe": [
+        "PA-LEX-NA",
+        "PA-ETYMON-NA-NE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-NEG-03",
+      "category": "Nanh (negation)",
+      "label": "negating a sentence: main nahin ...",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Both negative words are taught and NO NEGATED SENTENCE PATTERN IS. There is no model anywhere for putting nahin into a clause, so 'I don't understand' -- arguably the single most necessary A1 utterance -- cannot be produced."
+    },
+    {
+      "id": "PA-A1-NEG-04",
+      "category": "Nanh (negation)",
+      "label": "it is nothing: the reply that dismisses a problem",
+      "probe": [
+        "PA-PHRASE-NO-PROBLEM-03",
+        "PA-ETYMON-NEGATIVE-NE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-06",
+        "A1-F4-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "koi gall nahin, which is both the reply to an apology and the reply to thanks."
+    },
+    {
+      "id": "PA-A1-NEG-05",
+      "category": "Nanh (negation)",
+      "label": "negative coordination: neither this nor that",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Depends on the missing coordinator at PA-A1-JOIN-01."
+    },
+    {
+      "id": "PA-A1-Q-01",
+      "category": "Prashan (asking questions)",
+      "label": "ki: what",
+      "probe": [
+        "PA-LEX-KI-02",
+        "PA-PHRASE-YOUR-NAME-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-OS-03",
+        "A1-F1-02"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-Q-02",
+      "category": "Prashan (asking questions)",
+      "label": "kivein: how, and the k- that opens every question word",
+      "probe": [
+        "PA-LEX-KIVEIN-03",
+        "PA-ETYMON-QUESTION-K-03",
+        "PA-PHRASE-HOW-ARE-YOU-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "The etymon atom teaches the FAMILY -- that ki, kaun, kad, kithe and kivein all share a k- onset -- which makes the four untaught members cheaper to add than they look."
+    },
+    {
+      "id": "PA-A1-Q-03",
+      "category": "Prashan (asking questions)",
+      "label": "kaun: who",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Named once, in a romanised prose mnemonic in PA-C02-ki and PA-C03-kivein, in Latin letters, never in Gurmukhi, never an atom, never practised."
+    },
+    {
+      "id": "PA-A1-Q-04",
+      "category": "Prashan (asking questions)",
+      "label": "kithe: where",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-NG3-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Same prose mnemonic, same status. This is the one that closes a1-speaking-personal-interview, because 'where do you live' is the question that paper part exists to ask."
+    },
+    {
+      "id": "PA-A1-Q-05",
+      "category": "Prashan (asking questions)",
+      "label": "kad: when",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Same prose mnemonic, same status."
+    },
+    {
+      "id": "PA-A1-Q-06",
+      "category": "Prashan (asking questions)",
+      "label": "kyon: why",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "NOT EVEN NAMED. kyon is the one member of the k- family the mnemonic omits, and kyunki ('because') is absent too, so cause can be neither asked for nor given."
+    },
+    {
+      "id": "PA-A1-Q-07",
+      "category": "Prashan (asking questions)",
+      "label": "the yes-or-no question: making one without a question word",
+      "probe": [
+        "PA-PHRASE-HOW-ARE-YOU-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Punjabi asks by intonation with the words in statement order, and tusi kivein ho is the model the learner has. No lesson names the fact, so this is covered by example and not by rule."
+    },
+    {
+      "id": "PA-A1-Q-08",
+      "category": "Prashan (asking questions)",
+      "label": "kinne: how much, how many",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught, and moot above five in any case."
+    },
+    {
+      "id": "PA-A1-Q-09",
+      "category": "Prashan (asking questions)",
+      "label": "asking for confirmation: a tag question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "PA-A1-Q-10",
+      "category": "Prashan (asking questions)",
+      "label": "confirming or denying what was just said",
+      "probe": [
+        "PA-LEX-HAAN-NAHIN-01",
+        "PA-LEX-ACHCHHA",
+        "PA-LEX-JI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F1-05",
+        "A1-F2-06",
+        "A1-NG6-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "haan, nahin, achchha and the respectful ji -- which the corpus notes can answer, address and agree all by itself."
+    },
+    {
+      "id": "PA-A1-ADV-01",
+      "category": "Kiria-visheshan (adverbs)",
+      "label": "phir: again, then",
+      "probe": [
+        "PA-LEX-PHIR-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-ADV-02",
+      "category": "Kiria-visheshan (adverbs)",
+      "label": "jaldi: soon, quickly",
+      "probe": [
+        "PA-LEX-JALDI",
+        "PA-ETYMON-JALDI-JALD"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-ADV-03",
+      "category": "Kiria-visheshan (adverbs)",
+      "label": "polarity: yes and no as one-word answers",
+      "probe": [
+        "PA-LEX-HAAN-NAHIN-01",
+        "PA-LEX-JI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-ADV-04",
+      "category": "Kiria-visheshan (adverbs)",
+      "label": "manner: well, badly",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "changa and thik are adjectives used as replies; no manner adverb is taught."
+    },
+    {
+      "id": "PA-A1-ADV-05",
+      "category": "Kiria-visheshan (adverbs)",
+      "label": "place deictics: here, there",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "See PA-A1-DEM-02."
+    },
+    {
+      "id": "PA-A1-ADV-06",
+      "category": "Kiria-visheshan (adverbs)",
+      "label": "connective adverbs: also, neither",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "vi ('also') is not taught."
+    },
+    {
+      "id": "PA-A1-ADV-07",
+      "category": "Kiria-visheshan (adverbs)",
+      "label": "quantity adverbs: a lot, a little",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "PA-A1-ADV-08",
+      "category": "Kiria-visheshan (adverbs)",
+      "label": "certainty and doubt",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05",
+        "A1-F2-08",
+        "A1-F2-10",
+        "A1-F2-11",
+        "A1-F2-12"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing. Five Spanish points about certainty, doubt, scepticism and possibility have no Punjabi exponent in the corpus at all -- shayad is absent, and so is any hedging frame."
+    },
+    {
+      "id": "PA-A1-S-01",
+      "category": "Vaak (the sentence)",
+      "label": "the verb comes last",
+      "probe": [
+        "PA-GRAMMAR-VERB-LAST-02",
+        "PA-PHRASE-I-SPEAK-PUNJABI-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-OS-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Taught on the copula in chapter 2 and demonstrated in the chapter-5 sentence. The first thing a Spanish or English speaker has to re-wire."
+    },
+    {
+      "id": "PA-A1-S-02",
+      "category": "Vaak (the sentence)",
+      "label": "the copular sentence: X hai",
+      "probe": [
+        "PA-LEX-HAI-02",
+        "PA-PHRASE-MY-NAME-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-OS-05",
+        "A1-SV-02"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-S-03",
+      "category": "Vaak (the sentence)",
+      "label": "the four-slot clause: mainu X pasand hai",
+      "probe": [
+        "PA-GRAMMAR-DATIVE-LIKING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SV-01",
+        "A1-SV-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "The longest structure the track teaches. Everything beyond it needs a connective the corpus does not have."
+    },
+    {
+      "id": "PA-A1-S-04",
+      "category": "Vaak (the sentence)",
+      "label": "the declarative, affirmative and negative",
+      "probe": [
+        "PA-PHRASE-I-SPEAK-PUNJABI-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Affirmative only, in truth -- see PA-A1-NEG-03 for why the negative half is not there."
+    },
+    {
+      "id": "PA-A1-S-05",
+      "category": "Vaak (the sentence)",
+      "label": "the question, with and without an asking word",
+      "probe": [
+        "PA-PHRASE-YOUR-NAME-02",
+        "PA-PHRASE-HOW-ARE-YOU-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-OS-02",
+        "A1-OS-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-S-06",
+      "category": "Vaak (the sentence)",
+      "label": "the existential sentence: there is, there are",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught. Punjabi uses hai with a location and the track never builds one, so presence and absence cannot be stated."
+    },
+    {
+      "id": "PA-A1-S-07",
+      "category": "Vaak (the sentence)",
+      "label": "the vocative: addressing somebody",
+      "probe": [
+        "PA-LEX-JI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "ji is the whole of it, and it is a real answer -- the corpus says ji can address as well as agree. No name-plus-title form is taught."
+    },
+    {
+      "id": "PA-A1-S-08",
+      "category": "Vaak (the sentence)",
+      "label": "the noun phrase: more than one word before the verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SN-01",
+        "A1-SN-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "With no adjective-noun phrase, no genitive and no demonstrative, the track's noun phrases are single nouns. Three of the pieces the Spanish point names are each open elsewhere in this file."
+    },
+    {
+      "id": "PA-A1-JOIN-01",
+      "category": "Jorr (joining and subordination)",
+      "label": "and: joining two nouns, and joining two clauses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "ABSENT. te and ate return zero conjunction uses in 226 lessons -- every apparent hit is the script-drill syllable te or the Sanskrit dative inside namas-te. A learner cannot say 'tea and milk' although both nouns are taught in the same chapter."
+    },
+    {
+      "id": "PA-A1-JOIN-02",
+      "category": "Jorr (joining and subordination)",
+      "label": "or: offering two alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-CO-03",
+        "A1-F3-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "jaan is absent. So is any way to ask 'tea or milk?', which a1-speaking-transactional-role-play needs."
+    },
+    {
+      "id": "PA-A1-JOIN-03",
+      "category": "Jorr (joining and subordination)",
+      "label": "but: setting one thing against another",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "punjabiSpecific": false,
+      "note": "par and lekin are both absent; the only apparent hits are the first two letters of parivar."
+    },
+    {
+      "id": "PA-A1-JOIN-04",
+      "category": "Jorr (joining and subordination)",
+      "label": "distributive: one thing, then the other",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Absent."
+    },
+    {
+      "id": "PA-A1-JOIN-05",
+      "category": "Jorr (joining and subordination)",
+      "label": "because: giving a reason",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "kyunki is absent, and so is kyon -- see PA-A1-Q-06."
+    },
+    {
+      "id": "PA-A1-JOIN-06",
+      "category": "Jorr (joining and subordination)",
+      "label": "that-clauses: saying what somebody said or thinks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03",
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "punjabiSpecific": false,
+      "note": "The complementiser ki is absent. ki ('what') is taught and the short-vowel ki that opens a subordinate clause is a different word and never appears -- so sochna, samajhna and janna are all taught and none of them can be given anything to think, understand or know."
+    },
+    {
+      "id": "PA-A1-JOIN-07",
+      "category": "Jorr (joining and subordination)",
+      "label": "when: locating one event against another",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "punjabiSpecific": false,
+      "note": "jadon is absent."
+    },
+    {
+      "id": "PA-A1-JOIN-08",
+      "category": "Jorr (joining and subordination)",
+      "label": "if: the conditional clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "punjabiSpecific": false,
+      "note": "je is absent."
+    },
+    {
+      "id": "PA-A1-JOIN-09",
+      "category": "Jorr (joining and subordination)",
+      "label": "in order to: purpose",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "Absent."
+    },
+    {
+      "id": "PA-A1-JOIN-10",
+      "category": "Jorr (joining and subordination)",
+      "label": "the relative clause with jo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Absent. Enumerated here as well as at PA-A1-PRON-08 because the Spanish inventory files relatives under both pronouns and subordination."
+    },
+    {
+      "id": "PA-A1-JOIN-11",
+      "category": "Jorr (joining and subordination)",
+      "label": "any two-clause sentence at all",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-CO-01",
+        "A1-SUB-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "THE COLUMN IS EMPTY, 0 OF 11, AND THAT IS THE HEADLINE OF THIS FILE. Not one of the ten joining devices above exists anywhere in the corpus, in Gurmukhi or in romanisation. The longest structure the track teaches is a four-slot single clause. Every multi-word item in the corpus is a fixed juxtaposition or a lexicalised chunk, so the writing paper a1-writing-reader-purpose-message asks for a message the taught inventory cannot produce."
+    },
+    {
+      "id": "PA-A1-TIME-01",
+      "category": "Samaan (time and date)",
+      "label": "the days of the week",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not one weekday name. Zero hits for somvaar, hafta or any day word."
+    },
+    {
+      "id": "PA-A1-TIME-02",
+      "category": "Samaan (time and date)",
+      "label": "the months",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "PA-A1-TIME-03",
+      "category": "Samaan (time and date)",
+      "label": "the seasons",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02",
+        "A1-NE20-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing. mausam, sardi and garmi are all absent, so weather is closed too."
+    },
+    {
+      "id": "PA-A1-TIME-04",
+      "category": "Samaan (time and date)",
+      "label": "telling the clock time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "vaje is absent, and impossible anyway above five o'clock."
+    },
+    {
+      "id": "PA-A1-TIME-05",
+      "category": "Samaan (time and date)",
+      "label": "the parts of the day",
+      "probe": [
+        "PA-ETYMON-RAAT-RATRI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "raat ('night') only, and only inside the formal good-night greeting. No morning, afternoon or evening word."
+    },
+    {
+      "id": "PA-A1-TIME-06",
+      "category": "Samaan (time and date)",
+      "label": "today, yesterday, tomorrow",
+      "probe": [
+        "PA-LEX-KALL",
+        "PA-ETYMON-KALL-KALYA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "kall is taught, and the corpus is explicit that it means BOTH yesterday and tomorrow. Punjabi resolves it by tense -- which this track does not teach (PA-A1-V-06) -- so an inventory item testing 'yesterday' is unanswerable from this corpus. ajj ('today') is absent."
+    },
+    {
+      "id": "PA-A1-TIME-07",
+      "category": "Samaan (time and date)",
+      "label": "now",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "hun is absent."
+    },
+    {
+      "id": "PA-A1-TIME-08",
+      "category": "Samaan (time and date)",
+      "label": "asking and giving an age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG5-04",
+        "A1-NE03-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "No spoken age construction anywhere. The form runway teaches the learner to WRITE 15 and 25 in Gurmukhi digits under the label umar, and there is no way to say either number aloud."
+    },
+    {
+      "id": "PA-A1-TIME-09",
+      "category": "Samaan (time and date)",
+      "label": "before and after",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03",
+        "A1-NG3-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "PA-A1-TIME-10",
+      "category": "Samaan (time and date)",
+      "label": "locating an event in time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Needs a time word and a postposition, and the track has neither."
+    },
+    {
+      "id": "PA-A1-F-01",
+      "category": "Vihaar (communicative functions)",
+      "label": "greet: three hellos, for three of Punjab's communities",
+      "probe": [
+        "PA-LEX-SAT-SRI-AKAL-01",
+        "PA-LEX-NAMASTE-01",
+        "PA-LEX-SALAAM",
+        "PA-ETYMON-SALAAM-SLM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F6-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "sat sri akal, namaste and salaam. The track teaches all three and says which community each belongs to, which is a genuinely Punjabi answer to a Spanish point that needs only one word."
+    },
+    {
+      "id": "PA-A1-F-02",
+      "category": "Vihaar (communicative functions)",
+      "label": "greet formally at night",
+      "probe": [
+        "PA-LEX-SHUBH-RAAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-03",
+      "category": "Vihaar (communicative functions)",
+      "label": "respond to a greeting, and say how you are",
+      "probe": [
+        "PA-PHRASE-I-AM-FINE-03",
+        "PA-LEX-THIK-03",
+        "PA-LEX-CHANGA",
+        "PA-LEX-THIK-THAK"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-02",
+        "A1-F6-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "thik, changa and thik-thak give a three-way answer -- well, good, getting by -- which is more than most tracks manage at this level."
+    },
+    {
+      "id": "PA-A1-F-04",
+      "category": "Vihaar (communicative functions)",
+      "label": "ask how somebody is",
+      "probe": [
+        "PA-PHRASE-HOW-ARE-YOU-03",
+        "PA-GRAMMAR-TUSI-HO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-02"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-05",
+      "category": "Vihaar (communicative functions)",
+      "label": "introduce oneself by name",
+      "probe": [
+        "PA-PHRASE-MY-NAME-02",
+        "PA-LEX-NAAM-02",
+        "PA-LEX-MERA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F1-01",
+        "A1-F1-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-06",
+      "category": "Vihaar (communicative functions)",
+      "label": "ask somebody their name",
+      "probe": [
+        "PA-PHRASE-YOUR-NAME-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-07",
+      "category": "Vihaar (communicative functions)",
+      "label": "respond to an introduction",
+      "probe": [
+        "PA-PHRASE-KHUSHI-HOI-02",
+        "PA-ETYMON-KHUSH-PERSIAN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-08",
+      "category": "Vihaar (communicative functions)",
+      "label": "say what language you speak",
+      "probe": [
+        "PA-PHRASE-I-SPEAK-PUNJABI-05",
+        "PA-LEX-PANJABI-05",
+        "PA-ETYMON-PANJ-AAB-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-F1-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "and the etymology that makes panjabi the land of five rivers, which the track ties back to its own number five."
+    },
+    {
+      "id": "PA-A1-F-09",
+      "category": "Vihaar (communicative functions)",
+      "label": "thank, in either of Punjabi's two registers",
+      "probe": [
+        "PA-LEX-DHANVAAD-01",
+        "PA-LEX-SHUKRIYA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "dhanvaad is the Sanskritic choice and shukriya the Perso-Arabic one, and the track teaches them as a PAIR in the same chapter. That doubling is this track's identity and is the subject of PA-A1-REG-02."
+    },
+    {
+      "id": "PA-A1-F-10",
+      "category": "Vihaar (communicative functions)",
+      "label": "reply to thanks",
+      "probe": [
+        "PA-PHRASE-NO-PROBLEM-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-11",
+      "category": "Vihaar (communicative functions)",
+      "label": "apologise",
+      "probe": [
+        "PA-LEX-MAAF",
+        "PA-ETYMON-MAAF-AFW"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "maaf karo -- 'make pardon', a noun plus karna, so it also practises the pattern at PA-A1-V-10."
+    },
+    {
+      "id": "PA-A1-F-12",
+      "category": "Vihaar (communicative functions)",
+      "label": "say please, in either register",
+      "probe": [
+        "PA-LEX-MIHARBANI",
+        "PA-ETYMON-MIHARBANI-MITHRA",
+        "PA-PHRASE-KIRPA-KARKE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "miharbani karke and kirpa karke -- the Perso-Arabic and the Sanskritic again, and again taught as a pair."
+    },
+    {
+      "id": "PA-A1-F-13",
+      "category": "Vihaar (communicative functions)",
+      "label": "ask for something",
+      "probe": [
+        "PA-PHRASE-KIRPA-KARKE",
+        "PA-LEX-PAANI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-F4-02",
+        "A1-NE05-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "The one request pattern in the track is NOUN plus kirpa karke, taught on paani. It works, and it is the whole of the track's request machinery -- there is no verb-based request and no 'can I'."
+    },
+    {
+      "id": "PA-A1-F-14",
+      "category": "Vihaar (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "PA-LEX-MADAD-KARNA",
+        "PA-ETYMON-MADAD-ARABIC"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "The verb is taught; the frame that would turn it into 'can you help me' needs sakna, which is not -- see PA-A1-V-17."
+    },
+    {
+      "id": "PA-A1-F-15",
+      "category": "Vihaar (communicative functions)",
+      "label": "say what you like",
+      "probe": [
+        "PA-LEX-PASAND",
+        "PA-GRAMMAR-DATIVE-LIKING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F3-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-16",
+      "category": "Vihaar (communicative functions)",
+      "label": "welcome somebody on arrival",
+      "probe": [
+        "PA-LEX-JI-AAIAN-NU",
+        "PA-GRAM-NU-DATIVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F4-07",
+        "A1-F5-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "ji aaian nu, literally 'to those who have come' -- and the track uses it to teach the nu postposition, which is the only one it teaches at all."
+    },
+    {
+      "id": "PA-A1-F-17",
+      "category": "Vihaar (communicative functions)",
+      "label": "take leave, formally and casually",
+      "probe": [
+        "PA-PHRASE-RABB-RAKHA-04",
+        "PA-ETYMON-RABB-ARABIC-04",
+        "PA-LEX-CHANGA-JI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-11",
+        "A1-F6-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "rabb rakha ('God keep you') and changa ji ('right then, bye'). The formal and the everyday, again as a pair."
+    },
+    {
+      "id": "PA-A1-F-18",
+      "category": "Vihaar (communicative functions)",
+      "label": "arrange to meet again",
+      "probe": [
+        "PA-PHRASE-SEE-YOU-AGAIN-04",
+        "PA-LEX-JALDI",
+        "PA-LEX-KALL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "punjabiSpecific": false,
+      "note": "phir milaange, jaldi milaange, kall milaange -- three farewells on one future ending, which is how the track gets four uses out of a form it teaches once."
+    },
+    {
+      "id": "PA-A1-F-19",
+      "category": "Vihaar (communicative functions)",
+      "label": "show one is following: I see, right",
+      "probe": [
+        "PA-LEX-ACHCHHA",
+        "PA-ETYMON-ACHCHHA-CLEAR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-20",
+      "category": "Vihaar (communicative functions)",
+      "label": "agree",
+      "probe": [
+        "PA-LEX-HAAN-NAHIN-01",
+        "PA-LEX-JI",
+        "PA-ETYMON-JI-JIVA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-F2-05",
+        "A1-NG6-06"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-21",
+      "category": "Vihaar (communicative functions)",
+      "label": "disagree",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "nahin is taught as a bare 'no' and no negated clause exists, so a learner can refuse a yes-or-no question and cannot contradict a statement."
+    },
+    {
+      "id": "PA-A1-F-32",
+      "category": "Vihaar (communicative functions)",
+      "label": "say that you do not know, or do not understand",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F2-15"
+      ],
+      "punjabiSpecific": false,
+      "note": "OPEN, AND IT IS THE MOST NEEDED SENTENCE AT THIS LEVEL. janna and samajhna are both taught and neither can be negated, because no negated clause pattern exists (PA-A1-NEG-03). A candidate in a1-listening-short-exchanges who misses something has no way to say so."
+    },
+    {
+      "id": "PA-A1-F-22",
+      "category": "Vihaar (communicative functions)",
+      "label": "give an opinion or an evaluation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F2-01",
+        "A1-F2-02",
+        "A1-F2-03",
+        "A1-F2-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "OPEN, AND IT IS THE COMPLEMENTISER. 'I think that ...' needs the ki that PA-A1-JOIN-06 records as absent. sochna is taught and has nothing to think."
+    },
+    {
+      "id": "PA-A1-F-23",
+      "category": "Vihaar (communicative functions)",
+      "label": "give an order or instruction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "See PA-A1-V-09: no imperative is taught."
+    },
+    {
+      "id": "PA-A1-F-24",
+      "category": "Vihaar (communicative functions)",
+      "label": "grant or refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "PA-A1-F-25",
+      "category": "Vihaar (communicative functions)",
+      "label": "accept or decline an offer",
+      "probe": [
+        "PA-LEX-HAAN-NAHIN-01",
+        "PA-LEX-ACHCHHA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "punjabiSpecific": false,
+      "note": "By the bare yes and no. Covered thinly and genuinely."
+    },
+    {
+      "id": "PA-A1-F-26",
+      "category": "Vihaar (communicative functions)",
+      "label": "state a plan or intention",
+      "probe": [
+        "PA-GRAMMAR-FUTURE-AANGE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "The future ending exists for one person only, so intentions are statable in the first plural and nowhere else."
+    },
+    {
+      "id": "PA-A1-F-27",
+      "category": "Vihaar (communicative functions)",
+      "label": "express a wish or a preference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F3-03",
+        "A1-F3-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "See PA-A1-V-18."
+    },
+    {
+      "id": "PA-A1-F-28",
+      "category": "Vihaar (communicative functions)",
+      "label": "congratulate, toast, offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-08",
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "PA-A1-F-29",
+      "category": "Vihaar (communicative functions)",
+      "label": "address somebody by name or title",
+      "probe": [
+        "PA-LEX-JI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-F-30",
+      "category": "Vihaar (communicative functions)",
+      "label": "ask for a person, and ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F6-03",
+        "A1-F6-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Neither is taught, and both need the third-person pronoun and the imperative this track lacks."
+    },
+    {
+      "id": "PA-A1-F-31",
+      "category": "Vihaar (communicative functions)",
+      "label": "say how you feel",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01",
+        "A1-NE13-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "thik and changa answer 'how are you' as formulae. No word for tired, ill, hungry or happy exists as vocabulary."
+    },
+    {
+      "id": "PA-A1-LEX-01",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "the face: eye, nose, ear, mouth",
+      "probe": [
+        "PA-LEX-AKKH",
+        "PA-LEX-NAKK",
+        "PA-LEX-KANN",
+        "PA-LEX-MUNH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-LEX-02",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "head and heart",
+      "probe": [
+        "PA-LEX-SIR",
+        "PA-LEX-DIL",
+        "PA-ETYMON-SIR-HORN",
+        "PA-ETYMON-DIL-HEART"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "and the etymologies the track hangs on them: sir is a cousin of English horn rather than head, and dil is a Persian loan where Punjabi could have kept the Sanskrit word."
+    },
+    {
+      "id": "PA-A1-LEX-03",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "the rest of the body: hand, leg, stomach, back",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01",
+        "A1-NE01-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Six body words in total and all six are above the neck. No limb, no torso -- and with no imperative (PA-A1-V-09) there is no way to name a bodily action or position either, so the Spanish point about what the body DOES is open on the same gap."
+    },
+    {
+      "id": "PA-A1-LEX-04",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "physical characteristics of a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "PA-A1-LEX-05",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "PA-A1-LEX-06",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "family: brother, sister, and the family itself",
+      "probe": [
+        "PA-LEX-BHARA",
+        "PA-LEX-BHAIN",
+        "PA-LEX-PARIVAR",
+        "PA-ETYMON-PARIVAR-SURROUND"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Three kin words. NO MOTHER, FATHER, SON, DAUGHTER, WIFE, HUSBAND OR CHILD is taught anywhere -- an unusual shape for a track that reached chapter 36."
+    },
+    {
+      "id": "PA-A1-LEX-07",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "friend",
+      "probe": [
+        "PA-LEX-DOST",
+        "PA-ETYMON-DOST-CHOOSE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-LEX-08",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "celebrations and occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "PA-A1-LEX-09",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "drink: water, tea, milk",
+      "probe": [
+        "PA-LEX-PAANI",
+        "PA-LEX-CHA",
+        "PA-LEX-DUDH",
+        "PA-ETYMON-CHA-CHINESE",
+        "PA-ETYMON-DUDH-DUGDHA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "and the road tea took overland out of China, which is the etymology the track uses to introduce its tone system."
+    },
+    {
+      "id": "PA-A1-LEX-10",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "food: bread",
+      "probe": [
+        "PA-LEX-ROTI",
+        "PA-ETYMON-ROTI-UNKNOWN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "roti is the whole of the track's food vocabulary. The Spanish points about meals, dishes and the restaurant are PA-A1-LEX-11."
+    },
+    {
+      "id": "PA-A1-LEX-11",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "meals, dishes and eating out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01",
+        "A1-NE05-04",
+        "A1-NE05-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing. khana is taught as the verb 'to eat' and never as the noun 'a meal'."
+    },
+    {
+      "id": "PA-A1-LEX-12",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "work: the activity, and two kinds of it",
+      "probe": [
+        "PA-LEX-KAMM-05",
+        "PA-FORM-WORK-JOB-01",
+        "PA-FORM-WORK-FARMING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "kamm as a spoken word, then naukri and kheti as values to write on a form. Two of the three are writing-runway atoms, which is the shape of this whole track."
+    },
+    {
+      "id": "PA-A1-LEX-13",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "conditions of work: rights, unemployment, the workplace",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing taught, and correctly marginal at A1."
+    },
+    {
+      "id": "PA-A1-LEX-14",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "study: reading, writing, and the language you learn",
+      "probe": [
+        "PA-LEX-PARHNA",
+        "PA-LEX-LIKHNA",
+        "PA-FORM-LANGUAGE-PUNJABI-01",
+        "PA-FORM-LANGUAGE-HINDI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04",
+        "A1-NE06-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "The two verbs, plus the two language names the form runway teaches -- which are the only proper nouns in the track."
+    },
+    {
+      "id": "PA-A1-LEX-15",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "school, the classroom and examinations",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-03",
+        "A1-NE06-05",
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing. Five Spanish education points on one gap."
+    },
+    {
+      "id": "PA-A1-LEX-16",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "residence: city and village",
+      "probe": [
+        "PA-FORM-RESIDENCE-CITY-01",
+        "PA-FORM-RESIDENCE-VILLAGE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03",
+        "A1-NE10-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "shahar and pind, as form values. They name a KIND of place and no place -- see PA-A1-N-02."
+    },
+    {
+      "id": "PA-A1-LEX-17",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "the house: rooms, furniture, household objects",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero. ghar ('house') itself is not taught."
+    },
+    {
+      "id": "PA-A1-LEX-18",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "clothing and footwear",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-19",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "colours",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero. No colour term of any kind."
+    },
+    {
+      "id": "PA-A1-LEX-20",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "animals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero as vocabulary. ghora ('horse') appears three times purely as a TONE demonstration, and the lesson says explicitly that the learner is not being asked to write it."
+    },
+    {
+      "id": "PA-A1-LEX-21",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "plants and the countryside",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero, except kheti ('farming') as a form value."
+    },
+    {
+      "id": "PA-A1-LEX-22",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "weather and climate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-23",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "the sky and space",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-24",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "geography: country, town, capital",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero. See PA-A1-N-02."
+    },
+    {
+      "id": "PA-A1-LEX-25",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "travel, transport and accommodation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-26",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "shops, shopping and paying",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01",
+        "A1-NE12-03",
+        "A1-NE15-01",
+        "A1-NE15-02",
+        "A1-NG6-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero. Five Spanish points on one gap, and it is the gap that closes the transactional role-play in the A1 speaking paper."
+    },
+    {
+      "id": "PA-A1-LEX-27",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "health, illness and medicine",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-28",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "the telephone, and dictating a number",
+      "probe": [
+        "PA-FORM-LABEL-PHONE-01",
+        "PA-FORM-PHONE-A-01",
+        "PA-FORM-PHONE-GROUPING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE09-03",
+        "A1-NE09-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "The form runway teaches the label phone and two practice numbers as digit strings, with a grouping convention. So the number can be WRITTEN and not said -- the digits have no spoken form above five."
+    },
+    {
+      "id": "PA-A1-LEX-29",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "post, press, television, radio and the internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-04",
+        "A1-NE09-05",
+        "A1-NE11-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-30",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "banks, health services and the police",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-31",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "leisure, sport, games and shows",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-32",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "the arts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-33",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "religion",
+      "probe": [
+        "PA-LEX-SAT-SRI-AKAL-01",
+        "PA-ETYMON-RABB-ARABIC-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not as a topic, but genuinely present: sat sri akal is a Sikh formula the track explains as one, and rabb is named as the Arabic word for God inside the farewell. Thin and real."
+    },
+    {
+      "id": "PA-A1-LEX-34",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "government, politics and law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-35",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "business, industry and energy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-36",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "computing and technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-37",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "personal objects",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-38",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "open and closed, in and out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-39",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "attractiveness, ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NG6-10"
+      ],
+      "punjabiSpecific": false,
+      "note": "Zero."
+    },
+    {
+      "id": "PA-A1-LEX-40",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "good and bad, correct and incorrect",
+      "probe": [
+        "PA-LEX-CHANGA",
+        "PA-LEX-THIK-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-04",
+        "A1-NG6-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "changa and thik cover the positive half. There is no word for bad or wrong, so evaluation runs one way only."
+    },
+    {
+      "id": "PA-A1-LEX-41",
+      "category": "Shabdkosh (lexicon by domain)",
+      "label": "hearing and listening",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "sunna is not taught, although vekhna ('to see') is -- so the pair a listening paper needs is half present."
+    },
+    {
+      "id": "PA-A1-SCR-01",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "Gurmukhi hangs from a top line, and that line is how a word holds together",
+      "probe": [
+        "PA-SCRIPT-GURMUKHI-TOP-LINE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-SCR-02",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the script is an abugida: a letter carries an inherent vowel until a matra changes it",
+      "probe": [
+        "PA-SCRIPT-AA-MATRA-01",
+        "PA-SCRIPT-E-MATRA-01",
+        "PA-SCRIPT-II-MATRA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02",
+        "A1-O1-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-SCR-03",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the vowel matras, one at a time",
+      "probe": [
+        "PA-SCRIPT-AA-MATRA-01",
+        "PA-SCRIPT-E-MATRA-01",
+        "PA-SCRIPT-II-MATRA-01",
+        "PA-SCRIPT-AU-MATRA-01",
+        "PA-SCRIPT-AUNKAR-01",
+        "PA-SCRIPT-DULAINKAR-01",
+        "PA-SCRIPT-DULAVAN-01",
+        "PA-SCRIPT-HORA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Eight signs, each with its Punjabi name -- aunkar, dulainkar, dulavan, hora -- which is how a Punjabi reader learns them."
+    },
+    {
+      "id": "PA-A1-SCR-04",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the independent vowel letters",
+      "probe": [
+        "PA-SCRIPT-INDEPENDENT-A-01",
+        "PA-SCRIPT-INDEPENDENT-AA-01",
+        "PA-SCRIPT-INDEPENDENT-I-01",
+        "PA-SCRIPT-INDEPENDENT-U-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Four of them. The two vowel CARRIERS uraa and iri are never taught, which is why PA-A1-SCR-10 is open."
+    },
+    {
+      "id": "PA-A1-SCR-05",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the addak, which doubles the consonant after it",
+      "probe": [
+        "PA-SCRIPT-ADDAK-DOUBLING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "Taught on ikk, in the numbers lesson, so the reader meets it on a word they already say."
+    },
+    {
+      "id": "PA-A1-SCR-06",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the bindi and tippi, which nasalise",
+      "probe": [
+        "PA-SCRIPT-BINDI-01",
+        "PA-SCRIPT-TIPPI-NASAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-SCR-07",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the pairin bindi, and the subjoined ha",
+      "probe": [
+        "PA-SCRIPT-PAIRIN-BINDI-01",
+        "PA-SCRIPT-SUBJOINED-HA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "The two marks that carry Punjabi's Perso-Arabic sounds and its tone respectively -- both of them things no other Indic script needs in this form."
+    },
+    {
+      "id": "PA-A1-SCR-08",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the everyday consonants",
+      "probe": [
+        "PA-SCRIPT-KA-01",
+        "PA-SCRIPT-GA-01",
+        "PA-SCRIPT-CHA-01",
+        "PA-SCRIPT-JA-01",
+        "PA-SCRIPT-DA-01",
+        "PA-SCRIPT-NA-01",
+        "PA-SCRIPT-PA-01",
+        "PA-SCRIPT-BA-01",
+        "PA-SCRIPT-MA-01",
+        "PA-SCRIPT-LA-01",
+        "PA-SCRIPT-HA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-SCR-09",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the aspirates and the retroflexes",
+      "probe": [
+        "PA-SCRIPT-KHA-01",
+        "PA-SCRIPT-BHA-01",
+        "PA-SCRIPT-CHHA-01",
+        "PA-SCRIPT-DDA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-SCR-10",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "the seven letters of the alphabet the track never teaches",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "MEASURED TWO WAYS, AND THE TWO ANSWERS DIFFER -- which is the point. Against the CORPUS, closure is PERFECT: 50 distinct Gurmukhi characters appear in headwords across 226 lessons and all 50 are taught, so the track never leaks an untaught glyph. Against the ALPHABET, seven of the 35 akhar are never taught and never used -- uraa, iri, nganga, nyanya, ddhadda, thattha and yayya -- and six of the ten digits are likewise absent. So a learner who meets tha or ddha in a real sign has no atom for it, and a1-reading-signs-and-forms draws on exactly that kind of text."
+    },
+    {
+      "id": "PA-A1-SCR-11",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "reading a whole known word back off the page",
+      "probe": [
+        "PA-SCRIPT-NAMASTE-READ-01",
+        "PA-SCRIPT-HAAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-SCR-12",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "capital letters",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "punjabiSpecific": false,
+      "note": "Gurmukhi has no case distinction. Enumerated rather than dropped so a reader comparing the files sees the answer."
+    },
+    {
+      "id": "PA-A1-SCR-13",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "written accentuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Gurmukhi has no accent marks. Same reasoning as PA-A1-SCR-12."
+    },
+    {
+      "id": "PA-A1-SCR-14",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "punctuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "punjabiSpecific": false,
+      "note": "Modern Punjabi uses the European marks alongside the danda, and no lesson teaches any of them. Nine Spanish points on one gap, and the writing paper asks for a written message."
+    },
+    {
+      "id": "PA-A1-SCR-15",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "abbreviations and initialisms",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-06",
+        "A1-O4-01",
+        "A1-O4-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "PA-A1-SCR-16",
+      "category": "Gurmukhi (script and orthography)",
+      "label": "Shahmukhi, the other script Punjabi is written in",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "DELIBERATELY OUT OF SCOPE, AND THE TRACK SAYS SO. punjabi/assessment-spec.md states that Shahmukhi 'is an important Punjabi writing tradition but is outside this track's present script contract'. Enumerated here so the exclusion is visible in the measurement rather than only in a spec: a Punjabi A1 candidate in Pakistan reads a script this inventory does not cover, and that is a scoping decision rather than debt."
+    },
+    {
+      "id": "PA-A1-TONE-01",
+      "category": "Sur (tone and pronunciation)",
+      "label": "Punjabi has tone, and no other major Indo-Aryan language does",
+      "probe": [
+        "PA-SOUND-PUNJABI-TONE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "The single most distinctive fact about the language's sound, and the track teaches it as a fact before teaching any individual tone."
+    },
+    {
+      "id": "PA-A1-TONE-02",
+      "category": "Sur (tone and pronunciation)",
+      "label": "the falling tone",
+      "probe": [
+        "PA-SOUND-TONE-FALLING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Taught on samajhna."
+    },
+    {
+      "id": "PA-A1-TONE-03",
+      "category": "Sur (tone and pronunciation)",
+      "label": "the high level tone",
+      "probe": [
+        "PA-SOUND-TONE-HIGH-LEVEL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Taught on chaa."
+    },
+    {
+      "id": "PA-A1-TONE-04",
+      "category": "Sur (tone and pronunciation)",
+      "label": "the low tone",
+      "probe": [
+        "PA-SOUND-TONE-LOW"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Taught on bhara, where the spelling says bh and the mouth says p."
+    },
+    {
+      "id": "PA-A1-TONE-05",
+      "category": "Sur (tone and pronunciation)",
+      "label": "tone is written by the letter you do NOT say",
+      "probe": [
+        "PA-SCRIPT-SUBJOINED-HA",
+        "PA-SOUND-PUNJABI-TONE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "The subjoined ha and the voiced-aspirate letters are where the tone lives, which is why a Punjabi word can be spelt with bh and pronounced with p. A spelling-to-sound rule with no Spanish counterpart at all."
+    },
+    {
+      "id": "PA-A1-TONE-06",
+      "category": "Sur (tone and pronunciation)",
+      "label": "sound changes that explain the vocabulary",
+      "probe": [
+        "PA-SOUND-Y-TO-J",
+        "PA-SOUND-NASAL-STOP-VOICING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "Sanskrit y- becoming Punjabi j-, and the nasal-stop voicing behind panj. The track uses sound law as a vocabulary aid rather than as phonetics."
+    },
+    {
+      "id": "PA-A1-TONE-07",
+      "category": "Sur (tone and pronunciation)",
+      "label": "word stress",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Not taught anywhere."
+    },
+    {
+      "id": "PA-A1-REG-01",
+      "category": "Bolchaal (register: familiar and respectful, Sanskritic and Perso-Arabic)",
+      "label": "tu against tusi: respect expressed as plurality",
+      "probe": [
+        "PA-LEX-YOU-REGISTER-02",
+        "PA-GRAMMAR-TUSI-HO-03",
+        "PA-LEX-JI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01",
+        "A1-F5-03"
+      ],
+      "punjabiSpecific": false,
+      "note": "MEASURED, NOT ASSUMED. The track teaches the pair as one atom with a hard rule -- 'for a first meeting, always tusi' -- and it propagates into the copula and into ji. The axis is BINARY: aap appears exactly once in the corpus and only as the HINDI word, so this file does not claim the three-way honorific some Indo-Aryan tracks need."
+    },
+    {
+      "id": "PA-A1-REG-02",
+      "category": "Bolchaal (register: familiar and respectful, Sanskritic and Perso-Arabic)",
+      "label": "the Sanskritic word and the Perso-Arabic one, taught as a pair",
+      "probe": [
+        "PA-LEX-DHANVAAD-01",
+        "PA-LEX-SHUKRIYA-01",
+        "PA-LEX-MIHARBANI",
+        "PA-PHRASE-KIRPA-KARKE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-07",
+        "A1-F4-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "THIS TRACK'S IDENTITY, AND IT IS A REGISTER AXIS. dhanvaad against shukriya, miharbani karke against kirpa karke, shubh raat against changa ji: the corpus repeatedly teaches BOTH members of a doublet in the same chapter and says which tradition each comes from. Measured from the corpus, not imported -- Malayalam's inventory found a comparable borrowed-against-inherited split and Tamil's found a literary/spoken diglossia, and all three are different axes."
+    },
+    {
+      "id": "PA-A1-REG-03",
+      "category": "Bolchaal (register: familiar and respectful, Sanskritic and Perso-Arabic)",
+      "label": "three greetings, three communities",
+      "probe": [
+        "PA-LEX-SAT-SRI-AKAL-01",
+        "PA-LEX-NAMASTE-01",
+        "PA-LEX-SALAAM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "The doublet widened to a triplet, and the one place the register choice is about who the speaker is rather than how formal the moment is."
+    },
+    {
+      "id": "PA-A1-REG-04",
+      "category": "Bolchaal (register: familiar and respectful, Sanskritic and Perso-Arabic)",
+      "label": "the formal farewell against the everyday one",
+      "probe": [
+        "PA-PHRASE-RABB-RAKHA-04",
+        "PA-LEX-CHANGA-JI",
+        "PA-LEX-SHUBH-RAAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-REG-05",
+      "category": "Bolchaal (register: familiar and respectful, Sanskritic and Perso-Arabic)",
+      "label": "when to choose which",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F5-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "The tu/tusi rule IS stated. The doublet rule is not: the track teaches dhanvaad and shukriya side by side and never says which to use when, so a learner owns both and can choose neither. One lesson would close it."
+    },
+    {
+      "id": "PA-A1-FRM-01",
+      "category": "Faram (filling in a form)",
+      "label": "the labels on a form: name, language, residence, work, age, phone",
+      "probe": [
+        "PA-FORM-LABEL-NAME-01",
+        "PA-FORM-LABEL-LANGUAGE-01",
+        "PA-FORM-LABEL-RESIDENCE-01",
+        "PA-FORM-LABEL-WORK-01",
+        "PA-FORM-LABEL-AGE-01",
+        "PA-FORM-LABEL-PHONE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Six labels, each with its own lesson. This is the track's strongest column and it is the one a1-writing-practical-form is scored on."
+    },
+    {
+      "id": "PA-A1-FRM-02",
+      "category": "Faram (filling in a form)",
+      "label": "writing a value under a label, with the model visible",
+      "probe": [
+        "PA-FORM-NAME-SUPPORTED-ENTRY-01",
+        "PA-FORM-LANGUAGE-SUPPORTED-ENTRY-01",
+        "PA-FORM-RESIDENCE-SUPPORTED-ENTRY-01",
+        "PA-FORM-WORK-SUPPORTED-ENTRY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-FRM-03",
+      "category": "Faram (filling in a form)",
+      "label": "writing a value after the model is hidden",
+      "probe": [
+        "PA-FORM-NAME-DELAYED-ENTRY-01",
+        "PA-FORM-LANGUAGE-DELAYED-ENTRY-01",
+        "PA-FORM-RESIDENCE-DELAYED-ENTRY-01",
+        "PA-FORM-WORK-DELAYED-ENTRY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-FRM-04",
+      "category": "Faram (filling in a form)",
+      "label": "choosing the value yourself, with no model at all",
+      "probe": [
+        "PA-FORM-NAME-NO-MODEL-01",
+        "PA-FORM-LANGUAGE-NO-MODEL-01",
+        "PA-FORM-RESIDENCE-NO-MODEL-01",
+        "PA-FORM-WORK-NO-MODEL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "The end of the ladder, and the point at which the form task becomes a real one."
+    },
+    {
+      "id": "PA-A1-FRM-05",
+      "category": "Faram (filling in a form)",
+      "label": "keeping the label and the value apart on the line",
+      "probe": [
+        "PA-FORM-AGE-SPACING-01",
+        "PA-FORM-RESIDENCE-SPACING-01",
+        "PA-FORM-WORK-SPACING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "punjabiSpecific": false,
+      "note": "A mechanical writing skill that a hand-written form is genuinely scored on, and that no Spanish orthography point quite names."
+    },
+    {
+      "id": "PA-A1-FRM-06",
+      "category": "Faram (filling in a form)",
+      "label": "repairing a wrong entry",
+      "probe": [
+        "PA-FORM-AGE-REPAIR-01",
+        "PA-FORM-RESIDENCE-REPAIR-01",
+        "PA-FORM-WORK-REPAIR-01",
+        "PA-FORM-PHONE-REPAIR-01",
+        "PA-FORM-THREE-MIXED-REPAIR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-FRM-07",
+      "category": "Faram (filling in a form)",
+      "label": "filling three fields at once",
+      "probe": [
+        "PA-FORM-THREE-LABEL-ORDER-01",
+        "PA-FORM-THREE-SUPPORTED-01",
+        "PA-FORM-THREE-NO-MODEL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-FRM-08",
+      "category": "Faram (filling in a form)",
+      "label": "writing a phone number, grouped",
+      "probe": [
+        "PA-FORM-PHONE-A-01",
+        "PA-FORM-PHONE-B-01",
+        "PA-FORM-PHONE-GROUPING-01",
+        "PA-FORM-PHONE-DIGIT-ORDER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE09-06"
+      ],
+      "punjabiSpecific": false
+    },
+    {
+      "id": "PA-A1-FRM-09",
+      "category": "Faram (filling in a form)",
+      "label": "writing an age in two digits",
+      "probe": [
+        "PA-FORM-AGE-FIFTEEN-01",
+        "PA-FORM-AGE-TWENTY-FIVE-01",
+        "PA-FORM-AGE-TWO-DIGIT-ORDER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI",
+        "PA-TASK-SHAPES"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "punjabiSpecific": false,
+      "note": "Covered as a WRITING skill, and it is worth saying plainly that the learner writing 25 here cannot say the number aloud -- see PA-A1-NUM-02."
+    },
+    {
+      "id": "PA-A1-FRM-10",
+      "category": "Faram (filling in a form)",
+      "label": "documents: passport and identity card",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PA-CORPUS",
+        "ED-PUNJABI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ],
+      "punjabiSpecific": false,
+      "note": "The form runway teaches the fields and never the document they sit on. No word for passport or card."
+    }
+  ]
+}

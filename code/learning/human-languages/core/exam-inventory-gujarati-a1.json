@@ -1,0 +1,3912 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY GUJARATI EXAMINING OR LANGUAGE BODY. core/exam-levels.json records gujarati as exam 'no widely-sat ladder', basis 'editorial', and it carries NO caveat. Gujarat's state school syllabi and the Gujarati Sahitya Parishad examinations exist, but they are built for children schooled in Gujarati or for literary attainment rather than for an adult second-language learner against CEFR can-do descriptors, and neither was consulted. Read 'A1' here as the CEFR descriptor and as a measuring stick this project built for itself.\\n\\nEXAM ENVELOPE: A PRE-A1 TASK SHAPE EXISTS AND AN A1 ONE DOES NOT. gujarati/task-shapes/ holds exactly one file, pre-a1.json. gujarati/assessment.json declares all seven rungs and points at task-shapes/a1.json and at fourteen mocks; task-shapes/a1.json does not exist, gujarati/mocks/ does not exist, and every artifact assessment.json names except pre-a1.json is missing. So this file cannot cite a paper part the way the Punjabi inventory can, and it says so rather than implying an envelope it does not have.\\n\\nSEARCH FOR AN EXTERNAL SOURCE: NOT SEARCHED, BY INSTRUCTION. The project settled at HL-C287/HL-C290 that the proxy derivation is the method for tracks with no sat ladder, and the search was deliberately not redone for Gujarati. Saying so is what keeps 'we did not look' from reading as 'there is nothing to find'.\\n\\nTHE REGISTER COLUMN IS DERIVED FROM LESSON BODIES, NOT FROM FRONTMATTER, AND THAT IS ITSELF THE FINDING. All 228 lessons carry register: neutral, so the frontmatter asserts this track makes no register distinction whatever. It does: the tu / tame contrast is taught explicitly, compared to French vous, given a hard rule for first meetings, and then propagated into the copula, the possessive and the farewell -- four coupled places, none of them visible in a frontmatter field. An inventory that had trusted the frontmatter would have reported no register column at all.\\n\\nGENDER IS THIS TRACK'S OWN COLUMN. Gujarati keeps the Sanskrit neuter that Hindi and Punjabi lost, so it has THREE genders, and five of the corpus's eight grammar atoms are about gender -- the neuter -u tell, the -vu infinitive being neuter, the fact that the ending does NOT settle it, gender shifting during inheritance, and an infinitive agreeing with its OBJECT. That is the deepest grammar in the track by a wide margin and it gets a column of its own.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is the Instituto Cervantes Plan Curricular inventories. The proxy supplies the LEVEL and the shape of the columns; every Gujarati exponent is this project's choice, and every point records which Spanish point or points it was derived from.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Spanish is a proxy for LEVEL, never for grammar: each point was read as 'what must an A1 learner be able to do here', and the Gujarati exponent that carries the same load was then chosen. Where Gujarati carries the load with machinery Spanish does not have -- a three-way gender, a neuter infinitive, a dative-liking construction, postpositions -- the point is restated around the Gujarati machinery and its Spanish origin recorded in derivedFrom."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume",
+      "note": "Supplies the meaning of 'A1' as a can-do band. It describes what a learner can DO and names no language's forms, which is why a second, language-shaped source was needed."
+    },
+    {
+      "id": "GU-CORPUS",
+      "kind": "project-owned",
+      "title": "gujarati/lessons/ as merged on main",
+      "note": "228 lessons, all schema_version 2, introducing 219 atoms. Every probe in this file names an atom drawn from that set and was checked mechanically against it before the file was written; no probe names an id a future lesson is expected to introduce. Note the shape of that atom set: 68 are script atoms and 27 are etymologies, so the count is larger than the usable A1 language in it."
+    },
+    {
+      "id": "ED-GUJARATI",
+      "kind": "editorial",
+      "title": "this project's judgement about Gujarati",
+      "note": "Where a Spanish point has no single Gujarati exponent, the choice of which Gujarati form carries the load is this project's and is defended in the point's own note. The clearest cases are giving gender a column of its own, deriving the register column from lesson bodies rather than the uniformly-neutral frontmatter, and declining to claim a Sanskritic/native register axis on the strength of one concept atom."
+    }
+  ],
+  "proxy": {
+    "of": "core/exam-inventory-es-a1.json",
+    "notTransferred": []
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "Derived from the PCIC functional inventory by way of core/exam-inventory-es-a1.json.",
+      "note": "Every Spanish functional subsection was walked. Partial because the answers are this project's editorial choices rather than an examining body's list, and because there is no A1 task shape and no mock to check an exponent against."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "Derived from the PCIC grammar inventory by way of core/exam-inventory-es-a1.json.",
+      "note": "Every Spanish A1 grammar category was answered, including the ones whose Gujarati answer is that the category is absent from the corpus. Partial because a Gujarati-shaped grammar inventory would enumerate categories Spanish never raises -- the neuter, the ergative, the oblique -- and this file reaches those only where a Spanish point pointed at them, and because the corpus has eight grammar atoms in total."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "Derived from the PCIC orthography inventory, plus this track's own script and sound-change lessons.",
+      "note": "Script closure over the CORPUS is exact and holds even over lesson bodies -- 43 of 43 characters taught, zero leaks. Closure over the ALPHABET is about two thirds: fourteen letters and all ten digits are never taught. Partial for that, for the untaught punctuation, and because the sound points are historical sound CHANGE rather than pronunciation."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "Derived from the PCIC notional inventories by way of core/exam-inventory-es-a1.json.",
+      "note": "All twenty Spanish specific-notion areas were walked. Roughly 48 concrete content nouns exist in the track, and clothes, colours, animals and health are at absolute zero. The uncovered areas are enumerated rather than omitted."
+    }
+  },
+  "probeSemantics": "A probe is the set of atoms whose presence in the corpus demonstrates the point. ALL of them must be introduced for the point to count: a point covered by half its atoms is not covered, because a candidate asked for the whole of something does not get partial credit for half of it. probe: null means nothing in the corpus corresponds to the point, and every null carries a note naming what is missing -- those notes are a work queue and are written as one.",
+  "points": [
+    {
+      "id": "GU-A1-N-01",
+      "category": "Naam (the noun)",
+      "label": "proper nouns: a personal name, given in an introduction",
+      "probe": [
+        "GU-CONCEPT-C02-NAAM-01",
+        "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+        "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-N-02",
+      "category": "Naam (the noun)",
+      "label": "place names: the town you live in, and the country you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-01",
+        "A1-NE20-02",
+        "A1-NG3-07"
+      ],
+      "gujaratiSpecific": false,
+      "note": "shahar ('city'), gaam ('village') and ghar ('home') are taught as CATEGORIES of place; not one settlement name exists. Ahmedabad appears once as an unlabelled example sentence inside GU-C05-rahevun with no atom, and there is no word for a country and no Gujarat or Bharat anywhere. Three Spanish points rest on this."
+    },
+    {
+      "id": "GU-A1-N-03",
+      "category": "Naam (the noun)",
+      "label": "common nouns naming stretches of time",
+      "probe": [
+        "GU-LEX-DIVAS-01",
+        "GU-LEX-MAHINO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "divas ('day') and mahino -- which is the WORD for month and not any month's name."
+    },
+    {
+      "id": "GU-A1-N-04",
+      "category": "Naam (the noun)",
+      "label": "number: forming a plural noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-05",
+        "A1-ADJ-04",
+        "A1-SN-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT TAUGHT ANYWHERE. The word 'plural' occurs in two lessons and in both it means tame being grammatically plural as a courtesy. There is no plural noun form, no rule, and no plural atom."
+    },
+    {
+      "id": "GU-A1-N-05",
+      "category": "Naam (the noun)",
+      "label": "natural gender by separate words: bhai against bahen",
+      "probe": [
+        "GU-LEX-BHAI",
+        "GU-LEX-BAHEN",
+        "GU-ETYMON-BHAI-BROTHER",
+        "GU-ETYMON-BAHEN-BHAGA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "and the etymology the track hangs on the pair: bhai is the plainest cousin of English brother, and bahen is not the cousin of sister."
+    },
+    {
+      "id": "GU-A1-GEN-01",
+      "category": "Ling (grammatical gender, of which Gujarati has three)",
+      "label": "Gujarati nouns come in three genders, not two",
+      "probe": [
+        "GU-CONCEPT-C02-MAARUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-03",
+        "A1-ADJ-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "maaru / maaro / maari, taught on the possessive in chapter 2. Gujarati keeps the Sanskrit neuter that Hindi and Punjabi lost, so a learner arriving from either has a third box to learn."
+    },
+    {
+      "id": "GU-A1-GEN-02",
+      "category": "Ling (grammatical gender, of which Gujarati has three)",
+      "label": "the nasalised -u ending is the neuter's tell",
+      "probe": [
+        "GU-GRAMMAR-NEUTER-U-NASAL-TELL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught on modhu ('mouth'). The one reliable surface clue the language gives."
+    },
+    {
+      "id": "GU-A1-GEN-03",
+      "category": "Ling (grammatical gender, of which Gujarati has three)",
+      "label": "the -vu infinitive is itself neuter",
+      "probe": [
+        "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
+        "GU-ETYMON-CHHE-DWELL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Which is why every verb in this track is cited as hovu, javu, khaavu -- the dictionary form is a neuter noun."
+    },
+    {
+      "id": "GU-A1-GEN-04",
+      "category": "Ling (grammatical gender, of which Gujarati has three)",
+      "label": "but the ending does NOT settle it: -i is not always feminine",
+      "probe": [
+        "GU-GRAMMAR-GENDER-NOT-BY-ENDING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught on rotli. The track is unusually honest here: it teaches the clue and then teaches that the clue fails."
+    },
+    {
+      "id": "GU-A1-GEN-05",
+      "category": "Ling (grammatical gender, of which Gujarati has three)",
+      "label": "a word can change gender on its way into the language",
+      "probe": [
+        "GU-GRAMMAR-GENDER-SHIFT-INHERITANCE",
+        "GU-ETYMON-KAAN-DISPUTED"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught on kaan ('ear'), a word Sanskrit itself could not settle."
+    },
+    {
+      "id": "GU-A1-GEN-06",
+      "category": "Ling (grammatical gender, of which Gujarati has three)",
+      "label": "the infinitive agrees with its OBJECT",
+      "probe": [
+        "GU-GRAMMAR-INFINITIVE-OBJECT-GENDER",
+        "GU-LEX-MADAD-KARVI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SN-02",
+        "A1-SV-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "madad karvi, not karvu, because madad is feminine. A genuinely difficult agreement rule, taught at A1, and the fifth of the track's eight grammar atoms to be about gender."
+    },
+    {
+      "id": "GU-A1-GEN-07",
+      "category": "Ling (grammatical gender, of which Gujarati has three)",
+      "label": "the present tense carries no gender at all",
+      "probe": [
+        "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Stated explicitly in GU-C07-javun. Worth its own point because the learner has just been taught five gender rules and needs to know where they stop."
+    },
+    {
+      "id": "GU-A1-ADJ-01",
+      "category": "Visheshan (the adjective)",
+      "label": "qualifying adjectives, and evaluating something as good",
+      "probe": [
+        "GU-CONCEPT-C01-SAARUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-NG6-01",
+        "A1-NG6-04",
+        "A1-NG6-07"
+      ],
+      "gujaratiSpecific": false,
+      "note": "saaru ('good, okay, fine') is the ONLY adjective in the track. Four Spanish evaluation points rest on it -- general evaluation, quality, correctness -- and there is no word for bad or wrong, so evaluation runs one way only."
+    },
+    {
+      "id": "GU-A1-ADJ-02",
+      "category": "Visheshan (the adjective)",
+      "label": "the adjective agrees in gender",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The gender machinery is taught in depth for nouns, possessives and infinitives, and never for an adjective -- saaru/saari/saaro is never contrasted, because there is no second adjective to contrast it with."
+    },
+    {
+      "id": "GU-A1-ADJ-03",
+      "category": "Visheshan (the adjective)",
+      "label": "position: the adjective stands before its noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Never stated. The corpus contains no adjective-plus-noun phrase."
+    },
+    {
+      "id": "GU-A1-ADJ-04",
+      "category": "Visheshan (the adjective)",
+      "label": "relational adjectives: where a person is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "No gentilic."
+    },
+    {
+      "id": "GU-A1-ADJ-05",
+      "category": "Visheshan (the adjective)",
+      "label": "degree: very, quite, a bit",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01",
+        "A1-NG2-03",
+        "A1-ADV-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "bahu is not taught, nor any other degree word. Four Spanish points on one gap."
+    },
+    {
+      "id": "GU-A1-ADJ-06",
+      "category": "Visheshan (the adjective)",
+      "label": "colour as a quality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO colour terms in 228 lessons -- no laal, no nilu, nothing."
+    },
+    {
+      "id": "GU-A1-ADJ-07",
+      "category": "Visheshan (the adjective)",
+      "label": "attractiveness, ease, difficulty, age of a thing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NG6-10",
+        "A1-NG5-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "None taught. With one adjective in the whole track this is where most of the Spanish qualitative points land."
+    },
+    {
+      "id": "GU-A1-ART-01",
+      "category": "Nirdeshak (definiteness, and the article Gujarati does not have)",
+      "label": "Gujarati has no article: a bare noun is definite or indefinite by context",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Correct for Gujarati, and never stated. ek ('one') is taught as a numeral and never as 'a'."
+    },
+    {
+      "id": "GU-A1-ART-02",
+      "category": "Nirdeshak (definiteness, and the article Gujarati does not have)",
+      "label": "no article contractions exist, because there is no article to contract",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ART-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Enumerated rather than dropped so the walk is total."
+    },
+    {
+      "id": "GU-A1-DEM-01",
+      "category": "Sanketvachak (demonstratives and deixis)",
+      "label": "aa and te: this and that",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02",
+        "A1-DEM-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT TAUGHT. aa is taught only as the LETTER aa (GU-SCRIPT-AA-01), never as the word 'this'; te appears as a free word in exactly one lesson, inside a copula recitation. Three Spanish points on one gap, and it leaves the track's 48 nouns with nothing to point at them."
+    },
+    {
+      "id": "GU-A1-DEM-02",
+      "category": "Sanketvachak (demonstratives and deixis)",
+      "label": "ahin and tyaan: here and there",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "GU-A1-PRON-01",
+      "category": "Sarvanaam (pronouns)",
+      "label": "first person: hun",
+      "probe": [
+        "GU-CONCEPT-C03-HUN-01",
+        "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-PRON-02",
+      "category": "Sarvanaam (pronouns)",
+      "label": "second person: tu and tame, taught as one contrast",
+      "probe": [
+        "GU-CONCEPT-C02-TUTAME-01",
+        "GU-CONCEPT-C03-TAMEKEMCHHO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The pair is taught as a register choice with the rule 'for a first meeting, use tame', and the copula is drilled to match it."
+    },
+    {
+      "id": "GU-A1-PRON-03",
+      "category": "Sarvanaam (pronouns)",
+      "label": "third person: te -- he, she, it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT TAUGHT. te occurs as a free word in one file, inside the copula paradigm recitation in GU-C02-chhe, with no atom of its own. Nothing can be said about anyone absent."
+    },
+    {
+      "id": "GU-A1-PRON-04",
+      "category": "Sarvanaam (pronouns)",
+      "label": "plural pronouns: ame, aapne, teo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT TAUGHT -- zero occurrences. 'We' survives only inside the lexicalised future malishun, 'we will meet'."
+    },
+    {
+      "id": "GU-A1-PRON-05",
+      "category": "Sarvanaam (pronouns)",
+      "label": "the oblique pronoun: mane, 'to me'",
+      "probe": [
+        "GU-GRAMMAR-DATIVE-LIKING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-PRON-08",
+        "A1-SV-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught only inside the gamvu construction, never as a general form."
+    },
+    {
+      "id": "GU-A1-PRON-06",
+      "category": "Sarvanaam (pronouns)",
+      "label": "interrogative pronouns: shun",
+      "probe": [
+        "GU-CONCEPT-C02-SHUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "shun ('what') is taught. kon ('who') is named once in a prose aside and never introduced."
+    },
+    {
+      "id": "GU-A1-PRON-07",
+      "category": "Sarvanaam (pronouns)",
+      "label": "the relative je",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Zero occurrences as a word -- the single apparent hit is aavje, the familiar imperative of the goodbye. Three Spanish points open."
+    },
+    {
+      "id": "GU-A1-PRON-08",
+      "category": "Sarvanaam (pronouns)",
+      "label": "reflexive and exclamative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04",
+        "A1-PRON-07"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Neither taught."
+    },
+    {
+      "id": "GU-A1-POS-01",
+      "category": "Sambandh (possession)",
+      "label": "maaru: my, in all three genders",
+      "probe": [
+        "GU-CONCEPT-C02-MAARUN-01",
+        "GU-CONCEPT-C02-MAARUNNAAMCHHE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-POS-02",
+      "category": "Sambandh (possession)",
+      "label": "the genitive no / ni / nu, between two nouns",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-03",
+        "A1-SN-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT TAUGHT. nu returns zero occurrences as a word; no and ni appear only as substrings of mahino, keri and baari. So 'my friend's book' cannot be built although both nouns are taught, and taaru/tamaru have no atom either."
+    },
+    {
+      "id": "GU-A1-POS-03",
+      "category": "Sambandh (possession)",
+      "label": "having something",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-POS-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Gujarati says 'to me X is'. Neither the frame nor a general dative is taught."
+    },
+    {
+      "id": "GU-A1-NUM-01",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "cardinals one to five",
+      "probe": [
+        "GU-LEX-NUMBERS-ONE-TO-FIVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-NUM-02",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "why be begins with b and tran kept its r",
+      "probe": [
+        "GU-ETYMON-BE-DVE-SELECTION",
+        "GU-ETYMON-TRAN-R-RESTORATION",
+        "GU-HISTORY-LEARNED-RESTORATION",
+        "GU-FORM-BE-INITIAL-B",
+        "GU-FORM-TRAN-R"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE16-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Five atoms on two numbers. The track uses them to teach learned restoration -- a sound that was lost and then put back by scholars -- which is real historical linguistics at A1."
+    },
+    {
+      "id": "GU-A1-NUM-03",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "cardinals six to ten",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "THE COUNT STOPS AT FIVE. chha, saat, aath, nav and das return zero hits. Ages, prices, times and quantities are all closed above five."
+    },
+    {
+      "id": "GU-A1-NUM-04",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "counting past ten",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Follows from GU-A1-NUM-03."
+    },
+    {
+      "id": "GU-A1-NUM-05",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "ordinals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "GU-A1-NUM-06",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "relative quantity and sufficiency",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-Q-04",
+        "A1-NG2-02",
+        "A1-ADV-03",
+        "A1-NG6-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Neither vadhu nor ochhu nor bas is taught. Five Spanish points on one gap; there is no way to answer 'how much'."
+    },
+    {
+      "id": "GU-A1-NUM-07",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04",
+        "A1-NG3-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "GU-A1-NUM-08",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "the Gujarati digits",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O4-03",
+        "A1-NE16-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT ONE DIGIT IS TAUGHT OR USED. A character census over every headword and every lesson body finds no codepoint in the Gujarati digit range at all, so a learner cannot read a price, a house number or a date."
+    },
+    {
+      "id": "GU-A1-CASE-01",
+      "category": "Vibhakti (postpositions and case)",
+      "label": "postpositions come AFTER the noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-NG3-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "GU-C05-rahevun has a grammar lens headed 'in comes after the noun' and that SECTION INTRODUCES NOTHING -- its introduces list is empty, and the lesson's only atom is the verb. So the principle is explained in prose and is not an atom, and -ma otherwise appears only inside majaama."
+    },
+    {
+      "id": "GU-A1-CASE-02",
+      "category": "Vibhakti (postpositions and case)",
+      "label": "-ne: the dative and the marked object",
+      "probe": [
+        "GU-GRAMMAR-DATIVE-LIKING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SV-04",
+        "A1-SV-05",
+        "A1-PRON-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught only for the gamvu construction, as mane/tamne, never as a general marker."
+    },
+    {
+      "id": "GU-A1-CASE-03",
+      "category": "Vibhakti (postpositions and case)",
+      "label": "-thi: from, by",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-05",
+        "A1-NG3-07"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Zero occurrences."
+    },
+    {
+      "id": "GU-A1-CASE-04",
+      "category": "Vibhakti (postpositions and case)",
+      "label": "-ma: in, at",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "See GU-A1-CASE-01: explained, never an atom."
+    },
+    {
+      "id": "GU-A1-CASE-05",
+      "category": "Vibhakti (postpositions and case)",
+      "label": "par and the spatial postpositions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Zero. No word for on, under, behind or in front of."
+    },
+    {
+      "id": "GU-A1-CASE-06",
+      "category": "Vibhakti (postpositions and case)",
+      "label": "with, and the instrumental",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "GU-A1-CASE-07",
+      "category": "Vibhakti (postpositions and case)",
+      "label": "the ergative -e",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught, and moot while there is no past tense -- but Gujarati's past cannot be taught without it."
+    },
+    {
+      "id": "GU-A1-V-01",
+      "category": "Kriyapad (the verb)",
+      "label": "the -vu infinitive, which is how every verb is named",
+      "probe": [
+        "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
+        "GU-LEX-HOVU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-12",
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-V-02",
+      "category": "Kriyapad (the verb)",
+      "label": "the present: stem plus a person ending plus the copula",
+      "probe": [
+        "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA",
+        "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03",
+        "A1-SN-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "hun jaaun chhun / tame jao chho / te jaay chhe -- taught as a three-form paradigm, which is more than most tracks in this series manage."
+    },
+    {
+      "id": "GU-A1-V-03",
+      "category": "Kriyapad (the verb)",
+      "label": "the copula chhe, and its person forms",
+      "probe": [
+        "GU-CONCEPT-C02-CHHE-01",
+        "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+        "GU-ETYMON-CHHE-DWELL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-SV-03",
+        "A1-OS-05",
+        "A1-NG1-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "chhun / chhe / chho, plus the etymology from a root meaning 'to dwell'. Five Spanish ser/estar points land here because Gujarati has one copula and no choice to make."
+    },
+    {
+      "id": "GU-A1-V-04",
+      "category": "Kriyapad (the verb)",
+      "label": "the past tense",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ENTIRELY ABSENT, AND IT TAKES EIGHT SPANISH POINTS WITH IT. Two lessons forward-reference it -- saying gender lives in the past tense -- and the memorised aanand thayo contains an unanalysed past participle. Nothing teaches it."
+    },
+    {
+      "id": "GU-A1-V-05",
+      "category": "Kriyapad (the verb)",
+      "label": "the future: the -ishun ending",
+      "probe": [
+        "GU-CONCEPT-C04-MALISHUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught for the first plural only, inside a farewell. 'We will meet' is sayable; 'I will go' is not."
+    },
+    {
+      "id": "GU-A1-V-06",
+      "category": "Kriyapad (the verb)",
+      "label": "the progressive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "GU-A1-V-07",
+      "category": "Kriyapad (the verb)",
+      "label": "the imperative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01",
+        "A1-NE01-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT TAUGHT as a form. aavjo is named in prose as 'the polite imperative of aavvu' and its atom is a lexical goodbye; the word 'imperative' occurs in one file. There is no other imperative in the corpus -- no come, sit, give me, or repeat please."
+    },
+    {
+      "id": "GU-A1-V-08",
+      "category": "Kriyapad (the verb)",
+      "label": "a noun plus karvu, the way Gujarati makes new verbs",
+      "probe": [
+        "GU-CONCEPT-C05-KAAMKARVUN-01",
+        "GU-LEX-MADAD-KARVI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "kaam karvu and madad karvi -- and the second is where the object-gender rule is taught."
+    },
+    {
+      "id": "GU-A1-V-09",
+      "category": "Kriyapad (the verb)",
+      "label": "verbs of motion: javu and aavvu",
+      "probe": [
+        "GU-LEX-JAVU",
+        "GU-LEX-AAVVU",
+        "GU-ETYMON-AAVVU-REACH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-V-10",
+      "category": "Kriyapad (the verb)",
+      "label": "verbs of perception and knowing: jovu, jaanvu",
+      "probe": [
+        "GU-LEX-JOVU",
+        "GU-LEX-JAANVU",
+        "GU-FORM-JAVU-JOVU-CONTRAST",
+        "GU-ETYMON-JAANVU-KNOW"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-NG7-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "and the minimal pair with javu, which is one vowel sign away."
+    },
+    {
+      "id": "GU-A1-V-11",
+      "category": "Kriyapad (the verb)",
+      "label": "verbs of the mind: vicharvu, samajvu",
+      "probe": [
+        "GU-LEX-VICHARVU",
+        "GU-LEX-SAMAJVU",
+        "GU-ETYMON-VICHAR-TURN",
+        "GU-ETYMON-BUDH-AWAKE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01",
+        "A1-F2-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-V-12",
+      "category": "Kriyapad (the verb)",
+      "label": "verbs of the page: vanchvu, lakhvu",
+      "probe": [
+        "GU-LEX-VANCHVU",
+        "GU-LEX-LAKHVU",
+        "GU-ETYMON-VAC-VOICE",
+        "GU-ETYMON-LIKH-SCRATCH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02",
+        "A1-NE06-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "and the etymology that vanchvu once meant 'to make a voice', which is what reading was before it was silent."
+    },
+    {
+      "id": "GU-A1-V-13",
+      "category": "Kriyapad (the verb)",
+      "label": "verbs of exchange: levu, puchhvu, madad karvi",
+      "probe": [
+        "GU-LEX-LEVU",
+        "GU-LEX-PUCHHVU",
+        "GU-LEX-MADAD-KARVI",
+        "GU-ETYMON-MADAD-ARABIC"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-V-14",
+      "category": "Kriyapad (the verb)",
+      "label": "verbs of everyday living: khaavu, rahevu, bolvu",
+      "probe": [
+        "GU-LEX-KHAAVU",
+        "GU-CONCEPT-C05-RAHEVUN-01",
+        "GU-CONCEPT-C05-BOLVUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-03",
+        "A1-NE05-01"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-V-15",
+      "category": "Kriyapad (the verb)",
+      "label": "liking: mane X game chhe",
+      "probe": [
+        "GU-LEX-GAMVU",
+        "GU-GRAMMAR-DATIVE-LIKING",
+        "GU-ETYMON-GAM-GO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SV-01",
+        "A1-F3-01",
+        "A1-NG6-08"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Gujarati's answer to gustar, and the corpus notes the verb is built on a root meaning 'to go' -- what pleases you GOES to you."
+    },
+    {
+      "id": "GU-A1-V-16",
+      "category": "Kriyapad (the verb)",
+      "label": "ability and wanting",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09",
+        "A1-F3-03",
+        "A1-F3-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Neither shakvu nor joie is taught. Five Spanish points about what a learner can and wants to do have no Gujarati form here."
+    },
+    {
+      "id": "GU-A1-NEG-01",
+      "category": "Nakaar (negation)",
+      "label": "na: the bare no",
+      "probe": [
+        "GU-CONCEPT-C01-HAANAA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-F1-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught as the second half of the haa/naa pair, and that is the entire negative resource of the track."
+    },
+    {
+      "id": "GU-A1-NEG-02",
+      "category": "Nakaar (negation)",
+      "label": "nathi: negating a sentence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO OCCURRENCES IN 228 FILES, in script or romanisation. This is the starkest single finding in the file: a learner cannot say 'I don't understand', 'it isn't', or 'no, I don't'. Gujarati's ordinary sentence negator is simply not in the corpus."
+    },
+    {
+      "id": "GU-A1-NEG-03",
+      "category": "Nakaar (negation)",
+      "label": "nahin, and the fixed phrase that carries it",
+      "probe": [
+        "GU-CONCEPT-C03-VANDHONAHI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-06",
+        "A1-F4-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "vaandho nahin -- 'no objection'. nahin occurs in five lessons and every one of them is inside this chunk, so the word is in the learner's mouth and not in their grammar."
+    },
+    {
+      "id": "GU-A1-NEG-04",
+      "category": "Nakaar (negation)",
+      "label": "negative coordination and refusal",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-CO-02",
+        "A1-F4-06",
+        "A1-F4-09"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Depends on the missing coordinator and the missing negator together."
+    },
+    {
+      "id": "GU-A1-Q-01",
+      "category": "Prashna (asking questions)",
+      "label": "shun: what",
+      "probe": [
+        "GU-CONCEPT-C02-SHUN-01",
+        "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-OS-03",
+        "A1-F1-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-Q-02",
+      "category": "Prashna (asking questions)",
+      "label": "kem: how, and also why",
+      "probe": [
+        "GU-CONCEPT-C03-KEM-01",
+        "GU-CONCEPT-C03-TAMEKEMCHHO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-ADV-08"
+      ],
+      "gujaratiSpecific": false,
+      "note": "One word doing two jobs, which is a genuine economy and is taught as one."
+    },
+    {
+      "id": "GU-A1-Q-03",
+      "category": "Prashna (asking questions)",
+      "label": "kon: who",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Named once, in a single prose aside in GU-C02-shun about the k- question family. Never an atom."
+    },
+    {
+      "id": "GU-A1-Q-04",
+      "category": "Prashna (asking questions)",
+      "label": "kyaan: where",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-NG3-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Same single prose aside, same line of the same file. This is the one that closes 'where are you from' -- a core A1 identity function -- in a track that teaches city, village and home."
+    },
+    {
+      "id": "GU-A1-Q-05",
+      "category": "Prashna (asking questions)",
+      "label": "kyaare: when",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Same prose aside."
+    },
+    {
+      "id": "GU-A1-Q-06",
+      "category": "Prashna (asking questions)",
+      "label": "kevi rite: how, in what manner",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Zero occurrences."
+    },
+    {
+      "id": "GU-A1-Q-07",
+      "category": "Prashna (asking questions)",
+      "label": "ketlaa: how much, how many",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Zero occurrences."
+    },
+    {
+      "id": "GU-A1-Q-08",
+      "category": "Prashna (asking questions)",
+      "label": "the yes-or-no question",
+      "probe": [
+        "GU-CONCEPT-C03-TAMEKEMCHHO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Covered by example -- the how-are-you question is the model -- and by no rule."
+    },
+    {
+      "id": "GU-A1-Q-09",
+      "category": "Prashna (asking questions)",
+      "label": "asking for confirmation: a tag question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "GU-A1-Q-10",
+      "category": "Prashna (asking questions)",
+      "label": "confirming or denying",
+      "probe": [
+        "GU-CONCEPT-C01-HAANAA-01",
+        "GU-CONCEPT-C01-SAARUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F1-05",
+        "A1-F2-06",
+        "A1-NG6-06"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-ADV-01",
+      "category": "Kriyavisheshan (adverbs)",
+      "label": "pachha: again, back",
+      "probe": [
+        "GU-CONCEPT-C04-PACHHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-ADV-02",
+      "category": "Kriyavisheshan (adverbs)",
+      "label": "atyaare: now",
+      "probe": [
+        "GU-LEX-ATYAARE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-ADV-03",
+      "category": "Kriyavisheshan (adverbs)",
+      "label": "polarity: yes and no as one-word answers",
+      "probe": [
+        "GU-CONCEPT-C01-HAANAA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-ADV-04",
+      "category": "Kriyavisheshan (adverbs)",
+      "label": "manner: well, badly",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "GU-A1-ADV-05",
+      "category": "Kriyavisheshan (adverbs)",
+      "label": "place deictics: here, there",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "See GU-A1-DEM-02."
+    },
+    {
+      "id": "GU-A1-ADV-06",
+      "category": "Kriyavisheshan (adverbs)",
+      "label": "connective adverbs: also, neither",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "pan as 'also' is not taught."
+    },
+    {
+      "id": "GU-A1-ADV-07",
+      "category": "Kriyavisheshan (adverbs)",
+      "label": "certainty, doubt and possibility",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05",
+        "A1-F2-08",
+        "A1-F2-10",
+        "A1-F2-11",
+        "A1-F2-12"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing. Five Spanish points about certainty and hedging have no Gujarati exponent in the corpus."
+    },
+    {
+      "id": "GU-A1-S-01",
+      "category": "Vaakya (the sentence)",
+      "label": "the verb comes last",
+      "probe": [
+        "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-OS-06"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-S-02",
+      "category": "Vaakya (the sentence)",
+      "label": "the copular sentence: X chhe",
+      "probe": [
+        "GU-CONCEPT-C02-CHHE-01",
+        "GU-CONCEPT-C02-MAARUNNAAMCHHE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-OS-05",
+        "A1-SV-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-S-03",
+      "category": "Vaakya (the sentence)",
+      "label": "the dative-liking sentence: mane X game chhe",
+      "probe": [
+        "GU-GRAMMAR-DATIVE-LIKING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SV-01",
+        "A1-SV-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The longest structure the track teaches."
+    },
+    {
+      "id": "GU-A1-S-04",
+      "category": "Vaakya (the sentence)",
+      "label": "the declarative, affirmative and negative",
+      "probe": [
+        "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Affirmative only -- see GU-A1-NEG-02 for why the negative half does not exist."
+    },
+    {
+      "id": "GU-A1-S-05",
+      "category": "Vaakya (the sentence)",
+      "label": "the question, with and without an asking word",
+      "probe": [
+        "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
+        "GU-CONCEPT-C03-TAMEKEMCHHO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-OS-02",
+        "A1-OS-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-S-06",
+      "category": "Vaakya (the sentence)",
+      "label": "the existential sentence: there is, there are",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "GU-A1-S-07",
+      "category": "Vaakya (the sentence)",
+      "label": "the vocative: addressing somebody",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "No term of address and no vocative particle. A learner cannot open a conversation by naming anyone."
+    },
+    {
+      "id": "GU-A1-S-08",
+      "category": "Vaakya (the sentence)",
+      "label": "the noun phrase: more than one word before the verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SN-01",
+        "A1-SN-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "With one adjective, no genitive and no demonstrative, the track's noun phrases are single nouns."
+    },
+    {
+      "id": "GU-A1-JOIN-01",
+      "category": "Jodaan (joining and subordination)",
+      "label": "and: joining two nouns, and joining two clauses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ABSENT. ane returns ZERO occurrences in 228 files, in script and in romanisation. The word does not exist in this corpus. A learner cannot say 'tea and milk' although both are taught in the same chapter."
+    },
+    {
+      "id": "GU-A1-JOIN-02",
+      "category": "Jodaan (joining and subordination)",
+      "label": "or: offering two alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-CO-03",
+        "A1-F3-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "athava is absent, and ke never occurs as a standalone word -- all 25 apparent hits are inside kem or keri."
+    },
+    {
+      "id": "GU-A1-JOIN-03",
+      "category": "Jodaan (joining and subordination)",
+      "label": "but: setting one thing against another",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "gujaratiSpecific": false,
+      "note": "pan and parantu are both absent."
+    },
+    {
+      "id": "GU-A1-JOIN-04",
+      "category": "Jodaan (joining and subordination)",
+      "label": "distributive: one thing, then the other",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Absent."
+    },
+    {
+      "id": "GU-A1-JOIN-05",
+      "category": "Jodaan (joining and subordination)",
+      "label": "because: giving a reason",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "kemke is absent. kem is taught and can mean 'why', so the question is askable and the answer is not."
+    },
+    {
+      "id": "GU-A1-JOIN-06",
+      "category": "Jodaan (joining and subordination)",
+      "label": "that-clauses: saying what somebody said or thinks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03",
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The complementiser ke never occurs as a word. vicharvu, samajvu and jaanvu are all taught and none of them can be given anything to think, understand or know."
+    },
+    {
+      "id": "GU-A1-JOIN-07",
+      "category": "Jodaan (joining and subordination)",
+      "label": "when: locating one event against another",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "gujaratiSpecific": false,
+      "note": "jyaare is absent."
+    },
+    {
+      "id": "GU-A1-JOIN-08",
+      "category": "Jodaan (joining and subordination)",
+      "label": "if: the conditional clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "gujaratiSpecific": false,
+      "note": "jo is absent -- all 16 apparent hits are inside aavjo or the stem of jovu."
+    },
+    {
+      "id": "GU-A1-JOIN-09",
+      "category": "Jodaan (joining and subordination)",
+      "label": "in order to, and therefore",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "gujaratiSpecific": false,
+      "note": "maate and tethi are both absent."
+    },
+    {
+      "id": "GU-A1-JOIN-10",
+      "category": "Jodaan (joining and subordination)",
+      "label": "the relative clause with je",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Absent. Enumerated here as well as at GU-A1-PRON-07 because the Spanish inventory files relatives under both."
+    },
+    {
+      "id": "GU-A1-JOIN-11",
+      "category": "Jodaan (joining and subordination)",
+      "label": "any two-clause sentence at all",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-CO-01",
+        "A1-SUB-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "THE COLUMN IS EMPTY, 0 OF 11. Ten joining devices were searched in Gujarati script and in romanisation across every headword, gloss and body; every raw match was checked in context and every one is a substring artefact. The track's own roadmap agrees -- its backlog item 2.2 asks for negation and basic question patterns -- so this is measured debt the authors already suspect, now enumerated."
+    },
+    {
+      "id": "GU-A1-TIME-01",
+      "category": "Samay (time and date)",
+      "label": "the parts of the day: morning, midday, evening, night",
+      "probe": [
+        "GU-LEX-SAVAAR-01",
+        "GU-LEX-BAPOR-01",
+        "GU-LEX-SAANJ-01",
+        "GU-LEX-RAAT-01",
+        "GU-PERFORMANCE-TIME-EIGHT-FOUR-SKILL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Four words, each heard before it is read, and then bundled into a four-skill performance. The track's strongest lexical set."
+    },
+    {
+      "id": "GU-A1-TIME-02",
+      "category": "Samay (time and date)",
+      "label": "today, and now",
+      "probe": [
+        "GU-LEX-AAJ-01",
+        "GU-LEX-ATYAARE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-TIME-03",
+      "category": "Samay (time and date)",
+      "label": "tomorrow and yesterday",
+      "probe": [
+        "GU-CONCEPT-C04-KAALE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "kaal means BOTH, and the corpus says so. Gujarati disambiguates it by TENSE -- which this track does not teach (GU-A1-V-04) -- so an exam item testing 'yesterday' is unanswerable from this corpus. Recorded as covered because the word is taught, with the caveat stated."
+    },
+    {
+      "id": "GU-A1-TIME-04",
+      "category": "Samay (time and date)",
+      "label": "the day and the month as spans",
+      "probe": [
+        "GU-LEX-DIVAS-01",
+        "GU-LEX-MAHINO-01",
+        "GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-TIME-05",
+      "category": "Samay (time and date)",
+      "label": "the days of the week",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not one weekday name."
+    },
+    {
+      "id": "GU-A1-TIME-06",
+      "category": "Samay (time and date)",
+      "label": "the months by name",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "mahino is the common noun only; no month is named."
+    },
+    {
+      "id": "GU-A1-TIME-07",
+      "category": "Samay (time and date)",
+      "label": "the seasons",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Zero occurrences of ritu or any season."
+    },
+    {
+      "id": "GU-A1-TIME-08",
+      "category": "Samay (time and date)",
+      "label": "telling the clock time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "vaagye is absent, and impossible above five in any case."
+    },
+    {
+      "id": "GU-A1-TIME-09",
+      "category": "Samay (time and date)",
+      "label": "asking and giving an age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG5-04",
+        "A1-NE03-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Zero hits for 'how old' or 'years old', and no number above five to answer with."
+    },
+    {
+      "id": "GU-A1-TIME-10",
+      "category": "Samay (time and date)",
+      "label": "before and after, and locating an event in time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03",
+        "A1-NG3-06",
+        "A1-NG1-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing, and it would need a postposition on a time word -- which GU-A1-CASE-04 records as unavailable."
+    },
+    {
+      "id": "GU-A1-F-01",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "greet",
+      "probe": [
+        "GU-CONCEPT-C01-NAMASTE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F6-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "namaste, which the track teaches as both hello and goodbye."
+    },
+    {
+      "id": "GU-A1-F-02",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "greet by the time of day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "savaar and raat are taught as bare time NOUNS; no good-morning or good-night greeting is built from them."
+    },
+    {
+      "id": "GU-A1-F-03",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "respond to a greeting, and say how you are",
+      "probe": [
+        "GU-CONCEPT-C03-MAJAA-01",
+        "GU-CONCEPT-C01-SAARUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-02",
+        "A1-F6-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "majaa, and the reply hun majaamaa chhun."
+    },
+    {
+      "id": "GU-A1-F-04",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "ask how somebody is",
+      "probe": [
+        "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+        "GU-CONCEPT-C03-KEM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-05",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "introduce oneself by name",
+      "probe": [
+        "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+        "GU-CONCEPT-C02-NAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F1-01",
+        "A1-F1-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-06",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "ask somebody their name",
+      "probe": [
+        "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-07",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "respond to an introduction",
+      "probe": [
+        "GU-CONCEPT-C02-ANAND-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "tamne maline aanand thayo. The phrase contains a past participle the track never analyses, which is why GU-A1-V-04 matters."
+    },
+    {
+      "id": "GU-A1-F-08",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "say what language you speak",
+      "probe": [
+        "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
+        "GU-CONCEPT-C05-BOLVUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F1-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-09",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "thank",
+      "probe": [
+        "GU-CONCEPT-C01-AABHAAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-10",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "reply to thanks",
+      "probe": [
+        "GU-CONCEPT-C03-VANDHONAHI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-11",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "apologise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT TAUGHT AT ALL. Zero hits for maaf, kshama, sorry or excuse me across 228 lessons. There is no way to apologise or to get someone's attention, which closes both a courtesy function and a repair strategy."
+    },
+    {
+      "id": "GU-A1-F-12",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "say please, and ask for something",
+      "probe": [
+        "GU-PHRASE-MEHERBANI-KARINE",
+        "GU-LEX-PAANI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The one request pattern in the corpus is NOUN plus meherbani karine, taught as a rider on paani. There is no verb-based request and no 'can I'."
+    },
+    {
+      "id": "GU-A1-F-13",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "GU-LEX-MADAD-KARVI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The verb is taught; the frame that would ask for help is not -- see GU-A1-V-16."
+    },
+    {
+      "id": "GU-A1-F-14",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "respond to a request: all right",
+      "probe": [
+        "GU-CONCEPT-C01-SAARUN-01",
+        "GU-CONCEPT-C03-VANDHONAHI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F4-04",
+        "A1-NG6-06"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-15",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "take leave",
+      "probe": [
+        "GU-CONCEPT-C01-AAVJO-01",
+        "GU-CONCEPT-C04-PACHHAMALISHUN-01",
+        "GU-CONCEPT-C04-KAALE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-11",
+        "A1-F6-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "aavjo -- literally '[please] come [again]' -- plus pachha malishun and kaale malishun. Three farewells, and the track explains that Gujarati says come rather than go."
+    },
+    {
+      "id": "GU-A1-F-16",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "say what you like",
+      "probe": [
+        "GU-LEX-GAMVU",
+        "GU-GRAMMAR-DATIVE-LIKING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-NG6-08"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-17",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "agree",
+      "probe": [
+        "GU-CONCEPT-C01-HAANAA-01",
+        "GU-CONCEPT-C01-SAARUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F2-05",
+        "A1-F2-06"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-18",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "disagree, and say you do not know or understand",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F2-07",
+        "A1-F2-15"
+      ],
+      "gujaratiSpecific": false,
+      "note": "OPEN, AND IT IS THE MISSING NEGATOR. samajvu and jaanvu are both taught and neither can be negated, because nathi does not appear in the corpus. 'I don't understand' is arguably the most necessary A1 utterance and it cannot be said."
+    },
+    {
+      "id": "GU-A1-F-19",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "give an opinion or an evaluation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F2-01",
+        "A1-F2-02",
+        "A1-F2-03",
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "OPEN, AND IT IS THE COMPLEMENTISER. 'I think that ...' needs the ke that GU-A1-JOIN-06 records as absent, and the evaluation vocabulary beyond saaru does not exist. Five Spanish points on one gap."
+    },
+    {
+      "id": "GU-A1-F-20",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "show one is following: I see, right",
+      "probe": [
+        "GU-CONCEPT-C01-SAARUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-F-21",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "give an order or instruction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "See GU-A1-V-07."
+    },
+    {
+      "id": "GU-A1-F-22",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "offer, invite, accept and decline",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F4-07",
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "gujaratiSpecific": false,
+      "note": "haa and naa can answer, and no offer or invitation frame exists to answer."
+    },
+    {
+      "id": "GU-A1-F-23",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "grant or refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "GU-A1-F-24",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "state a plan or intention",
+      "probe": [
+        "GU-CONCEPT-C04-MALISHUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The future ending exists for one person only."
+    },
+    {
+      "id": "GU-A1-F-25",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "express a wish or a preference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F3-03",
+        "A1-F3-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "See GU-A1-V-16."
+    },
+    {
+      "id": "GU-A1-F-26",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "congratulate, toast, offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-08",
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "GU-A1-F-27",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "See GU-A1-S-07."
+    },
+    {
+      "id": "GU-A1-F-28",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "ask for a person, and ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F6-03",
+        "A1-F6-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Neither is taught; both need the third-person pronoun and the imperative."
+    },
+    {
+      "id": "GU-A1-F-29",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "say how you feel physically",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01",
+        "A1-NE13-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "majaa answers 'how are you' as a formula. No word for tired, ill, hungry or happy."
+    },
+    {
+      "id": "GU-A1-F-30",
+      "category": "Vyavahaar (communicative functions)",
+      "label": "welcome somebody",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "gujaratiSpecific": false,
+      "note": "swagat is absent. The house vocabulary is taught and no welcome is."
+    },
+    {
+      "id": "GU-A1-LEX-01",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "the face: eye, ear, nose, mouth",
+      "probe": [
+        "GU-LEX-AANKH",
+        "GU-LEX-KAAN",
+        "GU-LEX-NAAK",
+        "GU-LEX-MODHU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-LEX-02",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "the hand",
+      "probe": [
+        "GU-LEX-HAATH-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Five body words in all: the face and one hand. No head, leg, stomach or back."
+    },
+    {
+      "id": "GU-A1-LEX-03",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "physical characteristics and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NE02-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing -- and with one adjective in the track there is nothing to describe anyone with."
+    },
+    {
+      "id": "GU-A1-LEX-04",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "family: brother, sister, the family itself",
+      "probe": [
+        "GU-LEX-BHAI",
+        "GU-LEX-BAHEN",
+        "GU-LEX-KUTUMB",
+        "GU-ETYMON-KUTUMB-DRAVIDIAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Three kin words, and the track notes kutumb is a Dravidian borrowing into Indo-Aryan. NO MOTHER, FATHER, SON, DAUGHTER, WIFE OR HUSBAND is taught."
+    },
+    {
+      "id": "GU-A1-LEX-05",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "people: boy, girl, person",
+      "probe": [
+        "GU-LEX-CHHOKRO-01",
+        "GU-LEX-CHHOKRI-01",
+        "GU-LEX-MAANAS-01",
+        "GU-PERFORMANCE-PEOPLE-FIVE-ORAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-LEX-06",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "friend",
+      "probe": [
+        "GU-LEX-MITRA",
+        "GU-ETYMON-MITRA-BIND"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-LEX-07",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "celebrations and occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "GU-A1-LEX-08",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "drink: water, tea, milk",
+      "probe": [
+        "GU-LEX-PAANI",
+        "GU-LEX-CHA",
+        "GU-LEX-DUDH",
+        "GU-ETYMON-CHA-CHINESE",
+        "GU-HISTORY-TEA-CHA-ISOGLOSS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "and the cha/tea isogloss -- which word a language uses depends on whether it met tea overland or by sea."
+    },
+    {
+      "id": "GU-A1-LEX-09",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "the plate: rice, lentils, vegetable, oil, mango, flatbread",
+      "probe": [
+        "GU-LEX-BHAAT-01",
+        "GU-LEX-DAAL-01",
+        "GU-LEX-SHAAK-01",
+        "GU-LEX-TEL-01",
+        "GU-LEX-KERI-01",
+        "GU-LEX-ROTLI",
+        "GU-PERFORMANCE-PLATE-FIVE-ORAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03",
+        "A1-NE05-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Six foods bundled into an oral performance. The track's best domain."
+    },
+    {
+      "id": "GU-A1-LEX-10",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "meals of the day, and eating out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01",
+        "A1-NE05-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "No meal name and no word for a restaurant."
+    },
+    {
+      "id": "GU-A1-LEX-11",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "the house: home, door, window, chair, key, lamp",
+      "probe": [
+        "GU-LEX-GHAR-01",
+        "GU-LEX-BAARNUN-01",
+        "GU-LEX-BAARI-01",
+        "GU-LEX-KHURSHI-01",
+        "GU-LEX-CHAAVI-01",
+        "GU-LEX-DIVO-01",
+        "GU-PERFORMANCE-HOUSE-FIVE-ORAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02",
+        "A1-NE10-04"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-LEX-12",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "housing as a transaction, and domestic activity",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "GU-A1-LEX-13",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "places in a town: market, temple, shop, school, road, city, village",
+      "probe": [
+        "GU-LEX-BAJAR-01",
+        "GU-LEX-MANDIR-01",
+        "GU-LEX-DUKAAN-01",
+        "GU-LEX-SHAALAA-01",
+        "GU-LEX-RASTO-01",
+        "GU-LEX-SHAHAR-01",
+        "GU-LEX-GAAM-01",
+        "GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01",
+        "GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03",
+        "A1-NE12-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Seven places, two performance bundles. Unusually strong, and it makes the missing 'where' at GU-A1-Q-04 more costly rather than less."
+    },
+    {
+      "id": "GU-A1-LEX-14",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "money",
+      "probe": [
+        "GU-LEX-PAISA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE15-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "paisa is taught. No price, no rupee, no buying or selling verb -- so GU-A1-LEX-15 is the gap this leaves."
+    },
+    {
+      "id": "GU-A1-LEX-15",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "paying, prices, buying and selling",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03",
+        "A1-NE15-02",
+        "A1-NG6-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing, and with no number above five the shopping scenario is closed twice over."
+    },
+    {
+      "id": "GU-A1-LEX-16",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "clothing and footwear",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO. No garment word of any kind."
+    },
+    {
+      "id": "GU-A1-LEX-17",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "animals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO. No animal word in any atom."
+    },
+    {
+      "id": "GU-A1-LEX-18",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "the sky: sun, moon, sky",
+      "probe": [
+        "GU-LEX-SOORAJ-01",
+        "GU-LEX-CHANDRA-01",
+        "GU-LEX-AAKAASH-01",
+        "GU-PERFORMANCE-SKY-FIVE-ORAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-LEX-19",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "rain, and the river",
+      "probe": [
+        "GU-LEX-VARSAAD-01",
+        "GU-LEX-NADI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "varsaad ('rain') is the only weather word. There is no hot or cold, and no way to say it is raining."
+    },
+    {
+      "id": "GU-A1-LEX-20",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "plants and the countryside",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "GU-A1-LEX-21",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "geography: country, town, capital",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "See GU-A1-N-02."
+    },
+    {
+      "id": "GU-A1-LEX-22",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "study: book, paper, school, reading, writing",
+      "probe": [
+        "GU-LEX-PUSTAK-01",
+        "GU-LEX-KAAGAL-01",
+        "GU-LEX-SHAALAA-01",
+        "GU-LEX-VANCHVU",
+        "GU-LEX-LAKHVU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04",
+        "A1-NE06-07"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-LEX-23",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "the education system: teachers, timetable, examinations",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02",
+        "A1-NE06-03",
+        "A1-NE06-05",
+        "A1-NE06-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing. No profession noun of any kind exists in the track -- no teacher, no student, no doctor."
+    },
+    {
+      "id": "GU-A1-LEX-24",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "work as an activity",
+      "probe": [
+        "GU-CONCEPT-C05-KAAMKARVUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-LEX-25",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "professions, workplaces and conditions of work",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-02",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing."
+    },
+    {
+      "id": "GU-A1-LEX-26",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "travel, transport and accommodation",
+      "probe": [
+        "GU-LEX-RASTO-01",
+        "GU-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01",
+        "GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The track has a route and a map performance built from PLACES, and not one vehicle, ticket or lodging word. Recorded as covered for the notion of a route, and the three Spanish points behind it remain thin."
+    },
+    {
+      "id": "GU-A1-LEX-27",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "directions: left, right, near, far",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03",
+        "A1-NG3-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing, which is what a map performance most obviously wants next."
+    },
+    {
+      "id": "GU-A1-LEX-28",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "health, illness and medicine",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO."
+    },
+    {
+      "id": "GU-A1-LEX-29",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "the telephone, post, press and the internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-03",
+        "A1-NE09-04",
+        "A1-NE09-05",
+        "A1-NE09-06",
+        "A1-NE11-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO. Seven Spanish points on one gap."
+    },
+    {
+      "id": "GU-A1-LEX-30",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "banks, health services and the police",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO."
+    },
+    {
+      "id": "GU-A1-LEX-31",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "leisure, sport, games and shows",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO."
+    },
+    {
+      "id": "GU-A1-LEX-32",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "the arts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO."
+    },
+    {
+      "id": "GU-A1-LEX-33",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "religion",
+      "probe": [
+        "GU-LEX-MANDIR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "mandir ('temple') is taught as a place on a map. Thin and genuinely present."
+    },
+    {
+      "id": "GU-A1-LEX-34",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "government, politics and law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO."
+    },
+    {
+      "id": "GU-A1-LEX-35",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "business, industry and energy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO."
+    },
+    {
+      "id": "GU-A1-LEX-36",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "computing and technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "ZERO."
+    },
+    {
+      "id": "GU-A1-LEX-37",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "personal objects, and documents",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03",
+        "A1-NE03-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "chaavi ('key') is the nearest thing. No document, no passport, no card."
+    },
+    {
+      "id": "GU-A1-LEX-38",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "personal data: address, telephone, age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Name is available; address, telephone and age are not. Unlike Punjabi, this track has no form-filling runway to supply them in writing either."
+    },
+    {
+      "id": "GU-A1-LEX-39",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "open and closed, way in and way out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The door and the window are taught and neither can be opened."
+    },
+    {
+      "id": "GU-A1-LEX-40",
+      "category": "Shabdbhandol (lexicon by domain)",
+      "label": "hearing and listening",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "sambhalvu is not taught, although jovu ('to see') is."
+    },
+    {
+      "id": "GU-A1-SCR-01",
+      "category": "Lipi (script and orthography)",
+      "label": "the script is an abugida: a letter carries an inherent vowel until a matra changes it",
+      "probe": [
+        "GU-SCRIPT-VIRAMA-01",
+        "GU-SCRIPT-AA-MATRA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01",
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-SCR-02",
+      "category": "Lipi (script and orthography)",
+      "label": "Gujarati dropped the top line Devanagari keeps",
+      "probe": [
+        "GU-SCRIPT-HEADLESS-CLUE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught on the numbers, and it is the single fastest way to tell Gujarati from Hindi on a page."
+    },
+    {
+      "id": "GU-A1-SCR-03",
+      "category": "Lipi (script and orthography)",
+      "label": "the independent vowel letters",
+      "probe": [
+        "GU-SCRIPT-INDEPENDENT-A-01",
+        "GU-SCRIPT-AA-01",
+        "GU-SCRIPT-INDEPENDENT-II-01",
+        "GU-SCRIPT-INDEPENDENT-U-01",
+        "GU-SCRIPT-INDEPENDENT-E-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Five of them."
+    },
+    {
+      "id": "GU-A1-SCR-04",
+      "category": "Lipi (script and orthography)",
+      "label": "the dependent vowel signs",
+      "probe": [
+        "GU-SCRIPT-AA-MATRA-01",
+        "GU-SCRIPT-I-MATRA-01",
+        "GU-SCRIPT-II-MATRA-01",
+        "GU-SCRIPT-U-MATRA-01",
+        "GU-SCRIPT-UU-MATRA-01",
+        "GU-SCRIPT-E-MATRA-01",
+        "GU-SCRIPT-AI-MATRA-01",
+        "GU-SCRIPT-O-MATRA-01",
+        "GU-SCRIPT-VOCALIC-R-MATRA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nine signs, including the vocalic r that only Sanskrit borrowings need."
+    },
+    {
+      "id": "GU-A1-SCR-05",
+      "category": "Lipi (script and orthography)",
+      "label": "the anusvara, and what it does inside a word",
+      "probe": [
+        "GU-SCRIPT-ANUSVARA-01",
+        "GU-SCRIPT-ANUSVARA-MEDIAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-SCR-06",
+      "category": "Lipi (script and orthography)",
+      "label": "the everyday consonants",
+      "probe": [
+        "GU-SCRIPT-KA-01",
+        "GU-SCRIPT-GA-01",
+        "GU-SCRIPT-CHA-01",
+        "GU-SCRIPT-JA-01",
+        "GU-SCRIPT-TA-01",
+        "GU-SCRIPT-DA-01",
+        "GU-SCRIPT-NA-01",
+        "GU-SCRIPT-PA-01",
+        "GU-SCRIPT-BA-01",
+        "GU-SCRIPT-MA-01",
+        "GU-SCRIPT-LA-01",
+        "GU-SCRIPT-VA-01",
+        "GU-SCRIPT-SA-01",
+        "GU-SCRIPT-HA-01",
+        "GU-SCRIPT-RA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-SCR-07",
+      "category": "Lipi (script and orthography)",
+      "label": "the aspirates",
+      "probe": [
+        "GU-SCRIPT-KHA-01",
+        "GU-SCRIPT-GHA-01",
+        "GU-SCRIPT-CHHA-01",
+        "GU-SCRIPT-THA-01",
+        "GU-SCRIPT-DHA-01",
+        "GU-SCRIPT-BHA-01",
+        "GU-SCRIPT-DDHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-SCR-08",
+      "category": "Lipi (script and orthography)",
+      "label": "the retroflexes and the distinctively Indic letters",
+      "probe": [
+        "GU-SCRIPT-TTA-01",
+        "GU-SCRIPT-NNA-01",
+        "GU-SCRIPT-LLA-01",
+        "GU-SCRIPT-SHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false
+    },
+    {
+      "id": "GU-A1-SCR-09",
+      "category": "Lipi (script and orthography)",
+      "label": "reading a whole known word back off the page",
+      "probe": [
+        "GU-SCRIPT-NAMASTE-READ-01",
+        "GU-SCRIPT-GHAR-01",
+        "GU-SCRIPT-BAJAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The track's whole-word spelling atoms, which follow the word being HEARD in an earlier lesson."
+    },
+    {
+      "id": "GU-A1-SCR-10",
+      "category": "Lipi (script and orthography)",
+      "label": "the fourteen letters of the alphabet the track never teaches",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "MEASURED TWO WAYS, AND THE TWO ANSWERS DIFFER. Against the CORPUS closure is EXACT and unusually so: 43 distinct Gujarati characters appear in headwords, all 43 are taught, and extending the census to every lesson BODY still finds 43 and zero untaught -- the track never leaks a glyph even in a prose example. Against the ALPHABET it is about two thirds: fourteen letters are never taught and never used, including the everyday DDA, PHA, O and short I, plus the visarga, the candrabindu and the nukta. A reading paper drawn from real signage would be unreadable."
+    },
+    {
+      "id": "GU-A1-SCR-11",
+      "category": "Lipi (script and orthography)",
+      "label": "the Gujarati digits",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O4-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "NOT ONE. The character census finds no codepoint in the digit range anywhere in the corpus. See GU-A1-NUM-08."
+    },
+    {
+      "id": "GU-A1-SCR-12",
+      "category": "Lipi (script and orthography)",
+      "label": "capital letters, and written accentuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05",
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Gujarati has neither. Enumerated rather than dropped so a reader comparing the files sees the answer."
+    },
+    {
+      "id": "GU-A1-SCR-13",
+      "category": "Lipi (script and orthography)",
+      "label": "punctuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Gujarati uses the European marks alongside the danda, and no lesson teaches any of them."
+    },
+    {
+      "id": "GU-A1-SCR-14",
+      "category": "Lipi (script and orthography)",
+      "label": "abbreviations and initialisms",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-06",
+        "A1-O4-01",
+        "A1-O4-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "GU-A1-SND-01",
+      "category": "Uchchaaran (sound change and pronunciation)",
+      "label": "Sanskrit y- became Gujarati j-",
+      "probe": [
+        "GU-SOUND-PRAKRIT-Y-TO-J"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught on javu. The track uses sound change as a vocabulary aid: knowing the law makes the next word cheaper."
+    },
+    {
+      "id": "GU-A1-SND-02",
+      "category": "Uchchaaran (sound change and pronunciation)",
+      "label": "the Prakrit p-to-v softening",
+      "probe": [
+        "GU-SOUND-PRAKRIT-P-TO-V"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught on aavvu."
+    },
+    {
+      "id": "GU-A1-SND-03",
+      "category": "Uchchaaran (sound change and pronunciation)",
+      "label": "how dhy became jjh became j",
+      "probe": [
+        "GU-SOUND-DHY-JJH-J"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught on samajvu."
+    },
+    {
+      "id": "GU-A1-SND-04",
+      "category": "Uchchaaran (sound change and pronunciation)",
+      "label": "how dv became bb became b",
+      "probe": [
+        "GU-SOUND-DV-BB-B"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Taught on be, the number two."
+    },
+    {
+      "id": "GU-A1-SND-05",
+      "category": "Uchchaaran (sound change and pronunciation)",
+      "label": "long and short vowels as a meaning difference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The matras are taught as shapes; no lesson says length changes the word."
+    },
+    {
+      "id": "GU-A1-SND-06",
+      "category": "Uchchaaran (sound change and pronunciation)",
+      "label": "word stress",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "GU-A1-REG-01",
+      "category": "Bhaashaashaili (register: familiar and respectful)",
+      "label": "tu against tame: courtesy expressed as plurality",
+      "probe": [
+        "GU-CONCEPT-C02-TUTAME-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "MEASURED FROM THE LESSON BODIES, NOT THE FRONTMATTER -- and that distinction is the finding. All 228 lessons carry register: neutral, so the frontmatter says this track makes no register distinction at all. It does: GU-C02-tu-tame teaches the contrast explicitly, compares it to French vous, and gives the rule 'for a first meeting, use tame'."
+    },
+    {
+      "id": "GU-A1-REG-02",
+      "category": "Bhaashaashaili (register: familiar and respectful)",
+      "label": "the copula has to match the pronoun you chose",
+      "probe": [
+        "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+        "GU-CONCEPT-C02-CHHE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ],
+      "gujaratiSpecific": false,
+      "note": "tame kem chho against tu kem chhe, drilled as a paired rule. The register choice is not decorative -- it changes the verb."
+    },
+    {
+      "id": "GU-A1-REG-03",
+      "category": "Bhaashaashaili (register: familiar and respectful)",
+      "label": "the possessive matches it too",
+      "probe": [
+        "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "tamaru against taaru, explained inside the name question."
+    },
+    {
+      "id": "GU-A1-REG-04",
+      "category": "Bhaashaashaili (register: familiar and respectful)",
+      "label": "the farewell has a familiar form as well",
+      "probe": [
+        "GU-CONCEPT-C01-AAVJO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "gujaratiSpecific": false,
+      "note": "aavjo against aavje -- a lexicalised imperative pair, and the fourth place the same axis surfaces."
+    },
+    {
+      "id": "GU-A1-REG-05",
+      "category": "Bhaashaashaili (register: familiar and respectful)",
+      "label": "a Sanskritic or a native word: which register a borrowing lands in",
+      "probe": [
+        "GU-GRAMMAR-LEARNED-BORROWING",
+        "GU-LEX-KUTUMB"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "GU-CORPUS",
+        "ED-GUJARATI"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "gujaratiSpecific": false,
+      "note": "The track teaches learned borrowing as a concept, on kutumb. It does NOT build a Sanskritic-against-everyday doublet column the way the Punjabi track does, and this file does not claim one -- one atom is a concept, not an axis."
+    }
+  ]
+}
