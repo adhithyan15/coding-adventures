@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "A Tree",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b520d8966f76601f",
+  "sourceHash": "fnv1a64:9251b1cbf84d4066",
   "lessons": [
     {
       "id": "TA-C52-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4111f26163d761c8",
+      "sourceHash": "fnv1a64:ff81256384dd3f6b",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mēkam*, then *maram*, the cloud and what stands under it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vāsal, then read ஆகாயம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vāsal*, then read **ஆகாயம்**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:416603282f2c14c6",
+      "sourceHash": "fnv1a64:c7df4674e66b354b",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *maram*, then *kiḷai*, the tree and then what comes off it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read கோலம், then say sūriyaṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **கோலம்**, then say *sūriyaṉ*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f33d28b86db8abec",
+      "sourceHash": "fnv1a64:d1abeaa6a9e7a695",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kiḷai*, then *taḷir*, the branch and the new thing on the end of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say malar, then read நிலா",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *malar*, then read **நிலா**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c31c7437e7ff6d6a",
+      "sourceHash": "fnv1a64:64cc4bbd3ebe35ba",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *taḷir*, then *vēr*, the top of the tree and the bottom of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read வெற்றிலை, then say viṇmīṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **வெற்றிலை**, then say *viṇmīṉ*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8898c71bd7ef14f",
+      "sourceHash": "fnv1a64:1db826557cefbae7",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *maram*, *kiḷai*, *taḷir*, *vēr*, *vitai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say varavēṟpu, then read மேகம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *varavēṟpu*, then read **மேகம்**]"
             }
           ]
         },

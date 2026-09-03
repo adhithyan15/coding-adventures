@@ -9,7 +9,7 @@ headword: "ஆண்டு"
 gloss: "a year"
 romanization: "āṇḍu"
 concept_tag: TA-NOUN-YEAR
-prerequisites: [TA-C73-month]
+prerequisites: [TA-C73-month, TA-C71-play, TA-C72-cry]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C73-WHEN-05]
 practises:
-  knowledge: [TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C73-WHEN-05]
+  knowledge: [TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C73-WHEN-05, TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -56,13 +56,14 @@ Three sizes now, each holding the one before it: நாள், மாதம், 
 Five: today, yesterday, and the three units above the day.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C73-WHEN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C73-WHEN-05, TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āṇḍu*]
 - [YOU SAY: *vayathu*, then *āṇḍu* — the question, and what the answer counts]
 - [YOU SAY: the three sizes in order — *nāḷ*, *mādam*, *āṇḍu*]
 - [YOU RECALL: say *muṉbu*, then say *mādam*, then say *āṇḍu*]
+- [YOU RECALL: say *viḷaiyāḍu*, then read **அழு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C73-WHEN-05] -->

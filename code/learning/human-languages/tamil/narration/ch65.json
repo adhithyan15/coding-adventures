@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Doing, and Undoing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:734daa3a2d95ebc2",
+  "sourceHash": "fnv1a64:67b1d3620d7f03eb",
   "lessons": [
     {
       "id": "TA-C65-drink",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e2ee4013d8a5ce2",
+      "sourceHash": "fnv1a64:89e29242265f7d5c",
       "notice": null,
       "blocks": [
         {
@@ -119,6 +119,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: which of *sāppiḍu* and *kuḍi* takes *sādam*, and which takes *taṇṇīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vēṇḍukōḷ, then read நெல்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vēṇḍukōḷ*, then read **நெல்**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8996c1f6fc65d367",
+      "sourceHash": "fnv1a64:ceeeceae8e960cd9",
       "notice": null,
       "blocks": [
         {
@@ -254,6 +263,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kuḍi*, then *naḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read அனுமதி, then say pul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **அனுமதி**, then say *pul*]"
             }
           ]
         },
@@ -439,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:398ec48787a8862f",
+      "sourceHash": "fnv1a64:7bbabc1da018b770",
       "notice": null,
       "blocks": [
         {
@@ -539,6 +557,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vāṉilai*, and name the piece of it this verb is related to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tayakkam, then read பயிர்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tayakkam*, then read **பயிர்**]"
             }
           ]
         },
@@ -574,7 +601,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b11e50b85bea861",
+      "sourceHash": "fnv1a64:f1d9663a693f27e1",
       "notice": null,
       "blocks": [
         {
@@ -674,6 +701,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *niṟuttu*, then *tiṟa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read நம்பிக்கை, then say kaḷam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **நம்பிக்கை**, then say *kaḷam*]"
             }
           ]
         },
@@ -709,7 +745,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9711243ff23e9c96",
+      "sourceHash": "fnv1a64:6832ad75d2edb697",
       "notice": null,
       "blocks": [
         {
@@ -827,6 +863,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **குடி** — the one word of the five you have spelled out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paṇivu, then read அறுவடை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paṇivu*, then read **அறுவடை**]"
             }
           ]
         },

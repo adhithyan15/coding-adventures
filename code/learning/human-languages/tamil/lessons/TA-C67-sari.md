@@ -9,7 +9,7 @@ headword: "புடவை"
 gloss: "a sari"
 romanization: "puḍavai"
 concept_tag: TA-NOUN-SARI
-prerequisites: [TA-W23-read-sattai]
+prerequisites: [TA-W23-read-sattai, TA-C66-outside]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C67-WEAR-03]
 practises:
-  knowledge: [TA-LEX-C67-WEAR-02, TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03]
+  knowledge: [TA-LEX-C67-WEAR-02, TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03, TA-LEX-C66-WHICHWAY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ inside சட்டை.
 Three garments, and a Tamil word English never borrowed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-02, TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-02, TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03, TA-LEX-C66-WHICHWAY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *puḍavai*]
 - [YOU SAY: *talai*, *saṭṭai*, *puḍavai* — three words, one ending]
 - [YOU RECALL: say *vēṭṭi*, then read **சட்டை**, then say *puḍavai*]
+- [YOU RECALL: say *veḷiyē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-02, TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03] -->

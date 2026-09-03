@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "The Household",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c95cc1d2d84d1b6f",
+  "sourceHash": "fnv1a64:32c1d2e6238a78c2",
   "lessons": [
     {
       "id": "TA-C43-child",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ebe1f3123382f17",
+      "sourceHash": "fnv1a64:302ccd0a78c6d06d",
       "notice": null,
       "blocks": [
         {
@@ -102,6 +102,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *koṭu*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say periya, then read சிறிய",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *periya*, then read **சிறிய**]"
             }
           ]
         },
@@ -137,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d95a1a8fbff242c",
+      "sourceHash": "fnv1a64:fd91a972f73f7c9a",
       "notice": null,
       "blocks": [
         {
@@ -220,6 +229,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *kuḻandai*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read நல்ல",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **நல்ல**]"
             }
           ]
         },
@@ -255,7 +273,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2db4c20c4e777e1e",
+      "sourceHash": "fnv1a64:2f24194da2555b4c",
       "notice": null,
       "blocks": [
         {
@@ -338,6 +356,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *makaṉ*, and hear only the ending move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pudiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pudiya*]"
             }
           ]
         },
@@ -373,7 +400,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a26b66c8899f0f3",
+      "sourceHash": "fnv1a64:b56da3ec2318a3b1",
       "notice": null,
       "blocks": [
         {
@@ -456,6 +483,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *makaḷ*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read பழைய",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **பழைய**]"
             }
           ]
         },

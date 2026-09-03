@@ -9,7 +9,7 @@ headword: "சாலை"
 gloss: "a road"
 romanization: "sālai"
 concept_tag: TA-NOUN-ROAD
-prerequisites: [TA-C69-train]
+prerequisites: [TA-C69-train, TA-C67-sandal, TA-C68-buy]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C69-GOING-04]
 practises:
-  knowledge: [TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04]
+  knowledge: [TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04, TA-LEX-C67-WEAR-04, TA-LEX-C68-SHOP-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Both end in the same **ை**, which by now you have read four times.
 Four, and the vehicles have somewhere to run.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04, TA-LEX-C67-WEAR-04, TA-LEX-C68-SHOP-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sālai*]
 - [YOU SAY: *pātai*, then *sālai* — and say which one you drive down]
 - [YOU RECALL: read **வண்டி**, then say *rayil*, then say *sālai*]
+- [YOU RECALL: read **செருப்பு**, then say *vāṅgu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04] -->

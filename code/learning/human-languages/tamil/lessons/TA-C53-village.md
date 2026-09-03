@@ -9,7 +9,7 @@ headword: "கிராமம்"
 gloss: "a village"
 romanization: "kirāmam"
 concept_tag: TA-NOUN-VILLAGE
-prerequisites: [TA-C53-path]
+prerequisites: [TA-C53-path, TA-C51-cloud, TA-C52-seed]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C53-LAND-05]
 practises:
-  knowledge: [TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05]
+  knowledge: [TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05, TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ You already have *ūr* for the place you belong to. *ūr* is yours — your town
 Water, high ground, a wet field, a way across it, and the place at the end of the way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05, TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kirāmam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *nadi*, *malai*, *vayal*, *pātai*, *kirāmam*]
+- [YOU RECALL: say *mēkam*, then read **விதை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05] -->

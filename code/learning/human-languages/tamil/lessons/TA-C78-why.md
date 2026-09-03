@@ -9,7 +9,7 @@ headword: "ஏன்"
 gloss: why
 romanization: "ēṉ"
 concept_tag: TA-QUESTION-WHY
-prerequisites: [TA-C77-opinion]
+prerequisites: [TA-C77-opinion, TA-C76-but]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C78-WHY-01]
 practises:
-  knowledge: [TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03, TA-LEX-C78-WHY-01, TA-PRAGMATICS-C76-CHOICE-03, TA-LEX-C63-MANNERS-04, TA-SCRIPT-READ-INRU-01]
+  knowledge: [TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03, TA-LEX-C78-WHY-01, TA-PRAGMATICS-C76-CHOICE-03, TA-LEX-C63-MANNERS-04, TA-SCRIPT-READ-INRU-01, TA-LEX-C76-JOIN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -64,7 +64,7 @@ is a sentence, and the next lesson is the word that lets you give one.
 The sixth member of a question family whose pattern you have known since chapter forty.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03, TA-LEX-C78-WHY-01, TA-PRAGMATICS-C76-CHOICE-03, TA-LEX-C63-MANNERS-04, TA-SCRIPT-READ-INRU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03, TA-LEX-C78-WHY-01, TA-PRAGMATICS-C76-CHOICE-03, TA-LEX-C63-MANNERS-04, TA-SCRIPT-READ-INRU-01, TA-LEX-C76-JOIN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ēṉ*]
@@ -72,6 +72,7 @@ The sixth member of a question family whose pattern you have known since chapter
 - [YOU ASK: *ēṉ tēnīr vēṇḍum?*]
 - [YOU RECALL: read **சொல்**, then say *idu nalla vīḍu eṉṟu niṉaikkiṟēṉ*, then ask *ēṉ?*]
 - [YOU RETURN TO: say *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?*, say *nambikkai* and read **இன்று** — three distances back — then ask ஏன் about one of them]
+- [YOU RECALL: say *āṉāl*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03, TA-LEX-C78-WHY-01, TA-PRAGMATICS-C76-CHOICE-03, TA-LEX-C63-MANNERS-04, TA-SCRIPT-READ-INRU-01] -->

@@ -9,7 +9,7 @@ headword: "சந்தோஷம்"
 gloss: "gladness"
 romanization: "santōṣam"
 concept_tag: TA-COURTESY-GLADNESS
-prerequisites: [TA-C49-respect]
+prerequisites: [TA-C49-respect, TA-C47-certainly, TA-C48-journey]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C49-COURTESY-03]
 practises:
-  knowledge: [TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03]
+  knowledge: [TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C47-REPLY-03, TA-LEX-C48-LEAVE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Sanskrit *santoṣa*, 'contentment', sitting beside the native *magiḻcci* you 
 Three, and the third one is an answer as much as a feeling.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C47-REPLY-03, TA-LEX-C48-LEAVE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *santōṣam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mariyādai*, then *santōṣam*, and let the second one lift]
+- [YOU RECALL: say *niccayamāka*, then read **பயணம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03] -->

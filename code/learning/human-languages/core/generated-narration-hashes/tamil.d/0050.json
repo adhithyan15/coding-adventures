@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 50,
-  "sourceHash": "fnv1a64:e4075edd14f098ed",
+  "sourceHash": "fnv1a64:b0746d820864bd86",
   "lessonIds": [
     "TA-C50-threshold",
     "TA-C50-kolam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch50.txt",
   "json": "tamil/narration/ch50.json",
-  "textHash": "fnv1a64:44394ee595c90483",
-  "jsonHash": "fnv1a64:88ee567a9a0c9671",
+  "textHash": "fnv1a64:266f12ff5bf5c211",
+  "jsonHash": "fnv1a64:08d0e40bb382376b",
   "findings": []
 }

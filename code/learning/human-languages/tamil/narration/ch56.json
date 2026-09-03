@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "How Much",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e8cc56bd9d4b2098",
+  "sourceHash": "fnv1a64:00202cb7a787fafc",
   "lessons": [
     {
       "id": "TA-C56-a-little",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:055508c53aafc004",
+      "sourceHash": "fnv1a64:4342d318dcd9c0af",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *elumbu*, then *siṟitu*, and keep the second one short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pāy, then read கழுத்து",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pāy*, then read **கழுத்து**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c06fb61a6ba6e95d",
+      "sourceHash": "fnv1a64:93e9c4e2b8a15e54",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *siṟitu*, then *niṟaiya*, the little and the lot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read கூடை, then say mutuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **கூடை**, then say *mutuku*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba7a90842bfc26d7",
+      "sourceHash": "fnv1a64:009e33540c796f11",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *niṟaiya*, then *kuṟaivu*, plenty and then not enough]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say katti, then read உதடு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *katti*, then read **உதடு**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1444d1ed3e8dbdb",
+      "sourceHash": "fnv1a64:dbd42441e6401f79",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kuṟaivu*, then *tēvaiyillai*, and let the whole of the second run as one word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read கிண்ணம், then say nakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **கிண்ணம்**, then say *nakam*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:565f96c0906be523",
+      "sourceHash": "fnv1a64:21b8c3e572077578",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *siṟitu*, *niṟaiya*, *kuṟaivu*, *tēvaiyillai*, *ākaṭṭum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say peṭṭi, then read எலும்பு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *peṭṭi*, then read **எலும்பு**]"
             }
           ]
         },

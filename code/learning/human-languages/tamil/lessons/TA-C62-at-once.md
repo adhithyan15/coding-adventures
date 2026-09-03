@@ -9,7 +9,7 @@ headword: "உடனே"
 gloss: "at once"
 romanization: "uṭaṉē"
 concept_tag: TA-REPLY-AT-ONCE
-prerequisites: [TA-C62-soon]
+prerequisites: [TA-C62-soon, TA-C60-broom, TA-C61-fever]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C62-JOIN-04]
 practises:
-  knowledge: [TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04]
+  knowledge: [TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04, TA-LEX-C60-MADE-04, TA-LEX-C61-FEEL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Say it ending long, on the ே. That final length is doing the work — it is wh
 Four, and the fourth pushes harder than the third.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04, TA-LEX-C60-MADE-04, TA-LEX-C61-FEEL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uṭaṉē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sīkkiram*, then *uṭaṉē*, and say which one leaves you no room]
+- [YOU RECALL: read **துடைப்பம்**, then say *kāyccal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04] -->

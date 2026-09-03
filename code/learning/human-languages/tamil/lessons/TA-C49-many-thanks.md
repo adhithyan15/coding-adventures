@@ -9,7 +9,7 @@ headword: "மிக்க நன்றி"
 gloss: "thank you very much"
 romanization: "mikka naṉṟi"
 concept_tag: TA-COURTESY-MANY-THANKS
-prerequisites: [TA-C49-good-wish]
+prerequisites: [TA-C49-good-wish, TA-C47-just-so, TA-C48-set-out]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C49-COURTESY-05]
 practises:
-  knowledge: [TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05]
+  knowledge: [TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05, TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil does not raise its voice to be warm. It puts *mikka* at the front and leav
 That closes the run: affection, respect, gladness, a good wish, and thanks with weight behind it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05, TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mikka naṉṟi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *aṉbu*, *mariyādai*, *santōṣam*, *vāḻttu*, *mikka naṉṟi*]
+- [YOU RECALL: say *appaḍiyē*, then read **புறப்படு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05] -->

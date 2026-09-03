@@ -9,7 +9,7 @@ headword: "வரவேற்பு"
 gloss: "a welcome"
 romanization: "varavēṟpu"
 concept_tag: TA-WELCOME-WELCOME
-prerequisites: [TA-C50-betel-leaf]
+prerequisites: [TA-C50-betel-leaf, TA-C48-set-out, TA-C49-many-thanks]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C50-WELCOME-05]
 practises:
-  knowledge: [TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05]
+  knowledge: [TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05, TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Two pieces you can almost hear coming apart. *vara* is the coming, from *vā*, t
 That closes the run: a doorway, a design, a flower, a leaf, and the word for taking somebody in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05, TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *varavēṟpu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *vāsal*, *kōlam*, *malar*, *veṟṟilai*, *varavēṟpu*]
+- [YOU RECALL: say *puṟappaḍu*, then read **மிக்க நன்றி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05] -->

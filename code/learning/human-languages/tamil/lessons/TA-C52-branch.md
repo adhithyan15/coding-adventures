@@ -9,7 +9,7 @@ headword: "கிளை"
 gloss: "a branch"
 romanization: "kiḷai"
 concept_tag: TA-NOUN-BRANCH
-prerequisites: [TA-C52-tree]
+prerequisites: [TA-C52-tree, TA-C50-kolam, TA-C51-sun]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C52-TREE-02]
 practises:
-  knowledge: [TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02]
+  knowledge: [TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C50-WELCOME-02, TA-LEX-C51-SKY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ And a கிளை is not only what grows off a tree. A family has them: the bra
 Two: the trunk, and what comes off it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C50-WELCOME-02, TA-LEX-C51-SKY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kiḷai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maram*, then *kiḷai*, the tree and then what comes off it]
+- [YOU RECALL: read **கோலம்**, then say *sūriyaṉ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02] -->

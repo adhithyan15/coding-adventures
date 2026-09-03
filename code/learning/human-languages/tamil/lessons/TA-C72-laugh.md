@@ -9,7 +9,7 @@ headword: "சிரி"
 gloss: "to laugh"
 romanization: "siri"
 concept_tag: TA-VERB-SIRI
-prerequisites: [TA-C72-sorrow]
+prerequisites: [TA-C72-sorrow, TA-C70-floor, TA-C71-wash]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C72-FEEL-04]
 practises:
-  knowledge: [TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04]
+  knowledge: [TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04, TA-LEX-C70-ROOM-04, TA-LEX-C71-DAY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,13 +54,14 @@ After three nouns, this is a verb: something a person **does**, not something th
 Four, and the feelings start doing something.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04, TA-LEX-C70-ROOM-04, TA-LEX-C71-DAY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *siri*]
 - [YOU READ: **சிரி**, and point at the sign that appears twice]
 - [YOU SAY: *kōpam*, then *siri* — and say which one is a verb]
 - [YOU RECALL: read **பயம்**, then say *varuttam*, then say *siri*]
+- [YOU RECALL: read **தரை**, then say *kaḻuvu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04] -->

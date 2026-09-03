@@ -9,7 +9,7 @@ headword: "நம்பிக்கை"
 gloss: "trust"
 romanization: "nambikkai"
 concept_tag: TA-NOUN-TRUST
-prerequisites: [TA-C63-hesitancy]
+prerequisites: [TA-C63-hesitancy, TA-C61-fever, TA-C62-at-once]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C63-MANNERS-04]
 practises:
-  knowledge: [TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04]
+  knowledge: [TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04, TA-LEX-C61-FEEL-04, TA-LEX-C62-JOIN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A விருந்தாளி is given this before anything else is given, wh
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04, TA-LEX-C61-FEEL-04, TA-LEX-C62-JOIN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nambikkai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nambikkai*, then *viruntāḷi*, and say who is given which]
+- [YOU RECALL: read **காய்ச்சல்**, then say *uṭaṉē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04] -->

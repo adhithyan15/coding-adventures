@@ -9,7 +9,7 @@ headword: "சர்க்கரை"
 gloss: "sugar"
 romanization: "sarkkarai"
 concept_tag: TA-NOUN-SUGAR
-prerequisites: [TA-C59-jaggery]
+prerequisites: [TA-C59-jaggery, TA-C57-ember, TA-C58-bird]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C59-KITCHEN-05]
 practises:
-  knowledge: [TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05]
+  knowledge: [TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05, TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It has travelled further than any other word in this run. Sanskrit *śarkarā* w
 Five, and the run is closed: curd, ghee, oil, jaggery, and sugar.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05, TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sarkkarai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *tayir*, *ney*, *eṇṇey*, *vellam*, *sarkkarai*]
+- [YOU RECALL: say *kaṉal*, then read **பறவை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05] -->

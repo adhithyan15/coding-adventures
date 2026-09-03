@@ -9,7 +9,7 @@ headword: "எப்போது"
 gloss: when?
 romanization: "eppōdu"
 concept_tag: TA-QUESTION-WHEN
-prerequisites: [TA-C78-for-the-sake-of]
+prerequisites: [TA-C78-for-the-sake-of, TA-C77-say]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C79-WHEN-01]
 practises:
-  knowledge: [TA-LEX-C78-WHY-03, TA-GRAMMAR-C78-WHY-04, TA-LEX-C79-WHEN-01, TA-GRAMMAR-C74-JOIN-02, TA-LEX-C64-HARVEST-04, TA-LEX-C78-WHY-01]
+  knowledge: [TA-LEX-C78-WHY-03, TA-GRAMMAR-C78-WHY-04, TA-LEX-C79-WHEN-01, TA-GRAMMAR-C74-JOIN-02, TA-LEX-C64-HARVEST-04, TA-LEX-C78-WHY-01, TA-LEX-C77-SAY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -61,7 +61,7 @@ you have walked from a statement to a question, exactly as இங்கே walke
 The question word for time, and the small word போது that sits inside it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C78-WHY-03, TA-GRAMMAR-C78-WHY-04, TA-LEX-C79-WHEN-01, TA-GRAMMAR-C74-JOIN-02, TA-LEX-C64-HARVEST-04, TA-LEX-C78-WHY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C78-WHY-03, TA-GRAMMAR-C78-WHY-04, TA-LEX-C79-WHEN-01, TA-GRAMMAR-C74-JOIN-02, TA-LEX-C64-HARVEST-04, TA-LEX-C78-WHY-01, TA-LEX-C77-SAY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *eppōdu*]
@@ -69,6 +69,7 @@ The question word for time, and the small word போது that sits inside it.
 - [YOU ASK: *eppōdu vēṇḍum?*]
 - [YOU RECALL: say *adaṉāl*, then say *uṅgaḷukkāga*, then ask *eppōdu?*]
 - [YOU RETURN TO: say *-um*, *kaḷam* and *ēṉ* — three distances back — then say when one of them happens]
+- [YOU RECALL: say *sol*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C78-WHY-03, TA-GRAMMAR-C78-WHY-04, TA-LEX-C79-WHEN-01, TA-GRAMMAR-C74-JOIN-02, TA-LEX-C64-HARVEST-04, TA-LEX-C78-WHY-01] -->

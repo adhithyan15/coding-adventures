@@ -9,7 +9,7 @@ headword: "ஆனால்"
 gloss: but
 romanization: "āṉāl"
 concept_tag: TA-JOIN-BUT
-prerequisites: [TA-C75-permission]
+prerequisites: [TA-C75-permission, TA-C73-today, TA-C73-yesterday, TA-C73-before]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C76-JOIN-01]
 practises:
-  knowledge: [TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-GRAMMAR-C74-JOIN-03, TA-LEX-C62-JOIN-01, TA-LEX-C72-FEEL-01]
+  knowledge: [TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-GRAMMAR-C74-JOIN-03, TA-LEX-C62-JOIN-01, TA-LEX-C72-FEEL-01, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C73-WHEN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -62,7 +62,7 @@ In everyday speech the tail wears down and you will hear **ஆனா**. It is th
 Two sentences held together, with the second one pushing back.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-GRAMMAR-C74-JOIN-03, TA-LEX-C62-JOIN-01, TA-LEX-C72-FEEL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-GRAMMAR-C74-JOIN-03, TA-LEX-C62-JOIN-01, TA-LEX-C72-FEEL-01, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C73-WHEN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āṉāl*]
@@ -70,6 +70,7 @@ Two sentences held together, with the second one pushing back.
 - [YOU BUILD: *idu nalla vīḍu, āṉāl siṟiya vīḍu*]
 - [YOU RECALL: read **சரியா**, then ask *varalāmā?*, then say *āṉāl*]
 - [YOU RETURN TO: say *-um … -um illai*, *maṭṭum* and *kōpam* — three distances back — then set two of them against each other with ஆனால்]
+- [YOU RECALL: say *iṉṟu*, then read **நேற்று**, then say *muṉbu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-GRAMMAR-C74-JOIN-03, TA-LEX-C62-JOIN-01, TA-LEX-C72-FEEL-01] -->

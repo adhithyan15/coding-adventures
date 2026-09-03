@@ -9,7 +9,7 @@ headword: "மருத்துவர்"
 gloss: "a doctor"
 romanization: "maruttuvar"
 concept_tag: TA-ROLE-DOCTOR
-prerequisites: [TA-C46-student]
+prerequisites: [TA-C46-student, TA-C44-lamp, TA-C45-nose]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C46-ROLE-03]
 practises:
-  knowledge: [TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03]
+  knowledge: [TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C44-ASK-03, TA-LEX-C45-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Beside it sits *vaittiyar*, from Sanskrit *vaidya*, doing the same work with bor
 Three, and the third one you hope to need rarely.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C44-ASK-03, TA-LEX-C45-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maruttuvar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *māṇavaṉ*, then *maruttuvar*, and hear the ending change]
+- [YOU RECALL: say *viḷakku*, then read **மூக்கு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03] -->

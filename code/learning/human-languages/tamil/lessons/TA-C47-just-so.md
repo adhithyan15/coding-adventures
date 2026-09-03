@@ -9,7 +9,7 @@ headword: "அப்படியே"
 gloss: "just so"
 romanization: "appaḍiyē"
 concept_tag: TA-REPLY-JUST-SO
-prerequisites: [TA-C47-perhaps]
+prerequisites: [TA-C47-perhaps, TA-C45-stomach, TA-C46-guest]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C47-REPLY-05]
 practises:
-  knowledge: [TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05]
+  knowledge: [TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05, TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Move the pointer and the whole set follows: *ippaḍi*, 'like this', and *eppa�
 That closes the run: true, enough, certainly, perhaps, just so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05, TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *appaḍiyē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *uṇmai*, *pōdum*, *niccayamāka*, *oruvēḷai*, *appaḍiyē*]
+- [YOU RECALL: say *vayiṟu*, then read **விருந்தாளி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05] -->

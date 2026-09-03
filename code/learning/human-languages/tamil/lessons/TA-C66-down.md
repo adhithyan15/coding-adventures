@@ -9,7 +9,7 @@ headword: "கீழே"
 gloss: "down, below"
 romanization: "kīḻē"
 concept_tag: TA-ADVERB-KIZHE
-prerequisites: [TA-C66-up]
+prerequisites: [TA-C66-up, TA-C64-grass, TA-C65-walk]
 sounds: [zha-retroflex-glide]
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C66-WHICHWAY-02]
 practises:
-  knowledge: [TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02]
+  knowledge: [TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02, TA-LEX-C64-HARVEST-02, TA-LEX-C65-DOING-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -56,12 +56,13 @@ The vowel in front of it is **long**: *kīḻ*, not *kiḻ*. Tamil separates wor
 vowel length, so the length is doing work here, not decoration.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02, TA-LEX-C64-HARVEST-02, TA-LEX-C65-DOING-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kīḻē* — feel the ழ]
 - [YOU SAY: *mēlē pār*, then *kīḻē pār*]
 - [YOU SAY: both bare words, *mēl* and *kīḻ*, then both with the ending]
+- [YOU RECALL: read **புல்**, then say *naḍa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 64,
-  "sourceHash": "fnv1a64:94fe5f3beb137e77",
+  "sourceHash": "fnv1a64:57f5a1c091257b49",
   "lessonIds": [
     "TA-C64-paddy",
     "TA-C64-grass",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch64.txt",
   "json": "tamil/narration/ch64.json",
-  "textHash": "fnv1a64:a4343d136184634c",
-  "jsonHash": "fnv1a64:10a0d79ecda17001",
+  "textHash": "fnv1a64:53989915c9f7df13",
+  "jsonHash": "fnv1a64:1358429efd486750",
   "findings": []
 }

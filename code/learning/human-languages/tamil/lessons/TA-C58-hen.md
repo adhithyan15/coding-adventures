@@ -9,7 +9,7 @@ headword: "கோழி"
 gloss: "a hen"
 romanization: "kōḻi"
 concept_tag: TA-NOUN-HEN
-prerequisites: [TA-C58-goat]
+prerequisites: [TA-C58-goat, TA-C56-less, TA-C57-mud]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C58-ANIMAL-03]
 practises:
-  knowledge: [TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03]
+  knowledge: [TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C56-AMOUNT-03, TA-LEX-C57-FIRE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the clock of a கிராமம். A கோழி has a house awake wel
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C56-AMOUNT-03, TA-LEX-C57-FIRE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kōḻi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōḻi*, then *maṇi*, and say which one comes first in the morning]
+- [YOU RECALL: say *kuṟaivu*, then read **சேறு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03] -->

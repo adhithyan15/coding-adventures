@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f9e06aff0f91fe83",
+  "sourceHash": "fnv1a64:bf3721296042a041",
   "lessons": [
     {
       "id": "TA-C40-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49fa0f4b7912c830",
+      "sourceHash": "fnv1a64:874156e5cebd52f5",
       "notice": null,
       "blocks": [
         {
@@ -86,6 +86,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say uḍambu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *uḍambu*]"
             }
           ]
         },
@@ -223,7 +232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4bd073ae46d486b",
+      "sourceHash": "fnv1a64:5a0d07dcd38dd4e7",
       "notice": null,
       "blocks": [
         {
@@ -290,6 +299,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sugam, then read எவ்வளவு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sugam*, then read **எவ்வளவு**]"
             }
           ]
         },
@@ -427,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:342e5eb5bbee5048",
+      "sourceHash": "fnv1a64:fe95da429dca311f",
       "notice": null,
       "blocks": [
         {
@@ -494,6 +512,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say viḍai, then read ஒரு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *viḍai*, then read **ஒரு**]"
             }
           ]
         },

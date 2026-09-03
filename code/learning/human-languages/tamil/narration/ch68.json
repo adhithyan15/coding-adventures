@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "At the Shop",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a9b0d15fed0aba80",
+  "sourceHash": "fnv1a64:80a92a7c15952bf5",
   "lessons": [
     {
       "id": "TA-C68-shop",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2161416c9bfbd5e4",
+      "sourceHash": "fnv1a64:44d2cafb55cbbe47",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *seruppu*, then say *toppi*, then say *kaḍai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mēlē, then read கீழே, then say saṭṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mēlē*, then read **கீழே**, then say *saṭṭai*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:349e6bb892ba4a05",
+      "sourceHash": "fnv1a64:f51385f466226304",
       "notice": null,
       "blocks": [
         {
@@ -241,6 +250,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *toppi*, then say *kaḍai*, then say *vilai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read உள்ளே, then say vēṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **உள்ளே**, then say *vēṭṭi*]"
             }
           ]
         },
@@ -428,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:661ff1b46cca7729",
+      "sourceHash": "fnv1a64:b077f9ced54e1cdf",
       "notice": null,
       "blocks": [
         {
@@ -515,6 +533,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *vilai*, then read **கடை**, then say *paṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say veḷiyē, then read புடவை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *veḷiyē*, then read **புடவை**]"
             }
           ]
         },
@@ -550,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e2a4f100cbcb2db",
+      "sourceHash": "fnv1a64:51ae8dbb33e88cd6",
       "notice": null,
       "blocks": [
         {
@@ -641,6 +668,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: read **கடை**, then say *paṇam*, then say *vāṅgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read வலது, then say seruppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **வலது**, then say *seruppu*]"
             }
           ]
         },
@@ -676,7 +712,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:918852de61d989e9",
+      "sourceHash": "fnv1a64:0f78b215833ba940",
       "notice": null,
       "blocks": [
         {
@@ -767,6 +803,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *paṇam*, then say *vāṅgu*, then say *pai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iḍadu, then read தொப்பி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iḍadu*, then read **தொப்பி**]"
             }
           ]
         },

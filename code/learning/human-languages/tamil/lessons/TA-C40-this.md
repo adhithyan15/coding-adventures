@@ -9,7 +9,7 @@ headword: "இது"
 gloss: "this one — the thing near me"
 romanization: "idu"
 concept_tag: TA-DEIXIS-THIS
-prerequisites: []
+prerequisites: [TA-C38-udambu]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C40-DEIXIS-01]
 practises:
-  knowledge: [TA-LEX-C40-DEIXIS-01]
+  knowledge: [TA-LEX-C40-DEIXIS-01, TA-LEX-UDAMBU-01, TA-ETYMON-UDAMBU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-01, TA-LEX-UDAMBU-01, TA-ETYMON-UDAMBU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "இது" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *uḍambu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-01] -->

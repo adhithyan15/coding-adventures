@@ -9,7 +9,7 @@ headword: "சிறிது"
 gloss: "a little"
 romanization: "siṟitu"
 concept_tag: TA-REPLY-A-LITTLE
-prerequisites: [TA-C55-bone]
+prerequisites: [TA-C55-bone, TA-C54-mat, TA-C55-neck]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C56-AMOUNT-01]
 practises:
-  knowledge: [TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01]
+  knowledge: [TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01, TA-LEX-C54-HOUSE-01, TA-LEX-C55-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil has a *koñcam* as well, which is the one you will hear across a table, an
 The first of five answers to "how much?".
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01, TA-LEX-C54-HOUSE-01, TA-LEX-C55-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *siṟitu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *elumbu*, then *siṟitu*, and keep the second one short]
+- [YOU RECALL: say *pāy*, then read **கழுத்து**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01] -->

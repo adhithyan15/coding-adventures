@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Today, Yesterday, and the Year",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:20c6ed4a66f57c8b",
+  "sourceHash": "fnv1a64:3df37a507fac30fa",
   "lessons": [
     {
       "id": "TA-C73-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6eed0daef0c0ea90",
+      "sourceHash": "fnv1a64:b482fb956393c4bc",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *siri*, then say *aḻu*, then say *iṉṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eḻu, then read கோபம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eḻu*, then read **கோபம்**]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9014f818ae50ea9",
+      "sourceHash": "fnv1a64:788f6c3b6b08c500",
       "notice": null,
       "blocks": [
         {
@@ -245,6 +254,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *aḻu*, then say *iṉṟu*, then say *nēṟṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read தூங்கு, then say payam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **தூங்கு**, then say *payam*]"
             }
           ]
         },
@@ -427,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02b4f08b2d1c383f",
+      "sourceHash": "fnv1a64:ed61840cb3f920a4",
       "notice": null,
       "blocks": [
         {
@@ -527,6 +545,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *nēṟṟu*, then read **இன்று**, then say *muṉbu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ōḍu, then read வருத்தம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ōḍu*, then read **வருத்தம்**]"
             }
           ]
         },
@@ -562,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f929cea4d9534d5",
+      "sourceHash": "fnv1a64:cdbdf0f9120a6395",
       "notice": null,
       "blocks": [
         {
@@ -653,6 +680,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: read **இன்று**, then say *muṉbu*, then say *mādam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read கழுவு, then say siri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **கழுவு**, then say *siri*]"
             }
           ]
         },
@@ -688,7 +724,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94399fc3a2ff9825",
+      "sourceHash": "fnv1a64:2bcff0325aaf050b",
       "notice": null,
       "blocks": [
         {
@@ -792,6 +828,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *muṉbu*, then say *mādam*, then say *āṇḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say viḷaiyāḍu, then read அழு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *viḷaiyāḍu*, then read **அழு**]"
             }
           ]
         },

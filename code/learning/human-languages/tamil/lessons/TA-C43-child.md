@@ -9,7 +9,7 @@ headword: "குழந்தை"
 gloss: "child"
 romanization: "kuḻandai"
 concept_tag: TA-NOUN-CHILD
-prerequisites: [TA-C42-give]
+prerequisites: [TA-C42-give, TA-C41-big, TA-C41-small]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-CHILD]
 practises:
-  knowledge: [TA-LEX-GIVE, TA-LEX-CHILD]
+  knowledge: [TA-LEX-GIVE, TA-LEX-CHILD, TA-LEX-C41-ADJ-01, TA-LEX-C41-ADJ-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ Take it apart and the stem is *kuḻa-*, 'young, tender', closed off into a noun
 The first of four words for the people in a house. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-GIVE, TA-LEX-CHILD] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-GIVE, TA-LEX-CHILD, TA-LEX-C41-ADJ-01, TA-LEX-C41-ADJ-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuḻandai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *koṭu*, so the two sit together]
+- [YOU RECALL: say *periya*, then read **சிறிய**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-GIVE, TA-LEX-CHILD] -->

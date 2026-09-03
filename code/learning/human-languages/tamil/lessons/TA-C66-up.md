@@ -9,7 +9,7 @@ headword: "மேலே"
 gloss: "up, above"
 romanization: "mēlē"
 concept_tag: TA-ADVERB-MELE
-prerequisites: [TA-C65-doing-recall]
+prerequisites: [TA-C65-doing-recall, TA-C64-paddy, TA-C65-drink]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C66-WHICHWAY-01]
 practises:
-  knowledge: [TA-LEX-C65-DOING-05, TA-LEX-C66-WHICHWAY-01]
+  knowledge: [TA-LEX-C65-DOING-05, TA-LEX-C66-WHICHWAY-01, TA-LEX-C64-HARVEST-01, TA-LEX-C65-DOING-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -61,12 +61,13 @@ So this is not a new machine. It is a machine you already own, running on a new
 word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-05, TA-LEX-C66-WHICHWAY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-05, TA-LEX-C66-WHICHWAY-01, TA-LEX-C64-HARVEST-01, TA-LEX-C65-DOING-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mēlē*]
 - [YOU SAY: *mēlē pār* — "look up"]
 - [YOU SAY: *iṅgē*, *aṅgē*, *mēlē* — three words, one ending]
+- [YOU RECALL: say *nel*, then read **குடி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-01] -->

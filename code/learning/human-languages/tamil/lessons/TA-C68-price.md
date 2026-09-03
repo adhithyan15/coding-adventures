@@ -9,7 +9,7 @@ headword: "விலை"
 gloss: "a price"
 romanization: "vilai"
 concept_tag: TA-NOUN-PRICE
-prerequisites: [TA-C68-shop]
+prerequisites: [TA-C68-shop, TA-C66-inside, TA-C67-veshti]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C68-SHOP-02]
 practises:
-  knowledge: [TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02]
+  knowledge: [TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02, TA-LEX-C66-WHICHWAY-03, TA-LEX-C67-WEAR-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,13 +55,14 @@ about it, and stops.
 Two words, and a question you can already ask.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02, TA-LEX-C66-WHICHWAY-03, TA-LEX-C67-WEAR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vilai*]
 - [YOU SAY: *vilai evvaḷavu?*]
 - [YOU SAY: *kaḍai*, then *vilai*, then the whole question]
 - [YOU RECALL: say *toppi*, then say *kaḍai*, then say *vilai*]
+- [YOU RECALL: read **உள்ளே**, then say *vēṭṭi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02] -->

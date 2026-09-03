@@ -9,7 +9,7 @@ headword: "தூக்கம்"
 gloss: "sleep"
 romanization: "tūkkam"
 concept_tag: TA-NOUN-SLEEP
-prerequisites: [TA-C61-thirst]
+prerequisites: [TA-C61-thirst, TA-C59-oil, TA-C60-umbrella]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C61-FEEL-03]
 practises:
-  knowledge: [TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03]
+  knowledge: [TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C59-KITCHEN-03, TA-LEX-C60-MADE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Open it on a long ஊ, the same long ஊ that opens ஊசி, and then hold the
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C59-KITCHEN-03, TA-LEX-C60-MADE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tūkkam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tūkkam*, then *ūsi*, and hear the same long vowel open both]
+- [YOU RECALL: say *eṇṇey*, then read **குடை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03] -->

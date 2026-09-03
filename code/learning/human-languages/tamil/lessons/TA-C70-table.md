@@ -9,7 +9,7 @@ headword: "மேசை"
 gloss: "a table"
 romanization: "mēsai"
 concept_tag: TA-NOUN-TABLE
-prerequisites: [TA-C69-station]
+prerequisites: [TA-C69-station, TA-C68-shop, TA-C69-vehicle]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C70-ROOM-01]
 practises:
-  knowledge: [TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01]
+  knowledge: [TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01, TA-LEX-C68-SHOP-01, TA-LEX-C69-GOING-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Its two signs are old friends: the **ே** in front of ம, and the **ை** at t
 The first thing in the room.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01, TA-LEX-C68-SHOP-01, TA-LEX-C69-GOING-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mēsai*]
 - [YOU SAY: *nāṟkāli*, then *mēsai* — the pair, in the order you sit down to them]
 - [YOU RECALL: say *sālai*, then say *nilaiyam*, then say *mēsai*]
+- [YOU RECALL: say *kaḍai*, then read **வண்டி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01] -->

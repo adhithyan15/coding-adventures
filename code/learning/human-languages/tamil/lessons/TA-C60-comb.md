@@ -9,7 +9,7 @@ headword: "சீப்பு"
 gloss: "a comb"
 romanization: "sīppu"
 concept_tag: TA-NOUN-COMB
-prerequisites: [TA-C60-broom]
+prerequisites: [TA-C60-broom, TA-C58-bird, TA-C59-sugar]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C60-MADE-05]
 practises:
-  knowledge: [TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05]
+  knowledge: [TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05, TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A சீப்பு and a மலர் are what go into hair on a morning that 
 Five, and the run is closed: a needle, a rope, an umbrella, a broom, and a comb.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05, TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sīppu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ūsi*, *kayiṟu*, *kuṭai*, *tuṭaippam*, *sīppu*]
+- [YOU RECALL: say *paṟavai*, then read **சர்க்கரை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05] -->
