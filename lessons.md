@@ -10,6 +10,14 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 
 ---
 
+## Security boundaries
+
+- **Naming a function after the trust you want does not create it.** `OrchestratorProfile::from_manifests` took `&AgentManifest` values from the caller and its doc claimed the surface came "from inside the integrity boundary". `AgentManifest`'s fields are all `pub` and `parse_manifest` accepts any text, so an operator-authored manifest passed there had exactly the trust level of the `from_json` path it was written to replace — under a name asserting the opposite. Make the trusted thing the only input: read the manifest from `package.manifest_bytes()` after verifying the package, and take no manifest argument at all. This repo already had two crates doing that (`agent-discovery`, `skill-package`); look for an existing verified-source pattern before inventing a parameter.
+
+- **Before gating a path, grep who calls it.** Three times in one arc I put an authorization check on code the shipping path never executes: `HostProfile::from_manifest` (7 call sites, all in-crate tests), `v1_agent_tool_catalog` (zero callers outside its own test), and `HostProfileRuntime` (the daemon imports no host-runtime type at all — its model surface is `SmartHomeToolBridge::invoke` over a bare `InMemoryToolRuntime`). Each took ten seconds to disprove with `grep -rn <symbol> --include='*.rs'`. A boundary on a dead path is worse than none, because the commit message says the hole is closed.
+- **A conformance test is not a boundary, and saying "enforces" does not make it one.** Same arc, three overclaims: "enforcing" for a check nothing called, "closes" for a check that narrows, and a refactor described as done when one of three call sites had moved. The failure mode is writing the claim while holding the intent, before the code has finished disagreeing. Write the CHANGELOG line *after* re-reading the diff, and prefer "narrows"/"checks" unless a caller actually refuses.
+- **Scope an exemption by who is looking, not by a list of things.** Applying an identity check to tool outputs globally broke the smart-home audit readers, which exist to report on principals. A per-tool exemption list would have drifted; scoping by *runtime* worked because "is this an agent surface" is already answered by a gate that refuses peer-naming tools there.
+
 ## Supply chain & CI pinning
 
 - **A third-party GitHub Action on a tag or branch is not pinned — a tag is mutable and a branch is worse.** `pypa/gh-action-pypi-publish@release/v1` is a *branch* ref on the action that holds PyPI trusted-publishing OIDC: whoever controls that branch controls a publish with the repo's identity. Same shape for `dtolnay/rust-toolchain@master`, which installs the compiler for every Rust job. Pin release- and publish-path actions to a 40-character SHA with a trailing `# vX.Y.Z` comment so a future bump is reviewable. Verify the SHA maps to the version the comment claims — `gh api repos/OWNER/REPO/tags` — rather than trusting the tag you started from. **Enumerate by what the ref IS, not by the strings you happened to notice.** The first pass here pinned `dtolnay/rust-toolchain@master` and missed `@stable` — also a branch, 8 more sites, including release workflows the same commit had already edited. In one of them the *publisher* got pinned while the *compiler producing the bytes being published* stayed mutable in the same file, which is the higher-value target. `gh api repos/OWNER/REPO/branches` tells you which refs are branches; grepping for the one you thought of does not. Existing pins drift too: a `# stable` pin already in the tree had diverged from the branch it named. **And check that classifier with an exit code, not with output emptiness.** `gh api repos/O/R/branches/REF` prints its 404 body to *stdout* and exits non-zero, so `[ -n "$(gh api ... 2>/dev/null)" ]` counts every missing branch as a branch. That bug had me about to report "all eight refs are branches" when three were; use `if gh api ... >/dev/null 2>&1`. Most `@vN` refs on popular actions are mutable *tags* rather than branches -- still worth pinning, but ranking the work needs the distinction to be right. **And pin the GENERATORS, not just the tree.** `web-app-scaffold-generator` emits a deploy workflow with `peaceiris/actions-gh-pages@v4` baked into a template string, so every scaffolded app re-introduced an unpinned action holding `contents: write`. A sweep that fixes the checked-in files and leaves the thing that writes them has a half-life, not a fix. `grep` the emitters (`--include='*.ts' --include='*.py' --include='*.go'`), not only the workflows.
@@ -6596,3 +6604,85 @@ nothing, and "passed". When redone properly the guard turned out to be
 redundant in `dylib_dependencies` (a second check caught the same input) and
 load-bearing in `is_code_signed`, where its removal hung on a 64-byte file. Two
 different answers that the vacuous run had collapsed into one false one.
+
+## The one platform I could not test was the one with no engine check at all
+
+XAML/WinUI is the only backend that cannot be built on a non-Windows machine,
+so unlike the other four its payload was never launched by hand before
+shipping. Security review asked the right question — *what could go wrong that
+nobody would notice* — and the answer was the thing the whole module exists to
+prevent.
+
+`build-native.sh` gates every backend on the engine's contract:
+`nm | grep -c ' eg_'`, rejecting fewer than 20 symbols, with the comment *"a
+library that exists but exports nothing produces the same silent, feature-free
+app as no library at all."* Its `case "$(uname -s)"` has arms for Darwin and
+Linux and falls through to `*) EXPORTS="unknown"` — **there is no Windows arm**.
+And my archiver's only content check was a leading `MZ`, which every PE has,
+including the app's own managed assembly. `cp EngramApp.dll engram_capi.dll`
+archived cleanly.
+
+So on the platform with no local verification, nothing anywhere verified the
+engine. Both halves individually looked reasonable; the gap was in the seam.
+
+Two things made this fixable rather than a guess:
+
+- **`dotnet publish -r win-x64` cross-compiles on macOS**, producing a real
+  apphost `.exe` and managed `.dll`, and a previous build had left genuine
+  native Windows DLLs in the NuGet cache. So a PE export-directory parser could
+  be validated against real positives (`CoreMsgCreateSession`,
+  `CreateDwmSceneRenderer`) and real negatives (managed assembly: zero
+  exports). "I cannot build the app here" did not mean "I cannot verify
+  anything here" — worth asking which parts of a platform are actually out of
+  reach before accepting that none can be checked.
+- **The real binaries caught a bug my fixture could not have.** I read
+  `AddressOfNames` at `IMAGE_EXPORT_DIRECTORY+28`, which is
+  `AddressOfFunctions` — an array of *code* addresses. Against real DLLs the
+  "names" came back as disassembly. A synthesized fixture built from the same
+  wrong layout would have agreed with the parser perfectly, and the check would
+  have shipped reading the wrong field. Same lesson as the case-fold fixtures,
+  in a new place: **a fixture I write cannot test the assumption I wrote it
+  from.**
+
+The review also found a second unnoticeable failure: the csproj's
+`FlattenNativeRuntimeDlls` copies the WindowsAppSDK natives beside the
+executable because the unpackaged bootstrap looks for them there — but it runs
+into `$(OutDir)` and the release lane archives `$(PublishDir)`. The csproj
+author had guarded `.pri` and `.xbf` against exactly that mismatch and never
+guarded the natives. A payload missing them archives green and fails at launch.
+
+## An issue saying "the shared half is done" is a claim, not a fact
+
+#14024 read: *"Depends on `build-native.sh`, which already builds the engine,
+emits the project, and places the library — **the shared half is done**; what
+remains is this backend's toolchain."* I took that as given, built the
+publishing layer on top, wired the job into the release lane, and CI failed
+before reaching a single line of my code:
+
+```
+error CS0101: The namespace 'Mosaic.Generated' already contains a definition
+  for 'EngramAppEvent'
+```
+
+`engram-app` ships two layout variants, and the XAML emitter writes an event
+type for each into the same namespace. `--backend xaml --build` has never
+compiled this package. The build half was not done; nobody had run it, because
+it only runs on Windows and everyone works on macOS.
+
+The near-miss is the part worth keeping. I had added `build-xaml` to the
+publish job's `needs` — so merging would have put a job that **cannot pass**
+into the dependency list of every future release. A release-blocking regression,
+introduced by trusting a sentence.
+
+- **Verify the precondition, not just your own work.** The five minutes to run
+  `--backend xaml` and look at the emitted files would have found this before
+  any of the publishing layer was written. "Depends on X, which is done" is
+  exactly the claim to spot-check, and it is cheap when X has a command.
+- **Adding a job to `publish.needs` is a release-blocking act.** Every other
+  backend's job was added the same way and was fine because each had been run
+  locally first. This one could not be, which is precisely when the wiring
+  deserves more caution rather than less.
+- **Ship the verified part, hold back the part that would break things, and say
+  which is which.** The PE export parser, the archiver, `-p:Platform=x64`, and
+  the trigger paths are all correct and tested. Only the release wiring is held,
+  behind a filed blocker, with a comment in the code saying what unblocks it.

@@ -412,7 +412,10 @@ impl HostProfileRuntime {
         profile.validate()?;
         Ok(Self {
             profile,
-            runtime: InMemoryToolRuntime::new(),
+            // A HostProfileRuntime IS the V1 agent surface -- that is what
+            // `check_registration`'s S-I7 refusal established -- so its
+            // outputs are walked for peer identities too.
+            runtime: InMemoryToolRuntime::new().as_agent_surface(),
             registered_tools: BTreeSet::new(),
         })
     }
@@ -1717,6 +1720,76 @@ for line in sys.stdin:
             .contains(&"smart_home.discover".to_string()));
         assert!(!profile.has_capability("smart_home:read"));
         assert_eq!(profile.max_tier, PrivilegeTier::Tier0);
+    }
+
+    #[test]
+    fn a_handler_cannot_return_a_peer_identity_through_an_undescribed_output() {
+        // The exact end-to-end case a security review reproduced against the
+        // real runtime: `context.read_entries` declares `entries` as an array
+        // of `Any`, so a handler returning
+        // `{"entries": [{"agent_id": "peer-7"}]}` passed every schema check
+        // and was delivered to the agent verbatim.
+        //
+        // The registration gate cannot catch this -- it inspects DECLARED
+        // schemas, and an `Any` declares nothing. That is S-I7's first clause,
+        // and it was the half the gate could never reach.
+        let definition = builtin_tool_definition("context.read_entries")
+            .expect("context.read_entries is a built-in");
+        let profile = HostProfile::from_json(
+            r#"{
+              "profile_id": "orchestrator-1",
+              "host_id": "reading-agent",
+              "max_tier": "tier3",
+              "allowed_tools": ["context.read_entries"],
+              "capabilities": ["context:read"]
+            }"#,
+        )
+        .expect("profile parses");
+        let mut runtime = HostProfileRuntime::new(profile).expect("runtime builds");
+
+        runtime
+            .register_handler(definition, |_arguments, _context| {
+                Ok(ToolHandlerOutput::new(JsonValue::Object(vec![
+                    (
+                        "session_id".to_string(),
+                        JsonValue::String("sess-1".to_string()),
+                    ),
+                    (
+                        "entries".to_string(),
+                        JsonValue::Array(vec![JsonValue::Object(vec![(
+                            "agent_id".to_string(),
+                            JsonValue::String("peer-7".to_string()),
+                        )])]),
+                    ),
+                ])))
+            })
+            .expect("a tool that declares no peer registers fine");
+
+        let request = ToolInvocationRequest {
+            call_id: "call-1".to_string(),
+            tool_id: "context.read_entries".to_string(),
+            arguments: JsonValue::Object(vec![(
+                "session_id".to_string(),
+                JsonValue::String("sess-1".to_string()),
+            )]),
+            requested_by: RequestedBy::Agent,
+            session_id: None,
+            job_id: None,
+            agent_id: Some("reading-agent".to_string()),
+            user_id: None,
+            requested_at: 0,
+            deadline_at: None,
+            idempotency_key: None,
+        };
+        // A profile runtime must be activated before it serves calls.
+        let active = runtime
+            .activate()
+            .expect("every allowed tool is registered");
+        let trace = active.invoke_with_events(&request);
+        assert!(
+            !trace.result.ok,
+            "a peer identity in an undescribed output must not reach the agent"
+        );
     }
 
     #[test]

@@ -898,7 +898,40 @@ impl<B: StorageBackend + 'static> SmartHomeToolBridge<B> {
     /// The bridge and central controller remain thread-safe; the short-lived
     /// registry is only a validation, policy, event, and terminal-result shell.
     pub fn invoke(&self, request: &ToolInvocationRequest) -> Result<ToolResult, ToolApiError> {
-        let mut runtime = InMemoryToolRuntime::new();
+        self.invoke_inner(request, false)
+    }
+
+    /// Execute one request on behalf of a **model-facing agent**.
+    ///
+    /// Same path as [`SmartHomeToolBridge::invoke`] with the D18S S-I7 output
+    /// walk enabled, so a peer identity cannot reach the model through a
+    /// position no schema describes -- and this catalog is full of them:
+    /// `get_state.state`, `command.message`, `pair_bridge.metadata`, and the
+    /// `Array<Any>` collection outputs behind `list_bridges`, `list_devices`,
+    /// `get_health`, `describe_capabilities` and `observe_supervision`.
+    ///
+    /// Deliberately a separate entry point rather than a flag on `invoke`.
+    /// `invoke` serves non-agent callers and accepts any smart-home tool id,
+    /// including the ten audit and access-review readers that report on
+    /// principals by design. Those must keep working; only the model-facing
+    /// caller is an agent surface.
+    pub fn invoke_for_agent(
+        &self,
+        request: &ToolInvocationRequest,
+    ) -> Result<ToolResult, ToolApiError> {
+        self.invoke_inner(request, true)
+    }
+
+    fn invoke_inner(
+        &self,
+        request: &ToolInvocationRequest,
+        agent_surface: bool,
+    ) -> Result<ToolResult, ToolApiError> {
+        let mut runtime = if agent_surface {
+            InMemoryToolRuntime::new().as_agent_surface()
+        } else {
+            InMemoryToolRuntime::new()
+        };
         let definition = smart_home_tool_definition(&request.tool_id)
             .ok_or_else(|| ToolApiError::UnknownTool(request.tool_id.clone()))?;
         runtime.register_handler(definition, self.handler_for(&request.tool_id))?;
@@ -11131,7 +11164,6 @@ fn pair_bridge_definition() -> ToolDefinition {
                 SchemaProperty::new("session_id", JsonSchema::String),
                 SchemaProperty::new("bridge_id", JsonSchema::String),
                 SchemaProperty::new("integration_id", JsonSchema::String),
-                SchemaProperty::new("requested_by", JsonSchema::String),
                 SchemaProperty::new("started_at_ms", JsonSchema::Integer),
                 SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
                 SchemaProperty::new("status", JsonSchema::String),
@@ -11142,7 +11174,6 @@ fn pair_bridge_definition() -> ToolDefinition {
                 "session_id",
                 "bridge_id",
                 "integration_id",
-                "requested_by",
                 "started_at_ms",
                 "expires_at_ms",
                 "status",
@@ -11190,7 +11221,6 @@ fn complete_pairing_definition() -> ToolDefinition {
                 SchemaProperty::new("session_id", JsonSchema::String),
                 SchemaProperty::new("bridge_id", JsonSchema::String),
                 SchemaProperty::new("integration_id", JsonSchema::String),
-                SchemaProperty::new("requested_by", JsonSchema::String),
                 SchemaProperty::new("started_at_ms", JsonSchema::Integer),
                 SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
                 SchemaProperty::new("status", JsonSchema::String),
@@ -11201,7 +11231,6 @@ fn complete_pairing_definition() -> ToolDefinition {
                 "session_id",
                 "bridge_id",
                 "integration_id",
-                "requested_by",
                 "started_at_ms",
                 "expires_at_ms",
                 "status",
@@ -51331,11 +51360,34 @@ fn unsubscribe_output_json(output: &RuntimeUnsubscribeToolOutput) -> JsonValue {
 }
 
 fn pair_bridge_output_json(output: &RuntimePairBridgeToolOutput) -> JsonValue {
-    pairing_session_json(&output.session)
+    pairing_session_json_without_requester(&output.session)
 }
 
 fn complete_pairing_output_json(output: &RuntimeCompletePairingToolOutput) -> JsonValue {
-    pairing_session_json(&output.session)
+    pairing_session_json_without_requester(&output.session)
+}
+
+/// A pairing session without `requested_by`, for the two model-facing tools.
+///
+/// `RuntimePairingSession.requested_by` is typed `AgentId`, and both
+/// `smart_home.pair_bridge` and `smart_home.complete_pairing` are on
+/// `PRODUCTION_SMART_HOME_MODEL_TOOLS`. Sessions are also created by the
+/// smart-home HTTP and pairing services under other principals, so a model
+/// completing a session it did not start received that principal's identity --
+/// a peer in the agent's view, which D18S S-I7 forbids.
+///
+/// The field stays on the supervisor-facing `smart_home.list_pairing_sessions`,
+/// where knowing who requested a session is the point.
+fn pairing_session_json_without_requester(session: &RuntimePairingSession) -> JsonValue {
+    let JsonValue::Object(fields) = pairing_session_json(session) else {
+        unreachable!("pairing_session_json always builds an object");
+    };
+    JsonValue::Object(
+        fields
+            .into_iter()
+            .filter(|(name, _)| name != "requested_by")
+            .collect(),
+    )
 }
 
 fn discover_output_json(output: &RuntimeDiscoverToolOutput) -> JsonValue {
@@ -96484,12 +96536,21 @@ mod tests {
                 "smart_home.get_authorization_summary",
                 "smart_home.get_capability_grant_summary",
                 "smart_home.get_command_risk_audit_summary",
+                // The five below joined the list when the peer vocabulary
+                // gained the by-whom forms. Each declares `requested_by`,
+                // which is backed by an `AgentId` -- so they always named a
+                // peer and the check simply could not see it.
+                "smart_home.get_desired_state_drift_audit_summary",
                 "smart_home.get_platform_access_review_summary",
                 "smart_home.list_authorization_decisions",
                 "smart_home.list_authorization_gap_audit",
                 "smart_home.list_capability_grants",
                 "smart_home.list_command_risk_audit",
+                "smart_home.list_desired_state_drift_audit",
+                "smart_home.list_desired_states",
+                "smart_home.list_pairing_sessions",
                 "smart_home.list_platform_access_review",
+                "smart_home.set_desired_state",
             ],
             "a smart-home tool gained or lost a peer identity in its schema"
         );

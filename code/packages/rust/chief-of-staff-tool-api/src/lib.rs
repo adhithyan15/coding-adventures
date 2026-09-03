@@ -1111,6 +1111,16 @@ const PEER_STEMS: &[&str] = &[
     "delegate",
     "assignee",
     "impersonate",
+    // The by-whom forms. `RuntimePairingSession.requested_by` is typed
+    // `AgentId` and is serialized into tool output, so this is not a
+    // hypothetical shape -- it was declared on two tools already on the
+    // production model surface and both gates reported them clean.
+    "requestedby",
+    "requester",
+    "startedby",
+    "createdby",
+    "initiatedby",
+    "ownedby",
 ];
 
 /// Prefixes that turn a stem into a reference to somebody else.
@@ -1178,8 +1188,33 @@ fn names_an_agent(property: &str) -> bool {
 /// described position the schema settles which; in an opaque one nothing does,
 /// and refusing every job spec that names a machine buys nothing.
 fn value_key_names_a_peer(key: &str) -> bool {
-    const SELF_OR_MACHINE: &[&str] =
-        &["agent", "agents", "hostid", "hostname", "host", "principal"];
+    // Names that mean a peer when a TOOL declares them, and usually mean
+    // something else inside an opaque blob:
+    //
+    //   agent / agents      a skill manifest's own name
+    //   host* / principal   a machine, or a job's own principal
+    //   *_by forms          an annotation the blob author wrote about itself --
+    //                       pairing metadata carrying
+    //                       `initiated_by: "chief-of-staff-test"` is a label,
+    //                       not a peer reference
+    //
+    // As a SCHEMA property each still counts: a tool declaring
+    // `requested_by: String` backed by an `AgentId` really is handing over an
+    // identity, and `names_an_agent` catches that.
+    const SELF_OR_MACHINE: &[&str] = &[
+        "agent",
+        "agents",
+        "hostid",
+        "hostname",
+        "host",
+        "principal",
+        "requestedby",
+        "requester",
+        "startedby",
+        "createdby",
+        "initiatedby",
+        "ownedby",
+    ];
     let normalized = normalize_property_name(key);
     if SELF_OR_MACHINE.contains(&normalized.as_str()) {
         return false;
@@ -5046,6 +5081,7 @@ pub struct InMemoryToolRuntime {
     registry: InMemoryToolRegistry,
     handlers: BTreeMap<ToolId, Box<dyn ToolHandler>>,
     policy: Box<dyn ToolPolicyEngine>,
+    agent_surface: bool,
 }
 
 impl Default for InMemoryToolRuntime {
@@ -5054,6 +5090,7 @@ impl Default for InMemoryToolRuntime {
             registry: InMemoryToolRegistry::new(),
             handlers: BTreeMap::new(),
             policy: Box::new(AllowAllToolPolicy),
+            agent_surface: false,
         }
     }
 }
@@ -5071,7 +5108,25 @@ impl InMemoryToolRuntime {
             registry: InMemoryToolRegistry::new(),
             handlers: BTreeMap::new(),
             policy: Box::new(policy),
+            agent_surface: false,
         }
+    }
+
+    /// Mark this runtime as a V1 agent surface, enabling the D18S S-I7 output
+    /// check.
+    ///
+    /// Scoped by RUNTIME rather than by a per-tool exemption list, because the
+    /// exemption is a property of who is looking rather than of the tool. The
+    /// smart-home audit and access-review readers exist to report on
+    /// principals and must keep doing so; they simply cannot be registered
+    /// into a `HostProfileRuntime`, since `check_registration` refuses a tool
+    /// that names a peer in its schema. So "is this an agent surface" is
+    /// answerable here and a per-tool list would have to be maintained
+    /// forever.
+    #[must_use]
+    pub fn as_agent_surface(mut self) -> Self {
+        self.agent_surface = true;
+        self
     }
 
     pub fn set_policy<P>(&mut self, policy: P)
@@ -5277,8 +5332,38 @@ impl InMemoryToolRuntime {
                 // and forwards that call's side effects anyway -- a handler
                 // whose output was refused could still say anything it liked to
                 // every event sink.
-                if let Some(output_schema) = &definition.output_schema {
-                    let output_validation = output_schema.validate_value(&output.output);
+                // On an agent surface the output is walked for peer
+                // identities too, closing S-I7's FIRST clause -- the agent's
+                // view contains no agent identity.
+                //
+                // The registration gate covers tools that DECLARE a peer,
+                // which is precisely not the hole case: an `Any` output
+                // declares nothing, so `context.read_entries` could return
+                // `{"entries": [{"agent_id": "peer-7"}]}` unchallenged while
+                // passing every schema check.
+                //
+                // An ABSENT output schema is treated as `Any`, because it
+                // describes exactly as much. Without that, `output_schema:
+                // None` is a one-field opt-out of this control -- and
+                // `check_registration` pins canonical definitions for BUILT-IN
+                // ids only, so a host-local tool could register schemaless and
+                // return anything.
+                let output_validation = match (&definition.output_schema, self.agent_surface) {
+                    (Some(schema), true) => Some(schema.validate_supplied_value(&output.output)),
+                    (Some(schema), false) => Some(schema.validate_value(&output.output)),
+                    (None, true) => {
+                        let mut errors = Vec::new();
+                        reject_agent_identity_keys(&output.output, "$", &mut errors);
+                        (!errors.is_empty()).then(|| {
+                            let mut report = ToolValidationReport::empty();
+                            report.ok = false;
+                            report.errors = errors;
+                            report
+                        })
+                    }
+                    (None, false) => None,
+                };
+                if let Some(output_validation) = output_validation {
                     if !output_validation.ok {
                         let result = ToolResult::failed(
                             request.call_id.clone(),

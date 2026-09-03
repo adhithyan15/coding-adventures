@@ -4,6 +4,33 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Treat an ABSENT output schema as `Any` on an agent surface. `output_schema:
+  None` skipped output validation entirely -- not the shape check, not the
+  identity walk -- and `check_registration` pins canonical definitions for
+  BUILT-IN ids only, so a host-local tool could register schemaless and return
+  anything. A one-field opt-out of the control.
+- Add the by-whom forms (`requested_by`, `requester`, `started_by`,
+  `created_by`, `initiated_by`, `owned_by`) to the peer vocabulary for SCHEMA
+  positions. `RuntimePairingSession.requested_by` is typed `AgentId` and was
+  declared on two tools already on the production model surface; both gates
+  reported them clean.
+- Those forms are excluded from VALUE positions, where they are usually the
+  blob author's own annotation -- pairing metadata carrying
+  `initiated_by: "chief-of-staff-test"` is a label, not a peer reference.
+
+- Add `InMemoryToolRuntime::as_agent_surface`, which extends the S-I7 identity
+  walk to tool OUTPUTS. This closes the first clause -- the agent's view
+  contains no agent identity -- where the registration gate could not reach it:
+  that gate inspects DECLARED schemas, and an `Any` output declares nothing, so
+  `context.read_entries` could return `{"entries": [{"agent_id": "peer-7"}]}`
+  and pass every check.
+- Scoped by RUNTIME rather than by a per-tool exemption list. The exemption is
+  a property of who is looking, not of the tool: the smart-home audit and
+  access-review readers exist to report on principals and must keep doing so,
+  and they simply cannot be registered into an agent surface because
+  `check_registration` refuses a tool that names a peer in its schema. A
+  per-tool list would have to be maintained forever and would drift.
+
 - Add `JsonSchema::validate_supplied_value`, which validates shape and
   additionally refuses an agent identity smuggled through a position no schema
   describes. Tool invocation now validates arguments with it.

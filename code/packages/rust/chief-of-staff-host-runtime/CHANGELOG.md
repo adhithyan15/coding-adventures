@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Mark `HostProfileRuntime`'s inner runtime as a V1 agent surface, so tool
+  outputs are walked for peer identities as well as arguments. A
+  `HostProfileRuntime` IS the agent surface -- that is what
+  `check_registration`'s S-I7 refusal established -- so the scope follows from
+  a fact already encoded rather than from a new flag anyone must remember to
+  set.
+
 - Add `SupervisedOrchestratorRuntime::spawn_deno_from_package`, which reads the
   agent manifest from `package.manifest_bytes()` after verifying the package
   and derives the whole orchestrator profile from it. One package, one

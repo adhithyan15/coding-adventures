@@ -10,6 +10,16 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add `SmartHomeToolBridge::invoke_for_agent`, the model-facing entry point,
+  which enables the D18S S-I7 output walk. `invoke` is unchanged and still
+  serves non-agent callers, including the audit and access-review readers that
+  report on principals by design.
+- Stop returning `requested_by` from `smart_home.pair_bridge` and
+  `smart_home.complete_pairing`. It is typed `AgentId`, and sessions are also
+  created by the HTTP and pairing services under other principals, so a model
+  completing a session it did not start received that principal's identity. The
+  field stays on the supervisor-facing `list_pairing_sessions`.
+
 - Add selected-call invocation for thread-safe authenticated model-tool dispatch
   without moving policy or state out of D18D and the central D23 controller.
 - Replaced the actor-local `Rc<RefCell<SmartHomeRuntime>>` bridge with a

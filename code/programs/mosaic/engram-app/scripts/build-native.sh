@@ -467,7 +467,13 @@ PLIST
       exit 3
     fi
 
-    ( cd "$APP" && dotnet publish -c Release -r win-x64 --self-contained false -o "$APP/publish" )
+    # `-p:Platform=x64` is required, and `-r` does not supply it: the emitted
+    # build.ps1 says so in as many words -- "WindowsAppSDK's self-contained
+    # mode rejects AnyCPU; the csproj's <Platforms> only declares the SET, the
+    # ACTIVE one comes from this arg". Without it MSBuild may resolve AnyCPU
+    # and put the output where the flattening targets do not look.
+    ( cd "$APP" && dotnet publish -c Release -r win-x64 -p:Platform=x64 \
+        --self-contained false -o "$APP/publish" )
 
     # .NET probes beside the executable, so the engine goes into the publish
     # output rather than the project directory.
