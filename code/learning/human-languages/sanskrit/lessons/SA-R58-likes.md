@@ -37,7 +37,7 @@ reviews_of: [SA-C58-mahyam, SA-C58-rocate, SA-C57-icchati, SA-C57-shaknoti]
 <!-- hl-knowledge: introduces=[]; assesses=[SA-FRAME-ROCATE-01, SA-PRON-DATIVE-ME-01] -->
 
 [PAUSE 2s] Say "I like the fruit" in Sanskrit, and name the subject of the
-sentence you just said.
+sentence you said.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[SA-FRAME-ROCATE-01, SA-LEX-ICCHATI-WANT-01, SA-LEX-SHAKNOTI-CAN-01] -->

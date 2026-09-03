@@ -44,30 +44,53 @@ already spells a hand-authored reach-back.
 
 ### Every number re-measured against the merged tree, not derived
 
-    sanskrit R2 misses (5-15, "first real retrieval")   279 -> 122   (-157)
+    sanskrit R2 misses (5-15, "first real retrieval")   302 -> 145   (-157)
     sanskrit R1 misses (1-3)                             81 ->  81   (held)
-    sanskrit R3 misses (20-60)                          347 -> 347   (held)
-    sanskrit R4 misses (80-250)                         301 -> 301   (held)
-    sanskrit reinforcement window misses               1008 -> 851
-    sanskrit atoms taught                               381 -> 381   (held)
-    sanskrit atoms never revisited                       49 ->  47   (improved)
-    sanskrit lessons                                    304 -> 304   (held)
+    sanskrit R3 misses (20-60)                          374 -> 374   (held)
+    sanskrit R4 misses (80-250)                         313 -> 313   (held)
+    sanskrit reinforcement window misses               1070 -> 913
+    sanskrit atoms taught                               406 -> 406   (held)
+    sanskrit atoms never revisited                       46 ->  44   (improved)
+    sanskrit lessons                                    335 -> 335   (held)
     forward prerequisites                                 0 ->   0   (held)
     forward references                                    3 ->   3   (held)
-    corpus R2 misses                                   4782 -> 4625
+    corpus R2 misses                                   4666 -> 4509
     lessons at or over the 300s ceiling (ch18-51)         0 ->   0
     computed seconds, median of ch18-51                 115 -> 120
 
 Chapters 18-50 were the whole tranche and 157 of their judgeable atoms now enter
-R2. What is left in Sanskrit is not this shape: 119 misses in chapters 1-17,
-which mix word, writing, phrase, etymology and practice lessons and need their
-own reading, and a handful of grammar and script atoms inside the tranche range
-that no word lesson can naturally recall. Chapter 51's own atoms are correctly
-not counted — `continuity.ts` skips a window the track is too short to contain.
+R2. Every one of those figures was re-measured after `git merge origin/main`
+brought in chapters 52-61 (#14170) and Telugu's own fix (#14173) — the first
+draft of this section read `279 -> 122` against a 304-lesson track, and both
+ends of that moved when the track grew to 335. The delta did not, because the
+edited range is untouched by the new chapters.
 
-The derivation was falsified before shipping, not just asserted: reverting the
-single lesson `SA-C20-man` and re-measuring put R2 back to 123, with the chapter
-18 atom that lesson retrieves reappearing as the one extra miss.
+What is left in Sanskrit is not this shape: 115 misses split between chapters
+1-17, which mix word, writing, phrase, etymology and practice lessons and need
+their own reading, and the new chapters 52-61, whose grammar and review lessons
+are a different shape again. Chapter 51's five atoms are in that remainder for a
+reason worth naming: they were correctly NOT counted while chapter 51 ended the
+track — `continuity.ts` skips a window a track is too short to contain — and
+became judgeable the moment chapter 52 landed. Chapter 52 has three word
+lessons against chapter 51's five, which puts the reach at distances 3 to 5, and
+the generator refuses to write a line that would not count. They close when a
+uniform chapter follows them.
+
+The derivation was falsified before shipping, not merely asserted: reverting the
+single lesson `SA-C20-man` and re-measuring put R2 back one, with the chapter 18
+atom that lesson retrieves reappearing as the extra miss.
+
+### One unrelated red test, fixed rather than filed
+
+Merging `origin/main` brought the banned-word ceiling (HL10 §7.4) to 1081
+against a pinned 1077 — four new occurrences of `just` and `simply` arrived with
+chapters 52-61 and were red on `main` before this branch touched anything. The
+ceiling's own comment says the fix is the sentence and never the number, so five
+sentences in `SA-C52-ca`, `SA-C52-va`, `SA-C59-bharatiyah`, `SA-C60-danda` and
+`SA-R58-likes` were rewritten: 1081 -> 1076 occurrences across 872 lessons, both
+back under the pin. The pin itself was left at 1077 rather than ratcheted to
+1076; it is a contended counter and lowering it from one branch is how two
+branches end up disagreeing about it.
 
 ## Unreleased — the joining column, the past tense, and the letter ऋ: 126 -> 141 of 164 A1 points
 
