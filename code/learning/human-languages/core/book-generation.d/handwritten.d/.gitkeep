@@ -1,0 +1,8 @@
+This directory is a book-generation owner section and must exist even when it
+holds no records. It holds none: every chapter of every book in this corpus is
+generated from lesson markdown, so there are no hand-written chapters left to
+own. Git cannot track an empty directory, so this file holds it open.
+
+readStrictDirectory() in book-generation-shards.ts filters this filename out of
+the listing. Do not rename it, and delete it only when this section has a real
+record again.

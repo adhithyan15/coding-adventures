@@ -204,6 +204,13 @@ function authoredChapterIdentities(): Set<string> {
 }
 
 describe("the chapter-owned real book-generation ledger", () => {
+  // Section directories may now hold a `.gitkeep`, which holds an EMPTY section
+  // open in git and is filtered out by `readStrictDirectory`. Counting it here
+  // would make every owner total off by one per empty section, so these counts
+  // are taken the same way the reader takes them.
+  const ownerNames = (directory: string, section: string): string[] =>
+    readdirSync(join(directory, section)).filter((name) => name !== ".gitkeep");
+
   it("re-serializes each owner file to its own canonical bytes", () => {
     // What survives from the pinned digest: every owner file on disk must equal
     // the bytes the projector would write for it, so raw formatting drift —
@@ -224,7 +231,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     // Both directions: no owner on disk is left unaccounted for.
     expect(compared).toBe(
       BOOK_GENERATION_SECTION_DIRECTORIES.reduce(
-        (sum, section) => sum + readdirSync(join(directory, section)).length,
+        (sum, section) => sum + ownerNames(directory, section).length,
         1, // _meta.json
       ),
     );
@@ -258,16 +265,20 @@ describe("the chapter-owned real book-generation ledger", () => {
     // matters now — a NEW hand-written chapter appearing — which is the only
     // direction that should ever require a human to think.
     //
-    // When the retirement completes, tighten this ONCE to `toBe(0)`: at that
-    // point it stops being a ratchet and becomes a guarantee.
-    expect(
-      readdirSync(join(directory, "handwritten.d")).length,
-    ).toBeLessThanOrEqual(69);
+    // The retirement is COMPLETE, so this is tightened once, as the paragraph
+    // above always said it would be. It is no longer a ratchet with room in it;
+    // it is the guarantee that every chapter of every book in this corpus is
+    // generated from lesson markdown. The last hand-written chapter was German's
+    // colours, retired as chapters 20 and 21.
+    //
+    // A failure here now means a NEW hand-written chapter has appeared, which is
+    // exactly the direction that should require a human to think.
+    expect(ownerNames(directory, "handwritten.d")).toEqual([]);
     // The total is chapter-scaled, so it is proved against the independently
     // authored `chapters.d` instead.
     expect(
-      readdirSync(join(directory, "targets.d")).length +
-        readdirSync(join(directory, "handwritten.d")).length,
+      ownerNames(directory, "targets.d").length +
+        ownerNames(directory, "handwritten.d").length,
     ).toBe(authoredChapterIdentities().size);
   });
 
@@ -452,6 +463,36 @@ describe("strict owner tree", () => {
     rmSync(section, { recursive: true });
     symlinkSync(join(path, BOOK_GENERATION_DIRECTORY, "handwritten.d"), section);
     expect(() => readBookGenerationOwners(path)).toThrow(/symbolic link|real directory/);
+  });
+
+  // A section directory MUST exist and MAY be empty, and the two claims need
+  // separate tests because the corpus reached the second one and CI found it
+  // before any test did. `handwritten.d` emptied when the last hand-written
+  // chapter in the corpus was generated; git cannot track an empty directory, so
+  // it vanished from the tree and the owner-root check failed on a fresh
+  // checkout while passing on the authoring machine, where `git rm` leaves the
+  // empty directory behind. The empty case was unreachable for as long as any
+  // track had one hand-written chapter, so nothing exercised it.
+  it("accepts a section directory that is empty apart from its placeholder", () => {
+    const path = sandbox();
+    writeOwners(path);
+    const section = join(path, BOOK_GENERATION_DIRECTORY, "handwritten.d");
+    for (const name of readdirSync(section)) rmSync(join(section, name));
+    writeFileSync(join(section, ".gitkeep"), "");
+    expect(readBookGenerationOwners(path).document.handwritten ?? []).toEqual([]);
+  });
+
+  // The other half of the pair, and the reason the fix is a placeholder rather
+  // than "an absent section reads as empty": a genuinely deleted section must
+  // still be loud. Silently reading a missing `targets.d` as zero targets would
+  // produce a book with no generated chapters and no error.
+  it("still rejects a section directory that is absent rather than empty", () => {
+    const path = sandbox();
+    writeOwners(path);
+    rmSync(join(path, BOOK_GENERATION_DIRECTORY, "handwritten.d"), { recursive: true });
+    expect(() => readBookGenerationOwners(path)).toThrow(
+      /missing, legacy, or unexpected entries/,
+    );
   });
 
   it("rejects a resurrected monolith", () => {
