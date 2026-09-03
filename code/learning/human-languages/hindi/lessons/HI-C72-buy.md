@@ -12,7 +12,7 @@ headword: "ख़रीदना"
 gloss: "to buy"
 romanization: "kharīdnā"
 concept_tag: VERB-BUY
-prerequisites: [HI-C72-expensive]
+prerequisites: [HI-C72-expensive, HI-C70-rest, HI-C71-very]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C72-COST-05]
 practises:
-  knowledge: [HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C72-COST-04, HI-LEX-C72-COST-05]
+  knowledge: [HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C72-COST-04, HI-LEX-C72-COST-05, HI-LEX-C70-LEISURE-05, HI-LEX-C71-TODAY-03]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,13 +62,14 @@ Five: पैसा, रुपया, दाम, महँगा, ख़रीद
 what a thing costs.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C72-COST-04, HI-LEX-C72-COST-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C72-COST-04, HI-LEX-C72-COST-05, HI-LEX-C70-LEISURE-05, HI-LEX-C71-TODAY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kharīdnā*]
 - [YOU SAY: *dām kyā hai?*, then *bahut mahãgā*]
 - [YOU WRITE: महँगा from memory, then ख़रीदना beside the printed model]
 - [YOU SAY: all five in order]
+- [YOU RECALL: say *ārām*, then read **बहुत**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-03, HI-LEX-C72-COST-05] -->

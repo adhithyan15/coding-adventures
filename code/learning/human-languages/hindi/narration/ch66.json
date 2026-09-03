@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Field and the Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5d646defe5091b33",
+  "sourceHash": "fnv1a64:59d0401ae152724a",
   "lessons": [
     {
       "id": "HI-C66-seed",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5a164022c348d09",
+      "sourceHash": "fnv1a64:3131a30cfe9dc848",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bīj*, then *khet*, and say which one goes into the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ab, then read मेहरबानी",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ab*, then read **मेहरबानी**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc6e1dae16d68790",
+      "sourceHash": "fnv1a64:d62d958c176a19b6",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *fasal*, then *kisān*, and say who watches the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read जल्दी, then say vintī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **जल्दी**, then say *vintī*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19dd8b6a444abd03",
+      "sourceHash": "fnv1a64:25abacc4e866f562",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *anāj*, then *chāval*, and say which one is the sack]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dhīre, then read अनुमति",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dhīre*, then read **अनुमति**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbbab69b40178230",
+      "sourceHash": "fnv1a64:98fbfd8dab67e8ee",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ghās*, then *bhaĩs*, and say which one is waiting for the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read कम, then say bharosā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **कम**, then say *bharosā*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eba139ee127dc7fd",
+      "sourceHash": "fnv1a64:072bb6b019658d8a",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *phir milenge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zyādā, then read अदब",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zyādā*, then read **अदब**]"
             }
           ]
         },

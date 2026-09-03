@@ -12,7 +12,7 @@ headword: "खुला"
 gloss: "open"
 romanization: "khulā"
 concept_tag: HI-ADJ-OPEN
-prerequisites: [HI-C73-drink, HI-C73-waiter]
+prerequisites: [HI-C73-drink, HI-C73-waiter, HI-C72-money, HI-C73-eating-house]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C74-SIGNS-01]
 practises:
-  knowledge: [HI-LEX-C73-EATING-05, HI-LEX-C74-SIGNS-01, HI-LEX-C73-EATING-04]
+  knowledge: [HI-LEX-C73-EATING-05, HI-LEX-C74-SIGNS-01, HI-LEX-C73-EATING-04, HI-LEX-C72-COST-01, HI-LEX-C73-EATING-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -61,13 +61,14 @@ The ु under the ख is the short *u* matra, hanging below.
 The first of five words you read rather than say.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C73-EATING-04, HI-LEX-C73-EATING-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C73-EATING-04, HI-LEX-C73-EATING-05, HI-LEX-C72-COST-01, HI-LEX-C73-EATING-01] -->
 
 [PAUSE 1s]
 - [YOU RECALL: say *veṭar*, then read **पीना** and say what it means]
 - [YOU READ: खुला, as though it were painted on a shutter]
 - [YOU SAY: *khulā*]
 - [YOU SAY: *khulā paisā*]
+- [YOU RECALL: say *paisā*, then read **होटल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01] -->

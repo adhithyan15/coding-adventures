@@ -12,7 +12,7 @@ headword: "मेहमान"
 gloss: "a guest"
 romanization: "mehmān"
 concept_tag: HI-NOUN-GUEST
-prerequisites: [HI-C47-farmer]
+prerequisites: [HI-C47-farmer, HI-C45-salt, HI-C46-nose]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C47-ROLE-04]
 practises:
-  knowledge: [HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04]
+  knowledge: [HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04, HI-LEX-C45-ASK-04, HI-LEX-C46-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The inherited word is *atithi*, and it is built out of a small argument: *a-tith
 Four, and this one arrives at your door.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04, HI-LEX-C45-ASK-04, HI-LEX-C46-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mehmān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mehmān*, then *kisān*, so the visitor and the host sit together]
+- [YOU RECALL: read **नमक**, then say *nāk*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04] -->

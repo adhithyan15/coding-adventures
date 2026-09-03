@@ -12,7 +12,7 @@ headword: "दाम"
 gloss: "a price"
 romanization: "dām"
 concept_tag: HI-NOUN-PRICE
-prerequisites: [HI-C72-rupee, HI-C02-kya]
+prerequisites: [HI-C72-rupee, HI-C02-kya, HI-C70-cricket, HI-C71-today]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C72-COST-03]
 practises:
-  knowledge: [HI-CONCEPT-C02-KYA-01, HI-LEX-C72-COST-02, HI-LEX-C72-COST-03]
+  knowledge: [HI-CONCEPT-C02-KYA-01, HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C70-LEISURE-03, HI-LEX-C71-TODAY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -66,12 +66,13 @@ something.
 Three: पैसा, रुपया, दाम — and a question you can ask with the third.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-KYA-01, HI-LEX-C72-COST-02, HI-LEX-C72-COST-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-KYA-01, HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C70-LEISURE-03, HI-LEX-C71-TODAY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dām*]
 - [YOU SAY: *dām kyā hai?*]
 - [YOU SAY: it again, pointing at something in the room]
+- [YOU RECALL: say *krikeṭ*, then read **आज**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-KYA-01, HI-LEX-C72-COST-03] -->

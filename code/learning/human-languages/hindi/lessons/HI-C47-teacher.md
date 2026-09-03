@@ -12,7 +12,7 @@ headword: "शिक्षक"
 gloss: "a teacher"
 romanization: "śikṣak"
 concept_tag: HI-NOUN-TEACHER
-prerequisites: [HI-C46-throat]
+prerequisites: [HI-C46-throat, HI-C45-fruit, HI-C46-hair]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C47-ROLE-01]
 practises:
-  knowledge: [HI-LEX-C46-BODY-04, HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01]
+  knowledge: [HI-LEX-C46-BODY-04, HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01, HI-LEX-C45-ASK-01, HI-LEX-C46-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Everyday speech reaches for *ustād* or *guru* depending on what is being taught
 The first of five words for who someone is.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-04, HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-04, HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01, HI-LEX-C45-ASK-01, HI-LEX-C46-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śikṣak*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śikṣak*, then *galā*, so the teacher and the voice sit together]
+- [YOU RECALL: say *phal*, then read **बाल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-04, HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01] -->

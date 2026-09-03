@@ -12,7 +12,7 @@ headword: "चावल"
 gloss: "rice"
 romanization: "chāval"
 concept_tag: HI-NOUN-RICE
-prerequisites: [HI-C51-sweet]
+prerequisites: [HI-C51-sweet, HI-C50-gratitude, HI-C51-flower]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C52-KITCHEN-01]
 practises:
-  knowledge: [HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01]
+  knowledge: [HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01, HI-LEX-C50-COURTESY-01, HI-LEX-C51-WELCOME-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That makes it the fourth everyday Hindi word you have met whose origin is honest
 The first of five things a kitchen is stocked with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01, HI-LEX-C50-COURTESY-01, HI-LEX-C51-WELCOME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chāval*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chāval*, the grain the rest of the meal is served over]
+- [YOU RECALL: say *ābhār*, then read **फूल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01] -->

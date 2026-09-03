@@ -12,7 +12,7 @@ headword: "बीज"
 gloss: "a seed"
 romanization: "bīj"
 concept_tag: HI-NOUN-SEED
-prerequisites: [HI-C65-manners]
+prerequisites: [HI-C65-manners, HI-C64-now, HI-C65-kindness]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C66-FIELD-01]
 practises:
-  knowledge: [HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01]
+  knowledge: [HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01, HI-LEX-C64-MEASURE-01, HI-LEX-C65-GRACE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It reaches well past the field. बीज is the seed of a plant, the germ of an
 The first of five things a field holds.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01, HI-LEX-C64-MEASURE-01, HI-LEX-C65-GRACE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bīj*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bīj*, then *khet*, and say which one goes into the other]
+- [YOU RECALL: say *ab*, then read **मेहरबानी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01] -->

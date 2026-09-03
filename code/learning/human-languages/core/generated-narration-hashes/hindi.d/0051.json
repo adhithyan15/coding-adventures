@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 51,
-  "sourceHash": "fnv1a64:ea961c177506a0aa",
+  "sourceHash": "fnv1a64:d339c92531248b67",
   "lessonIds": [
     "HI-C51-flower",
     "HI-C51-garland",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch51.txt",
   "json": "hindi/narration/ch51.json",
-  "textHash": "fnv1a64:913e09d42235b894",
-  "jsonHash": "fnv1a64:edb99b6532c5853c",
+  "textHash": "fnv1a64:c351379e8126e60c",
+  "jsonHash": "fnv1a64:fa6540baa4a1cb6f",
   "findings": []
 }

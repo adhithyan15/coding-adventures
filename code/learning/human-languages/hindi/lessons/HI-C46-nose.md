@@ -12,7 +12,7 @@ headword: "नाक"
 gloss: "a nose"
 romanization: "nāk"
 concept_tag: HI-NOUN-NOSE
-prerequisites: [HI-C46-ear]
+prerequisites: [HI-C46-ear, HI-C44-people, HI-C45-salt]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C46-BODY-04]
 practises:
-  knowledge: [HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03, HI-LEX-C46-BODY-04]
+  knowledge: [HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03, HI-LEX-C46-BODY-04, HI-LEX-PEOPLE, HI-LEX-C45-ASK-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Hindi puts the nose where English puts the face: to have your नाक cut is t
 Four, and the last one is on the inside.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03, HI-LEX-C46-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03, HI-LEX-C46-BODY-04, HI-LEX-PEOPLE, HI-LEX-C45-ASK-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nāk*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nāk*, then *kān*, so the two openings of the head sit together]
+- [YOU RECALL: read **लोग**, then say *namak*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03, HI-LEX-C46-BODY-04] -->

@@ -12,7 +12,7 @@ headword: "शायद"
 gloss: "perhaps"
 romanization: "śāyad"
 concept_tag: HI-WORD-PERHAPS
-prerequisites: [HI-C48-certainly]
+prerequisites: [HI-C48-certainly, HI-C46-nose, HI-C47-guest]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C48-REPLY-04]
 practises:
-  knowledge: [HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04]
+  knowledge: [HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04, HI-LEX-C46-BODY-04, HI-LEX-C47-ROLE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The inherited alternative is *sambhavataḥ*, four syllables of Sanskrit that be
 Four, and this one takes a step back.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04, HI-LEX-C46-BODY-04, HI-LEX-C47-ROLE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śāyad*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śāyad*, then *zarūr*, the two ends of how sure you are]
+- [YOU RECALL: read **नाक**, then say *mehmān*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04] -->

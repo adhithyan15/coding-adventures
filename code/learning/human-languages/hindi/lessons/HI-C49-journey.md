@@ -12,7 +12,7 @@ headword: "सफ़र"
 gloss: "a journey"
 romanization: "safar"
 concept_tag: HI-NOUN-JOURNEY
-prerequisites: [HI-C49-day-after]
+prerequisites: [HI-C49-day-after, HI-C47-farmer, HI-C48-certainly]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C49-LEAVE-03]
 practises:
-  knowledge: [HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03]
+  knowledge: [HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C47-ROLE-03, HI-LEX-C48-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The inherited word is *yātrā*, from the Sanskrit root *yā-*, 'to go', and it 
 Three: right now, the far day, a journey.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C47-ROLE-03, HI-LEX-C48-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *safar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *safar*, then *parsoṁ*, then *abhī*, back down the run]
+- [YOU RECALL: say *kisān*, then read **ज़रूर**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03] -->

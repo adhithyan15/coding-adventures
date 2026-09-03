@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 62,
-  "sourceHash": "fnv1a64:91980025364c4b75",
+  "sourceHash": "fnv1a64:e801e13392465bb5",
   "lessonIds": [
     "HI-C62-rope",
     "HI-C62-needle",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch62.txt",
   "json": "hindi/narration/ch62.json",
-  "textHash": "fnv1a64:8b11d09b6ee9ee81",
-  "jsonHash": "fnv1a64:2dcdbc7f1c104f7d",
+  "textHash": "fnv1a64:3247da0228f45df2",
+  "jsonHash": "fnv1a64:9e554403e4c81533",
   "findings": []
 }

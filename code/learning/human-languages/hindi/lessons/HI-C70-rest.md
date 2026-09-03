@@ -12,7 +12,7 @@ headword: "आराम"
 gloss: "rest, ease"
 romanization: "ārām"
 concept_tag: HI-NOUN-REST
-prerequisites: [HI-C70-song]
+prerequisites: [HI-C70-song, HI-C68-english, HI-C69-go]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C70-LEISURE-05]
 practises:
-  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03, HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05]
+  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03, HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05, HI-LEX-C68-ORIGIN-05, HI-LEX-C69-GOING-05]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -61,13 +61,14 @@ Five: खेल, खेलना, क्रिकेट, गाना, आरा
 lets go of you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03, HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03, HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05, HI-LEX-C68-ORIGIN-05, HI-LEX-C69-GOING-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ārām*]
 - [YOU SAY: *ārām karnā*]
 - [YOU WRITE: गाना and then आराम, both from memory]
 - [YOU SAY: all five in order]
+- [YOU RECALL: say *angrezī*, then read **जाना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05] -->

@@ -12,7 +12,7 @@ headword: "तारा"
 gloss: "a star"
 romanization: "tārā"
 concept_tag: HI-NOUN-STAR
-prerequisites: [HI-C55-moon]
+prerequisites: [HI-C55-moon, HI-C53-forehead, HI-C54-fish]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C55-SKY-03]
 practises:
-  knowledge: [HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03]
+  knowledge: [HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C53-BODY-03, HI-LEX-C54-ANIMAL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ So the three biggest things in the sky are, in Hindi, three separate PIE inherit
 The third of five, and the third clean cousin in a row.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C53-BODY-03, HI-LEX-C54-ANIMAL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tārā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tārā*, and hear *star* in it]
+- [YOU RECALL: say *māthā*, then say *machhlī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03] -->

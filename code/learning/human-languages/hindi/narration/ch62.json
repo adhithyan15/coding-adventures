@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "What Hands Work With",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:91980025364c4b75",
+  "sourceHash": "fnv1a64:e801e13392465bb5",
   "lessons": [
     {
       "id": "HI-C62-rope",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd54a89fe3efb478",
+      "sourceHash": "fnv1a64:d2440e69db8efb5b",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *rassī*, then *sūraj*, and say what the old word held in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bandar, then read बर्तन",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bandar*, then read **बर्तन**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12eb89fdb53855d7",
+      "sourceHash": "fnv1a64:7145db4a00a44df2",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sūī*, then *kapṛā*, and say which one goes through the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read साँप, then say chammach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **साँप**, then say *chammach*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1265bd917167eb8",
+      "sourceHash": "fnv1a64:4edd4c7fb0a063d6",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ṭokrī*, then *sabzī* in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say murgī, then read गिलास",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *murgī*, then read **गिलास**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53b615b51831b323",
+      "sourceHash": "fnv1a64:bd75288b273e1825",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *miṭṭī*, then *dīyā*, and say which one the other is made of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read भैंस, then say tavā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **भैंस**, then say *tavā*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db87dd356d0a7f10",
+      "sourceHash": "fnv1a64:04eea174c29d7801",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *merā nām* and your own name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mor, then read चूल्हा",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mor*, then read **चूल्हा**]"
             }
           ]
         },

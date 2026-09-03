@@ -12,7 +12,7 @@ headword: "फूल"
 gloss: "a flower"
 romanization: "phūl"
 concept_tag: HI-NOUN-FLOWER
-prerequisites: [HI-C50-salutation]
+prerequisites: [HI-C50-salutation, HI-C49-now, HI-C50-gratitude]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C51-WELCOME-01]
 practises:
-  knowledge: [HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01]
+  knowledge: [HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01, HI-LEX-C49-LEAVE-01, HI-LEX-C50-COURTESY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The double *ll* collapsed and paid for itself by lengthening the vowel in front 
 The first of five things at a welcome.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01, HI-LEX-C49-LEAVE-01, HI-LEX-C50-COURTESY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *phūl*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *phūl*, then *praṇām*, the flower and the bow at the door]
+- [YOU RECALL: say *abhī*, then say *ābhār*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01] -->

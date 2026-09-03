@@ -12,7 +12,7 @@ headword: "कपड़ा"
 gloss: "cloth"
 romanization: "kapṛā"
 concept_tag: HI-NOUN-CLOTH
-prerequisites: [HI-C45-fruit]
+prerequisites: [HI-C45-fruit, HI-C43-listen, HI-C44-son]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C45-ASK-02]
 practises:
-  knowledge: [HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02]
+  knowledge: [HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-LISTEN, HI-LEX-SON]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Beside it Hindi keeps *vastra*, lifted from Sanskrit untouched, which turns up o
 Two: a fruit and a cloth.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-LISTEN, HI-LEX-SON] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kapṛā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *phal*, then *kapṛā*, and ask for each with *kṛpayā* in front]
+- [YOU RECALL: read **सुनना**, then say *beṭā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02] -->

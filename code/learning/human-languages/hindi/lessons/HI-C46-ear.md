@@ -12,7 +12,7 @@ headword: "कान"
 gloss: "an ear"
 romanization: "kān"
 concept_tag: HI-NOUN-EAR
-prerequisites: [HI-C46-finger]
+prerequisites: [HI-C46-finger, HI-C44-family, HI-C45-lamp]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C46-BODY-03]
 practises:
-  knowledge: [HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03]
+  knowledge: [HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03, HI-LEX-FAMILY, HI-LEX-C45-ASK-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The same collapse is what turned *suvarṇa*, 'good colour', into *sonā*, gold.
 Three: hair, a finger, an ear.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03, HI-LEX-FAMILY, HI-LEX-C45-ASK-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kān*, then *uṅglī*, then *bāl*, back down the run]
+- [YOU RECALL: say *parivār*, then read **दीया**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03] -->

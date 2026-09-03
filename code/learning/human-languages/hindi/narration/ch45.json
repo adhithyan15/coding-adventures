@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:82505a42ca050c03",
+  "sourceHash": "fnv1a64:575971086d2d9c42",
   "lessons": [
     {
       "id": "HI-C45-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0414282e1bc675ad",
+      "sourceHash": "fnv1a64:bd6a8627dd244662",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *phal*, then *log*, so the new one sits beside the last one you learned]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dekhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dekhnā*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7da9243b0275f59c",
+      "sourceHash": "fnv1a64:f484e05b6fda5833",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *phal*, then *kapṛā*, and ask for each with *kṛpayā* in front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read सुनना, then say beṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **सुनना**, then say *beṭā*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc9af47cee0a1342",
+      "sourceHash": "fnv1a64:8420cfb41fec0c79",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dīyā*, then *kapṛā*, so the two objects sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bolnā, then read बेटी",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bolnā*, then read **बेटी**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a40554b0faed7d3d",
+      "sourceHash": "fnv1a64:0f24d8c5f5195ffe",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *namak*, then *dīyā*, then *kapṛā*, backwards down the run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read लिखना, then say parivār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **लिखना**, then say *parivār*]"
             }
           ]
         },

@@ -12,7 +12,7 @@ headword: "उँगली"
 gloss: "a finger"
 romanization: "uṅglī"
 concept_tag: HI-NOUN-FINGER
-prerequisites: [HI-C46-hair]
+prerequisites: [HI-C46-hair, HI-C44-daughter, HI-C45-cloth]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C46-BODY-02]
 practises:
-  knowledge: [HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02]
+  knowledge: [HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-DAUGHTER, HI-LEX-C45-ASK-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The mark above the line here is doing the work the *ṅ* used to do. The nasal c
 Two of five.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-DAUGHTER, HI-LEX-C45-ASK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uṅglī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uṅglī*, then *bāl*, and touch each as you name it]
+- [YOU RECALL: read **बेटी**, then say *kapṛā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02] -->

@@ -12,7 +12,7 @@ headword: … या …
 romanization: "… yā …"
 gloss: or — two letters you already own, and the word every offered choice is made of
 concept_tag: HI-JOIN-YA
-prerequisites: [HI-C68-aur, HI-C02-kya]
+prerequisites: [HI-C68-aur, HI-C02-kya, HI-C66-grain, HI-C66-grass]
 sounds: [semivowel-ya, matra-aa]
 roots: []
 etymology_hook: "या is Sanskrit वा (vā), the inherited Indo-European particle of alternatives, with the v- softened to y- as Prakrit softened many an initial v-; the same वा is Latin's -ve in sīve and it is still visible in Marathi's किंवा, which is किम् + वा — so Hindi and Marathi are using the same ancient particle, one of them bare and one of them compounded"
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [HI-JOIN-YA-01]
 practises:
-  knowledge: [HI-JOIN-YA-01, HI-CONCEPT-C02-KYA-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-JOIN-AUR-01]
+  knowledge: [HI-JOIN-YA-01, HI-CONCEPT-C02-KYA-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-JOIN-AUR-01, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,7 +65,7 @@ host asks and how an examiner's role-play begins.
 *vā*, "what-or." One old word, three descendants.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-YA-01, HI-JOIN-AUR-01, HI-CONCEPT-C02-KYA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-YA-01, HI-JOIN-AUR-01, HI-CONCEPT-C02-KYA-01, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04] -->
 
 <!-- hl-activity: {"id":"HI-C68-ya-r1","kind":"text","assesses":["HI-JOIN-YA-01","HI-JOIN-AUR-01"],"prompt":"Offer a guest a choice between tea and milk, then offer them both.","answer":"chāy yā dūdh? — chāy aur dūdh","accepted":["चाय या दूध?","chay ya dudh, chay aur dudh"],"feedback":{"correct":"One slot, two opposite jobs.","incorrect":"yā offers the choice; aur hands over both."},"response_seconds":25} -->
 
@@ -73,6 +73,7 @@ host asks and how an examiner's role-play begins.
 - [YOU SAY: *chāy yā dūdh?*]
 - [YOU SAY: the same pair with *aur*, and hear the offer become a list]
 - [YOU SAY: which of the two you can also WRITE today — **या**]
+- [YOU RECALL: read **अनाज**, then say *ghās*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-YA-01, HI-JOIN-AUR-01] -->

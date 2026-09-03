@@ -12,7 +12,7 @@ headword: "आभार"
 gloss: "gratitude"
 romanization: "ābhār"
 concept_tag: HI-NOUN-GRATITUDE
-prerequisites: [HI-C49-meeting]
+prerequisites: [HI-C49-meeting, HI-C48-true, HI-C49-now]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C50-COURTESY-01]
 practises:
-  knowledge: [HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01]
+  knowledge: [HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01, HI-LEX-C48-REPLY-01, HI-LEX-C49-LEAVE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It stands above धन्यवाद in formality, and well above शुक्�
 The first of five courtesy words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01, HI-LEX-C48-REPLY-01, HI-LEX-C49-LEAVE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ābhār*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ābhār*, then *mulāqāt*, the thanks and the meeting it ends]
+- [YOU RECALL: say *sac*, then say *abhī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01] -->

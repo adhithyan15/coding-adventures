@@ -12,7 +12,7 @@ headword: "टोकरी"
 gloss: "a basket"
 romanization: "ṭokrī"
 concept_tag: HI-NOUN-BASKET
-prerequisites: [HI-C62-needle]
+prerequisites: [HI-C62-needle, HI-C60-hen, HI-C61-tumbler]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C62-HANDS-03]
 practises:
-  knowledge: [HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03]
+  knowledge: [HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C60-YARD-03, HI-LEX-C61-FIRE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ A टोकरी is woven, usually from split cane or from the ribs of a leaf, 
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C60-YARD-03, HI-LEX-C61-FIRE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ṭokrī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ṭokrī*, then *sabzī* in it]
+- [YOU RECALL: say *murgī*, then read **गिलास**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03] -->

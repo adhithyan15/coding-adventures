@@ -12,7 +12,7 @@ headword: "नया"
 gloss: "new"
 romanization: "nayā"
 concept_tag: HI-ADJ-NEW
-prerequisites: [HI-C41-good]
+prerequisites: [HI-C41-good, HI-C39-aurat, HI-C40-who]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C41-ADJ-04]
 practises:
-  knowledge: [HI-LEX-C41-ADJ-02, HI-LEX-C41-ADJ-03, HI-LEX-C41-ADJ-04]
+  knowledge: [HI-LEX-C41-ADJ-02, HI-LEX-C41-ADJ-03, HI-LEX-C41-ADJ-04, HI-CONCEPT-C39-AURAT-01, HI-CONCEPT-C39-AURAT-02, HI-CONCEPT-C39-AURAT-03, HI-LEX-C40-DEIXIS-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,11 +52,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-04, HI-CONCEPT-C39-AURAT-01, HI-CONCEPT-C39-AURAT-02, HI-CONCEPT-C39-AURAT-03, HI-LEX-C40-DEIXIS-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: "नया" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *aurat / mahilā / strī*, then say *kaun*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-04] -->

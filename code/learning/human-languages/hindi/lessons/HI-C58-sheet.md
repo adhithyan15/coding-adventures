@@ -12,7 +12,7 @@ headword: "चादर"
 gloss: "a sheet"
 romanization: "chādar"
 concept_tag: HI-NOUN-SHEET
-prerequisites: [HI-C58-stairs]
+prerequisites: [HI-C58-stairs, HI-C56-field, HI-C57-sweetness]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C58-HOUSE-05]
 practises:
-  knowledge: [HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04, HI-LEX-C58-HOUSE-05]
+  knowledge: [HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04, HI-LEX-C58-HOUSE-05, HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ So it ends the chapter the way दीवार began it: a Persian word for a pl
 The fifth of five. That is the house, wall to roof.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04, HI-LEX-C58-HOUSE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04, HI-LEX-C58-HOUSE-05, HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chādar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chādar*, *sīṛhī*, *khiṛkī*, *chat*, *dīvār* — name the house]
+- [YOU RECALL: say *khet*, then read **मिठास**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04, HI-LEX-C58-HOUSE-05] -->

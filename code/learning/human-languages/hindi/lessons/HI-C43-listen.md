@@ -12,7 +12,7 @@ headword: "सुनना"
 gloss: "to listen, to hear"
 romanization: "sunnā"
 concept_tag: HI-VERB-LISTEN
-prerequisites: [HI-C43-look]
+prerequisites: [HI-C43-look, HI-C41-good]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-LISTEN]
 practises:
-  knowledge: [HI-LEX-LOOK, HI-LEX-LISTEN]
+  knowledge: [HI-LEX-LOOK, HI-LEX-LISTEN, HI-LEX-C41-ADJ-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ Hindi does not separate listening from hearing; context does the work that a sec
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK, HI-LEX-LISTEN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK, HI-LEX-LISTEN, HI-LEX-C41-ADJ-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sunnā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *dekhnā*, so the two sit together]
+- [YOU RECALL: say *acchā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK, HI-LEX-LISTEN] -->
