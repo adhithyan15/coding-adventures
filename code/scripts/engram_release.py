@@ -508,6 +508,121 @@ def qt_artifact_name(version: str, platform: str) -> str:
     return f"engram-qt-{platform}-v{version}.{QT_TARGETS[platform]}"
 
 
+# The XAML / WinUI 3 backend. Windows only, and not as a scoping decision:
+# WinUI's markup compiler is a Windows-native tool, so `dotnet` restores and
+# type-checks elsewhere and then stops. There is nowhere else for this to run.
+#
+# NOT YET IN `artifact_names`, and deliberately so. `--backend xaml --build`
+# cannot currently compile this package at all: the emitter writes an event
+# type for BOTH layout variants into one namespace, and C# rejects the
+# duplicate (#14230). A `build-xaml` job that cannot pass would sit in the
+# publish job's `needs` and block every release, so the archiver below is
+# finished and tested but unwired. Adding the payload here and the job to the
+# workflow is the whole remaining step once #14230 lands.
+XAML_TARGETS = {"windows": "zip"}
+
+
+# The number of `eg_*` exports a real engine DLL carries. The same floor
+# `build-native.sh` applies on Linux and macOS -- and the reason this exists is
+# that the shell check has no Windows arm at all: its `case "$(uname -s)"` falls
+# through to `*) EXPORTS="unknown"`, so on the ONE platform where nobody can
+# launch the payload by hand, the engine's contract was never verified.
+MIN_EXPORTED_ENGINE_SYMBOLS = 20
+
+
+def pe_exported_names(binary: bytes) -> list[str]:
+    """The names a PE image exports.
+
+    Parsed from the export directory rather than trusted from the filename,
+    because `MZ` is not a discriminator: every PE starts with it, including
+    the app's own managed assembly. Copying `EngramApp.dll` over
+    `engram_capi.dll` passed every check this lane had -- an app that launches
+    into a UI where nothing works, on the platform with no local verification.
+
+    Returns an empty list for a PE with no export directory, which is the
+    normal shape of a managed assembly or an apphost.
+    """
+
+    if len(binary) < 0x40 or binary[:2] != b"MZ":
+        raise ValueError("not a PE image")
+    pe_offset = struct.unpack_from("<I", binary, 0x3C)[0]
+    if pe_offset + 24 > len(binary) or binary[pe_offset : pe_offset + 4] != b"PE\x00\x00":
+        raise ValueError("missing PE signature")
+
+    number_of_sections = struct.unpack_from("<H", binary, pe_offset + 6)[0]
+    optional_size = struct.unpack_from("<H", binary, pe_offset + 20)[0]
+    optional = pe_offset + 24
+    if optional + 2 > len(binary):
+        raise ValueError("truncated optional header")
+    magic = struct.unpack_from("<H", binary, optional)[0]
+    if magic == 0x20B:  # PE32+
+        directories = optional + 112
+    elif magic == 0x10B:  # PE32
+        directories = optional + 96
+    else:
+        raise ValueError(f"unknown optional header magic {magic:#x}")
+    if directories + 8 > len(binary) or optional_size < (directories - optional) + 8:
+        return []
+
+    export_rva, export_size = struct.unpack_from("<II", binary, directories)
+    if export_rva == 0 or export_size == 0:
+        return []
+
+    sections = []
+    section_table = optional + optional_size
+    for index in range(min(number_of_sections, 96)):
+        entry = section_table + index * 40
+        if entry + 40 > len(binary):
+            break
+        virtual_address, raw_size, raw_pointer = struct.unpack_from(
+            "<III", binary, entry + 12
+        )
+        sections.append((virtual_address, raw_size, raw_pointer))
+
+    def to_offset(rva: int) -> int | None:
+        for virtual_address, raw_size, raw_pointer in sections:
+            if virtual_address <= rva < virtual_address + raw_size:
+                return raw_pointer + (rva - virtual_address)
+        return None
+
+    table = to_offset(export_rva)
+    if table is None or table + 40 > len(binary):
+        return []
+    # IMAGE_EXPORT_DIRECTORY: NumberOfNames at +24, AddressOfNames at +32.
+    # Reading +28 gets AddressOfFunctions -- an array of CODE addresses -- and
+    # the "names" come back as disassembly. Caught only by running this against
+    # real exporting DLLs; a fixture built from the same wrong layout would
+    # have agreed with the parser exactly.
+    name_count = struct.unpack_from("<I", binary, table + 24)[0]
+    names_rva = struct.unpack_from("<I", binary, table + 32)[0]
+    names_offset = to_offset(names_rva)
+    if names_offset is None:
+        return []
+
+    names: list[str] = []
+    for index in range(min(name_count, 65536)):
+        entry = names_offset + index * 4
+        if entry + 4 > len(binary):
+            break
+        name_rva = struct.unpack_from("<I", binary, entry)[0]
+        start = to_offset(name_rva)
+        if start is None:
+            continue
+        end = binary.find(b"\x00", start)
+        if end > start:
+            names.append(binary[start:end].decode("utf-8", "replace"))
+    return names
+
+
+def xaml_artifact_name(version: str, platform: str) -> str:
+    """The published name for the XAML build."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}")
+    if platform not in XAML_TARGETS:
+        raise ValueError(f"unknown XAML platform: {platform}")
+    return f"engram-xaml-{platform}-v{version}.{XAML_TARGETS[platform]}"
+
+
 def artifact_names(version: str) -> list[str]:
     """Every payload this release publishes.
 
@@ -1480,6 +1595,132 @@ def _cmd_archive_qt(args: argparse.Namespace) -> int:
     return 0
 
 
+def archive_xaml(
+    version: str, platform: str, source: Path, output_dir: Path, commit: str
+) -> Path:
+    """Archive the XAML / WinUI publish output for publication.
+
+    `dotnet publish` writes a plain directory rather than a bundle, and .NET
+    probes for native libraries BESIDE the executable -- so the engine belongs
+    at the root of that directory, which is also where `build-native.sh` puts
+    it. Checked again here because packaging is a second chance to lose it, and
+    the Compose backend lost it exactly that way once.
+
+    Note on verification: this is the one backend that cannot be built or run
+    on a developer machine that is not Windows, so unlike the other four the
+    payload was never launched by hand before shipping. The checks below are
+    correspondingly structural, and the CI job asserts the same things against
+    the real publish output.
+    """
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if platform not in XAML_TARGETS:
+        raise ValueError(f"unknown XAML platform: {platform}")
+    if not source.is_dir():
+        raise ValueError(f"XAML publish output does not exist: {source}")
+
+    # The apphost is identified by NAME, derived from the managed assembly that
+    # has a matching runtimeconfig -- not by "some file ends in .exe". Any
+    # `.exe` satisfied the earlier check, so a publish output with the apphost
+    # missing and only `createdump.exe` present shipped a zip with nothing
+    # launchable in it, which is exactly the shape `UseAppHost=false` produces.
+    stems = [
+        path.stem
+        for path in sorted(source.glob("*.runtimeconfig.json"))
+        if (source / f"{path.stem.removesuffix('.runtimeconfig')}.dll").is_file()
+    ]
+    stems = [stem.removesuffix(".runtimeconfig") for stem in stems]
+    if not stems:
+        raise ValueError(
+            f"no managed assembly with a matching runtimeconfig.json at the "
+            f"root of {source}; the apphost would fail to start"
+        )
+    stem = stems[0]
+
+    apphost = source / f"{stem}.exe"
+    if not apphost.is_file() or apphost.read_bytes()[:2] != b"MZ":
+        raise ValueError(
+            f"the publish output has no {stem}.exe apphost at its root; "
+            f"nothing in the payload would be launchable"
+        )
+    for required in (f"{stem}.deps.json", f"{stem}.runtimeconfig.json"):
+        if not (source / required).is_file():
+            raise ValueError(
+                f"the publish output is missing {required}, which the apphost "
+                f"treats as a fatal startup error"
+            )
+
+    engine = _find_engine(source, "windows")
+    if engine is None:
+        raise ValueError(
+            f"the XAML publish output has no engram_capi.dll beside its "
+            f"executable; .NET probes there, so the app would launch with "
+            f"every deck operation silently unavailable: {source}"
+        )
+
+    # The engine's CONTRACT, not just a file with the right name. `MZ` is not a
+    # discriminator -- every PE starts with it, including this app's own
+    # managed assembly -- so copying `EngramApp.dll` over `engram_capi.dll`
+    # passed every check this lane had. `build-native.sh` gates the other
+    # platforms on `nm | grep -c eg_`, but its `case "$(uname -s)"` has no
+    # Windows arm and falls through to "unknown", so on the ONE platform where
+    # nobody can launch the payload by hand, nothing verified the engine at all.
+    exported = [name for name in pe_exported_names(engine.read_bytes()) if name.startswith("eg_")]
+    if len(exported) < MIN_EXPORTED_ENGINE_SYMBOLS:
+        raise ValueError(
+            f"{engine.name} exports only {len(exported)} eg_* symbols; the host "
+            f"resolves ~40, and a library that exists but exports nothing "
+            f"produces the same silent, feature-free app as no library at all"
+        )
+
+    # `FlattenNativeRuntimeDlls` copies the WindowsAppSDK natives out of
+    # `runtimes/win-x64/native/` and beside the executable, because the
+    # unpackaged bootstrap looks for them there. That target runs
+    # `AfterTargets="Build"` into `$(OutDir)`, and this lane archives
+    # `$(PublishDir)` -- a different directory. The csproj guards its `.pri`
+    # and `.xbf` against exactly this and never guarded the natives.
+    natives = source / "runtimes" / "win-x64" / "native"
+    if natives.is_dir():
+        missing = sorted(
+            path.name
+            for path in natives.glob("*.dll")
+            if not (source / path.name).is_file()
+        )
+        if missing:
+            raise ValueError(
+                f"{len(missing)} native runtime librar(ies) are only under "
+                f"runtimes/win-x64/native and not beside the executable, where "
+                f"the unpackaged bootstrap looks: {', '.join(missing[:5])}"
+            )
+
+    name = xaml_artifact_name(version, platform)
+    output = output_dir / name
+    with tempfile.TemporaryDirectory() as staging:
+        _reject_hard_links(source)
+        # Named for the app, not `publish` -- the directory name is what a
+        # downloader sees after extracting, and every other backend nests
+        # something meaningful there.
+        staged = Path(staging) / "Engram"
+        shutil.copytree(source, staged, symlinks=True)
+        _reject_links_out_of(staged)
+        if _find_engine(staged, "windows") is None:
+            raise ValueError("the staged publish output lost its engine")
+        _zip_tree(Path(staging), output, f"engram-xaml-{platform}-v{version}", commit)
+    return output
+
+
+def _cmd_archive_xaml(args: argparse.Namespace) -> int:
+    output = archive_xaml(
+        args.version,
+        args.platform,
+        Path(args.source),
+        Path(args.output_dir),
+        args.commit,
+    )
+    print(output)
+    return 0
+
+
 def _cmd_validate(args: argparse.Namespace) -> int:
     validate_identifiers(args.version, args.tag, args.commit)
     print(f"version={args.version}")
@@ -1530,6 +1771,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     names.add_argument("--version", required=True)
     names.set_defaults(handler=_cmd_artifact_names)
+
+    archive_xaml_cmd = subcommands.add_parser(
+        "archive-xaml", help="Archive the XAML publish output for publication"
+    )
+    archive_xaml_cmd.add_argument("--version", required=True)
+    archive_xaml_cmd.add_argument("--platform", required=True)
+    archive_xaml_cmd.add_argument("--source", required=True)
+    archive_xaml_cmd.add_argument("--output-dir", required=True)
+    archive_xaml_cmd.add_argument("--commit", required=True)
+    archive_xaml_cmd.set_defaults(handler=_cmd_archive_xaml)
 
     archive_qt_cmd = subcommands.add_parser(
         "archive-qt", help="Archive the Qt .app bundle for publication"
