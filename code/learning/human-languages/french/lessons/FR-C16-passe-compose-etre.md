@@ -1,17 +1,17 @@
 ---
 id: FR-C16-passe-compose-etre
-sequence: 570
+sequence: 630
 chapter: 19
 type: phrase
 headword: je suis allé(e)
 gloss: the compound past with être and subject agreement
 concept_tag: FR-PAST-COMPOUND-ETRE
-prerequisites: [FR-C16-etre-roots, FR-C15-passe-compose, FR-C03-aller]
+prerequisites: [FR-C16-etre-roots, FR-C15-practice, FR-C03-aller]
 sounds: [silent-agreement, nasal-on]
 roots: [latin-esse-participle]
 etymology_hook: "elle est allée preserves the participle's older job as an adjective describing the subject"
 est_minutes: 4
-reviews_of: [FR-C16-etre, FR-C16-etre-roots, FR-C15-passe-compose, FR-C03-aller]
+reviews_of: [FR-C16-etre, FR-C16-etre-roots, FR-C15-practice, FR-C03-aller]
 ---
 
 # Je suis allé — the past built from “be”

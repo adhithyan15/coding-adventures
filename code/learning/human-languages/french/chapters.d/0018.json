@@ -2,15 +2,25 @@
   "chapter": 18,
   "title": "The Compound Past",
   "label": "ch:passe-compose",
-  "canDo": "I can build the chapter's conversational past tense in French and say what happened.",
+  "canDo": "I can build and use French's everyday past tense, and recognise the second past tense that only appears in writing.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C15-passe-simple",
+    "lesson": "FR-C15-practice",
     "kind": "task",
-    "summary": "Complete FR-C15-passe-simple, the canonical closing checkpoint, and demonstrate the chapter promise: build the chapter's conversational past tense in French and say what happened.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "French's everyday past is avoir plus a participle that never moves, so it costs one new form rather than six. It exists because habeō litterās scriptās once meant plain possession — 'I have letters, written ones' — and hardened into a tense, which is also why a participle still agrees when its object comes first. Then the other past: il parla, which you read in every novel and never hear. It is the same inherited tense Spanish says every day as habló, and it retreated into writing across a connected block of France, southern Germany and northern Italy while the languages at the western edge kept theirs.",
+    "assesses": [
+      "FR-GRAM-PARTICIPE-ER-01",
+      "FR-GRAM-PASSE-COMPOSE-02",
+      "FR-PHON-PARLER-PARLE-PARLEZ-03",
+      "FR-GRAM-PARTICIPE-IR-RE-04",
+      "FR-ETYMON-PARTICIPE-LATIN-05",
+      "FR-GRAM-PASSE-COMPOSE-ORIGINE-06",
+      "FR-GRAM-ACCORD-PARTICIPE-07",
+      "FR-GRAM-PASSE-SIMPLE-08",
+      "FR-ETYMON-PASSE-SIMPLE-ROMANCE-09"
+    ],
+    "note": "Authored when chapter 18 left the hand-written set: two schema-v1 lessons held the whole participle system, the tense's origin, the agreement fossil and a second tense. Twelve lessons now own one thing each. The payoff is atom-scored -- it assesses every knowledge atom its chapter introduces; the chapter's culture claim is assessed by FR-C15-areal."
   }
 }

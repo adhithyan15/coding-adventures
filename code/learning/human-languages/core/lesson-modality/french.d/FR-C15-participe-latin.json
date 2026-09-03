@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FR-C15-passe-compose",
+    "id": "FR-C15-participe-latin",
     "language": "french",
     "chapter": 18,
-    "sequence": 545,
+    "sequence": 560,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:45f2ce552694a09d"
+    "sourceHash": "fnv1a64:7bc09c81f574f4c0"
   },
   "findings": []
 }

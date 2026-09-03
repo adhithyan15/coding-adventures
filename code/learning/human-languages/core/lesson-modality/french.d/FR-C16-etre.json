@@ -3,7 +3,7 @@
     "id": "FR-C16-etre",
     "language": "french",
     "chapter": 19,
-    "sequence": 560,
+    "sequence": 620,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:68dc0cf58b17902e"
+    "sourceHash": "fnv1a64:45b9b7ede61336bd"
   },
   "findings": []
 }
