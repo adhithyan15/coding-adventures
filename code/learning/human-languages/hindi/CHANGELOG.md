@@ -57,13 +57,17 @@ the letters have not arrived.
     forward prerequisites                              0 ->   0   (held)
     forward references                                11 ->  11   (held)
     script closure violations                        271 -> 271   (held)
-    corpus R2 misses                                4681 -> 4506
+    corpus R2 misses                                4524 -> 4349
     lessons at or over the 300s ceiling                0 ->   0
     computed seconds, median of ch34-81              121 -> 124
 
 The derivation was falsified before shipping: reverting the single lesson
 `HI-C40-here` and re-measuring put R2 up by two — `HI-C37-khaana` introduces two
 atoms and that lesson is their only retrieval inside the window.
+
+The corpus line was re-measured after Sanskrit's own fix merged underneath this
+branch; the Hindi columns did not move, because only Hindi lessons changed here,
+but the corpus pair did and was taken from the tree rather than carried forward.
 
 ### One prediction this branch made and then contradicted
 
