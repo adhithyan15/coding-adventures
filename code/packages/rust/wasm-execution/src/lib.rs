@@ -61,7 +61,7 @@ use virtual_machine::{
 };
 use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
-use wasm_types::{CanonicalGroup, FuncType, FunctionBody, GlobalType, TypeSubtyping, ValueType};
+use wasm_types::{CanonicalGroup, FuncType, FunctionBody, GlobalType, TypeKind, TypeSubtyping, ValueType};
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Section 1: WasmValue — Typed WASM values
@@ -3164,8 +3164,21 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 // followed). For McCarthy `pair?` the heap type is the
                 // concrete `$LispyPair` struct type, whose small typeidx
                 // encodes identically as a signed or unsigned LEB, so we read
-                // it as a typeidx. (Abstract heap types — negative sLEB — are
-                // not used.)
+                // it as a typeidx.
+                //
+                // W39 slice 2: an ABSTRACT heap type (`i31`/`eq`/`struct`/
+                // `array`/`any`/`func`/`extern`/the four bottom types) is
+                // now also a real, encoded possibility here -- `wasm-wast-
+                // parser`'s encoder emits it as a single tag byte in
+                // `0x69..=0x74` (see `parse_ref_null_heap_type`'s own byte
+                // table). Every one of those bytes has its LEB128
+                // continuation bit (`0x80`) clear, so `decode_leb_u32`
+                // already reads exactly the right ONE byte for an abstract
+                // tag with zero decode-loop changes needed -- only the
+                // VALUE it returns is now sometimes a raw tag byte instead
+                // of a real type-section index; `AbstractHeapType::from_
+                // byte` (below) is where that distinction is actually made,
+                // at USE time, not here.
                 0x14..=0x17 => {
                     let (t, sz) = decode_leb_u32(code, offset);
                     offset += sz;
@@ -4236,6 +4249,30 @@ pub struct WasmExecutionContext {
     /// unless the embedder set it; `call_indirect` treats empty as
     /// "no type info available", not "the type section is empty".
     pub types: Vec<FuncType>,
+    /// Per-`types`-entry composite-kind ledger (W39 slice 2: `code/specs/
+    /// W39-wasm-gc-ref-eq-cast-br-on-cast.md`) — mirrors [`wasm_types::
+    /// WasmModule::type_kinds`] exactly (one [`TypeKind`] per flat
+    /// type-section index, `Func`/`Struct(k)`/`Array(k)`). Empty unless the
+    /// embedder set it, in which case `ref_matches_concrete_type` falls
+    /// back to its pre-W39 `type_idx < ctx.types.len()` heuristic.
+    ///
+    /// This exists because that length-based heuristic is UNSOUND in
+    /// general: `wasm-wast-parser` gives every declared type — struct and
+    /// array included — its OWN slot in `types` too (an unused dummy empty
+    /// `FuncType`, see `TypeKind`'s own doc comment for why), so
+    /// `ctx.types.len()` counts EVERY declared type, not just real
+    /// function types. A module whose struct/array types are declared
+    /// BEFORE its functions' own (deduplicated) signatures get registered
+    /// — real corpus case: `ref_test.wast`'s "Concrete Types" module
+    /// declares eight struct types before any function needs a fresh
+    /// `() -> ()` signature entry — ends up with struct type indices
+    /// SMALLER than `ctx.types.len()`, so the old heuristic would
+    /// misclassify a real struct `type_idx` as a function one, sending
+    /// `ref_matches_concrete_type` down the wrong branch entirely (this
+    /// was caught by this slice's own corpus re-verification, not assumed:
+    /// `test-sub`/`test-canon` both traps as "unreachable" until this field
+    /// was added). Set with [`WasmExecutionEngine::set_type_kinds`].
+    pub type_kinds: Vec<TypeKind>,
     /// Per-`types`-entry GC-proposal nominal-subtyping metadata (W33
     /// second slice, item 4) — see [`WasmExecutionEngine::
     /// set_type_subtyping`]'s doc comment. Empty unless the embedder set
@@ -5609,30 +5646,191 @@ fn resolve_array_elem_segment<'a>(ctx: &'a WasmExecutionContext, idx: usize, op:
     }
 }
 
-// ── Helper: real dynamic type check for ref.test/ref.cast (W33 second slice) ──
+// ── Helper: abstract heap-type tags for ref.test/ref.cast (W39 slice 2) ───
+//
+// The twelve single-byte abstract heap-type tags `ref.test`/`ref.cast`'s
+// binary type immediate can now carry, alongside a real type-section index
+// -- the SAME byte values `wasm-wast-parser::parse_ref_null_heap_type`
+// already establishes as correct for `ref.null`'s own heap-type immediate,
+// reused here verbatim rather than reinvented.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AbstractHeapType {
+    Any,
+    Eq,
+    I31,
+    Struct,
+    Array,
+    Func,
+    Extern,
+    /// `none` / bare-atom `nullref` — bottom of the `any` hierarchy.
+    None,
+    /// `nofunc` / bare-atom `nullfuncref` — bottom of the `func` hierarchy.
+    NoFunc,
+    /// `noextern` / bare-atom `nullexternref` — bottom of the `extern` hierarchy.
+    NoExtern,
+    /// `noexn` / bare-atom `nullexnref` — bottom of the exceptions hierarchy
+    /// (not exercised by the vendored `ref_test.wast`/`ref_cast.wast`
+    /// corpus, included for completeness alongside its sibling bottom
+    /// types).
+    NoExn,
+    /// `exn` — top of the exceptions hierarchy (same "not exercised, kept
+    /// for completeness" note as `NoExn`).
+    Exn,
+}
+
+impl AbstractHeapType {
+    /// Recognize one of the twelve single-byte abstract heap-type tags a
+    /// decoded `ref.test`/`ref.cast` type immediate might carry. `type_idx`
+    /// is whatever the `0xFB` decode loop's `decode_leb_u32` returned for
+    /// the immediate — for a real abstract tag, that immediate is always
+    /// exactly one byte (every one of `0x69..=0x74`'s LEB128 continuation
+    /// bits, `0x80`, is clear), so the decoded `u32` equals the raw byte
+    /// value verbatim.
+    ///
+    /// KNOWN, DOCUMENTED AMBIGUITY: `wasm-wast-parser`'s encoder emits a
+    /// CONCRETE type index as a bare unsigned LEB128 (`wasm_leb128::
+    /// encode_unsigned`), not the real spec's own signed `s33` encoding —
+    /// so a module declaring 105+ GC types, where a `ref.test`/`ref.cast`
+    /// names one of the type indices `0x69..=0x74` (105..=116) specifically,
+    /// would be misread as the corresponding abstract tag instead of that
+    /// real concrete type. No vendored corpus module comes anywhere close
+    /// to this many types (the largest GC-subtyping fixture declares well
+    /// under 20), so this is a real but currently-unreachable limitation,
+    /// flagged here rather than silently accepted — see `code/specs/
+    /// W39-wasm-gc-ref-eq-cast-br-on-cast.md`'s own Design §2b for why this
+    /// is the same encoding trade-off that spec deliberately makes.
+    fn from_byte(type_idx: u32) -> Option<Self> {
+        match type_idx {
+            0x6E => Some(Self::Any),
+            0x6D => Some(Self::Eq),
+            0x6C => Some(Self::I31),
+            0x6B => Some(Self::Struct),
+            0x6A => Some(Self::Array),
+            0x70 => Some(Self::Func),
+            0x6F => Some(Self::Extern),
+            0x71 => Some(Self::None),
+            0x73 => Some(Self::NoFunc),
+            0x72 => Some(Self::NoExtern),
+            0x74 => Some(Self::NoExn),
+            0x69 => Some(Self::Exn),
+            _ => None,
+        }
+    }
+}
+
+// ── Helper: structural dynamic type test for ref.test/ref.cast against an
+//    abstract heap-type immediate (W39 slice 2b) ──────────────────────────
+//
+// `ref_matches_concrete_type` (below) answers a NOMINAL question ("is this
+// value an instance of type-section entry N, or one of its declared
+// subtypes"); this answers a STRUCTURAL one instead ("which tier of the GC
+// hierarchy does this value's own runtime SHAPE belong to") — there is no
+// type-section index to look up at all, since an abstract heap type names a
+// hierarchy tier, not one specific declared type.
+//
+// `payload` is a NON-NULL ref's raw `u32` (the caller already special-cased
+// `WasmValue::Ref(None)` via the nullable-sub-opcode flag before ever
+// reaching here — see `ref_matches_concrete_type`'s own doc comment for
+// what `payload` can mean for a func-shaped value). A plain i31 value is
+// carried as `WasmValue::I32` on the operand stack, never as a `WasmValue::
+// Ref` at all (see `pop_i31_payload`'s own doc comment) — its own dynamic
+// test is `i31_matches_abstract_heap_type` below, called directly from the
+// `0x14`-`0x17` opcode handler instead of from here.
+//
+// OPEN LIMITATION (documented, matches this spec's own explicitly-flagged
+// open sub-question): this engine's `GcObject` enum has no distinct
+// externref-carrying variant, so `Func`/`Extern` both fall back to "not a
+// live `gc_heap` object" as their only available positive signal — the
+// vendored corpus never tests a func-shaped value against `externref` or
+// vice versa (each hierarchy has its own dedicated table), so this
+// heuristic is never asked to make that real distinction in practice, but
+// it WOULD misclassify a dangling/stale `gc_heap` handle as func-shaped
+// rather than as "matches nothing" — a pre-existing representational gap,
+// not a new one this function introduces, left for whichever future slice
+// finally traces externref's own runtime representation end-to-end.
+fn ref_matches_abstract_heap_type(ctx: &WasmExecutionContext, tag: AbstractHeapType, payload: u32) -> bool {
+    let is_gc_object = ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()).is_some();
+    match tag {
+        AbstractHeapType::Struct => matches!(ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()), Some(GcObject::Struct(_))),
+        AbstractHeapType::Array => matches!(ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()), Some(GcObject::Array(_))),
+        // `eq`/`any`: the `eq` hierarchy (and its `any` supertype, as far as
+        // this engine's non-func/extern values go) covers i31/struct/array
+        // — a non-null `Ref` payload reaching here is therefore a match iff
+        // it's a live struct/array object. (i31's own contribution to "eq
+        // covers i31" is handled entirely by `i31_matches_abstract_heap_
+        // type`, never by this function, since a live i31 value never
+        // reaches here as a `Ref` payload — see this function's own doc
+        // comment.)
+        AbstractHeapType::Eq | AbstractHeapType::Any => is_gc_object,
+        AbstractHeapType::Func | AbstractHeapType::Extern => !is_gc_object,
+        // A live i31 value is never carried as a `Ref` payload at all (see
+        // `i31_matches_abstract_heap_type`, this function's own sibling,
+        // for the real i31-vs-abstract-tag check) — so a genuine `Ref`
+        // payload reaching HERE is, by construction, never an i31.
+        AbstractHeapType::I31 => false,
+        // The four bottom heap types: only the null reference belongs to
+        // any of them, and null is handled entirely by the caller's own
+        // nullable-sub-opcode branch before this function is ever invoked
+        // — so a NON-NULL payload reaching here never matches any of them.
+        AbstractHeapType::None | AbstractHeapType::NoFunc | AbstractHeapType::NoExtern => false,
+        // The exceptions-proposal hierarchy is disjoint from every GC value
+        // this engine can construct (see `ValueType::Exnref`'s own doc
+        // comment: "no real exnref value is ever produced") — neither its
+        // bottom nor its top is ever matched by a live GC reference.
+        AbstractHeapType::NoExn | AbstractHeapType::Exn => false,
+    }
+}
+
+// ── Helper: does a plain i31 payload (WasmValue::I32) match an abstract
+//    heap-type tag? (W39 slice 2b) ────────────────────────────────────────
+//
+// A non-null i31 value is never null, never a func, and never a struct/
+// array heap object — it matches exactly the three tiers of the hierarchy
+// that are true of every i31 value by construction: itself, `eq`, and
+// `any`.
+fn i31_matches_abstract_heap_type(tag: AbstractHeapType) -> bool {
+    matches!(tag, AbstractHeapType::I31 | AbstractHeapType::Eq | AbstractHeapType::Any)
+}
+
+// ── Helper: real dynamic type check for ref.test/ref.cast (W33 second slice;
+//    extended W39 slice 2 for struct/array nominal casts and abstract heap
+//    types) ──────────────────────────────────────────────────────────────
 //
 // Whether a NON-NULL reference whose raw payload is `payload` is a genuine
 // runtime instance of concrete type `type_idx` — the dynamic check `ref.test`/
 // `ref.cast` need (null itself is handled by each opcode's own caller via the
 // nullable-sub-opcode flag, not here).
 //
+// W39 slice 2: `type_idx` may now ALSO be one of `AbstractHeapType::from_
+// byte`'s twelve recognized tag bytes rather than a real type-section
+// index — that check runs FIRST, unconditionally (see below for why), and
+// dispatches to the STRUCTURAL test (`ref_matches_abstract_heap_type`)
+// instead of anything nominal.
+//
 // Same "no `sub` anywhere → preserve the pre-W33 behavior untouched" gating
 // as `call_indirect_type_matches` above, for the identical reason: this
 // engine's value model long predates real per-type dynamic checks (the one
 // existing consumer, McCarthy `pair?`, relies on the old "any live struct
 // matches" stub), so a module that never declares `sub` gets EXACTLY its old
-// behavior, zero regression risk.
+// behavior, zero regression risk. Crucially, this gate is NOT consulted for
+// an abstract heap type at all — "is this value an i31" (etc.) is a
+// completely different, independent structural question from "does
+// concrete struct type X nominally subtype concrete struct type Y," and
+// stays true regardless of whether the module declares any `sub` clause
+// anywhere (the vendored `ref_test.wast`/`ref_cast.wast` "Abstract Types"
+// module declares NONE, yet still expects real per-hierarchy
+// discrimination — confirmed by direct corpus read, not assumed).
 //
-// Once `sub` is in play, `type_idx` itself disambiguates which of this
-// crate's two disjoint reference representations `payload` is meant to be
-// interpreted as — the fundamental ambiguity `WasmValue::Ref(Option<u32>)`
-// has: for a FUNCREF, `payload` IS the function index directly (see
-// `ref.func`'s handler); for a STRUCTREF, it's a `gc_heap` handle. There is
-// no per-value tag to tell these apart; this crate's own `wasm_types::
-// WasmModule` doc comment gives the disambiguating convention instead —
-// "struct type k is at type-section index `types.len() + k`" — so a
-// `type_idx` inside `[0, ctx.types.len())` names a FUNCTION type (the funcref
-// path), and anything at or past `ctx.types.len()` names a struct/array type.
+// Once `sub` is in play (or the heap type is abstract), `type_idx` itself
+// disambiguates which of this crate's two disjoint reference
+// representations `payload` is meant to be interpreted as — the fundamental
+// ambiguity `WasmValue::Ref(Option<u32>)` has: for a FUNCREF, `payload` IS
+// the function index directly (see `ref.func`'s handler); for a STRUCTREF/
+// ARRAYREF, it's a `gc_heap` handle. There is no per-value tag to tell these
+// apart, so disambiguation must come from `type_idx` itself, via
+// `type_idx_is_struct_or_array` (below) — see THAT function's own doc
+// comment for why a bare `type_idx < ctx.types.len()` length check (this
+// crate's pre-W39 rule) is unsound in general, and what replaced it.
 //
 // The funcref path is real (item 4's actual scope, verified against `type-
 // subtyping.wast`'s "Runtime types" section, which exercises ONLY funcref
@@ -5640,20 +5838,61 @@ fn resolve_array_elem_segment<'a>(ctx: &'a WasmExecutionContext, idx: usize, op:
 // `func_type_indices`, then run the exact same nominal reflexive/subtype-
 // chain walk `call_indirect_type_matches` uses.
 //
-// The struct/array path deliberately stays a stub: this crate's struct/array
-// TEXT-format type declarations (and therefore real per-struct-type nominal
-// identity) remain the separate, still-open gap `code/specs/
-// W33-wasm-gc-recursive-type-subtyping.md`'s own "Recommended scope" step 2
-// names — not attempted here. Preserving "any live struct-heap object
-// matches any concrete struct type" is not a loss of real coverage: this
-// engine's value model only ever allocates ONE struct shape ($LispyPair, for
-// McCarthy pairs), so "is it a live struct ref" already equals "is it that
-// type" for every struct value this crate can currently construct.
+// W39 slice 2a: the struct/array path is no longer a stub. `GcStruct`/
+// `GcArray` already carry their own concrete `type_idx` (populated by
+// `struct.new`/`array.new`'s own handlers) — reading it off the live heap
+// object and running it through the SAME `nominal_subtype_chain` call the
+// funcref path already makes is the entire extension; no new subtyping
+// algorithm is needed (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`'s
+// own Design §2a).
+// ── Helper: is a flat type-section index a struct/array type? (W39 slice 2) ──
+//
+// `ref_matches_concrete_type`'s pre-W39 rule was a bare length check,
+// `type_idx < ctx.types.len()` means func, else struct/array — sound ONLY
+// because the one pre-W39 consumer (`ref.cast`/`ref.test` against the
+// McCarthy `$LispyPair` struct type) always ran against a module whose
+// struct type happened to be declared AFTER its function signatures got
+// registered into `types`.
+//
+// That assumption does NOT hold in general: `wasm-wast-parser` gives every
+// declared type — struct and array included — its own slot in `types` too
+// (an unused dummy empty `FuncType`; see `wasm_types::TypeKind`'s own doc
+// comment for why). A module that declares its struct/array types BEFORE
+// any function needs a fresh, not-yet-deduplicated signature registered
+// ends up with LOW struct/array type indices and a `types.len()` inflated
+// by those same dummy slots — so the old length check could misclassify a
+// genuine struct `type_idx` as a function one. Real corpus case, caught by
+// this slice's own corpus re-verification (not assumed): `ref_test.wast`'s
+// "Concrete Types" module declares eight struct types (`$t0`..`$t4` plus
+// three more) before its three functions' shared `() -> ()` signature ever
+// gets pushed, so `ctx.types.len()` is 9 while every struct type index is
+// 0..=7 — every one of them `< ctx.types.len()`, which the old rule would
+// have read as "this is a function type."
+//
+// The fix: when the embedder registered `ctx.type_kinds` (`wasm-runtime`
+// always does, via `WasmExecutionEngine::set_type_kinds`), ask it directly
+// instead of guessing from lengths — `type_kinds[type_idx]` is the SAME
+// `TypeKind` `wasm-wast-parser` itself assigned when the type was declared,
+// so this is exact, not heuristic. Left empty (an embedder — typically a
+// hand-built unit test — that never calls `set_type_kinds`), fall back to
+// the old length check, unchanged: every existing test that predates this
+// field keeps its exact old behavior, zero regression risk.
+fn type_idx_is_struct_or_array(ctx: &WasmExecutionContext, type_idx: u32) -> bool {
+    if ctx.type_kinds.is_empty() {
+        (type_idx as usize) >= ctx.types.len()
+    } else {
+        matches!(ctx.type_kinds.get(type_idx as usize), Some(TypeKind::Struct(_)) | Some(TypeKind::Array(_)))
+    }
+}
+
 fn ref_matches_concrete_type(ctx: &WasmExecutionContext, type_idx: u32, payload: u32) -> bool {
+    if let Some(tag) = AbstractHeapType::from_byte(type_idx) {
+        return ref_matches_abstract_heap_type(ctx, tag, payload);
+    }
     if !wasm_types::any_declares_subtyping(&ctx.type_subtyping) {
         return true;
     }
-    if (type_idx as usize) < ctx.types.len() {
+    if !type_idx_is_struct_or_array(ctx, type_idx) {
         // W35 slice 2: `payload` may be a `func_ref_heap`-tagged HANDLE
         // now (minted by `ref.func`'s own runtime opcode via
         // `push_func_ref`), not the raw local function index directly --
@@ -5690,7 +5929,18 @@ fn ref_matches_concrete_type(ctx: &WasmExecutionContext, type_idx: u32, payload:
             None => false,
         }
     } else {
-        ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()).is_some()
+        // W39 slice 2a: a real nominal check, reusing `GcStruct`/`GcArray`'s
+        // own `type_idx` field (already populated by `struct.new`/
+        // `array.new`, sitting right there on every heap object) and the
+        // exact same `nominal_subtype_chain` call the funcref path above
+        // already makes — no new subtyping algorithm. `None` (a dangling/
+        // stale handle) keeps the same safe `false` default the funcref
+        // path's own `None` arms already establish.
+        match ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()) {
+            Some(GcObject::Struct(s)) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, s.type_idx, type_idx),
+            Some(GcObject::Array(a)) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, a.type_idx, type_idx),
+            None => false,
+        }
     }
 }
 
@@ -6837,15 +7087,25 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             // (0x16) / ref.cast null (0x17): pop a reference, push it back
             // unchanged if it's an instance, else trap "cast failure" (W33
             // second slice, item 4 — see `ref_matches_concrete_type`'s own
-            // doc comment for the real dynamic-type check, and `code/specs/
-            // W33-wasm-gc-recursive-type-subtyping.md`'s second addendum for
-            // why this is scoped to funcref-family casts/tests only).
+            // doc comment for the real dynamic-type check; extended W39
+            // slice 2 to concrete struct/array types and abstract heap
+            // types — see `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`).
+            //
+            // A plain i31 value is carried as `WasmValue::I32`, never
+            // `WasmValue::Ref` (see `pop_i31_payload`'s own doc comment), so
+            // it can never reach `ref_matches_concrete_type` — testing/
+            // casting it against a CONCRETE type (func/struct/array) is
+            // always `false` (an i31 is never an instance of any of those),
+            // but testing it against an ABSTRACT tag needs its own check,
+            // `i31_matches_abstract_heap_type`, since `i31`/`eq`/`any` DO
+            // match a live i31 value.
             0x14 | 0x15 => {
                 let nullable = op.sub == 0x15;
                 let matches = match pop_wasm(vm)? {
                     WasmValue::Ref(Some(payload)) => ref_matches_concrete_type(ctx, op.type_idx, payload),
                     WasmValue::Ref(None) => nullable,
-                    _ => false, // an i31 payload / numeric value is not a ref at all
+                    WasmValue::I32(_) => AbstractHeapType::from_byte(op.type_idx).is_some_and(i31_matches_abstract_heap_type),
+                    _ => false, // any other numeric/v128 value is not a ref at all
                 };
                 push_wasm(vm, WasmValue::I32(if matches { 1 } else { 0 }));
             }
@@ -6855,6 +7115,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let matches = match value {
                     WasmValue::Ref(Some(payload)) => ref_matches_concrete_type(ctx, op.type_idx, payload),
                     WasmValue::Ref(None) => nullable,
+                    WasmValue::I32(_) => AbstractHeapType::from_byte(op.type_idx).is_some_and(i31_matches_abstract_heap_type),
                     _ => false,
                 };
                 if !matches {
@@ -14006,6 +14267,9 @@ pub struct WasmExecutionEngine {
     /// `call_indirect`'s handler); set with
     /// [`WasmExecutionEngine::set_type_section`].
     type_section: Vec<FuncType>,
+    /// Per-`type_section`-entry composite-kind ledger (W39 slice 2) — see
+    /// [`Self::set_type_kinds`]'s doc comment. Empty by default.
+    type_kinds: Vec<TypeKind>,
     /// Per-`type_section`-entry GC-proposal nominal-subtyping metadata
     /// (W33 second slice) — see [`Self::set_type_subtyping`]'s doc
     /// comment. Empty by default.
@@ -14125,6 +14389,7 @@ impl WasmExecutionEngine {
             struct_field_storage: Vec::new(),
             array_element_storage: Vec::new(),
             type_section: Vec::new(),
+            type_kinds: Vec::new(),
             type_subtyping: Vec::new(),
             canonical_types: Vec::new(),
             func_type_indices: Vec::new(),
@@ -14189,6 +14454,27 @@ impl WasmExecutionEngine {
     /// (see its handler). Returns `&mut self` for chaining.
     pub fn set_type_section(&mut self, types: Vec<FuncType>) -> &mut Self {
         self.type_section = types;
+        self
+    }
+
+    /// Register the module's per-type-section-entry composite-kind ledger
+    /// (W39 slice 2: `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`) —
+    /// same optional-setter pattern, and same index space, as
+    /// [`Self::set_type_section`] (`type_kinds[N]` describes what KIND of
+    /// composite `type_section[N]` really is: `Func`/`Struct(k)`/`Array(k)`).
+    ///
+    /// Left unset (empty), `ref_matches_concrete_type` falls back to its
+    /// pre-W39 `type_idx < ctx.types.len()` length heuristic — correct only
+    /// when every struct/array type in the module happens to be declared
+    /// AFTER every function signature ends up registered in `type_section`
+    /// (the historical, narrower case this heuristic was originally built
+    /// for). Setting this field makes that classification exact regardless
+    /// of declaration order — see [`WasmExecutionContext::type_kinds`]'s
+    /// own doc comment for the real corpus case (`ref_test.wast`'s
+    /// "Concrete Types" module) that falsified the length heuristic and
+    /// motivated adding this field. Returns `&mut self` for chaining.
+    pub fn set_type_kinds(&mut self, type_kinds: Vec<TypeKind>) -> &mut Self {
+        self.type_kinds = type_kinds;
         self
     }
 
@@ -14546,6 +14832,7 @@ impl WasmExecutionEngine {
             global_types: self.global_types.clone(),
             func_types: self.func_types.clone(),
             types: self.type_section.clone(),
+            type_kinds: self.type_kinds.clone(),
             type_subtyping: self.type_subtyping.clone(),
             canonical_types: self.canonical_types.clone(),
             func_type_indices: self.func_type_indices.clone(),
@@ -16622,6 +16909,259 @@ mod tests {
         );
     }
 
+    // ── W39 slice 2 (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`):
+    // `ref.test`/`ref.cast` extended past concrete-FUNCTION-only support to
+    // concrete struct/array nominal casts and abstract heap-type structural
+    // tests. Each test below exercises exactly one of the new cases the
+    // spec's own "Verification plan" calls for: a concrete struct type with
+    // a live struct of a DIFFERENT concrete struct type (must fail/return
+    // `0`, proving the nominal check actually discriminates), a concrete
+    // array type (same discrimination proof), and a bare abstract
+    // heap-type atom. The PRE-EXISTING concrete-function-type tests just
+    // above (`test_ref_test_distinguishes_cons_from_atom_and_nil` etc.) are
+    // left completely untouched, confirming that behavior is unaffected.
+
+    #[test]
+    fn test_ref_test_concrete_struct_subtype_matches_supertype() {
+        use wasm_types::StorageType;
+        // Two struct types: $t0 (base, 0 fields), $t1 = sub $t0 (1 field).
+        // A live $t1 instance IS a $t0 -- `ref.test (ref $t0)` on it must be 1.
+        let code = vec![
+            0xFB, 0x01, 0x01, // struct.new_default $t1 (type_idx 1)
+            0xFB, 0x14, 0x00, // ref.test (ref $t0) [type_idx 0, non-null]
+            0x0B,
+        ];
+        let mut engine = gc_engine_with_storage(code, vec![ValueType::I32], vec![0, 1], vec![vec![], vec![StorageType::Val(ValueType::I32)]]);
+        engine.set_type_kinds(vec![TypeKind::Struct(0), TypeKind::Struct(1)]);
+        engine.set_type_subtyping(vec![
+            TypeSubtyping::default(),
+            TypeSubtyping { supertype: Some(0), is_final: true, rec_group_size: 1, rec_group_position: 0 },
+        ]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "a $t1 instance must test true against its own supertype $t0");
+    }
+
+    #[test]
+    fn test_ref_test_concrete_struct_supertype_does_not_match_subtype() {
+        use wasm_types::StorageType;
+        // The mirror-image direction: a live $t0 instance is NOT a $t1
+        // (nominal subtyping is one-directional) -- `ref.test (ref $t1)`
+        // on it must be 0, proving the nominal check actually discriminates
+        // rather than "any struct matches any struct type" (this crate's
+        // pre-W39 stub behavior for the struct/array path).
+        let code = vec![
+            0xFB, 0x01, 0x00, // struct.new_default $t0 (type_idx 0)
+            0xFB, 0x14, 0x01, // ref.test (ref $t1) [type_idx 1, non-null]
+            0x0B,
+        ];
+        let mut engine = gc_engine_with_storage(code, vec![ValueType::I32], vec![0, 1], vec![vec![], vec![StorageType::Val(ValueType::I32)]]);
+        engine.set_type_kinds(vec![TypeKind::Struct(0), TypeKind::Struct(1)]);
+        engine.set_type_subtyping(vec![
+            TypeSubtyping::default(),
+            TypeSubtyping { supertype: Some(0), is_final: true, rec_group_size: 1, rec_group_position: 0 },
+        ]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "a $t0 instance must NOT test true against the more specific $t1");
+    }
+
+    #[test]
+    fn test_ref_cast_concrete_struct_mismatch_traps_cast_failure() {
+        use wasm_types::StorageType;
+        // Same mismatch as the test above, but through `ref.cast` (0x16):
+        // a real "cast failure" trap, not just a `0` on the stack.
+        let code = vec![
+            0xFB, 0x01, 0x00, // struct.new_default $t0
+            0xFB, 0x16, 0x01, // ref.cast (ref $t1) -- must trap
+            0x0B,
+        ];
+        let mut engine = gc_engine_with_storage(code, vec![ValueType::Anyref], vec![0, 1], vec![vec![], vec![StorageType::Val(ValueType::I32)]]);
+        engine.set_type_kinds(vec![TypeKind::Struct(0), TypeKind::Struct(1)]);
+        engine.set_type_subtyping(vec![
+            TypeSubtyping::default(),
+            TypeSubtyping { supertype: Some(0), is_final: true, rec_group_size: 1, rec_group_position: 0 },
+        ]);
+        let err = engine.call_function(0, &[]).unwrap_err();
+        assert!(format!("{err:?}").contains("cast failure"), "expected a cast failure trap, got {err:?}");
+    }
+
+    #[test]
+    fn test_ref_cast_concrete_struct_match_succeeds_and_returns_the_same_ref() {
+        use wasm_types::StorageType;
+        // The success direction: casting a $t1 instance to $t0 must NOT
+        // trap, and must push the SAME reference back unchanged.
+        let code = vec![
+            0xFB, 0x01, 0x01, // struct.new_default $t1
+            0xFB, 0x16, 0x00, // ref.cast (ref $t0) -- must succeed
+            0x0B,
+        ];
+        let mut engine = gc_engine_with_storage(code, vec![ValueType::Anyref], vec![0, 1], vec![vec![], vec![StorageType::Val(ValueType::I32)]]);
+        engine.set_type_kinds(vec![TypeKind::Struct(0), TypeKind::Struct(1)]);
+        engine.set_type_subtyping(vec![
+            TypeSubtyping::default(),
+            TypeSubtyping { supertype: Some(0), is_final: true, rec_group_size: 1, rec_group_position: 0 },
+        ]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert!(matches!(result[0], WasmValue::Ref(Some(_))), "a successful cast must push a real, non-null ref back, got {result:?}");
+    }
+
+    #[test]
+    fn test_ref_test_concrete_array_subtype_discriminates_both_directions() {
+        use wasm_types::StorageType;
+        // The array counterpart of the struct tests above: $t0 (base array
+        // of i32), $t1 = sub $t0. A live $t1 array tests true against $t0;
+        // a live $t0 array tests false against $t1.
+        let matches_code = vec![
+            0xFB, 0x08, 0x01, 0x00, // array.new_fixed $t1, 0 elements
+            0xFB, 0x14, 0x00, // ref.test (ref $t0)
+            0x0B,
+        ];
+        let mut m_engine = array_engine(matches_code, vec![ValueType::I32], vec![Some(StorageType::Val(ValueType::I32)), Some(StorageType::Val(ValueType::I32))]);
+        m_engine.set_type_kinds(vec![TypeKind::Array(0), TypeKind::Array(1)]);
+        m_engine.set_type_subtyping(vec![
+            TypeSubtyping::default(),
+            TypeSubtyping { supertype: Some(0), is_final: true, rec_group_size: 1, rec_group_position: 0 },
+        ]);
+        assert_eq!(m_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "a $t1 array must test true against its own supertype $t0");
+
+        let mismatches_code = vec![
+            0xFB, 0x08, 0x00, 0x00, // array.new_fixed $t0, 0 elements
+            0xFB, 0x14, 0x01, // ref.test (ref $t1)
+            0x0B,
+        ];
+        let mut nm_engine = array_engine(mismatches_code, vec![ValueType::I32], vec![Some(StorageType::Val(ValueType::I32)), Some(StorageType::Val(ValueType::I32))]);
+        nm_engine.set_type_kinds(vec![TypeKind::Array(0), TypeKind::Array(1)]);
+        nm_engine.set_type_subtyping(vec![
+            TypeSubtyping::default(),
+            TypeSubtyping { supertype: Some(0), is_final: true, rec_group_size: 1, rec_group_position: 0 },
+        ]);
+        assert_eq!(nm_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "a $t0 array must NOT test true against the more specific $t1");
+    }
+
+    #[test]
+    fn test_type_idx_is_struct_or_array_disambiguates_even_when_length_heuristic_would_not() {
+        // Regression test for the real bug this slice's own corpus
+        // re-verification caught: the pre-W39 `type_idx < ctx.types.len()`
+        // length heuristic assumed function types always occupy the LOW
+        // end of the flat type-section index space. `wasm-wast-parser`
+        // gives every declared type -- struct included -- its own dummy
+        // slot in `types` too, so a module declaring its struct type
+        // BEFORE any function needs a fresh signature (real corpus case:
+        // `ref_test.wast`'s "Concrete Types" module) ends up with a
+        // struct's own `type_idx` SMALLER than `ctx.types.len()`. Setting
+        // `type_kinds` (as `wasm-runtime` always does) must classify this
+        // correctly regardless. `struct_field_counts`/`struct_field_
+        // storage` here name index 0 as the ONLY struct despite `types`
+        // itself having TWO entries (mimicking the dummy-slot inflation).
+        let code = vec![
+            0xFB, 0x01, 0x00, // struct.new_default 0 (the ONLY struct type)
+            0xFB, 0x14, 0x00, // ref.test (ref $t0) -- must dispatch to the STRUCT path
+            0x0B,
+        ];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_struct_field_counts(vec![0]);
+        engine.set_struct_field_storage(vec![vec![]]);
+        // Two entries in the type SECTION (mimicking one real func type
+        // PLUS the struct's own dummy slot) -- under the old length
+        // heuristic, `type_idx 0 < types.len() == 2` would misclassify the
+        // struct as a function.
+        engine.set_type_section(vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }]);
+        engine.set_type_kinds(vec![TypeKind::Struct(0), TypeKind::Func]);
+        engine.set_type_subtyping(vec![
+            TypeSubtyping { supertype: None, is_final: true, rec_group_size: 1, rec_group_position: 0 },
+            TypeSubtyping::default(),
+        ]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(1)],
+            "a struct instance tested against its own type must be true even when its type_idx is smaller than types.len()"
+        );
+    }
+
+    #[test]
+    fn test_ref_test_abstract_i31ref_matches_i31_not_struct() {
+        // A bare abstract heap-type atom (`i31ref`, tag byte 0x6C) as the
+        // type immediate: matches a live i31 value, not a struct.
+        let i31_code = vec![
+            0x41, 5, 0xFB, 0x1C, // i32.const 5; ref.i31
+            0xFB, 0x15, 0x6C, // ref.test null i31ref
+            0x0B,
+        ];
+        let mut i31_engine = gc_engine(i31_code, vec![ValueType::I32], vec![0]);
+        assert_eq!(i31_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "i31ref must match a live i31 value");
+
+        let struct_code = vec![
+            0xFB, 0x00, 0x00, // struct.new 0 (0 fields)
+            0xFB, 0x15, 0x6C, // ref.test null i31ref
+            0x0B,
+        ];
+        let mut struct_engine = gc_engine(struct_code, vec![ValueType::I32], vec![0]);
+        assert_eq!(struct_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "i31ref must NOT match a live struct object");
+    }
+
+    #[test]
+    fn test_ref_test_abstract_structref_matches_struct_not_i31() {
+        // The mirror image: `structref` (tag byte 0x6B) matches a live
+        // struct, not an i31.
+        let struct_code = vec![
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x15, 0x6B, // ref.test null structref
+            0x0B,
+        ];
+        let mut struct_engine = gc_engine(struct_code, vec![ValueType::I32], vec![0]);
+        assert_eq!(struct_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "structref must match a live struct object");
+
+        let i31_code = vec![
+            0x41, 5, 0xFB, 0x1C, // i32.const 5; ref.i31
+            0xFB, 0x15, 0x6B, // ref.test null structref
+            0x0B,
+        ];
+        let mut i31_engine = gc_engine(i31_code, vec![ValueType::I32], vec![0]);
+        assert_eq!(i31_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "structref must NOT match a live i31 value");
+    }
+
+    #[test]
+    fn test_ref_test_abstract_anyref_matches_both_i31_and_struct() {
+        // `anyref` (tag byte 0x6E), the top of the hierarchy: matches
+        // EVERY value struct/array/i31 can produce.
+        let i31_code = vec![
+            0x41, 5, 0xFB, 0x1C, // i32.const 5; ref.i31
+            0xFB, 0x15, 0x6E, // ref.test null anyref
+            0x0B,
+        ];
+        let mut i31_engine = gc_engine(i31_code, vec![ValueType::I32], vec![0]);
+        assert_eq!(i31_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "anyref must match a live i31 value");
+
+        let struct_code = vec![
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x15, 0x6E, // ref.test null anyref
+            0x0B,
+        ];
+        let mut struct_engine = gc_engine(struct_code, vec![ValueType::I32], vec![0]);
+        assert_eq!(struct_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "anyref must match a live struct object");
+    }
+
+    #[test]
+    fn test_ref_cast_abstract_i31ref_mismatch_traps_cast_failure() {
+        // `ref.cast` against an abstract heap-type atom must trap the same
+        // "cast failure" way the concrete-type path already does.
+        let code = vec![
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x16, 0x6C, // ref.cast i31ref (non-null) -- must trap
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::Anyref], vec![0]);
+        let err = engine.call_function(0, &[]).unwrap_err();
+        assert!(format!("{err:?}").contains("cast failure"), "expected a cast failure trap, got {err:?}");
+    }
+
     // ── W33 fourth slice: struct.new_default / struct.get_s / struct.get_u ──
 
     /// Helper: build a single-function engine with struct field STORAGE
@@ -18367,6 +18907,7 @@ mod tests {
             global_types: Vec::new(),
             func_types,
             types: Vec::new(),
+            type_kinds: Vec::new(),
             type_subtyping: Vec::new(),
             canonical_types: Vec::new(),
             func_type_indices: Vec::new(),

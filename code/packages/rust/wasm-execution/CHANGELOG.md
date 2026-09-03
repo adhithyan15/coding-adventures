@@ -2,6 +2,108 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.99] - 2026-09-02 - `ref.test`/`ref.cast` extended to struct/array/abstract heap types (W39 slice 2)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5.
+
+**`ref_matches_concrete_type`, extended (Design §2a)**: the struct/array
+branch was a documented stub (`ctx.gc_heap.get(payload).is_some()`, "any
+live struct matches any concrete struct type") since the engine only ever
+allocated one struct shape (`$LispyPair`). It's now a real nominal check,
+reading `GcStruct`/`GcArray`'s own `type_idx` field (already populated by
+`struct.new`/`array.new`) and running it through the exact same
+`nominal_subtype_chain` call the funcref path already makes -- no new
+subtyping algorithm.
+
+**New: `AbstractHeapType` + `ref_matches_abstract_heap_type` +
+`i31_matches_abstract_heap_type` (Design §2b)**: dynamic structural tests
+for a bare abstract heap-type immediate (`i31ref`, `eqref`, `structref`,
+`arrayref`, `anyref`, `funcref`, `externref`, the four bottom types, `exn`)
+-- recognized by `AbstractHeapType::from_byte` peeking the decoded
+immediate for one of `wasm-wast-parser::parse_ref_null_heap_type`'s twelve
+established tag bytes (`0x69..=0x74`), reused verbatim, not reinvented.
+This check runs BEFORE the existing `any_declares_subtyping` early-return
+gate (not after) -- that gate exists to preserve pre-W33 behavior for
+modules with no `sub` clause, but "is this value an i31" is a structural
+question, independent of whether the module declares any nominal
+subtyping at all; the vendored `ref_test.wast`/`ref_cast.wast` "Abstract
+Types" module declares no `sub` clause anywhere yet still requires real
+per-hierarchy discrimination.
+
+A live i31 value is carried as `WasmValue::I32`, never `WasmValue::Ref`
+(see `pop_i31_payload`'s own doc comment) -- the `0x14`-`0x17` opcode
+handlers now special-case an `I32` operand against an abstract tag via
+`i31_matches_abstract_heap_type` (matches `i31`/`eq`/`any`, never a
+concrete type or any other abstract tag), since it can never reach
+`ref_matches_concrete_type` as a `Ref` payload at all.
+
+**Real bug found and fixed: `type_idx < ctx.types.len()` was an unsound
+func-vs-struct/array disambiguation.** This crate's pre-W39 rule assumed
+every declared function type occupies a lower flat type-section index
+than every struct/array type -- true only by accident for the one
+pre-existing consumer (McCarthy `pair?`). `wasm-wast-parser` in fact gives
+every declared type, struct included, its own slot in `types` too (an
+unused dummy `FuncType`), so a module declaring struct types BEFORE any
+function needs a fresh signature registered (real corpus case:
+`ref_test.wast`'s "Concrete Types" module, eight struct types before its
+functions' shared `() -> ()` signature) ends up with LOW struct type
+indices that the old length check would misclassify as function types --
+caught by this slice's own corpus re-verification (`test-sub`/
+`test-canon` both trapped "unreachable" until fixed), not assumed. Fixed
+by adding `WasmExecutionContext::type_kinds`/`WasmExecutionEngine::
+set_type_kinds` (mirroring `wasm_types::WasmModule::type_kinds` exactly)
+and a new `type_idx_is_struct_or_array` helper that consults it directly
+when the embedder set it, falling back to the old length heuristic
+otherwise (empty `type_kinds`, e.g. a hand-built unit test that predates
+this field, keeps its exact old behavior -- zero regression risk).
+
+**`ref.eq`/`ref.test`/`ref.cast`'s own type-immediate decode loop**: no
+consumption change needed -- every one of the twelve abstract tag bytes
+has its LEB128 continuation bit clear, so `decode_leb_u32` already reads
+exactly one byte for an abstract tag with zero decode-loop changes;
+`AbstractHeapType::from_byte` makes the concrete-vs-abstract distinction
+at USE time, not decode time. Comment-only update to document this.
+
+**Known, documented limitation**: `AbstractHeapType::from_byte` cannot
+distinguish a genuinely abstract tag byte (`0x69..=0x74`) from a real
+concrete type index that happens to fall in that same numeric range (a
+module with 105+ GC types) -- the encoder still emits a concrete index as
+a bare unsigned LEB128, matching the pre-existing convention Design §2a
+deliberately keeps unchanged. No vendored corpus module comes anywhere
+close to this many types.
+
+**Corpus impact** (`cargo run --release --bin wasm_conformance_report`,
+before/after `tests/fixtures/testsuite-status.json`, diffed
+programmatically across all 257 files -- exactly 3 files changed, zero
+regressions anywhere else):
+- `i31.wast`: 46 -> 42 NYS (-4; the 4 in-scope directives Correction 1
+  predicted, all a bare `(ref.cast i31ref ...)`). The remaining 42 are
+  explicitly out of scope (a flat-form `table.size $table` parsing gap,
+  and an inline table-initializer expression gap -- both pre-existing,
+  unrelated to this spec).
+- `ref_test.wast`: 71 -> 68 NYS (-3: 1 module + 2 `assert_return`
+  directives -- the ENTIRE "Concrete Types" module, closed). The
+  remaining 68 all live in the file's OTHER module ("Abstract Types"),
+  which fails to parse at all because its own `init` function calls
+  `any.convert_extern`/`extern.convert_any` -- neither is wired into
+  `wasm-wast-parser`'s text parser yet (W39 slice 3, a separate,
+  independent concern this slice does not touch).
+- `ref_cast.wast`: 45 -> 42 NYS (-3: same shape as `ref_test.wast` --
+  the file's "Concrete Types" module's 1 module directive + 2 bare
+  `invoke` actions fully close; its OTHER module, "Abstract Types", is
+  blocked by the identical `any.convert_extern` dependency).
+- `ref_eq.wast`/`type-subtyping.wast`: unchanged (0 delta) -- confirms an
+  earlier, REVERTED attempt at this slice (widening `wasm-wast-parser`'s
+  shared `parse_value_type` instead of handling `ref.test`/`ref.cast`'s
+  own new heap-type forms locally) is NOT present in the final diff; that
+  attempt regressed 3 of `ref_eq.wast`'s own `assert_invalid` directives
+  by letting previously-unparseable `(ref func)`/`(ref extern)`/`(ref
+  null any)` param declarations parse when they shouldn't have (see
+  `wasm-wast-parser`'s own CHANGELOG for the full story).
+
+Total aggregate NYS across the full corpus: 621 -> 611 (-10, exactly
+4+3+3), zero new `Fail`/`Trap` outcomes anywhere.
+
 ## [0.9.98] - 2026-09-02 - `ref.eq` (`0xD3`) + a `Table`/`TableElement` i31ref gap it uncovered (W39 slice 1)
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 1 of 5.

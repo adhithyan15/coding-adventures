@@ -1,5 +1,61 @@
 # Changelog — wasm-conformance
 
+## 0.1.133 — 2026-09-02 — baseline refresh: `ref.test`/`ref.cast` struct/array/abstract heap types (W39 slice 2)
+
+`wasm-wast-parser` 0.1.107 / `wasm-validator` 0.2.93 / `wasm-execution`
+0.9.99 / `wasm-runtime` 0.6.37 extend `ref.test`/`ref.cast` past
+concrete-function-only support (per `code/specs/
+W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5) -- see those crates'
+own CHANGELOGs for the full account. This crate's own code is unchanged;
+only `tests/fixtures/testsuite-status.json` moves, regenerated via
+`--write-baseline` and diffed programmatically (Python, comparing the
+`files` dict) against the prior baseline across all 257 files. Exactly 3
+files changed, all strictly `not_yet_supported` -> `pass` movement, with
+**zero new `fail`/`trap` anywhere in the full 257-file corpus**:
+
+| File | Before (pass/fail/trap/NYS, totals) | After |
+|---|---|---|
+| `i31.wast` | 27/0/0/46 | 31/0/0/42 |
+| `ref_test.wast` | 0/0/0/71 | 3/0/0/68 |
+| `ref_cast.wast` | 0/0/0/45 | 3/0/0/42 |
+
+Full aggregate: 64846/0/0/621 -> 64856/0/0/611 (-10 `not_yet_supported`,
+exactly 4+3+3, zero new failures/traps anywhere in the 257-file corpus).
+
+**Honest scope note, not the spec's original aspiration**: the spec's own
+"Recommended slice decomposition" expected this slice to close "most of
+`ref_test.wast` (71) and `ref_cast.wast` (45)." Direct re-verification
+against the actual pinned corpus found something narrower: BOTH files
+split into two independent modules, an "Abstract Types" module (the bulk
+of each file's directives) and a "Concrete Types" module (a handful of
+directives testing struct nominal subtyping). The "Abstract Types"
+module's own `init` function calls `any.convert_extern`/
+`extern.convert_any` -- neither instruction is wired into `wasm-wast-
+parser`'s text parser at all yet (confirmed: `grep` finds zero hits
+outside `wasm-module-encoder`'s own doc comments), so that ENTIRE module
+fails to parse, blocking every directive that depends on it regardless of
+how complete this slice's own `ref.test`/`ref.cast` work is. Only the
+"Concrete Types" module in each file -- unaffected by that dependency --
+actually closes here. The remaining 68/42 `not_yet_supported` directives
+in `ref_test.wast`/`ref_cast.wast` are confirmed to be exactly this
+slice-3 (`any.convert_extern`/`extern.convert_any`) dependency, not a gap
+in this slice's own struct/array/abstract-heap-type work.
+
+`i31.wast`'s own 4-directive close matches the spec's Correction 1
+prediction exactly (a bare `(ref.cast i31ref ...)` atom) -- its remaining
+42 `not_yet_supported` are the two explicitly-out-of-scope causes the spec
+itself already named (a flat-form `table.size $table` parsing gap, and an
+inline table-initializer expression gap), unrelated to this spec.
+
+An EARLIER attempt at this slice widened `wasm-wast-parser`'s shared
+`parse_value_type` (rather than handling `ref.test`/`ref.cast`'s own new
+heap-type forms locally) and was caught, by this exact programmatic diff,
+regressing `ref_eq.wast` (3 `assert_invalid` directives silently flipped
+from correctly-rejected to wrongly-accepted) -- reverted before this
+baseline was written; see `wasm-wast-parser`'s own CHANGELOG for the full
+story. This is exactly the discipline this crate's own diff methodology
+exists to catch.
+
 ## 0.1.132 — 2026-09-02 — baseline refresh: `ref_eq.wast` closes 81/83 (W39 slice 1: `ref.eq` / `0xD3`)
 
 `wasm-wast-parser` 0.1.106 / `wasm-validator` 0.2.92 / `wasm-execution`
