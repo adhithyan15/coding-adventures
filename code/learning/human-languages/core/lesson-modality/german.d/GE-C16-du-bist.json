@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-du-bist",
     "language": "german",
-    "chapter": 25,
+    "chapter": 26,
     "sequence": 510,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:46668bc244346330"
+    "sourceHash": "fnv1a64:1a753f69ee2f10d5"
   },
   "findings": []
 }

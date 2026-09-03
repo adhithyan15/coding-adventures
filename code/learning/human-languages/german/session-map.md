@@ -6,11 +6,11 @@ spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
 authoritative order.
 
-Every chapter listed here is **generated from the lessons** rather than
+Every chapter in the book is **generated from the lessons** rather than
 hand-written LaTeX, so these tables and the book are the same object seen twice:
-the order below is the `sequence:` order the generator reads. The gap between
-chapter 19 and chapter 21 is the hand-written stretch that has not been retired
-yet: one chapter, and it is the last one German has.
+the order below is the `sequence:` order the generator reads. There is no longer
+a gap — the last hand-written chapter was retired as chapters 20 and 21, and
+German holds none.
 
 ## Chapter 1 — Greetings
 
@@ -354,7 +354,35 @@ four-column, eight-row teens table the narrator refused goes with it.
 | -zig und -ty | twenty is two tens, and both endings are *ten* worn down |
 | practice | eight clean runs, where the Romance sisters break at 16 or 17 |
 
-## Chapter 21 — To Have
+## Chapters 20 and 21 — the colours, and the words German lent away
+
+Two lessons become twelve. Old chapter 20 held fourteen atoms against a ceiling
+of twelve, so it splits at the `.tex`'s own section seam into 8 and 6. This was
+the **last hand-written chapter in the corpus**.
+
+### Chapter 20 — The Colour German Lent Away
+
+| Session | What it adds |
+|---|---|
+| schwarz | black, and the *schw-* cluster you have from *Schwester* |
+| schwarz und swarthy | English kept the word only in one dusty corner |
+| weiß | white, and the **ß** after a long vowel |
+| weiß und white | *\*hwītaz* kept whole on both sides |
+| blank | shining, polished — a German word about to emigrate |
+| blank und blanc | it became *white* in French, Italian and Portuguese |
+| practice | the chapter where Rome's daughters buy from German |
+
+### Chapter 21 — An Ancient Cousin and a Second Emigrant
+
+| Session | What it adds |
+|---|---|
+| rot | red, one of the oldest colour words there is |
+| rot und ruber | Latin *ruber* is a **cousin**, not a source — descent, not borrowing |
+| blau | blue, and the *au* diphthong |
+| blau und bleu | the second emigrant; English took *blue* back from French |
+| practice | two inherited, two lent, and none of them bought |
+
+## Chapter 22 — To Have
 
 Chapter 5 taught the ending machine, so *haben* is met as the place that machine
 **fails**. It predicts four of the six forms correctly, so those share one
@@ -375,7 +403,7 @@ each.
 The age half of the hand-written chapter is **not** here — it needs the copula,
 so it waits until after it.
 
-## Chapters 22, 23 and 24 — the participle, the Perfekt, and the Präteritum
+## Chapters 23, 24 and 25 — the participle, the Perfekt, and the Präteritum
 
 Split from one hand-written chapter. The material is a participle recipe, four
 person slots of a compound tense, and a second past tense that means the same
@@ -384,7 +412,7 @@ thing as the first — twenty-four atoms at one per lesson, twice
 this one, then 20 and 21, with the age chapter sitting between the first two so
 the present forms get used before the past arrives.
 
-### Chapter 22 — The Wrapped Participle
+### Chapter 23 — The Wrapped Participle
 
 | Session | What it adds |
 |---|---|
@@ -397,7 +425,7 @@ the present forms get used before the past arrives.
 | ge- | Germanic \**ga-* "completely"; the fossil inside *enough* and *yclept* |
 | practice | the four participles together for the first time, as a recap |
 
-### Chapter 23 — The Past Built From Have
+### Chapter 24 — The Past Built From Have
 
 | Session | What it adds |
 |---|---|
@@ -411,7 +439,7 @@ the present forms get used before the past arrives.
 | ich habe gesagt = I said | the translation trap: it is a plain past, not a perfect |
 | practice | the four slots together for the first time, as a recap |
 
-### Chapter 24 — The Simple Past
+### Chapter 25 — The Simple Past
 
 | Session | What it adds |
 |---|---|
@@ -426,7 +454,7 @@ the present forms get used before the past arrives.
 | areale Veränderung | German, French and Italian retreated together, by contact |
 | practice | both pasts, back to back, until nothing about the meaning moves |
 
-## Chapter 25 — I Am, You Are
+## Chapter 26 — I Am, You Are
 
 Split from one hand-written chapter. `sein` is the only German verb whose forms
 cannot be derived from its infinitive, so it is met one form per lesson and the
@@ -447,7 +475,7 @@ one atom per grammar cell the material is twenty-four atoms, which is twice
 | müde | tired — and an adjective after *sein* takes no ending |
 | practice | the six forms together for the first time, as a recap |
 
-## Chapter 26 — Being Your Years
+## Chapter 27 — Being Your Years
 
 Moved out of the hand-written *haben* chapter, because the sentence it teaches
 needs the copula. It sits directly after the chapter that supplies *ich bin* and
@@ -464,7 +492,7 @@ six forms of a verb should use them for something real before meeting its past.
 | sein, nicht haben | Germanic **is** its years; Romance **has** them |
 | practice | asking and answering, with *haben* never once needed |
 
-## Chapter 27 — Three Verbs Under One Roof
+## Chapter 28 — Three Verbs Under One Roof
 
 | Session | What it adds |
 |---|---|
@@ -477,7 +505,7 @@ six forms of a verb should use them for something real before meeting its past.
 | why sein is a mess | frequency protects irregularity; analogy never reaches "to be" |
 | practice | the past assembled, and the account of the three roots |
 
-## Chapter 28 — The Past That Takes To Be
+## Chapter 29 — The Past That Takes To Be
 
 | Session | What it adds |
 |---|---|
@@ -493,5 +521,6 @@ six forms of a verb should use them for something real before meeting its past.
 
 ## Next
 
-Chapter 20 — colours, the last hand-written chapter in the corpus;
-see `../BACKLOG.d/` for the retirement queue.
+Nothing to retire. German has no hand-written chapters left, and neither
+does any other track — the corpus is generated end to end. What comes next for
+this track is depth rather than migration; see `../BACKLOG.d/`.

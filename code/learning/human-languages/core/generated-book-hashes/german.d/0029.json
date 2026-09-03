@@ -1,11 +1,17 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:179f73ad3a1bf0e7",
+  "sourceHash": "fnv1a64:e33769bbf634d5b8",
   "lessonIds": [
-    "GE-C17-kopf",
-    "GE-C17-kopf-haupt",
-    "GE-C17-hand"
+    "GE-C16-perfekt-sein",
+    "GE-C16-kommen",
+    "GE-C16-fahren",
+    "GE-C16-werden",
+    "GE-C16-bleiben",
+    "GE-C16-perfekt-sein-ausnahmen",
+    "GE-C16-perfekt-sein-agreement",
+    "GE-C16-partizip-attributiv",
+    "GE-C16-haben-oder-sein"
   ],
-  "tex": "german/book/chapters/ch29-head-and-hand.tex"
+  "tex": "german/book/chapters/ch29-perfekt-sein.tex"
 }

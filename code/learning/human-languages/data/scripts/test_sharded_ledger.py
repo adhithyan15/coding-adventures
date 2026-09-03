@@ -289,6 +289,33 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
                 expected_handwritten_identities={"spanish/0004"},
             )
 
+    # A section directory MUST exist and MAY be empty. The pair below pins both
+    # halves, and they are pinned HERE as well as in grouped-shards.test.ts
+    # because these are two independent readers of one contract -- the
+    # TypeScript side was fixed first, and this reader then rejected a tree the
+    # other had just accepted.
+    def test_book_generation_accepts_an_empty_section_with_a_placeholder(self):
+        directory = self.book_generation_tree()
+        section = directory / "handwritten.d"
+        for entry in section.iterdir():
+            entry.unlink()
+        (section / ".gitkeep").write_text("", encoding="utf-8")
+
+        document = load_book_generation(self.root)
+        self.assertEqual(document.get("handwritten", []), [])
+
+    def test_book_generation_still_rejects_an_absent_section(self):
+        directory = self.book_generation_tree()
+        section = directory / "handwritten.d"
+        for entry in section.iterdir():
+            entry.unlink()
+        section.rmdir()
+
+        with self.assertRaisesRegex(
+            ValueError, "missing book-generation owner directories.*handwritten.d"
+        ):
+            load_book_generation(self.root)
+
     def test_book_generation_rejects_unexpected_nested_owner(self):
         directory = self.book_generation_tree()
         nested = directory / "targets.d" / "spanish"

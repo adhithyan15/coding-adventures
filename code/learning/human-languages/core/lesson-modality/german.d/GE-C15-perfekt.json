@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-perfekt",
     "language": "german",
-    "chapter": 23,
+    "chapter": 24,
     "sequence": 395,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:69da419efcba5998"
+    "sourceHash": "fnv1a64:86c4a957167c4c37"
   },
   "findings": []
 }

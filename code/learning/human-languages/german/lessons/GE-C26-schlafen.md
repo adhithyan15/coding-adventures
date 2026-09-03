@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C26-schlafen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 860
-chapter: 38
+chapter: 39
 type: word
 headword: schlafen
 gloss: to sleep — the same word as English sleep under two coats of German paint, and a second way for a strong verb to break

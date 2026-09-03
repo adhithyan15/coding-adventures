@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C26-hoeren",
     "language": "german",
-    "chapter": 38,
+    "chapter": 39,
     "sequence": 870,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:da6a58c3911ad1b7"
+    "sourceHash": "fnv1a64:36e476832bc1e516"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C30-mund
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1000
-chapter: 42
+chapter: 43
 type: word
 headword: der Mund
 gloss: mouth — the same inherited word as English mouth, with a root the standard accounts do not agree on past Proto-Germanic

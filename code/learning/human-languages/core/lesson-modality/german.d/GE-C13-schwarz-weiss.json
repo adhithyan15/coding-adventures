@@ -3,7 +3,7 @@
     "id": "GE-C13-schwarz-weiss",
     "language": "german",
     "chapter": 20,
-    "sequence": 335,
+    "sequence": 324,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e24bbcfca18c372a"
+    "sourceHash": "fnv1a64:1e7353c14ccd0a24"
   },
   "findings": []
 }

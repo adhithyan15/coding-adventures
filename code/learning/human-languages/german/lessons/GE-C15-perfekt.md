@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-perfekt
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 395
-chapter: 23
+chapter: 24
 type: grammar
 headword: haben plus Partizip
 gloss: the Perfekt recipe — a conjugated haben and a participle, which is how German says what happened

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-er-hat-gemacht",
     "language": "german",
-    "chapter": 23,
+    "chapter": 24,
     "sequence": 410,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8fa79248f43936b0"
+    "sourceHash": "fnv1a64:176580e2521b8c8d"
   },
   "findings": []
 }

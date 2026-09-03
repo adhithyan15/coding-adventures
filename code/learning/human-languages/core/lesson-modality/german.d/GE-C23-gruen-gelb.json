@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C23-gruen-gelb",
     "language": "german",
-    "chapter": 35,
+    "chapter": 36,
     "sequence": 750,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0d1a294ea5f3fef9"
+    "sourceHash": "fnv1a64:40d17f5198fdf886"
   },
   "findings": []
 }

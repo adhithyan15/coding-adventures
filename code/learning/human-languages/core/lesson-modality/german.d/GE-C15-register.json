@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-register",
     "language": "german",
-    "chapter": 24,
+    "chapter": 25,
     "sequence": 465,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7d382d5ed00fd597"
+    "sourceHash": "fnv1a64:b08f71c6d35b9796"
   },
   "findings": []
 }

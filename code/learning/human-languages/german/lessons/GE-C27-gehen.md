@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C27-gehen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 880
-chapter: 39
+chapter: 40
 type: word
 headword: gehen
 gloss: to go, and to walk — because German has no separate word for walking, and English's walk turns out to be a word about cloth

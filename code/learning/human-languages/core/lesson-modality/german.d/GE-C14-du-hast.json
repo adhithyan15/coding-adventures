@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C14-du-hast",
     "language": "german",
-    "chapter": 21,
+    "chapter": 22,
     "sequence": 347,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9bfa2f2b677641f2"
+    "sourceHash": "fnv1a64:9dce73c8535772cd"
   },
   "findings": []
 }

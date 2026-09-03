@@ -1,23 +1,22 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:4939762ab838a78c",
+  "sourceHash": "fnv1a64:1a8c94cb64fa7cc3",
   "lessonIds": [
-    "GE-C15-perfekt",
-    "GE-C15-ich-habe-gesagt",
-    "GE-C15-du-hast-gesagt",
-    "GE-C15-er-hat-gemacht",
-    "GE-C15-wir-haben-gesagt",
-    "GE-C15-partizip-am-ende",
-    "GE-C15-gestern",
-    "GE-C15-perfekt-als-vergangenheit",
-    "GE-C15-perfekt-practice"
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix",
+    "GE-C15-partizip-practice"
   ],
-  "voiceLessons": 9,
-  "drivablePrefix": 9,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch23.txt",
   "json": "german/narration/ch23.json",
-  "textHash": "fnv1a64:5948380eb504c59c",
-  "jsonHash": "fnv1a64:2e6cd16e5e2e4052",
+  "textHash": "fnv1a64:d76c02124e7afcec",
+  "jsonHash": "fnv1a64:248ad3b7fa9e2cdc",
   "findings": []
 }

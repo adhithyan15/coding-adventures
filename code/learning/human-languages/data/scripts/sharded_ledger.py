@@ -467,6 +467,18 @@ def _validate_book_generation_tree(root):
         )
 
 
+# A section directory MUST exist and MAY be empty, and those are two different
+# claims. `handwritten.d` reached zero entries when the last hand-written chapter
+# in the corpus was generated; git cannot track an empty directory, so a tracked
+# `.gitkeep` holds it open and both readers filter the placeholder out.
+#
+# This mirrors `readStrictDirectory` in book-generation-shards.ts EXACTLY. The two
+# are independent implementations of one contract, and the TypeScript side was
+# fixed first -- which is how this reader came to reject a tree the other reader
+# had just accepted. If one of them changes, the other has to change with it.
+DIRECTORY_PLACEHOLDER = ".gitkeep"
+
+
 def _strict_owner_names(root, directory):
     names = []
     for name, is_directory in _strict_directory_entries(
@@ -476,6 +488,8 @@ def _strict_owner_names(root, directory):
             raise ValueError(
                 f"unexpected nested book-generation owner directory: {directory}/{name}"
             )
+        if name == DIRECTORY_PLACEHOLDER:
+            continue
         if not name.endswith(".json"):
             raise ValueError(
                 f"malformed book-generation owner name: {directory}/{name}"

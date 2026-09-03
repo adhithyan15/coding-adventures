@@ -1,17 +1,23 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:41bc474c623cfe74",
+  "sourceHash": "fnv1a64:7663d5407e8f2dfd",
   "lessonIds": [
-    "GE-C17-kopf",
-    "GE-C17-kopf-haupt",
-    "GE-C17-hand"
+    "GE-C16-perfekt-sein",
+    "GE-C16-kommen",
+    "GE-C16-fahren",
+    "GE-C16-werden",
+    "GE-C16-bleiben",
+    "GE-C16-perfekt-sein-ausnahmen",
+    "GE-C16-perfekt-sein-agreement",
+    "GE-C16-partizip-attributiv",
+    "GE-C16-haben-oder-sein"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch29.txt",
   "json": "german/narration/ch29.json",
-  "textHash": "fnv1a64:b523e1d02c1f3bcc",
-  "jsonHash": "fnv1a64:d7ba3dc4155fabc9",
+  "textHash": "fnv1a64:33be0a2abd8ad836",
+  "jsonHash": "fnv1a64:a6821b20b226b52f",
   "findings": []
 }

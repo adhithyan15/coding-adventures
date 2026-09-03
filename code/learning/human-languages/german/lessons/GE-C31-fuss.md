@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C31-fuss
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1040
-chapter: 43
+chapter: 44
 type: word
 headword: der Fuß
 gloss: foot — the fourth name from the *Hand* table, and the same p-to-f Grimm's law pattern Vater already taught

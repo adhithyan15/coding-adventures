@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C29-freund",
     "language": "german",
-    "chapter": 41,
+    "chapter": 42,
     "sequence": 950,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:edc33a2dc97b875d"
+    "sourceHash": "fnv1a64:bcc7d802b5bc796a"
   },
   "findings": []
 }

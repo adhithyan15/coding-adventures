@@ -1,136 +1,102 @@
-German, chapter 42: Eyes, Ears, Mouth, Nose.
-4 lessons. All 4 can be done entirely by ear.
+German, chapter 42: Friend and Family.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-das Auge — back to the head, one part at a time.
+Lesson 1 of 3.
+der Freund — a word that was already a compliment.
 
 Warm-up.
 [pause 2 seconds]
-You already have der Kopf and die Hand. The head has more in it than its own name — starting with what you see with.
+You were taught freut mich — "pleased to meet you," literally "it gladdens me." The person doing the gladdening has a name of their own, and it is built from the very same root.
 
-You'll want to know: das Auge.
-das Auge — eye. Neuter.
-Das ist das Auge. — "This/That is the eye."
-The plural is die Augen — both eyes together, the form you will hear far more often than the singular.
+You'll want to know: der Freund.
+der Freund — friend (male, or a friend in general). Masculine.
+Das ist der Freund. — "This/That is the friend."
 
-Sounds you'll need: au.
-au is a diphthong said ow, as in English how: Auge = OW-geh.
+Sounds you'll need: eu.
+eu is a diphthong said oy, exactly as in English boy: Freund = FROYND. It is the same sound spelled äu in Häuser and läuft, just without the umlaut in front of it.
 
-The word, taken apart: a root three families still share.
-Auge is Proto-Germanic augô, the direct cousin of English eye — both inherited, no loan in either direction, from Proto-Indo-European h₃ekʷ-. That root did not stay hidden in only the Germanic family: Latin turned it into oculus (giving English ocular, binoculars), and Greek into ophthalmós (giving English ophthalmology). Three branches of one family tree, and English ended up borrowing back two Latin and Greek reflexes of the very root it had already inherited natively as eye.
-Kopf was a container word that took over the everyday job. Auge needed no such replacement — it has meant "eye" the whole way down.
+The word, taken apart: a verb wearing a noun's clothes.
+Freund and English friend are not merely cousins — they are the exact same inherited word, Proto-Germanic frijōnds. That word was never a plain noun to begin with: it is a frozen present participle of the verb frijōną, "to love," so Freund literally means "the one who is loving." freut mich is built on the same family: both trace to Proto-Indo-European preyH-, "to love, to please." The goddess Frigg — whose day German keeps as Freitag and English as Friday — carries the same root one step further.
+Milch needed no journey to reach German; Freund did not either — but where Milch is a noun that was always a noun, Freund is a verb that stopped moving and became one.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "das Auge" — OW-geh; "die Augen" — both eyes]
+[your turn — say: "der Freund" — FROYND]
 [pause 8 seconds for the answer]
-[your turn — say: "Das ist das Auge."]
+[your turn — say: "Das ist der Freund."]
 [pause 8 seconds for the answer]
-[your turn — say: the three-family root — "Auge/eye, Latin oculus, Greek ophthalmós"]
+[your turn — say: the family — "Freund, freut mich, Frigg, Friday — all one root"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "eye" with its article, and its plural. (Das Auge, die Augen.) Is it native or borrowed? (Native — cousin of English eye.) Name one English word borrowed from the same PIE root by way of Latin or Greek. (Ocular, binoculars, or ophthalmology.)
+Give "friend" with its article. (Der Freund.) What part of speech did Freund start out as? (A verb — a frozen present participle of "to love.") Which greeting phrase shares its root? (Freut mich.) Which day of the week carries the same PIE root one step further? (Freitag / Friday, from the goddess Frigg.)
 
 
-Lesson 2 of 4.
-das Ohr — the part hören was named for.
+Lesson 2 of 3.
+die Freundin — one suffix, and the fox that kept it in English.
 
 Warm-up.
 [pause 2 seconds]
-You have the eye. You already have the verb for what the next part does — hören, "to hear" — without ever naming the part itself.
+You have der Freund. German does not need a new word for the feminine — it needs one small, reusable ending.
 
-You'll want to know: das Ohr.
-das Ohr — ear. Neuter.
-Das ist das Ohr. — "This/That is the ear."
-Plural: die Ohren.
+You'll want to know: die Freundin.
+die Freundin — friend (female). Feminine.
+Das ist die Freundin. — "This/That is the (female) friend."
 
-Sounds you'll need: a long, plain o.
-Ohr is a single long o, said the way you'd say the letter itself in English: Ohr = OHR, no glide, no second vowel.
+Grammar Lens: the ending that builds a whole class of nouns.
+Add -in to a masculine noun for a person and you get the feminine: der Lehrer becomes die Lehrerin ("teacher"), der Student becomes die Studentin ("student"), der Freund becomes die Freundin. It is entirely regular, and it works on almost any such noun you will ever meet — one rule, not a new word each time.
 
-The word, taken apart: the root inside hören.
-Ohr is Proto-Germanic auzô, the direct cousin of English ear — both from Proto-Indo-European h₂ous-. One disputed idea about hören was already flagged: some accounts break its root into "sharp" plus "ear," which would put this very word, Ohr, hiding inside the verb for using it. That analysis was marked cited but unsettled there, and it stays unsettled here — a tidy story is not the same as a confirmed one.
-What is confirmed: Ohr and ear are not two words that happen to sound alike. They are one Germanic word, unbroken since before English and German were different languages.
+The word, taken apart: English kept this suffix exactly once.
+-in is native Germanic, not a Latin import — English inherited the same suffix and mostly stopped using it. Almost mostly: one English word still carries it, fossilized, unrecognized as a suffix by most speakers who use it — vixen, "female fox," built the same way Freundin is built. English did not lose this pattern by borrowing over it; it simply stopped reaching for it, and later borrowed French -ess (princess, actress) to do the same job instead. German never stopped.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "das Ohr" — a plain long o; "die Ohren"]
+[your turn — say: "die Freundin" — Freund plus -in]
 [pause 8 seconds for the answer]
-[your turn — say: "Das ist das Ohr."]
+[your turn — say: "Das ist die Freundin."]
 [pause 8 seconds for the answer]
-[your turn — say: the maybe-link — "hören, Ohr — sharp-eared, unsettled"]
+[your turn — say: the pattern — "Lehrer/Lehrerin, Student/Studentin, Freund/Freundin"]
+[pause 8 seconds for the answer]
+[your turn — say: the English fossil — "fox, vixen — the same -in, once"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "ear" with its article and plural. (Das Ohr, die Ohren.) Is it native or borrowed? (Native — cousin of English ear.) What disputed idea would put this word inside hören? (The "sharp-eared" root analysis — cited, not settled.)
+Give "friend (female)" with its article. (Die Freundin.) What suffix builds it from Freund, and what does that suffix do generally? (-in — it makes the feminine of a person-noun.) Is -in borrowed or native? (Native — English inherited it too.) Name the one English word that still shows it. (Vixen.)
 
 
-Lesson 3 of 4.
-der Mund — where the family tree runs out.
+Lesson 3 of 3.
+die Familie — the word that gathers Eltern and Geschwister.
 
 Warm-up.
 [pause 2 seconds]
-Auge and Ohr both trace cleanly to Proto-Indo-European. This one does not go nearly as far back with any certainty — and saying so honestly is the lesson.
+You have der Freund and die Freundin, both native, both built on a verb meaning "to love." The word for the group at home has a completely different history.
 
-You'll want to know: der Mund.
-der Mund — mouth. Masculine.
-Das ist der Mund. — "This/That is the mouth."
-Plural: die Münder.
+You'll want to know: die Familie.
+die Familie — family. Feminine.
+Das ist die Familie. — "This/That is the family."
+You already have the members: Vater, Mutter, Bruder, Schwester — and the collective Geschwister, "siblings." Familie is the word that gathers all of them into one group.
 
-Sounds you'll need: a short u.
-Mund takes a short, closed u, as in English put: Mund = MOONT (final d devoiced, as in Hand).
+Sounds you'll need: three syllables, not two.
+Familie keeps all three vowels distinct: fa-MEE-lee-eh, four syllables in careful speech, with the stress on the second. It does not collapse the way English family does.
 
-The word, taken apart: inherited, but not traced further.
-Mund is Proto-Germanic munþaz, and English mouth is that same inherited word — no loan in either direction, exactly like Ohr and ear.
-Here the two words part company. Ohr and Auge both trace on to confirmed Proto-Indo-European roots. Munþaz does not: proposed deeper connections exist, but no single one is agreed upon by standard references. Rather than hand you a tidy-sounding root that is not actually settled, this lesson stops at Proto-Germanic. An honest "we don't fully know" is worth more than an invented ancestor.
+The word, taken apart: the one Latin loan among these three chapters.
+Familie is a Latin loan: familia, "household," related to famulus, "servant" or "slave" — a Roman household word, not originally a word about blood relation at all. English family borrowed the very same Latin root, by way of Old French, well before German did; German took Familie directly from Latin later, in the early modern period, which is why the two loans look so close to identical without one having been copied from the other.
+So this small chapter runs the same shape twice: Freund and Freundin are native, built from a Germanic verb meaning "to love"; Familie is borrowed, from a Roman word that first meant "household staff." The food lesson set up exactly this pattern with Wasser native beside Wein borrowed, and the drinks just ran it a third time with Milch beside Kaffee and Tee.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der Mund" — MOONT; "die Münder"]
+[your turn — say: "die Familie" — fa-MEE-lee-eh]
 [pause 8 seconds for the answer]
-[your turn — say: "Das ist der Mund."]
+[your turn — say: "Das ist die Familie."]
 [pause 8 seconds for the answer]
-[your turn — say: the honest stop — "Mund and mouth, inherited — but no further-back root is agreed"]
+[your turn — say: the members inside it — "Vater, Mutter, Bruder, Schwester, Geschwister"]
+[pause 8 seconds for the answer]
+[your turn — say: native beside borrowed — "Freund, Freundin native; Familie borrowed"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "mouth" with its article and plural. (Der Mund, die Münder.) Is it native or borrowed? (Native — cousin of English mouth.) Does its root trace to a confirmed PIE ancestor, the way Auge and Ohr do? (No — the trail goes cold at Proto-Germanic.)
-
-
-Lesson 4 of 4.
-die Nase — the face, complete.
-
-Warm-up.
-[pause 2 seconds]
-Auge. Ohr. Mund. One part of the face is left, and it closes what Kopf opened and never finished.
-
-You'll want to know: die Nase.
-die Nase — nose. Feminine.
-Das ist die Nase. — "This/That is the nose."
-Plural: die Nasen.
-
-Sounds you'll need: a long a.
-Nase opens on a long, open a: Nase = NAH-zeh, with the s voiced to z between two vowels — the mirror image of Hand's final d devoicing to t.
-
-The word, taken apart: cousins that never borrowed from each other.
-Nase is Proto-Germanic nasō, the inherited cousin of English nose — and, further back, of Latin nasus, which gave English nasal and nostril. One Proto-Indo-European root, nas-, split into Germanic and into Latin independently; German Nase and the Latin-derived word are family by descent, exactly like rot and rouge, never by borrowing.
-That gives this small face four parts with four different shapes of story: Auge and Ohr trace cleanly to confirmed PIE roots; Mund is inherited but its root before Proto-Germanic is not agreed upon; Nase traces to a root Latin also inherited, on its own branch. Four native words, four different depths of certainty — which is the honest way etymology actually looks, not four identical tidy stories.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "die Nase" — NAH-zeh; "die Nasen"]
-[pause 8 seconds for the answer]
-[your turn — say: "Das ist die Nase."]
-[pause 8 seconds for the answer]
-[your turn — say: the whole face — "Kopf, Auge, Ohr, Mund, Nase, Hand"]
-[pause 8 seconds for the answer]
-[your turn — say: the cousin — "Nase, nose, nasus — one PIE root, two families"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give "nose" with its article and plural. (Die Nase, die Nasen.) Which Latin word is its distant cousin, and what English word does that Latin word give? (Nasus, giving nasal.) Name all five face and head words from Chapters 17 and 30. (Kopf, Auge, Ohr, Mund, Nase.) Which of the four words of this chapter does not trace past Proto-Germanic? (Mund.)
+Give "family" with its article. (Die Familie.) Is it native or borrowed? (Borrowed — Latin familia, "household.") What did familia first mean, before "relatives"? (Household — kin to famulus, "servant.") Which two words from this chapter are native instead? (Freund and Freundin.)

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C27-oeffnen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 900
-chapter: 39
+chapter: 40
 type: word
 headword: öffnen
 gloss: to open — built on offen, which is English open, which is really the word up; and the doorway into German's separable verbs

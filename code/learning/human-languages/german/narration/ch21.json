@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 21,
-  "title": "To Have",
-  "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:cd149d13ea3d0ad3",
+  "title": "An Ancient Cousin and a Second Emigrant",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:77a7470fba9a5f21",
   "lessons": [
     {
-      "id": "GE-C14-haben",
-      "sequence": 345,
-      "title": "haben — \"to have\"",
-      "headword": "haben",
-      "romanization": "haben",
-      "gloss": "to have — the twin of English have, and the workhorse the rest of the book leans on",
+      "id": "GE-C13-rot",
+      "sequence": 325,
+      "title": "rot — \"red\"",
+      "headword": "rot",
+      "romanization": "rot",
+      "gloss": "red — the third colour, and the one humans name first after black and white",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:660a8b8c1f3d79e9",
+      "sourceHash": "fnv1a64:e81790791c0e4518",
       "notice": null,
       "blocks": [
         {
@@ -35,26 +35,22 @@
             },
             {
               "kind": "speech",
-              "text": "German's workhorse verb, and the twin of a word you have said every day of your life."
+              "text": "You have black and white. The next colour is not a matter of taste — languages the world over reach for the same one third."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: haben",
+          "title": "You'll want to know: rot",
           "segments": [
             {
               "kind": "speech",
-              "text": "haben — \"to have.\""
+              "text": "rot — \"red.\""
             },
             {
               "kind": "speech",
-              "text": "Same word as English have, worn differently. Chop the -en the way you did with machen and the stem is hab-, which is where every form in this chapter starts."
-            },
-            {
-              "kind": "speech",
-              "text": "Two syllables, and the first one carries the weight: HAH-ben."
+              "text": "Three letters, one syllable, and very close to the English word underneath the spelling."
             }
           ]
         },
@@ -65,297 +61,31 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "long-a — the a of haben is long and open, the vowel of English father, not the clipped a of hat."
+              "text": "long-o — the o is long, the vowel of English road, not the short o of rot. The German word does not rhyme with the English word spelled the same way."
             },
             {
               "kind": "speech",
-              "text": "d-t-final — that long a does not survive into every form. Two of them coming up are short and clipped, and both end in a crisp, fully released t."
+              "text": "d-t-final — the closing t is crisp and fully released: roht."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"haben\" — long a, soft second syllable",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"haben\" — long *a*, soft second syllable]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the stem on its own — \"hab-\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the stem on its own — \"hab-\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the twins — \"haben, have\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the twins — \"haben, have\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "kind": "speech",
+              "text": "If a language has only two colour words, they are dark and light. If it has a third, it is red — before green, before blue, before yellow. That holds across unrelated families on every continent, which is why schwarz, weiß and rot are the three this chapter and the last one reach for first."
             },
             {
               "kind": "speech",
-              "text": "\"haben, haben — to have.\""
+              "text": "Blood and fire are the guess most people make, and it may be right; what is certain is the order, not the reason."
             }
           ]
         },
         {
           "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"to have.\" (Haben.) What is its stem? (Hab-.) Is the a long or short? (Long — as in father.) Which English verb is it? (Have.) Next: the stem through the ending machine you already own."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C14-hab-stamm",
-      "sequence": 346,
-      "title": "hab- through the machine",
-      "headword": "ich habe, wir haben, ihr habt",
-      "romanization": "ich habe, wir haben, ihr habt",
-      "gloss": "four of haben's six forms come out of the ending machine you already own, with nothing new to learn",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:cbd77fb6beb50d88",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You own an ending machine: a stem, and -e, -st, -t, -en. Run hab- through it before reading on, and keep what you get."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: four forms you already knew",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "On hab-, the machine is right four times out of six."
-            },
-            {
-              "kind": "speech",
-              "text": "Ich takes -e, so ich habe. Wir takes -en, so wir haben — which is the infinitive over again, the way the wir form goes throughout German. Ihr takes -t, so ihr habt. And sie takes -en like wir, so sie haben."
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing there is new. Those four are the rule from your first verbs applied to one more stem — so do not read them off the page. Take each ending, put it on hab-, and hear that you already knew the answer."
-            },
-            {
-              "kind": "speech",
-              "text": "The chapter is about the other two."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Build each one before you say it — take the ending first, then put it on hab-."
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the ending ich takes, then the form — \"-e … ich habe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the ending *ich* takes, then the form — \"-e … ich habe\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the ending wir takes, then the form — \"-en … wir haben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the ending *wir* takes, then the form — \"-en … wir haben\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the ending ihr takes, then the form — \"-t … ihr habt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the ending *ihr* takes, then the form — \"-t … ihr habt\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sie borrows wir's ending — \"sie haben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *sie* borrows *wir*'s ending — \"sie haben\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "now prove the machine is not about this verb — run wohn- through it: \"ich wohne, wir wohnen, ihr wohnt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: now prove the machine is not about this verb — run *wohn-* through it: \"ich wohne, wir wohnen, ihr wohnt\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ich habe, wir haben, ihr habt, sie haben.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Build \"we have\" without being given it. (Wir haben.) Build \"you all have.\" (Ihr habt.) Which other form does wir haben match? (The infinitive.) Did you have to learn any of those four, or work them out? (Work them out — the endings were already yours.) How many of the six does the rule get right? (Four.) Next: the first one it gets wrong."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C14-du-hast",
-      "sequence": 347,
-      "title": "du hast — \"you have\"",
-      "headword": "du hast",
-      "romanization": "du hast",
-      "gloss": "you have — the first form where the b falls out and the rule stops working",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9bfa2f2b677641f2",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The machine says du plus -st on the stem hab-. Say what that would give, and then hear what German actually says."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: du hast",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "du hast — \"you have,\" to one person you are on familiar terms with."
-            },
-            {
-              "kind": "speech",
-              "text": "The rule predicts hab-st. German says hast. The b is simply gone, and the long a goes with it: the vowel is short and clipped now, and the -st lands crisply on the end."
-            },
-            {
-              "kind": "speech",
-              "text": "This is not a spelling convenience. It is one of exactly two places in the whole verb where the machine fails, and it is worth meeting on its own so that it is a form you know rather than a form you derive wrongly."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "vowel-a — short and clipped, the a of English hat, not the long a of haben. The form is one syllable: hast, rhyming with English mast."
-            },
-            {
-              "kind": "speech",
-              "text": "d-t-final — the -st is fully released; German does not soften it."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -368,29 +98,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"du hast\"",
+              "instruction": "\"rot\" — long o, as in road",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"du hast\"]"
+              "source": "[YOU SAY: \"rot\" — long *o*, as in *road*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the long against the short — \"ich habe, du hast\"",
+              "instruction": "the three in order — \"schwarz, weiß, rot\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the long against the short — \"ich habe, du hast\"]"
+              "source": "[YOU SAY: the three in order — \"schwarz, weiß, rot\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what the rule wanted, then what German says — \"hab-st … hast\"",
+              "instruction": "the warning — \"rot does not rhyme with English rot\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what the rule wanted, then what German says — \"hab-st … hast\"]"
+              "source": "[YOU SAY: the warning — \"rot does not rhyme with English *rot*\"]"
             },
             {
               "kind": "repeat",
@@ -399,12 +129,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"du hast, du hast.\""
+              "text": "\"rot, rot — roht.\""
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -416,26 +146,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"you have,\" informally. (Du hast.) Which letter went missing? (The b.) What happened to the vowel? (It shortened.) What would the rule have predicted? (Hab-st.) Next: the second place the machine fails, and it fails the same way."
+              "text": "Say \"red.\" (Rot.) Is the o long or short? (Long — as in road.) Which colour do languages name third? (Red.) And the first two? (Dark and light — black and white.) Next: the cousin it has in French, and why it is not a borrowing."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C14-er-hat",
-      "sequence": 348,
-      "title": "er hat — \"he has\"",
-      "headword": "er hat",
-      "romanization": "er hat",
-      "gloss": "he has — the second and last form where the b falls out",
+      "id": "GE-C13-rot-ruber",
+      "sequence": 326,
+      "title": "rot, taken apart",
+      "headword": "rot, red, rouge",
+      "romanization": "rot, red, rouge",
+      "gloss": "one of the oldest colour words we can reconstruct — and rot and rouge are cousins, not borrowings",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21c15171fe7529a4",
+      "sourceHash": "fnv1a64:a9662f555bb0c6c7",
       "notice": null,
       "blocks": [
         {
@@ -451,398 +181,7 @@
             },
             {
               "kind": "speech",
-              "text": "One more break, and then the verb behaves for good. The machine says -t on hab-."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: er hat",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "er hat — \"he has.\" Also sie hat, \"she has,\" and es hat, \"it has.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The rule predicts hab-t. German says hat: the same b gone, the same vowel shortened. One syllable, rhyming with English hut rather than hat — the German a sits further back than the English one."
-            },
-            {
-              "kind": "speech",
-              "text": "One form covers er, sie and es, exactly as the third-person -t always does. So the two breaks in this verb are neighbours: du hast, er hat, and every other form is the machine."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"er hat, sie hat, es hat\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"er hat, sie hat, es hat\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two breaks together — \"du hast, er hat\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two breaks together — \"du hast, er hat\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the whole shape — \"habe … hast … hat … haben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the whole shape — \"habe … hast … hat … haben\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"du hast, er hat.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"he has.\" (Er hat.) Say \"she has.\" (Sie hat.) Which two forms of this verb break the rule? (Hast and hat.) What do both of them drop? (The b.) Next: why they drop it, and the English verb that does the identical thing."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C14-b-verlust",
-      "sequence": 349,
-      "title": "The b that fell out",
-      "headword": "der verlorene b",
-      "romanization": "der verlorene b",
-      "gloss": "why hast and hat lost their b — and the English verb that lost it in the same two places",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:dace70f90d5fc21c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Hast and hat both lost a b. That is not two accidents."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one shortcut, in exactly two cells",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Haben keeps its b everywhere except before a -st or a -t ending, where the b drops and the vowel shortens with it."
-            },
-            {
-              "kind": "speech",
-              "text": "Say hab-st and hab-t at speed and you can feel why: a b squeezed between a vowel and a hard t is work, and centuries of speakers declined to do it. The consonant wore away and the two shortest forms are what is left."
-            },
-            {
-              "kind": "speech",
-              "text": "Now listen to English, which is the same verb:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "English",
-                "German"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: infinitive. English: have. German: haben.",
-                "person: second person, older. English: thou hast. German: du hast.",
-                "person: third person. English: he has. German: er hat."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "English lost the same consonant, in the same two cells, of the same verb — and kept the archaic hast long enough for us to see it. Two languages, one shortcut, inherited together rather than invented twice."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "where the b survives — \"habe, haben, habt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: where the b survives — \"habe, haben, habt\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "where it does not — \"hast, hat\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: where it does not — \"hast, hat\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English echo — \"thou hast, du hast; he has, er hat\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English echo — \"thou hast, du hast; he has, er hat\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"hast, hat — no b.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "In which two forms does the b drop? (Hast and hat.) What else changes with it? (The vowel shortens.) Which English form still shows the same loss? (He has — or archaic thou hast.) Next: something to actually have."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C14-einen",
-      "sequence": 350,
-      "title": "einen — \"a,\" when it is the thing you have",
-      "headword": "einen",
-      "romanization": "einen",
-      "gloss": "a, an — the form the word takes for a masculine thing you have, and the first sighting of a system taught later",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:bf55b19f57a7c95b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich habe … wants something after it. The commonest thing to put there is \"a something,\" and German asks one small question first."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: einen",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "einen — \"a,\" for a der-word that is the thing you have."
-            },
-            {
-              "kind": "speech",
-              "text": "Ein is the number one doing a second job, which is exactly what English a is — a worn-down one. German keeps the resemblance visible: ein, eins."
-            },
-            {
-              "kind": "speech",
-              "text": "The -en on the end is the part English threw away. German marks a der-word differently when it is the thing being had rather than the thing doing the having, and einen is that marked form:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich habe einen Bruder. — \"I have a brother.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Der Bruder is a der-word, and he is what you have, so ein becomes einen. Nothing else in the sentence moves."
-            },
-            {
-              "kind": "speech",
-              "text": "Take this one as a word for now, not as a system. The system behind it — German's cases — gets a chapter of its own later; this is the first place the book cannot avoid it, because a sentence with haben in it needs something to have."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"einen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"einen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Ich habe einen Bruder.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich habe einen Bruder.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "it with the two broken forms — \"du hast einen Bruder; er hat einen Bruder\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: it with the two broken forms — \"du hast einen Bruder; er hat einen Bruder\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Ich habe einen Bruder.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I have a brother.\" (Ich habe einen Bruder.) Which word did ein become? (Einen.) Why? (Because der Bruder is the thing being had.) Which English word is ein underneath? (One.) Next: the trap this verb is famous for."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C14-habere",
-      "sequence": 351,
-      "title": "haben is not habēre",
-      "headword": "haben ist nicht habēre",
-      "romanization": "haben ist nicht habēre",
-      "gloss": "the famous false cognate — haben is a cousin of capture, and Latin habēre is a cousin of give",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:442762393b972b18",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "German haben, Latin habēre. Same consonants, same meaning, and the best false cognate in the business."
+              "text": "The last lesson had a German word the Romance languages borrowed. This one has a German word they did not borrow — and they have it anyway."
             }
           ]
         },
@@ -853,57 +192,34 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two verbs that look like one word:"
+              "text": "Rot comes from Germanic raudaz, and behind that from Proto-Indo-European h₁rewdʰ- — one of the oldest colour words that can be reconstructed at all. It went everywhere:"
             },
             {
               "kind": "table",
               "headers": [
                 "language",
-                "verb",
-                "meaning"
+                "what it became"
               ],
-              "columns": 3,
-              "rowCount": 2,
+              "columns": 2,
+              "rowCount": 3,
               "utterances": [
-                "language: German. verb: haben. meaning: to have.",
-                "language: Latin. verb: habēre. meaning: to have."
+                "language: German. what it became: rot.",
+                "language: English. what it became: red, and rust, ruddy.",
+                "language: Latin. what it became: ruber, rubeus — and so French rouge, plus ruby, rubric."
               ]
             },
             {
               "kind": "speech",
-              "text": "They are not related. It is a coincidence, and one of the most famous in linguistics. Follow each one back and they go in opposite directions."
+              "text": "So rot and rouge are cousins, not borrowings. They did not pass from one language to the other; they split apart thousands of years before either language existed, and each walked its own road to a word for red."
             },
             {
               "kind": "speech",
-              "text": "Haben comes from Germanic habjaną, from Proto-Indo-European kap-, \"to seize.\" That root's Latin child is capere — which is where English gets capture, captive, capable and accept."
-            },
-            {
-              "kind": "speech",
-              "text": "Habēre comes from a different root entirely, gʰabʰ-, and its English descendant is … give."
-            },
-            {
-              "kind": "speech",
-              "text": "So German haben is a cousin of capture, and Latin habēre — the source of French avoir and Italian avere — is a cousin of give. Seizing and giving, which is about as far apart as two verbs get."
+              "text": "That is a different relationship from the one blank has with blanc. There, a word crossed a border within recorded history. Here, two words inherited the same ancestor and never met again."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "This is worth carrying beyond one verb. Resemblance is not evidence. Two words can match in sound and sense and still have nothing to do with each other, and the only way to tell is to follow both back rather than to compare them where they stand."
-            },
-            {
-              "kind": "speech",
-              "text": "Most of this book's cousin pairs are real. This one is the control that proves the others were checked."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -916,29 +232,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair that is not a pair — \"haben, habēre\"",
+              "instruction": "the family — \"rot, red, rouge\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair that is not a pair — \"haben, habēre\"]"
+              "source": "[YOU SAY: the family — \"rot, red, rouge\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "where German's goes — \"haben, kap-, capture\"",
+              "instruction": "the English extras — \"rust, ruddy\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: where German's goes — \"haben, kap-, capture\"]"
+              "source": "[YOU SAY: the English extras — \"rust, ruddy\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "where Latin's goes — \"habēre, gʰabʰ-, give\"",
+              "instruction": "the two relationships — \"blank and blanc: borrowed. Rot and rouge: cousins.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: where Latin's goes — \"habēre, gʰabʰ-, give\"]"
+              "source": "[YOU SAY: the two relationships — \"blank and blanc: borrowed. Rot and rouge: cousins.\"]"
             },
             {
               "kind": "repeat",
@@ -947,12 +263,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"haben is not habēre.\""
+              "text": "\"rot, red, rouge.\""
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -964,26 +280,26 @@
             },
             {
               "kind": "speech",
-              "text": "Are haben and habēre related? (No — a coincidence.) Which English word is haben's cousin? (Capture, from capere.) And habēre's? (Give.) What did haben's root originally mean? (\"To seize.\") Next: the whole verb, said through."
+              "text": "Which French word is rot's relative? (Rouge.) Did French borrow it from German? (No — they are cousins.) Which Latin word is in the line? (Ruber.) Name two English words from the same root besides red. (Rust, ruddy.) Next: the fourth colour, which was borrowed."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C14-practice",
-      "sequence": 352,
-      "title": "Practice — the whole of haben",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "chapter payoff — the six forms on one page for the first time, four of them free and two of them earned",
+      "id": "GE-C13-blau",
+      "sequence": 327,
+      "title": "blau — \"blue\"",
+      "headword": "blau",
+      "romanization": "blau",
+      "gloss": "blue — the fourth colour, and the second German word the Romance languages took",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d8cb64a7bdee91c",
+      "sourceHash": "fnv1a64:0421393e1e89cf0e",
       "notice": null,
       "blocks": [
         {
@@ -999,59 +315,41 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. Four of the six forms below cost you nothing, and the other two have each had a lesson, so this is the first place it is safe to set them out together."
+              "text": "The fourth and last colour of the set — and the second one German lent abroad."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the six, assembled",
+          "type": "input",
+          "title": "You'll want to know: blau",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "singular",
-                "plural"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "singular: ich habe. plural: wir haben.",
-                "singular: du hast. plural: ihr habt.",
-                "singular: er/sie/es hat. plural: sie/Sie haben."
-              ]
+              "kind": "speech",
+              "text": "blau — \"blue.\""
             },
             {
               "kind": "speech",
-              "text": "Run it aloud and hear where the b goes missing: habe … hast … hat … haben. Four forms carry it, two do not, and the two that do not are the two shortest."
+              "text": "Four letters, one syllable, and the vowel is the trap."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "German",
-                "English"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "Hast du einen Bruder? means Do you have a brother?",
-                "Und du? means And you?",
-                "Ich habe eine Schwester. means I have a sister.",
-                "Wir haben Brot und Wein. means We have bread and wine.",
-                "Gut! Dann haben wir alles. means Good! Then we have everything."
-              ]
+              "kind": "speech",
+              "text": "diphthong-au — German au is the vowel of English house or cow. It is not the aw of law and not the oo of blue."
             },
             {
               "kind": "speech",
-              "text": "Two things slip in without lessons of their own, because the translation carries them: eine, which is what ein becomes for a die-word, and alles (\"everything\"). And notice Hast du …? — a question puts the verb first, which is the one move German makes that English needs do for."
+              "text": "So blau rhymes with English cow: blow as in plough, never blow as in blew."
+            },
+            {
+              "kind": "speech",
+              "text": "That one vowel is what stops an English speaker recognising the word by ear even though it is the same word."
             }
           ]
         },
@@ -1069,38 +367,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the six in order — \"habe, hast, hat, haben, habt, haben\"",
+              "instruction": "\"blau\" — rhyming with cow",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the six in order — \"habe, hast, hat, haben, habt, haben\"]"
+              "source": "[YOU SAY: \"blau\" — rhyming with *cow*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two breaks alone — \"hast, hat\"",
+              "instruction": "the wrong one, then the right one — \"not bloo … blau\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two breaks alone — \"hast, hat\"]"
+              "source": "[YOU SAY: the wrong one, then the right one — \"not *bloo* … *blau*\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich habe einen Bruder.\" \"Wir haben Brot und Wein.\"",
+              "instruction": "all four — \"schwarz, weiß, rot, blau\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich habe einen Bruder.\" \"Wir haben Brot und Wein.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the whole exchange, both voices",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange, both voices]"
+              "source": "[YOU SAY: all four — \"schwarz, weiß, rot, blau\"]"
             },
             {
               "kind": "repeat",
@@ -1109,7 +398,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"habe, hast, hat, haben, habt, haben.\""
+              "text": "\"blau, blau — rhymes with cow.\""
             }
           ]
         },
@@ -1126,7 +415,298 @@
             },
             {
               "kind": "speech",
-              "text": "Run the six without looking. Which two drop the b? (Hast and hat.) Say \"I have a brother.\" (Ich habe einen Bruder.) Is haben related to Latin habēre? (No.) Which English word is it related to? (Capture.) Next: the one everyday sentence where German refuses this verb altogether."
+              "text": "Say \"blue.\" (Blau.) Which English word does it rhyme with? (Cow.) Does it rhyme with blue? (No.) Say all four colours. (Schwarz, weiß, rot, blau.) Next: the journey this word took, and the odd route English used to get it back."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C13-blau-bleu",
+      "sequence": 328,
+      "title": "blau, taken apart",
+      "headword": "blau, bleu, blue",
+      "romanization": "blau, bleu, blue",
+      "gloss": "the second Germanic emigrant — and English took the French form, so its blue came home in disguise",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dadfc968e41fe14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Blank emigrated. So did this one — and then English did something strange to get it back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Blau comes from Germanic blēwaz, and like blank before it, this word was borrowed into Romance:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "\"blue\""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "language: German. \"blue\": blau.",
+                "language: French. \"blue\": bleu.",
+                "language: Italian. \"blue\": blu.",
+                "language: English. \"blue\": blue — taken from French, not from Germanic."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read that last row twice. English is Germanic. It had inherited blēwaz itself — the word was already sitting in Old English — and it borrowed the French form anyway."
+            },
+            {
+              "kind": "speech",
+              "text": "So the word went Germanic becomes French becomes English, and arrived home wearing Romance clothes. English blue is a German word that took the long way round and is no longer recognisable as one — which is exactly why blau does not sound like blue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Portuguese went somewhere else entirely: its blue is azul, from Arabic. One colour, and within a few hundred miles you can find a Germanic word, a Germanic word laundered through French, and an Arabic one."
+            },
+            {
+              "kind": "speech",
+              "text": "Colour words travel more than almost any other kind, because they are easy to borrow: you can point at the thing. Verbs and grammar stay home; the names of shades move with cloth, dye and trade."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — \"blau, bleu, blu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — \"blau, bleu, blu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the long way round — \"Germanic, French, English\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the long way round — \"Germanic, French, English\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the outlier — \"azul, from Arabic\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the outlier — \"azul, from Arabic\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"blau, bleu, blue — one word, three stops.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two German colour words did Romance borrow? (Blank and blau.) Where did English get blue from? (French — not directly from Germanic.) Which language's blue is Arabic? (Portuguese — azul.) Next: all four colours, and what each of them did."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C13-rot-blau",
+      "sequence": 329,
+      "title": "Practice — four colours, four histories",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — four colours, four different relationships with the neighbours",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddc325b78420729c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Four colours, and no two of them got where they are the same way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "source",
+                "did Romance take it?"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "German: schwarz. source: Germanic swartaz. did Romance take it?: no.",
+                "German: weiß. source: Germanic hwītaz. did Romance take it?: no — but blank went instead.",
+                "German: rot. source: Germanic raudaz. did Romance take it?: no — Latin had its own cousin.",
+                "German: blau. source: Germanic blēwaz. did Romance take it?: yes — bleu, blu."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four native Germanic words and not a Latin borrowing among them, which is worth saying plainly: German did not get its colours from Rome. Two of them went the other way."
+            },
+            {
+              "kind": "speech",
+              "text": "And the \"no\" in row three is a different kind of no from the ones above it. Schwarz and weiß stayed home. Rot has a Romance relative anyway — because Latin inherited the same ancient word rather than borrowing the German one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"schwarz, weiß, rot, blau\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"schwarz, weiß, rot, blau\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two traps — \"rot as road, blau as cow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two traps — \"rot as *road*, blau as *cow*\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins that prove the family — \"rot, red, rouge\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins that prove the family — \"rot · red · rouge\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two that emigrated — \"blank, blau\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two that emigrated — \"blank, blau\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"schwarz, weiß, rot, blau.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the four colours. How many were borrowed from Latin? (None.) Which two did Romance take from German? (Blank and blau.) Is rouge a borrowing from rot? (No — a cousin.) Which English colour word came home through French? (Blue.)"
             }
           ]
         }

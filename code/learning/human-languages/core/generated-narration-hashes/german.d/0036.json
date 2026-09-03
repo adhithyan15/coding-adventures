@@ -1,18 +1,15 @@
 {
   "language": "german",
   "chapter": 36,
-  "sourceHash": "fnv1a64:709d2a05f9b6e9db",
+  "sourceHash": "fnv1a64:3111a50852ffb011",
   "lessonIds": [
-    "GE-C24-denken",
-    "GE-C24-verstehen",
-    "GE-C24-lesen",
-    "GE-C24-schreiben"
+    "GE-C23-gruen-gelb"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "german/narration/ch36.txt",
   "json": "german/narration/ch36.json",
-  "textHash": "fnv1a64:dbde27cdf455c6e7",
-  "jsonHash": "fnv1a64:74b6df2c772f21df",
+  "textHash": "fnv1a64:fb7a68fae9fc9012",
+  "jsonHash": "fnv1a64:256125660097da70",
   "findings": []
 }

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C31-herz
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1050
-chapter: 43
+chapter: 44
 type: word
 headword: das Herz
 gloss: heart — the last name from the *Hand* table, closing it with the same k-to-h Grimm's law swap already heard on hören and Hund

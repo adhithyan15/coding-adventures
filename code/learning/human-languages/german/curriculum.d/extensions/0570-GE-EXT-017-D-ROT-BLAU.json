@@ -1,0 +1,15 @@
+{
+  "id": "GE-EXT-017-D-ROT-BLAU",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say red and blue in German, and say which of them Romance borrowed.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C13-rot",
+    "GE-C13-rot-ruber",
+    "GE-C13-blau",
+    "GE-C13-blau-bleu",
+    "GE-C13-rot-blau"
+  ]
+}

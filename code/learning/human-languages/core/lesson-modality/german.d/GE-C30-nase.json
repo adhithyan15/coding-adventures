@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C30-nase",
     "language": "german",
-    "chapter": 42,
+    "chapter": 43,
     "sequence": 1010,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:934f7f16c208aad0"
+    "sourceHash": "fnv1a64:84c62120d70a25a1"
   },
   "findings": []
 }

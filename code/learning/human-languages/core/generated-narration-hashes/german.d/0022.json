@@ -1,22 +1,22 @@
 {
   "language": "german",
   "chapter": 22,
-  "sourceHash": "fnv1a64:12a67d91d1c11b6d",
+  "sourceHash": "fnv1a64:a3489715fe85b430",
   "lessonIds": [
-    "GE-C15-sagen",
-    "GE-C15-gesagt",
-    "GE-C15-partizip",
-    "GE-C15-gemacht",
-    "GE-C15-gelernt",
-    "GE-C15-gewohnt",
-    "GE-C15-ge-praefix",
-    "GE-C15-partizip-practice"
+    "GE-C14-haben",
+    "GE-C14-hab-stamm",
+    "GE-C14-du-hast",
+    "GE-C14-er-hat",
+    "GE-C14-b-verlust",
+    "GE-C14-einen",
+    "GE-C14-habere",
+    "GE-C14-practice"
   ],
   "voiceLessons": 8,
   "drivablePrefix": 8,
   "text": "german/narration/ch22.txt",
   "json": "german/narration/ch22.json",
-  "textHash": "fnv1a64:af5160908101b5d3",
-  "jsonHash": "fnv1a64:a2619eb776762918",
+  "textHash": "fnv1a64:d741a070108028b6",
+  "jsonHash": "fnv1a64:2d443b89148f99e4",
   "findings": []
 }

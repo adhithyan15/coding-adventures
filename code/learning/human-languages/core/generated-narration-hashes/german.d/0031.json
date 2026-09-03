@@ -1,15 +1,16 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:f39643d2ac327696",
+  "sourceHash": "fnv1a64:f801890d0ae7476a",
   "lessonIds": [
-    "GE-C19-bitte-requests"
+    "GE-C18-ja",
+    "GE-C18-nein"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "german/narration/ch31.txt",
   "json": "german/narration/ch31.json",
-  "textHash": "fnv1a64:2df0553c3432d46f",
-  "jsonHash": "fnv1a64:c9ce86362e44ec8d",
+  "textHash": "fnv1a64:044b115a5f211420",
+  "jsonHash": "fnv1a64:79e326ff2294cf58",
   "findings": []
 }

@@ -1,12 +1,9 @@
 {
   "language": "german",
   "chapter": 36,
-  "sourceHash": "fnv1a64:bdc3025f97fe8d3c",
+  "sourceHash": "fnv1a64:e9769c208af23855",
   "lessonIds": [
-    "GE-C24-denken",
-    "GE-C24-verstehen",
-    "GE-C24-lesen",
-    "GE-C24-schreiben"
+    "GE-C23-gruen-gelb"
   ],
-  "tex": "german/book/chapters/ch36-mind-verbs.tex"
+  "tex": "german/book/chapters/ch36-green-and-yellow.tex"
 }
