@@ -35,7 +35,7 @@ use std::env;
 use std::path::{Path, PathBuf};
 
 use cli_builder::{load_spec_from_file, Parser, ParserOutput};
-use grammar_tools::compiler::{compile_parser_grammar, compile_token_grammar};
+use grammar_tools::compiler::{compile_combined_grammar, compile_parser_grammar, compile_token_grammar};
 use grammar_tools::cross_validator::cross_validate;
 use grammar_tools::parser_grammar::{parse_parser_grammar, validate_parser_grammar};
 use grammar_tools::token_grammar::{parse_token_grammar, token_names, validate_token_grammar};
@@ -437,6 +437,102 @@ pub fn compile_tokens_command(tokens_path: &str, output_path: Option<&str>, forc
 /// Compile a `.grammar` file to Rust source code.
 ///
 /// Returns `0` on success, `1` on error.
+/// Compile a `.tokens` + `.grammar` pair into ONE Rust module.
+///
+/// The three Mosaic language compilers keep both grammars in a single
+/// `src/_grammar.rs`. They are `*-compiler` crates, so the `*-lexer` /
+/// `*-parser` sweep never covered them and nothing could regenerate them —
+/// even though their own generated headers named a regeneration command
+/// (#14067).
+///
+/// Returns `0` on success, `1` on error.
+pub fn compile_combined_command(
+    tokens_path: &str,
+    grammar_path: &str,
+    output_path: Option<&str>,
+    force: bool,
+) -> i32 {
+    let tokens_source = match std::fs::read_to_string(tokens_path) {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("Failed to read {}: {}", tokens_path, e);
+            return 1;
+        }
+    };
+    let grammar_source = match std::fs::read_to_string(grammar_path) {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("Failed to read {}: {}", grammar_path, e);
+            return 1;
+        }
+    };
+
+    let tokens = match parse_token_grammar(&tokens_source) {
+        Ok(g) => g,
+        Err(e) => {
+            eprintln!("Failed to parse {}: {}", tokens_path, e);
+            return 1;
+        }
+    };
+    let parser = match parse_parser_grammar(&grammar_source) {
+        Ok(g) => g,
+        Err(e) => {
+            eprintln!("Failed to parse {}: {}", grammar_path, e);
+            return 1;
+        }
+    };
+
+    if !force {
+        // Validate the parser grammar against the token grammar's real name
+        // set, not standalone. That is what catches a rule referencing a token
+        // the tokens file does not define — and, since `token_names` now
+        // reports the KEYWORD a `keywords:` block synthesizes, what stops a
+        // legitimate KEYWORD reference being reported as undefined.
+        let names = token_names(&tokens);
+        let mut issues = validate_token_grammar(&tokens);
+        issues.extend(validate_parser_grammar(&parser, Some(&names)));
+        issues.extend(cross_validate(&tokens, &parser));
+        let errors = count_errors(&issues);
+        if errors > 0 {
+            eprintln!(
+                "Validation failed for {} + {}:\n{}",
+                tokens_path,
+                grammar_path,
+                format_issue_block(&issues)
+            );
+            return 1;
+        }
+    }
+
+    let tokens_name = Path::new(tokens_path)
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or(tokens_path);
+    let grammar_name = Path::new(grammar_path)
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or(grammar_path);
+
+    let code = compile_combined_grammar(&tokens, &parser, tokens_name, grammar_name);
+
+    match output_path {
+        Some(out) => match std::fs::write(out, &code) {
+            Ok(()) => {
+                println!("Compiling {} + {} ... OK \u{2192} {}", tokens_name, grammar_name, out);
+                0
+            }
+            Err(e) => {
+                eprintln!("Failed to write {}: {}", out, e);
+                1
+            }
+        },
+        None => {
+            print!("{}", code);
+            0
+        }
+    }
+}
+
 pub fn compile_grammar_command(grammar_path: &str, output_path: Option<&str>, force: bool) -> i32 {
     let grammar_filename = Path::new(grammar_path)
         .file_name()
@@ -1104,6 +1200,15 @@ pub fn dispatch(command: &str, files: &[String], output_path: Option<&str>, forc
                 return 2;
             }
             compile_grammar_command(&files[0], output_path, force)
+        }
+        "compile-combined" => {
+            if files.len() != 2 {
+                eprintln!(
+                    "Error: 'compile-combined' requires exactly two files: <tokens> <grammar>"
+                );
+                return 2;
+            }
+            compile_combined_command(&files[0], &files[1], output_path, force)
         }
         "generate-rust-compiled-grammars" => generate_rust_compiled_grammars_command(files, force),
         other => {
