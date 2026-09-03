@@ -60,13 +60,15 @@ def _runner_layout(root: Path, *, modern: bool = True) -> tuple[Path, Path]:
     return sources_dir, sources_list
 
 
-def _prune(sources_dir: Path, sources_list: Path, *args: str):
+def _prune(sources_dir: Path, sources_list: Path, *args: str, keep: str = ""):
     """Run the script in prune-only mode, without sudo."""
 
     return subprocess.run(
         ["bash", str(SCRIPT), *args],
         env={
             "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+            "CI": "true",
+            "APT_KEEP": keep,
             "APT_SUDO": "",
             "APT_PRUNE_ONLY": "1",
             "APT_SOURCES_DIR": str(sources_dir),
@@ -104,21 +106,56 @@ class PruneTests(unittest.TestCase):
                 sorted(p.name for p in sources_dir.iterdir()), ["ubuntu.sources"]
             )
 
-    def test_leaves_a_repository_we_might_actually_use(self) -> None:
-        # The false-positive direction. Pruning is by explicit vendor pattern
-        # precisely so that a PPA someone adds later for a toolchain keeps
-        # working -- a blanket wipe would break it silently at the install step.
+    def test_prunes_every_vendor_repository_not_just_the_named_ones(self) -> None:
+        # The gap the first version left. It enumerated microsoft and azure-cli,
+        # and the runner also carries `google-chrome.sources` -- a repository
+        # nothing here installs from, which can 403 exactly the way Microsoft's
+        # did. A denylist over what someone else preinstalls is only ever as
+        # current as the last time somebody looked at a runner image.
+        with tempfile.TemporaryDirectory() as tmp:
+            sources_dir, sources_list = _runner_layout(Path(tmp))
+            (sources_dir / "google-chrome.sources").write_text(
+                "Types: deb\nURIs: https://dl.google.com/linux/chrome/deb/\n"
+            )
+            (sources_dir / "some-future-vendor.list").write_text(
+                "deb https://vendor.example.com/apt noble main\n"
+            )
+            result = _prune(sources_dir, sources_list)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(
+                sorted(p.name for p in sources_dir.iterdir()), ["ubuntu.sources"]
+            )
+
+    def test_apt_keep_preserves_a_declared_repository(self) -> None:
+        # The escape hatch. Nothing needs it today -- no workflow runs
+        # `add-apt-repository` -- but the day one does, it would add the PPA and
+        # then call this script, which would delete it a line later and fail
+        # with "unable to locate package" pointing at the package rather than
+        # at us.
         with tempfile.TemporaryDirectory() as tmp:
             sources_dir, sources_list = _runner_layout(Path(tmp))
             (sources_dir / "deadsnakes-ubuntu-ppa-noble.list").write_text(
                 "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu noble main\n"
             )
+            result = _prune(sources_dir, sources_list, keep="deadsnakes*")
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(
+                sorted(p.name for p in sources_dir.iterdir()),
+                ["deadsnakes-ubuntu-ppa-noble.list", "ubuntu.sources"],
+            )
+
+    def test_a_declared_repository_is_not_kept_without_apt_keep(self) -> None:
+        # So the test above cannot pass by the allowlist being permissive.
+        with tempfile.TemporaryDirectory() as tmp:
+            sources_dir, sources_list = _runner_layout(Path(tmp))
+            (sources_dir / "deadsnakes-ubuntu-ppa-noble.list").write_text("deb x y z\n")
             result = _prune(sources_dir, sources_list)
 
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn(
-                "deadsnakes-ubuntu-ppa-noble.list",
-                [p.name for p in sources_dir.iterdir()],
+            self.assertEqual(
+                sorted(p.name for p in sources_dir.iterdir()), ["ubuntu.sources"]
             )
 
     def test_refuses_to_continue_when_pruning_removed_everything(self) -> None:
@@ -217,7 +254,7 @@ class PruneTests(unittest.TestCase):
             result = _prune(root / "does-not-exist", sources_list)
 
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn("no vendor source lists to prune", result.stdout)
+            self.assertIn("no unused source lists to prune", result.stdout)
 
 
 class WorkflowConsistencyTests(unittest.TestCase):
