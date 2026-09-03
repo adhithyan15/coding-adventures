@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C60-ANIMAL-01]
 practises:
-  knowledge: [TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01]
+  knowledge: [TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01, TE-LEX-C58-REPLY-01, TE-LEX-C59-WEATHER-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A గేదె standing in a చెరువు with only its nose above the wat
 The first animal.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01, TE-LEX-C58-REPLY-01, TE-LEX-C59-WEATHER-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gēde*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gēde*, then *pālu*, and say which one gives the other]
+- [YOU RECALL: say *koñcem*, then read **గాలి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01] -->

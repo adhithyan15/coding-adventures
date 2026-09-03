@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C53-SKY-01]
 practises:
-  knowledge: [TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01]
+  knowledge: [TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01, TE-LEX-C51-COURTESY-01, TE-LEX-C52-WELCOME-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Telugu also holds an inherited word for the same overhead space, నింగి
 The space that the rest of this chapter hangs in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01, TE-LEX-C51-COURTESY-01, TE-LEX-C52-WELCOME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ākāśaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśaṁ*, then *namaskāraṁ*, as you would greet somebody outdoors]
+- [YOU RECALL: say *kṛtajñata*, then read **తలుపు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01] -->

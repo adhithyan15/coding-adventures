@@ -1,0 +1,13 @@
+{
+  "id": "SA-PATH-61-SEASON",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "SA-C61-rtu",
+    "SA-S225-letter-vocalic-r"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-061-SEASON"
+  ],
+  "after": []
+}

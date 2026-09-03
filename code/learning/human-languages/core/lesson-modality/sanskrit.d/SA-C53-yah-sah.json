@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C53-yah-sah",
+    "language": "sanskrit",
+    "chapter": 53,
+    "sequence": 2600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73fd30e9ff428f9a"
+  },
+  "findings": []
+}

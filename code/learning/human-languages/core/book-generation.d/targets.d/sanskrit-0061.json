@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 61,
+  "output": "sanskrit/book/chapters/ch61-the-turning-season.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C61-KITCHEN-05]
 practises:
-  knowledge: [TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05]
+  knowledge: [TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05, TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Andhra cooking is built on it now, and a kitchen there measures itself by how mu
 Five: పెరుగు, నెయ్యి, నూనె, చక్కెర, మిరప. Enough to name what a kitchen holds while somebody asks you your పేరు.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05, TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mirapa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *nā pēru* and your own name]
+- [YOU RECALL: say *nippu*, then read **పక్షి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05] -->

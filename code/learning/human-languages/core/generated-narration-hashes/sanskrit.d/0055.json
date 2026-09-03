@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:886dba400e7d53c1",
+  "lessonIds": [
+    "SA-C55-gatva",
+    "SA-C55-gantum",
+    "SA-R55-non-finite"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch55.txt",
+  "json": "sanskrit/narration/ch55.json",
+  "textHash": "fnv1a64:1795b28327efac73",
+  "jsonHash": "fnv1a64:c657033a35293719",
+  "findings": []
+}

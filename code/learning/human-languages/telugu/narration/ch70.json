@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Small Creatures",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ea9d47aa46c71be",
+  "sourceHash": "fnv1a64:2000993d2d2f7224",
   "lessons": [
     {
       "id": "TE-C70-mouse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab7dd7ea911ba11a",
+      "sourceHash": "fnv1a64:35a94f08f111032e",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *eluka*, then *avunu*, then *lēdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śabdaṁ, then read గొడ్డలి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śabdaṁ*, then read **గొడ్డలి** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:946043903d1c34b0",
+      "sourceHash": "fnv1a64:a032e9971904caa2",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kappu*, then *kappa*, and say which one is the roof]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read గొంతు, then say rampaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **గొంతు**, then say *rampaṁ*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2323029708995cf",
+      "sourceHash": "fnv1a64:72f92645bfa59841",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dōma*, then *kappa*, and say which one you hear at night]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pāṭa, then read పార and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pāṭa*, then read **పార** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2208d7e6ea8f777c",
+      "sourceHash": "fnv1a64:b59f62fa1482bdde",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *uḍuta*, then *eluka*, and say which one is welcome]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read అరుపు, then say sutti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **అరుపు**, then say *sutti*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86f0920ea37e0044",
+      "sourceHash": "fnv1a64:2b0d6397e53e4754",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *avunu* for the ones in your house and *lēdu* for the rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaburu, then read కర్ర and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaburu*, then read **కర్ర** and say what it means]"
             }
           ]
         },

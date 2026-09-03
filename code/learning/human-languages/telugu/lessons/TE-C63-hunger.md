@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C63-HEALTH-01]
 practises:
-  knowledge: [TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01]
+  knowledge: [TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01, TE-LEX-C61-KITCHEN-01, TE-LEX-C62-MADE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word is inherited, and it is among the first a child in a Telugu house learn
 The first thing to say about yourself.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01, TE-LEX-C61-KITCHEN-01, TE-LEX-C62-MADE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ākali*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nāku ākali*, then ask *mīru elā unnāru?*]
+- [YOU RECALL: say *perugu*, then read **దారం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01] -->

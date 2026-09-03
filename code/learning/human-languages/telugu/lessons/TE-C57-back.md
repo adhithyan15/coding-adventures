@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C57-BODY-02]
 practises:
-  knowledge: [TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02]
+  knowledge: [TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C55-ROAD-02, TE-LEX-C56-HOUSE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That pattern is worth noticing. The words a language borrows tend to be for thin
 Two more, both of them old.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C55-ROAD-02, TE-LEX-C56-HOUSE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vīpu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vīpu*, then *meḍa*, and say which is above the other]
+- [YOU RECALL: read **చెరువు**, then say *buṭṭa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02] -->

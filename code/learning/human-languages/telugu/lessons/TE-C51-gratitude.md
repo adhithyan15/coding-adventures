@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C51-COURTESY-01]
 practises:
-  knowledge: [TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01]
+  knowledge: [TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01, TE-LEX-C49-REPLY-01, TE-LEX-C50-LEAVE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Set it beside ధన్యవాదములు, the thank-you from the first pa
 A second word for thanks, with a different picture inside it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01, TE-LEX-C49-REPLY-01, TE-LEX-C50-LEAVE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kṛtajñata*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṛtajñata*, then *dhanyavādamulu*, and say which one remembers a debt]
+- [YOU RECALL: say *nijaṁ*, then read **ఇప్పుడు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01] -->

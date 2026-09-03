@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C66-FIELD-02]
 practises:
-  knowledge: [TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02]
+  knowledge: [TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C64-JOIN-02, TE-LEX-C65-MANNERS-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A వరి పొలం under water with the seedlings just pushed in is the pi
 Two: the ground and what is standing in it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C64-JOIN-02, TE-LEX-C65-MANNERS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vari*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vari*, then say which of బియ్యం and అన్నం comes next]
+- [YOU RECALL: read **మాత్రమే**, then say *maryāda*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02] -->

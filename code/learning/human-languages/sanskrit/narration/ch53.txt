@@ -1,0 +1,163 @@
+Sanskrit, chapter 53: Which One, That One.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+यः (yaḥ) — who, which.
+
+Warm-up.
+[pause 2 seconds]
+Say the deixis system out loud: the a- word for near, the t- word for far, the k- word that asks. Then say "neither food nor water".
+
+You'll want to know: यः.
+यः (yaḥ) — "who, which".
+The deixis lesson taught you that Sanskrit points with three initial letters. अ- points near, त- points far, क- asks. The system was presented as three legs, and it has always had four.
+य- is the fourth. It does not point and it does not ask. It hands the question forward — it opens a clause and says: hold on, I am about to tell you which one I mean.
+कः — who? — I am asking you यः (yaḥ) — who / the one who — I am about to tell you.
+Nothing else about the word is new. Its -ः ending is the masculine ending you have read on नरः, बालः and मार्गः since the place words, and it agrees exactly as those do.
+Say the four together, because from here on they behave as one family: अ-, त-, क-, य-.
+
+What you've built.
+The missing fourth leg of a system you already half knew.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kaḥ, then yaḥ, and say which one asks]
+[pause 8 seconds for the answer]
+[your turn — say: the four openings — a-, ta-, ka-, ya-]
+[pause 8 seconds for the answer]
+[your turn — read: यः (yaḥ), and name the ending it shares with नरः]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does यः (yaḥ) do that कः does not? (It hands the question forward instead of asking it.)
+
+
+Lesson 2 of 5.
+सः (saḥ) — he, that one.
+
+Warm-up.
+[pause 2 seconds]
+What does यः (yaḥ) do? And what does तत् point at?
+
+You'll want to know: सः.
+सः (saḥ) — "he, that one".
+You have known तत् since the deixis lesson — the t- word that points at something over there. सः (saḥ) is the same pointing word for a masculine person or thing: that man, he, that one.
+The odd part is the स-. Everywhere else in this family the far-pointer is त-: तत्, तत्र, and every other form of the word. Only the masculine and feminine nominative singulars break out and begin with स- — सः (saḥ) and सा. It is one of the oldest irregularities in the language, and it is inherited rather than invented: Greek's article does exactly the same thing, with ho and hē beside a t- everywhere else.
+So the rule to hold is small and strange: the word is a t- word that starts with स- only when it is the subject.
+
+What you've built.
+The pointer that will answer यः (yaḥ) in the next lesson.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: saḥ]
+[pause 8 seconds for the answer]
+[your turn — say: yaḥ, then saḥ, and say which one opens and which one answers]
+[pause 8 seconds for the answer]
+[your turn — read: तत् and सः (saḥ), and say what the two have in common]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does सः (saḥ) mean, and which letter does it begin with only as a subject? ("He, that one", and स-.)
+
+
+Lesson 3 of 5.
+यः … सः (yaḥ … saḥ) — the correlative.
+
+Warm-up.
+[pause 2 seconds]
+Say यः (yaḥ), then सः (saḥ). Which one opens, and which one answers?
+
+Grammar Lens: two clauses, one hinge.
+Put the two words in one sentence, each opening its own clause, and you have Sanskrit's entire relative-clause system.
+यः गच्छति सः पश्यति yaḥ gacchati saḥ paśyati the one who goes, sees.
+Read it literally and it is stranger and simpler than the English: which one goes, that one sees. The य- clause raises a candidate; the त- clause picks it up and says what happens to it.
+This is not the English shape with the words translated. English hangs the relative clause off a noun — the man who goes — and the clause sits inside the main sentence. Sanskrit sets two whole clauses side by side and pins them together with the य-/त- pair. There is no noun for the clause to hang from and none is needed.
+Three consequences, all of which you can check on the sentence above:
+The य- clause usually comes first. English almost always puts the main clause first; Sanskrit almost always puts the relative one first.
+Both halves are complete sentences. yaḥ gacchati would stand on its own as "he goes" if यः were सः (saḥ).
+Nothing is subordinated by word order. The pair of pronouns does all the work, so the halves can be swapped for emphasis without the grammar breaking.
+From here, every "the one that…", "whoever…", and "what I said" you will meet in Sanskrit is this same hinge with different endings on it.
+
+What you've built.
+A sentence with two clauses in it, for the first time in this track.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: yaḥ gacchati saḥ paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: it again, and name which half is the y- clause]
+[pause 8 seconds for the answer]
+[your turn — read: यः (yaḥ) गच्छति सः (saḥ) पश्यति, then say what it means in English]
+[pause 8 seconds for the answer]
+[your turn — contrast: English hangs the clause on a noun; Sanskrit pins two clauses with a pronoun pair]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which clause comes first in Sanskrit, the य- one or the त- one? (The य- one.) Say the sentence once more.
+
+
+Lesson 4 of 5.
+यत्र … तत्र (yatra … tatra) — where … there.
+
+Warm-up.
+[pause 2 seconds]
+Say the correlative sentence from the last lesson. Then say अत्र and तत्र, and what each one means.
+
+Grammar Lens: the hinge is not about people.
+यः … सः (yaḥ … saḥ) joined two clauses through a person. Change the pair and the same hinge joins them through a place, with no other change at all.
+यत्र ग्रामः तत्र मार्गः yatra grāmaḥ tatra mārgaḥ where there is a village, there is a road.
+तत्र is not new — you have had it since the deixis lesson. यत्र is तत्र with the य- opening swapped in, exactly as यः (yaḥ) was सः (saḥ) with the same swap.
+That is the real lesson of this chapter, and it is worth saying plainly: the correlative is a slot, not a word. Any त- word you already know has a य- partner, and putting the pair in two clauses joins them:
+[a table of 2 rows, read aloud]
+य- clause opens: यः (yaḥ). त- clause answers: सः (saḥ). joins by: person.
+य- clause opens: यत्र. त- clause answers: तत्र. joins by: place.
+You have met two of these. The pattern that generates them is one you can now recognise anywhere.
+
+What you've built.
+The same two-clause hinge, on a second axis.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: yatra grāmaḥ tatra mārgaḥ]
+[pause 8 seconds for the answer]
+[your turn — recall: say तत्र, then read यत्र and say what the swap did]
+[pause 8 seconds for the answer]
+[your turn — read: यत्र ग्रामः तत्र मार्गः, then say what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you make a य- word from a त- word? (Swap the opening letter.) Say the village-and-road sentence once more.
+
+
+Lesson 5 of 5.
+य-, त- — the correlative, reviewed.
+
+Warm-up.
+[pause 2 seconds]
+Say यः (yaḥ) and सः (saḥ), and say which one opens its clause.
+
+What you've built.
+The deixis lesson taught you three pointing letters and called it a system. It was three quarters of one. य- is the fourth, and adding it turns a set of question-and-answer words into a way of building sentences with two clauses in them.
+The whole of it fits in one line: a य- word raises a candidate, and the matching त- word picks it up.
+Everything else in this chapter was that line applied twice — once through a person, once through a place — plus one small irregularity worth keeping: the far-pointer is a त- word that wears स- when it is the subject.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: yaḥ gacchati saḥ paśyati]
+[pause 8 seconds for the answer]
+[your turn — say: yatra grāmaḥ tatra mārgaḥ]
+[pause 8 seconds for the answer]
+[your turn — recall: name the four openings of the pointing system, in order]
+[pause 8 seconds for the answer]
+[your turn — contrast: कः asks, यः (yaḥ) hands forward]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say both correlative sentences, and for each one name the axis it joins on — person or place.

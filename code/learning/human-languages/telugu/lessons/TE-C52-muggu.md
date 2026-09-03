@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C52-WELCOME-03]
 practises:
-  knowledge: [TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03]
+  knowledge: [TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C50-LEAVE-03, TE-LEX-C51-COURTESY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The flour is the point. It is laid where ants and birds will find it, so the wel
 Three: the door, the chair, and the mark on the ground in front of both.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C50-LEAVE-03, TE-LEX-C51-COURTESY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *muggu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *muggu*, then *talupu*, and say which one is outside the other]
+- [YOU RECALL: say *prayāṇaṁ*, then read **గౌరవం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03] -->

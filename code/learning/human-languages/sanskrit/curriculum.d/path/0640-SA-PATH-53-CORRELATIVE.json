@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-53-CORRELATIVE",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "SA-C53-yah",
+    "SA-C53-sah",
+    "SA-C53-yah-sah",
+    "SA-C53-yatra-tatra",
+    "SA-R53-correlative"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-053-CORRELATIVE"
+  ],
+  "after": []
+}

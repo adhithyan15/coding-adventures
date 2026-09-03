@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C50-LEAVE-01]
 practises:
-  knowledge: [TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01]
+  knowledge: [TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01, TE-LEX-C48-ROLE-01, TE-LEX-C49-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The grid from the last chapter has a time row, and this is its near corner. **-�
 Now — and a shape that gives you two more words for free.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01, TE-LEX-C48-ROLE-01, TE-LEX-C49-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ippuḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippuḍu*, then *ippuḍu veḷḷu* — "go now"]
+- [YOU RECALL: say *guruvu*, then read **నిజం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01] -->

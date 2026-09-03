@@ -1,0 +1,108 @@
+Sanskrit, chapter 56: What Happened Yesterday.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 3.
+अगच्छत् (agacchat) — he went.
+
+Warm-up.
+[pause 2 seconds]
+Say ह्यः, and what it means. Then say gacchati. You have had the word for yesterday since the time words and no verb to put in it.
+
+Grammar Lens: two changes, and the present becomes the past.
+This is the largest hole in the book so far, and it closes with two small changes to a verb you already say.
+गच्छति — he goes अगच्छत् (agacchat) — he went.
+Put अ- on the front. Cut the ending from -ति back to -त्. That is the whole operation.
+The अ- on the front has a name — the augment — and it does one job: it says this happened before now. It carries no person and no number. It is a single syllable meaning "past", glued to the front of the verb.
+Now put it with the word you have been holding all that time:
+ह्यः बालः अगच्छत् hyaḥ bālaḥ agacchat yesterday the boy went.
+That sentence was impossible one page ago. Not difficult — impossible: the track had a word for yesterday and no verb form that could stand in it.
+Here is the part that makes the augment worth remembering. Greek does exactly the same thing. Greek lúei is "he loosens"; élue is "he was loosening" — the same e- on the front, in the same job. Two branches of the family, two thousand miles and two alphabets apart, marking the past by prefixing one vowel. Neither borrowed it. Both inherited it.
+
+What you've built.
+The past tense, and a use at last for ह्यः.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: gacchati, then agacchat]
+[pause 8 seconds for the answer]
+[your turn — say: hyaḥ bālaḥ agacchat]
+[pause 8 seconds for the answer]
+[your turn — read: अगच्छत् (agacchat), and point at the two things that changed]
+[pause 8 seconds for the answer]
+[your turn — recall: the Greek prefix that does the same job]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two changes turn गच्छति into अगच्छत् (agacchat)? (अ- on the front, -ति cut to -त्.) Say "yesterday the boy went".
+
+
+Lesson 2 of 3.
+अपठत्, अखादत् — the same two changes, on any verb.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Turn गच्छति into the past out loud, and name the two things you changed.
+
+Grammar Lens: it is a rule, not a word.
+अगच्छत् (agacchat) was not a new word to memorise. It was गच्छति with a rule applied, and the rule applies to every verb of its class in the same way.
+[a table of 3 rows, read aloud]
+present: गच्छति. past: अगच्छत् (agacchat). meaning: goes / went.
+present: पठति. past: अपठत्. meaning: reads / read.
+present: खादति. past: अखादत्. meaning: eats / ate.
+Read down the middle column and the shape is identical every time: अ- in front, -त् at the back, the stem untouched in between.
+बालः अन्नम् अखादत् bālaḥ annam akhādat the boy ate the food.
+This is the first time in this book that learning one verb form has given you several. Up to now each verb arrived as its own word. From here, every first-class present you already hold has a past you can build without being told it.
+A caution worth having, said once and not laboured: Sanskrit has more than one past tense, and the classical language uses others too. This one — the imperfect — is the one a beginner meets first, forms most easily, and reads most often in narrative.
+
+What you've built.
+A past for every first-class verb you already say.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: paṭhati, then apaṭhat]
+[pause 8 seconds for the answer]
+[your turn — say: khādati, then akhādat]
+[pause 8 seconds for the answer]
+[your turn — say: bālaḥ annam akhādat]
+[pause 8 seconds for the answer]
+[your turn — read: अपठत्, and say which verb it came from]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build the past of खादति without being told it. Say "the boy ate the food".
+
+
+Lesson 3 of 3.
+अ- … -त् (a- … -t) — the past, reviewed.
+
+Warm-up.
+[pause 2 seconds]
+Say ह्यः, then say "yesterday the boy went".
+
+What you've built.
+Three time words have been sitting in this book waiting for a verb.
+ह्यः — yesterday, from the time words.
+अद्य — today, from the time words.
+श्वः — tomorrow, learnt with your first farewell.
+Until this chapter only one of the three could be used: अद्य, with the present. The other two named times the language could not talk about. अद्य and the present, ह्यः and the past — two of the three now work, and the third waits on a tense this book has not reached.
+That is worth naming plainly rather than glossing over. A track can teach a word and leave it unusable, and the only way to notice is to check what the learner can actually build with it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: adya bālaḥ gacchati — today the boy goes]
+[pause 8 seconds for the answer]
+[your turn — say: hyaḥ bālaḥ agacchat — yesterday the boy went]
+[pause 8 seconds for the answer]
+[your turn — contrast: the two sentences, and name every difference between them]
+[pause 8 seconds for the answer]
+[your turn — recall: build the past of पठति and of खादति]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say the two changes that make a past, and use them on a verb nobody has shown you in the past.

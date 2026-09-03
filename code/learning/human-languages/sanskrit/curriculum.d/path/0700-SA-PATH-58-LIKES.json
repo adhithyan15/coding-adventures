@@ -1,0 +1,14 @@
+{
+  "id": "SA-PATH-58-LIKES",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "SA-C58-mahyam",
+    "SA-C58-rocate",
+    "SA-R58-likes"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-058-LIKES"
+  ],
+  "after": []
+}

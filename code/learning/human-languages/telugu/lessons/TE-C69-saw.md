@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C69-TOOL-02]
 practises:
-  knowledge: [TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02]
+  knowledge: [TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C67-WALL-02, TE-LEX-C68-SOUND-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The noise is half the word. Telugu calls a rasping sound a రంపం sound, a
 Two. Both of them cut; only one cuts straight.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C67-WALL-02, TE-LEX-C68-SOUND-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *rampaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *goḍḍali*, then *rampaṁ*, and say which one leaves a straight edge]
+- [YOU RECALL: read **కప్పు**, then say *gontu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02] -->

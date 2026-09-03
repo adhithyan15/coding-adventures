@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C54-TREE-05]
 practises:
-  knowledge: [TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05]
+  knowledge: [TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05, TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Do not tie it to మొక్కు, "to bow, to make a vow", which sounds close
 Five: చెట్టు, కొమ్మ, వేరు, విత్తనం, మొక్క. A tree, its parts, and its beginning.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05, TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mokka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say them again as a life story, starting with the seed]
+- [YOU RECALL: say *pūladaṇḍa*, then read **మబ్బు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05] -->

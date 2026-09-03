@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C75-WHEN-01]
 practises:
-  knowledge: [TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-ETYMON-C40-BHOJANAM-02, TE-LEX-C40-BHOJANAM-01]
+  knowledge: [TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-ETYMON-C40-BHOJANAM-02, TE-LEX-C40-BHOJANAM-01, TE-LEX-C73-TASTE-01, TE-LEX-C74-LINK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ It begins with the same **ఇ-** as ఇక్కడ and ఇది: the near one,
 The day you are in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-ETYMON-C40-BHOJANAM-02, TE-LEX-C40-BHOJANAM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-ETYMON-C40-BHOJANAM-02, TE-LEX-C40-BHOJANAM-01, TE-LEX-C73-TASTE-01, TE-LEX-C74-LINK-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ivāḷa*]
 - [YOU SAY: *ivāḷa*, once more]
 - [YOU SAY: say *ivāḷa*, then *rēpu*, and say which is nearer]
 - [YOU RECALL: say *bhōjanaṁ*, then say *ivāḷa*]
+- [YOU RECALL: say *tīpi*, then read **మరియు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-ETYMON-C40-BHOJANAM-02, TE-LEX-C40-BHOJANAM-01] -->

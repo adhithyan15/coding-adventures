@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C58-REPLY-05]
 practises:
-  knowledge: [TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05]
+  knowledge: [TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05, TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is a good word to leave a chapter on. కొంచెం, ఎక్కువ,
 Five: కొంచెం, ఎక్కువ, తక్కువ, వద్దు, అంతే. You can now say how much, and when to stop.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05, TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *antē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then refuse a second helping with *vaddu*, *antē*]
+- [YOU RECALL: say *peṭṭe*, then read **ఎముక** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05] -->

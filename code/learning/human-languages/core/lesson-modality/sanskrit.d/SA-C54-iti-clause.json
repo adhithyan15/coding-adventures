@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C54-iti-clause",
+    "language": "sanskrit",
+    "chapter": 54,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c8fd5e010f90307"
+  },
+  "findings": []
+}

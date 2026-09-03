@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C54-iti",
+    "language": "sanskrit",
+    "chapter": 54,
+    "sequence": 2630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a10b75c5cfdb466"
+  },
+  "findings": []
+}

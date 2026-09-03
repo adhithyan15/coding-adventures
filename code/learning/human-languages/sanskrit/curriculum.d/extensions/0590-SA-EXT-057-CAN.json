@@ -1,0 +1,11 @@
+{
+  "id": "SA-EXT-057-CAN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what somebody is able to do, with saknoti and the -tum form.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C57-shaknoti"
+  ]
+}

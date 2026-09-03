@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C73-TASTE-01]
 practises:
-  knowledge: [TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01]
+  knowledge: [TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01, TE-LEX-C71-KIN-01, TE-LEX-C72-MARKET-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Telugu counts its tastes rather than gesturing at them, and తీపి is the 
 One. The taste every count opens with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01, TE-LEX-C71-KIN-01, TE-LEX-C72-MARKET-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tīpi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tīpi*, then *cakkera*, and say which one is the taste]
+- [YOU RECALL: say *māma*, then read **అంగడి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01] -->

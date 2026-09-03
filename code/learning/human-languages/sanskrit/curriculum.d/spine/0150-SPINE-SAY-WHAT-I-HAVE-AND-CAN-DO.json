@@ -1,8 +1,9 @@
 {
-  "segments": [],
+  "segments": [
+    "SA-PATH-57-CAN"
+  ],
   "omits": [
-    "VERB-HAVE",
-    "VERB-CAN"
+    "VERB-HAVE"
   ],
   "relocates": {}
 }

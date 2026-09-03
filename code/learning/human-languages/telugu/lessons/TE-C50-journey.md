@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C50-LEAVE-03]
 practises:
-  knowledge: [TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03]
+  knowledge: [TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C48-ROLE-03, TE-LEX-C49-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The ending is the **-ం** you have now sorted three times: the tatsama neuter, 
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C48-ROLE-03, TE-LEX-C49-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *prayāṇaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *prayāṇaṁ*, then *dīpaṁ*, and name the ending they share]
+- [YOU RECALL: say *vaidyuḍu*, then read **తప్పకుండా** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03] -->

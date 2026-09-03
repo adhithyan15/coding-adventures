@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.37] — 2026-09-02 — thread the module's composite-kind ledger into `wasm-execution` (W39 slice 2)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5. One
+new line at instance-call time, alongside the existing `set_type_section`
+call: `engine.set_type_kinds(instance.module.type_kinds.clone())`.
+
+This exists because `wasm-execution`'s `ref_matches_concrete_type` used to
+disambiguate a `ref.test`/`ref.cast` type immediate as "function" or
+"struct/array" purely from `type_idx < ctx.types.len()` -- a heuristic
+that is unsound once a module declares its struct/array types BEFORE any
+function needs a fresh signature registered (real corpus case:
+`ref_test.wast`'s "Concrete Types" module). `type_kinds[N]` names exactly
+what `type_section[N]` really is (`Func`/`Struct(k)`/`Array(k)`), the SAME
+ledger `wasm-wast-parser` itself built while parsing the module -- so
+threading it through makes that disambiguation exact instead of guessed.
+See `wasm-execution`'s own CHANGELOG for the full bug account and the real
+corpus case that caught it.
+
 ## [0.6.36] — 2026-09-02 — round-2 security review: doc-comment corrections + a real, own-caught bug (`NonNullConcreteFuncRef`)
 
 Round 2 of the pre-push security review (on 0.6.35, immediately below)

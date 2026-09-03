@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C52-kintu",
+    "language": "sanskrit",
+    "chapter": 52,
+    "sequence": 2550,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:88bdb71c5fe69728"
+  },
+  "findings": []
+}

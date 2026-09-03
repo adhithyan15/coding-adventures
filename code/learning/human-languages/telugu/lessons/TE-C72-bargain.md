@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C72-MARKET-05]
 practises:
-  knowledge: [TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05]
+  knowledge: [TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05, TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ However the బేరం ends, it ends with ధన్యవాదములు, a
 Five: అంగడి, డబ్బు, ధర, తూకం, బేరం. Enough to buy something and thank the person who sold it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05, TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bēraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then close with *dhanyavādamulu*]
+- [YOU RECALL: say *sālīḍu*, then read **అల్లుడు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05] -->

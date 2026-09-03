@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C52-WELCOME-05]
 practises:
-  knowledge: [TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05]
+  knowledge: [TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05, TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ And that closes the welcome: the ముగ్గు on the ground, the తలు
 Five: తలుపు, కుర్చీ, ముగ్గు, పువ్వు, పూలదండ. A guest can now be met at the door and seated.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05, TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pūladaṇḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *namaskāraṁ* as you would at the door to an *atithi*]
+- [YOU RECALL: say *veḷḷostānu*, then read **దండం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05] -->

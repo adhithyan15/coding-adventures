@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C66-FIELD-04]
 practises:
-  knowledge: [TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04]
+  knowledge: [TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04, TE-LEX-C64-JOIN-04, TE-LEX-C65-MANNERS-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It gets swept with a చీపురు before anything is laid down on it, and 
 Four: where the year's work gets finished.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04, TE-LEX-C64-JOIN-04, TE-LEX-C65-MANNERS-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kallaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kallaṁ*, then *cīpuru*, and say which one is used on the other]
+- [YOU RECALL: read **తరువాత**, then say *anumati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04] -->

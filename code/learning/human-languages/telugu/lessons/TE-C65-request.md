@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C65-MANNERS-03]
 practises:
-  knowledge: [TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03]
+  knowledge: [TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C63-HEALTH-03, TE-LEX-C64-JOIN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A మనవి goes to somebody who can say no: an official, an elder, a host. T
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C63-HEALTH-03, TE-LEX-C64-JOIN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *manavi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *manavi*, then *dayacēsi*, and say which one is the whole request]
+- [YOU RECALL: say *daggu*, then read **అయితే** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03] -->

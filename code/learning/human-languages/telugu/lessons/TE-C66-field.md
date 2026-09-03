@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C66-FIELD-01]
 practises:
-  knowledge: [TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01]
+  knowledge: [TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01, TE-LEX-C64-JOIN-01, TE-LEX-C65-MANNERS-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Going out to the పొలం before ఉదయం and coming back after సా�
 The ground everything else here stands on.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01, TE-LEX-C64-JOIN-01, TE-LEX-C65-MANNERS-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *polaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *polaṁ*, then *grāmaṁ*, and say which one feeds the other]
+- [YOU RECALL: say *kūḍā*, then read **స్వాగతం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01] -->

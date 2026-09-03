@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C60-ANIMAL-03]
 practises:
-  knowledge: [TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03]
+  knowledge: [TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C58-REPLY-03, TE-LEX-C59-WEATHER-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The కోడి is also the village clock. It wakes a house before ఉదయం
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C58-REPLY-03, TE-LEX-C59-WEATHER-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kōḍi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōḍi*, then *mēka*, and say which one wakes you]
+- [YOU RECALL: say *takkuva*, then read **ఇసుక** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03] -->

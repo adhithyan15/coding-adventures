@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C50-LEAVE-05]
 practises:
-  knowledge: [TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05]
+  knowledge: [TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05, TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ What is not said is the flat "I am going". Leaving without the returning half is
 Five: ఇప్పుడు, ఎల్లుండి, ప్రయాణం, బయలుదేరు, and a goodbye that refuses to be one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05, TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *veḷḷostānu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *veḷḷostānu*, then the reply *veḷḷi raṇḍi*, and say why neither half stands alone]
+- [YOU RECALL: say *atithi*, then read **అలాగే** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C52-WELCOME-04]
 practises:
-  knowledge: [TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04]
+  knowledge: [TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04, TE-LEX-C50-LEAVE-04, TE-LEX-C51-COURTESY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The plural stem is పూల-, which is about to matter.
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04, TE-LEX-C50-LEAVE-04, TE-LEX-C51-COURTESY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *puvvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puvvu*, then *paṇḍu*, and say what the two share at the front]
+- [YOU RECALL: read **బయలుదేరు**, then say *āśīrvādaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04] -->

@@ -1,0 +1,17 @@
+{
+  "chapter": 60,
+  "title": "The Stick at the End",
+  "label": "ch:sa-the-stick-at-the-end",
+  "canDo": "I can read and write the daṇḍa that ends a Sanskrit sentence, and say what classical Sanskrit punctuates with instead of the marks English uses.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-C60-danda",
+    "kind": "recognition",
+    "summary": "Complete SA-C60-danda and say what a single stroke marks and what a doubled one marks.",
+    "assesses": [
+      "SA-SCRIPT-DANDA-01"
+    ]
+  }
+}

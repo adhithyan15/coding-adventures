@@ -1,0 +1,13 @@
+{
+  "id": "SA-EXT-056-PAST",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can form the imperfect past of a first-class Sanskrit verb and say what happened yesterday.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C56-agacchat",
+    "SA-C56-apathat",
+    "SA-R56-past"
+  ]
+}

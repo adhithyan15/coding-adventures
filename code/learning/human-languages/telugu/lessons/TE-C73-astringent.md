@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C73-TASTE-05]
 practises:
-  knowledge: [TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05]
+  knowledge: [TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05, TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ With ఉప్పు, which you already have, that is the full set a Telugu cook
 Five: తీపి, పులుపు, చేదు, కారం, వగరు. The tastes a Telugu meal is built from, and the last of them names what nothing else does.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05, TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vagaru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take your leave with *veḷḷostānu*]
+- [YOU RECALL: say *alluḍu*, then read **బేరం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05] -->

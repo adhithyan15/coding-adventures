@@ -1,0 +1,12 @@
+{
+  "id": "SA-PATH-60-DANDA",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "SA-C60-danda"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-060-DANDA"
+  ],
+  "after": []
+}

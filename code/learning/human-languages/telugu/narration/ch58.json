@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "More Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:37a3ca3eb4f04269",
+  "sourceHash": "fnv1a64:0695d7309e85d607",
   "lessons": [
     {
       "id": "TE-C58-a-little",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ab7fa5bc7ea3044",
+      "sourceHash": "fnv1a64:83e31f8958984069",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *koñcem*, then *koñcem pālu*, and hear how much softer it is than *pālu* alone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cāpa, then read మెడ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cāpa*, then read **మెడ** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:813f6231ed5aef02",
+      "sourceHash": "fnv1a64:05b02dcb464854ad",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ekkuva*, then *koñcem*, and say them as a pair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read బుట్ట, then say vīpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **బుట్ట**, then say *vīpu*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29a3de4eeca576c8",
+      "sourceHash": "fnv1a64:f40375425b67b3c3",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *takkuva*, then *ekkuva*, and say which one climbs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say katti, then read పెదవి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *katti*, then read **పెదవి** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe988ea0ae9e37d7",
+      "sourceHash": "fnv1a64:17a8812f963672e2",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vaddu*, then *vaddaṇḍi*, and say which one you would use with a stranger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read గిన్నె, then say gōru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **గిన్నె**, then say *gōru*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9b8a058c252622a",
+      "sourceHash": "fnv1a64:f271d94ca36af9e1",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then refuse a second helping with *vaddu*, *antē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say peṭṭe, then read ఎముక and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *peṭṭe*, then read **ఎముక** and say what it means]"
             }
           ]
         },

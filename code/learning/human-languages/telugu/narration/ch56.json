@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "In the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:51118e0ec266ad1d",
+  "sourceHash": "fnv1a64:224e2f14b2f63092",
   "lessons": [
     {
       "id": "TE-C56-mat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f61eaa19060f19f",
+      "sourceHash": "fnv1a64:9b19b5a9c97c2f60",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *cāpa*, then *kurcī*, and say which of the two gets rolled up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ceṭṭu, then read నది and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ceṭṭu*, then read **నది** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0906c165d3da9b18",
+      "sourceHash": "fnv1a64:43e8705fa84c87a5",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *buṭṭa*, then *cāpa*, and say what the two are made of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read కొమ్మ, then say ceruvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **కొమ్మ**, then say *ceruvu*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11ecc8934e5b1906",
+      "sourceHash": "fnv1a64:5155b4c23b06b893",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *katti*, then *buṭṭa*, and say which one you would cut a పండు with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vēru, then read గుట్ట and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vēru*, then read **గుట్ట** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58220e9e4981830a",
+      "sourceHash": "fnv1a64:9c63be87b9b6116d",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ginne*, then *katti*, and say which one goes on the fire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read విత్తనం, then say grāmaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **విత్తనం**, then say *grāmaṁ*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f1a7acb19774796",
+      "sourceHash": "fnv1a64:2e8b04da51028c7d",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then take one from somebody and say *dhanyavādālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mokka, then read బాట and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mokka*, then read **బాట** and say what it means]"
             }
           ]
         },

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C48-ROLE-05]
 practises:
-  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05]
+  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05, TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The old formula అతిథి దేవో భవ, "let the guest be a god to 
 Five roles: a teacher, a student, a doctor, a farmer, a guest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05, TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *atithi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five, then say *nā pēru* and your own name, and ask *mīru evaru?*]
+- [YOU RECALL: say *pustakaṁ*, then read **కడుపు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05] -->

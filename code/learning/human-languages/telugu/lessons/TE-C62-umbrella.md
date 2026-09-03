@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C62-MADE-04]
 practises:
-  knowledge: [TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04]
+  knowledge: [TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04, TE-LEX-C60-ANIMAL-04, TE-LEX-C61-KITCHEN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It settles two things already met: గాలి will turn it inside out and మ�
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04, TE-LEX-C60-ANIMAL-04, TE-LEX-C61-KITCHEN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *goḍugu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *goḍugu*, then *gāli*, and say what one does to the other]
+- [YOU RECALL: read **చీమ**, then say *cakkera*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C59-WEATHER-05]
 practises:
-  knowledge: [TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05]
+  knowledge: [TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05, TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ So Telugu keeps a working fire and a ceremonial one, in the same way it keeps a 
 Five: గాలి, మంచు, ఇసుక, బురద, నిప్పు. Weather enough to take your leave on.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05, TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nippu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *gāli ekkuva*, and take your leave with *veḷḷostānu*]
+- [YOU RECALL: say *emuka*, then read **అంతే** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05] -->

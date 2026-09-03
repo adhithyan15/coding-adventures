@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C67-WALL-02]
 practises:
-  knowledge: [TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02]
+  knowledge: [TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C65-MANNERS-02, TE-LEX-C66-FIELD-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ To be under somebody's కప్పు is to be their guest, and it binds the pe
 Two: గోడ and కప్పు. Sides, and a lid.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C65-MANNERS-02, TE-LEX-C66-FIELD-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kappu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gōḍa*, then *kappu*, and say which one holds up the other]
+- [YOU RECALL: read **మర్యాద**, then say *vari*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02] -->

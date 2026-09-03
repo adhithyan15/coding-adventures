@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C50-LEAVE-02]
 practises:
-  knowledge: [TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02]
+  knowledge: [TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C48-ROLE-02, TE-LEX-C49-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ There is an older tomorrow hiding at the front of it. ఎల్లి once meant
 Two: now, and the day after tomorrow.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C48-ROLE-02, TE-LEX-C49-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *elluṇḍi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippuḍu*, then *elluṇḍi*, and say which one is further off]
+- [YOU RECALL: read **విద్యార్థి**, then say *cālu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02] -->

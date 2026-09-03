@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:ac39cb4b09bd998e",
+  "lessonIds": [
+    "SA-C54-iti",
+    "SA-C54-iti-clause",
+    "SA-R54-iti"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch54.txt",
+  "json": "sanskrit/narration/ch54.json",
+  "textHash": "fnv1a64:0a47a5c90835213f",
+  "jsonHash": "fnv1a64:043699012a4eb865",
+  "findings": []
+}

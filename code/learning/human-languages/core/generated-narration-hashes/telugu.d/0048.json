@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 48,
-  "sourceHash": "fnv1a64:e22e97c39f8b3a48",
+  "sourceHash": "fnv1a64:167ed7be524e9eb0",
   "lessonIds": [
     "TE-C48-teacher",
     "TE-C48-student",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "telugu/narration/ch48.txt",
   "json": "telugu/narration/ch48.json",
-  "textHash": "fnv1a64:4924ba5a55588581",
-  "jsonHash": "fnv1a64:79a9778597286b90",
+  "textHash": "fnv1a64:9f8f69f945add6ac",
+  "jsonHash": "fnv1a64:5b0e865e4d95efe7",
   "findings": []
 }

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C51-COURTESY-03]
 practises:
-  knowledge: [TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03]
+  knowledge: [TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C49-REPLY-03, TE-LEX-C50-LEAVE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Telugu marks the same idea in its grammar as well as its vocabulary. మీర�
 Three, and one of them is a word you already knew wearing a different suit.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C49-REPLY-03, TE-LEX-C50-LEAVE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gauravaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gauravaṁ*, then *guruvu*, and name the syllable they share]
+- [YOU RECALL: say *tappakuṇḍā*, then read **ప్రయాణం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03] -->

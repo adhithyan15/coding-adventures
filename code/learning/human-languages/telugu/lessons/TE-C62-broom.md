@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C62-MADE-03]
 practises:
-  knowledge: [TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03]
+  knowledge: [TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C60-ANIMAL-03, TE-LEX-C61-KITCHEN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A చీపురు is treated with a little care because of that. It is not st
 Three, and this one starts the day.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C60-ANIMAL-03, TE-LEX-C61-KITCHEN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cīpuru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cīpuru*, then *muggu*, and say which one comes first]
+- [YOU RECALL: say *kōḍi*, then read **నూనె** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C68-SOUND-04]
 practises:
-  knowledge: [TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04]
+  knowledge: [TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04, TE-LEX-C66-FIELD-04, TE-LEX-C67-WALL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It turns rude only when there is a person on the far end of it. Somebody who was
 Four. Sound, voice, song, and now sound sent a distance.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04, TE-LEX-C66-FIELD-04, TE-LEX-C67-WALL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *arupu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *arupu*, then *gontu*, and say which one is louder]
+- [YOU RECALL: read **కల్లం**, then say *meṭṭu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04] -->

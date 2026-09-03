@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C73-TASTE-03]
 practises:
-  knowledge: [TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03]
+  knowledge: [TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C71-KIN-03, TE-LEX-C72-MARKET-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It carries over into speech unchanged. చేదు news is bad news, and a చ�
 Three. The one eaten on purpose.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C71-KIN-03, TE-LEX-C72-MARKET-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cēdu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cēdu*, then *tīpi*, and say which one is eaten first]
+- [YOU RECALL: say *bāva*, then read **ధర** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03] -->

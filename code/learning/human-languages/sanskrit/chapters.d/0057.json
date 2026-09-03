@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Able, and Willing",
+  "label": "ch:sa-able-and-willing",
+  "canDo": "I can say what somebody is able to do and what they want to do, by putting the -तुम् form in front of शक्नोति or इच्छति.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "SA-C57-icchati",
+    "kind": "production",
+    "summary": "Complete SA-C57-icchati and say both frames — the boy can read, and the boy wants to read.",
+    "assesses": [
+      "SA-LEX-SHAKNOTI-CAN-01",
+      "SA-LEX-ICCHATI-WANT-01"
+    ]
+  }
+}

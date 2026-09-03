@@ -116,7 +116,7 @@
       "derivedFrom": [
         "A1-N-02"
       ],
-      "note": "dinam, rātriḥ, prātaḥ, madhyāhnaḥ, sāyam, māsaḥ and saṁvatsaraḥ are all taught. WEEKDAY AND MONTH NAMES AND THE SEASONS ARE NOT, anywhere in the track, which is why SA-A1-T-02 below is uncovered even though this point is covered: naming a period is not the same as locating a day in the week."
+      "note": "dinam, rātriḥ, prātaḥ, madhyāhnaḥ, sāyam, māsaḥ and saṁvatsaraḥ are all taught, and `ṛtuḥ` ('a season') is added in chapter 61. WEEKDAY AND MONTH NAMES AND THE SIX SEASON NAMES ARE STILL ABSENT, which is why SA-A1-T-02 records the calendar as incomplete: naming a period is not the same demand as locating one, and the generic word for a season is not the six names."
     },
     {
       "id": "SA-A1-N-03",
@@ -213,7 +213,9 @@
       "id": "SA-A1-ADJ-02",
       "category": "Viśeṣaṇa — the adjective",
       "label": "relational adjectives: the gentilic, saying what country or people someone belongs to",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C59-ORIGIN-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -222,7 +224,7 @@
       "derivedFrom": [
         "A1-ADJ-02"
       ],
-      "note": "UNCOVERED, AND THE WHOLE FIELD IS MISSING. There is no word for a country, no country name, and no gentilic anywhere in the track. A learner cannot say where they are from. See SA-A1-G-02."
+      "note": "Closed by SA-C59-bharatiyah: `bhāratīyaḥ`, taught as the -iya suffix applied to a place name rather than as one word to memorise, and agreeing by the chapter-15 adjective rule."
     },
     {
       "id": "SA-A1-ADJ-03",
@@ -570,7 +572,10 @@
       "id": "SA-A1-PRON-04",
       "category": "Sarvanāma — the pronoun",
       "label": "the dative-experiencer frame Spanish gustar needs",
-      "probe": null,
+      "probe": [
+        "SA-PRON-DATIVE-ME-01",
+        "SA-FRAME-ROCATE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -582,7 +587,7 @@
         "A1-F3-01",
         "A1-NG6-08"
       ],
-      "note": "UNCOVERED, AND IT IS THE LARGEST SINGLE HOLE. Sanskrit's answer to gustar is rocate with the dative, and neither it nor any liking-frame is taught. snihyati ('loves') and priyam ('dear') are in chapter 9, but neither builds a sentence saying what you LIKE. Four proxy points depend on this one exponent."
+      "note": "Closed by SA-C58-mahyam and SA-C58-rocate. `mahyam` is taught first as the dative of `aham`, hooked to the dative-of-purpose the track already taught in `punardarshanaya`; `rocate` then makes the thing liked the subject and agrees with it, which is the whole of the gustar shape."
     },
     {
       "id": "SA-A1-PRON-05",
@@ -623,7 +628,10 @@
       "id": "SA-A1-PRON-07",
       "category": "Sarvanāma — the pronoun",
       "label": "the relative pronoun, and the correlative that answers it",
-      "probe": null,
+      "probe": [
+        "SA-REL-YAH-01",
+        "SA-GRAMMAR-CORRELATIVE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -634,7 +642,7 @@
         "A1-SUB-04",
         "A1-SUB-05"
       ],
-      "note": "UNCOVERED. The yad … tad correlative is Sanskrit's whole relative-clause machinery and no lesson introduces it. yathā ('as', chapter 49) is the only member of the family taught and it is an adverb, not a relative pronoun."
+      "note": "Closed by SA-C53-yah and SA-C53-yah-sah. The relative pronoun is taught as the missing fourth leg of the a- / ta- / ka- deixis system the track already teaches at chapter 14, and the correlative sentence is built from it."
     },
     {
       "id": "SA-A1-PRON-08",
@@ -917,7 +925,10 @@
       "id": "SA-A1-V-06",
       "category": "Dhātu and kriyāpada — the verb",
       "label": "past tense",
-      "probe": null,
+      "probe": [
+        "SA-GRAMMAR-PAST-AUGMENT-01",
+        "SA-GRAMMAR-PAST-PATTERN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -932,7 +943,7 @@
         "A1-V-09",
         "A1-V-10"
       ],
-      "note": "UNCOVERED, AND SEVEN PROXY POINTS RIDE ON IT. Not one past form is taught anywhere in the track — no imperfect, no perfect, no aorist, and no past participle used as a past. A candidate cannot say what they did yesterday, although hyaḥ ('yesterday') is taught in chapter 17. This is the largest structural absence in the inventory."
+      "note": "Closed by SA-C56-agacchat and SA-C56-apathat: the imperfect, taught as two changes to a present a learner already says -- the augment on the front and the shortened ending at the back. The other past tenses of the classical language remain untaught and are named as such on the page."
     },
     {
       "id": "SA-A1-V-07",
@@ -957,7 +968,10 @@
       "id": "SA-A1-V-08",
       "category": "Dhātu and kriyāpada — the verb",
       "label": "the infinitive and other non-finite forms",
-      "probe": null,
+      "probe": [
+        "SA-GRAMMAR-INFINITIVE-TUM-01",
+        "SA-GRAMMAR-GERUND-TVA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -970,7 +984,7 @@
         "A1-SUB-01",
         "A1-SUB-02"
       ],
-      "note": "UNCOVERED. The infinitive in -tum, the gerund in -tvā and the past participle in -ta are the three non-finite forms Sanskrit lives on, and none is taught. This blocks both infinitive-clause points as well."
+      "note": "Closed by SA-C55-gatva and SA-C55-gantum: the -tva gerund and the -tum infinitive, the two non-finite forms a beginner needs to put two actions in one clause. The -ta past participle is still untaught."
     },
     {
       "id": "SA-A1-V-09",
@@ -1292,7 +1306,9 @@
       "id": "SA-A1-CO-01",
       "category": "Samuccaya — coordination",
       "label": "joining two things with 'and'",
-      "probe": null,
+      "probe": [
+        "SA-JOIN-CA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -1301,13 +1317,15 @@
       "derivedFrom": [
         "A1-CO-01"
       ],
-      "note": "UNCOVERED, AND IT IS THE CHEAPEST GAP IN THE FILE TO CLOSE. Sanskrit's ca is a single enclitic word, it appears incidentally in several lesson bodies, and NO lesson introduces it as an atom. A candidate cannot join two nouns. One lesson closes this point and part of SA-A1-CO-05."
+      "note": "Closed by SA-C52-ca. `ca` is introduced as an atom, with the fact that decides whether a learner can use it: it stands AFTER the second item, not between the two."
     },
     {
       "id": "SA-A1-CO-02",
       "category": "Samuccaya — coordination",
       "label": "negative coordination: neither … nor",
-      "probe": null,
+      "probe": [
+        "SA-JOIN-NA-NA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -1316,13 +1334,15 @@
       "derivedFrom": [
         "A1-CO-02"
       ],
-      "note": "UNCOVERED. na … na … is the construction and nothing teaches it as a pattern."
+      "note": "Closed by SA-C52-na-na, which builds the construction out of the `na` the track has taught since chapter 1 rather than introducing a new word: doubled, once before each item, it denies both."
     },
     {
       "id": "SA-A1-CO-03",
       "category": "Samuccaya — coordination",
       "label": "disjunctive coordination: or",
-      "probe": null,
+      "probe": [
+        "SA-JOIN-VA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -1331,13 +1351,15 @@
       "derivedFrom": [
         "A1-CO-03"
       ],
-      "note": "UNCOVERED. vā, the enclitic 'or', is taught nowhere."
+      "note": "Closed by SA-C52-va. `va` shares the enclitic slot with `ca`, which is why the two are taught one lesson apart and contrasted in the same position."
     },
     {
       "id": "SA-A1-CO-04",
       "category": "Samuccaya — coordination",
       "label": "adversative coordination: but",
-      "probe": null,
+      "probe": [
+        "SA-JOIN-KINTU-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -1347,7 +1369,7 @@
         "A1-CO-04",
         "A1-F2-09"
       ],
-      "note": "UNCOVERED. kintu and paraṁtu are both absent, which also blocks offering a counter-argument."
+      "note": "Closed by SA-C52-kintu, taught against the two enclitics: `kintu` is not enclitic and stands FIRST in its clause, which is the error the pair invites."
     },
     {
       "id": "SA-A1-CO-05",
@@ -1370,7 +1392,10 @@
       "id": "SA-A1-SUB-01",
       "category": "Subordination",
       "label": "a finite clause as object: saying that you think that something is so",
-      "probe": null,
+      "probe": [
+        "SA-JOIN-ITI-01",
+        "SA-GRAMMAR-ITI-CLAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -1381,13 +1406,15 @@
         "A1-F2-02",
         "A1-F2-11"
       ],
-      "note": "UNCOVERED. Sanskrit uses the quotative particle iti after the reported clause, which is the single most characteristic thing about Sanskrit subordination, and iti is taught nowhere. cintayati ('thinks') is taught in chapter 8 with nothing to think."
+      "note": "Closed by SA-C54-iti and SA-C54-iti-clause. `cintayati` had been taught since chapter 8 with nothing to think; the quotative now gives it a whole clause as its object, unchanged and unbackshifted."
     },
     {
       "id": "SA-A1-SUB-02",
       "category": "Subordination",
       "label": "the relative clause",
-      "probe": null,
+      "probe": [
+        "SA-GRAMMAR-CORRELATIVE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -1398,7 +1425,7 @@
         "A1-SUB-05",
         "A1-SN-01"
       ],
-      "note": "UNCOVERED. See SA-A1-PRON-07: the yad … tad correlative is absent."
+      "note": "Closed by SA-C53-yah-sah, and by the same atom as SA-A1-PRON-07 because in Sanskrit they are one fact: the relative CLAUSE is the correlative pair, not a clause hung off a noun. SA-C53-yatra-tatra then shows the same hinge on a second axis."
     },
     {
       "id": "SA-A1-SUB-03",
@@ -1581,7 +1608,10 @@
       "id": "SA-A1-F-08",
       "category": "Opinions, attitudes and knowledge",
       "label": "say what you can do",
-      "probe": null,
+      "probe": [
+        "SA-LEX-SHAKNOTI-CAN-01",
+        "SA-GRAMMAR-INFINITIVE-TUM-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1593,13 +1623,16 @@
         "A1-F2-17",
         "A1-NG6-09"
       ],
-      "note": "UNCOVERED. śaknoti ('is able') is taught nowhere, and there is no other way to say you can do something."
+      "note": "Closed by SA-C57-shaknoti. It is scheduled two chapters after the -tum infinitive because it takes one as its object, which is the dependency and not a preference."
     },
     {
       "id": "SA-A1-F-09",
       "category": "Likes, wishes and feelings",
       "label": "say what you like, want or prefer",
-      "probe": null,
+      "probe": [
+        "SA-LEX-ICCHATI-WANT-01",
+        "SA-FRAME-ROCATE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1612,7 +1645,7 @@
         "A1-F3-03",
         "A1-F3-04"
       ],
-      "note": "UNCOVERED, and it is the second-largest hole after the past tense. icchati ('wants') and rocate ('is pleasing to') are both absent. snihyati and priyam (chapter 9) name affection without building a sentence that expresses a preference."
+      "note": "Closed by SA-C57-icchati for wanting and SA-C58-rocate for liking. The two are deliberately taught in different chapters because they take different frames: `icchati` takes an infinitive from the person, `rocate` makes the thing liked the subject."
     },
     {
       "id": "SA-A1-F-10",
@@ -1629,7 +1662,7 @@
         "A1-F3-05",
         "A1-F3-06"
       ],
-      "note": "UNCOVERED. There is no future tense anywhere in the track and no periphrastic intention frame."
+      "note": "UNCOVERED. There is no future tense anywhere in the track and no periphrastic intention frame. Chapter 56 gave the track a past and left this untouched on purpose: śvaḥ ('tomorrow') has been taught since chapter 4 and is still the one relative day a learner cannot build a sentence around."
     },
     {
       "id": "SA-A1-F-11",
@@ -1989,7 +2022,11 @@
       "id": "SA-A1-SP-04",
       "category": "Spatial notions",
       "label": "origin: where you are from",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C59-ORIGIN-01",
+        "SA-LEX-C59-ORIGIN-02",
+        "SA-GRAMMAR-ABLATIVE-ORIGIN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -1999,7 +2036,7 @@
         "A1-NG3-07",
         "A1-F1-03"
       ],
-      "note": "UNCOVERED. kutaḥ ('from where') is taught in chapter 18 and there is NOTHING TO ANSWER IT WITH — no country, no city name, no gentilic, and no ablative-of-origin sentence. Asking is taught and answering is not, which is the exact half-a-pair failure that earns no credit."
+      "note": "Closed by SA-C59-desha, SA-C59-bharatam and SA-C59-bharatat. `kutaḥ` had been taught since chapter 18 with nothing to answer it; the answer needed both a country to name and the -at ablative to name it FROM, and the lesson teaches the ending rather than the phrase."
     },
     {
       "id": "SA-A1-T-01",
@@ -2042,7 +2079,7 @@
       "derivedFrom": [
         "A1-NG4-02"
       ],
-      "note": "adya, hyaḥ, śvaḥ, paraśvaḥ, māsaḥ, saṁvatsaraḥ — an unusually full set. THE WEEKDAY NAMES, THE MONTH NAMES AND THE SEASONS ARE ALL ABSENT, so a learner has the relative days and no calendar."
+      "note": "adya, hyaḥ, śvaḥ, paraśvaḥ, māsaḥ, saṁvatsaraḥ -- an unusually full set, and as of chapter 56 two of the three relative days can finally be USED: adya with the present and hyaḥ with the past. śvaḥ still waits on a future tense the track does not teach. THE WEEKDAY NAMES, THE MONTH NAMES AND THE SIX SEASON NAMES ARE ALL STILL ABSENT, so a learner has the relative days and no calendar; chapter 61 adds the generic ṛtuḥ and not the six names."
     },
     {
       "id": "SA-A1-T-03",
@@ -2776,7 +2813,9 @@
       "id": "SA-A1-L-06",
       "category": "Lipi — the script and its orthography",
       "label": "punctuation: the daṇḍa, and almost nothing else",
-      "probe": null,
+      "probe": [
+        "SA-SCRIPT-DANDA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -2794,7 +2833,7 @@
         "A1-O3-08",
         "A1-O3-09"
       ],
-      "note": "UNCOVERED, AND NINE PROXY POINTS COLLAPSE ONTO IT. Classical Sanskrit punctuates with one mark, the daṇḍa (।), doubled at the end of a verse. It appears in the track's printed text and NO LESSON TEACHES IT. Spanish's comma, colon, brackets, quotes, hyphen, dash and slash have no classical counterpart at all. One short lesson closes this point."
+      "note": "Closed by SA-C60-danda, one short lesson, exactly as the earlier note predicted. It teaches the single stroke, the doubled stroke that ends a verse, and what classical Sanskrit uses INSTEAD of the marks English has -- `iti` for a quotation, `kim` for a question."
     },
     {
       "id": "SA-A1-L-07",
@@ -2809,7 +2848,7 @@
       ],
       "derivedFrom": [],
       "sanskritSpecific": true,
-      "note": "Sanskrit-specific, and a measurement rather than a demand: the track puts 53 Devanagari characters on the page and teaches 48. The five are ऋ, ङ, ई, ँ and घ. THE TWO REFUSALS ARE BLOCKED ON OPPOSITE HALVES AND ONE OF THEM HAS NOW FLIPPED — see SA-A1-L-08."
+      "note": "Sanskrit-specific, and a measurement rather than a demand. The track now teaches 49 of the 53 Devanagari characters it shows. THE FIVE ARE NOW FOUR: ऋ is taught in chapter 61, and ई, घ, ङ and ँ remain. Still uncovered, and it cannot close while ङ and ँ stand -- see SA-A1-L-08 for why two of the four are a different kind of blocked from the other two."
     },
     {
       "id": "SA-A1-L-08",
@@ -2824,7 +2863,7 @@
       ],
       "derivedFrom": [],
       "sanskritSpecific": true,
-      "note": "Sanskrit-specific, and the most actionable line in this file. The roadmap records ऋ and ङ as having 'no cited stroke order in the shared script file and so no lesson at all'. That is now HALF TRUE. ऋ HAS a cited four-stroke ductus in data/scripts/devanagari.json, sourced to Saurmandal's four-panel Commons diagram, so the SOURCING refusal on it is lifted; what still blocks it is that NO SANSKRIT HEADWORD CONTAINS ऋ, and HL-C217's own rule says a recognition segment with an empty 'you already say these' list teaches a shape for nothing. The fix is vocabulary first: schedule ऋतु ('season') — which would also close the seasons half of SA-A1-T-02 — or ऋषि, then teach the shape. ङ IS THE MIRROR IMAGE: it sits in a headword already, सङ्ख्याशब्दाः in chapter 19, and it is ABSENT FROM devanagari.json ENTIRELY, so there is no sourced pen path. That refusal stands and must stand; a stroke order must be sourced and cited, never invented."
+      "note": "Sanskrit-specific, and the line this file called its most actionable. ऋ IS NOW TAUGHT: SA-C61-rtu schedules `ṛtuḥ` ('a season') so the letter has a headword to be recognised inside, and SA-S225-letter-vocalic-r then draws it from the four-stroke ductus cited in data/scripts/devanagari.json to Saurmandal's four-panel Commons diagram. Vocabulary first, then the shape, exactly as HL-C217 requires. ङ IS UNCHANGED AND ITS REFUSAL STANDS: it sits in सङ्ख्याशब्दाः in chapter 19 and is ABSENT FROM devanagari.json entirely, so there is no sourced pen path and one must never be invented. RE-MEASURED AGAINST THE FILE, THE SPLIT IS NOT TWO AND TWO BUT THREE AND TWO. ई and घ are in exactly the position ऋ was in -- both have a cited ductus in devanagari.json (Saurmandal for ई, Opiaterein's Deva-घ-order.gif for घ) and neither appears in any Sanskrit HEADWORD, so both are blocked on vocabulary alone and can be unblocked the same way. ँ is in ङ's position: no headword and no entry in devanagari.json at all. Sourcing blocks two; vocabulary blocks two."
     },
     {
       "id": "SA-A1-L-09",

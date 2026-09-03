@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C75-WHEN-04]
 practises:
-  knowledge: [TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C74-LINK-01, TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02]
+  knowledge: [TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C74-LINK-01, TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02, TE-LEX-C73-TASTE-04, TE-LEX-C74-LINK-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ Like most Telugu relation words it follows its noun: **భోజనం ముం
 Both ends of an order: ముందు and తరువాత.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C74-LINK-01, TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C74-LINK-01, TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02, TE-LEX-C73-TASTE-04, TE-LEX-C74-LINK-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mundu*]
 - [YOU SAY: *mundu*, once more]
 - [YOU SAY: say *mundu*, then *taruvāta*, and put a meal between them]
 - [YOU RECALL: say *mariyu*, then *udayam*, then say *mundu*]
+- [YOU RECALL: read **కారం**, then say *enduku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C74-LINK-01, TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02] -->

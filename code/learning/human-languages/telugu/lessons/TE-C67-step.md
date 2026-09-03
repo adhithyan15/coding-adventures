@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C67-WALL-04]
 practises:
-  knowledge: [TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04]
+  knowledge: [TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04, TE-LEX-C65-MANNERS-04, TE-LEX-C66-FIELD-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word carries rank as well. A person who has risen has climbed a మెట్
 Four. Something to climb before you cross.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04, TE-LEX-C65-MANNERS-04, TE-LEX-C66-FIELD-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *meṭṭu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *meṭṭu*, then *gaḍapa*, in the order your feet meet them]
+- [YOU RECALL: read **అనుమతి**, then say *kallaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04] -->

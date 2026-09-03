@@ -1,0 +1,20 @@
+{
+  "chapter": 52,
+  "title": "Two Things Joined",
+  "label": "ch:sa-two-things-joined",
+  "canDo": "I can join two Sanskrit nouns with and, offer a choice between them with or, set one clause against another with but, and deny both with a doubled na.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-R52-joins",
+    "kind": "production",
+    "summary": "Complete SA-R52-joins and say all four joins in order, naming for each one where it stands in the sentence.",
+    "assesses": [
+      "SA-JOIN-CA-01",
+      "SA-JOIN-VA-01",
+      "SA-JOIN-KINTU-01",
+      "SA-JOIN-NA-NA-01"
+    ]
+  }
+}

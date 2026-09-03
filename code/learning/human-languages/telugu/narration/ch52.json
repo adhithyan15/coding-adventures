@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d98138f5ed174cfc",
+  "sourceHash": "fnv1a64:29cf5720100abb78",
   "lessons": [
     {
       "id": "TE-C52-door",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f568d18e2ff408b",
+      "sourceHash": "fnv1a64:e7d8ffd150be10db",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *talupu*, then *ikkaḍa talupu undi* — \"there is a door here\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ippuḍu, then read కృతజ్ఞత and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ippuḍu*, then read **కృతజ్ఞత** and say what it means]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbd2e89021c98cc3",
+      "sourceHash": "fnv1a64:4e89e924883f92d7",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kurcī*, then *kūrcō*, and say why the two are not related]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ఎల్లుండి, then say mēlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ఎల్లుండి**, then say *mēlu*]"
             }
           ]
         },
@@ -267,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab13b9f5fafd324b",
+      "sourceHash": "fnv1a64:94bb7ca1354347b3",
       "notice": null,
       "blocks": [
         {
@@ -354,6 +372,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *muggu*, then *talupu*, and say which one is outside the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say prayāṇaṁ, then read గౌరవం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *prayāṇaṁ*, then read **గౌరవం** and say what it means]"
             }
           ]
         },
@@ -389,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d38ecad787b51f10",
+      "sourceHash": "fnv1a64:57406b16a5bf7482",
       "notice": null,
       "blocks": [
         {
@@ -480,6 +507,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *puvvu*, then *paṇḍu*, and say what the two share at the front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read బయలుదేరు, then say āśīrvādaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **బయలుదేరు**, then say *āśīrvādaṁ*]"
             }
           ]
         },
@@ -515,7 +551,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a88098c380d0f6ed",
+      "sourceHash": "fnv1a64:701ce463c10d3693",
       "notice": null,
       "blocks": [
         {
@@ -606,6 +642,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say *namaskāraṁ* as you would at the door to an *atithi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say veḷḷostānu, then read దండం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *veḷḷostānu*, then read **దండం** and say what it means]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c81bca627d596923",
+  "sourceHash": "fnv1a64:e258167f1c365c8a",
   "lessons": [
     {
       "id": "TE-C60-buffalo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8574853e80eae94a",
+      "sourceHash": "fnv1a64:1a2fbd5d177a41eb",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gēde*, then *pālu*, and say which one gives the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say koñcem, then read గాలి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *koñcem*, then read **గాలి** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22325be3f45244d0",
+      "sourceHash": "fnv1a64:3a42bc50173488a1",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mēka*, then *gēde*, and say which one wants the చెరువు]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ఎక్కువ, then say mañcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ఎక్కువ**, then say *mañcu*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb8f0a47504372fb",
+      "sourceHash": "fnv1a64:af7b13cb4fe2d63a",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kōḍi*, then *mēka*, and say which one wakes you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say takkuva, then read ఇసుక and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *takkuva*, then read **ఇసుక** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b18902e5f21d339",
+      "sourceHash": "fnv1a64:8c00956d338b9434",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *cīma*, then *gēde*, and say which one is easier to miss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read వద్దు, then say burada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **వద్దు**, then say *burada*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:408df582366d324c",
+      "sourceHash": "fnv1a64:b95b4ff17fd0da49",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say *namaskāram* to whoever keeps them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say antē, then read నిప్పు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *antē*, then read **నిప్పు** and say what it means]"
             }
           ]
         },

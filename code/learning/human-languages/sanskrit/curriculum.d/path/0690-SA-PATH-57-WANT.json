@@ -1,0 +1,12 @@
+{
+  "id": "SA-PATH-57-WANT",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "SA-C57-icchati"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-057-WANT"
+  ],
+  "after": []
+}

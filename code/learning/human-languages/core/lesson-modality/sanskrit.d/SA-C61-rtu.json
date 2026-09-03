@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C61-rtu",
+    "language": "sanskrit",
+    "chapter": 61,
+    "sequence": 2820,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8d27b62b0f11772a"
+  },
+  "findings": []
+}

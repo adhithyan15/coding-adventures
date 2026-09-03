@@ -3578,6 +3578,16 @@ impl WasmRuntime {
         // site actually declared instead of skipping the check.
         engine.set_type_section(instance.module.types.clone());
 
+        // Thread the module's own composite-kind ledger (W39 slice 2: `code/
+        // specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`) so `ref_matches_
+        // concrete_type`'s func-vs-struct/array disambiguation is exact
+        // (reads the REAL declared kind) rather than guessed from
+        // `type_section`'s own length — see `wasm-execution`'s own
+        // `type_idx_is_struct_or_array` doc comment for the real corpus
+        // case (a struct-types-declared-before-functions module) that
+        // falsified the length-based guess this replaces.
+        engine.set_type_kinds(instance.module.type_kinds.clone());
+
         // Thread the module's GC-proposal nominal-subtyping metadata (W33
         // second slice, item 4) and the combined func_index -> declared
         // type-index space, so `call_indirect`'s real subtype check and
