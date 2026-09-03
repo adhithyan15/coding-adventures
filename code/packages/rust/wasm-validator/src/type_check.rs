@@ -2769,6 +2769,30 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     }
                 }
             }
+            0xD3 => {
+                // ref.eq (W39 slice 1, base opcode space -- NOT `0xFB`-
+                // prefixed, unlike most other GC instructions; see
+                // `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`'s own
+                // "Real spec text" section, which cross-checked this byte
+                // against two independent fetches of `MVP.md` after a
+                // first fetch attempt of a different page returned wrong
+                // `0xFB` sub-opcode numbers). Real spec typing rule:
+                // `[(ref null eq) (ref null eq)] -> [i32]` -- both operands
+                // must be a type assignable to `eqref` (covers `i31ref`,
+                // `structref`, `arrayref`, and their concrete subtypes,
+                // plus null). This validator doesn't track precise
+                // reference subtypes for every GC instruction (`ref.cast`'s
+                // own `0x17` arm above already pushes `Unknown` rather than
+                // the real narrowed type), so -- matching that established
+                // looseness rather than introducing new rigor only here --
+                // this arm pops two generic values (`pop_val`, no
+                // expected-type check) and pushes `I32`, exactly like
+                // `ref.is_null`'s own `0xD1` arm two values instead of one.
+                // No immediate bytes to consume.
+                pop_val(&mut stack, frame!())?;
+                pop_val(&mut stack, frame!())?;
+                push_val(&mut stack, ValueType::I32);
+            }
 
             // ── Control ──────────────────────────────────────────────────────
             0x00 => mark_unreachable(&mut stack, frame_mut!()), // unreachable

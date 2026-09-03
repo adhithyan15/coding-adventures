@@ -2,6 +2,46 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.92] - 2026-09-02 - `ref.eq` (`0xD3`) type-checking arm (W39 slice 1)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 1 of 5. New
+`0xD3` match arm alongside the existing `0xD0`-`0xD2` reference-opcode
+arms in the per-function stack-effect pass: pops two generic values
+(`pop_val`, no expected-type check) and pushes `ValueType::I32`, no
+immediate bytes consumed.
+
+The real spec's typing rule is `[(ref null eq) (ref null eq)] -> [i32]`
+-- both operands must be assignable to `eqref`. This arm deliberately
+does NOT check that constraint: this crate doesn't track precise
+reference subtypes for GC instructions in general (`ref.cast`'s own
+`0x17` arm already pushes `Unknown` rather than a real narrowed type), so
+matching that established looseness here, rather than introducing new
+rigor only for this one instruction, is the design this spec's own
+"Slice 1" section calls for.
+
+**Known, explicitly-accepted consequence** (see `wasm-conformance`'s own
+CHANGELOG for the full account): `ref_eq.wast` carries 6 `assert_invalid`
+cases whose intended failure reason is exactly this operand-type
+constraint (e.g. `(ref.eq (local.get $r) (local.get $r))` where `$r` is
+typed `(ref null func)`). Before this change, ALL SIX passed by
+coincidence -- `ref.eq` wasn't a recognized instruction name at all, so
+`wasm-wast-parser` itself rejected every one of these modules with an
+"unknown instruction" error, which this crate's own `grade_assert_
+invalid` harness convention counts as a legitimate rejection. Now that
+`ref.eq` is real: 4 of the 6 still fail to even PARSE, for an unrelated,
+already-known, out-of-scope reason (Correction 3 in the spec: `(ref
+any)`/`(ref func)`/`(ref extern)` as NON-NULL param types don't parse
+yet) -- still `Pass`. The other 2 (`(ref null func)`/`(ref null extern)`,
+whose NULLABLE forms already parse) now genuinely reach this crate's
+loose `0xD3` arm, which -- by design, per above -- doesn't reject them,
+so they downgrade from an accidental `Pass` to an honest `NotYetSupported`
+("no instruction-level type-checker; module structurally validates").
+This is not a regression: no `Fail` is introduced anywhere in the
+257-file corpus (verified), and the file's overall pass count rises
+dramatically (81 previously-`NotYetSupported` `assert_return` directives
+now genuinely pass) -- these 2 directives simply stop getting credit for
+the wrong reason.
+
 ## [0.2.91] - 2026-09-02 - `array.new_elem`/`array.init_elem` type-checking + an `Element::declared_type` bounds-check fix -- W38 slices 4/5
 
 Per `code/specs/W38-wasm-gc-array-bulk-ops.md`.
