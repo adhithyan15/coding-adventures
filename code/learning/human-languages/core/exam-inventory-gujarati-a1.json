@@ -517,7 +517,9 @@
       "id": "GU-A1-PRON-03",
       "category": "Sarvanaam (pronouns)",
       "label": "third person: te -- he, she, it",
-      "probe": null,
+      "probe": [
+        "GU-PRON-TE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -527,7 +529,7 @@
         "A1-PRON-01"
       ],
       "gujaratiSpecific": false,
-      "note": "NOT TAUGHT. te occurs as a free word in one file, inside the copula paradigm recitation in GU-C02-chhe, with no atom of its own. Nothing can be said about anyone absent."
+      "note": "Closed. te covers he, she and it with one word, and doubles as the pointing 'that' -- which is where the to of jo ... to ... comes from."
     },
     {
       "id": "GU-A1-PRON-04",
@@ -543,7 +545,7 @@
         "A1-PRON-01"
       ],
       "gujaratiSpecific": false,
-      "note": "NOT TAUGHT -- zero occurrences. 'We' survives only inside the lexicalised future malishun, 'we will meet'."
+      "note": "Still open, and the reason is a GLYPH. ame and aapne are both taught in chapter 40 -- including the exclusive/inclusive distinction English does not make -- but teo needs the independent vowel O, which no script lesson has taught. This point names its own fix: one script lesson for that sign."
     },
     {
       "id": "GU-A1-PRON-05",
@@ -587,7 +589,9 @@
       "id": "GU-A1-PRON-07",
       "category": "Sarvanaam (pronouns)",
       "label": "the relative je",
-      "probe": null,
+      "probe": [
+        "GU-PRON-JE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -599,7 +603,7 @@
         "A1-SUB-05"
       ],
       "gujaratiSpecific": false,
-      "note": "Zero occurrences as a word -- the single apparent hit is aavje, the familiar imperative of the goodbye. Three Spanish points open."
+      "note": "Closed. See GU-A1-JOIN-10 for the scope actually claimed."
     },
     {
       "id": "GU-A1-PRON-08",
@@ -1284,7 +1288,10 @@
       "id": "GU-A1-NEG-02",
       "category": "Nakaar (negation)",
       "label": "nathi: negating a sentence",
-      "probe": null,
+      "probe": [
+        "GU-NEG-NATHI-01",
+        "GU-NEG-SAMAJTO-NATHI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1294,7 +1301,7 @@
         "A1-OS-01"
       ],
       "gujaratiSpecific": false,
-      "note": "ZERO OCCURRENCES IN 228 FILES, in script or romanisation. This is the starkest single finding in the file: a learner cannot say 'I don't understand', 'it isn't', or 'no, I don't'. Gujarati's ordinary sentence negator is simply not in the corpus."
+      "note": "Closed, and it was the starkest finding in the file. nathi REPLACES chhe rather than joining it, and the first thing built on it is samajto nathi -- the sentence a beginner needs before any noun."
     },
     {
       "id": "GU-A1-NEG-03",
@@ -1331,7 +1338,7 @@
         "A1-F4-09"
       ],
       "gujaratiSpecific": false,
-      "note": "Depends on the missing coordinator and the missing negator together."
+      "note": "Still open, and now for ONE reason rather than two. The negator exists (GU-NEG-NATHI-01) and the coordinator exists (GU-JOIN-ANE-01); what is missing is the na ... na correlative that carries 'neither ... nor'. Needs no new glyph."
     },
     {
       "id": "GU-A1-Q-01",
@@ -1376,7 +1383,9 @@
       "id": "GU-A1-Q-03",
       "category": "Prashna (asking questions)",
       "label": "kon: who",
-      "probe": null,
+      "probe": [
+        "GU-Q-KON-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1386,13 +1395,16 @@
         "A1-PRON-06"
       ],
       "gujaratiSpecific": false,
-      "note": "Named once, in a single prose aside in GU-C02-shun about the k- question family. Never an atom."
+      "note": "Closed. kon, and the ka- stem every question word in the family shares."
     },
     {
       "id": "GU-A1-Q-04",
       "category": "Prashna (asking questions)",
       "label": "kyaan: where",
-      "probe": null,
+      "probe": [
+        "GU-Q-KYAAN-01",
+        "GU-SCRIPT-KYAAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1403,13 +1415,15 @@
         "A1-NG3-01"
       ],
       "gujaratiSpecific": false,
-      "note": "Same single prose aside, same line of the same file. This is the one that closes 'where are you from' -- a core A1 identity function -- in a track that teaches city, village and home."
+      "note": "Closed, and it is the one the note singled out: the track teaches shahar, gaam, ghar, shaalaa and rasto and could not ask where any of them was. The lesson reads that five-word row cold, which also services four chapter-22 atoms at their R4 window."
     },
     {
       "id": "GU-A1-Q-05",
       "category": "Prashna (asking questions)",
       "label": "kyaare: when",
-      "probe": null,
+      "probe": [
+        "GU-Q-KYAARE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1419,7 +1433,7 @@
         "A1-NG4-02"
       ],
       "gujaratiSpecific": false,
-      "note": "Same prose aside."
+      "note": "Closed. kyaare and jyaare differ by one letter -- ka- asks, ja- answers -- so the answer taught two chapters earlier turns out to have been half of a pair."
     },
     {
       "id": "GU-A1-Q-06",
@@ -1435,13 +1449,15 @@
         "A1-ADV-07"
       ],
       "gujaratiSpecific": false,
-      "note": "Zero occurrences."
+      "note": "Still open. kevi rite needs no new glyph -- every sign in it is taught -- but one new item per lesson left no fifth slot in the question chapter. A one-lesson job."
     },
     {
       "id": "GU-A1-Q-07",
       "category": "Prashna (asking questions)",
       "label": "ketlaa: how much, how many",
-      "probe": null,
+      "probe": [
+        "GU-Q-KETLA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1451,7 +1467,7 @@
         "A1-NG2-01"
       ],
       "gujaratiSpecific": false,
-      "note": "Zero occurrences."
+      "note": "Closed with ketla, the question the market chapter needed: the track has taught bajar, dukaan and paisa since chapter 24 and could not ask the price."
     },
     {
       "id": "GU-A1-Q-08",
@@ -1605,7 +1621,7 @@
         "A1-ADV-06"
       ],
       "gujaratiSpecific": false,
-      "note": "pan as 'also' is not taught."
+      "note": "Half closed, so the probe stays null. pan as 'also' IS now taught (GU-JOIN-PAN-ALSO-01), which the previous note recorded as missing; 'neither' still needs the na ... na correlative that GU-A1-NEG-04 also waits on."
     },
     {
       "id": "GU-A1-ADV-07",
@@ -1776,7 +1792,10 @@
       "id": "GU-A1-JOIN-01",
       "category": "Jodaan (joining and subordination)",
       "label": "and: joining two nouns, and joining two clauses",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-ANE-01",
+        "GU-JOIN-ANE-CLAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1786,13 +1805,15 @@
         "A1-CO-01"
       ],
       "gujaratiSpecific": false,
-      "note": "ABSENT. ane returns ZERO occurrences in 228 files, in script and in romanisation. The word does not exist in this corpus. A learner cannot say 'tea and milk' although both are taught in the same chapter."
+      "note": "Closed. ane is taught twice over -- joining two nouns (cha ane dudh, the two drinks the food chapter taught on facing pages and could not name together) and joining two whole clauses, where it costs neither side anything."
     },
     {
       "id": "GU-A1-JOIN-02",
       "category": "Jodaan (joining and subordination)",
       "label": "or: offering two alternatives",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-ATHAVA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1803,13 +1824,15 @@
         "A1-F3-02"
       ],
       "gujaratiSpecific": false,
-      "note": "athava is absent, and ke never occurs as a standalone word -- all 25 apparent hits are inside kem or keri."
+      "note": "Closed with athava, which stands where ane stands and asks the listener to pick. The standalone ke of colloquial speech is still not taught."
     },
     {
       "id": "GU-A1-JOIN-03",
       "category": "Jodaan (joining and subordination)",
       "label": "but: setting one thing against another",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-PAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1820,7 +1843,7 @@
         "A1-F2-09"
       ],
       "gujaratiSpecific": false,
-      "note": "pan and parantu are both absent."
+      "note": "Closed with pan between clauses. The same word after a noun means 'also', which is typed separately as GU-JOIN-PAN-ALSO-01."
     },
     {
       "id": "GU-A1-JOIN-04",
@@ -1836,13 +1859,16 @@
         "A1-CO-05"
       ],
       "gujaratiSpecific": false,
-      "note": "Absent."
+      "note": "Still absent. The distributive needs a paired correlative this tranche did not teach; it is the one joining point of eleven left open, and it needs no new glyph, so it is a one-lesson job rather than a script problem."
     },
     {
       "id": "GU-A1-JOIN-05",
       "category": "Jodaan (joining and subordination)",
       "label": "because: giving a reason",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-KEMKE-01",
+        "GU-JOIN-KEM-KEMKE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1852,13 +1878,17 @@
         "A1-SUB-06"
       ],
       "gujaratiSpecific": false,
-      "note": "kemke is absent. kem is taught and can mean 'why', so the question is askable and the answer is not."
+      "note": "Closed. kemke is kem + ke, so the answer is built from two things the reader already owned; the second atom is the question and its answer drilled as one exchange, because kem has been askable since chapter 3 and unanswerable until now."
     },
     {
       "id": "GU-A1-JOIN-06",
       "category": "Jodaan (joining and subordination)",
       "label": "that-clauses: saying what somebody said or thinks",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-KE-01",
+        "GU-JOIN-VICHAARUN-KE-01",
+        "GU-JOIN-JAANUN-KE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1870,13 +1900,15 @@
         "A1-F2-11"
       ],
       "gujaratiSpecific": false,
-      "note": "The complementiser ke never occurs as a word. vicharvu, samajvu and jaanvu are all taught and none of them can be given anything to think, understand or know."
+      "note": "Closed. The complementiser, plus the two verbs the note named as taught-but-objectless: vicharvu and jaanvu each get a sentence to take."
     },
     {
       "id": "GU-A1-JOIN-07",
       "category": "Jodaan (joining and subordination)",
       "label": "when: locating one event against another",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-JYAARE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1886,13 +1918,16 @@
         "A1-SUB-08"
       ],
       "gujaratiSpecific": false,
-      "note": "jyaare is absent."
+      "note": "Closed with jyaare, which opens its clause rather than following it."
     },
     {
       "id": "GU-A1-JOIN-08",
       "category": "Jodaan (joining and subordination)",
       "label": "if: the conditional clause",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-JO-01",
+        "GU-JOIN-JO-TO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1902,13 +1937,16 @@
         "A1-SUB-08"
       ],
       "gujaratiSpecific": false,
-      "note": "jo is absent -- all 16 apparent hits are inside aavjo or the stem of jovu."
+      "note": "Closed. Both atoms are listed because Gujarati marks BOTH ends of a condition and the two-part jo ... to ... is what a learner will hear. The writing lesson carries the warning the inventory's own note needed: jo hides inside aavjo and jovun, which is why sixteen apparent hits were all artefacts."
     },
     {
       "id": "GU-A1-JOIN-09",
       "category": "Jodaan (joining and subordination)",
       "label": "in order to, and therefore",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-MAATE-01",
+        "GU-JOIN-TETHI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1918,13 +1956,16 @@
         "A1-SUB-07"
       ],
       "gujaratiSpecific": false,
-      "note": "maate and tethi are both absent."
+      "note": "Closed. Both are listed because the point names both, and they are opposite directions: maate looks forward to a purpose, tethi back from a reason to its conclusion."
     },
     {
       "id": "GU-A1-JOIN-10",
       "category": "Jodaan (joining and subordination)",
       "label": "the relative clause with je",
-      "probe": null,
+      "probe": [
+        "GU-PRON-JE-01",
+        "GU-JOIN-JE-TE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1935,13 +1976,20 @@
         "A1-SUB-05"
       ],
       "gujaratiSpecific": false,
-      "note": "Absent. Enumerated here as well as at GU-A1-PRON-07 because the Spanish inventory files relatives under both."
+      "note": "Closed at the A1 use the point names -- 'the one who' -- with the je ... te ... pair. The canonical RELATIVE-CLAUSE concept is deliberately NOT claimed: the corpus spine stages it at B2, and what is taught here is the two-ended pattern, not the full relative system."
     },
     {
       "id": "GU-A1-JOIN-11",
       "category": "Jodaan (joining and subordination)",
       "label": "any two-clause sentence at all",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-ANE-CLAUSE-01",
+        "GU-JOIN-KE-01",
+        "GU-JOIN-KEMKE-01",
+        "GU-JOIN-JO-TO-01",
+        "GU-JOIN-JYAARE-01",
+        "GU-JOIN-JE-TE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -1952,7 +2000,7 @@
         "A1-SUB-03"
       ],
       "gujaratiSpecific": false,
-      "note": "THE COLUMN IS EMPTY, 0 OF 11. Ten joining devices were searched in Gujarati script and in romanisation across every headword, gloss and body; every raw match was checked in context and every one is a substring artefact. The track's own roadmap agrees -- its backlog item 2.2 asks for negation and basic question patterns -- so this is measured debt the authors already suspect, now enumerated."
+      "note": "THE COLUMN IS NO LONGER EMPTY. Six different two-clause sentences are now available, and all six are listed rather than a sample, because this point is the column's summary and a single device would not substantiate it. Ten of the eleven joining devices needed NO new sign: every one is spelled in glyphs the track taught before chapter 30, which means this was never a script debt -- the words were simply absent."
     },
     {
       "id": "GU-A1-TIME-01",
@@ -2318,7 +2366,10 @@
       "id": "GU-A1-F-11",
       "category": "Vyavahaar (communicative functions)",
       "label": "apologise",
-      "probe": null,
+      "probe": [
+        "GU-LEX-MAAF-01",
+        "GU-SCRIPT-MAAF-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -2328,7 +2379,7 @@
         "A1-F5-06"
       ],
       "gujaratiSpecific": false,
-      "note": "NOT TAUGHT AT ALL. Zero hits for maaf, kshama, sorry or excuse me across 228 lessons. There is no way to apologise or to get someone's attention, which closes both a courtesy function and a repair strategy."
+      "note": "Closed with maaf karo, which both apologises and stops a stranger -- the two jobs the note said were missing together. It is the only item in this tranche that cost a new letter: pha, taught one lesson earlier, and the only new glyph in seven chapters."
     },
     {
       "id": "GU-A1-F-12",
@@ -2449,7 +2500,11 @@
       "id": "GU-A1-F-18",
       "category": "Vyavahaar (communicative functions)",
       "label": "disagree, and say you do not know or understand",
-      "probe": null,
+      "probe": [
+        "GU-NEG-SAMAJTO-NATHI-01",
+        "GU-JOIN-JAANUN-KE-01",
+        "GU-NEG-NATHI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -2460,13 +2515,16 @@
         "A1-F2-15"
       ],
       "gujaratiSpecific": false,
-      "note": "OPEN, AND IT IS THE MISSING NEGATOR. samajvu and jaanvu are both taught and neither can be negated, because nathi does not appear in the corpus. 'I don't understand' is arguably the most necessary A1 utterance and it cannot be said."
+      "note": "Closed. Both admissions now exist and they are different: samajto nathi is not having FOLLOWED, jaanto nathi is not having the FACT. Both are taught in the speaker-gender form that matches the learner."
     },
     {
       "id": "GU-A1-F-19",
       "category": "Vyavahaar (communicative functions)",
       "label": "give an opinion or an evaluation",
-      "probe": null,
+      "probe": [
+        "GU-JOIN-VICHAARUN-KE-01",
+        "GU-JOIN-KE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "GU-CORPUS",
@@ -2480,7 +2538,7 @@
         "A1-NG6-01"
       ],
       "gujaratiSpecific": false,
-      "note": "OPEN, AND IT IS THE COMPLEMENTISER. 'I think that ...' needs the ke that GU-A1-JOIN-06 records as absent, and the evaluation vocabulary beyond saaru does not exist. Five Spanish points on one gap."
+      "note": "Closed for the opinion frame -- vicharun chhun ke turns any sentence the learner owns into a view rather than a fact. The evaluation vocabulary beyond saaru is still absent, so the point is claimed on the frame the note identified as the blocker, and the lexical gap is named here rather than hidden."
     },
     {
       "id": "GU-A1-F-20",
@@ -2668,7 +2726,7 @@
         "A1-F4-07"
       ],
       "gujaratiSpecific": false,
-      "note": "swagat is absent. The house vocabulary is taught and no welcome is."
+      "note": "Still absent. swagat needs no new glyph and remains untaught; the house vocabulary is still taught and the welcome is not."
     },
     {
       "id": "GU-A1-LEX-01",

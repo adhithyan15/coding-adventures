@@ -9,7 +9,7 @@ headword: ಒಂದು
 gloss: one — the Dravidian number Telugu will not share
 romanization: "ondu"
 concept_tag: KA-NUMBER-ONE
-prerequisites: [KA-C06-dative-subject, KA-S06-letter-da, KA-S115-letter-i]
+prerequisites: [KA-C06-dative-subject, KA-S06-letter-da, KA-S115-letter-i, KA-C05-maatanaadu]
 sounds: [kannada-anusvara-o, u-vowel-sign]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Tamil onru and Kannada ondu are cousins from an older on-, but Telugu breaks rank with okati"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C07-ONDU-01]
 practises:
-  knowledge: [KA-LEX-C07-ONDU-01, KA-SCRIPT-RECOG-06, KA-SCRIPT-RECOG-02]
+  knowledge: [KA-LEX-C07-ONDU-01, KA-SCRIPT-RECOG-06, KA-SCRIPT-RECOG-02, KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -53,12 +53,13 @@ The small circle **ಂ** sitting on ಒ is the **anusvara** — a nasal with no 
 sound of its own. Here it borrows *n* from the **ದ** that follows.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-ONDU-01, KA-SCRIPT-RECOG-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-ONDU-01, KA-SCRIPT-RECOG-06, KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ondu"]
 - [YOU LOOK: at ಒಂದು and find the ದ you learned as a letter]
 - [YOU SAY: "Tamil oṉṟu, Kannada ondu — same word, new coat"]
+- [YOU RECALL: say *mātanāḍu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-ONDU-01] -->

@@ -9,7 +9,7 @@ headword: "ಚಾಕು"
 gloss: "a knife"
 romanization: "cāku"
 concept_tag: KA-NOUN-KNIFE
-prerequisites: [KA-C56-basket]
+prerequisites: [KA-C56-basket, KA-C54-leaf]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C56-HOUSE-03]
 practises:
-  knowledge: [KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03]
+  knowledge: [KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C54-TREE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The pattern is the one the chair showed. When a language borrows a word for a th
 Three, and the second of them arrived by the northern road.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C54-TREE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cāku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kurci*, then *cāku*, and say what the two of them have in common]
+- [YOU RECALL: say *ele*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03] -->

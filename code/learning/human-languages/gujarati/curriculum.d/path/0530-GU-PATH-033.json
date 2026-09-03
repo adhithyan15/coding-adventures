@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-033",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "GU-C34-kemke",
+    "GU-C34-kem-kemke",
+    "GU-C34-kemke-write",
+    "GU-C34-maate",
+    "GU-C34-tethi"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-045-REASONS"
+  ],
+  "after": []
+}

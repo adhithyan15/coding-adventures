@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "At the Doorway",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e4075edd14f098ed",
+  "sourceHash": "fnv1a64:b0746d820864bd86",
   "lessons": [
     {
       "id": "TA-C50-threshold",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9a04ead13b84967",
+      "sourceHash": "fnv1a64:61375a4e7b242969",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kadavu*, then *vāsal*, so the door and its opening sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ippōdu, then read அன்பு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ippōdu*, then read **அன்பு**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a62f8f131e3e915",
+      "sourceHash": "fnv1a64:f9b564b84d121c9f",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vāsal*, then *kōlam*, and let the long *ō* open the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read நேரம், then say mariyādai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **நேரம்**, then say *mariyādai*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c5d385d215dfc33",
+      "sourceHash": "fnv1a64:a3e27b19dd30526b",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kōlam*, then *malar*, and hear the soft *r* close the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say payaṇam, then read சந்தோஷம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *payaṇam*, then read **சந்தோஷம்**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53b700951eb2b5eb",
+      "sourceHash": "fnv1a64:00af6d28a2367869",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *malar*, then *veṟṟilai*, and let the hard *ṟ* double in the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read பிறகு, then say vāḻttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **பிறகு**, then say *vāḻttu*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1ca13a4a05a282e",
+      "sourceHash": "fnv1a64:65bbd58d55ca2d5f",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *vāsal*, *kōlam*, *malar*, *veṟṟilai*, *varavēṟpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puṟappaḍu, then read மிக்க நன்றி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puṟappaḍu*, then read **மிக்க நன்றி**]"
             }
           ]
         },

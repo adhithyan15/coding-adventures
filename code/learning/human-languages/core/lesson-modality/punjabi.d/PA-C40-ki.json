@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C40-ki",
+    "language": "punjabi",
+    "chapter": 40,
+    "sequence": 2320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:197365b2dd29b125"
+  },
+  "findings": []
+}

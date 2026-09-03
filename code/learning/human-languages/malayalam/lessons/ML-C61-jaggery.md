@@ -9,7 +9,7 @@ headword: "ശർക്കര"
 gloss: "jaggery"
 romanization: "śarkkara"
 concept_tag: ML-NOUN-JAGGERY
-prerequisites: [ML-C61-curd]
+prerequisites: [ML-C61-curd, ML-C59-smoke]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C61-SHELF-04]
 practises:
-  knowledge: [ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04]
+  knowledge: [ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04, ML-LEX-C59-AIR-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kerala's own ശർക്കര is dark and soft, boiled down from palm sap or c
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04, ML-LEX-C59-AIR-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śarkkara*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śarkkara*, then the English word *sugar*, and hear one word twice]
+- [YOU RECALL: read **പുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04] -->

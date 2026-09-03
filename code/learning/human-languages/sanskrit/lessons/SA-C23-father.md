@@ -12,7 +12,7 @@ headword: "पिता"
 gloss: "father"
 romanization: "pitā"
 concept_tag: SA-NOUN-FATHER
-prerequisites: [SA-C22-burn]
+prerequisites: [SA-C22-burn, SA-C21-dance, SA-C22-hear]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-FATHER]
 practises:
-  knowledge: [SA-LEX-BURN, SA-LEX-FATHER]
+  knowledge: [SA-LEX-BURN, SA-LEX-FATHER, SA-LEX-DANCE, SA-LEX-HEAR]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ The stem behind it is **पितृ** (*pitṛ-*), and its family reaches furth
 The first of the four oldest words in the family. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-BURN, SA-LEX-FATHER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-BURN, SA-LEX-FATHER, SA-LEX-DANCE, SA-LEX-HEAR] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pitā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it beside *pater* and *father*, and hear the one word underneath]
+- [YOU RECALL: say *nṛtyati*, then read **शृणोति**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-BURN, SA-LEX-FATHER] -->

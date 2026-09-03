@@ -12,7 +12,7 @@ headword: "दारु"
 gloss: "wood, timber"
 romanization: "dāru"
 concept_tag: SA-TREE-DARU
-prerequisites: [SA-C32-vine]
+prerequisites: [SA-C32-vine, SA-C30-anjali, SA-C31-snow]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C32-TREE-05]
 practises:
-  knowledge: [SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05]
+  knowledge: [SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05, SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It is one of the securest cousins in this book. English *tree* is it, and so are
 Five growing things, and the tree standing inside the English word *true*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05, SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dāru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then name the English word hiding in *dāru*]
+- [YOU RECALL: say *añjaliḥ*, then read **हिमम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05] -->

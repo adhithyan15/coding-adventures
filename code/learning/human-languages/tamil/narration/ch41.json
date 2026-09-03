@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:9746d87673fef68c",
+  "sourceHash": "fnv1a64:5bcdfa3981b3642a",
   "lessons": [
     {
       "id": "TA-C41-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b172d44794aaf9b1",
+      "sourceHash": "fnv1a64:685c18d590ab681e",
       "notice": null,
       "blocks": [
         {
@@ -86,6 +86,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vēṇḍum, then read இது, then say adu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vēṇḍum*, then read **இது**, then say *adu*]"
             }
           ]
         },
@@ -121,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e0b77db2b2bd740",
+      "sourceHash": "fnv1a64:79f5e2c284696928",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +201,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read எவ்வளவு, then say iṅgē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **எவ்வளவு**, then say *iṅgē*]"
             }
           ]
         },
@@ -227,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14b6ac8d32b13a37",
+      "sourceHash": "fnv1a64:0a0a733c3578fad6",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +316,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṅgē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṅgē*]"
             }
           ]
         },
@@ -333,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d1e8a5a7a5e2548",
+      "sourceHash": "fnv1a64:2d328911070ec8df",
       "notice": null,
       "blocks": [
         {
@@ -404,6 +431,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ஒரு, then say yār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ஒரு**, then say *yār*]"
             }
           ]
         },
@@ -439,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10ef1e9ca946eda9",
+      "sourceHash": "fnv1a64:73b4661cb5e8f0bd",
       "notice": null,
       "blocks": [
         {
@@ -510,6 +546,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eṅgē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eṅgē*]"
             }
           ]
         },

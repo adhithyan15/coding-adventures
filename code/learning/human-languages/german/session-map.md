@@ -1,4 +1,4 @@
-# Session Map — German Chapters 1–9 and 17–23
+# Session Map — German Chapters 1–11 and 18–23
 
 How the lessons compose into commute sessions. Mechanics in
 [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md); same
@@ -9,7 +9,7 @@ authoritative order.
 Every chapter listed here is **generated from the lessons** rather than
 hand-written LaTeX, so these tables and the book are the same object seen twice:
 the order below is the `sequence:` order the generator reads. The gap between
-chapter 4 and chapter 19 is the hand-written stretch that has not been retired
+chapter 12 and chapter 18 is the hand-written stretch that has not been retired
 yet.
 
 ## Chapter 1 — Greetings
@@ -184,7 +184,57 @@ were evidence for became its own session. *ein Kaffee* and *eine Katze* became
 
 Reviews of earlier words fold into each session per the interval schedule.
 
-## Chapter 17 — To Have
+## Chapters 10 and 11 — the seven days
+
+Seven days were two lessons; they are fifteen now, across two chapters. Eighteen
+atoms in one chapter is a cram, so the cut follows the `.tex`'s own
+weekday/weekend seam.
+
+### Chapter 10 — The Gods of the Week
+
+| Session | What it adds |
+|---|---|
+| Gott plus Tag | the shape: a god's name with *Tag* on the end, five times of seven |
+| der Mond | the moon (= English *moon*); final *d* hardens to *t* |
+| Montag | *Mond* + *Tag*, the same two words English uses, in the same order |
+| Dienstag | **Tiw** for **Mars** — his name is Latin *deus* and Greek *Zeus* |
+| der Donner | thunder; *th* → *d*, the sound law paying a second time |
+| Donnerstag | **Donar** = **Thor**, standing where **Jupiter** stood |
+| Freitag | **Frija** for **Venus** — the swap matched the god, not just the slot |
+| Mittwoch | no god and no *Tag*: the Church's edit, where English kept Woden |
+| practice | the five, and the one that broke the shape |
+
+### Chapter 11 — The German Weekend
+
+| Session | What it adds |
+|---|---|
+| die Sonne | the sun — and *der* Mond beside *die* Sonne, the reverse of Romance |
+| Sonntag | *Sonne* + *Tag*; Romance renamed this day, German did not |
+| der Sabbat | Hebrew *shabbāt* through Greek — the one word from outside Europe |
+| Samstag | the Sabbath, not Saturn; *Samstag* and *sábado* are one word |
+| Sonnabend | the northern Saturday: *Sonne* + *Abend*, "Sun-eve" |
+| practice | all seven, five gods, one edit, one import |
+
+## Chapter 12 — Telling the Time
+
+Two lessons become ten. The chapter's own thesis is a division of labour: the
+clock arrived from Rome and brought its word with it, while noon and midnight
+were always there and German built them out of what it owned.
+
+| Session | What it adds |
+|---|---|
+| die Uhr | the clock, and the word for "o'clock"; one long syllable |
+| Uhr und hōra | Latin *hōra*, the same word as *heure*, *ora* and **hour** |
+| die Stunde | German's own hour-word, kept for the span the loan did not take |
+| Es ist … Uhr | the frame: *es ist* + a number + *Uhr* |
+| zwei Uhr, not zwei Uhren | a unit of time takes no plural; *Uhren* means clocks |
+| die Mitte | the middle; English *mid*, Latin *medius* |
+| der Mittag | *Mitte* + *Tag*, readable before it is taught |
+| Mittag und midi | French assembled *medius diēs*; German assembled its own |
+| die Mitternacht | *Mitte* + *Nacht*, and *-cht*/*-ght* paying off from *acht* |
+| practice | the counted hour and the two uncounted pivots, side by side |
+
+## Chapter 18 — To Have
 
 Chapter 5 taught the ending machine, so *haben* is met as the place that machine
 **fails**. It predicts four of the six forms correctly, so those share one
@@ -205,7 +255,7 @@ each.
 The age half of the hand-written chapter is **not** here — it needs the copula,
 so it waits until after it.
 
-## Chapters 18, 19 and 20 — the participle, the Perfekt, and the Präteritum
+## Chapters 19, 20 and 21 — the participle, the Perfekt, and the Präteritum
 
 Split from one hand-written chapter. The material is a participle recipe, four
 person slots of a compound tense, and a second past tense that means the same
@@ -214,7 +264,7 @@ thing as the first — twenty-four atoms at one per lesson, twice
 this one, then 20 and 21, with the age chapter sitting between the first two so
 the present forms get used before the past arrives.
 
-### Chapter 18 — The Wrapped Participle
+### Chapter 19 — The Wrapped Participle
 
 | Session | What it adds |
 |---|---|
@@ -227,7 +277,7 @@ the present forms get used before the past arrives.
 | ge- | Germanic \**ga-* "completely"; the fossil inside *enough* and *yclept* |
 | practice | the four participles together for the first time, as a recap |
 
-### Chapter 19 — The Past Built From Have
+### Chapter 20 — The Past Built From Have
 
 | Session | What it adds |
 |---|---|
@@ -241,7 +291,7 @@ the present forms get used before the past arrives.
 | ich habe gesagt = I said | the translation trap: it is a plain past, not a perfect |
 | practice | the four slots together for the first time, as a recap |
 
-### Chapter 20 — The Simple Past
+### Chapter 21 — The Simple Past
 
 | Session | What it adds |
 |---|---|
@@ -256,7 +306,7 @@ the present forms get used before the past arrives.
 | areale Veränderung | German, French and Italian retreated together, by contact |
 | practice | both pasts, back to back, until nothing about the meaning moves |
 
-## Chapter 21 — I Am, You Are
+## Chapter 22 — I Am, You Are
 
 Split from one hand-written chapter. `sein` is the only German verb whose forms
 cannot be derived from its infinitive, so it is met one form per lesson and the
@@ -277,7 +327,7 @@ one atom per grammar cell the material is twenty-four atoms, which is twice
 | müde | tired — and an adjective after *sein* takes no ending |
 | practice | the six forms together for the first time, as a recap |
 
-## Chapter 22 — Being Your Years
+## Chapter 23 — Being Your Years
 
 Moved out of the hand-written *haben* chapter, because the sentence it teaches
 needs the copula. It sits directly after the chapter that supplies *ich bin* and
@@ -294,7 +344,7 @@ six forms of a verb should use them for something real before meeting its past.
 | sein, nicht haben | Germanic **is** its years; Romance **has** them |
 | practice | asking and answering, with *haben* never once needed |
 
-## Chapter 23 — Three Verbs Under One Roof
+## Chapter 24 — Three Verbs Under One Roof
 
 | Session | What it adds |
 |---|---|
@@ -307,7 +357,7 @@ six forms of a verb should use them for something real before meeting its past.
 | why sein is a mess | frequency protects irregularity; analogy never reaches "to be" |
 | practice | the past assembled, and the account of the three roots |
 
-## Chapter 24 — The Past That Takes To Be
+## Chapter 25 — The Past That Takes To Be
 
 | Session | What it adds |
 |---|---|
@@ -323,5 +373,5 @@ six forms of a verb should use them for something real before meeting its past.
 
 ## Next
 
-Chapter 10 — the days of the week. Chapters 10–16 are still hand-written LaTeX;
+Chapter 13 — months and seasons. Chapters 13–17 are still hand-written LaTeX;
 see `../BACKLOG.d/` for the retirement queue.

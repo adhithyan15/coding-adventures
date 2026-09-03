@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C43-kitthe",
+    "language": "punjabi",
+    "chapter": 43,
+    "sequence": 2500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f81e1248d569d761"
+  },
+  "findings": []
+}

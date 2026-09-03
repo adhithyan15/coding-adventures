@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Getting There",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:918e5dc70354507c",
+  "sourceHash": "fnv1a64:db5e9b7c99e9a040",
   "lessons": [
     {
       "id": "TA-C69-vehicle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4341454b46dd6a73",
+      "sourceHash": "fnv1a64:865cb2fecb6629ec",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *vāṅgu*, then say *pai*, then say *vaṇḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say saṭṭai, then read கடை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *saṭṭai*, then read **கடை**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d6a9dcea0fbc299",
+      "sourceHash": "fnv1a64:03b8c2eecb5f37f6",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *pai*, then say *vaṇḍi*, then say *pērundu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read வேட்டி, then say vilai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **வேட்டி**, then say *vilai*]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4e424c8de6e00cf",
+      "sourceHash": "fnv1a64:8f79dd31388cabb7",
       "notice": null,
       "blocks": [
         {
@@ -499,6 +517,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *pērundu*, then read **வண்டி**, then say *rayil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puḍavai, then read பணம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puḍavai*, then read **பணம்**]"
             }
           ]
         },
@@ -534,7 +561,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d1276bbc761162c",
+      "sourceHash": "fnv1a64:9e03ea707b0e284c",
       "notice": null,
       "blocks": [
         {
@@ -625,6 +652,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: read **வண்டி**, then say *rayil*, then say *sālai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read செருப்பு, then say vāṅgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **செருப்பு**, then say *vāṅgu*]"
             }
           ]
         },
@@ -660,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9f481420ff4a564",
+      "sourceHash": "fnv1a64:009459bf1c73b76b",
       "notice": null,
       "blocks": [
         {
@@ -760,6 +796,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *rayil*, then say *sālai*, then say *nilaiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say toppi, then read பை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *toppi*, then read **பை**]"
             }
           ]
         },

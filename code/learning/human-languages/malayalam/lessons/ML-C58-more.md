@@ -9,7 +9,7 @@ headword: "കൂടുതൽ"
 gloss: "more"
 romanization: "kūṭutal"
 concept_tag: ML-WORD-MORE
-prerequisites: [ML-C57-bone]
+prerequisites: [ML-C57-bone, ML-C56-mat]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C58-ANSWER-01]
 practises:
-  knowledge: [ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01]
+  knowledge: [ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01, ML-LEX-C56-HOUSE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The long *ū* at the front carries the word. Shorten it and you have said someth
 The first of five short answers.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01, ML-LEX-C56-HOUSE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kūṭutal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ellŭ*, then *kūṭutal*, and stretch the long vowel at the front]
+- [YOU RECALL: say *pāya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01] -->

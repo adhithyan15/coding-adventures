@@ -9,7 +9,7 @@ headword: "காது"
 gloss: "an ear"
 romanization: "kādu"
 concept_tag: TA-NOUN-EAR
-prerequisites: [TA-C45-eye]
+prerequisites: [TA-C45-eye, TA-C43-son, TA-C44-cloth]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C45-BODY-02]
 practises:
-  knowledge: [TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02]
+  knowledge: [TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-SON, TA-LEX-C44-ASK-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil owns that root as well. செவி (*sevi*) names the same organ and is 
 Two: an eye and an ear.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-SON, TA-LEX-C44-ASK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kādu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaṇ*, then *kādu*, and hear the long *ā* arrive in the second]
+- [YOU RECALL: read **மகன்**, then say *tuṇi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02] -->

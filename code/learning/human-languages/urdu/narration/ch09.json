@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d52d0f5d443af79d",
+  "sourceHash": "fnv1a64:7f19b27a6286e117",
   "lessons": [
     {
       "id": "UR-C09-bhai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f2b9198d56225dbb",
+      "sourceHash": "fnv1a64:407f0a2fe9c1312d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -144,6 +144,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: **mujhe paṛhnā pasand hai** once more, then **merā bhāī**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ānā, then say bolnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ānā*, then say *bolnā*]"
             }
           ]
         },
@@ -183,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5315e835977c4062",
+      "sourceHash": "fnv1a64:316edaf122aed94d",
       "notice": null,
       "blocks": [
         {
@@ -292,6 +301,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: **bahan** ← *bhaginī* ← *bhaj-*, \"to share\" — held loosely]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jānnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jānnā*]"
             }
           ]
         },

@@ -12,7 +12,7 @@ headword: "नरः"
 gloss: "man, person"
 romanization: "naraḥ"
 concept_tag: SA-NOUN-MAN
-prerequisites: [SA-C19-number-family]
+prerequisites: [SA-C19-number-family, SA-C18-when, SA-C19-six]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C20-PERSON-01]
 practises:
-  knowledge: [SA-LEX-C20-PERSON-01]
+  knowledge: [SA-LEX-C20-PERSON-01, SA-LEX-C18-ASK-01, SA-LEX-C19-NUM-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -56,12 +56,13 @@ Ending in *-aḥ*, so you already know its family: masculine, like ग्रा�
 Your first person, and the ending told you what it was before the lesson did.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-01, SA-LEX-C18-ASK-01, SA-LEX-C19-NUM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *naraḥ* — "man"]
 - [YOU SAY: "a good man" — *uttama naraḥ*]
 - [YOU SAY: the English word built on its Greek cousin (*android*)]
+- [YOU RECALL: say *kadā*, then read **षट्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-01] -->

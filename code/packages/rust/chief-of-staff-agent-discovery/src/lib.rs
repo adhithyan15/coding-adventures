@@ -464,7 +464,7 @@ mod tests {
     fn explicit_candidate_discovers_a_sealed_skill_only_package() {
         let f = Fixture::new(PrivilegeTier::Tier1);
         let path = f.root.join("weather-skill.agent");
-        let source = "---\nagent: weather-skill\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Skill\n\nReport a concise forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
+        let source = "---\nagent: weather-skill\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Skill\n\nReport a concise forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n\n## Tool capabilities needed\n- none\n";
         build_signed_skill_package(&path, source, "test", &f.secret).unwrap();
         let found = inspect_agent_package(&path, &f.keyring).unwrap();
         assert_eq!(found.manifest().agent, "weather-skill");

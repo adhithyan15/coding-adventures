@@ -9,7 +9,7 @@ headword: "தேவையில்லை"
 gloss: "there is no need"
 romanization: "tēvaiyillai"
 concept_tag: TA-REPLY-NO-NEED
-prerequisites: [TA-C56-less]
+prerequisites: [TA-C56-less, TA-C54-bowl, TA-C55-nail]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C56-AMOUNT-04]
 practises:
-  knowledge: [TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04]
+  knowledge: [TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04, TA-LEX-C54-HOUSE-04, TA-LEX-C55-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A flat *illai* refuses the thing. தேவையில்லை says there is n
 Four, and this one is the polite way out.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04, TA-LEX-C54-HOUSE-04, TA-LEX-C55-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tēvaiyillai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuṟaivu*, then *tēvaiyillai*, and let the whole of the second run as one word]
+- [YOU RECALL: read **கிண்ணம்**, then say *nakam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04] -->

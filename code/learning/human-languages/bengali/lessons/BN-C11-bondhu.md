@@ -9,7 +9,7 @@ headword: বন্ধু
 romanization: bôndhu
 gloss: friend — a word built openly on "to bind," and the rare case where Bengali and English share both the word and the picture behind it
 concept_tag: BN-PEOPLE-FRIEND
-prerequisites: [BN-C10-bhat]
+prerequisites: [BN-C10-bhat, BN-C08-pora, BN-C08-lekha, BN-C09-neowa]
 sounds: [ndhu-conjunct]
 roots: [bandh-bind]
 etymology_hook: "বন্ধু is Sanskrit বন্ধু bandhu, kept whole rather than worn down by sound change — a tatsama, a word borrowed straight from Sanskrit into literary and everyday Bengali alike — built on √bandh 'to bind,' PIE bʰendʰ-, the very root of English bind, bond and band: a friend is, at the root, someone you are bound to"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C11-BONDHU-01]
 practises:
-  knowledge: [BN-LEX-C10-BHAT-01, BN-LEX-C11-BONDHU-01, BN-GRAMMAR-C07-ASHA-02]
+  knowledge: [BN-LEX-C10-BHAT-01, BN-LEX-C11-BONDHU-01, BN-GRAMMAR-C07-ASHA-02, BN-LEX-C08-PORA-01, BN-SOUND-C08-PORA-02, BN-LEX-C08-LEKHA-01, BN-GRAMMAR-C08-LEKHA-02, BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,12 +68,13 @@ explain what a friend is; the word does it for you. A বন্ধু is, at the
 someone you are bound to.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BONDHU-01, BN-LEX-C10-BHAT-01, BN-GRAMMAR-C07-ASHA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BONDHU-01, BN-LEX-C10-BHAT-01, BN-GRAMMAR-C07-ASHA-02, BN-LEX-C08-PORA-01, BN-SOUND-C08-PORA-02, BN-LEX-C08-LEKHA-01, BN-GRAMMAR-C08-LEKHA-02, BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bôndhu" — friend]
 - [YOU SAY: "āmār bôndhu" — my friend, no gender marked either way]
 - [YOU SAY: the root, and its English family — "bandh … bind, bond, band"]
+- [YOU RECALL: say *pôṛā*, then read **লেখা**, then say *neowā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BONDHU-01, BN-GRAMMAR-C07-ASHA-02] -->

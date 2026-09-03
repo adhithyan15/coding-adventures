@@ -12,7 +12,7 @@ headword: "अब"
 gloss: "now, from this point on"
 romanization: "ab"
 concept_tag: HI-ADV-NOW
-prerequisites: [HI-C63-pain]
+prerequisites: [HI-C63-pain, HI-C62-rope, HI-C63-hunger]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C64-MEASURE-01]
 practises:
-  knowledge: [HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01]
+  knowledge: [HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01, HI-LEX-C62-HANDS-01, HI-LEX-C63-STATE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The dictionaries do not agree on where अब came from, and this book will say 
 The first of five words of degree and pace.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01, HI-LEX-C62-HANDS-01, HI-LEX-C63-STATE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ab*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ab*, then *abhī*, and say which one draws a line]
+- [YOU RECALL: say *rassī*, then read **भूख**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01] -->

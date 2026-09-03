@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Grandparents, and the Married Pair",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a8e7308e3b652322",
+  "sourceHash": "fnv1a64:4ed6b3b86fdae39d",
   "lessons": [
     {
       "id": "ML-C45-grandfather",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e032a5f6ec126409",
+      "sourceHash": "fnv1a64:920ed5bd8202675d",
       "notice": null,
       "blocks": [
         {
@@ -102,6 +102,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *eḻutū*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paḻaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paḻaya*]"
             }
           ]
         },
@@ -255,7 +264,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63f7e81d7e5f109e",
+      "sourceHash": "fnv1a64:4545b0c74f2893bf",
       "notice": null,
       "blocks": [
         {
@@ -338,6 +347,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *muttaśśi*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ōṭū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ōṭū*]"
             }
           ]
         },
@@ -373,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6593168f10c6d69",
+      "sourceHash": "fnv1a64:0a63198c011e9a46",
       "notice": null,
       "blocks": [
         {
@@ -456,6 +474,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *bharttāvŭ*, and name the root they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ഉറങ്ങൂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ഉറങ്ങൂ**]"
             }
           ]
         },

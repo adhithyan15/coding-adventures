@@ -9,7 +9,7 @@ headword: "വിളക്ക്"
 gloss: "a lamp"
 romanization: "viḷakkŭ"
 concept_tag: ML-NOUN-LAMP
-prerequisites: [ML-C46-cloth]
+prerequisites: [ML-C46-cloth, ML-C44-look]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C46-ASK-03]
 practises:
-  knowledge: [ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03]
+  knowledge: [ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-LOOK]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada reached for a borrowed word here, ದೀಪ (*dīpa*) from Sanskrit, whe
 Three. A fruit, a cloth, a lamp.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-LOOK] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viḷakkŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *viḷakkŭ*, then *tuṇi*, and hear which of the two is the older resident]
+- [YOU RECALL: say *nōkkū*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03] -->

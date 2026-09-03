@@ -9,7 +9,7 @@ headword: "എഴുതൂ"
 gloss: "write"
 romanization: "eḻutū"
 concept_tag: ML-VERB-WRITE
-prerequisites: [ML-C44-speak]
+prerequisites: [ML-C44-speak, ML-C42-new]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-WRITE]
 practises:
-  knowledge: [ML-LEX-SPEAK, ML-LEX-WRITE]
+  knowledge: [ML-LEX-SPEAK, ML-LEX-WRITE, ML-LEX-C42-ADJ-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ From *eḻuttu*, 'letter' — the writing verb is built from the thing written, 
 That closes the run: look, listen, speak, write.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SPEAK, ML-LEX-WRITE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SPEAK, ML-LEX-WRITE, ML-LEX-C42-ADJ-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *eḻutū*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *saṁsārikkū*, so the two sit together]
+- [YOU RECALL: read **പുതിയ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SPEAK, ML-LEX-WRITE] -->

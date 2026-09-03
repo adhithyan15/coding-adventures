@@ -12,7 +12,7 @@ headword: "तारा"
 gloss: "a star"
 romanization: "tārā"
 concept_tag: SA-SKY-TARA
-prerequisites: [SA-C31-moon]
+prerequisites: [SA-C31-moon, SA-C29-bow, SA-C30-flower]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C31-SKY-03]
 practises:
-  knowledge: [SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03]
+  knowledge: [SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C29-COURTESY-03, SA-LEX-C30-WELCOME-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Sanskrit dropped the *s-* at the front and kept the rest. Ends in **-आ**, like
 A third light overhead, and a word that reached every branch of the family.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C29-COURTESY-03, SA-LEX-C30-WELCOME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tārā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tārā*, and one of its cousins outside India]
+- [YOU RECALL: say *praṇāmaḥ*, then read **पुष्पम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03] -->

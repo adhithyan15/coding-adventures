@@ -9,7 +9,7 @@ headword: പാതിരാ
 gloss: midnight, built on Malayalam paathi "half" rather than Sanskrit ardha
 romanization: "pāthirā"
 concept_tag: ML-TIME-MIDNIGHT
-prerequisites: [ML-C17-ucha-paathira]
+prerequisites: [ML-C17-ucha-paathira, ML-C13-shareera-bhaagangal]
 sounds: [malayalam-vowel-sign-aa]
 roots: [dravidian-paathi-half]
 etymology_hook: "പാതിരാ and Telugu ardharātri share the half-night metaphor but use unrelated words for half"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C17-PAATHIRA-01]
 practises:
-  knowledge: [ML-CONCEPT-C17-PAATHIRA-01]
+  knowledge: [ML-CONCEPT-C17-PAATHIRA-01, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -54,12 +54,13 @@ while filling it with unrelated words for “half.” The metaphor matches; the
 vocabulary does not.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-PAATHIRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-PAATHIRA-01, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paathira* — midnight]
 - [YOU SAY: *paathi* — half]
 - [YOU SAY: Malayalam *paathi* versus Sanskrit *ardha* — same job, different roots]
+- [YOU RECALL: read **തല കൈ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-PAATHIRA-01] -->

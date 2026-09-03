@@ -1,16 +1,28 @@
 {
   "chapter": 12,
-  "title": "Months and Seasons",
-  "label": "ch:months-seasons",
-  "canDo": "I can name the months and seasons in German and say when something happens.",
+  "title": "Telling the Time",
+  "label": "ch:time",
+  "canDo": "I can ask for and tell the time in German.",
   "spineNodes": [
     "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C09-jahreszeiten",
+    "lesson": "GE-C08-mittag-mitternacht",
     "kind": "task",
-    "summary": "Complete GE-C09-jahreszeiten, the canonical closing checkpoint, and demonstrate the chapter promise: name the months and seasons in German and say when something happens.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The chapter's thesis is a division of labour. Uhr came from Latin hora with the clocks that needed it, and German already had Stunde for the span, so the loan took the clock-reading job and the native word kept the other. Mittag and Mitternacht are German's own compounds, Mitte with Tag and Nacht, the same thought French assembled out of Latin as midi. It closes on the two frames together: a number with Uhr, or a pivot standing alone.",
+    "assesses": [
+      "GE-LEX-UHR-01",
+      "GE-SOUND-UHR-01",
+      "GE-ETYMON-UHR-HORA-01",
+      "GE-LEX-STUNDE-01",
+      "GE-GRAMMAR-ES-IST-UHR-01",
+      "GE-GRAMMAR-UHR-NO-PLURAL-01",
+      "GE-LEX-MITTE-01",
+      "GE-ETYMON-MITTE-MEDIUS-01",
+      "GE-LEX-MITTAG-01",
+      "GE-ETYMON-MITTAG-MIDI-01",
+      "GE-LEX-MITTERNACHT-01"
+    ],
+    "note": "Chapter 12 is generated from schema-v2 lessons, so the payoff is atom-scored, and it assesses all eleven atoms the chapter introduces. Eleven sits under the maxNewAtomsPerChapter of 12 with no split: the chapter reaches eleven rather than twelve because its own thesis -- borrow what arrives, build what was always there -- is GE-GRAMMAR-NATIVE-VS-LOAN-01 for the third time, and is therefore required from chapter 9 rather than reintroduced. Lesson ids keep the GE-C08-* prefix and both schema-v1 ids survive."
   }
 }

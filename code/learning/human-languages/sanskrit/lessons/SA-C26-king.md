@@ -12,7 +12,7 @@ headword: "राजा"
 gloss: "a king"
 romanization: "rājā"
 concept_tag: SA-PERSON-KING
-prerequisites: [SA-C26-student]
+prerequisites: [SA-C26-student, SA-C24-fruit, SA-C25-head]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C26-ROLE-03]
 practises:
-  knowledge: [SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03]
+  knowledge: [SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C24-ASK-03, SA-LEX-C25-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its cousin in Rome is *rēx*, in its other forms *rēgem*: *regal*, *royal*, *re
 One word, two arrivals in English, with millennia between them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C24-ASK-03, SA-LEX-C25-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *rājā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *rājā*, then *pitā*, and name the family both stems share]
+- [YOU RECALL: say *phalam*, then read **शिरः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03] -->

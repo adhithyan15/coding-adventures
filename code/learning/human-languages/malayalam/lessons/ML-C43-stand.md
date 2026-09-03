@@ -9,7 +9,7 @@ headword: "നിൽക്കൂ"
 gloss: "stand"
 romanization: "nilkkū"
 concept_tag: ML-VERB-STAND
-prerequisites: [ML-C43-sleep]
+prerequisites: [ML-C43-sleep, ML-C41-where]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-STAND]
 practises:
-  knowledge: [ML-LEX-SLEEP, ML-LEX-STAND]
+  knowledge: [ML-LEX-SLEEP, ML-LEX-STAND, ML-LEX-C41-DEIXIS-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ Its pair, with the same courteous ending.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SLEEP, ML-LEX-STAND] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SLEEP, ML-LEX-STAND, ML-LEX-C41-DEIXIS-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nilkkū*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *uṟaṅṅū*, so the two sit together]
+- [YOU RECALL: say *eviṭe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SLEEP, ML-LEX-STAND] -->

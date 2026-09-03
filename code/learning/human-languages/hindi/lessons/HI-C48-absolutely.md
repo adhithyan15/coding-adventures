@@ -12,7 +12,7 @@ headword: "बिलकुल"
 gloss: "absolutely"
 romanization: "bilkul"
 concept_tag: HI-WORD-ABSOLUTELY
-prerequisites: [HI-C48-perhaps]
+prerequisites: [HI-C48-perhaps, HI-C46-throat, HI-C47-neighbour]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C48-REPLY-05]
 practises:
-  knowledge: [HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05]
+  knowledge: [HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05, HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It answers a yes-or-no question with more weight than a bare yes. Put *nahīṁ*
 Five, and the run is closed: true, enough, certainly, perhaps, absolutely.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05, HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bilkul*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *sac*, *bas*, *zarūr*, *śāyad*, *bilkul*]
+- [YOU RECALL: say *galā*, then say *paṛosī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05] -->

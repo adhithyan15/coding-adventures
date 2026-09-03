@@ -1,0 +1,13 @@
+{
+  "id": "GE-PATH-016-B",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GE-C09-monate",
+    "GE-C09-jahreszeiten"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-016-B-MONATE"
+  ],
+  "after": []
+}

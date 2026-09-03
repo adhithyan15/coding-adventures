@@ -9,7 +9,7 @@ headword: ಮೂರು
 gloss: three — the long vowel the whole family kept
 romanization: "mūru"
 concept_tag: KA-NUMBER-THREE
-prerequisites: [KA-C07-eradu]
+prerequisites: [KA-C07-eradu, KA-C05-kelasa-maadu]
 sounds: [u-vowel-sign]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Tamil munru, Kannada muuru, Telugu muudu: every branch kept the long uu of three"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C07-MUURU-01]
 practises:
-  knowledge: [KA-LEX-C07-MUURU-01, KA-LEX-C07-ERADU-01, KA-SCRIPT-RECOG-02]
+  knowledge: [KA-LEX-C07-MUURU-01, KA-LEX-C07-ERADU-01, KA-SCRIPT-RECOG-02, KA-LEX-C05-MAADU-01, KA-GRAMMAR-C05-MAADU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,12 +49,13 @@ you have never studied, look for a word that starts *mū-*.
 The long vowel is written with the sign **ೂ** hanging under ಮ.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-MUURU-01, KA-SCRIPT-RECOG-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-MUURU-01, KA-SCRIPT-RECOG-02, KA-LEX-C05-MAADU-01, KA-GRAMMAR-C05-MAADU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mūru" — hold the ū long]
 - [YOU LOOK: at ಮೂರು and find the long ೂ under the first letter]
 - [YOU SAY: the count so far — "ondu, eraḍu, mūru"]
+- [YOU RECALL: say *kelasa māḍu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-MUURU-01, KA-LEX-C07-ERADU-01] -->

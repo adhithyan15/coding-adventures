@@ -9,7 +9,7 @@ headword: ತಲೆ ಕೈ
 gloss: head and hand — native Dravidian, matching Tamil/Malayalam closely
 romanization: "tale kai"
 concept_tag: KA-BODY-BASIC
-prerequisites: [KA-C12-kutumba]
+prerequisites: [KA-C12-kutumba, KA-C10-vaara]
 sounds: [kannada-vowel-sign-ai]
 roots: [dravidian-tale-kai]
 etymology_hook: "ತಲೆ tale (head) and ಕೈ kai (hand) are native Dravidian, matching Tamil talai/kai and Malayalam thala/kai closely — a shared core across three of the four languages"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C13-DEHADA-BHAGAGALU-01]
 practises:
-  knowledge: [KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C13-DEHADA-BHAGAGALU-01]
+  knowledge: [KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C10-VAARA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -46,12 +46,13 @@ parts line up with Tamil and Malayalam almost perfectly.
   Malayalam's *kai* almost exactly.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C13-DEHADA-BHAGAGALU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C10-VAARA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tale" — head]
 - [YOU SAY: "kai" — hand]
 - [YOU SAY: the match — nearly identical across Tamil, Malayalam, Kannada]
+- [YOU RECALL: say *sōmavāra maṅgaḷavāra budhavāra guruvāra śukravāra śanivāra bhānuvāra*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C13-DEHADA-BHAGAGALU-01] -->

@@ -9,7 +9,7 @@ headword: "ಅಷ್ಟೇ"
 gloss: "that's all, just that"
 romanization: "aṣṭē"
 concept_tag: KA-WORD-THATS-ALL
-prerequisites: [KA-C58-no-thanks]
+prerequisites: [KA-C58-no-thanks, KA-C56-box]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C58-REPLY-05]
 practises:
-  knowledge: [KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05]
+  knowledge: [KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05, KA-LEX-C56-HOUSE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That closing *-ē* is worth keeping. Put it on almost anything and you get "only
 Five: ಸ್ವಲ್ಪ, ಹೆಚ್ಚು, ಕಡಿಮೆ, ಬೇಡ, ಅಷ್ಟೇ. You can answer an offer five ways.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05, KA-LEX-C56-HOUSE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *aṣṭē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *aṣṭē*, as though closing a list]
+- [YOU RECALL: say *peṭṭige*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05] -->

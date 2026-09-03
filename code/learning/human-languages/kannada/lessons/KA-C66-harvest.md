@@ -9,7 +9,7 @@ headword: "ಸುಗ್ಗಿ"
 gloss: "the harvest"
 romanization: "suggi"
 concept_tag: KA-NOUN-HARVEST
-prerequisites: [KA-C66-crop]
+prerequisites: [KA-C66-crop, KA-C64-in-that-case]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C66-FIELD-05]
 practises:
-  knowledge: [KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05]
+  knowledge: [KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05, KA-LEX-C64-JOIN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Which makes this the right place to take your leave of the ಹಳ್ಳಿ. You 
 Five: ಹೊಲ, ಹುಲ್ಲು, ಭತ್ತ, ಬೆಳೆ, ಸುಗ್ಗಿ. A field, what grows on it, and the season that takes it in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05, KA-LEX-C64-JOIN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *suggi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *hōgi baruttēne*]
+- [YOU RECALL: say *hāgādare*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05] -->

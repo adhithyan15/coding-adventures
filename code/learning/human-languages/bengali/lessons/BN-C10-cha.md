@@ -9,7 +9,7 @@ headword: চা
 romanization: chā
 gloss: tea — a loanword that crossed from China into Bengali overland, and the drink this chapter's polite offers run on
 concept_tag: BN-FOOD-TEA
-prerequisites: [BN-C09-bhalo-laga]
+prerequisites: [BN-C09-bhalo-laga, BN-C07-jaowa, BN-C07-asha]
 sounds: [cha-unaspirated]
 roots: [chinese-cha, persian-route]
 etymology_hook: "চা travelled Chinese chá into Persian čā and from there into Bengali চা — the overland route also taken by Hindi and Punjabi, and a different road entirely from the 'tea' words that reached Europe by sea from Hokkien Chinese by way of Dutch traders"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02]
 practises:
-  knowledge: [BN-LEX-C09-BHALOLAGA-01, BN-LEX-C07-KHAOWA-01, BN-GRAMMAR-C07-KHAOWA-02, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02]
+  knowledge: [BN-LEX-C09-BHALOLAGA-01, BN-LEX-C07-KHAOWA-01, BN-GRAMMAR-C07-KHAOWA-02, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C07-JAOWA-01, BN-GRAMMAR-C07-JAOWA-02, BN-LEX-C07-ASHA-01, BN-GRAMMAR-C07-ASHA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -75,13 +75,14 @@ offer or request:
 No new ending to learn — চা খান reuses exactly what Chapter 13 already gave you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C09-BHALOLAGA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C09-BHALOLAGA-01, BN-LEX-C07-JAOWA-01, BN-GRAMMAR-C07-JAOWA-02, BN-LEX-C07-ASHA-01, BN-GRAMMAR-C07-ASHA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "chā" — tea]
 - [YOU SAY: the offer — "chā khān"]
 - [YOU SAY: the route it travelled — "chá … čā … chā"]
 - [YOU SAY: last lesson's line again — "āmār chā bhālo lāge"]
+- [YOU RECALL: say *jāwā*, then read **আসা**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-GRAMMAR-C07-KHAOWA-02] -->

@@ -9,7 +9,7 @@ headword: "ಹಣ್ಣು"
 gloss: "a fruit"
 romanization: "haṇṇu"
 concept_tag: KA-NOUN-FRUIT
-prerequisites: [KA-C45-wife]
+prerequisites: [KA-C45-wife, KA-C43-stand]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C46-ASK-01]
 practises:
-  knowledge: [KA-LEX-HUSBAND, KA-LEX-WIFE, KA-LEX-C46-ASK-01]
+  knowledge: [KA-LEX-HUSBAND, KA-LEX-WIFE, KA-LEX-C46-ASK-01, KA-LEX-STAND]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Proto-Dravidian **\*paḻ**, 'to ripen, to grow old', is the source, and the sou
 The first of five things you might ask someone for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-HUSBAND, KA-LEX-WIFE, KA-LEX-C46-ASK-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-HUSBAND, KA-LEX-WIFE, KA-LEX-C46-ASK-01, KA-LEX-STAND] -->
 
 [PAUSE 1s]
 - [YOU SAY: *haṇṇu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *haṇṇu*, then *dayaviṭṭu haṇṇu koḍi* — "please give a fruit"]
+- [YOU RECALL: say *nillu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-HUSBAND, KA-LEX-WIFE, KA-LEX-C46-ASK-01] -->

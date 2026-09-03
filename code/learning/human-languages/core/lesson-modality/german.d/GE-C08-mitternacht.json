@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C08-mitternacht",
+    "language": "german",
+    "chapter": 12,
+    "sequence": 253,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccd3ef62bafdca16"
+  },
+  "findings": []
+}

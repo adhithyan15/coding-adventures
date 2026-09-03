@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C31-repair-five",
+    "language": "gujarati",
+    "chapter": 35,
+    "sequence": 1820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0040b3afe950781"
+  },
+  "findings": []
+}

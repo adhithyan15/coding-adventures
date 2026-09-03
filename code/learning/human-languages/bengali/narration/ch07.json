@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8c9f4a877c6aee6d",
+  "sourceHash": "fnv1a64:f25236a3a0ff454a",
   "lessons": [
     {
       "id": "BN-C04-abar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0eb8a80ffabb5096",
+      "sourceHash": "fnv1a64:1dbe986e935bff3e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: what it adds to a goodbye (\"again\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āmi, then read কেমন",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āmi*, then read **কেমন**]"
             }
           ]
         },
@@ -133,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:afb2b5b5960fe99b",
+      "sourceHash": "fnv1a64:37ede85ae1200518",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the verb \"to see\" inside it (*dækhā*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bhālo*]"
             }
           ]
         },

@@ -12,7 +12,7 @@ headword: "लवणम्"
 gloss: "salt"
 romanization: "lavaṇam"
 concept_tag: SA-HOUSE-LAVANA
-prerequisites: [SA-C35-honey]
+prerequisites: [SA-C35-honey, SA-C33-mountain, SA-C34-bone]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C35-HOUSE-03]
 practises:
-  knowledge: [SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03]
+  knowledge: [SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C33-LAND-03, SA-LEX-C34-LIMB-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Here Sanskrit went its own way: Latin *sal* and English *salt* come from a diffe
 Salt, and a word with no European relatives at all.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C33-LAND-03, SA-LEX-C34-LIMB-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *lavaṇam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *madhu*, then *lavaṇam*]
+- [YOU RECALL: say *parvataḥ*, then read **अस्थि**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03] -->

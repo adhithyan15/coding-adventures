@@ -9,7 +9,7 @@ headword: "ಕೂದಲು"
 gloss: "hair"
 romanization: "kūdalu"
 concept_tag: KA-NOUN-HAIR
-prerequisites: [KA-C47-tooth]
+prerequisites: [KA-C47-tooth, KA-C45-grandmother]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C47-BODY-03]
 practises:
-  knowledge: [KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03]
+  knowledge: [KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-GRANDMOTHER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Careful Kannada also has ಕೇಶ (*kēśa*), straight from Sanskrit, for the b
 Three: a leg, a tooth, and hair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-GRANDMOTHER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kūdalu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all three, and listen for the little *-u* at the end of each]
+- [YOU RECALL: say *ajji*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03] -->

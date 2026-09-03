@@ -9,7 +9,7 @@ headword: "ಅಲ್ಲಿ"
 gloss: "there — where I am not"
 romanization: "alli"
 concept_tag: KA-DEIXIS-THERE
-prerequisites: [KA-C41-here]
+prerequisites: [KA-C41-here, KA-C37-baayi]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C41-DEIXIS-04]
 practises:
-  knowledge: [KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04]
+  knowledge: [KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04, KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-04, KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಅಲ್ಲಿ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **ಬಾಯಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-04] -->

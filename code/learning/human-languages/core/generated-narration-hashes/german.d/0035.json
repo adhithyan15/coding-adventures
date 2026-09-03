@@ -1,18 +1,18 @@
 {
   "language": "german",
   "chapter": 35,
-  "sourceHash": "fnv1a64:1ca8af541ecf8bea",
+  "sourceHash": "fnv1a64:e220e4f785967d80",
   "lessonIds": [
-    "GE-C27-gehen",
-    "GE-C27-laufen",
-    "GE-C27-oeffnen",
-    "GE-C27-schliessen"
+    "GE-C26-sitzen",
+    "GE-C26-stehen",
+    "GE-C26-schlafen",
+    "GE-C26-hoeren"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "german/narration/ch35.txt",
   "json": "german/narration/ch35.json",
-  "textHash": "fnv1a64:0c06881eed077a4e",
-  "jsonHash": "fnv1a64:e28df0d7272b5d09",
+  "textHash": "fnv1a64:c3d6efd2fe216aa0",
+  "jsonHash": "fnv1a64:0581c9a9567c4c0f",
   "findings": []
 }

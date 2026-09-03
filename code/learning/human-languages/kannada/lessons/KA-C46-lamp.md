@@ -9,7 +9,7 @@ headword: "ದೀಪ"
 gloss: "a lamp"
 romanization: "dīpa"
 concept_tag: KA-NOUN-LAMP
-prerequisites: [KA-C46-cloth]
+prerequisites: [KA-C46-cloth, KA-C44-look]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C46-ASK-03]
 practises:
-  knowledge: [KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03]
+  knowledge: [KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-LOOK]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada has a word of its own as well, ಹಣತೆ (*haṇate*), and it means s
 Three, and one of them came from Sanskrit.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-LOOK] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dīpa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all three so far, and say which of them a potter makes]
+- [YOU RECALL: say *nōḍu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03] -->

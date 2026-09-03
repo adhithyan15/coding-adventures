@@ -9,7 +9,7 @@ headword: "ಬೆರಳು"
 gloss: "a finger"
 romanization: "beraḷu"
 concept_tag: KA-NOUN-FINGER
-prerequisites: [KA-C47-hair]
+prerequisites: [KA-C47-hair, KA-C45-husband]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C47-BODY-04]
 practises:
-  knowledge: [KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04]
+  knowledge: [KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04, KA-LEX-HUSBAND]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ That is the second regular exchange this book has shown you, the one already vis
 Four. A leg, a tooth, hair, a finger.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04, KA-LEX-HUSBAND] -->
 
 [PAUSE 1s]
 - [YOU SAY: *beraḷu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *beraḷu*, then *bare*, and hear the same *b* at the front of both]
+- [YOU RECALL: read **ಗಂಡ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04] -->

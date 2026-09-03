@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C11-brot",
     "language": "german",
-    "chapter": 14,
-    "sequence": 265,
+    "chapter": 15,
+    "sequence": 275,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:adf4ec35b4101b59"
+    "sourceHash": "fnv1a64:7f20a84569f3ad8b"
   },
   "findings": []
 }

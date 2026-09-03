@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:c6b854ca00b16847",
+  "lessonIds": [
+    "PA-C39-par",
+    "PA-C39-lekin",
+    "PA-C39-par-write",
+    "PA-C39-doublet",
+    "PA-C39-but-checkpoint"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch39.txt",
+  "json": "punjabi/narration/ch39.json",
+  "textHash": "fnv1a64:8918ccbebb51987b",
+  "jsonHash": "fnv1a64:43d3b98d4d949f14",
+  "findings": []
+}

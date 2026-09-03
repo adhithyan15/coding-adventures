@@ -2,24 +2,294 @@
   "version": 1,
   "language": "german",
   "chapter": 37,
-  "title": "Friend and Family",
+  "title": "Coffee, Tea, and Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f564c7cec079c2b2",
+  "sourceHash": "fnv1a64:f5d66f3f330431d3",
   "lessons": [
     {
-      "id": "GE-C29-freund",
+      "id": "GE-C28-kaffee",
+      "sequence": 880,
+      "title": "der Kaffee — the drink that closes one chapter and opens another",
+      "headword": "der Kaffee",
+      "romanization": "der Kaffee",
+      "gloss": "coffee — a loanword that crossed from Arabic to German by way of Turkish and Italian, and the first word in a new polite request",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64c1db2d6bd83e9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last chapter ended by closing a hand. Now open the day with something to drink — and a new use for a request pattern you already own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Kaffee",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Kaffee — coffee. Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Bitte taught you a complete polite request out of two known words: Wasser, bitte. The same pattern takes any drink you can name:"
+            },
+            {
+              "kind": "speech",
+              "text": "Kaffee, bitte. — Coffee, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: where the stress falls",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kaffee is said two ways, and both are standard: many speakers in the north stress the first syllable, KAF-fay; many in the south, and most international learners' material, stress the second, kaf-FAY. Unlike gehen and laufen's Germany/Austria split, this one is not regional in any strict sense — you will hear both from native speakers in the same city."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: a Turkish word wearing an Italian coat",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kaffee is a loanword, and a young one by this book's standard — nothing like Wein's two-thousand-year-old borrowing from Latin vīnum. The word travelled Arabic qahwa becomes Ottoman Turkish kahve becomes Italian caffè becomes German Kaffee. English coffee and French café took the same Italian step, which is why the whole spread of European words for the drink still rhymes with each other despite crossing four language families to get here."
+            },
+            {
+              "kind": "speech",
+              "text": "The last chapter closed on schließen, a verb Proto-Germanic built and English lost outright. Kaffee is the opposite kind of word: nothing here is inherited, and nothing needed to be — German simply took the whole word, sound and all, the way it took Wein centuries earlier."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Kaffee\" — either stress, both correct",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Kaffee\" — either stress, both correct]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Kaffee, bitte.\" — the bitte pattern, one word swapped",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Kaffee, bitte.\" — the *bitte* pattern, one word swapped]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the route — \"qahwa, kahve, caffè, Kaffee\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the route — \"qahwa, kahve, caffè, Kaffee\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"coffee\" with its article. (Der Kaffee.) Ask for it politely. (Kaffee, bitte.) Name the three languages the word crossed before German. (Arabic, Turkish, Italian.) Is Kaffee inherited like schließen, or borrowed like Wein? (Borrowed.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C28-tee",
+      "sequence": 890,
+      "title": "der Tee — the same loan as English, by the same ship",
+      "headword": "der Tee",
+      "romanization": "der Tee",
+      "gloss": "tea — a word that looks like its English cousin and is not said like it, and travelled to Europe by sea rather than overland",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:425262309733b592",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kaffee came overland through Turkey and Italy. The next drink took a completely different road — by sea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Tee",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Tee — tea. Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Tee, bitte. — Tea, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: not the English vowel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tee is spelled almost exactly like the English word it translates, and said nothing like it. German ee is a long, steady ay: Tee = TAY, not tea's ee. Looking alike on the page and sounding different is its own small trap — worth naming so it doesn't catch you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: the other half of the tea map",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tee is Hokkien Chinese tê, the word for the plant in the coastal Chinese dialect that Dutch traders dealt with directly. Dutch thee carried it into Europe by sea, and German took the word from Dutch — the same route English tea followed, which is why Tee and tea match as closely as they do."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not the only road this word took. Languages reached by the overland trade routes out of northern China took a different syllable of the same Chinese word: Hindi chai, Russian chai, Turkish çay. One plant, one Chinese word, two pronunciations of it — split by whether a language got the word from a ship or a caravan. Kaffee's three-hop route through Turkish and Italian was its own single path; tea forked into two."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Tee\" — say it TAY, not tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Tee\" — say it *TAY*, not *tea*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Tee, bitte.\" — \"Kaffee, bitte.\" — same pattern, two drinks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Tee, bitte.\" — \"Kaffee, bitte.\" — same pattern, two drinks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fork — \"tê, thee, Tee, tea\" by sea; \"chai, chai, çay\" overland",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fork — \"tê, thee, Tee, tea\" by sea; \"chai, chai, çay\" overland]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"tea\" with its article, and say it correctly. (Der Tee — TAY.) Which language gave German the word, and by what route? (Hokkien Chinese tê, by way of Dutch sea trade.) Name one language that got the same Chinese word overland instead. (Hindi, Russian, or Turkish.) Does Tee sound the way it's spelled in English? (No — same letters, different vowel.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C28-milch",
       "sequence": 900,
-      "title": "der Freund — a word that was already a compliment",
-      "headword": "der Freund",
-      "romanization": "der Freund",
-      "gloss": "friend — a Germanic cousin of English friend, both frozen out of the same old verb meaning \"to love\"",
+      "title": "die Milch — the one that was never borrowed",
+      "headword": "die Milch",
+      "romanization": "die Milch",
+      "gloss": "milk — the native Germanic word that closes this trio, standing beside two loanwords the way Wasser once stood beside the loanword Wein",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92eb77519f856b0b",
+      "sourceHash": "fnv1a64:53ed2e9f8036de86",
       "notice": null,
       "blocks": [
         {
@@ -35,48 +305,48 @@
             },
             {
               "kind": "speech",
-              "text": "You were taught freut mich — \"pleased to meet you,\" literally \"it gladdens me.\" The person doing the gladdening has a name of their own, and it is built from the very same root."
+              "text": "Kaffee came from Arabic by way of Turkish and Italian. Tee came from Chinese by way of Dutch. The third drink needed no ship and no caravan — German already had it."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: der Freund",
+          "title": "You'll want to know: die Milch",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Freund — friend (male, or a friend in general). Masculine."
+              "text": "die Milch — milk. Feminine."
             },
             {
               "kind": "speech",
-              "text": "Das ist der Freund. — \"This/That is the friend.\""
+              "text": "Milch, bitte. — Milk, please."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: eu",
+          "title": "Sounds you'll need: the other ch",
           "segments": [
             {
               "kind": "speech",
-              "text": "eu is a diphthong said oy, exactly as in English boy: Freund = FROYND. It is the same sound spelled äu in Häuser and läuft, just without the umlaut in front of it."
+              "text": "German's ch is not one sound but two. After a back vowel like the a of Nacht, it is a rasp at the back of the throat. After a front vowel or consonant like the i of Milch, it is soft, made further forward — closer to a hissed h. Say ich (your own word for \"I\") right before Milch and you are making the same sound twice."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: a verb wearing a noun's clothes",
+          "title": "The word, taken apart: a verb that became its own product",
           "segments": [
             {
               "kind": "speech",
-              "text": "Freund and English friend are not merely cousins — they are the exact same inherited word, Proto-Germanic frijōnds. That word was never a plain noun to begin with: it is a frozen present participle of the verb frijōną, \"to love,\" so Freund literally means \"the one who is loving.\" freut mich is built on the same family: both trace to Proto-Indo-European preyH-, \"to love, to please.\" The goddess Frigg — whose day German keeps as Freitag and English as Friday — carries the same root one step further."
+              "text": "Milch is native Germanic, from meluks, and further back from Proto-Indo-European h₂melg-, \"to milk\" — the action came first, and the word for the substance is simply that verb, frozen into a noun. English milk is the exact same word, inherited rather than borrowed, which makes it the cousin of German Melker (\"milker\") the way denken is the cousin of Dank."
             },
             {
               "kind": "speech",
-              "text": "Milch needed no journey to reach German; Freund did not either — but where Milch is a noun that was always a noun, Freund is a verb that stopped moving and became one."
+              "text": "So the trio closes the way the food lesson did: Wasser was native beside the loanword Wein; here, Milch is native beside the loanwords Kaffee and Tee. Two loans, one inherited word, in both chapters — but this time the loans arrived from opposite directions on the map, one overland and one by sea, and only the native word needed no journey at all."
             }
           ]
         },
@@ -94,29 +364,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Freund\" — FROYND",
+              "instruction": "\"die Milch\" — the soft ch, as in ich",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Freund\" — *FROYND*]"
+              "source": "[YOU SAY: \"die Milch\" — the soft *ch*, as in *ich*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist der Freund.\"",
+              "instruction": "all three requests — \"Kaffee, bitte. Tee, bitte. Milch, bitte.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Freund.\"]"
+              "source": "[YOU SAY: all three requests — \"Kaffee, bitte. Tee, bitte. Milch, bitte.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"Freund, freut mich, Frigg, Friday — all one root\"",
+              "instruction": "the shape of the chapter — \"Wasser native, Wein borrowed; Milch native, Kaffee and Tee borrowed\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"Freund, freut mich, Frigg, Friday — all one root\"]"
+              "source": "[YOU SAY: the shape of the chapter — \"Wasser native, Wein borrowed; Milch native, Kaffee and Tee borrowed\"]"
             }
           ]
         },
@@ -133,291 +403,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"friend\" with its article. (Der Freund.) What part of speech did Freund start out as? (A verb — a frozen present participle of \"to love.\") Which greeting phrase shares its root? (Freut mich.) Which day of the week carries the same PIE root one step further? (Freitag / Friday, from the goddess Frigg.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C29-freundin",
-      "sequence": 910,
-      "title": "die Freundin — one suffix, and the fox that kept it in English",
-      "headword": "die Freundin",
-      "romanization": "die Freundin",
-      "gloss": "friend (female) — built on Freund with the native feminine suffix -in, the same suffix English kept in exactly one fossil word, vixen",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:74945d0c7de9242c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have der Freund. German does not need a new word for the feminine — it needs one small, reusable ending."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: die Freundin",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "die Freundin — friend (female). Feminine."
-            },
-            {
-              "kind": "speech",
-              "text": "Das ist die Freundin. — \"This/That is the (female) friend.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the ending that builds a whole class of nouns",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Add -in to a masculine noun for a person and you get the feminine: der Lehrer becomes die Lehrerin (\"teacher\"), der Student becomes die Studentin (\"student\"), der Freund becomes die Freundin. It is entirely regular, and it works on almost any such noun you will ever meet — one rule, not a new word each time."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: English kept this suffix exactly once",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "-in is native Germanic, not a Latin import — English inherited the same suffix and mostly stopped using it. Almost mostly: one English word still carries it, fossilized, unrecognized as a suffix by most speakers who use it — vixen, \"female fox,\" built the same way Freundin is built. English did not lose this pattern by borrowing over it; it simply stopped reaching for it, and later borrowed French -ess (princess, actress) to do the same job instead. German never stopped."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"die Freundin\" — Freund plus -in",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Freundin\" — Freund plus -in]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Das ist die Freundin.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist die Freundin.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pattern — \"Lehrer/Lehrerin, Student/Studentin, Freund/Freundin\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pattern — \"Lehrer/Lehrerin, Student/Studentin, Freund/Freundin\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English fossil — \"fox, vixen — the same -in, once\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English fossil — \"fox, vixen — the same -in, once\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"friend (female)\" with its article. (Die Freundin.) What suffix builds it from Freund, and what does that suffix do generally? (-in — it makes the feminine of a person-noun.) Is -in borrowed or native? (Native — English inherited it too.) Name the one English word that still shows it. (Vixen.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C29-familie",
-      "sequence": 920,
-      "title": "die Familie — the word that gathers Eltern and Geschwister",
-      "headword": "die Familie",
-      "romanization": "die Familie",
-      "gloss": "family — the whole group the Eltern and Geschwister already named the members of, and this chapter's one Latin loan beside two native words",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c4b529b5a101088e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have der Freund and die Freundin, both native, both built on a verb meaning \"to love.\" The word for the group at home has a completely different history."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: die Familie",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "die Familie — family. Feminine."
-            },
-            {
-              "kind": "speech",
-              "text": "Das ist die Familie. — \"This/That is the family.\""
-            },
-            {
-              "kind": "speech",
-              "text": "You already have the members: Vater, Mutter, Bruder, Schwester — and the collective Geschwister, \"siblings.\" Familie is the word that gathers all of them into one group."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: three syllables, not two",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Familie keeps all three vowels distinct: fa-MEE-lee-eh, four syllables in careful speech, with the stress on the second. It does not collapse the way English family does."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: the one Latin loan among these three chapters",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Familie is a Latin loan: familia, \"household,\" related to famulus, \"servant\" or \"slave\" — a Roman household word, not originally a word about blood relation at all. English family borrowed the very same Latin root, by way of Old French, well before German did; German took Familie directly from Latin later, in the early modern period, which is why the two loans look so close to identical without one having been copied from the other."
-            },
-            {
-              "kind": "speech",
-              "text": "So this small chapter runs the same shape twice: Freund and Freundin are native, built from a Germanic verb meaning \"to love\"; Familie is borrowed, from a Roman word that first meant \"household staff.\" The food lesson set up exactly this pattern with Wasser native beside Wein borrowed, and the drinks just ran it a third time with Milch beside Kaffee and Tee."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"die Familie\" — fa-MEE-lee-eh",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Familie\" — *fa-MEE-lee-eh*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Das ist die Familie.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist die Familie.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the members inside it — \"Vater, Mutter, Bruder, Schwester, Geschwister\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the members inside it — \"Vater, Mutter, Bruder, Schwester, Geschwister\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "native beside borrowed — \"Freund, Freundin native; Familie borrowed\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: native beside borrowed — \"Freund, Freundin native; Familie borrowed\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"family\" with its article. (Die Familie.) Is it native or borrowed? (Borrowed — Latin familia, \"household.\") What did familia first mean, before \"relatives\"? (Household — kin to famulus, \"servant.\") Which two words from this chapter are native instead? (Freund and Freundin.)"
+              "text": "Give \"milk\" with its article. (Die Milch.) Is it native or borrowed? (Native — inherited meluks, the twin of English milk.) Which two drinks in this chapter were borrowed, and from where? (Kaffee from Arabic/Turkish/Italian; Tee from Hokkien Chinese by way of Dutch.) Which earlier chapter set up the exact same native/borrowed shape? (Chapter 11 — Wasser and Wein.)"
             }
           ]
         }

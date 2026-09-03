@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C24-denken",
     "language": "german",
-    "chapter": 32,
-    "sequence": 710,
+    "chapter": 33,
+    "sequence": 720,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:565058a6365c78b4"
+    "sourceHash": "fnv1a64:68ec74b1a283e3de"
   },
   "findings": []
 }

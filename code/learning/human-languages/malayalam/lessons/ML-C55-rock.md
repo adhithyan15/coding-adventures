@@ -9,7 +9,7 @@ headword: "പാറ"
 gloss: "a rock"
 romanization: "pāṟa"
 concept_tag: ML-NOUN-ROCK
-prerequisites: [ML-C55-river]
+prerequisites: [ML-C55-river, ML-C53-sun]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C55-GROUND-02]
 practises:
-  knowledge: [ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02]
+  knowledge: [ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C53-SKY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It goes figurative in the direction you would expect: somebody unmoved by argume
 Two: the water, and what it runs over.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C53-SKY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pāṟa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puḻa*, then *pāṟa*, and hear the soft sound against the hard one]
+- [YOU RECALL: read **സൂര്യൻ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02] -->

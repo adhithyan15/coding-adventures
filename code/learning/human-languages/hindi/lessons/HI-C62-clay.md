@@ -12,7 +12,7 @@ headword: "मिट्टी"
 gloss: "clay, earth"
 romanization: "miṭṭī"
 concept_tag: HI-NOUN-CLAY
-prerequisites: [HI-C62-basket]
+prerequisites: [HI-C62-basket, HI-C60-buffalo, HI-C61-griddle]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C62-HANDS-04]
 practises:
-  knowledge: [HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04]
+  knowledge: [HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C60-YARD-04, HI-LEX-C61-FIRE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ One word does the work of two English ones. मिट्टी is the ground und
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C60-YARD-04, HI-LEX-C61-FIRE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *miṭṭī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *miṭṭī*, then *dīyā*, and say which one the other is made of]
+- [YOU RECALL: read **भैंस**, then say *tavā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04] -->

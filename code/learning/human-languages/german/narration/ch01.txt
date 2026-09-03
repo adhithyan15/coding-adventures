@@ -110,7 +110,7 @@ Unlike Spanish el/la and French le/la (both from Latin ille/illa), German's arti
 
 Grammar Lens: German kept THREE genders.
 Here's the twist. Latin had three genders (masculine, feminine, neuter); Spanish and French collapsed to two, folding neuter into masculine. German kept all three: der (masc.), die (fem.), das (neut.). So a German noun is one of three classes, not two — and, as everywhere, the gender is unpredictable and must be learned with the noun and its article. English, meanwhile, threw gender out entirely and kept a single "the" — the opposite extreme. Your next nouns will let you practise that pairing.
-One more thing coming later: German articles also change by case (their job in the sentence), so der has other forms (den, dem, des). Ignore that for now; just learn der / die / das as the three "the"s.
+One more thing coming later: German articles also change by case (their job in the sentence), so der has other forms (den, dem, des). Ignore that for now; learn der / die / das as the three "the"s and leave it there.
 
 Guided Practice.
 [pause 1 second]
@@ -131,13 +131,13 @@ Tag — "day," a straight cousin of English day.
 
 Warm-up.
 [pause 2 seconds]
-Your first German noun. In Spanish "day" was día (via Latin); in French, jour (via a longer Latin detour). In German it's Tag — and it's simply English "day" with one consonant shifted.
+Your first German noun. In Spanish "day" was día (via Latin); in French, jour (via a longer Latin detour). In German it's Tag — and it's English "day" with one consonant shifted, and nothing else.
 
 You'll want to know first.
 der / die / das — gender; Tag is masculine, der Tag.
 
 Sounds you'll need.
-Tag = tahk — a long open a, the vowel of English father; Germans harden a final -g to a k (final devoicing), so Tag rhymes with English tock, not with English tag. German nouns are always Capitalized (every noun, not just names).
+Tag = tahk — a long open a, the vowel of English father; Germans harden a final -g to a k (final devoicing), so Tag rhymes with English tock, not with English tag. German nouns are always Capitalized (every noun, not only names).
 
 The word, taken apart.
 der Tag — "the day" (masculine). Root: Proto-Germanic dagaz — and English day is the same word. The only difference is the High German Consonant Shift from the gut lesson (d becomes t): dagaz becomes English day, German Tag.
@@ -175,7 +175,7 @@ The word, taken apart — by assembling it.
 Guten Tag = gut ("good") + Tag ("day") = "good day," the neutral polite "hello" for daytime. Said GOO-ten tahk.
 
 Grammar Lens: why guten, not gut?
-Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not just gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a longer wish — "I wish you a good day" — and in that fuller thought, "a good day" is the object of the wishing (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten. The rest of the wish fell away and left the ending behind.
+Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not only gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a longer wish — "I wish you a good day" — and in that fuller thought, "a good day" is the object of the wishing (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten. The rest of the wish fell away and left the ending behind.
 Don't try to master German's ending system now — it's a later chapter. Just bank two things: (1) German adjectives take endings that shift with gender, number, and case; (2) the greeting is really "(I wish you a) good day," which is why it's guten. A later bedtime greeting will give you a gentle contrast with a feminine noun and a different ending.
 
 Guided Practice.
@@ -421,7 +421,7 @@ Practice — the German greetings.
 
 Warm-up.
 [pause 2 seconds]
-No new words — just the day's arc, until the endings are automatic.
+No new words — only the day's arc, until the endings are automatic.
 
 What you've built.
 hallo — casual "hi" (a real cousin of English "hello").

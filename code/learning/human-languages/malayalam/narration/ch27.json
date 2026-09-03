@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1614ca3f0cadb12e",
+  "sourceHash": "fnv1a64:e4cb08d4d3217576",
   "lessons": [
     {
       "id": "ML-C27-vaikunneram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ac20e914f716f35",
+      "sourceHash": "fnv1a64:7cb8172ef0e042fb",
       "notice": null,
       "blocks": [
         {
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the honest tension — Wiktionary blurs afternoon/evening; phrasebooks split them cleanly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nāya, pūcca, then read പച്ച, മഞ്ഞ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nāya, pūcca*, then read **പച്ച, മഞ്ഞ**]"
             }
           ]
         },

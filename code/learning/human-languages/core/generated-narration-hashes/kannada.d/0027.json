@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 27,
-  "sourceHash": "fnv1a64:c09f7860a5c9b52d",
+  "sourceHash": "fnv1a64:52b7318732aaf9b7",
   "lessonIds": [
     "KA-C27-sanje"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch27.txt",
   "json": "kannada/narration/ch27.json",
-  "textHash": "fnv1a64:1fc9bc123b4dc95d",
-  "jsonHash": "fnv1a64:f934bdf9b10c50de",
+  "textHash": "fnv1a64:30198625d716cbf9",
+  "jsonHash": "fnv1a64:59fb1a4166dbafeb",
   "findings": []
 }

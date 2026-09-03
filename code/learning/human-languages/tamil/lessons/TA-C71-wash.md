@@ -9,7 +9,7 @@ headword: "கழுவு"
 gloss: "to wash"
 romanization: "kaḻuvu"
 concept_tag: TA-VERB-KAZHUVU
-prerequisites: [TA-C71-run]
+prerequisites: [TA-C71-run, TA-C69-road, TA-C70-floor]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C71-DAY-04]
 practises:
-  knowledge: [TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04]
+  knowledge: [TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04, TA-LEX-C69-GOING-04, TA-LEX-C70-ROOM-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,13 +52,14 @@ It carries **ழ**, the curled glide that Tamil kept and named itself with — t
 Four, and the day has some housework in it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04, TA-LEX-C69-GOING-04, TA-LEX-C70-ROOM-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaḻuvu*]
 - [YOU SAY: *tamiḻ*, then *kaḻuvu* — the same letter, twice]
 - [YOU SAY: *kaḻuvu*, then name one thing in this book you could wash]
 - [YOU RECALL: name the letter **ஓ**, then say *ōḍu*, then say *kaḻuvu*]
+- [YOU RECALL: read **சாலை**, then say *tarai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04] -->

@@ -12,7 +12,7 @@ headword: "सिकता"
 gloss: "sand"
 romanization: "sikatā"
 concept_tag: SA-EARTH-SIKATA
-prerequisites: [SA-C38-stone]
+prerequisites: [SA-C38-stone, SA-C36-slowly, SA-C37-congratulations]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C38-EARTH-04]
 practises:
-  knowledge: [SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04]
+  knowledge: [SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04, SA-LEX-C36-REPLY-04, SA-LEX-C37-COURTESY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Set it beside नदी and you have the two halves of a bank — the water, and
 What a river puts down at its edge.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04, SA-LEX-C36-REPLY-04, SA-LEX-C37-COURTESY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sikatā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śilā*, then *sikatā*]
+- [YOU RECALL: read **मन्दम्**, then say *abhinandanam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04] -->

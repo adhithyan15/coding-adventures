@@ -9,7 +9,7 @@ headword: "ವೈದ್ಯ"
 gloss: "a doctor"
 romanization: "vaidya"
 concept_tag: KA-NOUN-DOCTOR
-prerequisites: [KA-C48-student]
+prerequisites: [KA-C48-student, KA-C46-lamp]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C48-ROLE-03]
 practises:
-  knowledge: [KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03]
+  knowledge: [KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C46-ASK-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ So the student and the doctor are the same word twice over, once for the one sti
 Three, and two of the three are the same root wearing different clothes.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C46-ASK-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vaidya*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vidyārthi*, then *vaidya*, and hear *vid-* survive in both]
+- [YOU RECALL: say *dīpa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 25,
-  "sourceHash": "fnv1a64:e7db213a9c8ec31f",
+  "sourceHash": "fnv1a64:bda239609eaa106e",
   "lessonIds": [
     "BN-C15-kapor",
     "BN-C15-jama",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch25.txt",
   "json": "bengali/narration/ch25.json",
-  "textHash": "fnv1a64:835c2f416c73d152",
-  "jsonHash": "fnv1a64:818f41c388c5fe37",
+  "textHash": "fnv1a64:c6c2c2b5ab4831d0",
+  "jsonHash": "fnv1a64:6991512e98a81eb3",
   "findings": []
 }

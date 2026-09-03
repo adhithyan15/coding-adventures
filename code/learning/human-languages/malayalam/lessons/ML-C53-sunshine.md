@@ -9,7 +9,7 @@ headword: "വെയിൽ"
 gloss: "sunshine, the sun's heat"
 romanization: "veyil"
 concept_tag: ML-NOUN-SUNSHINE
-prerequisites: [ML-C53-star]
+prerequisites: [ML-C53-star, ML-C51-salutation]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C53-SKY-05]
 practises:
-  knowledge: [ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05]
+  knowledge: [ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05, ML-LEX-C51-COURTESY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Beside it sits its opposite, തണൽ (*taṇal*), the shade — and between th
 Five: the sky, the sun, the moon, a star, and what comes down out of it by day.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05, ML-LEX-C51-COURTESY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *veyil*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ākāśaṁ*, *sūryan*, *candran*, *nakṣatraṁ*, *veyil*]
+- [YOU RECALL: say *vandanaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05] -->

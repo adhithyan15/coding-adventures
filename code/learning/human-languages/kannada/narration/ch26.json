@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb10f3a46670574a",
+  "sourceHash": "fnv1a64:8bd7cf0d1b014de4",
   "lessons": [
     {
       "id": "KA-C26-belagge",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:568fb3965db9e150",
+      "sourceHash": "fnv1a64:b1f4b0584f510e9f",
       "notice": null,
       "blocks": [
         {
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the contrast — dina, ratri, madhyāhna are all Sanskrit; beḷagge is genuinely Kannada's own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hannondu — ippattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hannondu — ippattu*]"
             }
           ]
         },

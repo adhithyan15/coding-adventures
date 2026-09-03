@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "One, the Other, and the Price",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ae78ec68321fbd18",
+  "sourceHash": "fnv1a64:9629f34afa42041d",
   "lessons": [
     {
       "id": "TA-C80-other",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c37ca4cdf75b1acb",
+      "sourceHash": "fnv1a64:2c7c3cf166355de6",
       "notice": null,
       "blocks": [
         {
@@ -132,6 +132,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RETURN TO: say *ām / illai*, read **குடி** and say *-kkāga* — three distances back — then set two of them against each other, one and the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ēṉ, then read ஏனென்றால், then say adaṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ēṉ*, then read **ஏனென்றால்**, then say *adaṉāl*]"
             }
           ]
         },

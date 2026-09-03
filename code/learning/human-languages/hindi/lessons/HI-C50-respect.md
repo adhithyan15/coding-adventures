@@ -12,7 +12,7 @@ headword: "आदर"
 gloss: "respect"
 romanization: "ādar"
 concept_tag: HI-NOUN-RESPECT
-prerequisites: [HI-C50-favour]
+prerequisites: [HI-C50-favour, HI-C48-certainly, HI-C49-journey]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C50-COURTESY-03]
 practises:
-  knowledge: [HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03]
+  knowledge: [HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C48-REPLY-03, HI-LEX-C49-LEAVE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ So this is not only a word for a feeling somebody has. It is the name of a choic
 Three, and this one is built into the grammar.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C48-REPLY-03, HI-LEX-C49-LEAVE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ādar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ādar*, then *ehsān*, then *ābhār*, back down the run]
+- [YOU RECALL: say *zarūr*, then read **सफ़र**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03] -->

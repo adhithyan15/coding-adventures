@@ -9,7 +9,7 @@ headword: വായ്
 gloss: mouth — the word Chapter 33 already named, only to rule it out
 romanization: vāy
 concept_tag: ML-MOUTH
-prerequisites: [ML-C37-mookku, ML-C33-vaayikkuka]
+prerequisites: [ML-C37-mookku, ML-C33-vaayikkuka, ML-C35-kudumbam]
 sounds: [malayalam-vowel-sign-aa, malayalam-chandrakkala]
 roots: [dravidian-vaay-mouth]
 etymology_hook: "വായ് is native Dravidian (DEDR 5352), matching Tamil வாய் (vay) almost exactly; Kannada shows the family's v-to-b shift, ಬಾಯಿ (bayi); Telugu's everyday word, noru, is a different root. Chapter 33 already named vay once, only to rule it out -- vayikkuka, 'to read,' is not built on it, whatever the shapes suggest -- so this is the mouth-word that lesson promised and never delivered"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02]
 practises:
-  knowledge: [ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02]
+  knowledge: [ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,7 +63,7 @@ Gundert's dictionary says it isn't: the trail runs instead to Sanskrit
 This is the word itself, finally taught for what it actually means.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ente vāy" — my mouth]
@@ -72,6 +72,7 @@ This is the word itself, finally taught for what it actually means.
 - [YOU SAY: the false trail, named again — "vāyikkuka" is NOT built on
   "vāy"]
 - [YOU SAY: all four face words — "kaṇṇŭ, cevi, mūkkŭ, vāy"]
+- [YOU RECALL: read **കുടുംബം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02] -->

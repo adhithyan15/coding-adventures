@@ -1,0 +1,3917 @@
+{
+  "version": 1,
+  "language": "russian",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL POINT SET MEASURED AGAINST A REAL EXAM'S LEVEL, NOT A TRANSCRIPTION OF THAT EXAM'S SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO THE TORFL SYSTEM, to the Russian Ministry of Education and Science, to any TORFL test centre, or to the authors of the Elementary Level (TEU/A1) standard. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT RUSSIAN: they published a Spanish syllabus and have said nothing whatever about this language. Three claims are stacked here with very different strengths, so read them apart. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, which restates the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing in this file and all it establishes is a LEVEL: what an A1 candidate must be able to HANDLE, asked as a language-neutral demand rather than as a piece of Spanish grammar. (2) THE RUSSIAN EXPONENTS are editorial throughout. Deciding that Spanish's four article points collapse into the single fact that Russian has no article; that its five noun points cannot be answered without opening a CASE column the Spanish set does not have; that its three past tenses collapse onto one -l past and an aspect pair; and that gustar's frame is answered by the dative nravitsya rather than by lyubit - every one of those is chosen here. WHY THE PROXY AT ALL, GIVEN THAT RUSSIAN HAS A REAL EXAM: core/exam-levels.json records Russian against TORFL with basis 'published', and that published mapping is a LEVEL mapping - it says A1 is TEU - not a content syllabus this project holds. russian/assessment-spec.md#a1 says so in its own words: 'the inventory must transcribe the current official A1 Reading, Writing, Lexis. Grammar, Listening, and Speaking parts before mocks are authored', and that transcription DOES NOT EXIST. NO SEARCH WAS RUN, BY INSTRUCTION - BACKLOG.d HL-C287 and HL-C290 record the sourcing question as settled and forbid further agent-hours hunting a syllabus per track. So this file uses the Spanish proxy for the level and states the consequence rather than hiding it: the day somebody transcribes the TEU content standard, this point set should be checked against it and will probably be found to under-ask on case and over-ask on nothing. WHAT core/exam-levels.json RECORDS FOR RUSSIAN WAS READ BEFORE ANY POINT WAS WRITTEN, and the notable thing is what it does NOT record: Russian is one of the tracks with NO CAVEAT. Japanese carries one about production, Chinese about an unpublished correspondence, Tamil about diglossia, Sanskrit about a non-parallel traditional ladder. Russian carries none, so nothing external told this file which column to open. THE CASE COLUMN WAS OPENED BY MEASUREMENT INSTEAD: walking the Spanish noun, pronoun and verb-phrase columns against the corpus showed that every one of them resolved to a question about case, so case became a category of its own rather than a note under the noun. That is what the instruction to measure rather than to import another track's shape produced here. THE EVIDENCE BASE IS THIN. The russian track is 88 lessons in 15 chapters introducing 160 atoms, which is a fifth of the Sanskrit corpus and a fourteenth of the Spanish one, and this file's coverage number should be read as a statement about a STARTER track, not about a course that tried for A1 and fell short.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Russian is attributed to DELE, the Instituto Cervantes or the Plan Curricular. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.russian - exam 'TORFL (TRKI)', basis 'published', mapping A1 to TEU/A1, AND NO CAVEAT, which is itself load-bearing and is discussed in `about`. EXAM ENVELOPE: PARTIAL AND DANGLING. Unlike sanskrit, tamil and kannada, the russian track DOES ship an assessment contract - russian/assessment.json declares an A1 level targeting 'TORFL Elementary Level (TEU/A1)' with basis 'external', four skills at a 0.66 pass threshold, and russian/assessment-spec.md carries a prose A1 envelope. But russian/task-shapes/ contains only pre-a1.json, and russian/mocks/ does not exist, so the A1 task inventory and both A1 mocks the contract names are absent - the HL20 6b debt, pinned under core/assessment-artifact-ceiling/. The pre-A1 envelope in assessment-spec.md IS real and was read; no point below is bound to an A1 paper item, because no A1 paper item exists to bind to. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 88 lesson files in code/learning/human-languages/russian/lessons/, which introduce 160 distinct atoms between them - 53 LEX, 48 ETYMON, 36 SCRIPT, 21 GRAMMAR, 2 PRAGMATICS, 2 COMPARISON, 1 DIALOGUE and 1 DRILL. The script claims were taken by walking every Cyrillic character any lesson puts on a page and comparing it with the set the writing lessons teach: 33 letters exist, 29 are taught, yo and the hard sign are shown in 5 and 4 files and taught by nobody, and shcha and e-oborotnoe appear nowhere. The letter inventory those are compared against is code/learning/human-languages/data/scripts/cyrillic.json, which lists all 33 with a cited stroke order and is marked complete. The absence claims (no izvinite, no povtorite, no i as a conjunction, no ili, no chto, no numeral) were each checked across all 88 files in Cyrillic and in romanization. NOT SEARCHED, BY INSTRUCTION: no external search for the TORFL Elementary content standard was performed. See `about`.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding - an unmapped point is uncovered, never skipped. EVERY ATOM NAMED IN EVERY PROBE WAS CHECKED MECHANICALLY against the 160 atoms the russian track actually introduces, and the check is re-runnable: a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so no id was invented to fill a point and no probe points at a lesson somebody intends to write. Because no id was guessed, every point here is either fully probed or null, and the coverage report's `partial` count is zero by construction rather than by luck. THREE HABITS ARE NAMED SO THEY ARE NOT HIDDEN GENEROSITIES. (1) This track files a great deal under atom kinds other than LEX: the register choices carry PRAGMATICS atoms, the cross-language framing carries COMPARISON atoms, the chapter-1 and chapter-2 consolidations carry DIALOGUE and DRILL atoms, and every structural fact carries a GRAMMAR atom. Probing those points names a pragmatics, comparison, dialogue or grammar atom rather than a lexis one; the note on each such point says so. (2) SEVERAL POINTS ARE COUNTED COVERED ON ONE EXPONENT WHERE THE PROXY ASKS FOR A FIELD, and each such note says 'thin' or 'counted on X alone' in as many words - RU-A1-ADV-07 rests on kak where the proxy asks for five asking words, RU-A1-F3-01 on the bare infinitive lyubit, RU-A1-PRON-01 on three persons of six. A coverage tick that hides a one-word field is worse than an honest gap. (3) A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT, and this is where most of the uncovered points come from rather than from total absence: ochen is printed and glossed inside ochen priyatno and carries no atom, so the degree point is null; zavtra is taught inside do zavtra in the genitive, so the time-deictic point is null; net is taught as 'no' and not as the negative existential, so the possession point is null. A candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance - the proxy point ids whose demand it answers, or an empty list with `russianSpecific: true`. `anchorIds` records which anchor each point leans on and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The project's restatement of the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language: nothing about Russian is attributable to DELE, the Instituto Cervantes or the Plan Curricular. Its weakest place for Russian is the noun, where five points assume an analytic language and Russian answers with six cases."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral. It can anchor a FUNCTION - 'can introduce himself/herself', 'can ask for repetition when he/she does not understand' - and it can never anchor a Russian form, because it names none. Used only where a point is a can-do rather than a structure, and it is the reason the repair points RU-A1-F6-04 and RU-A1-F6-05 exist at all: the PCIC A1 function column has no repair entry and the CEFR descriptors do."
+    },
+    {
+      "id": "RU-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/russian/ - 88 lessons, 15 chapters, curriculum.d and chapters.d",
+      "note": "Our own work, and what every probe resolves against. It is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory."
+    },
+    {
+      "id": "RU-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.russian",
+      "note": "Records Russian as exam 'TORFL (TRKI)', basis 'published', with A1 mapped to TEU/A1 - and, alone among the tracks this file was written beside, NO CAVEAT. A published level mapping is not a published content syllabus, which is the distinction `about` turns on, and the missing caveat is why the case column here was measured into existence rather than imported from another track."
+    },
+    {
+      "id": "RU-ASSESSMENT",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/russian/assessment.json and assessment-spec.md",
+      "note": "A real project-internal contract that names a TORFL-targeted A1 with four skills at 0.66 - and whose A1 task inventory (task-shapes/a1.json) and both A1 mocks do not exist on disk. The pre-A1 envelope in assessment-spec.md is real and bounded. Cited only where a point leans on the project's own statement of what the A1 paper will demand."
+    },
+    {
+      "id": "RU-SCRIPT-DATA",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/data/scripts/cyrillic.json",
+      "note": "The Cyrillic ductus file: 33 letters, each with a cited school-hand stroke order, marked complete. It is the denominator behind RU-A1-L-01 and the evidence behind RU-A1-L-08 - the cursive forms it records are exactly the ones no lesson teaches."
+    },
+    {
+      "id": "ED-RUSSIAN",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Russian",
+      "note": "Every Russian exponent below. Deciding that case earns a column of its own rather than a footnote under the noun; that aspect earns another because Spanish has no place to put it; that the nine punctuation points transfer almost unchanged while the dash becomes load-bearing because of the zero copula; that ochen inside ochen priyatno is NOT a degree word the reader owns; and that six farewells covering one Spanish point is worth saying out loud - all of it is chosen here and none of it is sourced."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [],
+    "note": "EMPTY ON PURPOSE, AND THAT IS THE FINDING FOR THIS TRACK. Cyrillic is alphabetic and Russian is Indo-European, so every one of the 273 Spanish points restates - including the ones that looked untransferable at first reading. A1-O1-06, superscript letters in frequent abbreviations, is the case worth naming: it reads as a Spanish typographic accident, and it is really the demand that a numeral carry a written grammatical ending, which Russian answers with the hyphenated ordinal 1-y. It is derived at RU-A1-L-09 rather than dropped. The two article points, the three Spanish past tenses and the two accentuation points all collapse rather than vanish, and a collapse is a derivation."
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's 54 A1 function points), the CEFR Companion Volume A1 descriptors, and russian/assessment-spec.md's pre-A1 envelope",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension - for Spanish. It does not close this one, because the exponent that realises each function in Russian is our choice every time, and because the PCIC's list has no repair entry at all: asking for a repeat, asking for slower speech and apologising are CEFR A1 can-dos that the Spanish inventory does not enumerate. Two points here (RU-A1-F6-04, RU-A1-F6-05) exist only because the CEFR descriptors were read beside the proxy, and one of them is the emptiest thing in this file."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS WITH AND STILL DOES NOT CLOSE. Walking the Spanish column surfaces demands worth asking - past tense, relative clause, coordination, the article - and it is systematically silent on the two things that gate a Russian sentence: six cases on every nominal, and an aspect pair on every verb. Fourteen points are marked russianSpecific in the grammar columns alone, ten of them in the case and aspect categories the Spanish set has no room for. A proxy built on an analytic language enumerates an inflectional one only where somebody adds the missing columns by hand, which is what happened here and is exactly why this dimension is not complete."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's orthography and accentuation columns), data/scripts/cyrillic.json, and the corpus's own writing lessons",
+      "note": "The best-measured dimension here, because the claim is countable letter by letter: 33 Cyrillic letters exist, 29 are taught, 2 are shown untaught and 2 appear nowhere. What keeps it partial is threefold. The proxy has no pronunciation column at all for A1 - the PCIC publishes its pronunciation inventory as one undivided A1-A2 band - so the four sound points here are wholly project-defined. The proxy has no column for cursive, and Russian handwriting is a second alphabet rather than a style. And the hard/soft vowel pairing, which is the idea that makes Cyrillic spelling systematic, has no Spanish point to hang on and is added here as RU-A1-L-02's second half."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's general and specific notion columns)",
+      "note": "The proxy's specific-notion column is twenty fields of ordinary modern life - school, work, the shop, the doctor, the telephone. Russian answers three of them (food and drink, the family, the body) and returns nothing at all for the other seventeen, which is what a fifteen-chapter starter track looks like rather than a defect. The fields are kept rather than merged away so the work queue names what is owed; several are collapsed to one point where the whole field is empty, and each such point lists every Spanish id it stands for. The 53 lexical atoms this track teaches are also weighted oddly against any exam: fourteen verbs, all in the infinitive, and no adjective and no numeral at all."
+    }
+  },
+  "points": [
+    {
+      "id": "RU-A1-N-01",
+      "category": "Sushchestvitelnoe - the noun",
+      "label": "proper nouns: a personal name, given in an introduction and used back",
+      "probe": [
+        "RU-LEX-MENYA-ZOVUT",
+        "RU-LEX-KAK-VAS-ZOVUT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "menya zovut and kak vas zovut are chapter 2 and they are the whole naming exchange. Russian answers the Spanish point's second half - that a title takes an article - by having no article at all, which is RU-A1-ART-01. What is NOT here is the patronymic and the surname, which is how a Russian actually gives a full name and how a TORFL form asks for one; that gap is RU-A1-SN03-01."
+    },
+    {
+      "id": "RU-A1-N-02",
+      "category": "Sushchestvitelnoe - the noun",
+      "label": "common nouns naming periods of time: day, night, morning, evening, month, year",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "The track has zavtra and noch only INSIDE frozen farewells - do zavtra ('until tomorrow') and spokoynoy nochi ('of a calm night'), and the second is in the genitive, which is not the form a learner could reuse. den, utro, vecher, nedelya, mesyats and god are absent. A candidate who can say goodnight cannot say 'night'."
+    },
+    {
+      "id": "RU-A1-N-03",
+      "category": "Sushchestvitelnoe - the noun",
+      "label": "grammatical gender: three, not two, and usually readable off the ending",
+      "probe": [
+        "RU-GRAMMAR-NOUN-GENDER-ENDING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "note": "Spanish asks for a two-way -o/-a. Russian answers with three genders and a rule that is BETTER than Spanish's, because the ending is diagnostic: consonant is masculine, -a/-ya feminine, -o/-e neuter. Chapter 6 teaches it on voda and states the rule as a table."
+    },
+    {
+      "id": "RU-A1-N-04",
+      "category": "Sushchestvitelnoe - the noun",
+      "label": "gender by a different word: father against mother, brother against sister",
+      "probe": [
+        "RU-LEX-MAT",
+        "RU-LEX-OTETS",
+        "RU-LEX-BRAT-NOUN",
+        "RU-LEX-SESTRA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "mat / otets and brat / sestra, the same heteronymy Spanish asks for, all four taught in chapters 7 and 12. mama and papa are taught beside them as the informal register."
+    },
+    {
+      "id": "RU-A1-N-05",
+      "category": "Sushchestvitelnoe - the noun",
+      "label": "number: the nominative plural, and the fact that its ending depends on gender",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "NOT TAUGHT ANYWHERE. Every noun in the track is singular. There is no -y/-i plural, no neuter -a plural, and no lesson names the category. This is the single largest missing piece of Russian nominal morphology in the corpus and it blocks RU-A1-C-10, RU-A1-Q-01 and every counted noun."
+    },
+    {
+      "id": "RU-A1-N-06",
+      "category": "Sushchestvitelnoe - the noun",
+      "label": "when biology beats the ending: papa is masculine although it ends in -a",
+      "probe": [
+        "RU-GRAMMAR-NATURAL-GENDER-OVERRIDE",
+        "RU-LEX-PAPA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific, and taught on purpose in chapter 12 as the first place the spelling rule loses. Spanish has el dia but the PCIC A1 column does not ask for it; Russian cannot avoid it, because papa, dedushka and muzhchina are all high-frequency A1 words."
+    },
+    {
+      "id": "RU-A1-N-07",
+      "category": "Sushchestvitelnoe - the noun",
+      "label": "animacy: whether a noun counts as alive, which decides its accusative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific and absent. Animacy is not a curiosity here - it is what selects the accusative form of a masculine noun, so it gates RU-A1-C-03. No lesson mentions it."
+    },
+    {
+      "id": "RU-A1-N-08",
+      "category": "Sushchestvitelnoe - the noun",
+      "label": "a feminine noun derived from a masculine one: drug / podruga",
+      "probe": [
+        "RU-LEX-DRUG",
+        "RU-LEX-PODRUGA",
+        "RU-GRAMMAR-FEMININE-SUFFIX-A"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific. Spanish forms amigo/amiga by swapping the ending; Russian builds podruga out of drug with a prefix and a suffix and a consonant change, which is why the track spends a lesson on it rather than a line."
+    },
+    {
+      "id": "RU-A1-C-01",
+      "category": "Padezh - case",
+      "label": "the nominative: the dictionary form, the subject, and the form a name is given in",
+      "probe": [
+        "RU-GRAMMAR-NOUN-GENDER-ENDING",
+        "RU-LEX-YA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-03"
+      ],
+      "note": "Covered in the sense that every noun the track teaches is a nominative and chapter 6 says the ending identifies it. NOT covered in the sense the Spanish point means: no lesson contrasts the nominative with any other case for a noun, so the reader has one form and no reason to know it is one of six."
+    },
+    {
+      "id": "RU-A1-C-02",
+      "category": "Padezh - case",
+      "label": "the object form of the personal pronouns: menya, tebya, vas",
+      "probe": [
+        "RU-GRAMMAR-MENYA-OBJECT-CASE",
+        "RU-GRAMMAR-OBJECT-PRONOUNS",
+        "RU-DRILL-PERSON-SHAPES-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02"
+      ],
+      "note": "The one case contrast the track really teaches, and it teaches it well: chapter 2 sets ya against menya and ty/vy against vas, and the chapter-2 drill lesson exists to make the pair stick. It is a PRONOUN paradigm only - no noun in the track is ever put in the accusative."
+    },
+    {
+      "id": "RU-A1-C-03",
+      "category": "Padezh - case",
+      "label": "the accusative of nouns, and the animate/inanimate split that chooses its ending",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "note": "Spanish marks a human direct object with the preposition a; Russian marks every direct object with a case ending and picks the ending by animacy. Neither half is taught. Ya chitayu knigu cannot be said, because knigu is a form the corpus never shows."
+    },
+    {
+      "id": "RU-A1-C-04",
+      "category": "Padezh - case",
+      "label": "the genitive after a preposition: do svidaniya, do zavtra, do skorogo",
+      "probe": [
+        "RU-GRAMMAR-DO-GENITIVE",
+        "RU-LEX-DO-SVIDANIYA",
+        "RU-LEX-DO-SKOROGO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "Chapter 11 does something better than most of this corpus: it takes the four do- farewells the learner already says by rote and shows that do governs the genitive, so the frozen phrases become one grammatical fact. That is a real case lesson. It is also the ONLY one."
+    },
+    {
+      "id": "RU-A1-C-05",
+      "category": "Padezh - case",
+      "label": "the genitive of possession, which is how Russian says the of-phrase",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "Spanish's el libro de Maria has no Russian counterpart in the corpus: kniga Marii needs a genitive of a noun, and RU-A1-C-04 only ever puts a frozen phrase after do. Possession is unsayable in this track by any route - see also RU-A1-POS-01."
+    },
+    {
+      "id": "RU-A1-C-06",
+      "category": "Padezh - case",
+      "label": "the dative: the indirect object, and the recipient of a greeting or a wish",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-05",
+        "A1-PRON-03"
+      ],
+      "note": "Absent. The dative is where Russian would answer Spanish's gustar frame (mne nravitsya), its indirect object and its age construction (mne dvadtsat let), so this one missing case takes three Spanish demands with it."
+    },
+    {
+      "id": "RU-A1-C-07",
+      "category": "Padezh - case",
+      "label": "the prepositional: where something is, after v and na",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01"
+      ],
+      "note": "Absent, and it is the case a TORFL A1 candidate uses most, because every 'I live in', 'I work at' and 'it is on the table' needs it. The track teaches zhit ('to live') in chapter 3 and gives it nowhere to live."
+    },
+    {
+      "id": "RU-A1-C-08",
+      "category": "Padezh - case",
+      "label": "the instrumental: with what, and the complement of byt in the past",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific: Spanish has no case column at all and the PCIC A1 grammar inventory therefore asks nothing that maps here. Absent from the corpus."
+    },
+    {
+      "id": "RU-A1-C-09",
+      "category": "Padezh - case",
+      "label": "the six-case system named as a system, so a learner knows what they are collecting",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific and absent. Eleven lessons use the word 'case' in passing; none lists the six or says that every noun, adjective, pronoun and numeral in the language carries one. A learner meeting menya and do svidaniya without that frame is collecting exceptions."
+    },
+    {
+      "id": "RU-A1-C-10",
+      "category": "Padezh - case",
+      "label": "case in the plural, where the endings collapse across the three genders",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "Blocked twice over: no plural (RU-A1-N-05) and no case paradigm (RU-A1-C-09)."
+    },
+    {
+      "id": "RU-A1-ADJ-01",
+      "category": "Prilagatelnoe - the adjective",
+      "label": "qualifying adjectives, used before a noun and after the (absent) copula",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "note": "NO ADJECTIVE IS TAUGHT IN THIS TRACK. syroy ('raw') appears inside the etymology of syr, skorogo and spokoynoy inside frozen farewells, and priyatno inside ochen priyatno - every one of them a fragment of something else. khoroshiy, bolshoy, novyy, russkiy: none. This is the emptiest column in the file and it takes the whole adjective and evaluation apparatus with it."
+    },
+    {
+      "id": "RU-A1-ADJ-02",
+      "category": "Prilagatelnoe - the adjective",
+      "label": "adjectives of nationality and origin: russkiy, amerikanskiy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02",
+        "A1-NG3-07"
+      ],
+      "note": "Absent, and worth naming separately from RU-A1-ADJ-01 because 'where are you from' is a first-lesson question on every A1 paper and the answer needs both a country and a gentilic. The track has neither."
+    },
+    {
+      "id": "RU-A1-ADJ-03",
+      "category": "Prilagatelnoe - the adjective",
+      "label": "adjective gender: the -yy / -aya / -oe endings that agree with the noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03"
+      ],
+      "note": "Absent - see RU-A1-ADJ-01."
+    },
+    {
+      "id": "RU-A1-ADJ-04",
+      "category": "Prilagatelnoe - the adjective",
+      "label": "adjective agreement in number and in case, not only in gender",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-04",
+        "A1-SN-02"
+      ],
+      "note": "Absent. Spanish agrees an adjective in gender and number; Russian agrees it in gender, number AND case, which is why the missing case column and the missing adjective column compound rather than add."
+    },
+    {
+      "id": "RU-A1-ADJ-05",
+      "category": "Prilagatelnoe - the adjective",
+      "label": "position: the adjective stands before its noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "note": "Absent. Also the point where Russian and Spanish genuinely differ - Spanish's default is postnominal and restrictive, Russian's is prenominal - so this is a restatement rather than a transfer, and it measures nothing because there is no adjective to place."
+    },
+    {
+      "id": "RU-A1-ADJ-06",
+      "category": "Prilagatelnoe - the adjective",
+      "label": "degree: ochen plus an adjective or adverb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01"
+      ],
+      "note": "ochen IS in the corpus, and only inside ochen priyatno, where it is glossed in the body but carries no atom of its own and has nothing to modify. A candidate who can say 'pleased to meet you' cannot say 'very good'. This is the clearest case in the file of a word that is present on the page and absent from the language the reader owns."
+    },
+    {
+      "id": "RU-A1-ART-01",
+      "category": "Artikl - the article",
+      "label": "the article: Russian has none, and the noun arrives bare",
+      "probe": [
+        "RU-GRAMMAR-NOUN-GENDER-ENDING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-02",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "note": "All four Spanish article points collapse into one Russian fact, and the corpus teaches that fact deliberately rather than by omission: the chapter-6 block that introduces RU-GRAMMAR-NOUN-GENDER-ENDING is titled 'no the, no a - and the ending tells you the gender' and says in as many words that vodA can be water, the water or a water. Probing the gender atom is exact here, not generous: it is the same block."
+    },
+    {
+      "id": "RU-A1-DEM-01",
+      "category": "Ukazatelnye slova - demonstratives",
+      "label": "the demonstratives: etot / eta / eto against tot / ta / to",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01"
+      ],
+      "note": "Absent. Russian answers Spanish's three-way este/ese/aquel with a two-way near/far split, which would have been a clean restatement; the corpus teaches neither member."
+    },
+    {
+      "id": "RU-A1-DEM-02",
+      "category": "Ukazatelnye slova - demonstratives",
+      "label": "spatial deixis: this one here against that one there",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02"
+      ],
+      "note": "Absent, and compounded by RU-A1-ADV-01: there is no zdes, tut or tam either, so the track has no way to point at anything."
+    },
+    {
+      "id": "RU-A1-DEM-03",
+      "category": "Ukazatelnye slova - demonstratives",
+      "label": "the pointing sentence: eto plus a noun, which is how Russian says 'this is a ...'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03",
+        "A1-OS-05"
+      ],
+      "note": "Absent, and this is the one that hurts most. Eto moy brat is the single most common sentence shape on an A1 Russian paper - it needs no verb, no case and no agreement, and it is exactly what the track's zero copula would make easy. The corpus teaches the zero copula (RU-A1-SENT-02) and never gives it eto to work with."
+    },
+    {
+      "id": "RU-A1-POS-01",
+      "category": "Prityazhatelnye - possessives",
+      "label": "possessives with one possessor: moy, tvoy, vash",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "note": "Absent. The corpus makes a point of noting, in chapter 2, that menya zovut contains no word for 'my' - which is a good observation and leaves the learner with no way to say 'my brother'."
+    },
+    {
+      "id": "RU-A1-POS-02",
+      "category": "Prityazhatelnye - possessives",
+      "label": "possessives with several possessors: nash, and the invariant ego / ee / ikh",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-POS-02"
+      ],
+      "note": "Absent. Worth keeping separate because ego/ee/ikh do NOT agree with the noun, which is the one easy corner of Russian possession and the one a beginner can be given first."
+    },
+    {
+      "id": "RU-A1-POS-03",
+      "category": "Prityazhatelnye - possessives",
+      "label": "distribution: the possessive agrees with the thing possessed, not the owner",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-POS-03"
+      ],
+      "note": "Absent, and it is the fact that makes Russian possessives hard for an English speaker, so its absence is a teaching gap rather than a vocabulary one."
+    },
+    {
+      "id": "RU-A1-Q-01",
+      "category": "Chislitelnye i kolichestvo - numerals and quantity",
+      "label": "cardinal numerals, at least to ten",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "note": "NO NUMERAL IS TAUGHT. Not odin, not dva, not any of them; dva appears once inside the phrase do vstrechi's commentary and nowhere as a word. A candidate cannot give a telephone number, an age, a price or a floor. Russian numerals also govern case, so this gap and the case gap will have to be paid together."
+    },
+    {
+      "id": "RU-A1-Q-02",
+      "category": "Chislitelnye i kolichestvo - numerals and quantity",
+      "label": "ordinal numerals to tenth",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "note": "Absent, downstream of RU-A1-Q-01."
+    },
+    {
+      "id": "RU-A1-Q-03",
+      "category": "Chislitelnye i kolichestvo - numerals and quantity",
+      "label": "quantity words: mnogo and malo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "note": "Absent. mnogo takes a genitive, which is another place the missing case column resurfaces."
+    },
+    {
+      "id": "RU-A1-Q-04",
+      "category": "Chislitelnye i kolichestvo - numerals and quantity",
+      "label": "degree words: dostatochno, nemnogo, slishkom",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-Q-04",
+        "A1-NG2-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-Q-05",
+      "category": "Chislitelnye i kolichestvo - numerals and quantity",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-PRON-01",
+      "category": "Mestoimenie - the pronoun",
+      "label": "subject pronouns: ya, ty, vy, and the persons the track does not give",
+      "probe": [
+        "RU-LEX-YA",
+        "RU-LEX-TY-VY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "Counted covered on THREE of six persons. ya, ty and vy are taught with real care - chapter 2 spends a whole lesson on the ty/vy split and a second on why a plural pronoun addresses one person - and on, ona, ono, my and oni are absent. Marked covered because the Spanish point asks for the paradigm's function rather than its completeness, and the shortfall is stated here rather than hidden: a candidate cannot say 'he', 'she' or 'we'."
+    },
+    {
+      "id": "RU-A1-PRON-02",
+      "category": "Mestoimenie - the pronoun",
+      "label": "the object pronouns, which in Russian means the accusative and genitive forms",
+      "probe": [
+        "RU-GRAMMAR-OBJECT-PRONOUNS",
+        "RU-GRAMMAR-MENYA-OBJECT-CASE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02"
+      ],
+      "note": "menya and vas, both taught in chapter 2 and drilled in RU-DRILL-PERSON-SHAPES-01. See RU-A1-C-02: this is the corpus's only working case contrast."
+    },
+    {
+      "id": "RU-A1-PRON-03",
+      "category": "Mestoimenie - the pronoun",
+      "label": "the dative pronoun in the liking frame: mne nravitsya",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01",
+        "A1-F3-01",
+        "A1-NG6-08"
+      ],
+      "note": "The Russian counterpart of Spanish gustar, and it is absent twice: no dative (RU-A1-C-06) and no nravitsya. lyubit IS taught (chapter 5, 'to love, and to like'), which is a different frame with a different subject, so it cannot stand in - and the corpus says so itself."
+    },
+    {
+      "id": "RU-A1-PRON-04",
+      "category": "Mestoimenie - the pronoun",
+      "label": "the reflexive: the -sya ending that makes a verb turn back on its subject",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "Absent as a taught fact, and quietly load-bearing: svidaniya in do svidaniya is built on a reflexive, and zovut in menya zovut is the impersonal alternative to it. The learner meets the machinery twice without being told it exists."
+    },
+    {
+      "id": "RU-A1-PRON-05",
+      "category": "Mestoimenie - the pronoun",
+      "label": "the relative kotoryy with an expressed antecedent",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "Absent - see the whole Podchinenie column."
+    },
+    {
+      "id": "RU-A1-PRON-06",
+      "category": "Mestoimenie - the pronoun",
+      "label": "interrogative words used as pronouns: kto, chto, kakoy, skolko",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "Absent. kak ('how') is taught, and only as part of the naming frame (RU-A1-ADV-07); the track has no kto and no chto, so it cannot ask 'who is this' or 'what is this' - the two questions a first Russian lesson normally opens with."
+    },
+    {
+      "id": "RU-A1-PRON-07",
+      "category": "Mestoimenie - the pronoun",
+      "label": "the exclamative kak with an adjective or adverb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "Absent as an exclamative. The corpus teaches kak only inside kak vas zovut, where it is interrogative and idiomatic; the exclamative kak khorosho is a different construction and is not taught."
+    },
+    {
+      "id": "RU-A1-PRON-08",
+      "category": "Mestoimenie - the pronoun",
+      "label": "stressed pronouns after a preposition: u menya, so mnoy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-08"
+      ],
+      "note": "Absent. u menya is how Russian says 'I have', so this gap also removes possession from the track's reach - see RU-A1-NG1-01."
+    },
+    {
+      "id": "RU-A1-ADV-01",
+      "category": "Narechie - the adverb",
+      "label": "place deictics: zdes, tut, tam",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "note": "Absent. Nothing in the track locates anything."
+    },
+    {
+      "id": "RU-A1-ADV-02",
+      "category": "Narechie - the adverb",
+      "label": "time deictics: seychas, segodnya, zavtra, vchera",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "note": "zavtra exists ONLY inside do zavtra, in the genitive and welded to a preposition; segodnya, seychas and vchera are absent. Not counted: a candidate who can say 'see you tomorrow' cannot say 'tomorrow'."
+    },
+    {
+      "id": "RU-A1-ADV-03",
+      "category": "Narechie - the adverb",
+      "label": "quantity adverbs: mnogo, malo, nemnogo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03"
+      ],
+      "note": "Absent - see RU-A1-Q-03."
+    },
+    {
+      "id": "RU-A1-ADV-04",
+      "category": "Narechie - the adverb",
+      "label": "manner adverbs: khorosho and plokho",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04",
+        "A1-NG6-07"
+      ],
+      "note": "Absent, and this is the pair that answers 'how are you' on every A1 paper in every language. The track cannot answer kak dela - which it also cannot ask."
+    },
+    {
+      "id": "RU-A1-ADV-05",
+      "category": "Narechie - the adverb",
+      "label": "polarity: da and net",
+      "probe": [
+        "RU-LEX-DA",
+        "RU-LEX-NET"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "note": "Chapter 1, the second and third words in the book, and the lesson also gives da its discourse life as a soft 'well, so' - which is what a real speaker does with it."
+    },
+    {
+      "id": "RU-A1-ADV-06",
+      "category": "Narechie - the adverb",
+      "label": "connective adverbs: tozhe and tozhe ne",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-ADV-07",
+      "category": "Narechie - the adverb",
+      "label": "interrogative adverbs: gde, kuda, kak, pochemu",
+      "probe": [
+        "RU-LEX-KAK-VAS-ZOVUT",
+        "RU-GRAMMAR-NAMING-HOW-FRAME",
+        "RU-COMPARISON-NAMING-QUESTION-FRAMES"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "note": "COUNTED ON kak ALONE, and the note is the point. Chapter 2 teaches kak properly - it explains that Russian asks HOW they call you where Spanish asks what your name is, and sets the frame beside French comment and Spanish como. But gde, kuda, kogda and pochemu are all absent, so the covered tick here stands for one asking word out of five. Thin, and deliberately marked."
+    },
+    {
+      "id": "RU-A1-ADV-08",
+      "category": "Narechie - the adverb",
+      "label": "pochemu against potomu chto: asking a reason and giving one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "note": "Absent in both halves. potomu chto occurs zero times in the 88 lesson files - checked in Cyrillic and in romanization."
+    },
+    {
+      "id": "RU-A1-V-01",
+      "category": "Glagol - the verb",
+      "label": "the present tense: a full paradigm for one verb, all six persons",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "NOT TAUGHT. This is the largest single hole in the file. Nine verbs are introduced - byt, govorit, idti, videt, zhit, znat, chitat, dumat, pisat, brat, lyubit, pomogat, sprashivat, ponimat - and every one arrives as an INFINITIVE with an etymology. Chapter 3 teaches the -u first-person ending (RU-A1-V-02) and chapter 4 shows ya chitayu and ya ne ponimayu in running text, but no lesson gives six forms of one verb, and no atom claims one."
+    },
+    {
+      "id": "RU-A1-V-02",
+      "category": "Glagol - the verb",
+      "label": "the first-person -u ending, which is where the paradigm starts",
+      "probe": [
+        "RU-GRAMMAR-PRESENT-FIRST-PERSON-U"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "Chapter 3, on zhit. One person of six, taught as a fact about the language rather than as a table - which is the right first step and is why RU-A1-V-01 is separated from it rather than folded in."
+    },
+    {
+      "id": "RU-A1-V-03",
+      "category": "Glagol - the verb",
+      "label": "the two conjugation families, and which ending set a verb takes",
+      "probe": [
+        "RU-GRAMMAR-TWO-VERB-FAMILIES",
+        "RU-GRAMMAR-CONSONANT-SWAP-I-FORM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "Chapter 3 names the -e- and -i- families on govorit and teaches the consonant swap that hits the first person of the second family (videt / vizhu). The classification is taught before any paradigm it classifies, which is unusual and, for a reader who will meet hundreds of verbs, defensible."
+    },
+    {
+      "id": "RU-A1-V-04",
+      "category": "Glagol - the verb",
+      "label": "byt: the verb 'to be', and the tense in which Russian refuses to say it",
+      "probe": [
+        "RU-LEX-BYT",
+        "RU-GRAMMAR-ZERO-COPULA",
+        "RU-GRAMMAR-ZERO-COPULA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02"
+      ],
+      "note": "Spanish spends two verbs and a whole chapter on ser against estar. Russian's answer is that the present tense of byt is not said at all, and the corpus teaches that twice - once as the fact (chapter 3) and once as a practice lesson that deliberately keeps the reader from overgeneralising it. A genuinely better answer to the Spanish demand than a paradigm would have been."
+    },
+    {
+      "id": "RU-A1-V-05",
+      "category": "Glagol - the verb",
+      "label": "the present of idti and the motion verbs, where one-way and habitual are different words",
+      "probe": [
+        "RU-LEX-IDTI",
+        "RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ],
+      "note": "Chapter 3. Russian's motion-verb pairs have no Spanish counterpart at all - ir is one verb - so this is a restatement of the 'irregular high-frequency verb' demand around the machinery Russian actually has."
+    },
+    {
+      "id": "RU-A1-V-06",
+      "category": "Glagol - the verb",
+      "label": "the past tense: the -l ending and its gender agreement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08"
+      ],
+      "note": "ABSENT, and Russian makes it cheaper than any of the three Spanish past tenses that feed this point: one -l suffix, agreeing in gender and number, no person endings at all. The corpus mentions in passing that idti's past comes from a different root and never teaches the form. Four Spanish points - the imperfect, the regular preterite, its strong stems and its suppletive verbs - collapse here and none of them is answered."
+    },
+    {
+      "id": "RU-A1-V-07",
+      "category": "Glagol - the verb",
+      "label": "the past of byt: byl / byla / bylo, which is where the zero copula ends",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-04"
+      ],
+      "note": "Absent, and it is the counterweight the zero-copula lesson needs: Russian omits 'is' and states 'was'. Teaching the first without the second leaves a reader who will produce ya student vchera."
+    },
+    {
+      "id": "RU-A1-V-08",
+      "category": "Glagol - the verb",
+      "label": "description and habit in the past",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-05"
+      ],
+      "note": "Blocked on RU-A1-V-06. Russian carries this contrast on ASPECT rather than on a separate tense, so the demand really lands on RU-A1-ASP-01."
+    },
+    {
+      "id": "RU-A1-V-09",
+      "category": "Glagol - the verb",
+      "label": "the future: the compound budu plus infinitive, and the perfective present",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-09"
+      ],
+      "note": "Absent. Restated from Spanish's present perfect because that is where the PCIC A1 column puts its second finite tense; Russian's second finite tense is the future, and it has two of them."
+    },
+    {
+      "id": "RU-A1-V-10",
+      "category": "Glagol - the verb",
+      "label": "the past passive participle",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "note": "Absent. Two Spanish participle points collapse here; both are well beyond what this corpus reaches, and both are on the TORFL A1 reading paper only receptively."
+    },
+    {
+      "id": "RU-A1-V-11",
+      "category": "Glagol - the verb",
+      "label": "the imperative, second person: skazhite, povtorite, izvinite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ],
+      "note": "ABSENT, and this is a functional emergency rather than a grammatical one. Every classroom instruction, every request and every repair move in Russian is an imperative, and the track has none - see RU-A1-F4-01 and RU-A1-F6-05."
+    },
+    {
+      "id": "RU-A1-V-12",
+      "category": "Glagol - the verb",
+      "label": "the infinitive, and the fact that it is the form a dictionary lists",
+      "probe": [
+        "RU-LEX-CHITAT",
+        "RU-LEX-ZNAT",
+        "RU-LEX-PONIMAT",
+        "RU-LEX-GOVORIT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "note": "Covered, and over-covered: the infinitive is the ONLY verb form this track systematically teaches. Fourteen verbs arrive in it. The Spanish point asks for the infinitive as a non-finite form inside a larger construction, which is RU-A1-SUB-01; what is ticked here is the citation form."
+    },
+    {
+      "id": "RU-A1-V-13",
+      "category": "Glagol - the verb",
+      "label": "the gerund and the present participle",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ],
+      "note": "Absent, and correctly out of reach at A1 in Russian: the imperfective gerund is a B1 form on the TORFL ladder. Kept in the file so the proxy accounting stays complete rather than because it is owed soon."
+    },
+    {
+      "id": "RU-A1-V-14",
+      "category": "Glagol - the verb",
+      "label": "there is no progressive: ya chitayu is both 'I read' and 'I am reading'",
+      "probe": [
+        "RU-GRAMMAR-NO-PROGRESSIVE",
+        "RU-LEX-CHITAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-03"
+      ],
+      "note": "Chapter 4, on chitat. Spanish's actual/durative distinction is carried by estoy leyendo; Russian has no such form, and the corpus teaches the absence explicitly rather than letting the reader invent one."
+    },
+    {
+      "id": "RU-A1-ASP-01",
+      "category": "Vid - aspect",
+      "label": "aspect: every Russian verb belongs to a pair, and the pair is the tense system",
+      "probe": [
+        "RU-GRAMMAR-ASPECT-PARTNER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific, and the corpus knows it: chapter 4 introduces aspect on dumat as 'the fact that shapes every Russian verb you will ever meet'. There is no Spanish column for it, which is exactly why the proxy could not have found it."
+    },
+    {
+      "id": "RU-A1-ASP-02",
+      "category": "Vid - aspect",
+      "label": "a suppletive aspect pair: brat and vzyat, two roots for one verb",
+      "probe": [
+        "RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR",
+        "RU-LEX-BRAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific, chapter 5."
+    },
+    {
+      "id": "RU-A1-ASP-03",
+      "category": "Vid - aspect",
+      "label": "choosing the aspect: completed against ongoing, in the past and the future",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific and ABSENT. The category is named (RU-A1-ASP-01) and never used, because there is no past and no future to use it in. Naming a system the reader can never apply is the honest half of a two-part debt."
+    },
+    {
+      "id": "RU-A1-ASP-04",
+      "category": "Vid - aspect",
+      "label": "l-epenthesis and the other stem changes a paradigm springs on you",
+      "probe": [
+        "RU-GRAMMAR-L-EPENTHESIS",
+        "RU-LEX-LYUBIT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific, chapter 5, on lyubit / lyublyu. Taught as a curiosity about one word; it is in fact a rule over a whole class of labial-stem verbs."
+    },
+    {
+      "id": "RU-A1-SN-01",
+      "category": "Imennaya gruppa - the noun phrase",
+      "label": "noun-phrase complements: an adjective, a genitive phrase, a relative clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "None of the three exists in this track: no adjective (RU-A1-ADJ-01), no genitive of possession (RU-A1-C-05), no relative clause (RU-A1-SUB-04). The noun phrase in this corpus is one bare noun."
+    },
+    {
+      "id": "RU-A1-SN-02",
+      "category": "Imennaya gruppa - the noun phrase",
+      "label": "agreement inside the noun phrase, in gender, number and case",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-02"
+      ],
+      "note": "Absent - nothing to agree with a noun."
+    },
+    {
+      "id": "RU-A1-SN-03",
+      "category": "Imennaya gruppa - the noun phrase",
+      "label": "the vocative and the address form: how a Russian is called by name",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "note": "Absent. Russian's answer is not a case but a naming convention: first name plus patronymic for respect, a short form for intimacy. Neither is taught, and it is what a TORFL A1 form asks for by name (imya, otchestvo, familiya)."
+    },
+    {
+      "id": "RU-A1-SN-04",
+      "category": "Imennaya gruppa - the noun phrase",
+      "label": "subject-verb agreement stated as a rule",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-03"
+      ],
+      "note": "Not stated. RU-A1-V-02 teaches one person's ending; nothing tells the reader that the ending is chosen by the subject."
+    },
+    {
+      "id": "RU-A1-SV-01",
+      "category": "Glagolnaya gruppa - the verb phrase",
+      "label": "the nravitsya frame: the thing liked is the subject and the liker is dative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-01"
+      ],
+      "note": "Absent - see RU-A1-PRON-03. Russian has the closest analogue to gustar of any language in this corpus and the track does not teach it."
+    },
+    {
+      "id": "RU-A1-SV-02",
+      "category": "Glagolnaya gruppa - the verb phrase",
+      "label": "the copular sentence with no copula: ya student",
+      "probe": [
+        "RU-GRAMMAR-ZERO-COPULA",
+        "RU-GRAMMAR-ZERO-COPULA-01",
+        "RU-LEX-YA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-02",
+        "A1-OS-05"
+      ],
+      "note": "The zero-copula sentence is the one complete sentence pattern this track owns, and it owns it well: taught in chapter 3 and immediately practised in a lesson whose stated job is to keep the reader from overgeneralising. What it lacks is a complement to put in it - no adjective, no profession, no nationality."
+    },
+    {
+      "id": "RU-A1-SV-03",
+      "category": "Glagolnaya gruppa - the verb phrase",
+      "label": "the predicate complement and the case it takes",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-03"
+      ],
+      "note": "Absent. The Russian complication the Spanish point cannot see: the complement of byt is nominative in the present and instrumental in the past, which is RU-A1-C-08."
+    },
+    {
+      "id": "RU-A1-SV-04",
+      "category": "Glagolnaya gruppa - the verb phrase",
+      "label": "the direct object and how it is marked",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "note": "Absent - see RU-A1-C-03."
+    },
+    {
+      "id": "RU-A1-SV-05",
+      "category": "Glagolnaya gruppa - the verb phrase",
+      "label": "the indirect object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-05"
+      ],
+      "note": "Absent - see RU-A1-C-06."
+    },
+    {
+      "id": "RU-A1-SV-06",
+      "category": "Glagolnaya gruppa - the verb phrase",
+      "label": "adverbial complements, and Russian's free word order",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "Absent, and the free order is the interesting half: Russian moves constituents for information structure because case marks the roles. With no case, this track's word order is fixed by accident rather than free by design, and no lesson says so."
+    },
+    {
+      "id": "RU-A1-OS-01",
+      "category": "Prostoe predlozhenie - the simple sentence",
+      "label": "the declarative, affirmative and negative, with ne before the verb",
+      "probe": [
+        "RU-GRAMMAR-NE-NEGATION",
+        "RU-LEX-PONIMAT",
+        "RU-LEX-ZNAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "Chapter 3 teaches ne on znat and chapter 4 shows ya ne ponimayu in full. One particle, placed before the verb, no auxiliary and no agreement - genuinely simpler than the Spanish it is derived from."
+    },
+    {
+      "id": "RU-A1-OS-02",
+      "category": "Prostoe predlozhenie - the simple sentence",
+      "label": "the yes-or-no question, carried by intonation alone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "note": "Absent as a taught fact, which is a real loss: Russian marks a polar question with intonation and nothing else, so it is the cheapest thing in the language to teach and the track never says it. There is no li either."
+    },
+    {
+      "id": "RU-A1-OS-03",
+      "category": "Prostoe predlozhenie - the simple sentence",
+      "label": "the question with an asking word at the front",
+      "probe": [
+        "RU-LEX-KAK-VAS-ZOVUT",
+        "RU-GRAMMAR-NAMING-HOW-FRAME"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "One question exists in this track and this is it. Counted, and thin in exactly the way RU-A1-ADV-07 describes."
+    },
+    {
+      "id": "RU-A1-OS-04",
+      "category": "Prostoe predlozhenie - the simple sentence",
+      "label": "the existential sentence: u menya est and net plus genitive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01"
+      ],
+      "note": "Absent. net IS taught, as the word for 'no' (RU-A1-ADV-05), and its second life as the negative existential that takes a genitive is not mentioned - so the reader has the word and not the construction."
+    },
+    {
+      "id": "RU-A1-OS-05",
+      "category": "Prostoe predlozhenie - the simple sentence",
+      "label": "the attributive sentence: this is a ...",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-05"
+      ],
+      "note": "Absent - see RU-A1-DEM-03."
+    },
+    {
+      "id": "RU-A1-OS-06",
+      "category": "Prostoe predlozhenie - the simple sentence",
+      "label": "transitive and intransitive sentences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-06"
+      ],
+      "note": "Absent as a contrast the reader can make, because RU-A1-C-03 gives them no object to put after a transitive verb."
+    },
+    {
+      "id": "RU-A1-OS-07",
+      "category": "Prostoe predlozhenie - the simple sentence",
+      "label": "the impersonal-plural sentence: menya zovut, 'they call me'",
+      "probe": [
+        "RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL",
+        "RU-LEX-MENYA-ZOVUT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific. Chapter 2 unpacks menya zovut as an indefinite-personal plural rather than teaching it as a phrase, which is why the reader can later recognise govoryat and pishut. Spanish's se dice is a different construction, so this is not a transfer."
+    },
+    {
+      "id": "RU-A1-CO-01",
+      "category": "Sochinenie - joining two clauses",
+      "label": "joining with i",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "NOT TAUGHT. i is USED as a conjunction in exactly two lesson bodies - RU-C04-chitat ('Ya chitayu i ponimayu') and RU-C13-sup ('Moloko, syr, sok i sup, pozhaluysta') - and is introduced by no lesson and carried by no atom. Its other seven appearances in the corpus are the LETTER i being spelled out. So the commonest word in the Russian language is in the book, in print, twice, doing grammatical work, and the reader is never told it is a word."
+    },
+    {
+      "id": "RU-A1-CO-02",
+      "category": "Sochinenie - joining two clauses",
+      "label": "negative coordination: ni ... ni",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-CO-03",
+      "category": "Sochinenie - joining two clauses",
+      "label": "the alternative: ili",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ],
+      "note": "Absent. ili occurs zero times in the 88 lesson files."
+    },
+    {
+      "id": "RU-A1-CO-04",
+      "category": "Sochinenie - joining two clauses",
+      "label": "the contrast: no and a, which are two different words in Russian",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-04"
+      ],
+      "note": "Absent, both of them. Russian splits Spanish pero into no (adversative) and a (contrastive), which is a real A1 distinction on the TORFL lexis paper. Neither occurs anywhere in the track."
+    },
+    {
+      "id": "RU-A1-CO-05",
+      "category": "Sochinenie - joining two clauses",
+      "label": "distributive coordination: odin ... drugoy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-SUB-01",
+      "category": "Podchinenie - subordination",
+      "label": "the infinitive clause after a verb: ya khochu chitat",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "note": "Absent as a CONSTRUCTION although fourteen infinitives are taught: nothing in the track ever puts one after a finite verb, because there is no khochu, mogu or nado to put it after. Two Spanish points collapse here - Russian does not distinguish a subject infinitive clause from an object one by form."
+    },
+    {
+      "id": "RU-A1-SUB-02",
+      "category": "Podchinenie - subordination",
+      "label": "the finite clause after a verb of thinking: ya dumayu, chto ...",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03",
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "Absent, and one word away from existing. dumat is taught in chapter 4 and znat in chapter 3; chto as a complementiser is not taught at all, so the two verbs that most need a clause after them have nothing to take one. This is the highest-value single word in the whole Russian queue."
+    },
+    {
+      "id": "RU-A1-SUB-03",
+      "category": "Podchinenie - subordination",
+      "label": "the relative clause with kotoryy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-SUB-04",
+      "category": "Podchinenie - subordination",
+      "label": "the causal clause: potomu chto",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "note": "Absent - see RU-A1-ADV-08."
+    },
+    {
+      "id": "RU-A1-SUB-05",
+      "category": "Podchinenie - subordination",
+      "label": "the purpose clause: chtoby plus infinitive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-SUB-06",
+      "category": "Podchinenie - subordination",
+      "label": "simultaneity: kogda",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-SUB-07",
+      "category": "Podchinenie - subordination",
+      "label": "the reported question with li, which is how Russian embeds a yes/no question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific: Spanish embeds a polar question with si and the PCIC A1 column does not ask for it, while Russian's li is both an embedder and a question particle. Absent."
+    },
+    {
+      "id": "RU-A1-SUB-08",
+      "category": "Podchinenie - subordination",
+      "label": "joining two clauses at all: the whole column, measured together",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific, and it exists to record a corpus-level finding rather than a single form. NOT ONE SUBORDINATOR AND NOT ONE COORDINATOR IS TAUGHT IN THIS TRACK. i, ili, no, a, chto, potomu chto, kogda, kotoryy, chtoby: zero introducing lessons, and for six of the nine, zero occurrences of any kind across all 88 files. The reader finishes fifteen chapters able to produce single clauses only. This is the same hole the six Indic tracks reported, in a language family that shares nothing with them, which makes it a property of how this corpus is authored rather than of Indo-Aryan or Dravidian grammar."
+    },
+    {
+      "id": "RU-A1-F1-01",
+      "category": "Davat i prosit informatsiyu - giving and asking for information",
+      "label": "identify oneself or another by name",
+      "probe": [
+        "RU-LEX-MENYA-ZOVUT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-01"
+      ],
+      "note": "menya zovut, chapter 2. The strongest function in the file and one of only two the track can complete end to end."
+    },
+    {
+      "id": "RU-A1-F1-02",
+      "category": "Davat i prosit informatsiyu - giving and asking for information",
+      "label": "ask for information about a person, a thing or a place",
+      "probe": [
+        "RU-LEX-KAK-VAS-ZOVUT",
+        "RU-GRAMMAR-NAMING-HOW-FRAME"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-03"
+      ],
+      "note": "COVERED ON ONE QUESTION. kak vas zovut is the only question the track can ask; there is no kto eto, no chto eto, no gde. Ticked because the Spanish point is a can-do and the can-do is met once, and marked thin here because a candidate given a picture and asked to find out about it has one sentence."
+    },
+    {
+      "id": "RU-A1-F1-03",
+      "category": "Davat i prosit informatsiyu - giving and asking for information",
+      "label": "give personal information: name, age, where you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE03-01"
+      ],
+      "note": "One of the three is possible. Age needs numerals (RU-A1-Q-01) and a dative (RU-A1-C-06); origin needs a country and a gentilic (RU-A1-ADJ-02). Not counted: the TORFL A1 form asks for all three on one line."
+    },
+    {
+      "id": "RU-A1-F1-04",
+      "category": "Davat i prosit informatsiyu - giving and asking for information",
+      "label": "ask for confirmation with a tag",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "note": "Absent as a taught move. da? IS mentioned in the chapter-1 da lesson as a sentence-final tag equivalent to n'est-ce pas, in the prose and not in an atom, so the reader has seen it and cannot be said to hold it. da? is the cheapest tag question in Europe and one atom away."
+    },
+    {
+      "id": "RU-A1-F1-05",
+      "category": "Davat i prosit informatsiyu - giving and asking for information",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "RU-LEX-DA",
+        "RU-LEX-NET"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ],
+      "note": "Chapter 1."
+    },
+    {
+      "id": "RU-A1-F2-01",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "hand the turn back and ask for an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-01"
+      ],
+      "note": "Absent. Needs a ty/vy question form the track does not have."
+    },
+    {
+      "id": "RU-A1-F2-02",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "give an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "Absent - blocked on chto (RU-A1-SUB-02). dumat is taught and cannot take an object clause."
+    },
+    {
+      "id": "RU-A1-F2-03",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "ask for an evaluation: how is it, how are you",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-03"
+      ],
+      "note": "Absent. kak dela is not in the corpus - checked in Cyrillic and in romanization across all 88 files."
+    },
+    {
+      "id": "RU-A1-F2-04",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "evaluate with khorosho, plokho, normalno",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "note": "Absent - see RU-A1-ADV-04."
+    },
+    {
+      "id": "RU-A1-F2-05",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "express approval and disapproval",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-F2-06",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "agree",
+      "probe": [
+        "RU-LEX-DA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-NG6-06"
+      ],
+      "note": "Counted on da alone, and the chapter-1 lesson does more than gloss it: it teaches nu da as 'well, yeah', which is genuinely how agreement is voiced. konechno, soglasen and khorosho are absent."
+    },
+    {
+      "id": "RU-A1-F2-07",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "disagree",
+      "probe": [
+        "RU-LEX-NET"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "note": "Counted on net alone. A bare net is a blunt disagreement in Russian and the track offers no way to soften it, which is a register problem rather than a coverage one - see RU-A1-F2-09."
+    },
+    {
+      "id": "RU-A1-F2-08",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "show scepticism or hedge",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-12",
+        "A1-NG1-05"
+      ],
+      "note": "Absent. ne znayu IS taught (RU-A1-F2-11) and is used for exactly this in real speech; it is counted there rather than twice."
+    },
+    {
+      "id": "RU-A1-F2-09",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "put a counter-argument",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-09"
+      ],
+      "note": "Absent, and downstream of RU-A1-CO-04: a counter-argument in Russian starts with no or a, and the track teaches neither."
+    },
+    {
+      "id": "RU-A1-F2-10",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "assert something as certain",
+      "probe": [
+        "RU-GRAMMAR-ZERO-COPULA",
+        "RU-LEX-YA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-10"
+      ],
+      "note": "The plain assertion is what the zero-copula sentence IS, so this transfers cleanly. What can be asserted is limited to what can be said after ya."
+    },
+    {
+      "id": "RU-A1-F2-11",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "say you do not know",
+      "probe": [
+        "RU-LEX-ZNAT",
+        "RU-GRAMMAR-NE-NEGATION",
+        "RU-LEX-YA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-15"
+      ],
+      "note": "Ya ne znayu, taught in full in chapter 3 - the lesson calls it 'the sentence you will use most' and it is right. This is one of the two repair moves the track owns."
+    },
+    {
+      "id": "RU-A1-F2-12",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "say you know something",
+      "probe": [
+        "RU-LEX-ZNAT",
+        "RU-LEX-YA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-NG7-01"
+      ],
+      "note": "Ya znayu, same lesson. Asking whether somebody else knows is folded in here and is NOT possible, because it needs a second-person form - see the note on RU-A1-V-01."
+    },
+    {
+      "id": "RU-A1-F2-13",
+      "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
+      "label": "ask about, and state, an ability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "note": "Absent: no umet, no moch, no govorit conjugated. Ya govoryu po-russki - the single most useful ability sentence for a beginner - is out of reach although govorit is taught in chapter 3."
+    },
+    {
+      "id": "RU-A1-F3-01",
+      "category": "Vkusy, zhelaniya i chuvstva - likes, wishes and feelings",
+      "label": "say what you like",
+      "probe": [
+        "RU-LEX-LYUBIT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-01"
+      ],
+      "note": "COUNTED ON THE VERB ONLY, and this is the thinnest tick in the file. lyubit is introduced in chapter 5 as 'to love, and to like' - an infinitive, with an etymology, and with no conjugated form and no object case. A candidate cannot say ya lyublyu chai. Contrast RU-A1-PRON-03, where the idiomatic frame is absent outright."
+    },
+    {
+      "id": "RU-A1-F3-02",
+      "category": "Vkusy, zhelaniya i chuvstva - likes, wishes and feelings",
+      "label": "ask about a preference by offering alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-02"
+      ],
+      "note": "Absent - needs ili (RU-A1-CO-03)."
+    },
+    {
+      "id": "RU-A1-F3-03",
+      "category": "Vkusy, zhelaniya i chuvstva - likes, wishes and feelings",
+      "label": "state a preference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-F3-04",
+      "category": "Vkusy, zhelaniya i chuvstva - likes, wishes and feelings",
+      "label": "say what you want",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ],
+      "note": "Absent. khotet is not taught, which also blocks the infinitive clause at RU-A1-SUB-01 and the softened request at RU-A1-F4-02."
+    },
+    {
+      "id": "RU-A1-F3-05",
+      "category": "Vkusy, zhelaniya i chuvstva - likes, wishes and feelings",
+      "label": "ask about, and state, plans and intentions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "note": "Absent - blocked on the future (RU-A1-V-09)."
+    },
+    {
+      "id": "RU-A1-F3-06",
+      "category": "Vkusy, zhelaniya i chuvstva - likes, wishes and feelings",
+      "label": "say how you feel",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "Absent. Russian's ordinary answer is a dative impersonal (mne kholodno, mne khorosho), so this needs RU-A1-C-06."
+    },
+    {
+      "id": "RU-A1-F4-01",
+      "category": "Vliyat na sobesednika - influencing the other person",
+      "label": "give an instruction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "note": "Absent - no imperative anywhere (RU-A1-V-11)."
+    },
+    {
+      "id": "RU-A1-F4-02",
+      "category": "Vliyat na sobesednika - influencing the other person",
+      "label": "ask for something, softened",
+      "probe": [
+        "RU-LEX-POZHALUYSTA",
+        "RU-GRAMMAR-REQUEST-PATTERN",
+        "RU-LEX-CHAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "COVERED, and it is the track's second complete function. Chapter 6 waits until the reader has nouns, then teaches the whole request as a pattern: name the thing, add pozhaluysta. Chai, pozhaluysta. Because Russian needs no article and no verb here, the reader can produce a real, polite, idiomatic request out of two words - which is a better return on chapter six than most tracks manage."
+    },
+    {
+      "id": "RU-A1-F4-03",
+      "category": "Vliyat na sobesednika - influencing the other person",
+      "label": "ask for help",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "note": "Absent although pomogat ('to help') is taught in chapter 5. Pomogite, pozhaluysta needs the imperative."
+    },
+    {
+      "id": "RU-A1-F4-04",
+      "category": "Vliyat na sobesednika - influencing the other person",
+      "label": "respond to a request",
+      "probe": [
+        "RU-LEX-DA",
+        "RU-LEX-NET",
+        "RU-LEX-POZHALUYSTA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-04",
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "note": "Counted: da, net and pozhaluysta (which is also 'go ahead' and 'you're welcome') cover accepting, refusing and granting between them. Three Spanish points collapse here because Russian answers all three with the same three words."
+    },
+    {
+      "id": "RU-A1-F4-05",
+      "category": "Vliyat na sobesednika - influencing the other person",
+      "label": "make an offer or an invitation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "note": "Absent - needs an imperative or a first-person-plural form."
+    },
+    {
+      "id": "RU-A1-F4-06",
+      "category": "Vliyat na sobesednika - influencing the other person",
+      "label": "accept an offer",
+      "probe": [
+        "RU-LEX-DA",
+        "RU-LEX-SPASIBO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-08"
+      ],
+      "note": "da, spasibo. Idiomatic and complete."
+    },
+    {
+      "id": "RU-A1-F4-07",
+      "category": "Vliyat na sobesednika - influencing the other person",
+      "label": "decline an offer",
+      "probe": [
+        "RU-LEX-NET",
+        "RU-LEX-SPASIBO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ],
+      "note": "Net, spasibo. Also the standard polite refusal, and the track has both halves."
+    },
+    {
+      "id": "RU-A1-F5-01",
+      "category": "Sotsialnyy kontakt - social contact",
+      "label": "greet, and choose the register while doing it",
+      "probe": [
+        "RU-LEX-PRIVET",
+        "RU-LEX-ZDRAVSTVUYTE",
+        "RU-PRAGMATICS-GREETING-REGISTER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F5-02"
+      ],
+      "note": "The best-taught thing in the track. Chapter 1 gives both greetings AND the atom that says which is for whom, so the reader is never left choosing at random. Greeting and responding are one point in Russian because the response is the same word."
+    },
+    {
+      "id": "RU-A1-F5-02",
+      "category": "Sotsialnyy kontakt - social contact",
+      "label": "choose ty or vy, and know what the choice says",
+      "probe": [
+        "RU-LEX-TY-VY",
+        "RU-GRAMMAR-TY-VY-REGISTER",
+        "RU-PRAGMATICS-VY-POLITENESS",
+        "RU-COMPARISON-POLITE-PRONOUNS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific: Spanish has tu/usted and the PCIC A1 grammar column treats it as pronoun morphology, not as a function. The Russian track treats it as a social act, spending four atoms and two lessons on it including why a plural pronoun addresses one person. On a TORFL speaking paper this is scored."
+    },
+    {
+      "id": "RU-A1-F5-03",
+      "category": "Sotsialnyy kontakt - social contact",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "note": "Absent - see RU-A1-SN-03. No patronymic, no gospodin, no name-plus-title."
+    },
+    {
+      "id": "RU-A1-F5-04",
+      "category": "Sotsialnyy kontakt - social contact",
+      "label": "introduce yourself, and respond to an introduction",
+      "probe": [
+        "RU-LEX-MENYA-ZOVUT",
+        "RU-LEX-OCHEN-PRIYATNO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F5-05"
+      ],
+      "note": "Both halves, chapter 2: menya zovut and ochen priyatno. Introducing a THIRD person is not possible - it needs eto (RU-A1-DEM-03) and a possessive."
+    },
+    {
+      "id": "RU-A1-F5-05",
+      "category": "Sotsialnyy kontakt - social contact",
+      "label": "apologise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "ABSENT, AND THIS IS THE FUNCTIONAL HOLE NO PERCENTAGE SHOWS. izvinite, prostite and izvini occur ZERO times in the 88 lesson files - checked in Cyrillic and in romanization. There is no way to say sorry in this track, and no way to open a request to a stranger, because izvinite is how a Russian starts one. The same hole was measured in Gujarati; it is not an Indic accident."
+    },
+    {
+      "id": "RU-A1-F5-06",
+      "category": "Sotsialnyy kontakt - social contact",
+      "label": "thank, and answer thanks",
+      "probe": [
+        "RU-LEX-SPASIBO",
+        "RU-LEX-POZHALUYSTA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "spasibo and pozhaluysta, chapter 1, and the lesson makes the point that pozhaluysta does double duty as 'you're welcome'."
+    },
+    {
+      "id": "RU-A1-F5-07",
+      "category": "Sotsialnyy kontakt - social contact",
+      "label": "offer condolences, propose a toast, congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-08",
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "note": "None of the three. Kept as one point because all three are single fixed formulae in Russian and the track has no fixed formulae beyond greetings and farewells."
+    },
+    {
+      "id": "RU-A1-F5-08",
+      "category": "Sotsialnyy kontakt - social contact",
+      "label": "take leave, and choose the leave-taking to fit the moment",
+      "probe": [
+        "RU-LEX-DO-SVIDANIYA",
+        "RU-LEX-POKA",
+        "RU-LEX-DO-ZAVTRA",
+        "RU-LEX-DO-VSTRECHI",
+        "RU-LEX-DO-SKOROGO",
+        "RU-LEX-SPOKOYNOY-NOCHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "SIX farewells, a whole chapter of them, each with its own etymology and its own occasion. The Spanish point asks for one. This is the most over-covered point in the file and it is where a reader would notice the track's shape: it can leave a conversation six ways and cannot start one about anything."
+    },
+    {
+      "id": "RU-A1-F6-01",
+      "category": "Vesti razgovor - managing the conversation, and repairing it",
+      "label": "open a conversation and react to being addressed",
+      "probe": [
+        "RU-LEX-ZDRAVSTVUYTE",
+        "RU-LEX-PRIVET",
+        "RU-DIALOGUE-COURTESY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-02"
+      ],
+      "note": "The chapter-1 recap lesson runs the six words as an exchange, which is what makes this a can-do rather than a word list."
+    },
+    {
+      "id": "RU-A1-F6-02",
+      "category": "Vesti razgovor - managing the conversation, and repairing it",
+      "label": "ask for somebody, on the telephone or at a door",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-03",
+        "A1-NE09-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-F6-03",
+      "category": "Vesti razgovor - managing the conversation, and repairing it",
+      "label": "show that you are following",
+      "probe": [
+        "RU-LEX-DA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "Counted on the discourse da that chapter 1 teaches beside the polarity one - 'Russians sprinkle da through speech as a soft and / so / well'. That IS the backchannel, and teaching it in lesson two is unusually good sequencing."
+    },
+    {
+      "id": "RU-A1-F6-04",
+      "category": "Vesti razgovor - managing the conversation, and repairing it",
+      "label": "say you have not understood",
+      "probe": [
+        "RU-LEX-PONIMAT",
+        "RU-GRAMMAR-NE-NEGATION",
+        "RU-LEX-YA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Ya ne ponimayu, written out in full in chapter 4 with its stress marked. Together with ya ne znayu this is HALF a repair kit, and the missing half is what RU-A1-F6-05 records. Russian-specific as a point: the PCIC A1 function column has no repair entry, while the CEFR A1 descriptors do."
+    },
+    {
+      "id": "RU-A1-F6-05",
+      "category": "Vesti razgovor - managing the conversation, and repairing it",
+      "label": "ask for a repeat, or for slower speech",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific as a point, because the PCIC A1 function column has no separate repair entry and the CEFR A1 descriptor does: 'can ask for repetition when he/she does not understand'. MEASURED AND ABSENT. povtorite, poteshe, medlenno, ne ponyal and eshche raz occur ZERO times across the 88 files. So the track can report a failure of understanding and cannot do anything about it - which, with the missing apology at RU-A1-F5-05, is the whole repair column reading two out of five."
+    },
+    {
+      "id": "RU-A1-F6-06",
+      "category": "Vesti razgovor - managing the conversation, and repairing it",
+      "label": "propose closing the conversation",
+      "probe": [
+        "RU-LEX-DO-SVIDANIYA",
+        "RU-LEX-POKA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-06"
+      ],
+      "note": "Covered by the farewell chapter."
+    },
+    {
+      "id": "RU-A1-F6-07",
+      "category": "Vesti razgovor - managing the conversation, and repairing it",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "Absent - imperative again."
+    },
+    {
+      "id": "RU-A1-NG1-01",
+      "category": "Bytiynye ponyatiya - existence",
+      "label": "existence and possession: u menya est, and its negative net plus genitive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ],
+      "note": "Absent. Russian says 'at me there is' rather than 'I have', so this one construction carries every A1 sentence about owning, having a family, having time or having a question. It needs u plus genitive (RU-A1-PRON-08) and the existential net (RU-A1-OS-04); the track has the word net and neither construction."
+    },
+    {
+      "id": "RU-A1-NG1-02",
+      "category": "Bytiynye ponyatiya - existence",
+      "label": "presence and absence: est, net, s and bez",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NG1-03",
+      "category": "Bytiynye ponyatiya - existence",
+      "label": "stating a general property of something",
+      "probe": [
+        "RU-GRAMMAR-ZERO-COPULA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-03"
+      ],
+      "note": "The zero-copula sentence is the frame for exactly this, so the machinery is there; nothing exists to put in the predicate slot. Counted for the structure and hollow in the lexis, which is this track's characteristic shape."
+    },
+    {
+      "id": "RU-A1-NG1-04",
+      "category": "Bytiynye ponyatiya - existence",
+      "label": "locating an event in time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "note": "Absent - no clock, no calendar, no case to put a time in."
+    },
+    {
+      "id": "RU-A1-NG1-05",
+      "category": "Bytiynye ponyatiya - existence",
+      "label": "certainty and uncertainty",
+      "probe": [
+        "RU-LEX-ZNAT",
+        "RU-GRAMMAR-NE-NEGATION"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05"
+      ],
+      "note": "Counted on the ya znayu / ya ne znayu pair, which is how an A1 speaker really marks certainty. There is no navernoe, mozhet byt or konechno."
+    },
+    {
+      "id": "RU-A1-NG2-01",
+      "category": "Kolichestvennye ponyatiya - quantity",
+      "label": "numerical quantity",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "note": "Absent - see RU-A1-Q-01."
+    },
+    {
+      "id": "RU-A1-NG2-02",
+      "category": "Kolichestvennye ponyatiya - quantity",
+      "label": "relative quantity: bolshe, menshe, mnogo, malo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NG2-03",
+      "category": "Kolichestvennye ponyatiya - quantity",
+      "label": "degree: ochen, sovsem, nemnogo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-03"
+      ],
+      "note": "Absent - see RU-A1-ADJ-06 on the frozen ochen."
+    },
+    {
+      "id": "RU-A1-NG2-04",
+      "category": "Kolichestvennye ponyatiya - quantity",
+      "label": "measures of size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NG3-01",
+      "category": "Prostranstvennye ponyatiya - space",
+      "label": "saying where something is",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01"
+      ],
+      "note": "Absent - see RU-A1-C-07 and RU-A1-ADV-01."
+    },
+    {
+      "id": "RU-A1-NG3-02",
+      "category": "Prostranstvennye ponyatiya - space",
+      "label": "relative position: ryadom, daleko, sprava, sleva",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NG3-03",
+      "category": "Prostranstvennye ponyatiya - space",
+      "label": "movement, and the fact that Russian splits going by direction and by manner",
+      "probe": [
+        "RU-LEX-IDTI",
+        "RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04",
+        "A1-NG3-05"
+      ],
+      "note": "Counted on idti and its one-way/habitual pairing, taught in chapter 3. The verb is present and its destination is not, because kuda and the accusative of direction are both absent - so the reader can name the going and not the going anywhere."
+    },
+    {
+      "id": "RU-A1-NG3-04",
+      "category": "Prostranstvennye ponyatiya - space",
+      "label": "order: first, then, after",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NG3-05",
+      "category": "Prostranstvennye ponyatiya - space",
+      "label": "origin: where you are from, and the nationality that answers it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "note": "Absent, and it is the second question of every A1 speaking paper. Needs a country name, the preposition iz plus genitive, and a gentilic - the track has none of the three."
+    },
+    {
+      "id": "RU-A1-NG4-01",
+      "category": "Vremennye ponyatiya - time",
+      "label": "the clock and the parts of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "Absent. spokoynoy nochi ('good night') and the -shang of nothing else: the reader can wish a good night and cannot name one."
+    },
+    {
+      "id": "RU-A1-NG4-02",
+      "category": "Vremennye ponyatiya - time",
+      "label": "locating in time: today, yesterday, tomorrow, the weekdays, the months",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "Absent - see RU-A1-ADV-02."
+    },
+    {
+      "id": "RU-A1-NG4-03",
+      "category": "Vremennye ponyatiya - time",
+      "label": "before and after",
+      "probe": [
+        "RU-GRAMMAR-DO-GENITIVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "note": "Counted narrowly and honestly: do means 'until, before' and chapter 11 teaches it as a preposition with a case, not only as a piece of a farewell. posle is absent, so half the pair is here."
+    },
+    {
+      "id": "RU-A1-NG5-01",
+      "category": "Kachestvennye ponyatiya - quality",
+      "label": "seeing and hearing",
+      "probe": [
+        "RU-LEX-VIDET",
+        "RU-LEX-GLAZ",
+        "RU-LEX-UKHO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "note": "videt is taught in chapter 3 and the sense organs in chapter 9. slyshat is absent, so hearing has an ear and no verb; ticked because the notion is reachable, and the asymmetry is stated."
+    },
+    {
+      "id": "RU-A1-NG5-02",
+      "category": "Kachestvennye ponyatiya - quality",
+      "label": "colour",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "Absent - and it would need adjectives (RU-A1-ADJ-01)."
+    },
+    {
+      "id": "RU-A1-NG5-03",
+      "category": "Kachestvennye ponyatiya - quality",
+      "label": "age and old age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "note": "Absent - needs numerals and the dative."
+    },
+    {
+      "id": "RU-A1-NG5-04",
+      "category": "Kachestvennye ponyatiya - quality",
+      "label": "open and closed, in and out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "Absent - and these are the two words on every Russian shop door."
+    },
+    {
+      "id": "RU-A1-NG6-01",
+      "category": "Otsenochnye ponyatiya - evaluation",
+      "label": "general evaluation: khorosho, plokho, normalno",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-01",
+        "A1-NG6-04",
+        "A1-NG6-07"
+      ],
+      "note": "Absent. Three Spanish points collapse here because Russian answers all three with the khorosho/plokho pair, and the track has neither word."
+    },
+    {
+      "id": "RU-A1-NG6-02",
+      "category": "Otsenochnye ponyatiya - evaluation",
+      "label": "value and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02",
+        "A1-NE12-03",
+        "A1-NE15-01"
+      ],
+      "note": "Absent - no numerals, no money."
+    },
+    {
+      "id": "RU-A1-NG6-03",
+      "category": "Otsenochnye ponyatiya - evaluation",
+      "label": "attractiveness and appearance",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NE01-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NG6-04",
+      "category": "Otsenochnye ponyatiya - evaluation",
+      "label": "acceptability, and agreeing to something",
+      "probe": [
+        "RU-LEX-DA",
+        "RU-LEX-POZHALUYSTA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-05",
+        "A1-NG6-06"
+      ],
+      "note": "Counted on the two words that actually do this work at A1."
+    },
+    {
+      "id": "RU-A1-NG6-05",
+      "category": "Otsenochnye ponyatiya - evaluation",
+      "label": "interest and pleasure",
+      "probe": [
+        "RU-LEX-OCHEN-PRIYATNO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-08"
+      ],
+      "note": "Counted on the one fixed phrase that expresses pleasure, and marked thin: interesno, nravitsya and priyatno-as-a-free-word are all absent."
+    },
+    {
+      "id": "RU-A1-NG6-06",
+      "category": "Otsenochnye ponyatiya - evaluation",
+      "label": "ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-10"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NG6-07",
+      "category": "Otsenochnye ponyatiya - evaluation",
+      "label": "ability and competence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-09"
+      ],
+      "note": "Absent - see RU-A1-F2-13."
+    },
+    {
+      "id": "RU-A1-NG7-01",
+      "category": "Mentalnye ponyatiya - thinking and speaking",
+      "label": "thinking, knowing and understanding",
+      "probe": [
+        "RU-LEX-DUMAT",
+        "RU-LEX-ZNAT",
+        "RU-LEX-PONIMAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "note": "All three verbs taught, chapters 3 and 4, and two of them in complete sentences. The best-served notion in the file, and a fair reflection of what this track is: a course about words and where they come from."
+    },
+    {
+      "id": "RU-A1-NG7-02",
+      "category": "Mentalnye ponyatiya - thinking and speaking",
+      "label": "speaking, reading, writing and asking",
+      "probe": [
+        "RU-LEX-GOVORIT",
+        "RU-LEX-CHITAT",
+        "RU-LEX-PISAT",
+        "RU-LEX-SPRASHIVAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "note": "Four verbs, chapters 3 to 5. All infinitives - see RU-A1-V-01."
+    },
+    {
+      "id": "RU-A1-NE01-01",
+      "category": "Chelovek: telo - the body",
+      "label": "parts of the body",
+      "probe": [
+        "RU-LEX-GLAZ",
+        "RU-LEX-NOS",
+        "RU-LEX-ROT",
+        "RU-LEX-UKHO",
+        "RU-LEX-SERDTSE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "Chapters 9 and 10: eye, nose, mouth, ear, heart. Five words, each with an etymology, and the ear lesson is where the track introduces the neuter gender - so the field does structural work as well as lexical."
+    },
+    {
+      "id": "RU-A1-NE01-02",
+      "category": "Chelovek: telo - the body",
+      "label": "physical characteristics, and positions of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NE01-03"
+      ],
+      "note": "Absent - needs adjectives and verbs of posture."
+    },
+    {
+      "id": "RU-A1-NE02-01",
+      "category": "Lichnost - identity and character",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE02-02",
+      "category": "Lichnost - identity and character",
+      "label": "personal data: name, surname, patronymic, address, telephone, age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01",
+        "A1-NE03-02",
+        "A1-NE03-03"
+      ],
+      "note": "Only the given name (RU-A1-F1-01). Three Spanish points collapse here because a TORFL A1 registration form asks for them on one page, and the track can fill in one box of six."
+    },
+    {
+      "id": "RU-A1-NE03-01",
+      "category": "Semya i lyudi - family and people",
+      "label": "family relationships",
+      "probe": [
+        "RU-LEX-MAMA",
+        "RU-LEX-PAPA",
+        "RU-LEX-MAT",
+        "RU-LEX-OTETS",
+        "RU-LEX-BRAT-NOUN",
+        "RU-LEX-SESTRA",
+        "RU-LEX-SEMYA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "Seven words across chapters 7, 8 and 12, and the mama/mat and papa/otets pairs are taught as a REGISTER split rather than as synonyms, which is the fact that matters. What is missing is any way to attach them to a person: no possessive, so no moya sestra."
+    },
+    {
+      "id": "RU-A1-NE03-02",
+      "category": "Semya i lyudi - family and people",
+      "label": "social relationships: friend, colleague, neighbour",
+      "probe": [
+        "RU-LEX-DRUG",
+        "RU-LEX-PODRUGA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "drug and podruga, chapter 7, and the lesson ties drug to the ty/vy choice - who you call drug is who you say ty to. sosed, kollega and nachalnik are absent."
+    },
+    {
+      "id": "RU-A1-NE03-03",
+      "category": "Semya i lyudi - family and people",
+      "label": "celebrations and family occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE04-01",
+      "category": "Eda i pitye - food and drink",
+      "label": "drinks",
+      "probe": [
+        "RU-LEX-CHAI",
+        "RU-LEX-KOFE",
+        "RU-LEX-VODA",
+        "RU-LEX-MOLOKO",
+        "RU-LEX-SOK"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "note": "Five, chapters 6 and 13, and the chai/kofe pair is taught as the overland and sea routes of one commodity - which is the kind of thing this track does best."
+    },
+    {
+      "id": "RU-A1-NE04-02",
+      "category": "Eda i pitye - food and drink",
+      "label": "foodstuffs and dishes",
+      "probe": [
+        "RU-LEX-KHLEB",
+        "RU-LEX-SYR",
+        "RU-LEX-SUP"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03",
+        "A1-NE05-04"
+      ],
+      "note": "Bread, cheese, soup. Enough to order in a way no other field in this track can match."
+    },
+    {
+      "id": "RU-A1-NE04-03",
+      "category": "Eda i pitye - food and drink",
+      "label": "the meals of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "note": "Absent - zavtrak, obed and uzhin are not taught, and neither is any part of the day."
+    },
+    {
+      "id": "RU-A1-NE04-04",
+      "category": "Eda i pitye - food and drink",
+      "label": "the restaurant, and ordering in one",
+      "probe": [
+        "RU-GRAMMAR-REQUEST-PATTERN",
+        "RU-LEX-POZHALUYSTA",
+        "RU-LEX-CHAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "note": "COVERED, and it is the only complete real-world scenario in the track: the chapter-13 practice lesson puts four food nouns and pozhaluysta into one order. No schet, no menyu and no ofitsiant, so the reader can order and cannot pay."
+    },
+    {
+      "id": "RU-A1-NE05-01",
+      "category": "Obrazovanie - education",
+      "label": "school, teacher, student, lesson, examination, classroom language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02",
+        "A1-NE06-03",
+        "A1-NE06-04",
+        "A1-NE06-05",
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "note": "The whole education field is absent - seven Spanish points, no Russian word. It is also the field a TORFL A1 candidate is most likely to be IN, so it is high on the queue despite being empty."
+    },
+    {
+      "id": "RU-A1-NE06-01",
+      "category": "Rabota - work",
+      "label": "professions, workplaces and working",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-02",
+        "A1-NE07-03",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "note": "Absent. Six Spanish points; 'what do you do' is unanswerable, and rabota is not in the track."
+    },
+    {
+      "id": "RU-A1-NE07-01",
+      "category": "Dosug - leisure",
+      "label": "free time, sport, games and shows",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE08-01",
+      "category": "Svyaz i media - media and communication",
+      "label": "media, the telephone, letters, the internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-04",
+        "A1-NE09-05",
+        "A1-NE09-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE09-01",
+      "category": "Dom - housing",
+      "label": "the dwelling, its rooms and its furniture",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-02",
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "note": "Absent, although zhit ('to live') is taught in chapter 3 - the verb without a single place to apply it."
+    },
+    {
+      "id": "RU-A1-NE10-01",
+      "category": "Uslugi i pokupki - services and shopping",
+      "label": "shops, shopping, paying, and the public services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04",
+        "A1-NE12-01",
+        "A1-NE12-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE11-01",
+      "category": "Zdorove - health",
+      "label": "health, illness, medicine and the doctor",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "note": "Absent. The body-part chapter gives the nouns an illness sentence would need and no way to say anything hurts."
+    },
+    {
+      "id": "RU-A1-NE12-01",
+      "category": "Poezdki i transport - travel and transport",
+      "label": "travel, accommodation and transport",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE13-01",
+      "category": "Dengi i khozyaystvo - money and the economy",
+      "label": "money, buying and selling, business and industry",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02",
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE14-01",
+      "category": "Nauka i tekhnika - science and technology",
+      "label": "computing and technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE15-01",
+      "category": "Gosudarstvo i obshchestvo - state and society",
+      "label": "government, politics, law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "Absent as vocabulary. The word duma appears once, inside the etymology of dumat, which is a fine hook and not a word the reader owns."
+    },
+    {
+      "id": "RU-A1-NE16-01",
+      "category": "Iskusstvo - the arts",
+      "label": "the arts: music, painting, literature, cinema",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "Absent, and worth one line of self-criticism: a Russian course that reaches chapter 15 without kniga is unusual."
+    },
+    {
+      "id": "RU-A1-NE17-01",
+      "category": "Religiya - religion",
+      "label": "religion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-NE18-01",
+      "category": "Geografiya i priroda - geography and nature",
+      "label": "country, city, geography and the natural world",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01",
+        "A1-NE20-02",
+        "A1-NE20-03",
+        "A1-NE20-05",
+        "A1-NE20-06"
+      ],
+      "note": "Absent - and Rossiya is not in the track, which is what blocks RU-A1-NG3-05."
+    },
+    {
+      "id": "RU-A1-NE18-02",
+      "category": "Geografiya i priroda - geography and nature",
+      "label": "weather and climate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-L-01",
+      "category": "Kirillitsa - the letters",
+      "label": "the alphabet: thirty-three letters, and the names they are called by",
+      "probe": [
+        "RU-SCRIPT-EIGHT-SORTED-01",
+        "RU-SCRIPT-V-01",
+        "RU-SCRIPT-A-01",
+        "RU-SCRIPT-YA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "TWENTY-NINE OF THIRTY-THREE, counted letter by letter against data/scripts/cyrillic.json, which lists all 33 with a cited stroke order and is marked complete. The track's own chapter-15 practice lesson says the same number in the same words, which is what makes it checkable rather than asserted. The letter NAMES (a, be, ve, ge) are never given - the track teaches sounds, not names - so a candidate cannot spell a word aloud, which is a real TORFL A1 listening task."
+    },
+    {
+      "id": "RU-A1-L-02",
+      "category": "Kirillitsa - the letters",
+      "label": "the vowel letters, and the hard/soft pairing that organises them",
+      "probe": [
+        "RU-SCRIPT-A-01",
+        "RU-SCRIPT-O-01",
+        "RU-SCRIPT-U-01",
+        "RU-SCRIPT-I-01",
+        "RU-SCRIPT-Y-01",
+        "RU-SCRIPT-E-01",
+        "RU-SCRIPT-YA-01",
+        "RU-SCRIPT-YU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "Eight of the ten vowel letters are taught with their own writing lesson. Missing: yo and e-oborotnoe (see RU-A1-L-07). The PAIRING - that a/ya, o/yo, u/yu, e/e and y/i are five pairs of one vowel with two spellings, and that the choice signals the preceding consonant - is not taught as a system, and it is the single idea that makes Cyrillic spelling make sense."
+    },
+    {
+      "id": "RU-A1-L-03",
+      "category": "Kirillitsa - the letters",
+      "label": "the consonant letters, including the ones with no Latin shape at all",
+      "probe": [
+        "RU-SCRIPT-B-01",
+        "RU-SCRIPT-D-01",
+        "RU-SCRIPT-ZH-01",
+        "RU-SCRIPT-Z-01",
+        "RU-SCRIPT-K-01",
+        "RU-SCRIPT-L-01",
+        "RU-SCRIPT-M-01",
+        "RU-SCRIPT-N-01",
+        "RU-SCRIPT-P-01",
+        "RU-SCRIPT-R-01",
+        "RU-SCRIPT-S-01",
+        "RU-SCRIPT-T-01",
+        "RU-SCRIPT-F-01",
+        "RU-SCRIPT-KH-01",
+        "RU-SCRIPT-TS-01",
+        "RU-SCRIPT-CH-01",
+        "RU-SCRIPT-SH-01",
+        "RU-SCRIPT-V-01",
+        "RU-SCRIPT-G-01",
+        "RU-SCRIPT-Y-SHORT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Twenty consonant letters, each with its own writing lesson. Missing: shcha (see RU-A1-L-07). The track's organising idea here is better than an alphabetical march - it sorts letters into false friends (v, r, s, n, h, u), genuinely new shapes (b, d, zh, ts) and true friends (k, m, t, a, o), and teaches them in that order."
+    },
+    {
+      "id": "RU-A1-L-04",
+      "category": "Kirillitsa - the letters",
+      "label": "the two letters that spell no sound of their own: the soft sign and the hard sign",
+      "probe": [
+        "RU-SCRIPT-SOFT-SIGN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific: no Latin-alphabet language has a letter whose only job is to modify the one before it, so the Spanish orthography column has nothing to lend. HALF COVERED and counted anyway, with the shortfall named: the soft sign gets a full writing lesson in chapter 14, the hard sign is shown in four lesson bodies and taught nowhere. Marked covered because the CATEGORY - a letter that is a diacritic - is what the reader must grasp, and the soft sign teaches it."
+    },
+    {
+      "id": "RU-A1-L-05",
+      "category": "Kirillitsa - the letters",
+      "label": "capital letters, and the fact that most Cyrillic capitals are the small letter enlarged",
+      "probe": [
+        "RU-SCRIPT-M-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-04"
+      ],
+      "note": "Taught in the chapter-14 lesson on em, which states the rule for the whole alphabet and names the exceptions (be, de, a). One lesson closes a column that in most tracks is left implicit."
+    },
+    {
+      "id": "RU-A1-L-06",
+      "category": "Kirillitsa - the letters",
+      "label": "where Russian does NOT capitalise: the weekdays, the months, the nationalities, and ya",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-05"
+      ],
+      "note": "Absent, and it is a genuine transfer error rather than a curiosity: an English or Spanish speaker writes Russkiy and Ponedelnik, and a TORFL A1 writing paper marks both. The track cannot teach it because it has no weekday, month or nationality to lower-case (RU-A1-N-02, RU-A1-ADJ-02)."
+    },
+    {
+      "id": "RU-A1-L-07",
+      "category": "Kirillitsa - the letters",
+      "label": "the four letters this track never teaches: yo, shcha, the hard sign, and e-oborotnoe",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific, and the point exists to carry a MEASUREMENT rather than a demand. Walking every Cyrillic character any of the 88 lesson files prints, against the set the writing lessons teach: yo appears in 5 files and shcha, hard sign and e-oborotnoe are taught by nobody. The hard sign appears in 4 files, yo in 5; shcha and e-oborotnoe appear nowhere at all, so two of the four are untaught-and-unshown and two are shown-and-untaught. That second pair is the Kannada shape - a letter on the page that no lesson closes - and it is exactly four letters wide here rather than a whole alphabet."
+    },
+    {
+      "id": "RU-A1-L-08",
+      "category": "Kirillitsa - the letters",
+      "label": "the cursive hand, which is the only way a Russian writes by hand",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific and ABSENT. Every writing lesson in this track teaches the printed form. Russian handwriting is not a stylistic variant of print the way Latin cursive is - propisnoy te and em and sha are unreadable to somebody who has only seen the printed shapes - and a TORFL A1 candidate reads handwritten forms. data/scripts/cyrillic.json carries a cited school-hand stroke order for all 33 letters, so the evidence for teaching it exists and no lesson uses it."
+    },
+    {
+      "id": "RU-A1-L-09",
+      "category": "Kirillitsa - the letters",
+      "label": "the written ordinal: a numeral with its grammatical ending hyphenated on, 1-y, 2-e",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-06"
+      ],
+      "note": "DERIVED, NOT DROPPED. Spanish's superscript letters in abbreviations look untransferable, but they are the same demand - a numeral carrying a written grammatical ending - and Russian answers it with a hyphen instead of a superscript. Absent from the track, downstream of RU-A1-Q-02."
+    },
+    {
+      "id": "RU-A1-L-10",
+      "category": "Kirillitsa - the letters",
+      "label": "spelling rules: which vowel may follow which consonant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Absent. Russian's answer to Spanish's syllable-division question is the spelling rule (no y after k, g, kh, zh, ch, sh, shch), which decides endings all over the noun and verb systems. It is a rule about the letters and it does the work of morphology, so its absence costs more than an orthography point normally would."
+    },
+    {
+      "id": "RU-A1-ST-01",
+      "category": "Udarenie - stress and the written accent",
+      "label": "stress: unwritten in ordinary Russian, marked only in books for learners",
+      "probe": [
+        "RU-SCRIPT-O-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "note": "COVERED IN PRACTICE AND NOT AS A RULE. Every lesson marks stress in its romanization and 33 lessons carry the stress-unmarked sound tag, so the reader is trained on the convention from the first page. What is missing is the sentence saying that the acute in this book will not be on any Russian text they ever meet again."
+    },
+    {
+      "id": "RU-A1-ST-02",
+      "category": "Udarenie - stress and the written accent",
+      "label": "the one diacritic Russian writes: yo against e, and the fact that print usually drops it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O2-02"
+      ],
+      "note": "Absent, and it is the direct counterpart of the Spanish diacritic tilde: two letters, distinguished by two dots, and the distinction routinely omitted in print so that the reader must supply it. yo is shown in five lesson bodies and taught by none (RU-A1-L-07)."
+    },
+    {
+      "id": "RU-A1-ST-03",
+      "category": "Udarenie - stress and the written accent",
+      "label": "stress moves, and where it lands decides which vowel you hear",
+      "probe": [
+        "RU-SCRIPT-O-01",
+        "RU-SCRIPT-A-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific. The o lesson is built on it - 'a true friend when stressed, and the letter that turns into a when it is not' - and the a lesson on the other side of the same fact. Eight lessons carry the o-reduction sound tag. Spanish stress is a spelling rule; Russian stress is a phonological rule that changes the vowels, so this is a restatement rather than a transfer."
+    },
+    {
+      "id": "RU-A1-PU-01",
+      "category": "Punktuatsiya - punctuation",
+      "label": "the full stop",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O3-01"
+      ],
+      "note": "No lesson in the track teaches any punctuation mark. Marks appear in every example sentence, so the reader sees them; nothing tells them what Russian requires. This whole column is untaught, and it is not a transfer failure - Russian punctuation is close enough to Spanish that all nine points restate cleanly."
+    },
+    {
+      "id": "RU-A1-PU-02",
+      "category": "Punktuatsiya - punctuation",
+      "label": "the comma, which Russian requires before every subordinator without exception",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O3-02"
+      ],
+      "note": "Absent, and the least optional punctuation rule in the language: Russian puts a comma before chto, potomu chto, kotoryy and kogda every time, where Spanish and English use judgement. It is the first thing a TORFL writing marker looks at, and the track has no subordinator to put one in front of (RU-A1-SUB-08)."
+    },
+    {
+      "id": "RU-A1-PU-03",
+      "category": "Punktuatsiya - punctuation",
+      "label": "the colon",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-PU-04",
+      "category": "Punktuatsiya - punctuation",
+      "label": "the question and exclamation marks, closing only",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O3-04"
+      ],
+      "note": "Absent as a taught fact and worth one line of contrast: Spanish opens a question with an inverted mark and Russian does not, so a Spanish-speaking learner over-marks and an English-speaking one does not. The track's own example sentences use them correctly and never say so."
+    },
+    {
+      "id": "RU-A1-PU-05",
+      "category": "Punktuatsiya - punctuation",
+      "label": "quotation marks: the guillemets Russian uses for speech and for titles",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O3-05",
+        "A1-O3-06"
+      ],
+      "note": "Absent as teaching, and the corpus uses them on the page - the chapter-1 da lesson prints nu da in guillemets. Shown, not taught."
+    },
+    {
+      "id": "RU-A1-PU-06",
+      "category": "Punktuatsiya - punctuation",
+      "label": "the dash, which stands where the missing copula would have been",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O3-07",
+        "A1-O3-08"
+      ],
+      "note": "ABSENT AND LOAD-BEARING. Russian writes Moskva - stolitsa with a dash exactly because there is no is, so this punctuation mark is the written face of the zero copula the track teaches twice (RU-A1-SV-02). Teaching the syntax and not its punctuation leaves a reader who cannot write the sentence they can say."
+    },
+    {
+      "id": "RU-A1-PU-07",
+      "category": "Punktuatsiya - punctuation",
+      "label": "the slash",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O3-09"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "RU-A1-AB-01",
+      "category": "Sokrashcheniya - abbreviations and symbols",
+      "label": "everyday abbreviations: g. for god, ul. for ulitsa, and the like",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O4-01"
+      ],
+      "note": "Absent, and they are on every Russian address, which is a TORFL A1 reading task."
+    },
+    {
+      "id": "RU-A1-AB-02",
+      "category": "Sokrashcheniya - abbreviations and symbols",
+      "label": "initialisms and symbols: RF, MGU, the numero sign",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O4-02",
+        "A1-O4-03"
+      ],
+      "note": "Absent. The numero sign is the one symbol a learner meets on their first day in Russia and it is on no page of this track."
+    },
+    {
+      "id": "RU-A1-SND-01",
+      "category": "Zvuki - sound contrasts a reader must hear",
+      "label": "vowel reduction: unstressed o is heard as a",
+      "probe": [
+        "RU-SCRIPT-O-01",
+        "RU-SCRIPT-A-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific. Taught from the first word - spasibo is transcribed spasiba - and carried by the o-reduction sound tag on eight lessons. This is the fact that decides whether a learner can recognise a spoken word they can read."
+    },
+    {
+      "id": "RU-A1-SND-02",
+      "category": "Zvuki - sound contrasts a reader must hear",
+      "label": "hard against soft consonants, which is the central contrast of the sound system",
+      "probe": [
+        "RU-SCRIPT-SOFT-SIGN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific and HALF TAUGHT. The soft sign lesson gives the reader the written mark and the idea that a consonant can be softened; nothing teaches the softening itself, or that the ya/yu/e/i vowels do the same job, or that hard and soft consonants distinguish words. Counted, thinly, on the one lesson that names the phenomenon."
+    },
+    {
+      "id": "RU-A1-SND-03",
+      "category": "Zvuki - sound contrasts a reader must hear",
+      "label": "final devoicing: a voiced consonant at the end of a word is said unvoiced",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific and absent, although the corpus teaches four words it applies to - khleb, drug, glaz and rot's neighbours - and transcribes none of them with it."
+    },
+    {
+      "id": "RU-A1-SND-04",
+      "category": "Zvuki - sound contrasts a reader must hear",
+      "label": "the yery vowel, which English has no name and no letter for",
+      "probe": [
+        "RU-SCRIPT-Y-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "RU-CORPUS",
+        "RU-SCRIPT-DATA",
+        "ED-RUSSIAN"
+      ],
+      "derivedFrom": [],
+      "russianSpecific": true,
+      "note": "Russian-specific. Chapter 14 gives it a lesson of its own and calls it 'the vowel English has no name for', and three lessons carry the yery-vowel sound tag."
+    }
+  ]
+}

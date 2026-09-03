@@ -9,7 +9,7 @@ headword: "வெளியே"
 gloss: "outside, out"
 romanization: "veḷiyē"
 concept_tag: TA-ADVERB-VELIYE
-prerequisites: [TA-C66-inside]
+prerequisites: [TA-C66-inside, TA-C64-threshing-floor, TA-C65-open]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C66-WHICHWAY-04]
 practises:
-  knowledge: [TA-LEX-C66-WHICHWAY-03, TA-LEX-C66-WHICHWAY-04]
+  knowledge: [TA-LEX-C66-WHICHWAY-03, TA-LEX-C66-WHICHWAY-04, TA-LEX-C64-HARVEST-04, TA-LEX-C65-DOING-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -59,12 +59,13 @@ know it is there, you stop hearing **வெளியே** as a word with a stran
 letter and start hearing it as **வெளி** with an ending on it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-03, TA-LEX-C66-WHICHWAY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-03, TA-LEX-C66-WHICHWAY-04, TA-LEX-C64-HARVEST-04, TA-LEX-C65-DOING-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *veḷiyē*]
 - [YOU SAY: *uḷḷē vā*, then *veḷiyē pō*]
 - [YOU SAY: the bare pair — *uḷ* and *veḷi* — then both with the ending]
+- [YOU RECALL: read **களம்**, then say *tiṟa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-03, TA-LEX-C66-WHICHWAY-04] -->

@@ -1,72 +1,75 @@
 ---
+schema_version: 2
 id: GE-C08-uhr
-sequence: 235
-chapter: 11
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 245
+chapter: 12
 type: word
-headword: Uhr
-gloss: clock / o'clock — and a Latin word inside German
+headword: die Uhr
+gloss: the clock, and o'clock — the first everyday German word in this book that Rome supplied
 concept_tag: GE-TIME-HOUR
-prerequisites: [GE-C06-zahlen-1-5]
-sounds: [vowel-u-long, r-final]
-roots: [hora-latin]
-etymology_hook: "Uhr ← Latin hōra 'hour' — a LATIN LOANWORD, unlike German's native numbers and day-gods; the same hōra behind French heure and English hour"
-est_minutes: 4
-reviews_of: [GE-C06-zahlen-1-5, GE-C07-wochentage-2]
+prerequisites: [GE-C07-wochentage-2, GE-C01-der-die-das]
+sounds: [u-long, r-final]
+roots: [latin-hora]
+etymology_hook: "Uhr came in with the clocks themselves — Roman and monastic timekeeping arrived carrying its own word, and German took it rather than building one"
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [GE-LEX-DER-DIE-DAS-02, GE-LEX-TAG-02]
+introduces:
+  knowledge: [GE-LEX-UHR-01, GE-SOUND-UHR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-UHR-01, GE-SOUND-UHR-01, GE-LEX-DER-DIE-DAS-02, GE-LEX-TAG-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C07-wochentage-2, GE-C01-der-die-das]
 ---
 
-# Uhr — the clock, and a Roman word in the German day
+# die Uhr — "the clock"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-TAG-02] -->
 
-[PAUSE 2s] Something new happens here. German's numbers were homegrown (*eins,
-zwei*), and its weekdays were Germanic gods (*Donnerstag*). But its word for the
-**clock** — **Uhr** — is **borrowed from Latin**. Time-keeping came to the German
-world with Roman and monastic clocks, and the Latin word rode in with them.
+[PAUSE 2s] Something changes here. The numbers were German's own and the
+weekdays were German's gods — this word is neither.
+
+## You'll want to know: die Uhr
+<!-- hl-knowledge: introduces=[GE-LEX-UHR-01]; assesses=[GE-LEX-DER-DIE-DAS-02] -->
+
+> **die Uhr** — "the clock," and also "o'clock."
+
+A *die*-word, and one syllable. It does two jobs: the object on the wall, and
+the word you say when telling the time.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[GE-SOUND-UHR-01]; assesses=[GE-LEX-UHR-01] -->
 
-- `vowel-u-long` — **Uhr** = *oor*, a long *u* then a soft *r*: one syllable.
+- `u-long` — a long *u*, the vowel of English *moor*.
+- `r-final` — and then a soft *r* that barely closes: German's final *r* colours
+  the vowel and stops rather than rolling.
 
-## The word, taken apart — a Latin loan among Germanic natives
-
-**Uhr** comes from Latin **hōra**, "hour" — the *same word* that became French
-*heure*, Italian *ora*, and English *hour*. German took it in (through medieval
-Latin/Low German *ūr(e)*) and made it *Uhr*.
-
-That's the striking part: three layers of the German day, three different origins —
-
-| what | German | origin |
-|---|---|---|
-| the **numbers** | *eins, zwei, drei* | **native Germanic** (twins of English) |
-| the **weekdays** | *Montag, Donnerstag* | **Germanic gods** (Latin *months*) |
-| the **clock** | **Uhr** | **Latin loan** (*hōra*) |
-
-German kept its own numbers and gods, but for the *machine that measures hours*, it
-reached for Rome. (German also has a native word, **Stunde**, "an hour's span" — but
-for clock-reading, "o'clock," it's *Uhr*.)
-
-## Grammar Lens: "Es ist … Uhr"
-
-To tell the time, German says **es ist** ("it is") + the number + **Uhr**:
-
-> **Es ist ein Uhr.** — "It is one o'clock."
-> **Es ist zwei Uhr.** — "It is two o'clock."
-> **Es ist zehn Uhr.** — "It is ten o'clock."
-
-**Uhr** doesn't add a plural here (not "*zwei Uhren*" for the time) — it works like
-English **o'clock**: *zwei Uhr* = "two o'clock." (*Uhren*, plural, means "clocks"
-the objects.)
+Together: *oor*. One syllable, nothing more.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-UHR-01, GE-SOUND-UHR-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Uhr" — *oor*]
-- [YOU SAY: "Es ist ein Uhr, zwei Uhr, drei Uhr"]
-- [YOU SAY: "Uhr / heure / hour" — all from Latin *hōra*]
+- [YOU SAY: "die Uhr" — *oor*, long and soft]
+- [YOU SAY: its two jobs — "the clock; o'clock"]
+- [YOU SAY: it beside a word you own — "der Tag, die Uhr"]
+
+[REPEAT x2] "die Uhr."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-UHR-01, GE-SOUND-UHR-01] -->
 
-[PAUSE 3s] Where does *Uhr* come from, and why is that notable? (Latin **hōra** — a
-loanword, unlike German's native numbers and Germanic day-gods.) Two French/English
-cousins of *Uhr*? (*heure*, *hour*.) How does German say "it is three o'clock"? (*Es
-ist drei Uhr*.) Next: **Mittag** and **Mitternacht** — noon and midnight.
+[PAUSE 3s] Say "the clock." (**Die Uhr**.) Which article? (***Die***.) How many
+syllables? (**One** — *oor*.) What else does the word mean? (**O'clock**.)
+Next: where it came from, which is not where the rest of this book's words come
+from.

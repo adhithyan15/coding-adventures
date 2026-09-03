@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 8,
-  "sourceHash": "fnv1a64:fe8926aa218cab1e",
+  "sourceHash": "fnv1a64:c870ba9c02618053",
   "lessonIds": [
     "KA-S08-vowel-sign-aa",
     "KA-C08-dayavittu",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch08.txt",
   "json": "kannada/narration/ch08.json",
-  "textHash": "fnv1a64:c5f9649eb82a5375",
-  "jsonHash": "fnv1a64:fadfac9964413a23",
+  "textHash": "fnv1a64:0a50341a40edd249",
+  "jsonHash": "fnv1a64:a6a3d164e6e25ebe",
   "findings": []
 }

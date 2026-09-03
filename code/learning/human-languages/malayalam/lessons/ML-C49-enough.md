@@ -9,7 +9,7 @@ headword: "മതി"
 gloss: "enough, that will do"
 romanization: "mati"
 concept_tag: ML-WORD-ENOUGH
-prerequisites: [ML-C49-true]
+prerequisites: [ML-C49-true, ML-C47-tooth]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C49-REPLY-02]
 practises:
-  knowledge: [ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02]
+  knowledge: [ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C47-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Dictionaries connect മതി with a root about measuring and reckoning; the co
 Two replies: true, and enough.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C47-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mati*, then *illa*, two words that each finish a sentence alone]
+- [YOU RECALL: read **പല്ല്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02] -->

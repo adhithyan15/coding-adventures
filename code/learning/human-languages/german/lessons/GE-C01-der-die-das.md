@@ -74,7 +74,7 @@ opposite extreme. Your next nouns will let you practise that pairing.
 
 One more thing coming later: German articles also change by **case** (their
 job in the sentence), so *der* has other forms (*den, dem, des*). Ignore that
-for now; just learn *der / die / das* as the three "the"s.
+for now; learn *der / die / das* as the three "the"s and leave it there.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-ARTIKEL-01, GE-LEX-DER-DIE-DAS-02, GE-ETYMON-ARTIKEL-03] -->

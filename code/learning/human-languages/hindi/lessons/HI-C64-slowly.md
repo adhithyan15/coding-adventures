@@ -12,7 +12,7 @@ headword: "धीरे"
 gloss: "slowly"
 romanization: "dhīre"
 concept_tag: HI-ADV-SLOWLY
-prerequisites: [HI-C64-quickly]
+prerequisites: [HI-C64-quickly, HI-C62-basket, HI-C63-sleep]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C64-MEASURE-03]
 practises:
-  knowledge: [HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03]
+  knowledge: [HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C62-HANDS-03, HI-LEX-C63-STATE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Doubled — धीरे धीरे — it means 'little by little', and that 
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C62-HANDS-03, HI-LEX-C63-STATE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dhīre*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dhīre*, then *jaldī*, and say which one you would ask a speaker for]
+- [YOU RECALL: say *ṭokrī*, then read **नींद**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03] -->

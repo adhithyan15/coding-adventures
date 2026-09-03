@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fe8926aa218cab1e",
+  "sourceHash": "fnv1a64:c870ba9c02618053",
   "lessons": [
     {
       "id": "KA-S08-vowel-sign-aa",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:914592b7c3ac64e7",
+      "sourceHash": "fnv1a64:9ebdf595536d73d7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -328,6 +328,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the everyday way — the verb ending: \"kuḷitukoḷḷi\" = please sit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nālku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nālku*]"
             }
           ]
         },

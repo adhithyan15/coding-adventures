@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-partizip-practice
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 340
-chapter: 18
+sequence: 350
+chapter: 19
 type: practice
 headword: (practice)
 gloss: chapter payoff — the four participles side by side for the first time, built rather than memorised

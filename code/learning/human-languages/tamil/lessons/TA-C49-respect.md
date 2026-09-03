@@ -9,7 +9,7 @@ headword: "மரியாதை"
 gloss: "respect"
 romanization: "mariyādai"
 concept_tag: TA-COURTESY-RESPECT
-prerequisites: [TA-C49-affection]
+prerequisites: [TA-C49-affection, TA-C47-enough, TA-C48-time]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C49-COURTESY-02]
 practises:
-  knowledge: [TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02]
+  knowledge: [TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C47-REPLY-02, TA-LEX-C48-LEAVE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil shows it in its endings as much as in its words. You have been doing it si
 Two: what you feel, and what you show.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C47-REPLY-02, TA-LEX-C48-LEAVE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mariyādai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aṉbu*, then *mariyādai*, so the warm one and the formal one sit together]
+- [YOU RECALL: read **போதும்**, then say *nēram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02] -->

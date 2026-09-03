@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C08-mitte",
+    "language": "german",
+    "chapter": 12,
+    "sequence": 250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4729fa883defd105"
+  },
+  "findings": []
+}

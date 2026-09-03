@@ -12,7 +12,7 @@ headword: "तलम्"
 gloss: "the floor"
 romanization: "talam"
 concept_tag: SA-DWELL-TALA
-prerequisites: [SA-C47-pillar]
+prerequisites: [SA-C47-pillar, SA-C45-year, SA-C46-heat]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C47-DWELL-05]
 practises:
-  knowledge: [SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05]
+  knowledge: [SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05, SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Latin *tellūs*, "the ground", is a cousin of it. Neuter, ending in **-अम्
 Five parts of a building: a wall, a window, a stair, a pillar, the floor.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05, SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *talam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *bhittiḥ* and *talam* together]
+- [YOU RECALL: say *saṁvatsaraḥ*, then read **तापः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05] -->

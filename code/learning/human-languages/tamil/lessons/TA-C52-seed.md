@@ -9,7 +9,7 @@ headword: "விதை"
 gloss: "a seed"
 romanization: "vitai"
 concept_tag: TA-NOUN-SEED
-prerequisites: [TA-C52-root]
+prerequisites: [TA-C52-root, TA-C50-welcome, TA-C51-cloud]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C52-TREE-05]
 practises:
-  knowledge: [TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04, TA-LEX-C52-TREE-05]
+  knowledge: [TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04, TA-LEX-C52-TREE-05, TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Malayalam വിത്ത് (*vittŭ*) and Telugu విత్తనం (*vitta
 A whole tree, from the seed under it to the softest thing on the end of a branch.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04, TA-LEX-C52-TREE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04, TA-LEX-C52-TREE-05, TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vitai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *maram*, *kiḷai*, *taḷir*, *vēr*, *vitai*]
+- [YOU RECALL: say *varavēṟpu*, then read **மேகம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04, TA-LEX-C52-TREE-05] -->

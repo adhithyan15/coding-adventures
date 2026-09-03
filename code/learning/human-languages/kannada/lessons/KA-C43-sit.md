@@ -9,7 +9,7 @@ headword: "ಕುಳಿತುಕೋ"
 gloss: "sit"
 romanization: "kuḷitukō"
 concept_tag: KA-VERB-SIT
-prerequisites: [KA-C43-come]
+prerequisites: [KA-C43-come, KA-C41-where]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-SIT]
 practises:
-  knowledge: [KA-LEX-COME, KA-LEX-SIT]
+  knowledge: [KA-LEX-COME, KA-LEX-SIT, KA-LEX-C41-DEIXIS-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ Longer than it looks: the *-ko* on the end is a reflexive, so it is closer to 's
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-COME, KA-LEX-SIT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-COME, KA-LEX-SIT, KA-LEX-C41-DEIXIS-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuḷitukō*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *bā*, so the two sit together]
+- [YOU RECALL: read **ಎಲ್ಲಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-COME, KA-LEX-SIT] -->

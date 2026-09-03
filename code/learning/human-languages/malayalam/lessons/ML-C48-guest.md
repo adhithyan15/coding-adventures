@@ -9,7 +9,7 @@ headword: "അതിഥി"
 gloss: "a guest"
 romanization: "atithi"
 concept_tag: ML-NOUN-GUEST
-prerequisites: [ML-C48-farmer]
+prerequisites: [ML-C48-farmer, ML-C46-book]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C48-ROLE-05]
 practises:
-  knowledge: [ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05]
+  knowledge: [ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05, ML-LEX-C46-ASK-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ This word takes no masculine ending. It sits on the other side of the chapter fr
 Five, and the run is closed: a teacher, a student, a doctor, a farmer, a guest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05, ML-LEX-C46-ASK-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *atithi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *adhyāpakan*, *vidyārtthi*, *vaidyan*, *karṣakan*, *atithi*]
+- [YOU RECALL: say *pustakaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05] -->

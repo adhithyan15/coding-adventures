@@ -9,7 +9,7 @@ headword: "ഭർത്താവ്"
 gloss: "husband"
 romanization: "bharttāvŭ"
 concept_tag: ML-NOUN-HUSBAND
-prerequisites: [ML-C45-grandmother]
+prerequisites: [ML-C45-grandmother, ML-C43-run]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-HUSBAND]
 practises:
-  knowledge: [ML-LEX-GRANDMOTHER, ML-LEX-HUSBAND]
+  knowledge: [ML-LEX-GRANDMOTHER, ML-LEX-HUSBAND, ML-LEX-RUN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ Sanskrit *bhartṛ* with a Malayalam ending, *-āvŭ*, fitted onto it. Inside si
 Three of four. The last word grows from the same root.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-GRANDMOTHER, ML-LEX-HUSBAND] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-GRANDMOTHER, ML-LEX-HUSBAND, ML-LEX-RUN] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bharttāvŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *muttaśśi*, so the two sit together]
+- [YOU RECALL: say *ōṭū*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-GRANDMOTHER, ML-LEX-HUSBAND] -->

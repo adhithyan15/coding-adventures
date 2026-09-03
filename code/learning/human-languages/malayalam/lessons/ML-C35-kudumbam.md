@@ -9,7 +9,7 @@ headword: കുടുംബം
 gloss: family — the collective word Chapter 12's six people-words never needed, because each of them already named one specific person
 romanization: kuṭumbaṁ
 concept_tag: ML-FAMILY-COLLECTIVE
-prerequisites: [ML-C34-ishtam, ML-C12-kudumbam]
+prerequisites: [ML-C34-ishtam, ML-C12-kudumbam, ML-C32-undu, ML-C32-pokuka, ML-C32-varuka]
 sounds: [malayalam-vowel-sign-u, malayalam-anusvara, malayalam-retroflex-ta]
 roots: [sanskrit-kutumba-household]
 etymology_hook: "കുടുംബം is Sanskrit तत्सम कुटुम्ब (kuṭumba), 'family, household,' absorbed with the same nativizing -അം ending already met in ഇഷ്ടം and സുഖം -- a genuine Malayalam habit of dressing a bare Sanskrit neuter stem in its own -aṁ; Kannada borrows the identical word bare, ಕುಟುಂಬ (kuṭumba), no ending added. Chapter 12 already gave six words for six specific people -- അച്ഛൻ, അമ്മ, and four sibling words -- and not one of them names the group itself"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02]
 practises:
-  knowledge: [ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02]
+  knowledge: [ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,7 +67,7 @@ when it needed one, it reached for Sanskrit. The people came first, and
 stayed native; the collective came later, and came borrowed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ithu ente kuṭumbamāṇŭ" — this is my family]
@@ -75,6 +75,7 @@ stayed native; the collective came later, and came borrowed.
   amma, cēṭṭan, aniyan, cēcci, aniyatti … kuṭumbaṁ"]
 - [YOU SAY: bare against dressed — "kuṭumba" (Kannada), "kuṭumbaṁ"
   (Malayalam)]
+- [YOU RECALL: say *uṇṭŭ*, then read **പോകുക**, then say *varuka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->

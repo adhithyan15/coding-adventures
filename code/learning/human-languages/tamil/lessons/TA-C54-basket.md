@@ -9,7 +9,7 @@ headword: "கூடை"
 gloss: "a basket"
 romanization: "kūṭai"
 concept_tag: TA-NOUN-BASKET
-prerequisites: [TA-C54-mat]
+prerequisites: [TA-C54-mat, TA-C52-branch, TA-C53-hill]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C54-HOUSE-02]
 practises:
-  knowledge: [TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02]
+  knowledge: [TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C52-TREE-02, TA-LEX-C53-LAND-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the word for the basket a vendor sets down in front of you on the pavement
 Two: something to sit on, and something to carry in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C52-TREE-02, TA-LEX-C53-LAND-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kūṭai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāy*, then *kūṭai*, and let the long ஊ open the second]
+- [YOU RECALL: read **கிளை**, then say *malai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02] -->

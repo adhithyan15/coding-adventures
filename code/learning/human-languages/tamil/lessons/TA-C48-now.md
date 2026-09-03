@@ -9,7 +9,7 @@ headword: "இப்போது"
 gloss: "now"
 romanization: "ippōdu"
 concept_tag: TA-LEAVE-NOW
-prerequisites: [TA-C47-just-so]
+prerequisites: [TA-C47-just-so, TA-C46-teacher, TA-C47-true]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C48-LEAVE-01]
 practises:
-  knowledge: [TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01]
+  knowledge: [TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01, TA-LEX-C46-ROLE-01, TA-LEX-C47-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ In speech it usually shortens to *ippō*, the way English lets "going to" collap
 The first of five words for going.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01, TA-LEX-C46-ROLE-01, TA-LEX-C47-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ippōdu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *appaḍiyē*, then *ippōdu*, and hear the pointer swap ends]
+- [YOU RECALL: say *āsiriyar*, then read **உண்மை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01] -->

@@ -9,7 +9,7 @@ headword: جاننا
 romanization: jānnā
 gloss: to know — the Urdu cousin of English know, Latin notice, and Greek gnosis
 concept_tag: VERB-KNOW
-prerequisites: [UR-C06-bolna]
+prerequisites: [UR-C06-bolna, UR-C05-hafiz, UR-C06-hona]
 sounds: [rtl, long-a, geminate-nun]
 roots: [sanskrit-jna, pie-gneh3]
 etymology_hook: jānnā continues Sanskrit jānāti from the root jñā-, from PIE *ǵneh₃- — the same root as English know, can, and cunning.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-HONA, UR-LEX-JANA, UR-LEX-ANA, UR-LEX-BOLNA, UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW]
+  knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-HONA, UR-LEX-JANA, UR-LEX-ANA, UR-LEX-BOLNA, UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW, UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-ETYMON-HAFIZ-ARABIC, UR-ETYMON-HONA-BE]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -72,13 +72,14 @@ English has for the same idea, and every one of those borrowings is another
 place to hang it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-GRAMMAR-NA-INFINITIVE, UR-LEX-HONA, UR-LEX-JANA, UR-LEX-ANA, UR-LEX-BOLNA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-GRAMMAR-NA-INFINITIVE, UR-LEX-HONA, UR-LEX-JANA, UR-LEX-ANA, UR-LEX-BOLNA, UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-ETYMON-HAFIZ-ARABIC, UR-ETYMON-HONA-BE] -->
 
 - [YOU SAY: **jānnā** — to know, holding the long *n*]
 - [YOU CONTRAST: **jānā** to go, **jānnā** to know]
 - [YOU SAY: **maiṅ jāntā hūṅ**, then **maiṅ jāntī hūṅ**]
 - [YOU RUN: all five — *honā, jānā, ānā, bolnā, jānnā* — stripping each stem]
 - [YOU CONNECT: **jānnā** ← *jñā-* → English **know**, **notice**, **diagnosis**]
+- [YOU RECALL: say *hāfiz*, then say *honā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-GRAMMAR-NA-INFINITIVE, UR-LEX-HONA, UR-LEX-JANA, UR-LEX-ANA, UR-LEX-BOLNA] -->

@@ -1,7 +1,7 @@
 ---
 id: GE-C11-brot
-sequence: 265
-chapter: 14
+sequence: 275
+chapter: 15
 type: word
 headword: das Brot
 gloss: bread — inherited Germanic, the twin of English bread

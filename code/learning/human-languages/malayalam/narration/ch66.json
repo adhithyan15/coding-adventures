@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Out in the Paddy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c52087d6dd0d54dd",
+  "sourceHash": "fnv1a64:af3ed5f990144ddc",
   "lessons": [
     {
       "id": "ML-C66-paddy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9798967a115815a5",
+      "sourceHash": "fnv1a64:9d1095548a263341",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ellŭ*, then *nellŭ*, and say which of the two you can eat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pinne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pinne*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c6c469c54ef4cff",
+      "sourceHash": "fnv1a64:df0c200e4f2091ee",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *paśu*, then *pullŭ*, and say which one eats the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ഉടനെ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ഉടനെ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0eba34e130871ee",
+      "sourceHash": "fnv1a64:6d3014fbea37102d",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *veyil*, then *katirŭ*, and say what the two have in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cilappōḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cilappōḷ*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9152bce5b8a73152",
+      "sourceHash": "fnv1a64:398717625bd11dc7",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *karṣakan*, then *kalappa*, and say which one holds the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read മാത്രം, then say sammataṁ, then read മര്യാദ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **മാത്രം**, then say *sammataṁ*, then read **മര്യാദ**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a77f6745297efb1",
+      "sourceHash": "fnv1a64:8ecb189c2ed1f292",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *nellŭ*, *pullŭ*, *katirŭ*, *kalappa*, *koyttŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ennāl, then read അപേക്ഷ, then say anuvādaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ennāl*, then read **അപേക്ഷ**, then say *anuvādaṁ*]"
             }
           ]
         },

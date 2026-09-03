@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2d52c53f381ea3f2",
+  "sourceHash": "fnv1a64:ff6f44d521e8f471",
   "lessons": [
     {
       "id": "BN-C09-neowa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b16d37f4c791da2b",
+      "sourceHash": "fnv1a64:11882cfbf566d9d6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -164,6 +164,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: bring, then take away — \"niye āsā … niye jāwā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ek dui tin chār pā̃ch, then read হওয়া",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ek dui tin chār pā̃ch*, then read **হওয়া**]"
             }
           ]
         },

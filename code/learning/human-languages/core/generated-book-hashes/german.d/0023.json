@@ -1,16 +1,15 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:1afd9924b9deab4b",
+  "sourceHash": "fnv1a64:0f330808cc4d2b21",
   "lessonIds": [
-    "GE-C16-ich-war",
-    "GE-C16-du-warst",
-    "GE-C16-er-war",
-    "GE-C16-wir-waren",
-    "GE-C16-drei-wurzeln",
-    "GE-C16-suppletion",
-    "GE-C16-haeufig-unregelmaessig",
-    "GE-C16-war-practice"
+    "GE-C14-alt",
+    "GE-C14-jahr",
+    "GE-C14-jahr-alt",
+    "GE-C14-wie-alt-bist-du",
+    "GE-C14-alter",
+    "GE-C14-alter-sein-haben",
+    "GE-C14-alter-practice"
   ],
-  "tex": "german/book/chapters/ch23-drei-wurzeln.tex"
+  "tex": "german/book/chapters/ch23-alter.tex"
 }

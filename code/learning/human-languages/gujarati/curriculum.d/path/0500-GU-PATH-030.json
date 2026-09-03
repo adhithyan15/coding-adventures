@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-030",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GU-C31-nathi",
+    "GU-C31-samajto-nathi",
+    "GU-W08-pha",
+    "GU-C31-maaf",
+    "GU-C31-repair-five"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-042-REPAIR-FIVE"
+  ],
+  "after": []
+}

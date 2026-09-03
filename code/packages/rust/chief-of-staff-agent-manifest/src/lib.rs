@@ -15,16 +15,20 @@ use std::collections::{BTreeMap, BTreeSet};
 /// call. Before v3 the signed manifest declared operating-system
 /// `capabilities` and `vault_access` but named no tools at all, so a
 /// profile-backed supervisor had no signed source for its tool surface.
-pub const MANIFEST_VERSION: i64 = 3;
-/// Schema version that introduced per-channel payload-schema versions.
+pub const MANIFEST_VERSION: i64 = 4;
+/// Schema version that introduced `allowed_tools`.
 ///
-/// Still accepted for installed packages; it differs from v3 only by the
-/// absence of `allowed_tools`.
+/// Still accepted for installed packages; it differs from v4 only by the
+/// absence of `tool_capabilities`.
+pub const MANIFEST_V3_VERSION: i64 = 3;
+/// Schema version that introduced per-channel payload-schema versions.
 pub const MANIFEST_V2_VERSION: i64 = 2;
 /// Oldest agent-manifest schema version accepted for installed packages.
 pub const LEGACY_MANIFEST_VERSION: i64 = 1;
 /// Maximum number of tool identifiers one manifest may declare.
 pub const MAX_ALLOWED_TOOLS: usize = 256;
+/// Maximum number of D18D tool-capability names one manifest may declare.
+pub const MAX_TOOL_CAPABILITIES: usize = 256;
 /// Canonical schema URL emitted by [`AgentManifest::to_json`].
 pub const MANIFEST_SCHEMA: &str = "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/agent_manifest.schema.json";
 /// Maximum accepted UTF-8 manifest size.
@@ -40,6 +44,7 @@ const ROOT_FIELDS: &[&str] = &[
     "vault_access",
     "capabilities",
     "allowed_tools",
+    "tool_capabilities",
     "restart_policy",
     "justification",
 ];
@@ -102,6 +107,21 @@ pub struct AgentManifest {
     pub vault_access: Option<VaultAccess>,
     /// Validated OS capability profile.
     pub capabilities: Vec<Capability>,
+    /// D18D tool-capability names granted to this agent, sorted and deduplicated.
+    ///
+    /// Schema v4 and later; always empty below it. These are matched against a
+    /// `ToolDefinition`'s `required_capabilities` (values like `smart_home` and
+    /// `smart_home.events`), which is a **different namespace** from the
+    /// operating-system `capabilities` field above -- `fs:read:/x` is not a
+    /// tool capability and never satisfies one.
+    ///
+    /// Deliberately not derived from [`AgentManifest::allowed_tools`]. Deriving
+    /// it would make the check always pass for an allowed tool, and would
+    /// destroy the property it exists for: a *new version of a tool* that
+    /// starts requiring a new capability is denied until the manifest is
+    /// re-signed to grant it, so a tool cannot silently widen what it does to
+    /// agents already approved.
+    pub tool_capabilities: Vec<String>,
     /// D18D tool identifiers this agent may call, sorted and deduplicated.
     ///
     /// Schema v3 and later. Always empty for v1 and v2 manifests, which had no
@@ -315,7 +335,7 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
     let version = expect_integer(object.required("version")?, "version")?;
     if !matches!(
         version,
-        LEGACY_MANIFEST_VERSION | MANIFEST_V2_VERSION | MANIFEST_VERSION
+        LEGACY_MANIFEST_VERSION | MANIFEST_V2_VERSION | MANIFEST_V3_VERSION | MANIFEST_VERSION
     ) {
         return Err(ManifestError::UnsupportedVersion(version));
     }
@@ -336,10 +356,21 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
     // manifest could smuggle a tool surface past a consumer that trusts the
     // declared version.
     let allowed_tools = match version {
-        MANIFEST_VERSION => parse_allowed_tools(object.required("allowed_tools")?)?,
+        MANIFEST_V3_VERSION | MANIFEST_VERSION => {
+            parse_allowed_tools(object.required("allowed_tools")?)?
+        }
         _ => {
             if object.take("allowed_tools").is_some() {
                 return Err(ManifestError::InvalidField("allowed_tools"));
+            }
+            Vec::new()
+        }
+    };
+    let tool_capabilities = match version {
+        MANIFEST_VERSION => parse_tool_capabilities(object.required("tool_capabilities")?)?,
+        _ => {
+            if object.take("tool_capabilities").is_some() {
+                return Err(ManifestError::InvalidField("tool_capabilities"));
             }
             Vec::new()
         }
@@ -361,6 +392,7 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
         vault_access,
         capabilities,
         allowed_tools,
+        tool_capabilities,
         restart_policy,
         justification,
     };
@@ -381,7 +413,7 @@ fn parse_channels(
             },
             BTreeMap::new(),
         )),
-        MANIFEST_V2_VERSION | MANIFEST_VERSION => {
+        MANIFEST_V2_VERSION | MANIFEST_V3_VERSION | MANIFEST_VERSION => {
             let reads = parse_channel_bindings(object.required("reads")?, "channels.reads")?;
             let writes = parse_channel_bindings(object.required("writes")?, "channels.writes")?;
             let mut versions = BTreeMap::new();
@@ -464,11 +496,12 @@ fn parse_capabilities(value: JsonValue) -> Result<Vec<Capability>, ManifestError
 fn validate_manifest(manifest: &AgentManifest) -> Result<(), ManifestError> {
     if !matches!(
         manifest.version,
-        LEGACY_MANIFEST_VERSION | MANIFEST_V2_VERSION | MANIFEST_VERSION
+        LEGACY_MANIFEST_VERSION | MANIFEST_V2_VERSION | MANIFEST_V3_VERSION | MANIFEST_VERSION
     ) {
         return Err(ManifestError::UnsupportedVersion(manifest.version));
     }
     validate_allowed_tools(manifest)?;
+    validate_tool_capabilities(manifest)?;
     if !(2..=64).contains(&manifest.agent.len()) || !valid_identifier(&manifest.agent) {
         return Err(ManifestError::InvalidField("agent"));
     }
@@ -501,7 +534,7 @@ fn validate_manifest(manifest: &AgentManifest) -> Result<(), ManifestError> {
         LEGACY_MANIFEST_VERSION if !manifest.message_schema_versions.is_empty() => {
             return Err(ManifestError::InvalidField("message_schema_versions"));
         }
-        MANIFEST_V2_VERSION | MANIFEST_VERSION => {
+        MANIFEST_V2_VERSION | MANIFEST_V3_VERSION | MANIFEST_VERSION => {
             let channel_count = manifest.channels.reads.len() + manifest.channels.writes.len();
             let channels = manifest
                 .channels
@@ -560,6 +593,60 @@ fn validate_manifest(manifest: &AgentManifest) -> Result<(), ManifestError> {
     Ok(())
 }
 
+fn parse_tool_capabilities(value: JsonValue) -> Result<Vec<String>, ManifestError> {
+    let mut names = expect_string_array(value, "tool_capabilities")?;
+    names.sort();
+    names.dedup();
+    Ok(names)
+}
+
+/// A D18D tool-capability scope: colon-delimited segments of
+/// `[A-Za-z0-9_-]`, e.g. `smart_home:read`.
+///
+/// This mirrors `chief-of-staff-host-runtime`'s own `validate_capability`
+/// exactly, because these values are compared against a `ToolDefinition`'s
+/// `required_capabilities` and a manifest that a host profile would reject is
+/// worse than useless -- it would pass signing and fail at launch.
+///
+/// Note the separator: a capability scope uses `:` and a tool identifier uses
+/// `.`. `smart_home:read` is a capability; `smart_home.discover` is a tool.
+/// The two namespaces look similar and are not interchangeable.
+fn valid_tool_capability(value: &str) -> bool {
+    !value.is_empty()
+        && value.split(':').all(|segment| {
+            !segment.is_empty()
+                && segment
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_' || byte == b'-')
+        })
+}
+
+fn validate_tool_capabilities(manifest: &AgentManifest) -> Result<(), ManifestError> {
+    if manifest.version != MANIFEST_VERSION && !manifest.tool_capabilities.is_empty() {
+        return Err(ManifestError::InvalidField("tool_capabilities"));
+    }
+    if manifest.tool_capabilities.len() > MAX_TOOL_CAPABILITIES {
+        return Err(ManifestError::InvalidField("tool_capabilities"));
+    }
+    let mut seen = BTreeSet::new();
+    for name in &manifest.tool_capabilities {
+        if !(1..=128).contains(&name.len()) || !valid_tool_capability(name) {
+            return Err(ManifestError::InvalidField("tool_capabilities"));
+        }
+        if !seen.insert(name.as_str()) {
+            return Err(ManifestError::InvalidField("tool_capabilities"));
+        }
+    }
+    if manifest
+        .tool_capabilities
+        .windows(2)
+        .any(|pair| pair[0] > pair[1])
+    {
+        return Err(ManifestError::InvalidField("tool_capabilities"));
+    }
+    Ok(())
+}
+
 fn parse_allowed_tools(value: JsonValue) -> Result<Vec<String>, ManifestError> {
     let mut tools = expect_string_array(value, "allowed_tools")?;
     tools.sort();
@@ -611,7 +698,9 @@ fn validate_allowed_tools(manifest: &AgentManifest) -> Result<(), ManifestError>
     // v1 and v2 have no tool surface at all. A non-empty list on one of those
     // would mean a consumer reading `version` learns something false about
     // what the signed bytes authorize.
-    if manifest.version != MANIFEST_VERSION && !manifest.allowed_tools.is_empty() {
+    if !matches!(manifest.version, MANIFEST_V3_VERSION | MANIFEST_VERSION)
+        && !manifest.allowed_tools.is_empty()
+    {
         return Err(ManifestError::InvalidField("allowed_tools"));
     }
     if manifest.allowed_tools.len() > MAX_ALLOWED_TOOLS {
@@ -770,10 +859,16 @@ fn manifest_json(manifest: &AgentManifest) -> JsonValue {
             ]),
         ));
     }
-    if manifest.version == MANIFEST_VERSION {
+    if matches!(manifest.version, MANIFEST_V3_VERSION | MANIFEST_VERSION) {
         fields.push((
             "allowed_tools".to_string(),
             strings(&manifest.allowed_tools),
+        ));
+    }
+    if manifest.version == MANIFEST_VERSION {
+        fields.push((
+            "tool_capabilities".to_string(),
+            strings(&manifest.tool_capabilities),
         ));
     }
     fields.extend([
@@ -887,6 +982,28 @@ mod tests {
       "justification": "Uses only encrypted channels and no operating-system access."
     }"#;
 
+    const V4: &str = r#"{
+      "version": 4,
+      "agent": "weather-agent",
+      "description": "Reports a concise local weather forecast.",
+      "privilege_tier": 2,
+      "channels": {
+        "reads": {"weather-requests": 1},
+        "writes": {"weather-reports": 2}
+      },
+      "capabilities": [],
+      "allowed_tools": ["artifact.write", "smart_home.discover"],
+      "tool_capabilities": ["smart_home:read", "smart_home:write"],
+      "justification": "Uses only encrypted channels and no operating-system access."
+    }"#;
+
+    fn v4_with_capabilities(names: &str) -> String {
+        V4.replace(
+            r#""tool_capabilities": ["smart_home:read", "smart_home:write"]"#,
+            &format!(r#""tool_capabilities": {names}"#),
+        )
+    }
+
     fn v3_with_tools(tools: &str) -> String {
         V3.replace(
             r#""allowed_tools": ["artifact.write", "artifact.create_v2", "context.append_entry"]"#,
@@ -925,7 +1042,7 @@ mod tests {
     #[test]
     fn parses_and_round_trips_schema_v3_with_tools() {
         let manifest = parse_manifest(V3).unwrap();
-        assert_eq!(manifest.version, MANIFEST_VERSION);
+        assert_eq!(manifest.version, MANIFEST_V3_VERSION);
         // Stored sorted, not in source order: `to_json` must be deterministic
         // and two manifests must compare in one canonical order.
         assert_eq!(
@@ -1131,6 +1248,119 @@ mod tests {
     }
 
     #[test]
+    fn parses_and_round_trips_schema_v4_with_tool_capabilities() {
+        let manifest = parse_manifest(V4).unwrap();
+        assert_eq!(manifest.version, MANIFEST_VERSION);
+        assert_eq!(
+            manifest.tool_capabilities,
+            vec![
+                "smart_home:read".to_string(),
+                "smart_home:write".to_string()
+            ]
+        );
+        // Single-segment names are legal here and NOT legal as tool ids:
+        // `smart_home` is a real capability that `smart_home.events` sits
+        // beneath, so `valid_tool_id`'s two-segment minimum would reject it.
+        assert!(manifest
+            .tool_capabilities
+            .contains(&"smart_home:read".to_string()));
+        // A capability scope is not a tool id and vice versa: different
+        // separators, different namespaces.
+        assert!(!valid_tool_id("smart_home:read"));
+        assert!(!valid_tool_capability("smart_home.discover"));
+
+        let json = manifest.to_json().unwrap();
+        assert!(json.contains("\"tool_capabilities\""));
+        assert_eq!(parse_manifest(&json).unwrap(), manifest);
+    }
+
+    #[test]
+    fn schema_v4_requires_tool_capabilities_and_earlier_versions_may_not_carry_them() {
+        let missing = V4.replace(
+            r#""tool_capabilities": ["smart_home:read", "smart_home:write"],"#,
+            "",
+        );
+        assert_eq!(
+            parse_manifest(&missing),
+            Err(ManifestError::MissingField("tool_capabilities"))
+        );
+
+        let empty = parse_manifest(&v4_with_capabilities("[]")).unwrap();
+        assert!(empty.tool_capabilities.is_empty());
+        assert_eq!(parse_manifest(&empty.to_json().unwrap()).unwrap(), empty);
+
+        // v3 carried allowed_tools but no capability grant.
+        let smuggled = V3.replace(
+            r#""capabilities": [],"#,
+            r#""capabilities": [], "tool_capabilities": ["smart_home:read"],"#,
+        );
+        assert_eq!(
+            parse_manifest(&smuggled),
+            Err(ManifestError::InvalidField("tool_capabilities"))
+        );
+    }
+
+    #[test]
+    fn rejects_malformed_tool_capability_names() {
+        for bad in [
+            r#"["smart_home::read"]"#,
+            r#"[":read"]"#,
+            r#"["smart_home:"]"#,
+            r#"["smart_home.read"]"#,
+            r#"["smart home:read"]"#,
+            r#"[""]"#,
+        ] {
+            assert_eq!(
+                parse_manifest(&v4_with_capabilities(bad)),
+                Err(ManifestError::InvalidField("tool_capabilities")),
+                "should have rejected {bad}"
+            );
+        }
+    }
+
+    #[test]
+    fn validate_rejects_hand_built_tool_capability_states() {
+        // parse_tool_capabilities sorts and dedups, so unsorted and duplicated
+        // states are reachable only by building the struct directly -- which
+        // consumers do. validate is the check that covers them.
+        let mut unsorted = parse_manifest(V4).unwrap();
+        unsorted.tool_capabilities = vec!["smart_home:write".into(), "smart_home:read".into()];
+        assert_eq!(
+            unsorted.validate(),
+            Err(ManifestError::InvalidField("tool_capabilities"))
+        );
+
+        let mut duplicated = parse_manifest(V4).unwrap();
+        duplicated.tool_capabilities = vec!["smart_home:read".into(), "smart_home:read".into()];
+        assert_eq!(
+            duplicated.validate(),
+            Err(ManifestError::InvalidField("tool_capabilities"))
+        );
+
+        let mut downgraded = parse_manifest(V4).unwrap();
+        downgraded.version = MANIFEST_V3_VERSION;
+        assert_eq!(
+            downgraded.validate(),
+            Err(ManifestError::InvalidField("tool_capabilities"))
+        );
+    }
+
+    #[test]
+    fn tool_capabilities_are_not_derived_from_allowed_tools() {
+        // Deriving would make has_capability always pass for an allowed tool,
+        // and would destroy the property the two-level check exists for: a new
+        // version of a tool that starts requiring a new capability is denied
+        // until the manifest is re-signed.
+        let manifest = parse_manifest(V4).unwrap();
+        assert!(manifest
+            .allowed_tools
+            .contains(&"smart_home.discover".to_string()));
+        assert!(!manifest
+            .tool_capabilities
+            .contains(&"smart_home.discover".to_string()));
+    }
+
+    #[test]
     fn parses_complete_vault_and_capability_profile() {
         let source = MINIMAL.replace(
             "\"capabilities\": []",
@@ -1145,8 +1375,8 @@ mod tests {
     #[test]
     fn rejects_unsupported_or_malformed_versions() {
         assert_eq!(
-            parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 4")),
-            Err(ManifestError::UnsupportedVersion(4))
+            parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 5")),
+            Err(ManifestError::UnsupportedVersion(5))
         );
         assert_eq!(
             parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 1.0")),

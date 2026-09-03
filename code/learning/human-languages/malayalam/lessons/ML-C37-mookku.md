@@ -9,7 +9,7 @@ headword: മൂക്ക്
 gloss: nose — native Dravidian, a fourth near-perfect match across the family
 romanization: mūkkŭ
 concept_tag: ML-NOSE
-prerequisites: [ML-C37-chevi]
+prerequisites: [ML-C37-chevi, ML-C34-sahaayikkuka]
 sounds: [malayalam-vowel-sign-uu, malayalam-geminate-kka]
 roots: [dravidian-mookku-nose]
 etymology_hook: "മൂക്ക് is native Dravidian, close to Tamil மூக்கு (mUkku), Kannada ಮೂಗು (mUgu, showing the same k-to-g softening already met in makan/maga) and Telugu ముక్కు (mukku) -- a fourth body word, and a fourth close family match, though this one splits along the same k/g line chevi's vocabulary did not"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02]
 practises:
-  knowledge: [ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02]
+  knowledge: [ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C34-SAHAAYIKKUKA-01, ML-CONCEPT-C34-SAHAAYIKKUKA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -55,13 +55,14 @@ and Tamil hold a *-k-* between vowels, Kannada is likely to have worn it
 down to a *-g-*, whether the word is a family word or a body word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C34-SAHAAYIKKUKA-01, ML-CONCEPT-C34-SAHAAYIKKUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ente mūkkŭ" — my nose]
 - [YOU SAY: the recurring softening — "makan, maga … mūkkŭ, mūgu"]
 - [YOU SAY: three face words — "kaṇṇŭ, cevi, mūkkŭ"]
 - [YOU SAY: three against one, once more — "cevi, cevi, cevi … kivi"]
+- [YOU RECALL: say *sahāyikkuka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02] -->

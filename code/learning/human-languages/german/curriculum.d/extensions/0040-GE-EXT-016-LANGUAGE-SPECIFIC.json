@@ -3,15 +3,18 @@
   "stage": "pre-A1",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can use the additional German material required at this point in the path.",
+  "canDo": "I can tell the time in German — the hour with its borrowed word, and the two pivots German built itself.",
   "prerequisites": [],
   "lessons": [
     "GE-C08-uhr",
-    "GE-C09-monate",
-    "GE-C09-jahreszeiten",
-    "GE-C10-eltern",
-    "GE-C10-geschwister",
-    "GE-C11-brot",
-    "GE-C11-wasser-wein"
+    "GE-C08-uhr-hora",
+    "GE-C08-stunde",
+    "GE-C08-es-ist-uhr",
+    "GE-C08-uhr-ohne-plural",
+    "GE-C08-mitte",
+    "GE-C08-mittag",
+    "GE-C08-mittag-midi",
+    "GE-C08-mitternacht",
+    "GE-C08-mittag-mitternacht"
   ]
 }

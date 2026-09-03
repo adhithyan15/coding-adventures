@@ -12,7 +12,7 @@ headword: "लिखना"
 gloss: "to write"
 romanization: "likhnā"
 concept_tag: HI-VERB-WRITE
-prerequisites: [HI-C43-speak]
+prerequisites: [HI-C43-speak, HI-C41-old]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-WRITE]
 practises:
-  knowledge: [HI-LEX-SPEAK, HI-LEX-WRITE]
+  knowledge: [HI-LEX-SPEAK, HI-LEX-WRITE, HI-LEX-C41-ADJ-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ From the Sanskrit root **√लिख्** (*likh*), 'to scratch' — writing na
 That closes the run: look, listen, speak, write.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SPEAK, HI-LEX-WRITE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SPEAK, HI-LEX-WRITE, HI-LEX-C41-ADJ-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *likhnā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *bolnā*, so the two sit together]
+- [YOU RECALL: read **पुराना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SPEAK, HI-LEX-WRITE] -->

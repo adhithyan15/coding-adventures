@@ -9,7 +9,7 @@ headword: ಊಟ
 gloss: a meal — the word Chapter 32 already used to explain what "eating" doesn't cover, without ever teaching it, and the word that sits at the hour of two greetings you already know
 romanization: ūṭa
 concept_tag: KA-MEAL
-prerequisites: [KA-C39-haalu, KA-C32-tinnu, KA-C25-shubha-ratri, KA-C31-shubha-madhyahna]
+prerequisites: [KA-C39-haalu, KA-C32-tinnu, KA-C25-shubha-ratri, KA-C31-shubha-madhyahna, KA-C36-magalu]
 sounds: [independent-vowel-uu, retroflex-ta]
 roots: [dravidian-oota-meal]
 etymology_hook: "ಊಟ is native Dravidian, from a root shared with Tulu's own ūṭa, 'food, a meal' — Chapter 32 already reached for ಊಟ ಮಾಡು to name a FULL meal, set against the everyday ತಿನ್ನು which Tamil narrowed to snacking, but the book never once explained ūṭa itself until now; and a meal keeps close company with two greetings already taught — ಶುಭ ಮಧ್ಯಾಹ್ನ wished at the very hour of the midday ūṭa, ಶುಭ ರಾತ್ರಿ wished once the evening one is done"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02]
 practises:
-  knowledge: [KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-LEX-C32-TINNU-01, KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03, KA-ETYMON-C31-SHUBHA-MADHYAHNA-01, KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02, KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02]
+  knowledge: [KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-LEX-C32-TINNU-01, KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03, KA-ETYMON-C31-SHUBHA-MADHYAHNA-01, KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02, KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02, KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -70,7 +70,7 @@ is wished once the evening one is over. Two greetings that name the hour;
 one word for what fills it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02, KA-LEX-C32-TINNU-01, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03, KA-ETYMON-C31-SHUBHA-MADHYAHNA-01, KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02, KA-LEX-C32-TINNU-01, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03, KA-ETYMON-C31-SHUBHA-MADHYAHNA-01, KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02, KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ūṭa māḍu" — to have a meal]
@@ -78,6 +78,7 @@ one word for what fills it.
 - [YOU SAY: the hour and the meal — "śubha madhyāhna … ūṭa"]
 - [YOU SAY: the meal and the goodnight after it — "ūṭa … śubha rātri"]
 - [YOU SAY: this chapter's three drinks, once more — "cahā, kāphi, hālu"]
+- [YOU RECALL: say *magaḷu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02, KA-LEX-C32-TINNU-01, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03, KA-ETYMON-C31-SHUBHA-MADHYAHNA-01, KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02] -->

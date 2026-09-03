@@ -1,0 +1,605 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 38,
+  "title": "And, Or, and Neither",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f1708b37d9e77282",
+  "lessons": [
+    {
+      "id": "PA-C38-ate",
+      "sequence": 2220,
+      "title": "ਅਤੇ (ate) — and",
+      "headword": "ਅਤੇ",
+      "romanization": "ate",
+      "gloss": "and — the word that lets two things be named at once",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4d757484549c5a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the chapter behind you, the two admissions. And from the food chapter far back, the word for milk."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "mainū̃ samajh nahī̃ āī, mainū̃ nahī̃ patā — then dudh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *mainū̃ samajh nahī̃ āī*, *mainū̃ nahī̃ patā* — then *dudh*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Milk and bread were taught together, and read back together at a distant window. Until this lesson there has been no way to name them in one breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦੁੱਧ ਅਤੇ ਰੋਟੀ — dudh ate roṭī — milk and bread."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਤੇ (ate) stands between the two things it joins, exactly where English puts and."
+            },
+            {
+              "kind": "speech",
+              "text": "It has a shorter twin. In ordinary speech Punjabi very often says just ਤੇ, and the two are the same word — ਅਤੇ (ate) is the fuller, more written form. That matters here for an odd reason: the short ਤੇ is also a syllable this book drills in its script lessons, so a search of the corpus for and kept finding the drill and never the conjunction. The word looked present and was absent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dudh ate roṭī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dudh ate roṭī*.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dudh alone, then the pair. Hear what the middle word buys.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dudh* alone, then the pair. Hear what the middle word buys.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "any two things you can name, joined.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: any two things you can name, joined.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Join two foods. What is the shorter everyday form of ਅਤੇ (ate), and why did it make the word hard to find in this book? (ਤੇ — it is also a script drill syllable.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C38-ate-vaak",
+      "sequence": 2230,
+      "title": "ਅਤੇ (ate), joining two sentences",
+      "headword": "… ਅਤੇ …",
+      "romanization": "… ate …",
+      "gloss": "and, joining two whole sentences — the first two-clause sentence in this book",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f16016fca5cc527",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, the joining word. Four lessons back, at the head of the last chapter, where ਨਹੀਂ stands."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ate, and nahī̃ before the verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *ate*, and *nahī̃* before the verb]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The pattern, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same ਅਤੇ (ate) joins two whole sentences, and changes nothing about either:"
+            },
+            {
+              "kind": "speech",
+              "text": "(first sentence) ਅਤੇ (ate) (second sentence)."
+            },
+            {
+              "kind": "speech",
+              "text": "No ending appears, no word moves. That is why and is the joining word to learn first: it is the only one that costs the sentences on either side of it nothing at all."
+            },
+            {
+              "kind": "speech",
+              "text": "And it composes with the chapter behind you — the second half is free to be a negative:"
+            },
+            {
+              "kind": "speech",
+              "text": "… ਅਤੇ … (… ate …) ਨਹੀਂ …"
+            },
+            {
+              "kind": "speech",
+              "text": "That is a two-clause sentence, and it is the first one this book has been able to make. Until now the longest thing the track taught was a single clause of four slots."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "two short sentences you own, joined with ate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: two short sentences you own, joined with *ate*.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "the same again, the second half negative.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: the same again, the second half negative.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the two said separately, then joined. Same words.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the two said separately, then joined. Same words.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What changes about a sentence when ਅਤੇ (ate) joins it to another? (Nothing.) Make one whose second half is negative."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C38-ate-write",
+      "sequence": 2240,
+      "title": "ਅਤੇ (ate) reaches the page",
+      "headword": "ਅਤੇ",
+      "romanization": "ate",
+      "gloss": "and, on three signs taught long ago",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:725f1544b7041506",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — three pieces, none new"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — three pieces, none new until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One chapter back you wrote ਨਹੀਂ. Write it once from memory, bindi and all, before anything is uncovered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — three pieces, none new",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅ — the vowel carrier, ਤ — ta, ੇ — the laav stroke above."
+            },
+            {
+              "kind": "speech",
+              "text": "All three were taught long before this chapter. Say it plainly: the word this book most needed was never a writing problem. Nobody had written it down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy ਅਤੇ (ate) once. Check the laav sits above ਤ, not above ਅ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ਅਤੇ (ate) from memory. How many of its three signs were new today? (None.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C38-jaan",
+      "sequence": 2250,
+      "title": "ਜਾਂ (jāṁ) — or",
+      "headword": "ਜਾਂ",
+      "romanization": "jāṁ",
+      "gloss": "or — offering a choice between two things",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d98c6e136b19329",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back you wrote the joining word. Say it, then write it in the air."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ਅਤੇ (ate)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ਅਤੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਤੇ (ate) offers you both. ਜਾਂ (jāṁ) offers you one of two:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਦੁੱਧ ਜਾਂ ਰੋਟੀ — dudh jāṁ roṭī — milk or bread."
+            },
+            {
+              "kind": "speech",
+              "text": "Same position, different job: it stands between the two things and asks the listener to choose. The bindi on it is not decoration — the vowel goes through the nose, and this book has been marking that since its earliest script lessons."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the word a shopkeeper uses on you, and the one you need to answer with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dudh jāṁ roṭī, then dudh ate roṭī. One asks, one gives.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dudh jāṁ roṭī*, then *dudh ate roṭī*. One asks, one gives.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the two joining words back to back, twice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the two joining words back to back, twice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "offer someone a choice of two things you can name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: offer someone a choice of two things you can name.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Offer a choice, then offer both. Which word did each need? (jāṁ to choose, ate to give both.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C38-na-na",
+      "sequence": 2260,
+      "title": "ਨਾ … ਨਾ … (nā … nā …) — neither … nor",
+      "headword": "ਨਾ … ਨਾ …",
+      "romanization": "nā … nā …",
+      "gloss": "neither … nor — the coordinator and the negator working together",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc31bcb6fdeb17ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The two joining words of this chapter, and the rule from the chapter before it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ate, jāṁ — and nahī̃ before the verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *ate*, *jāṁ* — and *nahī̃* before the verb]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The pattern, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English uses two different words — neither and nor. Punjabi repeats one:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਾ (first thing) ਨਾ (second thing) — \"neither … nor …\""
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਾ is the short bare negative you have already met beside ਨਹੀਂ. Here it does the joining and the negating at once, standing in front of each item rather than between them."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth noticing against ਅਤੇ (ate) and ਜਾਂ (jāṁ), which stand between. This is the first joining pattern in the book that goes in front of both halves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "refuse two things at once with nā … nā ….",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: refuse two things at once with *nā … nā …*.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "ate between, then nā … nā in front of each.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *ate* between, then *nā … nā* in front of each.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "offered a choice with jāṁ, refuse both.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: offered a choice with *jāṁ*, refuse both.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Refuse two things in one sentence. Where does ਨਾ stand, and how is that different from ਅਤੇ? (In front of each item; ate stands between them.) Next chapter: but — and Punjabi has two words for it, one from each side of the language's history."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

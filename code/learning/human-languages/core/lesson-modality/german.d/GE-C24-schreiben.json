@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C24-schreiben",
     "language": "german",
-    "chapter": 32,
-    "sequence": 740,
+    "chapter": 33,
+    "sequence": 750,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9759c5b6ee0f3b34"
+    "sourceHash": "fnv1a64:ffdce801a14e3e64"
   },
   "findings": []
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-er-hat-gemacht",
     "language": "german",
-    "chapter": 19,
-    "sequence": 360,
+    "chapter": 20,
+    "sequence": 370,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5a20a45ca059b75b"
+    "sourceHash": "fnv1a64:0d30d8089f110d3c"
   },
   "findings": []
 }

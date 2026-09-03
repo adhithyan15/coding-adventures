@@ -14,7 +14,7 @@ You'll want to know: च.
 One syllable, and until this lesson the track had no way to put two things in one sentence. Everything you have learnt to name — a house, a river, a mother, a moon — you have named alone.
 च (ca) does not stand between the two things. It stands after the second one.
 अन्नं पानीयं च — annaṁ pānīyaṁ ca — food and water.
-English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Read the phrase again and notice that nothing sits between the two nouns at all: they are simply placed side by side, and च (ca) at the back is what tells you they were a pair.
+English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Read the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair.
 च can never begin a sentence. A word that must lean on the word before it is called an enclitic, and this is Sanskrit's commonest one.
 
 What you've built.
@@ -45,7 +45,7 @@ Say "food and water", and then say where च (ca) stood in it. Then say mātula�
 
 You'll want to know: वा.
 वा (vā) — "or".
-Everything you have just learnt about च is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence.
+Everything the last lesson said about च is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence.
 पानीयं क्षीरं वा — pānīyaṁ kṣīraṁ vā — water or milk.
 So the two words share one slot, and swapping them swaps the meaning of the whole phrase without moving anything else:
 पानीयं क्षीरं च (ca) — water and milk पानीयं क्षीरं वा (vā) — water or milk.

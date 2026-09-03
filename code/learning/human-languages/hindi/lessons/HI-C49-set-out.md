@@ -12,7 +12,7 @@ headword: "निकलना"
 gloss: "to set out, to leave"
 romanization: "nikalnā"
 concept_tag: HI-VERB-SET-OUT
-prerequisites: [HI-C49-journey]
+prerequisites: [HI-C49-journey, HI-C47-guest, HI-C48-perhaps]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C49-LEAVE-04]
 practises:
-  knowledge: [HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04]
+  knowledge: [HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04, HI-LEX-C47-ROLE-04, HI-LEX-C48-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Lengthen the vowel and the doer changes: that pairing is one of Hindi's tidiest 
 Four, and this one is something you do.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04, HI-LEX-C47-ROLE-04, HI-LEX-C48-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nikalnā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nikalnā*, then *safar*, the leaving and the road it opens]
+- [YOU RECALL: read **मेहमान**, then say *śāyad*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04] -->

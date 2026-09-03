@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One Root, Three Endings",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a9f129f06c399190",
+  "sourceHash": "fnv1a64:481551ab8293b355",
   "lessons": [
     {
       "id": "KA-C36-magu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90185e269967727c",
+      "sourceHash": "fnv1a64:aae2d2380ab20393",
       "notice": null,
       "blocks": [
         {
@@ -102,6 +102,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: friend, then child — \"snēhita … magu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yōcisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yōcisu*]"
             }
           ]
         },
@@ -137,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dec55ffa3a323b5",
+      "sourceHash": "fnv1a64:f34a834138ad3d4e",
       "notice": null,
       "blocks": [
         {
@@ -224,6 +233,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: Kannada's worn form, then Tamil's fuller one — \"maga … makaṉ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಅರ್ಥಮಾಡಿಕೊ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಅರ್ಥಮಾಡಿಕೊ**]"
             }
           ]
         },
@@ -259,7 +277,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fac2a2d47e37a4b",
+      "sourceHash": "fnv1a64:7cbf761c787075bd",
       "notice": null,
       "blocks": [
         {
@@ -380,6 +398,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the sisters, near-identical — \"magaḷu … makaḷ … makaḷ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ōdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ōdu*]"
             }
           ]
         },

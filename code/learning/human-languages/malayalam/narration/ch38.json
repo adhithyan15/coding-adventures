@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "The Two Hearts",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:458b8d8ebdc6af03",
+  "sourceHash": "fnv1a64:0480c39874494e14",
   "lessons": [
     {
       "id": "ML-C38-hrudayam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f14b74af1cfa8a1b",
+      "sourceHash": "fnv1a64:6aa6aab6ffc43d76",
       "notice": null,
       "blocks": [
         {
@@ -124,6 +124,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all the face words once more — \"kaṇṇŭ, cevi, mūkkŭ, vāy\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say suhṛttŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *suhṛttŭ*]"
             }
           ]
         },
@@ -159,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f19ddb5a8bf79d50",
+      "sourceHash": "fnv1a64:44bff2f6be25441f",
       "notice": null,
       "blocks": [
         {
@@ -264,6 +273,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: mouth, once more — \"vāy\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read കുട്ടി",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **കുട്ടി**]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: آنا
 romanization: ānā
 gloss: to come — literally “go toward,” built from a prefix and the verb for going
 concept_tag: VERB-COME
-prerequisites: [UR-C06-jana]
+prerequisites: [UR-C06-jana, UR-C05-khuda]
 sounds: [rtl, alif-madd, long-a]
 roots: [sanskrit-ya, sanskrit-a-prefix]
 etymology_hook: ānā continues Sanskrit āyāti — the preverb ā- “toward” welded onto the same yā- “go” that stands behind jānā.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-LEX-JANA, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO]
+  knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-LEX-JANA, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,12 +68,13 @@ prefix gives **advent**, **convene**, **intervene**, **prevent**, and
 English keeps the seam visible.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-JANA, UR-GRAMMAR-NA-INFINITIVE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-JANA, UR-GRAMMAR-NA-INFINITIVE, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN] -->
 
 - [YOU SAY: **ānā** — to come]
 - [YOU PAIR: **jānā** away, **ānā** toward]
 - [YOU SPLIT: *ā-* “toward” + *yā-* “go”]
 - [YOU READ: **آنا**, starting from *alif madd*]
+- [YOU RECALL: say *khudā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-JANA, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS] -->

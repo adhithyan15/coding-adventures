@@ -12,7 +12,7 @@ headword: "फल"
 gloss: "a fruit"
 romanization: "phal"
 concept_tag: HI-NOUN-FRUIT
-prerequisites: [HI-C44-people]
+prerequisites: [HI-C44-people, HI-C43-look]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C45-ASK-01]
 practises:
-  knowledge: [HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-C45-ASK-01]
+  knowledge: [HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-LOOK]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English readers meet the second sense in translations of the Gita, where "the fr
 The first of five things you might ask someone for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-C45-ASK-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-LOOK] -->
 
 [PAUSE 1s]
 - [YOU SAY: *phal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *phal*, then *log*, so the new one sits beside the last one you learned]
+- [YOU RECALL: say *dekhnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-C45-ASK-01] -->

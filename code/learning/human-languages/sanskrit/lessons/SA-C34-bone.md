@@ -12,7 +12,7 @@ headword: "अस्थि"
 gloss: "a bone"
 romanization: "asthi"
 concept_tag: SA-LIMB-ASTHI
-prerequisites: [SA-C34-neck]
+prerequisites: [SA-C34-neck, SA-C32-grass, SA-C33-mountain]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C34-LIMB-03]
 practises:
-  knowledge: [SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03]
+  knowledge: [SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C32-TREE-03, SA-LEX-C33-LAND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its cousins line up letter for letter: Latin *os*, *ossis*, behind *osseous* and
 A bone, and one of the oldest words anyone has written down.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C32-TREE-03, SA-LEX-C33-LAND-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *asthi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *grīvā*, then *asthi*]
+- [YOU RECALL: say *tṛṇam*, then read **पर्वतः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03] -->

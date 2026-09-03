@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 66,
-  "sourceHash": "fnv1a64:c52087d6dd0d54dd",
+  "sourceHash": "fnv1a64:af3ed5f990144ddc",
   "lessonIds": [
     "ML-C66-paddy",
     "ML-C66-grass",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch66.txt",
   "json": "malayalam/narration/ch66.json",
-  "textHash": "fnv1a64:ba75995695d5eb1e",
-  "jsonHash": "fnv1a64:330c59dfc9b2c500",
+  "textHash": "fnv1a64:407617654efe4f65",
+  "jsonHash": "fnv1a64:0adac92e968c5594",
   "findings": []
 }

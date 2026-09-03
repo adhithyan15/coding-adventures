@@ -58,7 +58,7 @@ belonging to that place, and the ending then agrees with whoever you are
 describing exactly as **महत्** and **नव** do.
 
 Notice what the sentence does **not** have. There is no **अस्ति** in it. Sanskrit
-can leave the *is* out when it simply links two things, and here it does — *he,
+can leave the *is* out when its only work is to link two things, and here it does — *he,
 Indian*. You have seen that before in **न चिन्ता**; this is the same economy.
 
 ## What you've built

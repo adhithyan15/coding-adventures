@@ -12,7 +12,7 @@ headword: "परिवार"
 gloss: "family"
 romanization: "parivār"
 concept_tag: HI-NOUN-FAMILY
-prerequisites: [HI-C44-daughter]
+prerequisites: [HI-C44-daughter, HI-C42-stand]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-FAMILY]
 practises:
-  knowledge: [HI-LEX-DAUGHTER, HI-LEX-FAMILY]
+  knowledge: [HI-LEX-DAUGHTER, HI-LEX-FAMILY, HI-LEX-STAND]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ Sanskrit, and it comes apart in the hand: *pari-*, 'around', on the root *vṛ*,
 Three of four, and a word you can take apart rather than memorise.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-DAUGHTER, HI-LEX-FAMILY] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-DAUGHTER, HI-LEX-FAMILY, HI-LEX-STAND] -->
 
 [PAUSE 1s]
 - [YOU SAY: *parivār*]
 - [YOU SAY: it once more, slowly, hearing *pari-* at the front]
 - [YOU SAY: it after *beṭī*, so the two sit together]
+- [YOU RECALL: say *khaṛā honā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-DAUGHTER, HI-LEX-FAMILY] -->

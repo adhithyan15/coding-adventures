@@ -9,7 +9,7 @@ headword: ആണ്
 gloss: is (the copula)
 romanization: "āṇŭ"
 concept_tag: WORD-IS
-prerequisites: [ML-C02-peru]
+prerequisites: [ML-C02-peru, ML-C01-athe, ML-C01-illa, ML-C01-sari]
 sounds: [independent-aa, retroflex-nu]
 roots: [aaka-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01]
 practises:
-  knowledge: [ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01]
+  knowledge: [ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01, ML-LEX-ILLA-01, ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01, ML-LEX-SARI-01, ML-CONCEPT-C01-ONE-WORD-FOUR-SCRIPTS-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -61,12 +61,13 @@ subject–object–**verb**: "my name Arun **is**." (Malayalis sometimes drop *�
 in fast speech, but the full form keeps it.)
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01, ML-LEX-ILLA-01, ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01, ML-LEX-SARI-01, ML-CONCEPT-C01-ONE-WORD-FOUR-SCRIPTS-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "āṇŭ"]
 - [YOU SAY: the contrast — Tamil *eṉ peyar Arun* (no verb) vs. Malayalam *enṟe
   pēru Arun āṇŭ*]
+- [YOU RECALL: say *athe*, then say *illa*, then read **ശരി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01] -->

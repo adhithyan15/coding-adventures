@@ -12,7 +12,7 @@ headword: "बड़ा"
 gloss: "big"
 romanization: "baṛā"
 concept_tag: HI-ADJ-BIG
-prerequisites: []
+prerequisites: [HI-C39-dost, HI-C40-this, HI-C40-that]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C41-ADJ-01]
 practises:
-  knowledge: [HI-LEX-C41-ADJ-01]
+  knowledge: [HI-LEX-C41-ADJ-01, HI-CONCEPT-C39-DOST-01, HI-CONCEPT-C39-DOST-02, HI-CONCEPT-C39-DOST-03, HI-LEX-C40-DEIXIS-01, HI-LEX-C40-DEIXIS-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,11 +50,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-01, HI-CONCEPT-C39-DOST-01, HI-CONCEPT-C39-DOST-02, HI-CONCEPT-C39-DOST-03, HI-LEX-C40-DEIXIS-01, HI-LEX-C40-DEIXIS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "बड़ा" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *dost*, then read **यह**, then say *vah*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-01] -->

@@ -9,7 +9,7 @@ headword: "ಆದರೆ"
 gloss: "but"
 romanization: "ādare"
 concept_tag: KA-CONJ-BUT
-prerequisites: [KA-C67-or, KA-C64-in-that-case, KA-C51-blessing, KA-C49-enough, KA-C48-guest, KA-C48-farmer]
+prerequisites: [KA-C67-or, KA-C64-in-that-case, KA-C51-blessing, KA-C49-enough, KA-C48-guest, KA-C48-farmer, KA-C65-trust]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C67-LINK-03, KA-GRAMMAR-C67-LINK-04]
 practises:
-  knowledge: [KA-GRAMMAR-C67-LINK-04, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-05, KA-LEX-C51-COURTESY-04, KA-LEX-C64-JOIN-05, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03]
+  knowledge: [KA-GRAMMAR-C67-LINK-04, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-05, KA-LEX-C51-COURTESY-04, KA-LEX-C64-JOIN-05, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03, KA-LEX-C65-MANNERS-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -66,7 +66,7 @@ ending, two everyday words, and both of them turn out to be small sentences.
 Three joins now: and, or, but.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-05, KA-LEX-C51-COURTESY-04, KA-LEX-C64-JOIN-05, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-05, KA-LEX-C51-COURTESY-04, KA-LEX-C64-JOIN-05, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03, KA-LEX-C65-MANNERS-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ādare*]
@@ -74,6 +74,7 @@ Three joins now: and, or, but.
 - [YOU SAY: *hāgādare*, then take it apart into *hāge* and *ādare*]
 - [YOU RECALL: say *athavā*, then offer a choice with it]
 - [YOU RECALL: from much earlier — say *āśīrvāda*, *sāku*, *atithi*, *raita*, and say what each one means]
+- [YOU RECALL: say *nambike*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-05, KA-LEX-C51-COURTESY-04, KA-LEX-C64-JOIN-05, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03] -->

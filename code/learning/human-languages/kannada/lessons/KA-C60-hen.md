@@ -9,7 +9,7 @@ headword: "ಕೋಳಿ"
 gloss: "a hen"
 romanization: "kōḷi"
 concept_tag: KA-NOUN-HEN
-prerequisites: [KA-C60-goat]
+prerequisites: [KA-C60-goat, KA-C58-less]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C60-ANIMAL-03]
 practises:
-  knowledge: [KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03]
+  knowledge: [KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C58-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is also the clock of the ಹಳ್ಳಿ. A ಕೋಳಿ wakes a house before
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C58-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kōḷi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōḷi*, then *beḷagge*, and say which one comes first]
+- [YOU RECALL: say *kaḍime*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03] -->

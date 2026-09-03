@@ -9,7 +9,7 @@ headword: "ആട്"
 gloss: "a goat"
 romanization: "āṭŭ"
 concept_tag: ML-NOUN-GOAT
-prerequisites: [ML-C60-cow]
+prerequisites: [ML-C60-cow, ML-C58-less]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C60-ANIMAL-02]
 practises:
-  knowledge: [ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02]
+  knowledge: [ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C58-ANSWER-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A goat is what a household keeps when it has no room for the larger animal: it e
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C58-ANSWER-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āṭŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nāṭŭ*, then *āṭŭ*, and say which of the two is an animal]
+- [YOU RECALL: read **കുറവ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02] -->

@@ -9,7 +9,7 @@ headword: എങ്ങനെ
 gloss: how
 romanization: "eṅṅane"
 concept_tag: QUESTION-HOW
-prerequisites: [ML-C02-entu]
+prerequisites: [ML-C02-entu, ML-C02-nii-ningal]
 sounds: [double-ng]
 roots: [e-interrogative-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-ENGANE-01]
 practises:
-  knowledge: [ML-LEX-ENGANE-01]
+  knowledge: [ML-LEX-ENGANE-01, ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -52,11 +52,12 @@ same Dravidian question-root heading Tamil's *eppaḍi* — the deepest, most na
 layer of a language otherwise rich in Sanskrit.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENGANE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENGANE-01, ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "eṅṅane"]
 - [YOU SAY: the e- question family — *entŭ, eṅṅane, ārŭ, eviṭe, eppōḷ*]
+- [YOU RECALL: say *nī / niṅṅaḷ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENGANE-01] -->

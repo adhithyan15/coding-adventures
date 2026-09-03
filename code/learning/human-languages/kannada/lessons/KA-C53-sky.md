@@ -9,7 +9,7 @@ headword: "ಆಕಾಶ"
 gloss: "the sky"
 romanization: "ākāśa"
 concept_tag: KA-NOUN-SKY
-prerequisites: [KA-C52-garland]
+prerequisites: [KA-C52-garland, KA-C51-gratitude]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C53-SKY-01]
 practises:
-  knowledge: [KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01]
+  knowledge: [KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01, KA-LEX-C51-COURTESY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada holds an inherited word for the same overhead space, ಬಾನು (*bān
 The space the rest of this chapter hangs in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01, KA-LEX-C51-COURTESY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ākāśa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśa*, then *namaskāra*, as you would greet somebody out of doors]
+- [YOU RECALL: say *kṛtajñate*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01] -->

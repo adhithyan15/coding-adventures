@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3fe53775c7e338bc",
+  "sourceHash": "fnv1a64:0f57bcd640395e1a",
   "lessons": [
     {
       "id": "KA-C13-dehada-bhagagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c279f3a44bfa3a5",
+      "sourceHash": "fnv1a64:c110c960fbb7fbf3",
       "notice": null,
       "blocks": [
         {
@@ -91,6 +91,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the match — nearly identical across Tamil, Malayalam, Kannada]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sōmavāra maṅgaḷavāra budhavāra guruvāra śukravāra śanivāra bhānuvāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sōmavāra maṅgaḷavāra budhavāra guruvāra śukravāra śanivāra bhānuvāra*]"
             }
           ]
         },

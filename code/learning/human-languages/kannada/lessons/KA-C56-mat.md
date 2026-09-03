@@ -9,7 +9,7 @@ headword: "ಚಾಪೆ"
 gloss: "a mat"
 romanization: "cāpe"
 concept_tag: KA-NOUN-MAT
-prerequisites: [KA-C55-path]
+prerequisites: [KA-C55-path, KA-C54-tree]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C56-HOUSE-01]
 practises:
-  knowledge: [KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05, KA-LEX-C56-HOUSE-01]
+  knowledge: [KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05, KA-LEX-C56-HOUSE-01, KA-LEX-C54-TREE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Offering a guest a ಚಾಪೆ is the older form of the courtesy the ಕುರ�
 The first of five things a Kannada house keeps to hand.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05, KA-LEX-C56-HOUSE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05, KA-LEX-C56-HOUSE-01, KA-LEX-C54-TREE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cāpe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuḷitukō*, then *cāpe*, and say who is offered which]
+- [YOU RECALL: say *mara*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05, KA-LEX-C56-HOUSE-01] -->

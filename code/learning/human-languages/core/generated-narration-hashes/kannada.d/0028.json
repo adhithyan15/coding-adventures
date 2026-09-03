@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 28,
-  "sourceHash": "fnv1a64:e5dbf3de0891bc7d",
+  "sourceHash": "fnv1a64:5076762af5f5498e",
   "lessonIds": [
     "KA-C28-aparahna"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch28.txt",
   "json": "kannada/narration/ch28.json",
-  "textHash": "fnv1a64:778e572752b543b5",
-  "jsonHash": "fnv1a64:548cfeef9dfe231d",
+  "textHash": "fnv1a64:d068d3f3d826df31",
+  "jsonHash": "fnv1a64:a2f242cdc20dec4b",
   "findings": []
 }

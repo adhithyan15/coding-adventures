@@ -9,7 +9,7 @@ headword: "ಉಪ್ಪು"
 gloss: "salt"
 romanization: "uppu"
 concept_tag: KA-NOUN-SALT
-prerequisites: [KA-C46-lamp]
+prerequisites: [KA-C46-lamp, KA-C44-listen]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C46-ASK-04]
 practises:
-  knowledge: [KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04]
+  knowledge: [KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-LISTEN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ There is a *p* sitting in the middle of this word, and it did not become *h*. Th
 Four. Salt, and the fruit, and the cloth, and the lamp.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-LISTEN] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uppu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uppu*, then *haṇṇu*, and hear the *p* survive in one and vanish from the other]
+- [YOU RECALL: read **ಕೇಳು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04] -->

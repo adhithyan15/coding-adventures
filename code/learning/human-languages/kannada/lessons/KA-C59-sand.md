@@ -9,7 +9,7 @@ headword: "ಮರಳು"
 gloss: "sand"
 romanization: "maraḷu"
 concept_tag: KA-NOUN-SAND
-prerequisites: [KA-C59-mist]
+prerequisites: [KA-C59-mist, KA-C57-lip]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C59-GROUND-03]
 practises:
-  knowledge: [KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03]
+  knowledge: [KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C57-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The ಮರಳು you meet most is on the bank of a ನದಿ, where the river dr
 Three, and one warning about reading too much into a spelling.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C57-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maraḷu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mara*, then *maraḷu*, and say why they are not relatives]
+- [YOU RECALL: say *tuṭi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03] -->

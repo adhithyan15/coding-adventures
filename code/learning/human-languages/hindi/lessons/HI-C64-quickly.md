@@ -12,7 +12,7 @@ headword: "जल्दी"
 gloss: "quickly, soon"
 romanization: "jaldī"
 concept_tag: HI-ADV-QUICKLY
-prerequisites: [HI-C64-now]
+prerequisites: [HI-C64-now, HI-C62-needle, HI-C63-thirst]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C64-MEASURE-02]
 practises:
-  knowledge: [HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02]
+  knowledge: [HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C62-HANDS-02, HI-LEX-C63-STATE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Hindi still keeps both jobs alive. जल्दी on its own tells someone to h
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C62-HANDS-02, HI-LEX-C63-STATE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *jaldī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *jaldī*, then *phir milenge*]
+- [YOU RECALL: read **सूई**, then say *pyās*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02] -->

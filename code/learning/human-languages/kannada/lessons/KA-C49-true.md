@@ -9,7 +9,7 @@ headword: "ನಿಜ"
 gloss: "true"
 romanization: "nija"
 concept_tag: KA-WORD-TRUE
-prerequisites: [KA-C48-guest]
+prerequisites: [KA-C48-guest, KA-C47-leg]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C49-REPLY-01]
 practises:
-  knowledge: [KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01]
+  knowledge: [KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01, KA-LEX-C47-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada and Telugu both took that and turned it toward truth, and you can watch 
 The first of five replies that do more than agree or refuse.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01, KA-LEX-C47-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nija*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nija*, then *haudu*, and hear how much more the first one claims]
+- [YOU RECALL: say *kālu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01] -->

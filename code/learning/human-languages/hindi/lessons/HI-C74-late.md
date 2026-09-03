@@ -12,7 +12,7 @@ headword: "देर"
 gloss: "lateness, a delay"
 romanization: "der"
 concept_tag: HI-NOUN-DELAY
-prerequisites: [HI-C74-exit, HI-C64-quickly]
+prerequisites: [HI-C74-exit, HI-C64-quickly, HI-C72-buy, HI-C73-drink]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C74-SIGNS-05]
 practises:
-  knowledge: [HI-LEX-C64-MEASURE-02, HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04, HI-LEX-C74-SIGNS-05]
+  knowledge: [HI-LEX-C64-MEASURE-02, HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04, HI-LEX-C74-SIGNS-05, HI-LEX-C72-COST-05, HI-LEX-C73-EATING-05]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,13 +62,14 @@ Five: खुला, बंद, प्रवेश, निकास, देर. E
 it, and understand why the train has not come.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-02, HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04, HI-LEX-C74-SIGNS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-02, HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04, HI-LEX-C74-SIGNS-05, HI-LEX-C72-COST-05, HI-LEX-C73-EATING-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *der*]
 - [YOU SAY: *gāṛī der se hai*]
 - [YOU CONTRAST: *jaldī* and *der*]
 - [YOU WRITE: निकास, then देर, and say all five in order]
+- [YOU RECALL: say *kharīdnā*, then read **पीना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-05] -->

@@ -12,7 +12,7 @@ headword: "रश्मिः"
 gloss: "a ray"
 romanization: "raśmiḥ"
 concept_tag: SA-LIGHT-RASHMI
-prerequisites: [SA-C46-sun]
+prerequisites: [SA-C46-sun, SA-C44-dark, SA-C45-noon]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C46-LIGHT-02]
 practises:
-  knowledge: [SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02]
+  knowledge: [SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C44-COLOUR-02, SA-LEX-C45-DAYTIME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ That doubling is worth noticing, because it shows how Sanskrit builds: not two w
 The sun, and the line of light it lets down.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C44-COLOUR-02, SA-LEX-C45-DAYTIME-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *raśmiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *raviḥ*, then *raśmiḥ*]
+- [YOU RECALL: read **श्यामः**, then say *madhyāhnaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02] -->

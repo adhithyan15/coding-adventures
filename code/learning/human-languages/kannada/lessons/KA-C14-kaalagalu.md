@@ -9,7 +9,7 @@ headword: ವಸಂತ ಋತು ಬೇಸಿಗೆ ಮಳೆಗಾಲ ಚಳಿ
 gloss: spring, summer, monsoon, winter — native heat/rain/cold words, one shared Sanskrit "spring"
 romanization: "vasanta ṛtu bēsige maḷegāla caḷigāla"
 concept_tag: KA-SEASONS
-prerequisites: [KA-C13-dehada-bhagagalu]
+prerequisites: [KA-C13-dehada-bhagagalu, KA-C11-bannagalu]
 sounds: [kannada-vocalic-r, kannada-anusvara]
 roots: [dravidian-besige-male-chali, sanskrit-vasanta]
 etymology_hook: "ಬೇಸಿಗೆ besige (summer) and ಮಳೆ male (rain) are native Dravidian; ವಸಂತ ಋತು vasanta rutu (spring) uses the same Sanskrit vasanta AND the Sanskrit word rutu itself, 'season' — a double Sanskrit loan where Tamil/Malayalam just say kaalam"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02]
 practises:
-  knowledge: [KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02]
+  knowledge: [KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,13 +63,14 @@ that shapes Karnataka's agricultural year the most, not a clean four-way
 Western split.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bēsige" — summer, native]
 - [YOU SAY: "maḷegāla" — the rains]
 - [YOU SAY: "caḷigāla" — the cold season, native]
 - [YOU SAY: the double loan — "vasanta ṛtu" — both halves Sanskrit]
+- [YOU RECALL: say *kappu biḷi kempu nīli*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02] -->

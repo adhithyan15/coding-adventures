@@ -9,7 +9,7 @@ headword: "അനുഗ്രഹം"
 gloss: "a blessing"
 romanization: "anugrahaṁ"
 concept_tag: ML-NOUN-BLESSING
-prerequisites: [ML-C51-respect]
+prerequisites: [ML-C51-respect, ML-C49-perhaps]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C51-COURTESY-04]
 practises:
-  knowledge: [ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04]
+  knowledge: [ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04, ML-LEX-C49-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada blesses with ಆಶೀರ್ವಾದ (*āśīrvāda*), a different Sans
 Four. Gratitude, a favour, respect, a blessing.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04, ML-LEX-C49-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *anugrahaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anugrahaṁ*, then *bahumānaṁ*, both of them things given rather than taken]
+- [YOU RECALL: read **ഒരുപക്ഷേ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04] -->

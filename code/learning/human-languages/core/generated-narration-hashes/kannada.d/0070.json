@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 70,
-  "sourceHash": "fnv1a64:4b1f846bd6742e6e",
+  "sourceHash": "fnv1a64:511b1ef02e3b8acb",
   "lessonIds": [
     "KA-C70-say",
     "KA-C70-quotative",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch70.txt",
   "json": "kannada/narration/ch70.json",
-  "textHash": "fnv1a64:fce95ce8387f6824",
-  "jsonHash": "fnv1a64:1f81d24b689eb75d",
+  "textHash": "fnv1a64:5f0dad6bd43becb4",
+  "jsonHash": "fnv1a64:1f160cfe0fbabf1b",
   "findings": []
 }

@@ -9,7 +9,7 @@ headword: "തൈര്"
 gloss: "curd"
 romanization: "tairŭ"
 concept_tag: ML-NOUN-CURD
-prerequisites: [ML-C61-oil]
+prerequisites: [ML-C61-oil, ML-C59-mud]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C61-SHELF-03]
 practises:
-  knowledge: [ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03]
+  knowledge: [ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C59-AIR-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ On a Kerala plate it is the last course, spooned over rice to cool everything th
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C59-AIR-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tairŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāl*, then *tairŭ*, and say which one is made from the other]
+- [YOU RECALL: say *ceḷi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03] -->

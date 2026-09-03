@@ -9,7 +9,7 @@ headword: "ചന്ദ്രൻ"
 gloss: "the moon"
 romanization: "candran"
 concept_tag: ML-NOUN-MOON
-prerequisites: [ML-C53-sun]
+prerequisites: [ML-C53-sun, ML-C51-respect]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C53-SKY-03]
 practises:
-  knowledge: [ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03]
+  knowledge: [ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C51-COURTESY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam's inherited moon-word is തിങ്കൾ (*tiṅkaḷ*), and that w
 Three, and the last two were borrowed together.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C51-COURTESY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *candran*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūryan*, then *candran*, and hear the same tail on both]
+- [YOU RECALL: say *bahumānaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03] -->

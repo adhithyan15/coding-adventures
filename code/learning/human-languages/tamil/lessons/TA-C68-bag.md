@@ -9,7 +9,7 @@ headword: "பை"
 gloss: "a bag"
 romanization: "pai"
 concept_tag: TA-NOUN-BAG
-prerequisites: [TA-C68-buy]
+prerequisites: [TA-C68-buy, TA-C66-left, TA-C67-cap]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C68-SHOP-05]
 practises:
-  knowledge: [TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02, TA-LEX-C68-SHOP-05]
+  knowledge: [TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02, TA-LEX-C68-SHOP-05, TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ ask for, the பணம் you hand over, the வாங்கு that does it, an
 Five, and the shop is closed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02, TA-LEX-C68-SHOP-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02, TA-LEX-C68-SHOP-05, TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pai*]
 - [YOU SAY: all five in the order they happen — *kaḍai*, *vilai*, *paṇam*, *vāṅgu*, *pai*]
 - [YOU RECALL: say *paṇam*, then say *vāṅgu*, then say *pai*]
+- [YOU RECALL: say *iḍadu*, then read **தொப்பி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02, TA-LEX-C68-SHOP-05] -->

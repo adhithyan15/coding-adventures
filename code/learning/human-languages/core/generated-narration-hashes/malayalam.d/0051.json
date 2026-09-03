@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 51,
-  "sourceHash": "fnv1a64:333a2d525a83cbbe",
+  "sourceHash": "fnv1a64:423f5852d996e55f",
   "lessonIds": [
     "ML-C51-gratitude",
     "ML-C51-favour",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch51.txt",
   "json": "malayalam/narration/ch51.json",
-  "textHash": "fnv1a64:41a175295170ce2a",
-  "jsonHash": "fnv1a64:f89d170ff0de1615",
+  "textHash": "fnv1a64:24fb8992273238e5",
+  "jsonHash": "fnv1a64:1a1bc818118966db",
   "findings": []
 }

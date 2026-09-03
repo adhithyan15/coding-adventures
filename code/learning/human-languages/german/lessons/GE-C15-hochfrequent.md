@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-hochfrequent
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 425
-chapter: 20
+sequence: 435
+chapter: 21
 type: grammar
 headword: hatte, konnte
 gloss: the short list of Präteritum forms that stay spoken everywhere, and the reason the list is short

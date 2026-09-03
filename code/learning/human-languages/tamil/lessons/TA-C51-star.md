@@ -9,7 +9,7 @@ headword: "விண்மீன்"
 gloss: "a star"
 romanization: "viṇmīṉ"
 concept_tag: TA-NOUN-STAR
-prerequisites: [TA-C51-moon]
+prerequisites: [TA-C51-moon, TA-C49-good-wish, TA-C50-betel-leaf]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C51-SKY-04]
 practises:
-  knowledge: [TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04]
+  knowledge: [TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04, TA-LEX-C49-COURTESY-04, TA-LEX-C50-WELCOME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The sisters went other ways. Malayalam takes the Sanskrit നക്ഷത്ര�
 Four, and this one is a picture rather than a name.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04, TA-LEX-C49-COURTESY-04, TA-LEX-C50-WELCOME-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viṇmīṉ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nilā*, then *viṇmīṉ*, the big light and then the small ones]
+- [YOU RECALL: read **வாழ்த்து**, then say *veṟṟilai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04] -->

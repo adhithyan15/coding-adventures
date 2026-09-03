@@ -9,7 +9,7 @@ headword: "நிச்சயமாக"
 gloss: "certainly"
 romanization: "niccayamāka"
 concept_tag: TA-REPLY-CERTAINLY
-prerequisites: [TA-C47-enough]
+prerequisites: [TA-C47-enough, TA-C45-nose, TA-C46-doctor]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C47-REPLY-03]
 practises:
-  knowledge: [TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03]
+  knowledge: [TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C45-BODY-03, TA-LEX-C46-ROLE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ That same *-āka* is inside *nalamāka*, from the answer about being well, so th
 Three, and the third leaves no room for doubt.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C45-BODY-03, TA-LEX-C46-ROLE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *niccayamāka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pōdum*, then *niccayamāka*, and feel how much longer the second is]
+- [YOU RECALL: say *mūkku*, then read **மருத்துவர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03] -->

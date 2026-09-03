@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "The Older Generation",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2d62fb1f0478ffb4",
+  "sourceHash": "fnv1a64:d39615f6fed4c9e2",
   "lessons": [
     {
       "id": "KA-C45-grandfather",
@@ -255,7 +255,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3da9fc65afe28f68",
+      "sourceHash": "fnv1a64:1e5f628dcb483da3",
       "notice": null,
       "blocks": [
         {
@@ -338,6 +338,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *ajji*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bā*]"
             }
           ]
         },
@@ -373,7 +382,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47dc722b1ecddaf7",
+      "sourceHash": "fnv1a64:e917eb1bcccaf934",
       "notice": null,
       "blocks": [
         {
@@ -456,6 +465,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *gaṇḍa*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಕುಳಿತುಕೋ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಕುಳಿತುಕೋ**]"
             }
           ]
         },

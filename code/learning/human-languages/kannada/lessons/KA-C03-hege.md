@@ -9,7 +9,7 @@ headword: ಹೇಗೆ
 gloss: how
 romanization: "hēge"
 concept_tag: QUESTION-HOW
-prerequisites: [KA-C02-enu]
+prerequisites: [KA-C02-enu, KA-C01-sari, KA-C02-hesaru, KA-C02-nanna]
 sounds: [long-e]
 roots: [e-interrogative-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02]
 practises:
-  knowledge: [KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02]
+  knowledge: [KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02, KA-LEX-C01-SARI-01, KA-GRAMMAR-C01-SARI-02, KA-LEX-C02-HESARU-01, KA-ETYMON-C02-HESARU-02, KA-ETYMON-C02-HESARU-03, KA-LEX-C02-NANNA-01, KA-ETYMON-C02-NANNA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -52,11 +52,12 @@ Dravidian question-root heading Tamil's *eppaṭi* and Telugu's *elā* — a fam
 far older than the Sanskrit words Kannada, like its sisters, borrows so readily.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02, KA-LEX-C01-SARI-01, KA-GRAMMAR-C01-SARI-02, KA-LEX-C02-HESARU-01, KA-ETYMON-C02-HESARU-02, KA-ETYMON-C02-HESARU-03, KA-LEX-C02-NANNA-01, KA-ETYMON-C02-NANNA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hēge"]
 - [YOU SAY: the question family — *ēnu, hēge, yāru, elli, yāvāga*]
+- [YOU RECALL: say *sari*, then read **ಹೆಸರು**, then say *nanna*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C03-HEGE-02] -->

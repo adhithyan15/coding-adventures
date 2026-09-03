@@ -9,7 +9,7 @@ headword: "வாங்கு"
 gloss: "to buy, to get"
 romanization: "vāṅgu"
 concept_tag: TA-VERB-VAANGU
-prerequisites: [TA-C68-money]
+prerequisites: [TA-C68-money, TA-C66-right, TA-C67-sandal]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C68-SHOP-04]
 practises:
-  knowledge: [TA-SCRIPT-READ-KADAI-01, TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04]
+  knowledge: [TA-SCRIPT-READ-KADAI-01, TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04, TA-LEX-C66-WHICHWAY-05, TA-LEX-C67-WEAR-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,12 +55,13 @@ the pair covers most of what happens over a counter.
 Four, and now something can change hands.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-KADAI-01, TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-KADAI-01, TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04, TA-LEX-C66-WHICHWAY-05, TA-LEX-C67-WEAR-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vāṅgu*]
 - [YOU SAY: *koṭu*, then *vāṅgu* — and say which way each hand is moving]
 - [YOU RECALL: read **கடை**, then say *paṇam*, then say *vāṅgu*]
+- [YOU RECALL: read **வலது**, then say *seruppu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-KADAI-01, TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04] -->

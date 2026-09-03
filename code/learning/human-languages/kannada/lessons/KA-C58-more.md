@@ -9,7 +9,7 @@ headword: "ಹೆಚ್ಚು"
 gloss: "more, a lot"
 romanization: "heccu"
 concept_tag: KA-WORD-MORE
-prerequisites: [KA-C58-a-little]
+prerequisites: [KA-C58-a-little, KA-C56-basket]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C58-REPLY-02]
 practises:
-  knowledge: [KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02]
+  knowledge: [KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C56-HOUSE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Held against ಸ್ವಲ್ಪ it gives you a scale you can answer with. ಸ್
 Two, and they point in opposite directions.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C56-HOUSE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *heccu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *svalpa hālu*, then *heccu hālu*, and hear the amount change in front]
+- [YOU RECALL: read **ಬುಟ್ಟಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02] -->

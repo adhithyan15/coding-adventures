@@ -9,7 +9,7 @@ headword: ഹൃദയം
 gloss: heart — Sanskrit tatsama, and a genuine (if distant) cousin of the English word
 romanization: hṛdayaṁ
 concept_tag: ML-HEART-SANSKRIT
-prerequisites: [ML-C37-vaay]
+prerequisites: [ML-C37-vaay, ML-C35-suhruthu]
 sounds: [malayalam-vowel-sign-vocalic-r, malayalam-anusvara]
 roots: [sanskrit-hrid-heart, pie-kerd-heart]
 etymology_hook: "ഹൃദയം is Sanskrit हृदय (hrdaya), 'heart,' absorbed with the same nativizing -അം ending as കുടുംബം and ഇഷ്ടം. Its root, हृद् (hrd), is Indo-European, not just Indo-Aryan: the same PIE root behind Greek kardia, Latin cor/cordis, and English heart itself, so hrdayam and 'heart' are true, if very distant, cousins -- a resemblance that has nothing to do with Malayalam's own Dravidian family"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02]
 practises:
-  knowledge: [ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02]
+  knowledge: [ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C35-SUHRUTHU-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,7 +62,7 @@ all.
 **su** + **hṛd**, good-heart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C35-SUHRUTHU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ente hṛdayaṁ" — my heart]
@@ -70,6 +70,7 @@ all.
 - [YOU SAY: the friend-word, taken apart again — "su + hṛd"]
 - [YOU SAY: mouth, then heart — "vāy … hṛdayaṁ"]
 - [YOU SAY: all the face words once more — "kaṇṇŭ, cevi, mūkkŭ, vāy"]
+- [YOU RECALL: say *suhṛttŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02] -->

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-er-war
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 520
-chapter: 23
+sequence: 530
+chapter: 24
 type: phrase
 headword: er war
 gloss: he was — the same word as ich war, because the German simple past gives its third person no ending

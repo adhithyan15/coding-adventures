@@ -9,7 +9,7 @@ headword: "വിദ്യാർത്ഥി"
 gloss: "a student"
 romanization: "vidyārtthi"
 concept_tag: ML-NOUN-STUDENT
-prerequisites: [ML-C48-teacher]
+prerequisites: [ML-C48-teacher, ML-C46-cloth]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C48-ROLE-02]
 practises:
-  knowledge: [ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02]
+  knowledge: [ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C46-ASK-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ There is a chillu here too, the ർ in the middle, doing the same job as the ൽ
 Two: a teacher and a student.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C46-ASK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vidyārtthi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *adhyāpakan*, then *vidyārtthi*, the pair that need each other]
+- [YOU RECALL: read **തുണി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02] -->

@@ -412,7 +412,9 @@
       "id": "PA-A1-PRON-03",
       "category": "Panvaanch (pronouns)",
       "label": "third person: oh -- he, she, it",
-      "probe": null,
+      "probe": [
+        "PA-PRON-OH-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -422,13 +424,15 @@
         "A1-PRON-01"
       ],
       "punjabiSpecific": false,
-      "note": "NOT TAUGHT. oh hai appears exactly once, inside a prose copula paradigm in PA-C03-tusi-kivein-ho, with no atom. Nothing can be said about anyone who is not in the room, which closes a1-speaking-prepared-description as well."
+      "note": "Closed. oh covers he, she and it with one word and doubles as the pointing that -- which is where the taan at the head of a result comes from."
     },
     {
       "id": "PA-A1-PRON-04",
       "category": "Panvaanch (pronouns)",
       "label": "first person plural: asi -- we",
-      "probe": null,
+      "probe": [
+        "PA-PRON-ASI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -438,7 +442,7 @@
         "A1-PRON-01"
       ],
       "punjabiSpecific": false,
-      "note": "NOT TAUGHT, and the gap is odd: the corpus teaches the 1pl FUTURE ENDING -aange four times, in milaange, phir milaange, jaldi milaange and kall milaange, so the learner says 'we will meet' constantly and has never met the word for 'we'."
+      "note": "Closed, and it was the oddest gap in the file: the corpus teaches the first-person PLURAL future ending four separate times, so a reader has been saying we will meet for chapters without ever owning the word for we. The lesson says exactly that."
     },
     {
       "id": "PA-A1-PRON-05",
@@ -504,7 +508,9 @@
       "id": "PA-A1-PRON-08",
       "category": "Panvaanch (pronouns)",
       "label": "the relative jo",
-      "probe": null,
+      "probe": [
+        "PA-PRON-JO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -516,7 +522,7 @@
         "A1-SUB-05"
       ],
       "punjabiSpecific": false,
-      "note": "Zero occurrences of jo in any form. Three Spanish points about relative clauses are open on one absent word."
+      "note": "Closed. See PA-A1-JOIN-10 for the scope actually claimed."
     },
     {
       "id": "PA-A1-PRON-09",
@@ -532,7 +538,7 @@
         "A1-PRON-04"
       ],
       "punjabiSpecific": false,
-      "note": "Not taught."
+      "note": "Still open. aap is untaught and needs no new glyph."
     },
     {
       "id": "PA-A1-PRON-10",
@@ -548,7 +554,7 @@
         "A1-PRON-07"
       ],
       "punjabiSpecific": false,
-      "note": "Not taught."
+      "note": "Still open. The exclamative is untaught and needs no new glyph."
     },
     {
       "id": "PA-A1-POS-01",
@@ -1285,7 +1291,10 @@
       "id": "PA-A1-NEG-03",
       "category": "Nanh (negation)",
       "label": "negating a sentence: main nahin ...",
-      "probe": null,
+      "probe": [
+        "PA-NEG-CLAUSE-01",
+        "PA-NEG-NOT-UNDERSTOOD-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1295,7 +1304,7 @@
         "A1-OS-01"
       ],
       "punjabiSpecific": false,
-      "note": "Both negative words are taught and NO NEGATED SENTENCE PATTERN IS. There is no model anywhere for putting nahin into a clause, so 'I don't understand' -- arguably the single most necessary A1 utterance -- cannot be produced."
+      "note": "Closed. Both negative words were already taught and the CLAUSE pattern was not; the rule is one position -- nahin directly before the verb, nothing else moving -- and the sentence built on it uses the dative frame the track already owns from mainu ... pasand hai."
     },
     {
       "id": "PA-A1-NEG-04",
@@ -1321,7 +1330,10 @@
       "id": "PA-A1-NEG-05",
       "category": "Nanh (negation)",
       "label": "negative coordination: neither this nor that",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-NA-NA-01",
+        "PA-NEG-CLAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1331,7 +1343,7 @@
         "A1-CO-02"
       ],
       "punjabiSpecific": false,
-      "note": "Depends on the missing coordinator at PA-A1-JOIN-01."
+      "note": "Closed. It depended on the missing coordinator and the missing clause pattern together, and both now exist. na ... na is the first joining pattern in the book that stands in FRONT of both halves rather than between them."
     },
     {
       "id": "PA-A1-Q-01",
@@ -1376,7 +1388,9 @@
       "id": "PA-A1-Q-03",
       "category": "Prashan (asking questions)",
       "label": "kaun: who",
-      "probe": null,
+      "probe": [
+        "PA-Q-KAUN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1386,13 +1400,16 @@
         "A1-PRON-06"
       ],
       "punjabiSpecific": false,
-      "note": "Named once, in a romanised prose mnemonic in PA-C02-ki and PA-C03-kivein, in Latin letters, never in Gurmukhi, never an atom, never practised."
+      "note": "Closed. kaun had been NAMED once, in a romanised prose mnemonic, in Latin letters -- never written in Gurmukhi, never an atom, never practised. That is a different kind of gap from merely absent: the book told the reader it existed and never handed it over."
     },
     {
       "id": "PA-A1-Q-04",
       "category": "Prashan (asking questions)",
       "label": "kithe: where",
-      "probe": null,
+      "probe": [
+        "PA-Q-KITTHE-01",
+        "PA-SCRIPT-KITTHE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1403,13 +1420,15 @@
         "A1-NG3-01"
       ],
       "punjabiSpecific": false,
-      "note": "Same prose mnemonic, same status. This is the one that closes a1-speaking-personal-interview, because 'where do you live' is the question that paper part exists to ask."
+      "note": "Closed, and it is the one the note singled out as closing the spoken interview. kitthe is the ONLY word in seven chapters that needed a new letter -- the tha taught one lesson earlier -- and the addak that doubles it is load-bearing."
     },
     {
       "id": "PA-A1-Q-05",
       "category": "Prashan (asking questions)",
       "label": "kad: when",
-      "probe": null,
+      "probe": [
+        "PA-Q-KADON-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1419,13 +1438,15 @@
         "A1-NG4-02"
       ],
       "punjabiSpecific": false,
-      "note": "Same prose mnemonic, same status."
+      "note": "Closed. kadon and jadon differ by exactly one letter -- ka- asks, ja- answers -- so the answer taught two chapters earlier turns out to have been half of a pair."
     },
     {
       "id": "PA-A1-Q-06",
       "category": "Prashan (asking questions)",
       "label": "kyon: why",
-      "probe": null,
+      "probe": [
+        "PA-Q-KYON-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1436,7 +1457,7 @@
         "A1-SUB-06"
       ],
       "punjabiSpecific": false,
-      "note": "NOT EVEN NAMED. kyon is the one member of the k- family the mnemonic omits, and kyunki ('because') is absent too, so cause can be neither asked for nor given."
+      "note": "Closed. kyon was the one member of the k- family the chapter mnemonic omitted, which is why cause could be neither asked for nor given; both halves of that are now taught."
     },
     {
       "id": "PA-A1-Q-07",
@@ -1460,7 +1481,9 @@
       "id": "PA-A1-Q-08",
       "category": "Prashan (asking questions)",
       "label": "kinne: how much, how many",
-      "probe": null,
+      "probe": [
+        "PA-Q-KINNE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1470,7 +1493,7 @@
         "A1-NG2-01"
       ],
       "punjabiSpecific": false,
-      "note": "Not taught, and moot above five in any case."
+      "note": "Closed with kinne, completing the k- family on the page."
     },
     {
       "id": "PA-A1-Q-09",
@@ -1486,7 +1509,7 @@
         "A1-F1-04"
       ],
       "punjabiSpecific": false,
-      "note": "Not taught."
+      "note": "Still open. A tag question needs no new glyph; one new item per lesson left no sixth slot in the question chapter."
     },
     {
       "id": "PA-A1-Q-10",
@@ -1801,7 +1824,10 @@
       "id": "PA-A1-JOIN-01",
       "category": "Jorr (joining and subordination)",
       "label": "and: joining two nouns, and joining two clauses",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-ATE-01",
+        "PA-JOIN-ATE-CLAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1811,13 +1837,15 @@
         "A1-CO-01"
       ],
       "punjabiSpecific": false,
-      "note": "ABSENT. te and ate return zero conjunction uses in 226 lessons -- every apparent hit is the script-drill syllable te or the Sanskrit dative inside namas-te. A learner cannot say 'tea and milk' although both nouns are taught in the same chapter."
+      "note": "Closed. ate joins two nouns and two whole clauses, and both are typed. Its shorter twin te is what Punjabi usually says -- and te is also a script-drill syllable, which is exactly why a search of the corpus for and kept finding the drill and never the conjunction."
     },
     {
       "id": "PA-A1-JOIN-02",
       "category": "Jorr (joining and subordination)",
       "label": "or: offering two alternatives",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-JAAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1828,13 +1856,16 @@
         "A1-F3-02"
       ],
       "punjabiSpecific": false,
-      "note": "jaan is absent. So is any way to ask 'tea or milk?', which a1-speaking-transactional-role-play needs."
+      "note": "Closed with jaan, which stands where ate stands and asks the listener to choose."
     },
     {
       "id": "PA-A1-JOIN-03",
       "category": "Jorr (joining and subordination)",
       "label": "but: setting one thing against another",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-PAR-01",
+        "PA-JOIN-LEKIN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1845,7 +1876,7 @@
         "A1-F2-09"
       ],
       "punjabiSpecific": false,
-      "note": "par and lekin are both absent; the only apparent hits are the first two letters of parivar."
+      "note": "Closed TWICE, and the pair is the point: par is the inherited word and lekin is Arabic by way of Persian. Both are listed because the point names both, and because the doublet they form is what closes PA-A1-REG-05."
     },
     {
       "id": "PA-A1-JOIN-04",
@@ -1861,13 +1892,16 @@
         "A1-CO-05"
       ],
       "punjabiSpecific": false,
-      "note": "Absent."
+      "note": "Still absent, and the one joining point of eleven left open. It needs a paired correlative this tranche did not teach, and it needs no new glyph -- a one-lesson job."
     },
     {
       "id": "PA-A1-JOIN-05",
       "category": "Jorr (joining and subordination)",
       "label": "because: giving a reason",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-KYUNKI-01",
+        "PA-Q-KYON-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1877,13 +1911,16 @@
         "A1-SUB-06"
       ],
       "punjabiSpecific": false,
-      "note": "kyunki is absent, and so is kyon -- see PA-A1-Q-06."
+      "note": "Closed, and it needed the missing question word first: the note recorded that kyunki was absent AND that kyon was too. kyunki is kyon plus ki, so both halves are taught in the same chapter and the join is the only new thing."
     },
     {
       "id": "PA-A1-JOIN-06",
       "category": "Jorr (joining and subordination)",
       "label": "that-clauses: saying what somebody said or thinks",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-KI-01",
+        "PA-JOIN-SOCHDA-KI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1895,13 +1932,15 @@
         "A1-F2-11"
       ],
       "punjabiSpecific": false,
-      "note": "The complementiser ki is absent. ki ('what') is taught and the short-vowel ki that opens a subordinate clause is a different word and never appears -- so sochna, samajhna and janna are all taught and none of them can be given anything to think, understand or know."
+      "note": "Closed. The complementiser ki is one sihari away from the ki the track has taught since its second chapter, and the lesson teaches the pair as a minimal contrast. sochna finally has something to think."
     },
     {
       "id": "PA-A1-JOIN-07",
       "category": "Jorr (joining and subordination)",
       "label": "when: locating one event against another",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-JADON-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1911,13 +1950,16 @@
         "A1-SUB-08"
       ],
       "punjabiSpecific": false,
-      "note": "jadon is absent."
+      "note": "Closed with jadon, which opens its clause rather than following it."
     },
     {
       "id": "PA-A1-JOIN-08",
       "category": "Jorr (joining and subordination)",
       "label": "if: the conditional clause",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-JE-01",
+        "PA-JOIN-JE-TAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1927,13 +1969,15 @@
         "A1-SUB-08"
       ],
       "punjabiSpecific": false,
-      "note": "je is absent."
+      "note": "Closed. Both atoms are listed because Punjabi marks BOTH ends of a condition and je ... taan is what a learner will hear."
     },
     {
       "id": "PA-A1-JOIN-09",
       "category": "Jorr (joining and subordination)",
       "label": "in order to: purpose",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-LAI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1943,13 +1987,16 @@
         "A1-SUB-07"
       ],
       "punjabiSpecific": false,
-      "note": "Absent."
+      "note": "Closed with lai, which looks forward to a purpose where kyunki looks back at a cause -- and which FOLLOWS what it applies to, unlike the j- words that open their clause."
     },
     {
       "id": "PA-A1-JOIN-10",
       "category": "Jorr (joining and subordination)",
       "label": "the relative clause with jo",
-      "probe": null,
+      "probe": [
+        "PA-PRON-JO-01",
+        "PA-JOIN-JO-OH-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1960,13 +2007,20 @@
         "A1-SUB-05"
       ],
       "punjabiSpecific": false,
-      "note": "Absent. Enumerated here as well as at PA-A1-PRON-08 because the Spanish inventory files relatives under both pronouns and subordination."
+      "note": "Closed at the A1 use the point names, with the jo ... oh ... pair. The canonical RELATIVE-CLAUSE concept is deliberately NOT claimed: the corpus spine stages it at B2, and what is taught here is the two-ended pattern rather than the full relative system."
     },
     {
       "id": "PA-A1-JOIN-11",
       "category": "Jorr (joining and subordination)",
       "label": "any two-clause sentence at all",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-ATE-CLAUSE-01",
+        "PA-JOIN-KI-01",
+        "PA-JOIN-KYUNKI-01",
+        "PA-JOIN-JE-TAN-01",
+        "PA-JOIN-JADON-01",
+        "PA-JOIN-JO-OH-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1977,7 +2031,7 @@
         "A1-SUB-03"
       ],
       "punjabiSpecific": false,
-      "note": "THE COLUMN IS EMPTY, 0 OF 11, AND THAT IS THE HEADLINE OF THIS FILE. Not one of the ten joining devices above exists anywhere in the corpus, in Gurmukhi or in romanisation. The longest structure the track teaches is a four-slot single clause. Every multi-word item in the corpus is a fixed juxtaposition or a lexicalised chunk, so the writing paper a1-writing-reader-purpose-message asks for a message the taught inventory cannot produce."
+      "note": "THE COLUMN IS NO LONGER EMPTY. Six different two-clause sentences are available and all six are listed, because this point is the column's summary. The longest structure the track taught was a four-slot single clause; it is now a paragraph. And the finding under the finding: ELEVEN of the eleven joining devices needed no new sign -- every one is spelled in glyphs the track taught long ago. This was never a script debt."
     },
     {
       "id": "PA-A1-TIME-01",
@@ -2546,7 +2600,10 @@
       "id": "PA-A1-F-21",
       "category": "Vihaar (communicative functions)",
       "label": "disagree",
-      "probe": null,
+      "probe": [
+        "PA-NEG-CLAUSE-01",
+        "PA-JOIN-PAR-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -2556,13 +2613,16 @@
         "A1-F2-07"
       ],
       "punjabiSpecific": false,
-      "note": "nahin is taught as a bare 'no' and no negated clause exists, so a learner can refuse a yes-or-no question and cannot contradict a statement."
+      "note": "Closed. A learner could refuse a yes-or-no question and could not contradict a statement; the clause pattern supplies the contradiction and par supplies the but that softens it."
     },
     {
       "id": "PA-A1-F-32",
       "category": "Vihaar (communicative functions)",
       "label": "say that you do not know, or do not understand",
-      "probe": null,
+      "probe": [
+        "PA-NEG-NOT-UNDERSTOOD-01",
+        "PA-LEX-PATA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -2572,13 +2632,16 @@
         "A1-F2-15"
       ],
       "punjabiSpecific": false,
-      "note": "OPEN, AND IT IS THE MOST NEEDED SENTENCE AT THIS LEVEL. janna and samajhna are both taught and neither can be negated, because no negated clause pattern exists (PA-A1-NEG-03). A candidate in a1-listening-short-exchanges who misses something has no way to say so."
+      "note": "Closed, and the note called it the most needed sentence at this level. Both admissions now exist and they are different: mainu samajh nahin aai is not having FOLLOWED, mainu nahin pata is not having the FACT."
     },
     {
       "id": "PA-A1-F-22",
       "category": "Vihaar (communicative functions)",
       "label": "give an opinion or an evaluation",
-      "probe": null,
+      "probe": [
+        "PA-JOIN-SOCHDA-KI-01",
+        "PA-JOIN-KI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -2591,7 +2654,7 @@
         "A1-F2-04"
       ],
       "punjabiSpecific": false,
-      "note": "OPEN, AND IT IS THE COMPLEMENTISER. 'I think that ...' needs the ki that PA-A1-JOIN-06 records as absent. sochna is taught and has nothing to think."
+      "note": "Closed for the opinion frame. sochna was taught and had nothing to think; it now has the complementiser the note identified as the blocker."
     },
     {
       "id": "PA-A1-F-23",
@@ -4024,7 +4087,11 @@
       "id": "PA-A1-REG-05",
       "category": "Bolchaal (register: familiar and respectful, Sanskritic and Perso-Arabic)",
       "label": "when to choose which",
-      "probe": null,
+      "probe": [
+        "PA-REG-DOUBLET-01",
+        "PA-LEX-DHANVAAD-01",
+        "PA-LEX-SHUKRIYA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -4035,7 +4102,7 @@
         "A1-F5-07"
       ],
       "punjabiSpecific": false,
-      "note": "The tu/tusi rule IS stated. The doublet rule is not: the track teaches dhanvaad and shukriya side by side and never says which to use when, so a learner owns both and can choose neither. One lesson would close it."
+      "note": "Closed, and the note said one lesson would do it. The lesson states the rule on the pair the book already taught -- dhanvaad against shukriya -- and on the pair it teaches two lessons earlier, par against lekin: the Sanskritic word leans formal and written, the Perso-Arabic one everyday and spoken, both are understood everywhere, and choosing the other is never an error. All three atoms are listed because the rule is only demonstrable on a pair."
     },
     {
       "id": "PA-A1-FRM-01",

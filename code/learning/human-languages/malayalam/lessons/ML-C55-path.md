@@ -9,7 +9,7 @@ headword: "വഴി"
 gloss: "a way, a path"
 romanization: "vaḻi"
 concept_tag: ML-NOUN-PATH
-prerequisites: [ML-C55-homeland]
+prerequisites: [ML-C55-homeland, ML-C53-star]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C55-GROUND-04]
 practises:
-  knowledge: [ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04]
+  knowledge: [ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04, ML-LEX-C53-SKY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The road and the method being one word is not peculiar to Malayalam. English *wa
 Four: the river, the rock, the home place, and the way through it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04, ML-LEX-C53-SKY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vaḻi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puḻa*, then *vaḻi*, and hold the ഴ in both]
+- [YOU RECALL: read **നക്ഷത്രം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04] -->

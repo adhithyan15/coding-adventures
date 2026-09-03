@@ -9,7 +9,7 @@ headword: "ಉಪಕಾರ"
 gloss: "a good turn, a favour"
 romanization: "upakāra"
 concept_tag: KA-NOUN-FAVOUR
-prerequisites: [KA-C51-gratitude]
+prerequisites: [KA-C51-gratitude, KA-C49-enough]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C51-COURTESY-02]
 practises:
-  knowledge: [KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02]
+  knowledge: [KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C49-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ And the *kāra* here rests on *kṛ*, 'to do', which is the same *kṛ* inside t
 Two: gratitude, and a good turn.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C49-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *upakāra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *upakāra*, then *kṛtajñate*, and name the piece they share]
+- [YOU RECALL: read **ಸಾಕು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02] -->

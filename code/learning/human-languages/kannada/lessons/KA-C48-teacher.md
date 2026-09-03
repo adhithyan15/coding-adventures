@@ -9,7 +9,7 @@ headword: "ಶಿಕ್ಷಕ"
 gloss: "a teacher"
 romanization: "śikṣaka"
 concept_tag: KA-NOUN-TEACHER
-prerequisites: [KA-C47-stomach]
+prerequisites: [KA-C47-stomach, KA-C46-fruit]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C48-ROLE-01]
 practises:
-  knowledge: [KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01]
+  knowledge: [KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01, KA-LEX-C46-ASK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The formal word is not what a Kannada child shouts across a classroom. That is �
 The first of five ways to say who someone is.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01, KA-LEX-C46-ASK-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śikṣaka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śikṣaka*, then ask *nimma hesaru ēnu?* as though meeting one]
+- [YOU RECALL: say *haṇṇu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01] -->

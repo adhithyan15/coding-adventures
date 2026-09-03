@@ -12,7 +12,7 @@ headword: "पैसा"
 gloss: "money"
 romanization: "paisā"
 concept_tag: HI-NOUN-MONEY
-prerequisites: [HI-C71-very, HI-C71-also]
+prerequisites: [HI-C71-very, HI-C71-also, HI-C70-game]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C72-COST-01]
 practises:
-  knowledge: [HI-LEX-C71-TODAY-02, HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-03]
+  knowledge: [HI-LEX-C71-TODAY-02, HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-03, HI-LEX-C70-LEISURE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -61,13 +61,14 @@ same one inside **कैसे**.
 The first of five words for buying something.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03, HI-LEX-C70-LEISURE-01] -->
 
 [PAUSE 1s]
 - [YOU RECALL: say *bhī*, then read **बहुत** and say what it means]
 - [YOU HEAR: *paisā*]
 - [YOU SAY: *paisā*]
 - [YOU READ: पैसा, and find the ै it shares with कैसे]
+- [YOU RECALL: say *khel*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01] -->

@@ -12,7 +12,7 @@ headword: "वहाँ"
 gloss: "there — where I am not"
 romanization: "vahā̃"
 concept_tag: HI-DEIXIS-THERE
-prerequisites: [HI-C40-here]
+prerequisites: [HI-C40-here, HI-C38-pair]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C40-DEIXIS-04]
 practises:
-  knowledge: [HI-LEX-C40-DEIXIS-02, HI-LEX-C40-DEIXIS-03, HI-LEX-C40-DEIXIS-04]
+  knowledge: [HI-LEX-C40-DEIXIS-02, HI-LEX-C40-DEIXIS-03, HI-LEX-C40-DEIXIS-04, HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,11 +51,12 @@ differ by one sound at the front — **v-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-04, HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "वहाँ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **पैर / पाँव**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-04] -->

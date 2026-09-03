@@ -9,7 +9,7 @@ headword: "ನೂಲು"
 gloss: "thread, yarn"
 romanization: "nūlu"
 concept_tag: KA-NOUN-THREAD
-prerequisites: [KA-C61-sugar]
+prerequisites: [KA-C61-sugar, KA-C60-cow]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C62-MADE-01]
 practises:
-  knowledge: [KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01]
+  knowledge: [KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01, KA-LEX-C60-ANIMAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The same shape does double duty: ನೂಲು is the thread and it is equally th
 The first of five things a household makes or keeps.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01, KA-LEX-C60-ANIMAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nūlu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nūlu*, then *baṭṭe*, and say which one comes first]
+- [YOU RECALL: say *hasu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01] -->

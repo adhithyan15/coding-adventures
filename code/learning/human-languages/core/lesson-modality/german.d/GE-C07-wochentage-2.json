@@ -2,20 +2,20 @@
   "lesson": {
     "id": "GE-C07-wochentage-2",
     "language": "german",
-    "chapter": 10,
-    "sequence": 230,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "chapter": 11,
+    "sequence": 241,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:1a05e8281c02d7dc"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8912cda3c560391"
   },
   "findings": []
 }

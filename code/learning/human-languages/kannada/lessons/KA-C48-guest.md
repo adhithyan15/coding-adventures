@@ -9,7 +9,7 @@ headword: "ಅತಿಥಿ"
 gloss: "a guest"
 romanization: "atithi"
 concept_tag: KA-NOUN-GUEST
-prerequisites: [KA-C48-farmer]
+prerequisites: [KA-C48-farmer, KA-C46-book]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C48-ROLE-05]
 practises:
-  knowledge: [KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05]
+  knowledge: [KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C46-ASK-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Five ways to say who someone is. Four came from Sanskrit, one from Arabic by way
 Five roles: a teacher, a student, a doctor, a farmer, a guest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05, KA-LEX-C46-ASK-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *atithi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then name the two that share a root]
+- [YOU RECALL: say *pustaka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04, KA-LEX-C48-ROLE-05] -->

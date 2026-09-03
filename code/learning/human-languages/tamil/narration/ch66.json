@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Which Way",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a168004a453e491b",
+  "sourceHash": "fnv1a64:60d00b990d3efc05",
   "lessons": [
     {
       "id": "TA-C66-up",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8437fe55e1e13066",
+      "sourceHash": "fnv1a64:5422a6f8ca5585ce",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *iṅgē*, *aṅgē*, *mēlē* — three words, one ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nel, then read குடி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nel*, then read **குடி**]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2f9abf4ea75ee6e",
+      "sourceHash": "fnv1a64:ea93e9b9752f8547",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: both bare words, *mēl* and *kīḻ*, then both with the ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read புல், then say naḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **புல்**, then say *naḍa*]"
             }
           ]
         },
@@ -418,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c11a023a05a2b202",
+      "sourceHash": "fnv1a64:ede12bffefd14b14",
       "notice": null,
       "blocks": [
         {
@@ -509,6 +527,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mēlē*, *kīḻē*, *uḷḷē* — three place-words, one ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say payir, then read நிறுத்து",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *payir*, then read **நிறுத்து**]"
             }
           ]
         },
@@ -544,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cba845d8bf3c043d",
+      "sourceHash": "fnv1a64:0142b13cc4aa0d44",
       "notice": null,
       "blocks": [
         {
@@ -631,6 +658,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the bare pair — *uḷ* and *veḷi* — then both with the ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read களம், then say tiṟa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **களம்**, then say *tiṟa*]"
             }
           ]
         },
@@ -666,7 +702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d591bae2802b8d0f",
+      "sourceHash": "fnv1a64:3bf7d5c503fa990c",
       "notice": null,
       "blocks": [
         {
@@ -757,6 +793,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *idu*, *adu*, *valadu* — three words, one ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṟuvaṭai, then read மூடு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṟuvaṭai*, then read **மூடு**]"
             }
           ]
         },

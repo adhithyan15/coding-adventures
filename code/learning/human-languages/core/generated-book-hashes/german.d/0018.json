@@ -1,16 +1,16 @@
 {
   "language": "german",
   "chapter": 18,
-  "sourceHash": "fnv1a64:8c9967a6f1e97e0f",
+  "sourceHash": "fnv1a64:4e0d3f016c0f3a7e",
   "lessonIds": [
-    "GE-C15-sagen",
-    "GE-C15-gesagt",
-    "GE-C15-partizip",
-    "GE-C15-gemacht",
-    "GE-C15-gelernt",
-    "GE-C15-gewohnt",
-    "GE-C15-ge-praefix",
-    "GE-C15-partizip-practice"
+    "GE-C14-haben",
+    "GE-C14-hab-stamm",
+    "GE-C14-du-hast",
+    "GE-C14-er-hat",
+    "GE-C14-b-verlust",
+    "GE-C14-einen",
+    "GE-C14-habere",
+    "GE-C14-practice"
   ],
-  "tex": "german/book/chapters/ch18-partizip.tex"
+  "tex": "german/book/chapters/ch18-haben.tex"
 }

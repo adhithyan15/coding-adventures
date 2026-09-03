@@ -62,6 +62,7 @@ Romance tracks.) For a first meeting, use **আপনি**.
 - [YOU SAY: the three — *tui* (intimate) / *tumi* (familiar) / *āpni* (respectful)]
 - [YOU SAY: the English cousin of *tumi* (**thou**)]
 - [YOU SAY: which you use on first meeting (*āpni*)]
+- [YOU RECALL: read **নাম**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C02-TUMIAPNI-01] -->

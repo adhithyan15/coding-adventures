@@ -9,7 +9,7 @@ headword: "ಕಾಗೆ"
 gloss: "a crow"
 romanization: "kāge"
 concept_tag: KA-NOUN-CROW
-prerequisites: [KA-C60-hen]
+prerequisites: [KA-C60-hen, KA-C58-no-thanks]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C60-ANIMAL-04]
 practises:
-  knowledge: [KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04]
+  knowledge: [KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04, KA-LEX-C58-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Of all the birds in this chapter it is the one a household actually deals with d
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04, KA-LEX-C58-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kāge*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāge*, then *kōḷi*, and say which one is kept and which one turns up]
+- [YOU RECALL: read **ಬೇಡ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04] -->

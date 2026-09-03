@@ -9,7 +9,7 @@ headword: "வலது"
 gloss: "the right side"
 romanization: "valadu"
 concept_tag: TA-ADJECTIVE-VALADU
-prerequisites: [TA-C66-outside]
+prerequisites: [TA-C66-outside, TA-C64-harvest, TA-C65-close]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C66-WHICHWAY-05]
 practises:
-  knowledge: [TA-LEX-C66-WHICHWAY-04, TA-LEX-C66-WHICHWAY-05]
+  knowledge: [TA-LEX-C66-WHICHWAY-04, TA-LEX-C66-WHICHWAY-05, TA-LEX-C64-HARVEST-05, TA-LEX-C65-DOING-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -63,12 +63,13 @@ can point at.
 > than a settled derivation.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-04, TA-LEX-C66-WHICHWAY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-04, TA-LEX-C66-WHICHWAY-05, TA-LEX-C64-HARVEST-05, TA-LEX-C65-DOING-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *valadu*]
 - [YOU SAY: *valadu kai* — "the right hand"]
 - [YOU SAY: *idu*, *adu*, *valadu* — three words, one ending]
+- [YOU RECALL: say *aṟuvaṭai*, then read **மூடு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-05] -->

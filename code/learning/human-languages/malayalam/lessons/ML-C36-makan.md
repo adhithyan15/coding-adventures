@@ -9,7 +9,7 @@ headword: മകൻ
 gloss: son — Proto-Dravidian, closely matching Tamil, where Kannada softened the same root
 romanization: makan
 concept_tag: ML-SON
-prerequisites: [ML-C36-kutti]
+prerequisites: [ML-C36-kutti, ML-C33-vaayikkuka]
 sounds: [malayalam-chillu-n]
 roots: [proto-dravidian-makan-son]
 etymology_hook: "മകൻ continues Proto-Dravidian *makan, 'son' -- Tamil keeps almost the same shape, மகன் (makan); Kannada lenited the intervocalic -k- to -g- and dropped the final -n, giving ಮಗ (maga), so Malayalam and Tamil hold the more conservative form here -- the same closeness Chapter 1 already found between Malayalam's nandi/athe/illa/sari and Tamil's twins"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02]
 practises:
-  knowledge: [ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02]
+  knowledge: [ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,7 +57,7 @@ greetings already showed in *nandi*, *athe*, *illa* and *śari*, this time
 in a family word rather than a greeting.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ithu ente makanāṇŭ" — this is my son]
@@ -65,6 +65,7 @@ in a family word rather than a greeting.
   (Kannada)]
 - [YOU SAY: general then specific — "kuṭṭi … makan"]
 - [YOU SAY: the friend-word, once more — "suhṛttŭ" — su plus hṛd]
+- [YOU RECALL: read **വായിക്കുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02] -->

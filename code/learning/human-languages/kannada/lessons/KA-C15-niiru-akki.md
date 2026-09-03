@@ -9,7 +9,7 @@ headword: ನೀರು ಅಕ್ಕಿ ಅನ್ನ
 gloss: water (matching Tamil's neer, unlike Malayalam), and rice raw/cooked
 romanization: "nīru akki anna"
 concept_tag: KA-FOOD-BASIC
-prerequisites: [KA-C14-kaalagalu]
+prerequisites: [KA-C14-kaalagalu, KA-C12-kutumba]
 sounds: [kannada-vowel-sign-ii, kannada-geminate-kka]
 roots: [niiru-water-dravidian, akki-rice-dravidian]
 etymology_hook: "ನೀರು niiru (water) matches Tamil's nir/thanneer closely — unlike Malayalam's genuinely different vellam; ಅಕ್ಕಿ akki (rice) and ಅನ್ನ anna (cooked rice) complete the same raw/cooked distinction found across the family"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02]
 practises:
-  knowledge: [KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02]
+  knowledge: [KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -52,12 +52,13 @@ the *veḷ-* "bright/white" root.
   influenced, the same general idea as Tamil's *sātam*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nīru" — water, matching Tamil]
 - [YOU SAY: "akki" — raw rice]
 - [YOU SAY: "anna" — cooked rice]
+- [YOU RECALL: say *appa amma aṇṇa tamma akka taṅgi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02] -->

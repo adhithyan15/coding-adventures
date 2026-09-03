@@ -8,7 +8,7 @@ type: word
 headword: "onnu randu moonnu naalu anchu"
 gloss: hear and say one to five before meeting their written forms
 concept_tag: ML-NUMBERS-1-5
-prerequisites: [ML-C01-namaskaram]
+prerequisites: [ML-C01-namaskaram, ML-C05-taamasikkuka, ML-C05-joli-ceyyuka]
 sounds: [malayalam-inherent-a, chandrakkala, gemination]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Malayalam split from Tamil about a thousand years ago; its first five number words remain close cousins"
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03]
 practises:
-  knowledge: [ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03]
+  knowledge: [ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03, ML-LEX-TAAMASIKKUKA-01, ML-CONCEPT-C05-POSTPOSITION-IL-01, ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,11 +65,12 @@ Five moved furthest: an older *aintu* softened toward Malayalam *anchu*. Say
 *an-chu* slowly, then normally. The sound comes before its spelling.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03, ML-LEX-TAAMASIKKUKA-01, ML-CONCEPT-C05-POSTPOSITION-IL-01, ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01] -->
 
 - [YOU SAY: *onnu, randu, moonnu, naalu, anchu* while raising one more finger]
 - [YOU HEAR: *moonnu*; YOU SHOW: 3]
 - [YOU HEAR: *anchu*; YOU SHOW: 5]
+- [YOU RECALL: say *tāmasikkuka*, then say *jōli ceyyuka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03] -->

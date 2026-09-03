@@ -9,7 +9,7 @@ headword: আমার
 romanization: "āmār"
 gloss: my
 concept_tag: PRONOUN-MY
-prerequisites: [BN-C02-naam]
+prerequisites: [BN-C02-naam, BN-C01-ashi]
 sounds: [independent-aa]
 roots: [asmad-first-person]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [BN-CONCEPT-C02-AMAR-01]
 practises:
-  knowledge: [BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-NAAM-01]
+  knowledge: [BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C01-ASHI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,12 +60,13 @@ entirely — you will see this again and again, and it makes Bengali, in this on
 respect, simpler than its western cousins.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-NAAM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C01-ASHI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "āmār"]
 - [YOU SAY: its owner (*āmi*, "I")]
 - [YOU SAY: does it change for a man vs. a woman? (No — Bengali has no gender)]
+- [YOU RECALL: say *āshi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-NAAM-01] -->

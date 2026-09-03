@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 39,
-  "sourceHash": "fnv1a64:1a5c7b9b093bef67",
+  "sourceHash": "fnv1a64:5fe29c9afd0e38f4",
   "lessonIds": [
     "KA-C39-chaha",
     "KA-C39-kaapi",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch39.txt",
   "json": "kannada/narration/ch39.json",
-  "textHash": "fnv1a64:576de22964d0d780",
-  "jsonHash": "fnv1a64:94703e0ebfeaeaea",
+  "textHash": "fnv1a64:d7cb74b9ee104f7f",
+  "jsonHash": "fnv1a64:f475ac0a73ea8d4a",
   "findings": []
 }

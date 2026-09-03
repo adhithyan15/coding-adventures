@@ -12,7 +12,7 @@ headword: "बाहुः"
 gloss: "an arm"
 romanization: "bāhuḥ"
 concept_tag: SA-LIMB-BAHU
-prerequisites: [SA-C33-sea]
+prerequisites: [SA-C33-sea, SA-C32-tree, SA-C33-river]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C34-LIMB-01]
 practises:
-  knowledge: [SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01]
+  knowledge: [SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01, SA-LEX-C32-TREE-01, SA-LEX-C33-LAND-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its English cousin is *bough* — the arm of a tree, which is exactly the pictur
 A sixth part of the body, and the branch of a tree hiding inside it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01, SA-LEX-C32-TREE-01, SA-LEX-C33-LAND-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bāhuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *samudraḥ*, then *bāhuḥ*]
+- [YOU RECALL: say *taruḥ*, then read **नदी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01] -->

@@ -9,7 +9,7 @@ headword: "கோபம்"
 gloss: "anger"
 romanization: "kōpam"
 concept_tag: TA-NOUN-ANGER
-prerequisites: [TA-C71-play]
+prerequisites: [TA-C71-play, TA-C70-table, TA-C71-rise]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C72-FEEL-01]
 practises:
-  knowledge: [TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01]
+  knowledge: [TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01, TA-LEX-C70-ROOM-01, TA-LEX-C71-DAY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,13 +54,14 @@ deep, and it is a good bet for a Tamil noun.
 The first of five feelings.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01, TA-LEX-C70-ROOM-01, TA-LEX-C71-DAY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kōpam*]
 - [YOU READ: **கோபம்**, and point at the sign of the letter you met last chapter]
 - [YOU SAY: *paṇam*, then *kōpam*, and name the ending they share]
 - [YOU RECALL: say *kaḻuvu*, then say *viḷaiyāḍu*, then say *kōpam*]
+- [YOU RECALL: say *mēsai*, then read **எழு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01] -->

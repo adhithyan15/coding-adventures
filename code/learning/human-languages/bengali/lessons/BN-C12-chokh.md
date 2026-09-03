@@ -9,7 +9,7 @@ headword: চোখ
 romanization: chokh
 gloss: eye — built on the same Sanskrit root as "to see," worn down through three centuries of Bengali spelling before it looked like this
 concept_tag: BN-BODY-EYE
-prerequisites: [BN-C11-bon]
+prerequisites: [BN-C11-bon, BN-C10-dudh, BN-C10-bhat]
 sounds: [kh-aspirate-review]
 roots: [caksus-see]
 etymology_hook: "চোখ traces to Sanskrit *cakṣus*, 'eye,' itself built on √cakṣ 'to see,' PIE kʷeḱ- 'to appear, to see' — Persian čašm is its nearest named cousin, and no secure English descendant is claimed; Old Bengali softened cakṣus through *cakhu* and *coukh* into today's চোখ, an ardhatatsama, half old sound and half new"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C12-CHOKH-01]
 practises:
-  knowledge: [BN-LEX-C11-BON-01, BN-LEX-C07-DEKHA-01, BN-LEX-C12-CHOKH-01]
+  knowledge: [BN-LEX-C11-BON-01, BN-LEX-C07-DEKHA-01, BN-LEX-C12-CHOKH-01, BN-LEX-C10-DUDH-01, BN-SOUND-C10-DUDH-02, BN-LEX-C10-BHAT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,13 +64,14 @@ Sanskrit, half worn smooth by three centuries of sound change, which is why
 this kind of word gets its own name, **ardhatatsama**, "half a tatsama."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-CHOKH-01, BN-LEX-C11-BON-01, BN-LEX-C07-DEKHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-CHOKH-01, BN-LEX-C11-BON-01, BN-LEX-C07-DEKHA-01, BN-LEX-C10-DUDH-01, BN-SOUND-C10-DUDH-02, BN-LEX-C10-BHAT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "chokh" — eye, no trailing vowel]
 - [YOU SAY: "āmār chokh" — my eye]
 - [YOU SAY: the verb it grew from — "cakṣ … cakṣus … chokh"]
 - [YOU SAY: the other "see" verb you already own — "dækhā"]
+- [YOU RECALL: say *dudh*, then read **ভাত**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-CHOKH-01, BN-LEX-C07-DEKHA-01] -->

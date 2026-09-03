@@ -12,7 +12,7 @@ headword: "प्लवः"
 gloss: "a boat, a raft"
 romanization: "plavaḥ"
 concept_tag: SA-CRAFT-PLAVA
-prerequisites: [SA-C41-pot]
+prerequisites: [SA-C41-pot, SA-C39-fish, SA-C40-butter]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C41-CRAFT-03]
 practises:
-  knowledge: [SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03]
+  knowledge: [SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C39-ANIMAL-03, SA-LEX-C40-FOOD-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Where there is no सेतुः across the नदी, there is a **प्ल�
 What carries you over when there is no bridge.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C39-ANIMAL-03, SA-LEX-C40-FOOD-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *plavaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kalaśaḥ*, then *plavaḥ*]
+- [YOU RECALL: say *matsyaḥ*, then read **नवनीतम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03] -->

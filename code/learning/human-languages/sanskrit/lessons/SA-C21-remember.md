@@ -12,7 +12,7 @@ headword: "स्मरति"
 gloss: "he, she or it remembers"
 romanization: "smarati"
 concept_tag: SA-VERB-REMEMBER
-prerequisites: [SA-C21-stand]
+prerequisites: [SA-C21-stand, SA-C19-ten]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-REMEMBER]
 practises:
-  knowledge: [SA-LEX-STAND, SA-LEX-REMEMBER]
+  knowledge: [SA-LEX-STAND, SA-LEX-REMEMBER, SA-LEX-C19-NUM-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ From **√स्मृ** (*smṛ*), 'to remember'. It gives *smṛti*, 'that whi
 One more everyday action. That closes the run: four everyday actions, each met on its own.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-STAND, SA-LEX-REMEMBER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-STAND, SA-LEX-REMEMBER, SA-LEX-C19-NUM-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *smarati*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *tiṣṭhati*, so the two sit together]
+- [YOU RECALL: read **दश**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-STAND, SA-LEX-REMEMBER] -->

@@ -9,7 +9,7 @@ headword: ചെവി
 gloss: ear — where three of the four sisters agree, and the fourth alone keeps the older sound
 romanization: cevi
 concept_tag: ML-EAR
-prerequisites: [ML-C37-kannu]
+prerequisites: [ML-C37-kannu, ML-C34-codikkuka]
 sounds: [malayalam-cha, malayalam-vowel-sign-e]
 roots: [proto-dravidian-kewi-ear]
 etymology_hook: "ചെവി continues Proto-Dravidian *kewi, 'ear' -- Tamil செவி (cevi) and Telugu చెవి (cevi) match Malayalam almost exactly, all three having softened the old initial *k- into a c-/ch- sound before this front vowel; Kannada alone kept the older sound, ಕಿವಿ (kivi), so on this word it is Kannada, not Malayalam, standing apart from its sisters"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02]
 practises:
-  knowledge: [ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02]
+  knowledge: [ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C34-CODIKKUKA-01, ML-CONCEPT-C34-CODIKKUKA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -56,13 +56,14 @@ standing apart from three sisters, the way *kuṭumbaṁ*'s dressed *-aṁ* did 
 it is Kannada, holding onto the sound the other three let go of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C34-CODIKKUKA-01, ML-CONCEPT-C34-CODIKKUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ente cevi" — my ear]
 - [YOU SAY: three softened, one not — "cevi, cevi, cevi … kivi"]
 - [YOU SAY: two face words now — "kaṇṇŭ, cevi"]
 - [YOU SAY: the closest family match — "makaḷ, makaḷ" — Malayalam, Tamil]
+- [YOU RECALL: read **ചോദിക്കുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02] -->

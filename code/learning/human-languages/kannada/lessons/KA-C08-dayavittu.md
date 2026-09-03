@@ -9,7 +9,7 @@ headword: ದಯವಿಟ್ಟು
 gloss: please (dayaviṭṭu — "having placed compassion," from ದಯ daya "compassion")
 romanization: "dayaviṭṭu"
 concept_tag: COURTESY-PLEASE
-prerequisites: [KA-C01-dhanyavada]
+prerequisites: [KA-C01-dhanyavada, KA-C07-naalku]
 sounds: [kannada-vowel-sign-i, kannada-virama-ottu, kannada-geminate-tta]
 roots: [daya-compassion]
 etymology_hook: "ದಯವಿಟ್ಟು = 'having placed compassion' — Kannada asks please with daya, like Tamil, Arabic faḍl and Hindi kṛpā"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04]
 practises:
-  knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04]
+  knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-LEX-C07-NAALKU-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -84,12 +84,13 @@ stacking, not repeating side by side — a neat contrast with how the Roman
 alphabet just writes "tt."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-LEX-C07-NAALKU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "daya" — compassion — then "iṭṭu," having placed]
 - [YOU SAY: the whole word — "dayaviṭṭu" = please]
 - [YOU SAY: the everyday way — the verb ending: "kuḷitukoḷḷi" = please sit]
+- [YOU RECALL: say *nālku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04] -->

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Friend, Family, Brother, and Sister",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4bcf1adc2ea7c3ca",
+  "sourceHash": "fnv1a64:2f068cbe6a3e94a6",
   "lessons": [
     {
       "id": "BN-C11-bondhu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:49b5a141f8c91f2f",
+      "sourceHash": "fnv1a64:f8640a19f9436d53",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -122,6 +122,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the root, and its English family — \"bandh … bind, bond, band\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pôṛā, then read লেখা, then say neowā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pôṛā*, then read **লেখা**, then say *neowā*]"
             }
           ]
         },
@@ -157,7 +166,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:971ae76b98791b95",
+      "sourceHash": "fnv1a64:3b5d9f91dc7f381a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -269,6 +278,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: a friend, then a family — \"bôndhu … pôribār\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jijñāsā kôrā, then read সাহায্য করা, then say bhālo lāgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jijñāsā kôrā*, then read **সাহায্য করা**, then say *bhālo lāgā*]"
             }
           ]
         },
@@ -304,7 +322,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fe118c4292e02ed1",
+      "sourceHash": "fnv1a64:c759aee9456b221e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -420,6 +438,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: friend, family, brother — \"bôndhu … pôribār … bhāi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chā, then read জল",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chā*, then read **জল**]"
             }
           ]
         },

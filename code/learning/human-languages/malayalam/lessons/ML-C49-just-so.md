@@ -9,7 +9,7 @@ headword: "അങ്ങനെ"
 gloss: "that way, just so"
 romanization: "aṅṅane"
 concept_tag: ML-WORD-JUST-SO
-prerequisites: [ML-C49-perhaps]
+prerequisites: [ML-C49-perhaps, ML-C47-stomach]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C49-REPLY-05]
 practises:
-  knowledge: [ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05]
+  knowledge: [ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05, ML-LEX-C47-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada does the same trick with ಹಾಗೆ (*hāge*), built on its own far-po
 Five, and the run is closed: true, enough, certainly, perhaps, just so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05, ML-LEX-C47-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *aṅṅane*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *satyaṁ*, *mati*, *tīrccayāyuṁ*, *orupakṣē*, *aṅṅane*]
+- [YOU RECALL: say *vayaṟŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05] -->

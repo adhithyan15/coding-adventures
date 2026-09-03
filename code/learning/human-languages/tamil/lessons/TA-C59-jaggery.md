@@ -9,7 +9,7 @@ headword: "வெல்லம்"
 gloss: "jaggery"
 romanization: "vellam"
 concept_tag: TA-NOUN-JAGGERY
-prerequisites: [TA-C59-oil]
+prerequisites: [TA-C59-oil, TA-C57-smoke, TA-C58-crow]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C59-KITCHEN-04]
 practises:
-  knowledge: [TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04]
+  knowledge: [TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04, TA-LEX-C57-FIRE-04, TA-LEX-C58-ANIMAL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ In an older Tamil kitchen sweetness meant this before it meant anything white, a
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04, TA-LEX-C57-FIRE-04, TA-LEX-C58-ANIMAL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vellam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vellam*, then *ney*, and say which of the two a sweet needs]
+- [YOU RECALL: read **புகை**, then say *kākkai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04] -->

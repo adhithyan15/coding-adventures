@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-034",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "GU-C35-jo",
+    "GU-C35-jo-to",
+    "GU-C35-jo-write",
+    "GU-C35-jyaare",
+    "GU-C35-condition-checkpoint"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-046-CONDITION"
+  ],
+  "after": []
+}

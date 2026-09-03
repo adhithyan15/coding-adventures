@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:05dceaf27326c18f",
+  "sourceHash": "fnv1a64:5fe964756f3d19cf",
   "lessons": [
     {
       "id": "KA-C44-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ee6802a2ba3d8b8",
+      "sourceHash": "fnv1a64:ddd18d1a8eb7ba53",
       "notice": null,
       "blocks": [
         {
@@ -93,6 +93,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cikka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cikka*]"
             }
           ]
         },
@@ -128,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da6116d0f20be8f6",
+      "sourceHash": "fnv1a64:93baeec05cd53524",
       "notice": null,
       "blocks": [
         {
@@ -211,6 +220,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *nōḍu*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಒಳ್ಳೆಯ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಒಳ್ಳೆಯ**]"
             }
           ]
         },
@@ -246,7 +264,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de99de5c98f9c1aa",
+      "sourceHash": "fnv1a64:f9be794769e68de8",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +347,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *kēḷu*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hosa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hosa*]"
             }
           ]
         },
@@ -364,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa72c5740e2cb450",
+      "sourceHash": "fnv1a64:7af8131948244738",
       "notice": null,
       "blocks": [
         {
@@ -447,6 +474,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *mātāḍu*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಹಳೆಯ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಹಳೆಯ**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:49cd9175720a9359",
+  "sourceHash": "fnv1a64:eff6fa7102598a35",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f6a527f54fd70832",
+      "sourceHash": "fnv1a64:08057a857b9a9e90",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the e- question family — *entŭ, eṅṅane, ārŭ, eviṭe, eppōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nī / niṅṅaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nī / niṅṅaḷ*]"
             }
           ]
         },
@@ -593,7 +602,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b33244e805467ef9",
+      "sourceHash": "fnv1a64:7b35fed8f562d57d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -692,6 +701,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: can Malayalam drop \"I\" like Tamil? (No — its verbs don't mark person)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read എന്ത്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **എന്ത്**]"
             }
           ]
         },

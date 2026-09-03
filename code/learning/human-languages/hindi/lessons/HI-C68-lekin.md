@@ -12,7 +12,7 @@ headword: लेकिन
 romanization: "lekin"
 gloss: but — an Arabic word Hindi took through Persian, and the first word in this book that can contradict something
 concept_tag: HI-JOIN-LEKIN
-prerequisites: [HI-C68-ya]
+prerequisites: [HI-C68-ya, HI-C66-well]
 sounds: [matra-e, matra-i, dental-na]
 roots: []
 etymology_hook: "लेकिन is Arabic لكن (lākin, 'but'), taken in through Persian along with शुक्रिया and मुश्किल; the inherited alternative पर is the native Indo-Aryan word from Sanskrit परम् (param, 'beyond'), and Hindi keeps both, which is the ordinary pattern in a language with a Persianate and a Sanskritic register side by side"
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [HI-JOIN-LEKIN-01]
 practises:
-  knowledge: [HI-JOIN-LEKIN-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C07-NAHIN-01, HI-JOIN-AUR-01, HI-JOIN-YA-01]
+  knowledge: [HI-JOIN-LEKIN-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C07-NAHIN-01, HI-JOIN-AUR-01, HI-JOIN-YA-01, HI-LEX-C66-FIELD-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,7 +63,7 @@ Persianate and one Sanskritic, is exactly what this language looks like: it
 almost never replaced a word, it collected a second one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-LEKIN-01, HI-JOIN-AUR-01, HI-JOIN-YA-01, HI-CONCEPT-C01-SHUKRIYA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-LEKIN-01, HI-JOIN-AUR-01, HI-JOIN-YA-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-LEX-C66-FIELD-05] -->
 
 <!-- hl-activity: {"id":"HI-C68-lekin-r1","kind":"text","assesses":["HI-JOIN-LEKIN-01","HI-JOIN-AUR-01","HI-JOIN-YA-01"],"prompt":"Fill the same slot three ways with chay and dudh: add, offer, contradict.","answer":"chāy aur dūdh; chāy yā dūdh; chāy hai lekin dūdh nahīṁ hai","accepted":["चाय या दूध, चाय है लेकिन दूध नहीं है"],"feedback":{"correct":"One slot, three relations.","incorrect":"Same position each time: aur, yā, lekin."},"response_seconds":30} -->
 
@@ -71,6 +71,7 @@ almost never replaced a word, it collected a second one.
 - [YOU SAY: *chāy hai lekin dūdh nahīṁ hai*]
 - [YOU SAY: the three joiners in a row — *aur*, *yā*, *lekin*]
 - [YOU SAY: the other Hindi word for *but*, the inherited one — *par*]
+- [YOU RECALL: say *kuā̃*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-LEKIN-01, HI-JOIN-YA-01, HI-JOIN-AUR-01] -->

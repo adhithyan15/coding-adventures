@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-065-QUESTIONS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask who, when, where and how many, write tha and kitthe, and hear the ka- ja- o- pattern the three families share.",
+  "prerequisites": [
+    "PA-EXT-064-PRONOUNS"
+  ],
+  "lessons": [
+    "PA-C43-kaun",
+    "PA-C43-kadon",
+    "PA-W10-thatha",
+    "PA-C43-kitthe",
+    "PA-C43-kinne"
+  ]
+}

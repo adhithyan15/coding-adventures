@@ -9,7 +9,7 @@ headword: "പാത്രം"
 gloss: "a vessel, a container"
 romanization: "pātraṁ"
 concept_tag: ML-NOUN-VESSEL
-prerequisites: [ML-C56-knife]
+prerequisites: [ML-C56-knife, ML-C54-root]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C56-HOUSE-04]
 practises:
-  knowledge: [ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04]
+  knowledge: [ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04, ML-LEX-C54-TREE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ One shape holding the pot and the person is the kind of figure a language borrow
 Four, and this one holds a story as well as a stew.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04, ML-LEX-C54-TREE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pātraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pātraṁ*, and then say which of its two senses a cook means]
+- [YOU RECALL: read **വേര്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04] -->

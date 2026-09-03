@@ -12,7 +12,7 @@ headword: "पुराना"
 gloss: "old — of a thing, not of a person"
 romanization: "purānā"
 concept_tag: HI-ADJ-OLD
-prerequisites: [HI-C41-new]
+prerequisites: [HI-C41-new, HI-C40-where]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C41-ADJ-05]
 practises:
-  knowledge: [HI-LEX-C41-ADJ-03, HI-LEX-C41-ADJ-04, HI-LEX-C41-ADJ-05]
+  knowledge: [HI-LEX-C41-ADJ-03, HI-LEX-C41-ADJ-04, HI-LEX-C41-ADJ-05, HI-LEX-C40-DEIXIS-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,11 +52,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-05, HI-LEX-C40-DEIXIS-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: "पुराना" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *kahā̃*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-05] -->

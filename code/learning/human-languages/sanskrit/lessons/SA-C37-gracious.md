@@ -12,7 +12,7 @@ headword: "प्रसन्नः"
 gloss: "pleased, gracious, clear"
 romanization: "prasannaḥ"
 concept_tag: SA-COURTESY-PRASANNA
-prerequisites: [SA-C37-respectfully]
+prerequisites: [SA-C37-respectfully, SA-C35-salt, SA-C36-likewise]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C37-COURTESY-03]
 practises:
-  knowledge: [SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03]
+  knowledge: [SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C35-HOUSE-03, SA-LEX-C36-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ To say that a guest left you **प्रसन्नः** is to say they left yo
 A word for water, a mind and a host, all at once.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C35-HOUSE-03, SA-LEX-C36-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *prasannaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sādaram*, then *prasannaḥ*]
+- [YOU RECALL: say *lavaṇam*, then read **तथा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03] -->

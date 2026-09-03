@@ -1,5 +1,184 @@
 # Changelog
 
+## German chapter 12 is generated, and the chapter's own thesis is why it fits
+
+`ch12-time.tex` is now generated. German's hand-written chapters: **6 -> 5**, and
+German is still the only track that has any. **No renumber** — the chapter stays
+at 12 and keeps its filename, because it did not split.
+
+### Sizing it four ways
+
+| instrument | answer |
+|---|---|
+| `handwritten_parity.py` | gap of **1** (`morphologybox` x1) |
+| `grep -l '^chapter: 12$'` | **2 lessons** |
+| the `.tex` | **2 sections**, two **three-column** tables |
+| taught-form census | *Uhr*, *Stunde*, *Mitte*, *Mittag*, *Mitternacht* + the *es ist* frame |
+
+**11 atoms against a ceiling of 12, so one chapter.** This is the first chapter
+in the German queue that does not split, and the reason it fits is worth stating,
+because it is not luck. The chapter's thesis — *a language borrows what arrives
+and builds what was always there* — is `GE-GRAMMAR-NATIVE-VS-LOAN-01` for the
+**third** time. It is therefore **required** from chapter 9 rather than
+reintroduced, which is one atom the chapter does not have to spend. Had the
+thesis been new here, the chapter would have been at 12 and one word away from a
+split.
+
+### The seam the `.tex` argues, made into two halves that answer each other
+
+The hand-written chapter says the thing twice and never joins it up: *Uhr* is
+Latin, *Mittag* and *Mitternacht* are native. The lessons make that one argument
+with two sides.
+
+* ***Uhr*** came from Latin *hōra* with the Roman and monastic clocks — the same
+  word as French *heure*, Italian *ora* and English **hour**. German already had
+  ***Stunde*** for an hour's span, so the loan took the job the native word could
+  not do (reading a machine) and *Stunde* kept the one it could.
+* ***Mittag*** and ***Mitternacht*** are *Mitte* with *Tag* and *Nacht* —
+  compounds a reader can assemble before being told. French reached the identical
+  thought from Latin *medius diēs* as *midi*. **Same idea, built twice, out of
+  whatever each language owned.**
+
+### Two payoffs spent rather than re-argued
+
+| atom | from | spent on |
+|---|---|---|
+| `GE-GRAMMAR-NATIVE-VS-LOAN-01` | ch9 | *Uhr* against *Stunde*, and *Mittag* against *midi* |
+| `GE-ETYMON-ACHT-EIGHT-02` | the numbers | *Nacht*/**night**, the *-cht*/*-ght* pair |
+
+The second one is measurable: `GE-ETYMON-ACHT-EIGHT-02` was an atom **introduced
+and never revisited** until this chapter. `Mitternacht` is the first lesson to
+spend it, and the corpus counter moves by exactly that one.
+
+### One table reshaped so the narrator can speak it
+
+The practice lesson's recap first read `| Es ist ein Uhr. | It is one o'clock. |`
+down four rows. German's person labels include ***es***, so four rows starting
+with *Es* is a **partial paradigm grid** to `info-dump.ts` — a finding on a
+chapter that teaches no paradigm at all. Putting the English first
+(`| one o'clock | Es ist ein Uhr. |`) says the same thing and is not a paradigm.
+The corpus info-dump count is unchanged at 118 rather than 119.
+
+### Counters, re-measured against the merged tree
+
+| counter | before | after |
+|---|---|---|
+| German hand-written chapters | 6 | **5** |
+| `handwritten_parity.py` german | 35 | **34** blocks at risk |
+| German lessons (schema-v2) | 212 | **222** |
+| atoms taught | 385 | **396** |
+| atom-measurement-blind lessons | 12 | **10** |
+| chapters over the 12-atom budget | 5 | **5** |
+| culture claims | 24 | **25** |
+| atoms never revisited | 82 | **81** |
+| forward references | 33 | **31** |
+| corpus narration refusals | 45 | **45** |
+| corpus info-dump findings | 118 | **118** |
+
+Forward references fall by two because the v1 `GE-C08-uhr` named *Mittag* and
+*Mitternacht* before either was taught. Both are now taught in this chapter, four
+and six lessons after *Uhr*, so the preview is gone rather than excused.
+
+### Modality
+
+All ten lessons are **voice**, and the chapter keeps a **hands-free start** for
+all ten. No table in the chapter exceeds three columns.
+
+## German chapter 10 becomes two chapters, and the weekday pattern gets its exceptions
+
+`ch10-days.tex` is now generated, as **chapter 10, *The Gods of the Week***, and
+**chapter 11, *The German Weekend***. German's hand-written chapters: **7 -> 6**,
+and German is the only track that has any. Old chapters 11-39 renumber to 12-40.
+
+### Sizing it four ways
+
+| instrument | answer |
+|---|---|
+| `handwritten_parity.py` | gap of **4** |
+| `grep -l '^chapter: 10$'` | **2 lessons** |
+| the `.tex` | **2 sections**, two **four-column** `tabularx` tables |
+| taught-form census | 7 day names + *Mond*, *Donner*, *Sonne*, *Sabbat*, *Sonnabend* |
+
+**18 atoms against a ceiling of 12**, so two chapters at the `.tex`'s own
+weekday/weekend seam: **11 and 7**. A three-way split (5/6/7) was considered and
+rejected — 11 fits, and splitting *below* the ceiling for its own sake is not the
+rule. The rule is the ceiling, not the median.
+
+### The chapter's own thesis is a rule with two exceptions
+
+The `.tex` closes by saying it: German names its days for **gods**, like English,
+not for planets — **with two edits**. So the pattern gets a lesson
+(`GE-C07-tag-muster`), five days apply it, and the two that break it get a lesson
+each:
+
+* ***Mittwoch*** has no god and no *Tag*. The medieval Church declined to name a
+  day for Wodan, and English kept him where German did not. That is a decision
+  you can **date and attribute**, sitting inside an everyday word — most
+  etymology in this book is drift with nobody deciding anything.
+* ***Samstag*** is not Saturn's day but the **Sabbath**, Hebrew *shabbāt* by way
+  of Greek *sábbaton*, which makes German *Samstag* and Spanish *sábado* the same
+  word while English alone still points at a Roman planet.
+
+### Five untaught words the chapter was leaning on
+
+*Mond*, *Donner*, *Sonne*, *Sabbat* and *Sonnabend* were headwords nowhere.
+*Mond* and *Donner* are now taught **before** the days built on them, so *Montag*
+and *Donnerstag* are assembled rather than memorised.
+
+### Six payoffs spent rather than re-argued
+
+| atom | owned by | spent on |
+|---|---|---|
+| `GE-LEX-TAG-02` | ch1 | the *-tag* in every day name |
+| `GE-SOUND-NACHT-CH-01` | ch1 | *Mittwoch*'s raspy *ch* |
+| `GE-LEX-ABEND-02` | ch1 | makes *Sonnabend* transparent |
+| `GE-SOUND-EI-AS-EYE-01` | ch6 | *Freitag*'s *ei* |
+| `GE-GRAMMAR-SOUND-LAW-01` | ch6 | *Donner* from *thunder*, *th* -> *d* |
+| `GE-GRAMMAR-NATIVE-VS-LOAN-01` | ch9 | *Samstag*, for the second time |
+
+Three of those six did not exist before chapter 6 was migrated. Working bottom-up
+is what makes them available rather than accidental.
+
+### Counters, re-measured against the merged tree
+
+| Measure | Before | After |
+|---|---|---|
+| German hand-written chapters | 7 | **6** |
+| corpus hand-written chapters | 7 | **6** |
+| `handwritten_parity.py` german | 39 | **35** blocks at risk |
+| German lessons (schema-v2) | 197 | **212** |
+| atoms taught | 367 | **385** |
+| atom-measurement-blind lessons | 14 | **12** |
+| chapters over the 12-atom budget | 5 | **5** |
+| culture claims | 19 | **24** |
+| atoms never revisited | 83 | **82** |
+| forward references | 33 | **33** |
+| corpus narration refusals | 47 | **45** |
+| corpus paradigm tables | 95 | **91** |
+| corpus full paradigm grids | 21 | **20** |
+| corpus lessons with info-dump findings | 121 | **118** |
+| book pages | 367 | **383** |
+
+Every corpus-wide info-dump number **fell**: the two four-column day tables are
+gone, and the two recaps that replace them are two-column German/English lists
+the narrator can speak. All fifteen lessons are `voice`, and both chapters open
+hands-free.
+
+### Five defects caught in the draft, before CI
+
+Four banned words (*not just the slot*, *not just to which day*, *you have just
+seen*, *the noun you just met*) and one sight cue (*But look at the pair*). The
+banned words mattered more than usual: `banned-words.test.ts` had been ratcheted
+to 1076 hours earlier, and shipping these would have pushed it straight back over
+a ceiling that had only just come down.
+
+### Verification
+
+125/125 test files, 1801 tests; all eleven `check:*` gates; language-ladder 39/39
+files, 442 tests; the German book compiles under XeLaTeX with zero errors, zero
+overfull or underfull boxes and zero missing characters (383 pages), and both new
+chapters were read on the page.
+
 ## German chapter 6 leaves the hand-written set, as four chapters
 
 Chapter 6 — the numbers one to ten — is now generated from its lessons, as

@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "The Leg and the Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c58e8e1da40d31c4",
+  "sourceHash": "fnv1a64:971564fc1500b999",
   "lessons": [
     {
       "id": "KA-C47-leg",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c78a65e38287ef97",
+      "sourceHash": "fnv1a64:8e179a79baa9e6cf",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kālu*, then *tale*, so the top and the bottom sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bare*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3216af73f360c94",
+      "sourceHash": "fnv1a64:3427a189d5bf3fb9",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kālu*, then *hallu*, and say which of the two also names a fraction]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಅಜ್ಜ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಅಜ್ಜ**]"
             }
           ]
         },
@@ -267,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:024a58c29052981e",
+      "sourceHash": "fnv1a64:fe229024fc809305",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +376,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all three, and listen for the little *-u* at the end of each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ajji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ajji*]"
             }
           ]
         },
@@ -393,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b86cb4e6dd66136",
+      "sourceHash": "fnv1a64:17e6e04427f4c6b5",
       "notice": null,
       "blocks": [
         {
@@ -480,6 +507,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *beraḷu*, then *bare*, and hear the same *b* at the front of both]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಗಂಡ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಗಂಡ**]"
             }
           ]
         },
@@ -515,7 +551,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01f131e2c09a5a7e",
+      "sourceHash": "fnv1a64:9eec8bc32802b537",
       "notice": null,
       "blocks": [
         {
@@ -602,6 +638,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then the three that begin with *h*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say heṇḍati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *heṇḍati*]"
             }
           ]
         },

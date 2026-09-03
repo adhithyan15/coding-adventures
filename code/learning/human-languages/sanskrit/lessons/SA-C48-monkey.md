@@ -12,7 +12,7 @@ headword: "वानरः"
 gloss: "a monkey"
 romanization: "vānaraḥ"
 concept_tag: SA-BEAST-VANARA
-prerequisites: [SA-C48-goat]
+prerequisites: [SA-C48-goat, SA-C46-shade, SA-C47-pillar]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C48-BEAST-04]
 practises:
-  knowledge: [SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04]
+  knowledge: [SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04, SA-LEX-C46-LIGHT-04, SA-LEX-C47-DWELL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ So the word costs you one new shape and pays back two old ones. Ends in **-अ�
 A word built out of two you had already.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04, SA-LEX-C46-LIGHT-04, SA-LEX-C47-DWELL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vānaraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chāgaḥ*, then *vānaraḥ*]
+- [YOU RECALL: read **छाया**, then say *stambhaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04] -->

@@ -1,0 +1,604 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 40,
+  "title": "He, She, We, and the One Who",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:813425a9ca2b8d44",
+  "lessons": [
+    {
+      "id": "GU-C36-te",
+      "sequence": 2030,
+      "title": "તે (te) — he, she, it",
+      "headword": "તે",
+      "romanization": "te",
+      "gloss": "he, she, it — the pronoun for anyone who is not here",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7d818d691205e26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the chapter behind you, a condition. And from the third chapter of this book, the word for I."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "jo … to …, and hũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *jo … to …*, and *hũ*]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have been able to talk about yourself since chapter 3 and about the person in front of you since chapter 2. You have never been able to talk about anybody absent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તે — te — he, she, or it."
+            },
+            {
+              "kind": "speech",
+              "text": "One word, three English ones. Gujarati's third person does not make you choose a gender before you speak — which is a real convenience, and occasionally a real ambiguity."
+            },
+            {
+              "kind": "speech",
+              "text": "તે also means that, pointing at something away from both speakers. The pronoun and the pointing word are the same word, which is where the તો of the last chapter came from as well."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ, then te. Yourself, then someone absent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ*, then *te*. Yourself, then someone absent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "a sentence about someone who is not in the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: a sentence about someone who is not in the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te as that, pointing at something across the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te* as *that*, pointing at something across the room.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many English pronouns does તે (te) cover? (Three — he, she, it.) What else does the same word do? (Points: that.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C36-ame-aapne",
+      "sequence": 2040,
+      "title": "અમે / આપણે (ame / āpaṇe) — the two we",
+      "headword": "અમે / આપણે",
+      "romanization": "ame / āpaṇe",
+      "gloss": "the two words for we — one that shuts you out, one that takes you in",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8852faa6b0122190",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back: the pronoun for someone absent. Four chapters back, at the top of its chapter: the word that joins two things."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "te, and ane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *te*, and *ane*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English has one we and it is ambiguous. Gujarati has two, and they are not interchangeable:"
+            },
+            {
+              "kind": "speech",
+              "text": "અમે — we, not including you."
+            },
+            {
+              "kind": "speech",
+              "text": "આપણે — we, including you."
+            },
+            {
+              "kind": "speech",
+              "text": "If you say અમે to someone, you have told them they are outside the group. If you say આપણે, you have invited them in. Neither is more polite; they mean different things, and the mistake is audible."
+            },
+            {
+              "kind": "speech",
+              "text": "This distinction has a name — linguists call it exclusive and inclusive we — and a great many languages make it. English speakers have to learn to hear a choice they have never had to make."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame — a group the listener is not in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame* — a group the listener is not in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpaṇe — a group that includes them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpaṇe* — a group that includes them.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the two, twice, thinking each time about who is standing there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the two, twice, thinking each time about who is standing there.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are inviting someone to come along. Which we do you use, and what would the other one tell them? (આપણે — અમે would say they are not included.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C36-te-write",
+      "sequence": 2050,
+      "title": "તે (te) reaches the page",
+      "headword": "તે",
+      "romanization": "te",
+      "gloss": "he, she, it, on two signs already in the hand",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:dc0352c151c5f581",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the same stroke, a third time"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the same stroke, a third time until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three chapters back you wrote કે. Write it once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the same stroke, a third time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ત — ta, ે — the e stroke."
+            },
+            {
+              "kind": "speech",
+              "text": "Set અને, કે and તે in a row and look only at the stroke on top. It is the same ે in all three, sitting on three different letters. Learning one stroke has now spelled three of this book's most useful words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy તે once with the model in view. Then write the row — અને કે તે — and check the three strokes sit at one height."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write તે from memory. Which sign does it share with કે and અને? (The ે above.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C36-je",
+      "sequence": 2060,
+      "title": "જે (je) — the one who",
+      "headword": "જે",
+      "romanization": "je",
+      "gloss": "the one who, the thing that — the relative word",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01824cc9321cb35d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back you wrote તે. One chapter back, the word that places one event against another in time."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "તે (te), and jyāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **તે**, and *jyāre*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જે — je — the one who, the thing that."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the stem from જ્યારે stands alone. જે (je) opens a clause that describes somebody or something, instead of naming them:"
+            },
+            {
+              "kind": "speech",
+              "text": "જે (je) (what they do) … — \"the one who …\""
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the pairing: જ્યારે was when, જે (je) is who or which, and both begin the same way. Gujarati marks a describing clause at its front, the way it marked a condition with જો."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je, then something a person might do.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je*, then something a person might do.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "jyāre and je — the same opening stem, different jobs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *jyāre* and *je* — the same opening stem, different jobs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "describe someone instead of naming them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: describe someone instead of naming them.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Describe a person rather than naming them. What does જે (je) share with જ્યારે? (The opening જ- stem; both start their clause.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C36-je-te",
+      "sequence": 2070,
+      "title": "જે … તે … (je … te …) — the one who … that one …",
+      "headword": "જે … તે …",
+      "romanization": "je … te …",
+      "gloss": "the one who … that one … — the relative pair, both ends marked",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:526f46378042b7a4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The two words this chapter has given you, and the two-part condition from the chapter before."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "je, te — and jo … to …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *je*, *te* — and *jo … to …*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The pattern, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જે (je) (description), તે (te) (the one meant)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the same shape as જો … તો …, and recognising that is most of the work. Gujarati marks both ends: the clause that describes, and the thing it describes. English collapses the two — the one who came is my friend — and Gujarati keeps them visibly paired."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you see the pair you can hear it everywhere: જો … તો, જ્યારે … ત્યારે, જે (je) … તે (te). One family, one habit, three uses."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "je + a description, te + who is meant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: *je* + a description, *te* + who is meant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the same idea said with a plain name, then with the pair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the same idea said with a plain name, then with the pair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo … to … then je … te … — hear that they are one shape.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo … to …* then *je … te …* — hear that they are one shape.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Describe someone with the pair. Which earlier pattern is this the same shape as? (જો … તો ….) Next chapter: the question words, all of them built on one sound."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Ground Underfoot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4d4a0cbb4fe01ea",
+  "sourceHash": "fnv1a64:cfc07e5b0d87f677",
   "lessons": [
     {
       "id": "ML-C55-river",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8d745e0d0be0e4a",
+      "sourceHash": "fnv1a64:f46164357e03f30e",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vittŭ*, then *puḻa*, and hold the ഴ a moment longer than feels natural]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ākāśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ākāśaṁ*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a256a3e872ae03d5",
+      "sourceHash": "fnv1a64:3dd5d368c71e700b",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *puḻa*, then *pāṟa*, and hear the soft sound against the hard one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read സൂര്യൻ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **സൂര്യൻ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abb3955b05ea5857",
+      "sourceHash": "fnv1a64:44755e5060a6e1d9",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nāṭŭ*, then *kāṭŭ*, and hear how little separates the tame from the wild]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say candran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *candran*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ca0eda99d2661d7",
+      "sourceHash": "fnv1a64:1ecb535a54a4e211",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *puḻa*, then *vaḻi*, and hold the ഴ in both]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read നക്ഷത്രം",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **നക്ഷത്രം**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2e62de21a8fb6c7",
+      "sourceHash": "fnv1a64:f2614525cd55373d",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *puḻa*, *pāṟa*, *nāṭŭ*, *vaḻi*, *vayal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say veyil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *veyil*]"
             }
           ]
         },

@@ -12,7 +12,7 @@ headword: "छागः"
 gloss: "a goat"
 romanization: "chāgaḥ"
 concept_tag: SA-BEAST-CHAGA
-prerequisites: [SA-C48-wolf]
+prerequisites: [SA-C48-wolf, SA-C46-light, SA-C47-stair]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C48-BEAST-03]
 practises:
-  knowledge: [SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03]
+  knowledge: [SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C46-LIGHT-03, SA-LEX-C47-DWELL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ That is worth holding on to, because it is what makes वृकः remarkable ra
 Three animals, and two different fates for a name.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C46-LIGHT-03, SA-LEX-C47-DWELL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chāgaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vṛkaḥ*, then *chāgaḥ*]
+- [YOU RECALL: say *prakāśaḥ*, then read **सोपानम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03] -->

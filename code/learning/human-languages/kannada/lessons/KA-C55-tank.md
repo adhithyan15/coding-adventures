@@ -9,7 +9,7 @@ headword: "ಕೆರೆ"
 gloss: "a tank, a reservoir"
 romanization: "kere"
 concept_tag: KA-NOUN-TANK
-prerequisites: [KA-C55-river]
+prerequisites: [KA-C55-river, KA-C53-sunshine]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C55-ROAD-02]
 practises:
-  knowledge: [KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02]
+  knowledge: [KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C53-SKY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The Deccan is dry and the rain arrives all at once, so this is the thing the lan
 Two: water that runs, and water somebody stopped.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C53-SKY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kere*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadi*, then *kere*, and say which one of them people made]
+- [YOU RECALL: read **ಬಿಸಿಲು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02] -->

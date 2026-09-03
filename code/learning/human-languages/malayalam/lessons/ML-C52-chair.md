@@ -9,7 +9,7 @@ headword: "കസേര"
 gloss: "a chair"
 romanization: "kasēra"
 concept_tag: ML-NOUN-CHAIR
-prerequisites: [ML-C52-door]
+prerequisites: [ML-C52-door, ML-C50-day-after]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C52-WELCOME-02]
 practises:
-  knowledge: [ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02]
+  knowledge: [ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C50-LEAVE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada's ಕುರ್ಚಿ (*kurci*) is a chair too, and it arrived from the n
 Two: a door, and a chair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C50-LEAVE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kasēra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kasēra*, then *vātil*, the way in and the seat beyond it]
+- [YOU RECALL: read **മറ്റന്നാൾ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02] -->

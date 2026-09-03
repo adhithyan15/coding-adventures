@@ -9,7 +9,7 @@ headword: "കോഴി"
 gloss: "a hen"
 romanization: "kōḻi"
 concept_tag: ML-NOUN-HEN
-prerequisites: [ML-C60-goat]
+prerequisites: [ML-C60-goat, ML-C58-a-little]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C60-ANIMAL-03]
 practises:
-  knowledge: [ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03]
+  knowledge: [ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C58-ANSWER-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is also the clock of a Kerala house: a കോഴി wakes the yard well befor
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C58-ANSWER-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kōḻi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōḻi*, then *puḻa*, and say which sound the two have in common]
+- [YOU RECALL: say *kuṟaccŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03] -->

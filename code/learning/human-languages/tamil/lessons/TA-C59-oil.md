@@ -9,7 +9,7 @@ headword: "எண்ணெய்"
 gloss: "oil"
 romanization: "eṇṇey"
 concept_tag: TA-NOUN-OIL
-prerequisites: [TA-C59-ghee]
+prerequisites: [TA-C59-ghee, TA-C57-mud, TA-C58-hen]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C59-KITCHEN-03]
 practises:
-  knowledge: [TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03]
+  knowledge: [TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C57-FIRE-03, TA-LEX-C58-ANIMAL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada kept the same word as ಎಣ್ಣೆ (*eṇṇe*); Telugu went to న�
 Three, and the third is built out of the second.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C57-FIRE-03, TA-LEX-C58-ANIMAL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *eṇṇey*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ney*, then *eṇṇey*, and hear the first one still sitting inside the second]
+- [YOU RECALL: say *sēṟu*, then read **கோழி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03] -->

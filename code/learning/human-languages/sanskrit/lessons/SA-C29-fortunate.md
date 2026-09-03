@@ -12,7 +12,7 @@ headword: "धन्यः"
 gloss: "fortunate, blessed"
 romanization: "dhanyaḥ"
 concept_tag: SA-COURTESY-FORTUNATE
-prerequisites: [SA-C29-favour]
+prerequisites: [SA-C29-favour, SA-C27-thus, SA-C28-svasti]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C29-COURTESY-05]
 practises:
-  knowledge: [SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05]
+  knowledge: [SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ And it closes a circle. The very first thank-you in this book was **धन्य
 Five courtesies, and the first word of this book opened up.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dhanyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take *dhanyavādaḥ* apart into its two pieces]
+- [YOU RECALL: say *evam*, then read **स्वस्ति**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05] -->

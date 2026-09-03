@@ -9,7 +9,7 @@ headword: দেখা হবে
 romanization: "dækhā hôbe"
 gloss: (we) will meet (lit. "seeing will happen")
 concept_tag: BN-VERB-DEKHA
-prerequisites: [BN-C03-tumi-kemon-achho]
+prerequisites: [BN-C03-tumi-kemon-achho, BN-C03-bhalo]
 sounds: [long-e, o-ending]
 roots: [dekh-see, ho-be]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [BN-CONCEPT-C04-DEKHAHOBE-01]
 practises:
-  knowledge: [BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C04-DEKHAHOBE-01]
+  knowledge: [BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C03-BHALO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,12 +60,13 @@ shape: *dækhā hôbe* ("[a] seeing will happen"), *kôthā hôbe* ("[a] talk wi
 happen"). No "we," no active verb — the event itself is the subject.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C04-DEKHAHOBE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C03-BHALO-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dækhā hôbe"]
 - [YOU SAY: its literal meaning ("[a] seeing will happen")]
 - [YOU SAY: the verb "to see" inside it (*dækhā*)]
+- [YOU RECALL: say *bhālo*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C04-DEKHAHOBE-01] -->

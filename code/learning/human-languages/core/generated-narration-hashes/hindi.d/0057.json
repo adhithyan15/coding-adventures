@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 57,
-  "sourceHash": "fnv1a64:9aa22a156a82266f",
+  "sourceHash": "fnv1a64:fe5a6f4fa320b895",
   "lessonIds": [
     "HI-C57-present",
     "HI-C57-feast",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch57.txt",
   "json": "hindi/narration/ch57.json",
-  "textHash": "fnv1a64:aa8dcc761abbe88b",
-  "jsonHash": "fnv1a64:c70947bb649d2712",
+  "textHash": "fnv1a64:1168e431321ab530",
+  "jsonHash": "fnv1a64:49823b89c370a603",
   "findings": []
 }

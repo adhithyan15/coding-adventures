@@ -9,7 +9,7 @@ headword: ಹೋಗು
 gloss: to go — and the one sound-law that separates Kannada from all three of its sisters
 romanization: hōgu
 concept_tag: VERB-GO
-prerequisites: [KA-C32-iru]
+prerequisites: [KA-C32-iru, KA-C24-ratri]
 sounds: [long-o, kannada-ha]
 roots: [hoogu-go-dravidian, proto-dravidian-p-to-h]
 etymology_hook: "ಹೋಗು is native Dravidian *pōku 'go' — Kannada alone among the four literary Dravidian languages turned old word-initial *p- into h-, so Tamil pōgu/pattu/pāl/peyar answer Kannada hōgu/hattu/hālu/hesaru while Telugu and Malayalam keep the p; Old Kannada texts still write ಪ, which is the proof"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02]
 practises:
-  knowledge: [KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02]
+  knowledge: [KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -78,13 +78,14 @@ The proof is written down: **Old Kannada** still spells these words with **ಪ**
 casual speech many speakers drop the *h* too, so *hōgu* can come out as *ōgu*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hōgu" — go — then "hōguttēne", I go]
 - [YOU SAY: the three beads again — "hōgu … utt … ēne"]
 - [YOU SAY: the four pairs — "pōgu … hōgu", "pattu … hattu", "pāl … hālu", "peyar … hesaru"]
 - [YOU SAY: the sisters that kept the p — Telugu "pōvu", Malayalam "pōkuka"]
+- [YOU RECALL: read **ರಾತ್ರಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02] -->

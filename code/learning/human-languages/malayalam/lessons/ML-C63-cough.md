@@ -9,7 +9,7 @@ headword: "ചുമ"
 gloss: "a cough"
 romanization: "cuma"
 concept_tag: ML-NOUN-COUGH
-prerequisites: [ML-C63-pain]
+prerequisites: [ML-C63-pain, ML-C61-jaggery]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C63-FEEL-04]
 practises:
-  knowledge: [ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04]
+  knowledge: [ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04, ML-LEX-C61-SHELF-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It covers the single cough and the standing complaint alike, so a speaker adds a
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04, ML-LEX-C61-SHELF-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cuma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kākka*, then *cuma*, and say what the making of the two words has in common]
+- [YOU RECALL: read **ശർക്കര**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04] -->

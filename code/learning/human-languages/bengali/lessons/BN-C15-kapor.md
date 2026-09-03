@@ -9,7 +9,7 @@ headword: কাপড়
 romanization: kapor
 gloss: cloth, clothing — a word Sanskrit's own dictionaries call homegrown, not inherited, and the flapped letter returns
 concept_tag: BN-CLOTHING-CLOTH
-prerequisites: [BN-C14-shobuj]
+prerequisites: [BN-C14-shobuj, BN-C13-maf-korben, BN-C13-sbagotom]
 sounds: [ra-flap-review]
 roots: [karpata-deshi]
 etymology_hook: "kApoR traces to Sanskrit *karpaṭa*, 'rag, old cloth' -- but even Sanskrit's own dictionaries label karpaTa a deshI word, homegrown vernacular vocabulary already inside classical Sanskrit rather than inherited from a reconstructed PIE root, so no further ancestor is claimed; the same word, worn down the same way, gives Hindi kapaDA, Marathi kapaDa, Gujarati kapaDuM and Punjabi kapaDA -- a genuinely pan-Indo-Aryan family sharing one root together"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C15-KAPOR-01]
 practises:
-  knowledge: [BN-LEX-C14-SHOBUJ-01, BN-SOUND-C08-PORA-02, BN-LEX-C14-SHADA-01, BN-LEX-C15-KAPOR-01]
+  knowledge: [BN-LEX-C14-SHOBUJ-01, BN-SOUND-C08-PORA-02, BN-LEX-C14-SHADA-01, BN-LEX-C15-KAPOR-01, BN-LEX-C13-MAFKORBEN-01, BN-GRAMMAR-C13-FUTURE-POLITE-02, BN-LEX-C13-SBAGOTOM-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,13 +67,14 @@ Indo-Aryan languages sharing one root together, none of them borrowing from
 the others.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-KAPOR-01, BN-SOUND-C08-PORA-02, BN-LEX-C14-SHADA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-KAPOR-01, BN-SOUND-C08-PORA-02, BN-LEX-C14-SHADA-01, BN-LEX-C13-MAFKORBEN-01, BN-GRAMMAR-C13-FUTURE-POLITE-02, BN-LEX-C13-SBAGOTOM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kāpoṛ" — cloth]
 - [YOU SAY: "shādā kāpoṛ" — white cloth]
 - [YOU SAY: the flap, again — "poṛā … kāpoṛ"]
 - [YOU SAY: the family sharing this root — "kāpoṛ … kapṛā … kapaḍā"]
+- [YOU RECALL: say *maf korben*, then read **স্বাগতম**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-KAPOR-01, BN-SOUND-C08-PORA-02] -->

@@ -9,7 +9,7 @@ headword: ಏನು
 gloss: what
 romanization: "ēnu"
 concept_tag: QUESTION-WHAT
-prerequisites: [KA-C02-niinu-niivu]
+prerequisites: [KA-C02-niinu-niivu, KA-C01-dhanyavada, KA-C01-haudu, KA-C01-illa]
 sounds: [independent-ee]
 roots: [yaa-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02]
 practises:
-  knowledge: [KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02]
+  knowledge: [KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02, KA-LEX-C01-DHANYAVADA-01, KA-ETYMON-C01-DHANYAVADA-02, KA-ETYMON-C01-DHANYAVADA-03, KA-LEX-C01-HAUDU-01, KA-GRAMMAR-C01-HAUDU-02, KA-LEX-C01-ILLA-01, KA-GRAMMAR-C01-ILLA-02, KA-ETYMON-C01-ILLA-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -49,11 +49,12 @@ reviews_of: [KA-C02-niinu-niivu, KA-C02-nanna-hesaru]
 question family: *ēnu* (what), *yāru* (who), *elli* (where), *yāke* (why).
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02, KA-LEX-C01-DHANYAVADA-01, KA-ETYMON-C01-DHANYAVADA-02, KA-ETYMON-C01-DHANYAVADA-03, KA-LEX-C01-HAUDU-01, KA-GRAMMAR-C01-HAUDU-02, KA-LEX-C01-ILLA-01, KA-GRAMMAR-C01-ILLA-02, KA-ETYMON-C01-ILLA-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ēnu"]
 - [YOU SAY: the question family — ēnu, yāru, elli]
+- [YOU RECALL: read **ಧನ್ಯವಾದ**, then say *haudu*, then say *illa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02] -->

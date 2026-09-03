@@ -9,7 +9,7 @@ headword: "நேற்று"
 gloss: "yesterday"
 romanization: "nēṟṟu"
 concept_tag: TA-ADVERB-YESTERDAY
-prerequisites: [TA-C73-today]
+prerequisites: [TA-C73-today, TA-C71-sleep, TA-C72-fear]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C73-WHEN-02]
 practises:
-  knowledge: [TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02]
+  knowledge: [TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C71-DAY-02, TA-LEX-C72-FEEL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,13 +54,14 @@ With three words you can now place any day against the one you are in.
 Two, and the days on either side of today are named.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C71-DAY-02, TA-LEX-C72-FEEL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nēṟṟu*]
 - [YOU SAY: *nēṟṟu*, *iṉṟu*, *nāḷai* — the three, in order]
 - [YOU SAY: *nēṟṟu* once more, holding the doubled ற]
 - [YOU RECALL: say *aḻu*, then say *iṉṟu*, then say *nēṟṟu*]
+- [YOU RECALL: read **தூங்கு**, then say *payam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02] -->

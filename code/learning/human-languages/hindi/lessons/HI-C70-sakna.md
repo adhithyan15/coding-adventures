@@ -12,7 +12,7 @@ headword: सकना
 romanization: "saknā"
 gloss: to be able to — the verb that never stands alone, and the one Hindi routes every kind of can and may through
 concept_tag: VERB-CAN
-prerequisites: [HI-R69-reported, HI-C42-come, HI-C05-bolna]
+prerequisites: [HI-R69-reported, HI-C42-come, HI-C05-bolna, HI-C68-aur, HI-C68-ya]
 sounds: [dental-na, matra-aa]
 roots: []
 etymology_hook: "सकना is Sanskrit शक्नोति (śaknoti, 'is able'), root शक् (śak-) — the same root that gave Marathi शिकणे 'to learn', which is literally 'to want to be able', and Sanskrit शक्ति (śakti) 'power'; where English can is a Germanic word that once meant 'to know', Hindi's is a word that always meant 'to be strong enough'"
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01]
 practises:
-  knowledge: [HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C07-NAHIN-01, HI-GRAMMAR-VERB-FINAL-01, HI-LEX-COME]
+  knowledge: [HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C07-NAHIN-01, HI-GRAMMAR-VERB-FINAL-01, HI-LEX-COME, HI-JOIN-AUR-01, HI-JOIN-YA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -69,7 +69,7 @@ Negate it and you have the most useful excuse in the language:
 **मैं कल नहीं आ सकता.** — *I can't come tomorrow.*
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-CONCEPT-C07-NAHIN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-CONCEPT-C07-NAHIN-01, HI-JOIN-AUR-01, HI-JOIN-YA-01] -->
 
 <!-- hl-activity: {"id":"HI-C70-sakna-r1","kind":"text","assesses":["HI-LEX-SAKNA-01","HI-GRAMMAR-SAKNA-STEM-01"],"prompt":"Say that you can speak Hindi, then that you cannot come tomorrow.","answer":"maiṁ hindī bol saktā hūṁ; maiṁ kal nahīṁ ā saktā","accepted":["मैं हिंदी बोल सकता हूँ मैं कल नहीं आ सकता"],"feedback":{"correct":"Bare stem, then saknā, and saknā takes the ending.","incorrect":"Strip -nā off the first verb and put saknā behind it."},"response_seconds":30} -->
 
@@ -77,6 +77,7 @@ Negate it and you have the most useful excuse in the language:
 - [YOU SAY: *bolnā* → *bol saktā hūṁ*, then *ānā* → *ā saktā hūṁ*]
 - [YOU SAY: *maiṁ kal nahīṁ ā saktā*]
 - [YOU SAY: which of the two verbs takes the ending — **सकना, and it goes last**]
+- [YOU RECALL: say *aur*, then read **… या …**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01] -->

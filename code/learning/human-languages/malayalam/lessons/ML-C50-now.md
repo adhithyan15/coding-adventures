@@ -9,7 +9,7 @@ headword: "ഇപ്പോൾ"
 gloss: "now"
 romanization: "ippōḷ"
 concept_tag: ML-WORD-NOW
-prerequisites: [ML-C49-just-so]
+prerequisites: [ML-C49-just-so, ML-C48-teacher]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C50-LEAVE-01]
 practises:
-  knowledge: [ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01]
+  knowledge: [ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01, ML-LEX-C48-ROLE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word ends on ൾ, the chillu already met at the end of നിങ്ങൾ. K
 The first of five words for going away.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01, ML-LEX-C48-ROLE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ippōḷ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippōḷ*, then *aṅṅane*, and hear the near and the far openers side by side]
+- [YOU RECALL: say *adhyāpakan*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-04, ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01] -->

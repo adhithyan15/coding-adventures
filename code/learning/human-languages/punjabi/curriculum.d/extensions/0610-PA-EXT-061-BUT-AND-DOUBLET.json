@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-061-BUT-AND-DOUBLET",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use either word for but, write par and tell it from the start of parivar, and choose between the two streams of Punjabi vocabulary knowing what the choice signals.",
+  "prerequisites": [
+    "PA-EXT-060-COORDINATORS"
+  ],
+  "lessons": [
+    "PA-C39-par",
+    "PA-C39-lekin",
+    "PA-C39-par-write",
+    "PA-C39-doublet",
+    "PA-C39-but-checkpoint"
+  ]
+}

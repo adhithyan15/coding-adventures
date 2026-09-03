@@ -9,7 +9,7 @@ headword: "പുല്ല്"
 gloss: "grass"
 romanization: "pullŭ"
 concept_tag: ML-NOUN-GRASS
-prerequisites: [ML-C66-paddy]
+prerequisites: [ML-C66-paddy, ML-C64-soon]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C66-PADDY-02]
 practises:
-  knowledge: [ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02]
+  knowledge: [ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C64-SMALL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Which makes this the *paśu*'s word rather than the farmer's: grass is what the 
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C64-SMALL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pullŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paśu*, then *pullŭ*, and say which one eats the other]
+- [YOU RECALL: read **ഉടനെ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02] -->

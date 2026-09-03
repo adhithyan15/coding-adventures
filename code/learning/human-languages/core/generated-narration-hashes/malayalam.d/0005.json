@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 5,
-  "sourceHash": "fnv1a64:51e78cedadaca4ec",
+  "sourceHash": "fnv1a64:b3971e0b0dd418cd",
   "lessonIds": [
     "ML-C05-samsaarikkuka",
     "ML-S115-letter-nya",
@@ -22,7 +22,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch05.txt",
   "json": "malayalam/narration/ch05.json",
-  "textHash": "fnv1a64:c6cd17299dd3019d",
-  "jsonHash": "fnv1a64:1685668951a7fa39",
+  "textHash": "fnv1a64:97cd447f55e42362",
+  "jsonHash": "fnv1a64:7764c1a6bf38c6a9",
   "findings": []
 }

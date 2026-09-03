@@ -12,7 +12,7 @@ headword: "नयति"
 gloss: "he, she or it leads"
 romanization: "nayati"
 concept_tag: SA-VERB-LEAD
-prerequisites: [SA-C22-hear]
+prerequisites: [SA-C22-hear, SA-C20-child]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-LEAD]
 practises:
-  knowledge: [SA-LEX-HEAR, SA-LEX-LEAD]
+  knowledge: [SA-LEX-HEAR, SA-LEX-LEAD, SA-LEX-C20-PERSON-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ From **√नी** (*nī*), 'to lead'. It is inside *netṛ*, 'leader', and *nay
 One more everyday action. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HEAR, SA-LEX-LEAD] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HEAR, SA-LEX-LEAD, SA-LEX-C20-PERSON-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nayati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *śṛṇoti*, so the two sit together]
+- [YOU RECALL: read **बालः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HEAR, SA-LEX-LEAD] -->

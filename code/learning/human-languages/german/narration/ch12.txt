@@ -1,74 +1,349 @@
-German, chapter 12: Months and Seasons.
-2 lessons. All 2 can be done entirely by ear.
+German, chapter 12: Telling the Time.
+10 lessons. All 10 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-die Monate — Rome's calendar in German.
+Lesson 1 of 10.
+die Uhr — "the clock".
 
 Warm-up.
 [pause 2 seconds]
-Here's the German pattern again. Its numbers are homegrown (eins, zwei), its weekday-gods are Germanic (Donnerstag). But its months — like its clock-word Uhr — are borrowed straight from Latin. Time-reckoning, again, came to the German world from Rome.
+Something changes here. The numbers were German's own and the weekdays were German's gods — this word is neither.
 
-The months, taken apart.
-[a table of 12 rows, read aloud]
-German: Januar. from Latin: Januarius. who / what: Janus, god of doors & beginnings.
-German: Februar. from Latin: Februarius. who / what: the Februa purification festival.
-German: März. from Latin: Martius. who / what: Mars, the war-god — the same Mars as English Tuesday / French mardi.
-German: April. from Latin: Aprilis. who / what: perhaps aperire "to open".
-German: Mai. from Latin: Maius. who / what: Maia, goddess of growth.
-German: Juni. from Latin: Junius. who / what: Juno, queen of the gods.
-German: Juli. from Latin: Julius. who / what: Julius Caesar.
-German: August. from Latin: Augustus. who / what: the emperor Augustus.
-German: September. from Latin: september. who / what: "7th" (septem).
-German: Oktober. from Latin: october. who / what: "8th" (octo).
-German: November. from Latin: november. who / what: "9th" (novem).
-German: Dezember. from Latin: december. who / what: "10th" (decem).
-Two familiar payoffs:
-März = Mars. German borrowed the Roman war-god's month whole — the same god behind English March and, as Tuesday (Tiw = Mars), behind German's own Dienstag. The god came in twice, once by name, once by translation.
-September–Dezember = 7–10. Even in German, these keep the Latin numbers septem…decem (the Roman year began in March). So German's own numbers are sieben, acht, neun, zehn — but its month names count in Latin.
-Three layers of the German calendar, three origins: numbers native, weekdays Germanic gods, months (and the clock, Uhr) Latin.
+You'll want to know: die Uhr.
+die Uhr — "the clock," and also "o'clock."
+A die-word, and one syllable. It does two jobs: the object on the wall, and the word you say when telling the time.
+
+Sounds you'll need.
+u-long — a long u, the vowel of English moor.
+r-final — and then a soft r that barely closes: German's final r colours the vowel and stops rather than rolling.
+Together: oor. One syllable, nothing more.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the twelve — "Januar, Februar, März … November, Dezember"]
+[your turn — say: "die Uhr" — oor, long and soft]
 [pause 8 seconds for the answer]
-[your turn — say: "März = Mars = Dienstag's god (Tiw)"]
+[your turn — say: its two jobs — "the clock; o'clock"]
 [pause 8 seconds for the answer]
-[your turn — say: "September = 7, Dezember = 10 — Latin numbers in German months"]
+[your turn — say: it beside a word you own — "der Tag, die Uhr"]
 [pause 8 seconds for the answer]
+[repeat that twice]
+"die Uhr."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Are German month names native or borrowed, and like which other German word? (Borrowed from Latin — like the clock-word Uhr.) What links März to Dienstag? (The war-god Mars = Germanic Tiw.) Why is Dezember Latin for "ten"? (The Roman year began in March.) Next: the seasons — where German goes native again.
+Say "the clock." (Die Uhr.) Which article? (Die.) How many syllables? (One — oor.) What else does the word mean? (O'clock.) Next: where it came from, which is not where the rest of this book's words come from.
 
 
-Lesson 2 of 2.
-die Jahreszeiten — the seasons go native.
+Lesson 2 of 10.
+Uhr, taken apart — the third layer of the German day — numbers native, weekdays Germanic, the clock Latin.
 
 Warm-up.
 [pause 2 seconds]
-The months were Latin. The seasons swing back to native German — and one of them, Herbst, is the same word as English harvest. The word for "season" itself is transparent: Jahres-zeit = "year-time."
+You have twice met a language keeping some words and buying others. Here is the third time, and it completes a picture.
 
-The four seasons, taken apart.
+The word, taken apart.
+Uhr comes from Latin hōra, "hour" — the same word that became French heure, Italian ora and English hour. It reached German through medieval Latin and Low German ūr(e).
+Timekeeping arrived with Roman and monastic clocks, and the word rode in with the machinery.
+
+Why it's said this way.
+Three layers of the German day, three different origins:
+[a table of 3 rows, read aloud]
+what: the numbers. German: eins, zwei, drei. where it came from: native Germanic.
+what: the weekdays. German: Montag, Donnerstag. where it came from: Germanic gods.
+what: the clock. German: Uhr. where it came from: Latin, from hōra.
+German kept its own counting and its own gods. For the machine that measures hours it reached for Rome.
+That is the same rule you were given with the months and again with Samstag: the words used every hour of every day are the hardest to displace, and the words that arrive with an institution come in whole. A clock is an institution arriving.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the family — "Uhr, hōra, heure, ora, hour"]
+[pause 8 seconds for the answer]
+[your turn — say: the three layers — "numbers native, weekdays gods, clock Latin"]
+[pause 8 seconds for the answer]
+[your turn — say: the reason — "the clock came in, and its word came with it"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Uhr — from hōra."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which Latin word is Uhr? (Hōra.) Which English word is its cousin? (Hour.) Which two layers of the German day are not borrowed? (The numbers and the weekdays.) Why did this one come in? (It arrived with the clocks.) Next: the German word that was there already.
+
+
+Lesson 3 of 10.
+die Stunde — "an hour".
+
+Warm-up.
+[pause 2 seconds]
+A borrowed word usually arrives because a language needs one. This time German already had a perfectly good word, and took the Latin one anyway.
+
+You'll want to know: die Stunde.
+die Stunde — "an hour," in the sense of a span of sixty minutes.
+Native Germanic, and older in the language than Uhr. It is the word for a duration: a lesson lasts eine Stunde.
+
+Sounds you'll need.
+st-initial-scht — a German st- at the start of a word is sht-, not st-. So this opens SHTOON-, which is the single most useful spelling rule in German after ei and ie.
+u-long — the same long u you met in Uhr.
+
+Why it's said this way.
+The loan did not push the native word out. The two divided the work instead:
+[a table of 2 rows, read aloud]
+for: reading a clock — "o'clock". German uses: Uhr.
+for: a length of time — "an hour". German uses: Stunde.
+English has the same split and hides it: hour covers both, and o'clock is a worn-down phrase (of the clock) doing the first job.
+This is worth holding on to, because it is what borrowing usually looks like. The loan rarely kills the native word; it takes a slice of the meaning and the two settle into different rooms.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "die Stunde" — SHTOON-duh]
+[pause 8 seconds for the answer]
+[your turn — say: the pair and their jobs — "Uhr for the clock, Stunde for the span"]
+[pause 8 seconds for the answer]
+[your turn — say: the spelling rule — "st- at the front is sht-"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"die Uhr, die Stunde."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "an hour," meaning a span. (Eine Stunde.) Which word do you use to read a clock? (Uhr.) Which of the two is native German? (Stunde.) How is st- pronounced at the start of a word? (Sht-.) Next: putting Uhr into a sentence.
+
+
+Lesson 4 of 10.
+Es ist zwei Uhr — telling the time.
+
+Warm-up.
+[pause 2 seconds]
+You have the numbers and you have the word. The frame that joins them needs nothing new.
+
+Grammar Lens: es ist, a number, Uhr.
+es ist + the number + Uhr.
+Es ist ein Uhr. — "It is one o'clock." Es ist zwei Uhr. — "It is two o'clock." Es ist zehn Uhr. — "It is ten o'clock."
+Word for word that is the English sentence with o'clock moved: it is two o'clock. Nothing about the order has to be relearned.
+One thing to notice: at one o'clock it is ein Uhr, not eins — the counting form drops its -s here exactly as it does before a noun, which you met with ein and eine.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the frame — "es ist … Uhr"]
+[pause 8 seconds for the answer]
+[your turn — say: "Es ist zwei Uhr." "Es ist zehn Uhr."]
+[pause 8 seconds for the answer]
+[your turn — say: the odd one — "Es ist ein Uhr", not eins]
+[pause 8 seconds for the answer]
+[your turn — say: the hour it is now, wherever you are]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Es ist zwei Uhr."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "it is ten o'clock." (Es ist zehn Uhr.) What are the three pieces? (Es ist, the number, Uhr.) What happens to eins at one o'clock? (It drops the -s: ein Uhr.) Next: the plural German does not use here.
+
+
+Lesson 5 of 10.
+zwei Uhr, not zwei Uhren — Uhr takes no plural when it means o'clock — it works like English o'clock, not like clocks.
+
+Warm-up.
+[pause 2 seconds]
+Every German noun you have met takes a plural. This one refuses — but only in one of its two jobs.
+
+Grammar Lens: the clock-reading Uhr does not count.
+Telling the time, Uhr stays singular however many hours you name.
+Zwei Uhr is "two o'clock." Not zwei Uhren — that would be two clocks, the objects on the wall.
+[a table of 2 rows, read aloud]
+zwei Uhr means two o'clock.
+zwei Uhren means two clocks.
+English does the identical thing and hides it behind an apostrophe. You would never say "two o'clocks" either, because o'clock is not a noun being counted — it is a fossilised phrase, of the clock. German's Uhr is doing that job with no apostrophe to warn you.
+So what you are watching is not really about Uhr. It is about a word that has stopped being a countable thing and become a unit of time, a job nouns take on in every language and mark differently in each.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the time — "zwei Uhr"]
+[pause 8 seconds for the answer]
+[your turn — say: the objects — "zwei Uhren"]
+[pause 8 seconds for the answer]
+[your turn — say: the English that hides it — "two o'clock, two clocks"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"zwei Uhr; zwei Uhren."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "two o'clock." (Zwei Uhr.) Say "two clocks." (Zwei Uhren.) Which of the two is the plural? (Uhren.) Why does the time not take one? (It is a unit of time, not a thing being counted.) Next: the two pivots of the day, and they are German's own.
+
+
+Lesson 6 of 10.
+die Mitte — "the middle".
+
+Warm-up.
+[pause 2 seconds]
+The clock-word was Latin. The two pivots of the German day swing straight back to German's own vocabulary, and they share a piece.
+
+You'll want to know: die Mitte.
+die Mitte — "the middle."
+Two syllables, short i, and a crisp doubled t: MIT-tuh.
+
+The word, taken apart.
+Mitte is English mid and middle — the same inherited word, and you can hear it without being told.
+Its Latin cousin is medius, "middle," which English borrowed several times over: medium, median, mediocre (literally "middling"), and the medi- of Mediterranean, the sea in the middle of the land.
+So the everyday Germanic word and the learned Latin one sit side by side in English, and German has the first of them. That is the pattern you have been watching all book: two doors into one root, one worn smooth by daily use and one carried in by scholars.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "die Mitte" — MIT-tuh]
+[pause 8 seconds for the answer]
+[your turn — say: the Germanic side — "Mitte, mid, middle"]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin side — "medius, medium, median"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"die Mitte — the middle."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "the middle." (Die Mitte.) Which two English words is it? (Mid and middle.) Which Latin word is its cousin? (Medius.) Name an English word from that side. (Medium, median or mediocre.) Next: the middle of the day.
+
+
+Lesson 7 of 10.
+der Mittag — "noon".
+
+Warm-up.
+[pause 2 seconds]
+You have the middle and you have the day. Put them together before reading on — you will be right.
+
+You'll want to know: der Mittag.
+der Mittag — "noon," and literally "mid-day."
+Mitt- from Mitte, -tag from Tag. Nothing is hidden and nothing had to be learned: this is the third compound in two chapters you could read on sight, after Montag and Sonnabend.
+English has the identical compound — midday — built from the identical two inherited words. Neither language got it from the other; each still had the pieces and used them.
+To say it is noon: Es ist Mittag. No number and no Uhr, because noon is not an hour you count to.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Mittag"]
+[pause 8 seconds for the answer]
+[your turn — say: its two pieces — "Mitte, Tag"]
+[pause 8 seconds for the answer]
+[your turn — say: the English twin — "Mittag, midday"]
+[pause 8 seconds for the answer]
+[your turn — say: "Es ist Mittag."]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der Mittag — midday."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "noon." (Der Mittag.) What are its two pieces? (Mitte and Tag.) Say "it is noon." (Es ist Mittag.) Does it need a number? (No.) Next: what French does with the same idea, and why German did not.
+
+
+Lesson 8 of 10.
+Mittag and midi — German and French mean the same thing by noon — but German built it and French inherited it.
+
+Warm-up.
+[pause 2 seconds]
+French says midi for noon, and it means exactly what Mittag means. That is not a borrowing in either direction.
+
+The word, taken apart.
+French midi comes from Latin medius diēs — "middle day." German Mittag is Mitte plus Tag — "middle day."
+The same thought, assembled twice, out of different material:
+[a table of 2 rows, read aloud]
+language: Latin, then French. built from: medius + diēs. result: midi.
+language: German. built from: Mitte + Tag. result: Mittag.
+Both families looked at the sun overhead and named the moment for the middle of the day. Neither copied the other; the idea is obvious enough that two languages reached it independently, and each used the words it had.
+
+Why it's said this way.
+This is the counterweight to Uhr, and the two are worth holding together.
+For the clock — a machine that arrived from outside — German took the foreign word whole. For noon — something anyone with a sky already has — German built its own out of pieces it owned.
+A language borrows what arrives and builds what was always there. One chapter, both halves of that.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "Mittag, midi"]
+[pause 8 seconds for the answer]
+[your turn — say: what each is made of — "Mitte plus Tag; medius plus diēs"]
+[pause 8 seconds for the answer]
+[your turn — say: the chapter in one line — "borrow the clock, build the noon"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Mittag, midi — the same thought, built twice."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is French midi made of? (Medius + diēs, "middle day".) And Mittag? (Mitte + Tag.) Did German borrow it? (No — it built its own.) Which word in this chapter was borrowed? (Uhr.) Next: the other pivot.
+
+
+Lesson 9 of 10.
+die Mitternacht — "midnight".
+
+Warm-up.
+[pause 2 seconds]
+The day's other pivot, and the second compound in this chapter you can assemble from words you already have.
+
+You'll want to know: die Mitternacht.
+die Mitternacht — "midnight," literally "mid-night."
+Mitter- is Mitte with the linking form it takes inside a compound, and -nacht is the night. English midnight is the same two words again.
+To say it: Es ist Mitternacht. Like Mittag, no number and no Uhr.
+
+Sounds you'll need.
+ch-ach — the raspy back-of-the-throat sound from Nacht itself, unchanged inside the longer word.
+And that -cht is the correspondence you were given with the numbers: German -cht- answers English -ght- every time.
+[a table of 3 rows, read aloud]
+acht means eight.
+Nacht means night.
+Licht means light.
+You met the first pair counting to ten. Here it is again on a word you now need, which is what a sound correspondence is for — you learn it once and it keeps paying.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "die Mitternacht"]
+[pause 8 seconds for the answer]
+[your turn — say: its pieces — "Mitte, Nacht"]
+[pause 8 seconds for the answer]
+[your turn — say: the correspondence — "acht/eight, Nacht/night, Licht/light"]
+[pause 8 seconds for the answer]
+[your turn — say: "Es ist Mitternacht."]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Mittag, Mitternacht."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "midnight." (Die Mitternacht.) What are its pieces? (Mitte and Nacht.) What does German -cht- answer in English? (-ght-.) Give the pair you met with the numbers. (Acht / eight.) Next: the whole chapter, said through.
+
+
+Lesson 10 of 10.
+Practice — the clock and the two pivots.
+
+Warm-up.
+[pause 2 seconds]
+No new words. One borrowed word and two built ones, and the difference between them is the chapter. Start by saying the borrowed one, one long syllable — Uhr — and then the piece both pivots begin with, Mitte.
+
+Grammar Lens: three ways to say when.
 [a table of 4 rows, read aloud]
-German: der Frühling (spring). =: früh "early" + -ling. English twin: early-season (from früh, cousin of English early).
-German: der Sommer (summer). =: native Germanic. English twin: summer.
-German: der Herbst (autumn). =: native Germanic. English twin: harvest.
-German: der Winter (winter). =: native Germanic. English twin: winter.
-All four are homegrown Germanic, and three are the plain twins of English summer, winter, and — the surprise — harvest:
-Frühling is built from früh ("early") — literally the "early-season," the year's first. (German also uses Lenz, an old poetic word for spring.)
-Herbst corresponds to harvest. They're the same Germanic word: the reaping season. English kept harvest but narrowed it to the act of gathering and reached for Latin-derived autumn for the season; German kept the old word for the season itself. Two languages, one word, split in meaning.
-So the German year splits cleanly: Latin for the months (like Uhr, the clock), native Germanic for the seasons (like the numbers and Mittag/Mitternacht).
+when: one o'clock. German: Es ist ein Uhr.
+when: ten o'clock. German: Es ist zehn Uhr.
+when: noon. German: Es ist Mittag.
+when: midnight. German: Es ist Mitternacht.
+One frame, es ist, and then either a number with Uhr or a pivot on its own. The pivots take no number because they are not hours you count to.
+
+Why it's said this way.
+Hold the two halves of the chapter side by side:
+Uhr came from Latin hōra, with the clocks. German had Stunde already, so the loan took the clock-reading job and the native word kept the span.
+Mittag and Mitternacht are German's own, built from Mitte with Tag and Nacht — the same thought French assembled out of Latin as midi.
+A language borrows what arrives and builds what was always there. The sky was always there; the clock was delivered.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der Frühling, der Sommer, der Herbst, der Winter"]
+[your turn — say: the four sentences above, in order]
 [pause 8 seconds for the answer]
-[your turn — say: the twins — "Sommer/summer, Winter/winter, Herbst/harvest"]
+[your turn — say: the two hour-words and their jobs — "Uhr for the clock, Stunde for the span"]
 [pause 8 seconds for the answer]
-[your turn — say: "Frühling = früh (early) + -ling — the early season"]
+[your turn — say: the counted and the uncounted — "zwei Uhr; Mittag"]
 [pause 8 seconds for the answer]
+[your turn — say: the chapter in one line — "borrow the clock, build the noon"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Es ist zwei Uhr. Es ist Mittag. Es ist Mitternacht."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Are German seasons native or Latin, unlike the months? (Native Germanic.) What English word is Herbst the twin of, and what happened to it? (Harvest — English narrowed it to the reaping act and took autumn from Latin for the season.) What is Frühling built from? (früh "early" — the early season.) Next chapter builds on this toward family and food.
+Say "it is two o'clock." (Es ist zwei Uhr.) Say "it is midnight." (Es ist Mitternacht.) Which word here is Latin? (Uhr, from hōra.) Which two did German build itself? (Mittag and Mitternacht.) Why does zwei Uhr have no plural? (It is a unit of time, not a thing being counted.)

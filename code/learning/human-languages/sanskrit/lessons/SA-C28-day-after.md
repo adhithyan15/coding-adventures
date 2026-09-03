@@ -12,7 +12,7 @@ headword: "परश्वः"
 gloss: "the day after tomorrow"
 romanization: "paraśvaḥ"
 concept_tag: SA-LEAVE-DAY-AFTER
-prerequisites: [SA-C28-now]
+prerequisites: [SA-C28-now, SA-C26-student, SA-C27-well-done]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C28-LEAVE-02]
 practises:
-  knowledge: [SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02]
+  knowledge: [SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C26-ROLE-02, SA-LEX-C27-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English needs four words for this and Sanskrit needs one, because *para* — "be
 A word you could have built yourself out of two you had.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C26-ROLE-02, SA-LEX-C27-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paraśvaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śvaḥ*, then *paraśvaḥ*, and say what *para* contributes]
+- [YOU RECALL: read **शिष्यः**, then say *sādhu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02] -->

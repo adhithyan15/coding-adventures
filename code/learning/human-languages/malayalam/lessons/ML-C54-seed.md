@@ -9,7 +9,7 @@ headword: "വിത്ത്"
 gloss: "a seed"
 romanization: "vittŭ"
 concept_tag: ML-NOUN-SEED
-prerequisites: [ML-C54-root]
+prerequisites: [ML-C54-root, ML-C52-garland]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C54-TREE-05]
 practises:
-  knowledge: [ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05]
+  knowledge: [ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05, ML-LEX-C52-WELCOME-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Sowing season in Kerala is set by the rains rather than by a date, which is why 
 Five, and the run closes where a tree starts: a tree, a branch, the trunk, a root, a seed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05, ML-LEX-C52-WELCOME-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vittŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *maraṁ*, *kompŭ*, *taṭi*, *vērŭ*, *vittŭ*]
+- [YOU RECALL: say *māla*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05] -->

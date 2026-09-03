@@ -9,7 +9,7 @@ headword: ചിങ്ങം കന്നി തുലാം വൃശ്ചി�
 gloss: the twelve months of the Malayalam (Kollam Era) solar calendar — also solar, like Tamil's, but named for ZODIAC SIGNS rather than nakshatras
 romanization: "ciṅṅaṁ kanni tulāṁ vṛścikaṁ dhanu makaraṁ kuṁbhaṁ mīnaṁ mēṭaṁ iṭavaṁ mithunaṁ karkkaṭakaṁ"
 concept_tag: ML-MONTHS
-prerequisites: [ML-C15-vellam-ari]
+prerequisites: [ML-C15-vellam-ari, ML-C11-nirangal]
 sounds: [malayalam-anusvara, malayalam-chillu-rr]
 roots: [malayalam-solar-calendar-zodiac, kollam-era]
 etymology_hook: "Malayalam's Kollam Era calendar is ALSO solar, like Tamil's — but its months are named for the ZODIAC SIGN the sun occupies (Chingam = Leo, Kanni = Virgo...), not nakshatras — a genuinely different naming logic from its closest cousin"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02]
 practises:
-  knowledge: [ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02]
+  knowledge: [ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02, ML-CONCEPT-C11-NIRANGAL-01, ML-CONCEPT-C11-NIRANGAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,7 +67,7 @@ start of the **Onam** festival season — Kerala's own solar calendar,
 running its own independent year.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02, ML-CONCEPT-C11-NIRANGAL-01, ML-CONCEPT-C11-NIRANGAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the twelve — "Chiṅṅam, Kanni, Tulām, Vṛścikam, Dhanu, Makaram,
@@ -75,6 +75,7 @@ running its own independent year.
 - [YOU SAY: "Chiṅṅam = Leo" — a zodiac sign, not a nakshatra]
 - [YOU SAY: the contrast — Tamil uses nakshatras, Malayalam uses zodiac
   signs]
+- [YOU RECALL: say *karuppŭ veḷḷa cuvappŭ nīla*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02] -->

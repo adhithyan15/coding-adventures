@@ -9,7 +9,7 @@ headword: "ಮೂಳೆ"
 gloss: "a bone"
 romanization: "mūḷe"
 concept_tag: KA-NOUN-BONE
-prerequisites: [KA-C57-shoulder]
+prerequisites: [KA-C57-shoulder, KA-C55-path]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C57-BODY-05]
 practises:
-  knowledge: [KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05]
+  knowledge: [KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05, KA-LEX-C55-ROAD-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That happens. A language drops an inherited word and promotes another one, and a
 Five: ಕುತ್ತಿಗೆ, ಬೆನ್ನು, ತುಟಿ, ಭುಜ, ಮೂಳೆ. Enough to say where it hurts.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05, KA-LEX-C55-ROAD-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mūḷe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say which of them is the odd one in the family]
+- [YOU RECALL: say *dāri*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05] -->

@@ -12,7 +12,7 @@ headword: "कंधा"
 gloss: "a shoulder"
 romanization: "kandhā"
 concept_tag: HI-NOUN-SHOULDER
-prerequisites: [HI-C52-vegetable]
+prerequisites: [HI-C52-vegetable, HI-C51-flower, HI-C52-rice]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C53-BODY-01]
 practises:
-  knowledge: [HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01]
+  knowledge: [HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01, HI-LEX-C51-WELCOME-01, HI-LEX-C52-KITCHEN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ From Sanskrit स्कन्ध (*skandha*), 'shoulder'. The initial *sk-* clus
 The first of five more parts of the body.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01, HI-LEX-C51-WELCOME-01, HI-LEX-C52-KITCHEN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kandhā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kandhā*, and touch it]
+- [YOU RECALL: say *phūl*, then read **चावल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01] -->

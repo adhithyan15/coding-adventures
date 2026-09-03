@@ -1,18 +1,17 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:e1fc2cbdf98e1c1f",
+  "sourceHash": "fnv1a64:6f16b159e4acc253",
   "lessonIds": [
-    "GE-C15-praeteritum",
-    "GE-C15-sagte",
-    "GE-C15-machte",
-    "GE-C15-dentales-praeteritum",
-    "GE-C15-hatte",
-    "GE-C15-register",
-    "GE-C15-konnte",
-    "GE-C15-hochfrequent",
-    "GE-C15-praeteritum-map",
-    "GE-C15-praeteritum-practice"
+    "GE-C15-perfekt",
+    "GE-C15-ich-habe-gesagt",
+    "GE-C15-du-hast-gesagt",
+    "GE-C15-er-hat-gemacht",
+    "GE-C15-wir-haben-gesagt",
+    "GE-C15-partizip-am-ende",
+    "GE-C15-gestern",
+    "GE-C15-perfekt-als-vergangenheit",
+    "GE-C15-perfekt-practice"
   ],
-  "tex": "german/book/chapters/ch20-praeteritum.tex"
+  "tex": "german/book/chapters/ch20-perfekt.tex"
 }

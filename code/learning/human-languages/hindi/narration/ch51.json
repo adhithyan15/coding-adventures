@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ea961c177506a0aa",
+  "sourceHash": "fnv1a64:d339c92531248b67",
   "lessons": [
     {
       "id": "HI-C51-flower",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b565e4ad7346113",
+      "sourceHash": "fnv1a64:a22be7b38899f6df",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *phūl*, then *praṇām*, the flower and the bow at the door]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say abhī, then say ābhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *abhī*, then say *ābhār*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c36fe069764ee1bb",
+      "sourceHash": "fnv1a64:c55b2971afc05ada",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mālā*, then *phūl*, the string and the thing it is made of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read परसों, then say ehsān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **परसों**, then say *ehsān*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c2853693399bfe9",
+      "sourceHash": "fnv1a64:998f4030086af8ac",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *āṁgan*, then *mālā*, then *phūl*, back down the run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say safar, then read आदर",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *safar*, then read **आदर**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c5337c5133917b6",
+      "sourceHash": "fnv1a64:f4fac695e8df9707",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mez*, then *āṁgan*, one of them standing inside the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read निकलना, then say āśīrvād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **निकलना**, then say *āśīrvād*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59a93c507eec02e3",
+      "sourceHash": "fnv1a64:d1475ad93707b34f",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *phūl*, *mālā*, *āṁgan*, *mez*, *miṭhāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mulāqāt, then read प्रणाम",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mulāqāt*, then read **प्रणाम**]"
             }
           ]
         },

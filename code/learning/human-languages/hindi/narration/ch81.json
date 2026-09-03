@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Words on the Door",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5681a8acd05ac501",
+  "sourceHash": "fnv1a64:d9691ce26041b5da",
   "lessons": [
     {
       "id": "HI-C74-open",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:969fdea1f4f2521b",
+      "sourceHash": "fnv1a64:967d1cb3757f016d",
       "notice": null,
       "blocks": [
         {
@@ -119,6 +119,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *khulā paisā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paisā, then read होटल",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paisā*, then read **होटल**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da28b991efad7889",
+      "sourceHash": "fnv1a64:ecbb96de7fca0d54",
       "notice": null,
       "blocks": [
         {
@@ -250,6 +259,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: खुला once more, then बंद beside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read रुपया, then say nāshtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **रुपया**, then say *nāshtā*]"
             }
           ]
         },
@@ -285,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d40038bdbbeb93c",
+      "sourceHash": "fnv1a64:73e1b79aa6212995",
       "notice": null,
       "blocks": [
         {
@@ -380,6 +398,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pravesh band hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dām, then read बिल",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dām*, then read **बिल**]"
             }
           ]
         },
@@ -415,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6d66a645ab6364b",
+      "sourceHash": "fnv1a64:bf23c00ad1e25089",
       "notice": null,
       "blocks": [
         {
@@ -506,6 +533,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: निकास, lengthening the vowel that निकलना keeps short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read महँगा, then say veṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **महँगा**, then say *veṭar*]"
             }
           ]
         },
@@ -541,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b661b46d1fa5f6b",
+      "sourceHash": "fnv1a64:6b592d0e6c503550",
       "notice": null,
       "blocks": [
         {
@@ -641,6 +677,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: निकास, then देर, and say all five in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kharīdnā, then read पीना",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kharīdnā*, then read **पीना**]"
             }
           ]
         },

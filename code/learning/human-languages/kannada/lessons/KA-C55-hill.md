@@ -9,7 +9,7 @@ headword: "ಬೆಟ್ಟ"
 gloss: "a hill"
 romanization: "beṭṭa"
 concept_tag: KA-NOUN-HILL
-prerequisites: [KA-C55-tank]
+prerequisites: [KA-C55-tank, KA-C53-moon]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C55-ROAD-03]
 practises:
-  knowledge: [KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03]
+  knowledge: [KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C53-SKY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A hill with a name is a hill people climb for a reason, and in Karnataka the rea
 Three, and the first of them that stands up.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C53-SKY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *beṭṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *doḍḍa beṭṭa*, then *cikka guḍḍa*, and hear the size words doing the sorting]
+- [YOU RECALL: say *candra*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03] -->

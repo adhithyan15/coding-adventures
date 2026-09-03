@@ -9,7 +9,7 @@ headword: জল
 romanization: jôl
 gloss: water — the word Chapter 13 already used to say "drink water," now taught on its own, beside the Bangladesh-register পানি
 concept_tag: BN-FOOD-WATER
-prerequisites: [BN-C10-cha]
+prerequisites: [BN-C10-cha, BN-C07-khaowa, BN-C07-dekha]
 sounds: [ja-unaspirated]
 roots: [jala-uncertain, pa-drink]
 etymology_hook: "জল is Sanskrit জল jala through Prakrit — an old Indo-Aryan word whose own root is genuinely disputed (perhaps PIE gʷelHo- 'to gush forth', perhaps not Indo-European at all); its Bangladesh-register neighbour পানি is on firmer ground, from Sanskrit pānīya, 'drinkable,' built on the very √pā that Chapter 13's পান করা already named"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C10-JOL-01]
 practises:
-  knowledge: [BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-GRAMMAR-C07-KHAOWA-02, BN-LEX-C10-JOL-01]
+  knowledge: [BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-GRAMMAR-C07-KHAOWA-02, BN-LEX-C10-JOL-01, BN-LEX-C07-KHAOWA-01, BN-LEX-C07-DEKHA-01, BN-GRAMMAR-C07-DEKHA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,13 +68,14 @@ built directly on **√pā**, "to drink," the very root behind Chapter 13's
 thing, one of disputed origin and one you can trace all the way home.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C10-CHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C10-CHA-01, BN-LEX-C07-KHAOWA-01, BN-GRAMMAR-C07-KHAOWA-02, BN-LEX-C07-DEKHA-01, BN-GRAMMAR-C07-DEKHA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "jôl" — water, one syllable]
 - [YOU SAY: the offer — "jôl khān"]
 - [YOU SAY: the Bangladesh word, and its root — "pani … pā, potion, potable"]
 - [YOU SAY: tea, then water — "chā khān … jôl khān"]
+- [YOU RECALL: read **খাওয়া**, then say *dækhā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02] -->

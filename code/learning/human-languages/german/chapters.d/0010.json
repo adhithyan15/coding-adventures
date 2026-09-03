@@ -1,16 +1,28 @@
 {
   "chapter": 10,
-  "title": "The Days of the Week",
-  "label": "ch:days",
-  "canDo": "I can name the days of the week in German and use them in simple plans.",
+  "title": "The Gods of the Week",
+  "label": "ch:ge-wochentage",
+  "canDo": "I can name the five German weekdays, say which god is in each, and explain why one of them has no god at all.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C07-wochentage-2",
+    "lesson": "GE-C07-wochentage-1",
     "kind": "task",
-    "summary": "Complete GE-C07-wochentage-2, the canonical closing checkpoint, and demonstrate the chapter promise: name the days of the week in German and use them in simple plans.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The Romans named their weekdays for planet-gods and the Germanic peoples swapped in their own, one for one, which is why German and English line up here and Romance does not. Five days are a god's name plus Tag; this chapter meets them one at a time, with the nouns Mond and Donner taught before the days built on them, and ends on Mittwoch — the day the medieval Church took Wodan out of.",
+    "assesses": [
+      "GE-GRAMMAR-GOTT-PLUS-TAG-01",
+      "GE-LEX-MOND-01",
+      "GE-LEX-MONTAG-01",
+      "GE-LEX-DIENSTAG-01",
+      "GE-ETYMON-DIENSTAG-TIW-01",
+      "GE-LEX-DONNER-01",
+      "GE-LEX-DONNERSTAG-01",
+      "GE-ETYMON-DONNERSTAG-THOR-01",
+      "GE-LEX-FREITAG-01",
+      "GE-ETYMON-FREITAG-FRIJA-01",
+      "GE-LEX-MITTWOCH-01"
+    ],
+    "note": "Chapter 10 is generated from schema-v2 lessons, so the payoff is atom-scored. It introduces 11 atoms, under the maxNewAtomsPerChapter of 12: the seven weekdays were split across two chapters at the .tex's own weekday/weekend seam, because eighteen atoms in one chapter is a cram. Lesson ids keep the GE-C07-* prefix."
   }
 }

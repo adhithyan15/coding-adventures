@@ -1,64 +1,87 @@
 ---
+schema_version: 2
 id: GE-C08-mittag-mitternacht
-sequence: 240
-chapter: 11
-type: word
-headword: Mittag, Mitternacht
-gloss: noon and midnight — native "mid-day" and "mid-night"
-concept_tag: GE-TIME-NOON-MIDNIGHT
-prerequisites: [GE-C08-uhr]
-sounds: [ch-ach, vowel-a]
-roots: [germanic-compounds]
-etymology_hook: "Mittag = Mitte + Tag ('mid-day'), Mitternacht = Mitte + Nacht ('mid-night') — native Germanic compounds, unlike the Latin-loaned Uhr"
-est_minutes: 4
-reviews_of: [GE-C08-uhr, GE-C07-wochentage-2]
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 254
+chapter: 12
+type: practice
+headword: (practice)
+gloss: chapter payoff — the borrowed clock and the two native pivots, said together
+concept_tag: CH12-PRACTICE
+prerequisites: [GE-C08-uhr, GE-C08-uhr-hora, GE-C08-stunde, GE-C08-es-ist-uhr, GE-C08-uhr-ohne-plural, GE-C08-mitte, GE-C08-mittag, GE-C08-mittag-midi, GE-C08-mitternacht]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GE-LEX-UHR-01, GE-SOUND-UHR-01, GE-ETYMON-UHR-HORA-01, GE-LEX-STUNDE-01, GE-GRAMMAR-ES-IST-UHR-01, GE-GRAMMAR-UHR-NO-PLURAL-01, GE-LEX-MITTE-01, GE-ETYMON-MITTE-MEDIUS-01, GE-LEX-MITTAG-01, GE-ETYMON-MITTAG-MIDI-01, GE-LEX-MITTERNACHT-01]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-UHR-01, GE-SOUND-UHR-01, GE-ETYMON-UHR-HORA-01, GE-LEX-STUNDE-01, GE-GRAMMAR-ES-IST-UHR-01, GE-GRAMMAR-UHR-NO-PLURAL-01, GE-LEX-MITTE-01, GE-ETYMON-MITTE-MEDIUS-01, GE-LEX-MITTAG-01, GE-ETYMON-MITTAG-MIDI-01, GE-LEX-MITTERNACHT-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C08-mitternacht, GE-C08-mittag-midi, GE-C08-uhr-hora]
 ---
 
-# Mittag and Mitternacht — the native middle of day and night
+# Practice — the clock and the two pivots
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-UHR-01, GE-SOUND-UHR-01, GE-LEX-MITTE-01, GE-LEX-MITTAG-01] -->
 
-[PAUSE 2s] The clock-word *Uhr* was Latin. But noon and midnight swing back to
-**native German**: *Mittag* and *Mitternacht* are plain Germanic compounds — "the
-day's middle" and "the night's middle" — built from words you can already almost
-read.
+[PAUSE 2s] No new words. One borrowed word and two built ones, and the
+difference between them is the chapter. Start by saying the borrowed one, one
+long syllable — *Uhr* — and then the piece both pivots begin with, *Mitte*.
 
-## The two words, taken apart
+## Grammar Lens: three ways to say when
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-ES-IST-UHR-01, GE-LEX-MITTAG-01, GE-LEX-MITTERNACHT-01, GE-GRAMMAR-UHR-NO-PLURAL-01] -->
 
-Both start with **Mitte**, "middle" (cousin of English *mid, middle*, and of Latin
-*medius*):
+| when | German |
+|---|---|
+| one o'clock | *Es ist ein Uhr.* |
+| ten o'clock | *Es ist zehn Uhr.* |
+| noon | *Es ist Mittag.* |
+| midnight | *Es ist Mitternacht.* |
 
-| German | = | literally |
-|---|---|---|
-| **Mittag** | *Mitte* + *Tag* | "**mid**-**day**" (noon) |
-| **Mitternacht** | *Mitter* (Mitte) + *Nacht* | "**mid**-**night**" (midnight) |
+One frame, *es ist*, and then either a number with *Uhr* or a pivot on its own.
+The pivots take no number because they are not hours you count to.
 
-- **Mittag** = "mid-day." *Tag* ("day") you met in *Montag, Dienstag*; put "middle"
-  in front and you get noon. Its meaning matches French *midi* (*medius diēs*)
-  exactly — same idea, but German built it from its **own** words instead of
-  borrowing the Latin one.
-- **Mitternacht** = "mid-night." *Nacht* ("night") is the twin of English *night*
-  (remember *acht/eight*, *Nacht/night* — the *-cht/-ght* pair). So *Mitternacht*
-  and English *mid-night* are the same compound in two Germanic tongues.
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-UHR-HORA-01, GE-ETYMON-MITTAG-MIDI-01, GE-LEX-STUNDE-01, GE-ETYMON-MITTE-MEDIUS-01] -->
 
-To tell the time with them:
+Hold the two halves of the chapter side by side:
 
-> **Es ist Mittag.** — "It is noon." **Es ist Mitternacht.** — "It is midnight."
+- ***Uhr*** came from Latin *hōra*, with the clocks. German had *Stunde*
+  already, so the loan took the clock-reading job and the native word kept the
+  span.
+- ***Mittag*** and ***Mitternacht*** are German's own, built from *Mitte* with
+  *Tag* and *Nacht* — the same thought French assembled out of Latin as *midi*.
 
-So German splits the day three ways by origin: **Uhr** (Latin) for the hours,
-**Mittag/Mitternacht** (native) for its pivots.
+**A language borrows what arrives and builds what was always there.** The sky
+was always there; the clock was delivered.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-ES-IST-UHR-01, GE-LEX-MITTERNACHT-01, GE-LEX-UHR-01, GE-LEX-STUNDE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Mittag" (noon), "Mitternacht" (midnight)]
-- [YOU SAY: break them — "Mitte (middle) + Tag (day)", "Mitte + Nacht (night)"]
-- [YOU SAY: "Mitternacht / mid-night" — the same Germanic compound]
+- [YOU SAY: the four sentences above, in order]
+- [YOU SAY: the two hour-words and their jobs — "Uhr for the clock, Stunde for the span"]
+- [YOU SAY: the counted and the uncounted — "zwei Uhr; Mittag"]
+- [YOU SAY: the chapter in one line — "borrow the clock, build the noon"]
+
+[REPEAT x2] "Es ist zwei Uhr. Es ist Mittag. Es ist Mitternacht."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-UHR-NO-PLURAL-01, GE-ETYMON-UHR-HORA-01, GE-LEX-MITTERNACHT-01, GE-ETYMON-MITTAG-MIDI-01] -->
 
-[PAUSE 3s] What do *Mittag* and *Mitternacht* literally mean, and from what native
-word? ("Mid-day" / "mid-night"; from *Mitte* "middle" + *Tag/Nacht*.) How does this
-differ from *Uhr*? (*Uhr* is a **Latin loan**; these are **native** compounds.) What
-English word is *Mitternacht* the twin of? (*Midnight*.) Next chapter builds on this
-toward months and family.
+[PAUSE 3s] Say "it is two o'clock." (**Es ist zwei Uhr**.) Say "it is
+midnight." (**Es ist Mitternacht**.) Which word here is Latin? (***Uhr***, from
+*hōra*.) Which two did German build itself? (***Mittag*** **and**
+***Mitternacht***.) Why does *zwei Uhr* have no plural? (**It is a unit of
+time, not a thing being counted**.)

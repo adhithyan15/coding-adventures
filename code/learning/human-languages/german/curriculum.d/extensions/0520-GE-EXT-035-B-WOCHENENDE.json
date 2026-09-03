@@ -1,0 +1,16 @@
+{
+  "id": "GE-EXT-035-B-WOCHENENDE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name both German words for Saturday and the word for Sunday, and say which German inherited and which it bought.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C07-sonne",
+    "GE-C07-sonntag",
+    "GE-C07-sabbat",
+    "GE-C07-samstag",
+    "GE-C07-sonnabend",
+    "GE-C07-wochentage-2"
+  ]
+}

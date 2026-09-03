@@ -9,7 +9,7 @@ headword: "ಭುಜ"
 gloss: "the shoulder"
 romanization: "bhuja"
 concept_tag: KA-NOUN-SHOULDER
-prerequisites: [KA-C57-lip]
+prerequisites: [KA-C57-lip, KA-C55-village]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C57-BODY-04]
 practises:
-  knowledge: [KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04]
+  knowledge: [KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04, KA-LEX-C55-ROAD-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That opening ಭ is a letter Kannada mostly uses in borrowed words. Meeting one 
 Four, and this is the run's borrowed one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04, KA-LEX-C55-ROAD-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bhuja*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhuja*, then *kuttige*, and say which of the two the ಹೂಮಾಲೆ passes]
+- [YOU RECALL: read **ಹಳ್ಳಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04] -->

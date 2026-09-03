@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "The Harvest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:94fe5f3beb137e77",
+  "sourceHash": "fnv1a64:57f5a1c091257b49",
   "lessons": [
     {
       "id": "TA-C64-paddy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11cc19499abaf6db",
+      "sourceHash": "fnv1a64:3436ad56b1eb0b40",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nel*, then *arisi*, and say which one the husk is still on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say maṭṭum, then read வேண்டுகோள்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *maṭṭum*, then read **வேண்டுகோள்**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30f78d3985e63e3c",
+      "sourceHash": "fnv1a64:bd8aa90b8e5c85d3",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pul*, then *pal*, and hold the two vowels apart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read இன்னும், then say aṉumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **இன்னும்**, then say *aṉumati*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16434aea9792ce6e",
+      "sourceHash": "fnv1a64:1682e66db1309e65",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vayal*, then *payir*, then *nel*, in that order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sīkkiram, then read தயக்கம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sīkkiram*, then read **தயக்கம்**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:897f2cdbf0977dfa",
+      "sourceHash": "fnv1a64:105bbab528ac21eb",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kaḷam*, then *nel*, and say what is brought to which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read உடனே, then say nambikkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **உடனே**, then say *nambikkai*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a87066fbc9f12aa1",
+      "sourceHash": "fnv1a64:d832067b5e3a4458",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *nel*, *pul*, *payir*, *kaḷam*, *aṟuvaṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mutalil, then read பணிவு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mutalil*, then read **பணிவு**]"
             }
           ]
         },

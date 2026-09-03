@@ -9,7 +9,7 @@ headword: "பேருந்து"
 gloss: "a bus"
 romanization: "pērundu"
 concept_tag: TA-NOUN-BUS
-prerequisites: [TA-C69-vehicle]
+prerequisites: [TA-C69-vehicle, TA-C67-veshti, TA-C68-price]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C69-GOING-02]
 practises:
-  knowledge: [TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02]
+  knowledge: [TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02, TA-LEX-C67-WEAR-02, TA-LEX-C68-SHOP-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ understood — but only one of them is written on the board you have to read.
 Two, and one of them you can take apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02, TA-LEX-C67-WEAR-02, TA-LEX-C68-SHOP-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pērundu*]
 - [YOU SAY: the two pieces, then the whole word]
 - [YOU RECALL: say *pai*, then say *vaṇḍi*, then say *pērundu*]
+- [YOU RECALL: read **வேட்டி**, then say *vilai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02] -->

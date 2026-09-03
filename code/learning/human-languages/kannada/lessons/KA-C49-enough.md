@@ -9,7 +9,7 @@ headword: "ಸಾಕು"
 gloss: "enough"
 romanization: "sāku"
 concept_tag: KA-WORD-ENOUGH
-prerequisites: [KA-C49-true]
+prerequisites: [KA-C49-true, KA-C47-tooth]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C49-REPLY-02]
 practises:
-  knowledge: [KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02]
+  knowledge: [KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C47-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ No Sanskrit anywhere in it — ಸಾಕು is Kannada's own, resting on an inhe
 Two: true, and enough.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C47-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sāku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sāku* over an imaginary plate, then *nija* to something just said]
+- [YOU RECALL: read **ಹಲ್ಲು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02] -->

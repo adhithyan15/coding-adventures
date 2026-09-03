@@ -9,7 +9,7 @@ headword: "காய்ச்சல்"
 gloss: "a fever"
 romanization: "kāyccal"
 concept_tag: TA-NOUN-FEVER
-prerequisites: [TA-C61-sleep]
+prerequisites: [TA-C61-sleep, TA-C59-jaggery, TA-C60-broom]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C61-FEEL-04]
 practises:
-  knowledge: [TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04]
+  knowledge: [TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04, TA-LEX-C59-KITCHEN-04, TA-LEX-C60-MADE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the first thing anybody tells a மருத்துவர், and it is 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04, TA-LEX-C59-KITCHEN-04, TA-LEX-C60-MADE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kāyccal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāyccal*, then *maruttuvar*, and say which one you take to the other]
+- [YOU RECALL: read **வெல்லம்**, then say *tuṭaippam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04] -->

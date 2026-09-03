@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C34-kem-kemke",
+    "language": "gujarati",
+    "chapter": 38,
+    "sequence": 1940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f370c899bcc5b98"
+  },
+  "findings": []
+}

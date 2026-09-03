@@ -12,7 +12,7 @@ headword: "खिड़की"
 gloss: "a window"
 romanization: "khiṛkī"
 concept_tag: HI-NOUN-WINDOW
-prerequisites: [HI-C58-roof]
+prerequisites: [HI-C58-roof, HI-C56-market, HI-C57-platter]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C58-HOUSE-03]
 practises:
-  knowledge: [HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03]
+  knowledge: [HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C56-ROAD-03, HI-LEX-C57-GIFT-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ This is the second time this book has had to say that about a piece of an ordina
 The third of five, and another honest gap.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C56-ROAD-03, HI-LEX-C57-GIFT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *khiṛkī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *khiṛkī*, cut into the *dīvār*]
+- [YOU RECALL: say *bāzār*, then say *thālī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03] -->

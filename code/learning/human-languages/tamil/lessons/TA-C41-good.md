@@ -9,7 +9,7 @@ headword: "நல்ல"
 gloss: "good"
 romanization: "nalla"
 concept_tag: TA-ADJ-GOOD
-prerequisites: [TA-C41-small]
+prerequisites: [TA-C41-small, TA-C40-there]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C41-ADJ-03]
 practises:
-  knowledge: [TA-LEX-C41-ADJ-01, TA-LEX-C41-ADJ-02, TA-LEX-C41-ADJ-03]
+  knowledge: [TA-LEX-C41-ADJ-01, TA-LEX-C41-ADJ-02, TA-LEX-C41-ADJ-03, TA-LEX-C40-DEIXIS-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-03, TA-LEX-C40-DEIXIS-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "நல்ல" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *aṅgē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-03] -->

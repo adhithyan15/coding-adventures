@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Four Words on the Face",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1d2b959adaf95179",
+  "sourceHash": "fnv1a64:4bdd4efed50ca649",
   "lessons": [
     {
       "id": "KA-C37-kannu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83e2044986919cd0",
+      "sourceHash": "fnv1a64:711ac46e23f14d80",
       "notice": null,
       "blocks": [
         {
@@ -111,6 +111,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: three body words now — \"tale, kai, kaṇṇu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bare*]"
             }
           ]
         },
@@ -146,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed6b81e1f79d6006",
+      "sourceHash": "fnv1a64:67494893978ca094",
       "notice": null,
       "blocks": [
         {
@@ -229,6 +238,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: eye, then ear — \"kaṇṇu … kivi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ತೆಗೆದುಕೊ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ತೆಗೆದುಕೊ**]"
             }
           ]
         },
@@ -264,7 +282,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4818ed2c32529fc7",
+      "sourceHash": "fnv1a64:450f338f445d835d",
       "notice": null,
       "blocks": [
         {
@@ -347,6 +365,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: ear, then nose — \"kivi … mūgu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kēḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kēḷu*]"
             }
           ]
         },
@@ -382,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d51caf6e91e84716",
+      "sourceHash": "fnv1a64:b942a275762f6478",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all six body words — \"tale, kai, kaṇṇu, kivi, mūgu, bāyi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಸಹಾಯ ಮಾಡು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಸಹಾಯ ಮಾಡು**]"
             }
           ]
         },

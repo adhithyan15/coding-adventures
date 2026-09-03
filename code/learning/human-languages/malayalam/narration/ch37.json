@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Face Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:32b919142940833e",
+  "sourceHash": "fnv1a64:7bdbf57b107686af",
   "lessons": [
     {
       "id": "ML-C37-kannu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2606586d13f68ed9",
+      "sourceHash": "fnv1a64:52b6e94cc428a748",
       "notice": null,
       "blocks": [
         {
@@ -111,6 +111,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: family, then body — \"makan, makaḷ … kaṇṇŭ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eṭukkuka*]"
             }
           ]
         },
@@ -146,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f8df872c77848bd",
+      "sourceHash": "fnv1a64:3e9da88a4dcc35c9",
       "notice": null,
       "blocks": [
         {
@@ -238,6 +247,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the closest family match — \"makaḷ, makaḷ\" — Malayalam, Tamil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ചോദിക്കുക",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ചോദിക്കുക**]"
             }
           ]
         },
@@ -273,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:719cb6a531250864",
+      "sourceHash": "fnv1a64:010baaeca1317297",
       "notice": null,
       "blocks": [
         {
@@ -365,6 +383,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: three against one, once more — \"cevi, cevi, cevi … kivi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sahāyikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sahāyikkuka*]"
             }
           ]
         },
@@ -400,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e62438e27a72e689",
+      "sourceHash": "fnv1a64:5a27b939bbfe7906",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +523,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all four face words — \"kaṇṇŭ, cevi, mūkkŭ, vāy\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read കുടുംബം",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **കുടുംബം**]"
             }
           ]
         },

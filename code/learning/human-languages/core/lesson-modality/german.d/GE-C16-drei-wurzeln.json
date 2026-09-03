@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-drei-wurzeln",
     "language": "german",
-    "chapter": 23,
-    "sequence": 530,
+    "chapter": 24,
+    "sequence": 540,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:91300937fd255985"
+    "sourceHash": "fnv1a64:1ba18de1c09a94ef"
   },
   "findings": []
 }

@@ -9,7 +9,7 @@ headword: "அல்லது"
 gloss: or
 romanization: "alladu"
 concept_tag: TA-JOIN-OR
-prerequisites: [TA-C76-but]
+prerequisites: [TA-C76-but, TA-C73-month, TA-C73-year]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C76-JOIN-02]
 practises:
-  knowledge: [TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-LEX-C76-JOIN-02, TA-GRAMMAR-C75-POLAR-01, TA-LEX-C62-JOIN-02, TA-LEX-C72-FEEL-02]
+  knowledge: [TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-LEX-C76-JOIN-02, TA-GRAMMAR-C75-POLAR-01, TA-LEX-C62-JOIN-02, TA-LEX-C72-FEEL-02, TA-LEX-C73-WHEN-04, TA-LEX-C73-WHEN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -67,7 +67,7 @@ It works on two statements as well as two things:
 Two joins in two lessons: one that sets things against each other, one that offers a choice.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-LEX-C76-JOIN-02, TA-GRAMMAR-C75-POLAR-01, TA-LEX-C62-JOIN-02, TA-LEX-C72-FEEL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-LEX-C76-JOIN-02, TA-GRAMMAR-C75-POLAR-01, TA-LEX-C62-JOIN-02, TA-LEX-C72-FEEL-02, TA-LEX-C73-WHEN-04, TA-LEX-C73-WHEN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *alladu*]
@@ -75,6 +75,7 @@ Two joins in two lessons: one that sets things against each other, one that offe
 - [YOU CONTRAST: *pālum tēnīrum* against *pāl alladu tēnīr* — both, then either]
 - [YOU RECALL: ask *varalāmā?*, then say *āṉāl*, then say *alladu*]
 - [YOU RETURN TO: say *-ā*, *iṉṉum* and *payam* — three distances back — then offer two of them with அல்லது]
+- [YOU RECALL: read **மாதம்**, then say *āṇḍu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-LEX-C76-JOIN-02, TA-GRAMMAR-C75-POLAR-01, TA-LEX-C62-JOIN-02, TA-LEX-C72-FEEL-02] -->

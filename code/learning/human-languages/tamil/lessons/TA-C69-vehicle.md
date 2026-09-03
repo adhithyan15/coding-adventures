@@ -9,7 +9,7 @@ headword: "வண்டி"
 gloss: "a vehicle, a cart"
 romanization: "vaṇḍi"
 concept_tag: TA-NOUN-VEHICLE
-prerequisites: [TA-C68-bag]
+prerequisites: [TA-C68-bag, TA-C67-shirt, TA-C68-shop]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C69-GOING-01]
 practises:
-  knowledge: [TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01]
+  knowledge: [TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01, TA-LEX-C67-WEAR-01, TA-LEX-C68-SHOP-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ is one of the most common shapes in the language, and you will now start seeing 
 The word the rest of this chapter is built on.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01, TA-LEX-C67-WEAR-01, TA-LEX-C68-SHOP-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vaṇḍi*]
 - [YOU SAY: it once more, curling the tongue back for the ண]
 - [YOU RECALL: say *vāṅgu*, then say *pai*, then say *vaṇḍi*]
+- [YOU RECALL: say *saṭṭai*, then read **கடை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01] -->

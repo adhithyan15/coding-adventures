@@ -9,7 +9,7 @@ headword: വൈകുന്നേരം
 gloss: "evening" (vaikunnēraṁ) — native Dravidian compound, Wiktionary-glossed "latening time," from വൈക് (vaikŭ, plausibly the root of വൈകുക, "to get late" — a reasonable inference, not something Wiktionary's compound entry states outright) + -ഉം (-uṁ) + നേരം (nēraṁ, "time," itself native Dravidian, not Sanskrit); Wiktionary itself ALSO lists "afternoon" as a second sense, though phrasebook sources cleanly split evening (this word) from afternoon (a separate compound built on ഉച്ച, ML-C17's "noon," plus കഴിഞ്ഞ്) — an honest source-tension worth flagging, not smoothing over
 romanization: "vaikunnēraṁ"
 concept_tag: TIME-EVENING
-prerequisites: [ML-C17-paathira]
+prerequisites: [ML-C17-paathira, ML-C21-naaya-poocha, ML-C22-paccha-manja]
 sounds: [malayalam-vowel-sign-ai, malayalam-conjunct-nn]
 roots: [dravidian-vaikuka-late, dravidian-neram-time]
 etymology_hook: "വൈകുന്നേരം (vaikunnēraṁ, 'evening') is, per Wiktionary, a compound of വൈക് (vaikŭ) + -ഉം (-uṁ) + നേരം (nēraṁ, 'time') — literally 'latening time'; നേരം is itself confirmed native Proto-Dravidian (*nēram, cognate Tamil நேரம்), not a Sanskrit borrowing, so this whole compound is native Dravidian start to finish; the വൈക് root is a reasonable morphological link to the everyday verb വൈകുക (vaikuka), confirmed 'to get late' on its own separate Wiktionary page (the compound's own page doesn't state the verb link explicitly, so treat that specific connection as the author's own inference, not a directly Wiktionary-sourced one); be honest about a real source tension: Wiktionary's own entry lists BOTH 'afternoon' and 'evening' as senses of this single word, but two independently-fetched phrasebook sources (ling-app.com, talkpal.ai) cleanly separate the two — evening = വൈകുന്നേരം, afternoon = a distinct compound built on ഉച്ച (ML-C17's 'noon') + കഴിഞ്ഞ് (kazhinju, 'passed, gone by') — don't smooth over this tension by picking whichever source is convenient; note it as a genuine open question about how cleanly the afternoon/evening boundary is drawn in practice"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C27-VAIKUNNERAM-01, ML-CONCEPT-C27-VAIKUNNERAM-02]
 practises:
-  knowledge: [ML-CONCEPT-C27-VAIKUNNERAM-01, ML-CONCEPT-C27-VAIKUNNERAM-02]
+  knowledge: [ML-CONCEPT-C27-VAIKUNNERAM-01, ML-CONCEPT-C27-VAIKUNNERAM-02, ML-CONCEPT-C21-NAAYA-POOCHA-01, ML-CONCEPT-C21-NAAYA-POOCHA-02, ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,13 +68,14 @@ blurry** in the dictionary sense, even though the two everyday
 phrasebook sources agree on a cleaner practical split.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C27-VAIKUNNERAM-01, ML-CONCEPT-C27-VAIKUNNERAM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C27-VAIKUNNERAM-01, ML-CONCEPT-C27-VAIKUNNERAM-02, ML-CONCEPT-C21-NAAYA-POOCHA-01, ML-CONCEPT-C21-NAAYA-POOCHA-02, ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "vaikunnēraṁ" — "evening," literally "latening time"]
 - [YOU SAY: the everyday verb root — vaikuka, "to get late"]
 - [YOU SAY: the honest tension — Wiktionary blurs afternoon/evening;
   phrasebooks split them cleanly]
+- [YOU RECALL: say *nāya, pūcca*, then read **പച്ച, മഞ്ഞ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C27-VAIKUNNERAM-01, ML-CONCEPT-C27-VAIKUNNERAM-02] -->

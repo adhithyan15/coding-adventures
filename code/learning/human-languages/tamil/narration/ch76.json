@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "But, and Or",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c23103fb22511fa9",
+  "sourceHash": "fnv1a64:8e43dea92a776dcd",
   "lessons": [
     {
       "id": "TA-C76-but",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:934a7a986887dd24",
+      "sourceHash": "fnv1a64:326f0ce02de7a159",
       "notice": null,
       "blocks": [
         {
@@ -144,6 +144,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RETURN TO: say *-um … -um illai*, *maṭṭum* and *kōpam* — three distances back — then set two of them against each other with ஆனால்]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iṉṟu, then read நேற்று, then say muṉbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iṉṟu*, then read **நேற்று**, then say *muṉbu*]"
             }
           ]
         },
@@ -179,7 +188,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cb37bb4bf62000e1",
+      "sourceHash": "fnv1a64:1f0f0c6e9a11127d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -319,6 +328,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RETURN TO: say *-ā*, *iṉṉum* and *payam* — three distances back — then offer two of them with அல்லது]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மாதம், then say āṇḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மாதம்**, then say *āṇḍu*]"
             }
           ]
         },

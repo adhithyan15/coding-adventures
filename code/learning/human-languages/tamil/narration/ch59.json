@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8b952cf43bccb15b",
+  "sourceHash": "fnv1a64:d2141c835afbc844",
   "lessons": [
     {
       "id": "TA-C59-curd",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32ff839f5042e02f",
+      "sourceHash": "fnv1a64:4aa7067700d9f680",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tayir*, then *sādam*, and say which one goes on top of the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kāṟṟu, then read பசு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kāṟṟu*, then read **பசு**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36ffd81192107d1d",
+      "sourceHash": "fnv1a64:4e56dfa73fc4b4d6",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tayir*, then *ney*, and say which one ends a meal and which one opens it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மணல், then say āṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மணல்**, then say *āṭu*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97c5697ce1896d19",
+      "sourceHash": "fnv1a64:df7a8670a0e582a0",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ney*, then *eṇṇey*, and hear the first one still sitting inside the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sēṟu, then read கோழி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sēṟu*, then read **கோழி**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e52f7500837f908",
+      "sourceHash": "fnv1a64:58933711ea06fdd8",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vellam*, then *ney*, and say which of the two a sweet needs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read புகை, then say kākkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **புகை**, then say *kākkai*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69d4e6af54605240",
+      "sourceHash": "fnv1a64:2968e8d746843714",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *tayir*, *ney*, *eṇṇey*, *vellam*, *sarkkarai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaṉal, then read பறவை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaṉal*, then read **பறவை**]"
             }
           ]
         },

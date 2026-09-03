@@ -9,7 +9,7 @@ headword: "ಆರೋಗ್ಯ"
 gloss: "health"
 romanization: "ārōgya"
 concept_tag: KA-NOUN-HEALTH
-prerequisites: [KA-C63-pain]
+prerequisites: [KA-C63-pain, KA-C61-sugar]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C63-HEALTH-05]
 practises:
-  knowledge: [KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05]
+  knowledge: [KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05, KA-LEX-C61-KITCHEN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It gives you a better answer than you had. ನೀವು ಹೇಗಿದ್ದೀ
 Five: ಹಸಿವು, ನಿದ್ದೆ, ಜ್ವರ, ನೋವು, ಆರೋಗ್ಯ. Enough to say how you are and to ask it back.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05, KA-LEX-C61-KITCHEN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ārōgya*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *nīvu hēgiddīrā* to whoever asked you first]
+- [YOU RECALL: say *sakkare*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05] -->

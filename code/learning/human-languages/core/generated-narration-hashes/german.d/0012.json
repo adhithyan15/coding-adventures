@@ -1,16 +1,24 @@
 {
   "language": "german",
   "chapter": 12,
-  "sourceHash": "fnv1a64:ee2b969b08054ad0",
+  "sourceHash": "fnv1a64:f74aed23f376e855",
   "lessonIds": [
-    "GE-C09-monate",
-    "GE-C09-jahreszeiten"
+    "GE-C08-uhr",
+    "GE-C08-uhr-hora",
+    "GE-C08-stunde",
+    "GE-C08-es-ist-uhr",
+    "GE-C08-uhr-ohne-plural",
+    "GE-C08-mitte",
+    "GE-C08-mittag",
+    "GE-C08-mittag-midi",
+    "GE-C08-mitternacht",
+    "GE-C08-mittag-mitternacht"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 10,
+  "drivablePrefix": 10,
   "text": "german/narration/ch12.txt",
   "json": "german/narration/ch12.json",
-  "textHash": "fnv1a64:14780533bcd1db7d",
-  "jsonHash": "fnv1a64:081c71e266e9e273",
+  "textHash": "fnv1a64:a727a3576670d118",
+  "jsonHash": "fnv1a64:2b302fa1cfb8b0ea",
   "findings": []
 }

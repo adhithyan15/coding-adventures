@@ -9,7 +9,7 @@ headword: "ಬೀಜ"
 gloss: "a seed"
 romanization: "bīja"
 concept_tag: KA-NOUN-SEED
-prerequisites: [KA-C54-root]
+prerequisites: [KA-C54-root, KA-C52-garland]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C54-TREE-05]
 practises:
-  knowledge: [KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05]
+  knowledge: [KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05, KA-LEX-C52-WELCOME-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada kept its own word for the act, though. ಬಿತ್ತು (*bittu*) is t
 Five: ಮರ, ಕೊಂಬೆ, ಎಲೆ, ಬೇರು, ಬೀಜ. A tree from the ground up, and the thing it began as.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05, KA-LEX-C52-WELCOME-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bīja*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say which one of them Kannada borrowed]
+- [YOU RECALL: say *hūmāle*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05] -->

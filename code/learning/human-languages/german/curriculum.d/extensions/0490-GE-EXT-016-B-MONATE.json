@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-016-B-MONATE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the German months and seasons, and say which of them German took from Latin.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C09-monate",
+    "GE-C09-jahreszeiten"
+  ]
+}

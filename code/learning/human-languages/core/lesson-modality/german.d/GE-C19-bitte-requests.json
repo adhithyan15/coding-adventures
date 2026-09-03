@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C19-bitte-requests",
     "language": "german",
-    "chapter": 27,
-    "sequence": 660,
+    "chapter": 28,
+    "sequence": 670,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4e2740d400506af6"
+    "sourceHash": "fnv1a64:53b7e7b65a518610"
   },
   "findings": []
 }

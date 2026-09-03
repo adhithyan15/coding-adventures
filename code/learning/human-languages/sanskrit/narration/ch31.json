@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Sky and Its Lights",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:af2240adafc6ffe6",
+  "sourceHash": "fnv1a64:246722aa4f221dee",
   "lessons": [
     {
       "id": "SA-C31-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba7f57230d045517",
+      "sourceHash": "fnv1a64:faa2e54a725e87a3",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *añjaliḥ*, then *ākāśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kṛpayā, then read द्वारम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kṛpayā*, then read **द्वारम्**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d0d3147d0a668ab",
+      "sourceHash": "fnv1a64:21a4d8020f0f2d22",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ākāśaḥ*, then *candraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read क्षम्यताम्, then say āsanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **क्षम्यताम्**, then say *āsanam*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c768e5ea621f5afa",
+      "sourceHash": "fnv1a64:ec32c3e471730ed7",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tārā*, and one of its cousins outside India]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say praṇāmaḥ, then read पुष्पम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *praṇāmaḥ*, then read **पुष्पम्**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2031139acebcf9d2",
+      "sourceHash": "fnv1a64:2166f025924d3278",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *candraḥ*, *tārā*, then *vāyuḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read उपकारः, then say mālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **उपकारः**, then say *mālā*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25c71651718ed63f",
+      "sourceHash": "fnv1a64:23449c0224d461aa",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say what *Himālaya* means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dhanyaḥ, then read अञ्जलिः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dhanyaḥ*, then read **अञ्जलिः**]"
             }
           ]
         },

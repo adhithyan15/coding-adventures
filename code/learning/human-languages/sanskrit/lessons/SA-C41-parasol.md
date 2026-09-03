@@ -12,7 +12,7 @@ headword: "छत्रम्"
 gloss: "a parasol"
 romanization: "chatram"
 concept_tag: SA-CRAFT-CHATRA
-prerequisites: [SA-C41-mirror]
+prerequisites: [SA-C41-mirror, SA-C39-snake, SA-C40-sweet]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C41-CRAFT-05]
 practises:
-  knowledge: [SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05]
+  knowledge: [SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05, SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It went east as well as up in the world: Hindi *chātā*, the umbrella anyone ca
 Five things made by hand: a wheel, a pot, a boat, a mirror, a parasol.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05, SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chatram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *cakram* and *chatram* together]
+- [YOU RECALL: say *sarpaḥ*, then read **मोदकः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05] -->

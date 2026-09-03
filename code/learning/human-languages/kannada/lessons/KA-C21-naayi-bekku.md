@@ -9,7 +9,7 @@ headword: ನಾಯಿ, ಬೆಕ್ಕು
 gloss: dog and cat — naayi is a solid, ancient native Dravidian root, no mystery at all; bekku is a DIFFERENT ancient Dravidian "wildcat" root, distinct from Tamil's everyday word for cat
 romanization: "nāyi, bekku"
 concept_tag: KA-ANIMALS
-prerequisites: [KA-C20-hannondu-ippattu]
+prerequisites: [KA-C20-hannondu-ippattu, KA-C16-tingalugalu, KA-C17-madhyaahna-madhyaraatri]
 sounds: [kannada-vowel-sign-e, kannada-geminate-kk]
 roots: [dravidian-naay-dog, dravidian-veruku-wildcat]
 etymology_hook: "ನಾಯಿ (nāyi, 'dog') is a solid, native Proto-Dravidian root — no mystery, unlike the tangled dog-words of Spanish, Hindi, and English; ಬೆಕ್ಕು (bekku, 'cat') is cognate with a DIFFERENT ancient Dravidian root, the same one behind Tamil/Malayalam's word for wildcat/civet cat — Kannada's everyday cat-word and Tamil's everyday cat-word (pūnai) come from two genuinely separate Dravidian roots"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02]
 practises:
-  knowledge: [KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02]
+  knowledge: [KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -58,12 +58,13 @@ cat**" — not the same root as Tamil's **everyday** word for cat. So unlike
 for their everyday word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nāyi" — dog, solid native Dravidian, no mystery]
 - [YOU SAY: "bekku" — cat, a different Dravidian root than Tamil's everyday
   word]
+- [YOU RECALL: say *caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa*, then read **ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02] -->

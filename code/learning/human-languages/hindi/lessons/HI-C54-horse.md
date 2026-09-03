@@ -12,7 +12,7 @@ headword: "घोड़ा"
 gloss: "a horse"
 romanization: "ghoṛā"
 concept_tag: HI-NOUN-HORSE
-prerequisites: [HI-C54-cow]
+prerequisites: [HI-C54-cow, HI-C52-lentils, HI-C53-knee]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C54-ANIMAL-02]
 practises:
-  knowledge: [HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02]
+  knowledge: [HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C52-KITCHEN-02, HI-LEX-C53-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ What makes it worth stopping on is what did *not* happen. Sanskrit had अश्
 The second of five, and an inherited word that was pushed out.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C52-KITCHEN-02, HI-LEX-C53-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ghoṛā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ghoṛā*, then *gāy* — the one that was replaced, the one that was not]
+- [YOU RECALL: read **दाल**, then say *ghuṭnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02] -->

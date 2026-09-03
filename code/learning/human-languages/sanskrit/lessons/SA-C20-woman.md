@@ -12,7 +12,7 @@ headword: "नारी"
 gloss: "woman"
 romanization: "nārī"
 concept_tag: SA-NOUN-WOMAN
-prerequisites: [SA-C20-man]
+prerequisites: [SA-C20-man, SA-C18-why, SA-C19-seven]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C20-PERSON-02]
 practises:
-  knowledge: [SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02]
+  knowledge: [SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02, SA-LEX-C18-ASK-02, SA-LEX-C19-NUM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -59,12 +59,13 @@ A second person and a fourth ending. The system is bigger than two, exactly as
 the night lesson warned.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02, SA-LEX-C18-ASK-02, SA-LEX-C19-NUM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nārī* — "woman"]
 - [YOU SAY: it against *naraḥ*, and name the shared piece]
 - [YOU SAY: the four endings you have now met]
+- [YOU RECALL: read **किमर्थम्**, then say *sapta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02] -->

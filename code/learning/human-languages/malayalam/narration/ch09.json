@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3e27667e1b1fb2d3",
+  "sourceHash": "fnv1a64:e06cc365aeed0d51",
   "lessons": [
     {
       "id": "ML-C09-kshamikkanam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca5b8c14bd082b01",
+      "sourceHash": "fnv1a64:1118b409adf37f3b",
       "notice": null,
       "blocks": [
         {
@@ -133,6 +133,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the plainer version — \"kṣamikkū,\" using the ‑ū ending you know]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **]"
             }
           ]
         },

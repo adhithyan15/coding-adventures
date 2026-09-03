@@ -9,7 +9,7 @@ headword: വെള്ളം അരി ചോറ്
 gloss: water (a genuinely DIFFERENT word than Tamil's), and rice raw/cooked, closely matching Tamil
 romanization: "veḷḷaṁ ari cōṟu"
 concept_tag: ML-FOOD-BASIC
-prerequisites: [ML-C14-kaalangal]
+prerequisites: [ML-C14-kaalangal, ML-C10-azhcha]
 sounds: [malayalam-geminate-lla, malayalam-vowel-sign-oo]
 roots: [vellam-flood-white, ari-rice-dravidian]
 etymology_hook: "വെള്ളം vellam (water) does NOT match Tamil's neer/thanneer — it shares the veL- 'bright/white' root already met in Malayalam's word for silver/Venus, originally meaning 'flood'; അരി ari (rice) DOES match Tamil's arisi closely"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02]
 practises:
-  knowledge: [ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02]
+  knowledge: [ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02, ML-CONCEPT-C10-AZHCHA-01, ML-CONCEPT-C10-AZHCHA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,12 +65,13 @@ Rice, though, tells the familiar story:
   word, where Tamil more often reaches for *sātam*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02, ML-CONCEPT-C10-AZHCHA-01, ML-CONCEPT-C10-AZHCHA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "veḷḷam" — water, NOT matching Tamil's neer]
 - [YOU SAY: "ari" — raw rice, matching Tamil closely]
 - [YOU SAY: "cōṟu" — cooked rice, Malayalam's own word]
+- [YOU RECALL: say *thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02] -->

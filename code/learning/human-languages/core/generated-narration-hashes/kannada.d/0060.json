@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 60,
-  "sourceHash": "fnv1a64:359b8870dcbb0314",
+  "sourceHash": "fnv1a64:1d6d8bc283eb3f43",
   "lessonIds": [
     "KA-C60-cow",
     "KA-C60-goat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch60.txt",
   "json": "kannada/narration/ch60.json",
-  "textHash": "fnv1a64:4bea8e9e97d3587d",
-  "jsonHash": "fnv1a64:af20786456c7e168",
+  "textHash": "fnv1a64:161a55b58a75e259",
+  "jsonHash": "fnv1a64:377c09153be07f9d",
   "findings": []
 }

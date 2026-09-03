@@ -9,7 +9,7 @@ headword: "ಮಂಜು"
 gloss: "mist, fog, frost"
 romanization: "mañju"
 concept_tag: KA-NOUN-MIST
-prerequisites: [KA-C59-wind]
+prerequisites: [KA-C59-wind, KA-C57-back]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C59-GROUND-02]
 practises:
-  knowledge: [KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02]
+  knowledge: [KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C57-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Held up beside ಮೋಡ the pair is tidy: the ಮೋಡ is the water overhead, 
 Two, and the second is the first one's water at ground level.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C57-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mañju*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mōḍa*, then *mañju*, and say which of them you can walk into]
+- [YOU RECALL: read **ಬೆನ್ನು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02] -->

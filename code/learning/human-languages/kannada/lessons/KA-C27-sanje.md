@@ -9,7 +9,7 @@ headword: ಸಂಜೆ
 gloss: "evening" (sañje) — borrowed from Maharashtri Prakrit sañjhā, itself from Sanskrit संध्या (saṃdhyā); a striking cross-family convergence with Hindi's साँझ/sāñjh, same Sanskrit root, arriving via a DIFFERENT sister Prakrit dialect
 romanization: "sañje"
 concept_tag: TIME-EVENING
-prerequisites: [KA-C24-ratri, KA-C26-belagge]
+prerequisites: [KA-C24-ratri, KA-C26-belagge, KA-C22-hasiru-haladi, KA-C23-dina]
 sounds: [kannada-anusvara, kannada-ja]
 roots: [sanskrit-sandhya-junction]
 etymology_hook: "ಸಂಜೆ (sañje, 'evening') is borrowed — from Maharashtri Prakrit ಸಂಝಾ (sañjhā), itself from Sanskrit ಸಂಧ್ಯಾ (saṃdhyā, 'twilight, junction of day and night'); unlike dina/ratri/madhyāhna (fresh Sanskrit TATSAMA, taken whole and unworn), ಸಂಜೆ arrived already eroded, in its Prakrit-worn shape; Hindi's साँझ (sāñjh) descends from the SAME Sanskrit word, but via a DIFFERENT, sister Middle Indo-Aryan dialect, Śauraseni Prakrit — two independent erosion paths off one Sanskrit root, converging on near-identical modern forms across two different language families"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02]
 practises:
-  knowledge: [KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02, KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02]
+  knowledge: [KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02, KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02, KA-ETYMON-C22-HASIRU-HALADI-01, KA-ETYMON-C22-HASIRU-HALADI-02, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,7 +64,7 @@ words, *sañje* and *sāñjh*, purely because they share the same Sanskrit
 starting point.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02, KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02, KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02, KA-ETYMON-C22-HASIRU-HALADI-01, KA-ETYMON-C22-HASIRU-HALADI-02, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "sañje" — "evening," from Sanskrit sandhyā via Maharashtri
@@ -73,6 +73,7 @@ starting point.
   whole; sañje arrived already worn down]
 - [YOU SAY: the striking convergence — Hindi's साँझ, same Sanskrit
   root, different Prakrit path, nearly the same sound today]
+- [YOU RECALL: say *hasiru haḷadi*, then read **ದಿನ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02, KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02] -->
