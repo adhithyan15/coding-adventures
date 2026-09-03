@@ -78,6 +78,9 @@ class ArtifactNamesTests(unittest.TestCase):
                 "engram-compose-macos-v0.4.0.zip",
                 "engram-compose-windows-v0.4.0.zip",
                 "engram-swiftui-macos-v0.4.0.zip",
+                "engram-flutter-linux-v0.4.0.zip",
+                "engram-flutter-macos-v0.4.0.zip",
+                "engram-flutter-windows-v0.4.0.zip",
             ],
         )
 
@@ -1170,6 +1173,254 @@ class ArchiveSwiftUITests(unittest.TestCase):
         self.assertEqual(sorted(engram_release.SWIFTUI_TARGETS), ["macos"])
         with self.assertRaises(ValueError):
             engram_release.swiftui_artifact_name("0.4.0", "linux")
+
+
+ENGINE_FILENAMES = {
+    "linux": "libengram_capi.so",
+    "macos": "libengram_capi.dylib",
+    "windows": "engram_capi.dll",
+}
+
+
+def _write_flutter_bundle(
+    root: Path, platform: str, *, engine_dir: str | None = None, empty: bool = False
+) -> Path:
+    """A stand-in for what `flutter build <platform>` leaves behind.
+
+    `engine_dir` overrides where the library is placed, which is how the
+    wrong-layout cases are built -- the whole point being that each platform's
+    loader reads a different directory.
+    """
+
+    names = {"linux": "bundle", "macos": "engram.app", "windows": "Release"}
+    bundle = root / platform / names[platform]
+    bundle.mkdir(parents=True)
+
+    if platform == "macos":
+        (bundle / "Contents" / "MacOS").mkdir(parents=True)
+        (bundle / "Contents" / "MacOS" / "engram").write_bytes(b"\xcf\xfa\xed\xfe")
+    else:
+        (bundle / "engram").write_bytes(b"\x7fELF")
+
+    where = engine_dir if engine_dir is not None else (
+        engram_release.FLUTTER_ENGINE_DIRS[platform]
+    )
+    target = bundle / where if where else bundle
+    target.mkdir(parents=True, exist_ok=True)
+    # Real container magic, because the check reads it: ELF, Mach-O, and PE.
+    # A fixture with made-up bytes would exercise the filename match and skip
+    # the part that distinguishes a library from a `.pdb`.
+    magic = {"linux": b"\x7fELF", "macos": b"\xcf\xfa\xed\xfe", "windows": b"MZ"}
+    (target / ENGINE_FILENAMES[platform]).write_bytes(
+        b"" if empty else magic[platform] + b"\x00rest-of-the-library\x00"
+    )
+    return bundle
+
+
+class ArchiveFlutterTests(unittest.TestCase):
+    def test_archives_each_platform(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for platform in engram_release.FLUTTER_TARGETS:
+                with self.subTest(platform=platform):
+                    bundle = _write_flutter_bundle(root, platform)
+                    output = engram_release.archive_flutter(
+                        "0.4.0", platform, bundle, root / f"out-{platform}", COMMIT
+                    )
+                    self.assertEqual(
+                        output.name, f"engram-flutter-{platform}-v0.4.0.zip"
+                    )
+                    self.assertIn(
+                        output.name, engram_release.artifact_names("0.4.0")
+                    )
+
+    def test_refuses_a_bundle_with_no_engine(self) -> None:
+        # `flutter build` succeeds whether or not the engine was copied in, so
+        # this is a runtime failure behind a green build: the app launches and
+        # every deck operation silently does nothing.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "macos")
+            next(bundle.rglob("libengram_capi.dylib")).unlink()
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_flutter(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("no engram_capi engine", str(caught.exception))
+
+    def test_refuses_an_engine_in_the_wrong_place_for_this_platform(self) -> None:
+        # The trap this backend actually has. Flutter puts native libraries in
+        # `Contents/Frameworks` on macOS, `lib` on Linux, and beside the
+        # executable on Windows. An engine present but in another platform's
+        # location passes any "is it in the bundle" check and produces an app
+        # whose loader cannot find it -- which is exactly how the Compose
+        # backend shipped a distribution with no usable engine.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "macos", engine_dir="lib")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_flutter(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            message = str(caught.exception)
+            self.assertIn("not where macos looks for it", message)
+            self.assertIn("Contents/Frameworks", message)
+
+    def test_each_platform_rejects_the_others_layout(self) -> None:
+        # So the layout table cannot be quietly collapsed to one directory.
+        others = {
+            "linux": "Contents/Frameworks",
+            "macos": "lib",
+            "windows": "lib",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for platform, wrong in others.items():
+                with self.subTest(platform=platform):
+                    bundle = _write_flutter_bundle(
+                        root / platform, platform, engine_dir=wrong
+                    )
+                    with self.assertRaises(ValueError) as caught:
+                        engram_release.archive_flutter(
+                            "0.4.0", platform, bundle, root / "o", COMMIT
+                        )
+                    self.assertIn("not where", str(caught.exception))
+
+    def test_windows_wants_the_engine_beside_the_executable(self) -> None:
+        # The one platform whose directory is the bundle root, so an empty
+        # string in the layout table is meaningful rather than a placeholder.
+        self.assertEqual(engram_release.FLUTTER_ENGINE_DIRS["windows"], "")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "windows")
+            self.assertTrue((bundle / "engram_capi.dll").is_file())
+            engram_release.archive_flutter(
+                "0.4.0", "windows", bundle, root / "out", COMMIT
+            )
+
+    def test_refuses_an_empty_engine(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            # An empty file cannot carry container magic, so it is refused as
+            # "not a library" rather than "empty" -- the stricter check
+            # subsumes the size test rather than reaching it.
+            bundle = _write_flutter_bundle(root, "linux", empty=True)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_flutter(
+                    "0.4.0", "linux", bundle, root / "out", COMMIT
+                )
+            self.assertIn("no engram_capi engine", str(caught.exception))
+
+    def test_a_symlinked_engine_does_not_satisfy_the_check(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "linux")
+            engine = bundle / "lib" / "libengram_capi.so"
+            real = bundle / "lib" / "other.bin"
+            real.write_bytes(b"\x00")
+            engine.unlink()
+            engine.symlink_to("other.bin")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_flutter(
+                    "0.4.0", "linux", bundle, root / "out", COMMIT
+                )
+            self.assertIn("engram_capi", str(caught.exception))
+
+    def test_refuses_debug_symbols_named_like_the_engine(self) -> None:
+        # A Rust cdylib on Windows emits `engram_capi.dll`,
+        # `engram_capi.dll.lib` and `engram_capi.pdb` side by side, so a copy
+        # step with a sloppy glob can pick up the debug symbols alone. A check
+        # that matched on filename accepted exactly that.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "windows")
+            (bundle / "engram_capi.dll").unlink()
+            (bundle / "engram_capi.pdb").write_bytes(b"Microsoft C/C++ MSF 7.00")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_flutter(
+                    "0.4.0", "windows", bundle, root / "out", COMMIT
+                )
+            self.assertIn("no engram_capi engine", str(caught.exception))
+
+    def test_refuses_a_file_with_the_right_name_and_wrong_contents(self) -> None:
+        for content, label in [(b"x", "one byte"), (b"not a library\n", "text")]:
+            with self.subTest(label=label):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    bundle = _write_flutter_bundle(root, "linux")
+                    (bundle / "lib" / "libengram_capi.so").write_bytes(content)
+                    with self.assertRaises(ValueError) as caught:
+                        engram_release.archive_flutter(
+                            "0.4.0", "linux", bundle, root / "out", COMMIT
+                        )
+                    self.assertIn("no engram_capi engine", str(caught.exception))
+
+    def test_accepts_a_versioned_soname(self) -> None:
+        # `Path.stem` strips one suffix, so a real versioned soname
+        # (`libengram_capi.so.0.4.0`) failed a stem-based match while
+        # `engram_capi.pdb` passed it. Both directions were wrong.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "linux")
+            engine = bundle / "lib" / "libengram_capi.so"
+            engine.rename(engine.with_name("libengram_capi.so.0.4.0"))
+            engram_release.archive_flutter(
+                "0.4.0", "linux", bundle, root / "out", COMMIT
+            )
+
+    def test_refuses_a_hard_link_that_staging_would_launder(self) -> None:
+        # `_zip_tree` refuses hard links -- they reach outside the payload with
+        # none of a symlink's tells -- but `shutil.copytree` DEREFERENCES one,
+        # writing a fresh file with nlink 1, so that guard can never fire on a
+        # staged tree. Verified before the fix: the outside file's bytes came
+        # back out of the published archive verbatim.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "linux")
+            secret = root / "outside-secret.txt"
+            secret.write_text("AUTHORIZATION: basic TOKEN\n", encoding="utf-8")
+            try:
+                os.link(secret, bundle / "lib" / "innocuous.dat")
+            except OSError:
+                self.skipTest("filesystem does not support hard links")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_flutter(
+                    "0.4.0", "linux", bundle, root / "out", COMMIT
+                )
+            self.assertIn("hard link", str(caught.exception))
+
+    def test_swiftui_also_refuses_a_hard_link(self) -> None:
+        # Same laundering, same fix: the SwiftUI archiver stages the same way.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_swiftui_bundle(root)
+            secret = root / "outside-secret.txt"
+            secret.write_text("AUTHORIZATION: basic TOKEN\n", encoding="utf-8")
+            try:
+                os.link(secret, bundle / "Contents" / "Resources" / "innocuous.dat")
+            except OSError:
+                self.skipTest("filesystem does not support hard links")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_swiftui(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("hard link", str(caught.exception))
+
+    def test_flutter_ships_every_desktop_platform(self) -> None:
+        self.assertEqual(
+            sorted(engram_release.FLUTTER_TARGETS), ["linux", "macos", "windows"]
+        )
+        self.assertEqual(
+            sorted(engram_release.FLUTTER_ENGINE_DIRS),
+            sorted(engram_release.FLUTTER_TARGETS),
+            "every target needs a declared engine directory",
+        )
+
+    def test_rejects_an_unknown_platform(self) -> None:
+        with self.assertRaises(ValueError):
+            engram_release.flutter_artifact_name("0.4.0", "solaris")
 
 
 class CommandLineTests(unittest.TestCase):
