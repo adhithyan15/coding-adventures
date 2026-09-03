@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C75-WHEN-03]
 practises:
-  knowledge: [TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02]
+  knowledge: [TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02, TE-LEX-C73-TASTE-03, TE-LEX-C74-LINK-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ The three days you just learned are its answers, and **మీరు** in front o
 The question the three days answer.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02, TE-LEX-C73-TASTE-03, TE-LEX-C74-LINK-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *eppuḍu*]
 - [YOU SAY: *eppuḍu*, once more]
 - [YOU SAY: ask *eppuḍu*, then answer it with *ivāḷa*]
 - [YOU RECALL: say *rātri*, then say *eppuḍu vastāru?*]
+- [YOU RECALL: say *cēdu*, then read **లేదా** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02] -->

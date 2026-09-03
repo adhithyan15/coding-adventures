@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C66-FIELD-03]
 practises:
-  knowledge: [TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03]
+  knowledge: [TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C64-JOIN-03, TE-LEX-C65-MANNERS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word is inherited. It covers straw as well, meaning what is left of the వ�
 Three, and this is what the animals get.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C64-JOIN-03, TE-LEX-C65-MANNERS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gaḍḍi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gaḍḍi*, then *gēde*, and say which one is carried to the other]
+- [YOU RECALL: say *ayitē*, then read **మనవి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03] -->

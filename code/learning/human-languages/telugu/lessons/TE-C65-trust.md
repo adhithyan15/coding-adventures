@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C65-MANNERS-05]
 practises:
-  knowledge: [TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05]
+  knowledge: [TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05, TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word also carries "belief" in the religious sense, and Telugu is content to 
 Five: స్వాగతం, మర్యాద, మనవి, అనుమతి, నమ్మకం. Enough to bring somebody in, ask something of them, and say ధన్యవాదములు when they agree.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05, TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nammakaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *dhanyavādamulu* to whoever gave you the last one]
+- [YOU RECALL: say *ārōgyaṁ*, then read **ఇంకా** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05] -->

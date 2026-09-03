@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C61-KITCHEN-01]
 practises:
-  knowledge: [TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01]
+  knowledge: [TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01, TE-LEX-C59-WEATHER-01, TE-LEX-C60-ANIMAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A గేదె's పాలు set thicker than a cow's, which is one reason a vi
 The first thing in the kitchen.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01, TE-LEX-C59-WEATHER-01, TE-LEX-C60-ANIMAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *perugu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *perugu*, then *pālu*, and say which one comes first]
+- [YOU RECALL: say *gāli*, then read **గేదె** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01] -->

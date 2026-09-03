@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C61-KITCHEN-03]
 practises:
-  knowledge: [TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03]
+  knowledge: [TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C59-WEATHER-03, TE-LEX-C60-ANIMAL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word is inherited, and Telugu keeps it firmly apart from నెయ్యి.
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C59-WEATHER-03, TE-LEX-C60-ANIMAL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nūne*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nūne*, then *neyyi*, and say which one a దీపం takes]
+- [YOU RECALL: say *isuka*, then read **కోడి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03] -->

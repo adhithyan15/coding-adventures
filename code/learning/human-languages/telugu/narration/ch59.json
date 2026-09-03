@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Weather and Ground",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d845d74de385c06b",
+  "sourceHash": "fnv1a64:60d60a67721b627f",
   "lessons": [
     {
       "id": "TE-C59-wind",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:616b2faabc1494f5",
+      "sourceHash": "fnv1a64:9c18655b5c682434",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gāli*, then *veḷḷostānu*, and use the one as a reason for the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say meḍa, then read కొంచెం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *meḍa*, then read **కొంచెం** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0243a4478817da7e",
+      "sourceHash": "fnv1a64:fabc781f83fd5599",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mañcu*, then *gāli*, and say which of the two you can see]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read వీపు, then say ekkuva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **వీపు**, then say *ekkuva*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:746733883bb8fbec",
+      "sourceHash": "fnv1a64:9b2d45be25079a85",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *isuka*, then *nadi*, and say where you would find one beside the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pedavi, then read తక్కువ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pedavi*, then read **తక్కువ** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03cf92397f6255fa",
+      "sourceHash": "fnv1a64:3d858fbdd5afee7f",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *burada*, then *isuka*, and say what turns one into the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read గోరు, then say vaddu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **గోరు**, then say *vaddu*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da6566dd60e18ed7",
+      "sourceHash": "fnv1a64:971607a7e4f11378",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say *gāli ekkuva*, and take your leave with *veḷḷostānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say emuka, then read అంతే and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *emuka*, then read **అంతే** and say what it means]"
             }
           ]
         },

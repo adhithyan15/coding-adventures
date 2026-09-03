@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C57-BODY-01]
 practises:
-  knowledge: [TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01]
+  knowledge: [TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01, TE-LEX-C55-ROAD-01, TE-LEX-C56-HOUSE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is where a పూలదండ goes, so you already had the place before you h
 The place a garland already went.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01, TE-LEX-C55-ROAD-01, TE-LEX-C56-HOUSE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *meḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *meḍa*, then *pūladaṇḍa*, and put one on the other]
+- [YOU RECALL: say *nadi*, then read **చాప** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01] -->

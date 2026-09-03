@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C56-HOUSE-05]
 practises:
-  knowledge: [TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05]
+  knowledge: [TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05, TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The house is furnished now: a చాప on the floor, a బుట్ట by the d
 Five: చాప, బుట్ట, కత్తి, గిన్నె, పెట్టె. You can name what a room holds, and say ధన్యవాదాలు when one is handed to you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05, TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *peṭṭe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take one from somebody and say *dhanyavādālu*]
+- [YOU RECALL: say *mokka*, then read **బాట** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05] -->

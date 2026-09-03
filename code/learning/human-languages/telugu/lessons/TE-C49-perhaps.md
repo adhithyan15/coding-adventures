@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C49-REPLY-04]
 practises:
-  knowledge: [TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04]
+  knowledge: [TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C47-BODY-04, TE-LEX-C48-ROLE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It also hangs on the end of a whole sentence, where English would need a separat
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C47-BODY-04, TE-LEX-C48-ROLE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ēmō*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ēmō*, then *tappakuṇḍā*, and say which one commits you]
+- [YOU RECALL: read **వేలు**, then say *raitu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04] -->

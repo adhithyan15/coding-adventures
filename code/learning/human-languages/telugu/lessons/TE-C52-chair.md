@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C52-WELCOME-02]
 practises:
-  knowledge: [TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02]
+  knowledge: [TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C50-LEAVE-02, TE-LEX-C51-COURTESY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ One trap: కుర్చీ and కూర్చో, "sit", look like a pair and
 Two: a door and a chair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C50-LEAVE-02, TE-LEX-C51-COURTESY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kurcī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kurcī*, then *kūrcō*, and say why the two are not related]
+- [YOU RECALL: read **ఎల్లుండి**, then say *mēlu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02] -->

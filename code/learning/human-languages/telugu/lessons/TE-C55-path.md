@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C55-ROAD-05]
 practises:
-  knowledge: [TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05]
+  knowledge: [TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05, TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ You can now ask your way properly: దయచేసి, which గ్రామం,
 Five: నది, చెరువు, గుట్ట, గ్రామం, బాట. Enough to be given directions with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05, TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bāṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then ask a stranger the way to the నది using *dayacēsi*]
+- [YOU RECALL: say *mabbu*, then read **మొక్క** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05] -->

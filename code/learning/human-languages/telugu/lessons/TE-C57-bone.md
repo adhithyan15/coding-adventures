@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C57-BODY-05]
 practises:
-  knowledge: [TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05]
+  knowledge: [TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05, TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That closes the body words. మెడ, వీపు, పెదవి, గోర�
 Five: మెడ, వీపు, పెదవి, గోరు, ఎముక. Enough to answer a వైద్యుడు with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05, TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *emuka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then point at your మెడ and say *nāku noppi*]
+- [YOU RECALL: say *bāṭa*, then read **పెట్టె** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05] -->

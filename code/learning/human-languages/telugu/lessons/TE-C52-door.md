@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C52-WELCOME-01]
 practises:
-  knowledge: [TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01]
+  knowledge: [TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01, TE-LEX-C50-LEAVE-01, TE-LEX-C51-COURTESY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ reviews_of: [TE-C51-salutation]
 The first of five things standing between the street and a guest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01, TE-LEX-C50-LEAVE-01, TE-LEX-C51-COURTESY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *talupu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *talupu*, then *ikkaḍa talupu undi* — "there is a door here"]
+- [YOU RECALL: say *ippuḍu*, then read **కృతజ్ఞత** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01] -->

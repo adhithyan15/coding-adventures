@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Today, Yesterday, When",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8f2c776caef94192",
+  "sourceHash": "fnv1a64:3f9cf791bcf94759",
   "lessons": [
     {
       "id": "TE-C75-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6667c0d776eefde6",
+      "sourceHash": "fnv1a64:30682104d3315844",
       "notice": null,
       "blocks": [
         {
@@ -115,6 +115,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *bhōjanaṁ*, then say *ivāḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tīpi, then read మరియు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tīpi*, then read **మరియు** and say what it means]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afb9dae6dffa1c29",
+      "sourceHash": "fnv1a64:0f2e42de6c0f2573",
       "notice": null,
       "blocks": [
         {
@@ -246,6 +255,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *vātāvaraṇam*, then say *ninna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read పులుపు, then say kānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **పులుపు**, then say *kānī*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c2677197f4ad633",
+      "sourceHash": "fnv1a64:300958df4b446703",
       "notice": null,
       "blocks": [
         {
@@ -377,6 +395,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *rātri*, then say *eppuḍu vastāru?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cēdu, then read లేదా and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cēdu*, then read **లేదా** and say what it means]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df965bf95585107d",
+      "sourceHash": "fnv1a64:b653dc812788c883",
       "notice": null,
       "blocks": [
         {
@@ -508,6 +535,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *mariyu*, then *udayam*, then say *mundu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read కారం, then say enduku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **కారం**, then say *enduku*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbf8fb623365d7b1",
+      "sourceHash": "fnv1a64:80b31f3758e3cd08",
       "notice": null,
       "blocks": [
         {
@@ -639,6 +675,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *kānī*, then *sāyantram*, then say *saṁvatsaraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vagaru, then read ఎందుకంటే and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vagaru*, then read **ఎందుకంటే** and say what it means]"
             }
           ]
         },

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C62-MADE-01]
 practises:
-  knowledge: [TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01]
+  knowledge: [TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01, TE-LEX-C60-ANIMAL-01, TE-LEX-C61-KITCHEN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word came in from Sanskrit, where it belongs to a family about tearing and d
 The first thing a house makes for itself.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01, TE-LEX-C60-ANIMAL-01, TE-LEX-C61-KITCHEN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dāraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dāraṁ*, then *dayacēsi*, and ask for it politely]
+- [YOU RECALL: say *gēde*, then read **పెరుగు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01] -->

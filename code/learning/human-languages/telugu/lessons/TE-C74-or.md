@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C74-LINK-03]
 practises:
-  knowledge: [TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-ETYMON-C33-ANUKO-03, TE-GRAMMAR-C33-ANUKO-02, TE-LEX-C33-ANUKO-01]
+  knowledge: [TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-ETYMON-C33-ANUKO-03, TE-GRAMMAR-C33-ANUKO-02, TE-LEX-C33-ANUKO-01, TE-LEX-C72-MARKET-03, TE-LEX-C73-TASTE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ You have met its first half already: **లే-** is the same root behind లే�
 A choice you can put to somebody.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-ETYMON-C33-ANUKO-03, TE-GRAMMAR-C33-ANUKO-02, TE-LEX-C33-ANUKO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-ETYMON-C33-ANUKO-03, TE-GRAMMAR-C33-ANUKO-02, TE-LEX-C33-ANUKO-01, TE-LEX-C72-MARKET-03, TE-LEX-C73-TASTE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *lēdā*]
 - [YOU SAY: *lēdā*, once more]
 - [YOU SAY: offer a choice between two drinks you know, using *lēdā*]
 - [YOU RECALL: say *anukō*, then say *lēdā*]
+- [YOU RECALL: say *dhara*, then read **చేదు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-ETYMON-C33-ANUKO-03, TE-GRAMMAR-C33-ANUKO-02, TE-LEX-C33-ANUKO-01] -->

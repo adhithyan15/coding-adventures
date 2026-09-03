@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Tastes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:36d42d74129e6538",
+  "sourceHash": "fnv1a64:7f626c08b3258f6a",
   "lessons": [
     {
       "id": "TE-C73-sweet",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00fe99b34a290951",
+      "sourceHash": "fnv1a64:dcced1a571d8ad2c",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tīpi*, then *cakkera*, and say which one is the taste]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say māma, then read అంగడి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *māma*, then read **అంగడి** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19d08410d34dd156",
+      "sourceHash": "fnv1a64:a95104952a5a2515",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tīpi*, then *pulupu*, and say which one is in curd]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read అత్త, then say ḍabbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **అత్త**, then say *ḍabbu*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a1d208c61a765f2",
+      "sourceHash": "fnv1a64:dadf35d2df8b8cff",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *cēdu*, then *tīpi*, and say which one is eaten first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bāva, then read ధర and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bāva*, then read **ధర** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b777a1e4b8a8af3d",
+      "sourceHash": "fnv1a64:f84d7b43a855324e",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kāraṁ*, then *takkuva* and *kāraṁ* together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read మరదలు, then say tūkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **మరదలు**, then say *tūkaṁ*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7edf9e9e12600c58",
+      "sourceHash": "fnv1a64:826434b70a462413",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then take your leave with *veḷḷostānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say alluḍu, then read బేరం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *alluḍu*, then read **బేరం** and say what it means]"
             }
           ]
         },

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05]
 practises:
-  knowledge: [TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-GRAMMAR-C18-GANTA-03, TE-LEX-C18-GANTA-01, TE-PRAGMATICS-C18-GANTA-02]
+  knowledge: [TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-GRAMMAR-C18-GANTA-03, TE-LEX-C18-GANTA-01, TE-PRAGMATICS-C18-GANTA-02, TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,13 +55,14 @@ Telugu can put the reason first, as **పని ఉంది కాబట్ట�
 A reason, attached to the thing it explains.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-GRAMMAR-C18-GANTA-03, TE-LEX-C18-GANTA-01, TE-PRAGMATICS-C18-GANTA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-GRAMMAR-C18-GANTA-03, TE-LEX-C18-GANTA-01, TE-PRAGMATICS-C18-GANTA-02, TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *endukaṇṭē*]
 - [YOU SAY: *endukaṇṭē*, once more]
 - [YOU SAY: answer an *enduku* question with *endukaṇṭē* and one word you know]
 - [YOU RECALL: say *ganṭa*, then say *endukaṇṭē*]
+- [YOU RECALL: say *bēraṁ*, then read **వగరు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-GRAMMAR-C18-GANTA-03, TE-LEX-C18-GANTA-01, TE-PRAGMATICS-C18-GANTA-02] -->

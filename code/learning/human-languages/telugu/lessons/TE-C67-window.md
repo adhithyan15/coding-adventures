@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C67-WALL-05]
 practises:
-  knowledge: [TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05]
+  knowledge: [TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05, TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A house with a గోడ, a కప్పు, a గడప, a మెట్టు a
 Five: గోడ, కప్పు, గడప, మెట్టు, కిటికీ. A house you could walk up to and greet.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05, TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kiṭikī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *namaskāram* at the last one]
+- [YOU RECALL: say *nammakaṁ*, then read **పంట** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05] -->

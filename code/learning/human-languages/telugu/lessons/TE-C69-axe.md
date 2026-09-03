@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C69-TOOL-01]
 practises:
-  knowledge: [TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01]
+  knowledge: [TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01, TE-LEX-C67-WALL-01, TE-LEX-C68-SOUND-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Asking for one is the ordinary polite request: దయచేసి, and then the 
 One. Heavy, and handed over rather than thrown.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01, TE-LEX-C67-WALL-01, TE-LEX-C68-SOUND-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *goḍḍali*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dayacēsi*, then *goḍḍali*, in that order]
+- [YOU RECALL: say *gōḍa*, then read **శబ్దం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01] -->

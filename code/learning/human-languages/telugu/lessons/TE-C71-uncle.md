@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C71-KIN-01]
 practises:
-  knowledge: [TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01]
+  knowledge: [TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01, TE-LEX-C69-TOOL-01, TE-LEX-C70-CREATURE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Asking after a మామ's ఆరోగ్యం is the first thing said after �
 One. And the reason Telugu needs fewer family words than you expect.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01, TE-LEX-C69-TOOL-01, TE-LEX-C70-CREATURE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *māma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *māma*, then *ārōgyaṁ*, as one question]
+- [YOU RECALL: say *goḍḍali*, then read **ఎలుక** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01] -->

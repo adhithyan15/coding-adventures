@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C68-SOUND-05]
 practises:
-  knowledge: [TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05]
+  knowledge: [TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05, TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Sending కబురు is a fixed pair of words in the countryside, and the gre
 Five: శబ్దం, గొంతు, పాట, అరుపు, కబురు. Sound, and the whole way it gets from one person to another.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05, TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaburu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then your own name, as the opening line of a కబురు]
+- [YOU RECALL: say *paṇṭa*, then read **కిటికీ** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05] -->

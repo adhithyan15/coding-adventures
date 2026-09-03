@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C53-SKY-05]
 practises:
-  knowledge: [TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05]
+  knowledge: [TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05, TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ With that, the sky is furnished.
 Five: ఆకాశం, సూర్యుడు, చంద్రుడు, చుక్క, మబ్బు. You can now say what is overhead.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05, TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mabbu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say which two of them end the same way]
+- [YOU RECALL: say *daṇḍaṁ*, then read **పూలదండ** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05] -->

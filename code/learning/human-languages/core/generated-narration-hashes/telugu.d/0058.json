@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 58,
-  "sourceHash": "fnv1a64:37a3ca3eb4f04269",
+  "sourceHash": "fnv1a64:0695d7309e85d607",
   "lessonIds": [
     "TE-C58-a-little",
     "TE-C58-more",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch58.txt",
   "json": "telugu/narration/ch58.json",
-  "textHash": "fnv1a64:ce721db6da651398",
-  "jsonHash": "fnv1a64:2ae8b669479f12db",
+  "textHash": "fnv1a64:47b4f747731d3d3e",
+  "jsonHash": "fnv1a64:82add9f4c010dd11",
   "findings": []
 }

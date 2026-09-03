@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C60-ANIMAL-02]
 practises:
-  knowledge: [TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02]
+  knowledge: [TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C58-REPLY-02, TE-LEX-C59-WEATHER-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A మేక will strip a bush bare and move on, which is why a గ్రామ�
 Two: one for milk, one for anything.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C58-REPLY-02, TE-LEX-C59-WEATHER-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mēka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mēka*, then *gēde*, and say which one wants the చెరువు]
+- [YOU RECALL: read **ఎక్కువ**, then say *mañcu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02] -->

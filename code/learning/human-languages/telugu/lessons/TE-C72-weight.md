@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C72-MARKET-04]
 practises:
-  knowledge: [TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04]
+  knowledge: [TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04, TE-LEX-C70-CREATURE-04, TE-LEX-C71-KIN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It carries fairness as well. Somebody who speaks with తూకం is somebody w
 Four. What the ధర is attached to.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04, TE-LEX-C70-CREATURE-04, TE-LEX-C71-KIN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tūkaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tūkaṁ*, then *dhara*, as one question in a shop]
+- [YOU RECALL: read **ఉడుత**, then say *maradalu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04] -->

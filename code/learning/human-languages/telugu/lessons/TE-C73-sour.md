@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C73-TASTE-02]
 practises:
-  knowledge: [TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02]
+  knowledge: [TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C71-KIN-02, TE-LEX-C72-MARKET-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Said of a face it means what it means in English, and it is said most often of c
 Two: తీపి and పులుపు, and a meal wants both of them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C71-KIN-02, TE-LEX-C72-MARKET-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pulupu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tīpi*, then *pulupu*, and say which one is in curd]
+- [YOU RECALL: read **అత్త**, then say *ḍabbu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02] -->

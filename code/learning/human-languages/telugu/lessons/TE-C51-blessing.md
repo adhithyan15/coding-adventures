@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C51-COURTESY-04]
 practises:
-  knowledge: [TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04]
+  knowledge: [TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04, TE-LEX-C49-REPLY-04, TE-LEX-C50-LEAVE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Notice *vāda* sitting there. It is the same piece inside ధన్యవాద�
 Four courtesy words, and two of them are utterances by name.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04, TE-LEX-C49-REPLY-04, TE-LEX-C50-LEAVE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āśīrvādaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āśīrvādaṁ*, then *dhanyavādamulu*, and name the piece they share]
+- [YOU RECALL: read **ఏమో**, then say *bayaludēru*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04] -->

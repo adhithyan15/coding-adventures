@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C74-LINK-02]
 practises:
-  knowledge: [TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-ETYMON-C09-KSHAMINCHANDI-01, TE-ETYMON-C09-KSHAMINCHANDI-02, TE-PRAGMATICS-C09-KSHAMINCHANDI-03]
+  knowledge: [TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-ETYMON-C09-KSHAMINCHANDI-01, TE-ETYMON-C09-KSHAMINCHANDI-02, TE-PRAGMATICS-C09-KSHAMINCHANDI-03, TE-LEX-C72-MARKET-02, TE-LEX-C73-TASTE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ reviews_of: [TE-C74-and]
 Two clauses, and a way to set the second against the first.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-ETYMON-C09-KSHAMINCHANDI-01, TE-ETYMON-C09-KSHAMINCHANDI-02, TE-PRAGMATICS-C09-KSHAMINCHANDI-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-ETYMON-C09-KSHAMINCHANDI-01, TE-ETYMON-C09-KSHAMINCHANDI-02, TE-PRAGMATICS-C09-KSHAMINCHANDI-03, TE-LEX-C72-MARKET-02, TE-LEX-C73-TASTE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kānī*]
 - [YOU SAY: *kānī*, once more]
 - [YOU SAY: say something you like, then *kānī*, then something about it you do not]
 - [YOU RECALL: say *kṣamin̄caṇḍi*, then say *kānī*]
+- [YOU RECALL: read **డబ్బు**, then say *pulupu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-ETYMON-C09-KSHAMINCHANDI-01, TE-ETYMON-C09-KSHAMINCHANDI-02, TE-PRAGMATICS-C09-KSHAMINCHANDI-03] -->

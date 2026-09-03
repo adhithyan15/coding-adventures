@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C54-TREE-04]
 practises:
-  knowledge: [TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04]
+  knowledge: [TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04, TE-LEX-C52-WELCOME-04, TE-LEX-C53-SKY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The whole chapter is inside this word. A విత్తనం becomes a చె�
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04, TE-LEX-C52-WELCOME-04, TE-LEX-C53-SKY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vittanaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vittanaṁ*, then *ceṭṭu*, and say which one comes first]
+- [YOU RECALL: read **పువ్వు**, then say *cukka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04] -->

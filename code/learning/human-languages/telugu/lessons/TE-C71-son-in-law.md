@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C71-KIN-05]
 practises:
-  knowledge: [TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05]
+  knowledge: [TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05, TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Which is what the chapter has been building to: మామ, అత్త, బా�
 Five: మామ, అత్త, బావ, మరదలు, అల్లుడు. A marriage's worth of new people to ask after.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05, TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *alluḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *ārōgyaṁ*, asking after the last of them]
+- [YOU RECALL: say *karra*, then read **సాలీడు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05] -->

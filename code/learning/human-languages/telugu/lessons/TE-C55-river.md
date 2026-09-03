@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C55-ROAD-01]
 practises:
-  knowledge: [TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01]
+  knowledge: [TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01, TE-LEX-C53-SKY-01, TE-LEX-C54-TREE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Telugu clipped the long final vowel and says నది. The inherited Telugu wor
 The first thing you would ask the way to.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01, TE-LEX-C53-SKY-01, TE-LEX-C54-TREE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nadi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadi*, then *dayacēsi*, and put the two together as a question]
+- [YOU RECALL: say *ākāśaṁ*, then read **చెట్టు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01] -->

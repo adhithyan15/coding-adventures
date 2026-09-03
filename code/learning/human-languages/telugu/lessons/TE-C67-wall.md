@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C67-WALL-01]
 practises:
-  knowledge: [TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01]
+  knowledge: [TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01, TE-LEX-C65-MANNERS-01, TE-LEX-C66-FIELD-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Whitewashing the గోడ before a festival is its own small season in a Telugu
 One. What a house is measured by before anything is put inside it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01, TE-LEX-C65-MANNERS-01, TE-LEX-C66-FIELD-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gōḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gōḍa*, then *namaskāram*, as though greeting somebody at a freshly painted one]
+- [YOU RECALL: say *svāgataṁ*, then read **పొలం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01] -->

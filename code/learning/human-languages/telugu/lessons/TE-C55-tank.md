@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C55-ROAD-02]
 practises:
-  knowledge: [TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02]
+  knowledge: [TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C53-SKY-02, TE-LEX-C54-TREE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Indian English calls this a "tank", which is why the translation can sound stran
 Two waters: one that moves, one that was kept.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C53-SKY-02, TE-LEX-C54-TREE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ceruvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ceruvu*, then *nadi*, and say which one people made]
+- [YOU RECALL: read **సూర్యుడు**, then say *komma*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02] -->

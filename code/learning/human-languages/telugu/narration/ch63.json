@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "Hunger, Sleep and Health",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca7c3be34920e255",
+  "sourceHash": "fnv1a64:cf316e8de5da6286",
   "lessons": [
     {
       "id": "TE-C63-hunger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1652f41114597740",
+      "sourceHash": "fnv1a64:3149fd77e2bb2c14",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nāku ākali*, then ask *mīru elā unnāru?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say perugu, then read దారం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *perugu*, then read **దారం** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de13683f401c4647",
+      "sourceHash": "fnv1a64:fb8fe2f778dc9a7f",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nidra*, then *ākali*, and say which one you have now]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read నెయ్యి, then say sūdi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **నెయ్యి**, then say *sūdi*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc1f54509cbf92d9",
+      "sourceHash": "fnv1a64:476e3e030fbd62a3",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *daggu*, then *nidra*, and say which one keeps you from the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nūne, then read చీపురు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nūne*, then read **చీపురు** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a717e9d5a9b98fc8",
+      "sourceHash": "fnv1a64:2b682ef7e73cf17a",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *rōgaṁ*, then *daggu*, and say which one is the smaller trouble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read చక్కెర, then say goḍugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **చక్కెర**, then say *goḍugu*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3129a4cdfdec42a2",
+      "sourceHash": "fnv1a64:03862f67920243f6",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then ask *mī ārōgyaṁ elā undi?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mirapa, then read అద్దం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mirapa*, then read **అద్దం** and say what it means]"
             }
           ]
         },

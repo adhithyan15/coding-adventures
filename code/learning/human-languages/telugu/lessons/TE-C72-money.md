@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C72-MARKET-02]
 practises:
-  knowledge: [TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02]
+  knowledge: [TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C70-CREATURE-02, TE-LEX-C71-KIN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is blunt and it is not rude. Asking whether somebody has డబ్బు toda
 Two. And one of them you had already used once.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C70-CREATURE-02, TE-LEX-C71-KIN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ḍabbu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ḍabbu*, then *lēdu*, as the phrase you already knew]
+- [YOU RECALL: read **కప్ప**, then say *atta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02] -->

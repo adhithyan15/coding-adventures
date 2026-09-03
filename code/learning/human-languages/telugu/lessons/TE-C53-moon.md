@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C53-SKY-03]
 practises:
-  knowledge: [TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03]
+  knowledge: [TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C51-COURTESY-03, TE-LEX-C52-WELCOME-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The inherited word here is నెల, which you already have as the word for a m
 Three, and two of them named as people.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C51-COURTESY-03, TE-LEX-C52-WELCOME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *candruḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *candruḍu*, then *sūryuḍu*, and say what the two share at the end]
+- [YOU RECALL: say *gauravaṁ*, then read **ముగ్గు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03] -->

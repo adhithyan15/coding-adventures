@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 62,
-  "sourceHash": "fnv1a64:810c054c05f389b8",
+  "sourceHash": "fnv1a64:1871023668d029b3",
   "lessonIds": [
     "TE-C62-thread",
     "TE-C62-needle",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch62.txt",
   "json": "telugu/narration/ch62.json",
-  "textHash": "fnv1a64:362b30d75d9fbeca",
-  "jsonHash": "fnv1a64:393664a211e23497",
+  "textHash": "fnv1a64:5b580cc8280c1a9b",
+  "jsonHash": "fnv1a64:4b3807e343a473d0",
   "findings": []
 }

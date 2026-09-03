@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C69-TOOL-05]
 practises:
-  knowledge: [TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04, TE-LEX-C69-TOOL-05]
+  knowledge: [TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04, TE-LEX-C69-TOOL-05, TE-LEX-C67-WALL-05, TE-LEX-C68-SOUND-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is also the right thing to ask for first. దయచేసి and a కర్�
 Five: గొడ్డలి, రంపం, పార, సుత్తి, కర్ర. Enough to ask for anything in a shed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04, TE-LEX-C69-TOOL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04, TE-LEX-C69-TOOL-05, TE-LEX-C67-WALL-05, TE-LEX-C68-SOUND-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *karra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dayacēsi* and the one you would borrow first]
+- [YOU RECALL: say *kiṭikī*, then read **కబురు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04, TE-LEX-C69-TOOL-05] -->

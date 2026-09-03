@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C56-HOUSE-03]
 practises:
-  knowledge: [TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03]
+  knowledge: [TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C54-TREE-03, TE-LEX-C55-ROAD-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is inherited, and it is spread right across the family — Tamil, Kannada and
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C54-TREE-03, TE-LEX-C55-ROAD-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *katti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *katti*, then *buṭṭa*, and say which one you would cut a పండు with]
+- [YOU RECALL: say *vēru*, then read **గుట్ట** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03] -->

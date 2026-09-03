@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C73-TASTE-04]
 practises:
-  knowledge: [TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04]
+  knowledge: [TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04, TE-LEX-C71-KIN-04, TE-LEX-C72-MARKET-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is inherited. Do not read it into the end of నమస్కారం, which 
 Four. And the one you may want తక్కువ of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04, TE-LEX-C71-KIN-04, TE-LEX-C72-MARKET-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kāraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāraṁ*, then *takkuva* and *kāraṁ* together]
+- [YOU RECALL: read **మరదలు**, then say *tūkaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04] -->

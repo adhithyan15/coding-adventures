@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C61-KITCHEN-02]
 practises:
-  knowledge: [TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02]
+  knowledge: [TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C59-WEATHER-02, TE-LEX-C60-ANIMAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A spoonful of నెయ్యి over rice is both a taste and a courtesy. It is
 Two, and the second is made out of the first.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C59-WEATHER-02, TE-LEX-C60-ANIMAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *neyyi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *neyyi*, then *perugu*, and say which one is poured]
+- [YOU RECALL: read **మంచు**, then say *mēka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02] -->

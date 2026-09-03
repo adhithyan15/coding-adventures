@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C63-HEALTH-03]
 practises:
-  knowledge: [TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03]
+  knowledge: [TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C61-KITCHEN-03, TE-LEX-C62-MADE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Telugu keeps దగ్గు for the whole thing at once — the single cough, t
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C61-KITCHEN-03, TE-LEX-C62-MADE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *daggu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *daggu*, then *nidra*, and say which one keeps you from the other]
+- [YOU RECALL: say *nūne*, then read **చీపురు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03] -->

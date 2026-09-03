@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C59-WEATHER-03]
 practises:
-  knowledge: [TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03]
+  knowledge: [TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C57-BODY-03, TE-LEX-C58-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The sand of a riverbed is where cattle are watered, where lorries come at night 
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C57-BODY-03, TE-LEX-C58-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *isuka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *isuka*, then *nadi*, and say where you would find one beside the other]
+- [YOU RECALL: say *pedavi*, then read **తక్కువ** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03] -->

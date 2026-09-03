@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C70-CREATURE-02]
 practises:
-  knowledge: [TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02]
+  knowledge: [TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C68-SOUND-02, TE-LEX-C69-TOOL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Telugu uses it for somebody whose world is small — a కప్ప in a well, w
 Two. And the roof is still కప్పు.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C68-SOUND-02, TE-LEX-C69-TOOL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kappa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kappu*, then *kappa*, and say which one is the roof]
+- [YOU RECALL: read **గొంతు**, then say *rampaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02] -->

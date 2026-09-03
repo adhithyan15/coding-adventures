@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C62-MADE-05]
 practises:
-  knowledge: [TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05]
+  knowledge: [TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05, TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Asking for one is where దయచేసి earns its keep. అద్దం ఇ�
 Five: దారం, సూది, చీపురు, గొడుగు, అద్దం. Enough to ask for what you need with దయచేసి in front of it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05, TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *addaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *dayacēsi addaṁ ivvaṇḍi*]
+- [YOU RECALL: say *pakṣi*, then read **మిరప** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05] -->

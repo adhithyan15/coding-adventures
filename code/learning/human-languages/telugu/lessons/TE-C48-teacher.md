@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C48-ROLE-01]
 practises:
-  knowledge: [TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01]
+  knowledge: [TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C46-ASK-01, TE-LEX-C47-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ You have already said the word without being told. గురువారం, Thu
 The first of five roles.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C46-ASK-01, TE-LEX-C47-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *guruvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guruvu*, then *guruvāraṁ*, and say what the two have in common]
+- [YOU RECALL: say *paṇḍu*, then read **కాలు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01] -->

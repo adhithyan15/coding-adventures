@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C75-WHEN-02]
 practises:
-  knowledge: [TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-ETYMON-C20-VATAVARANAM-01, TE-GRAMMAR-C20-VATAVARANAM-02]
+  knowledge: [TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-ETYMON-C20-VATAVARANAM-01, TE-GRAMMAR-C20-VATAVARANAM-02, TE-LEX-C73-TASTE-02, TE-LEX-C74-LINK-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ It is native Dravidian and short, with the doubled **న్న** you have seen i
 Three days: నిన్న, ఇవాళ, రేపు.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-ETYMON-C20-VATAVARANAM-01, TE-GRAMMAR-C20-VATAVARANAM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-ETYMON-C20-VATAVARANAM-01, TE-GRAMMAR-C20-VATAVARANAM-02, TE-LEX-C73-TASTE-02, TE-LEX-C74-LINK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ninna*]
 - [YOU SAY: *ninna*, once more]
 - [YOU SAY: say the three days in order: *ninna*, *ivāḷa*, *rēpu*]
 - [YOU RECALL: say *vātāvaraṇam*, then say *ninna*]
+- [YOU RECALL: read **పులుపు**, then say *kānī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-ETYMON-C20-VATAVARANAM-01, TE-GRAMMAR-C20-VATAVARANAM-02] -->

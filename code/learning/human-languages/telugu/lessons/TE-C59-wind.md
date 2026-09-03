@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C59-WEATHER-01]
 practises:
-  knowledge: [TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01]
+  knowledge: [TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01, TE-LEX-C57-BODY-01, TE-LEX-C58-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A గాలి getting up in the evening is the ordinary reason given for cuttin
 The first reason to start saying goodbye.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01, TE-LEX-C57-BODY-01, TE-LEX-C58-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gāli*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gāli*, then *veḷḷostānu*, and use the one as a reason for the other]
+- [YOU RECALL: say *meḍa*, then read **కొంచెం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01] -->
