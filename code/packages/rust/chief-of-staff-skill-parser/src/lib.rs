@@ -545,76 +545,33 @@ fn valid_capability_scope(value: &str) -> bool {
 }
 
 fn parse_allowed_tools(nodes: &[BlockNode]) -> Result<Vec<String>, SkillParseError> {
-    // Counted across nested blocks too, so a decoy section in a block quote
-    // makes the document ambiguous instead of being silently ignored.
-    if count_tools_headings(nodes) > 1 {
-        return Err(SkillParseError::AmbiguousToolsSection);
-    }
-    let sections = nodes
-        .iter()
-        .enumerate()
-        .filter_map(|(index, node)| match node {
-            BlockNode::Heading(heading) if heading.level == 2 => {
-                literal_inline_text(&heading.children)
-                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("tools needed"))
-                    .then_some(index)
-            }
-            _ => None,
-        })
-        .collect::<Vec<_>>();
-    let section = match sections.as_slice() {
-        [] => return Err(SkillParseError::MissingToolsSection),
-        [section] => *section,
-        _ => return Err(SkillParseError::AmbiguousToolsSection),
-    };
-    let lists = nodes[section + 1..]
-        .iter()
-        .take_while(|node| !matches!(node, BlockNode::Heading(_)))
-        .filter_map(|node| match node {
-            BlockNode::List(list) => Some(list),
-            _ => None,
-        })
-        .collect::<Vec<_>>();
-    let list = match lists.as_slice() {
-        [] => return Err(SkillParseError::MissingToolsList),
-        [list] => *list,
-        _ => return Err(SkillParseError::AmbiguousToolsSection),
+    let Some(items) = section_items(
+        nodes,
+        "tools needed",
+        SkillParseError::MissingToolsSection,
+        SkillParseError::MissingToolsList,
+        SkillParseError::AmbiguousToolsSection,
+        SkillParseError::InvalidTool,
+    )?
+    else {
+        return Ok(Vec::new());
     };
     let mut tools = Vec::new();
     let mut seen = BTreeSet::new();
-    for child in &list.children {
-        let blocks = match child {
-            ListChildNode::ListItem(item) => &item.children,
-            ListChildNode::TaskItem(item) => &item.children,
-        };
-        // Literal only. `block_text` would resolve an image to its alt text
-        // and drop raw HTML, which authorizes a tool the rendered document
-        // does not show -- see `literal_inline_text`.
-        let Some(value) = literal_item_text(blocks).map(|text| text.trim().to_string()) else {
-            return Err(SkillParseError::InvalidTool(
-                block_text(blocks).trim().to_string(),
-            ));
-        };
-        if value.eq_ignore_ascii_case("none") {
-            if list.children.len() != 1 {
-                return Err(SkillParseError::InvalidTool(value));
-            }
-            return Ok(Vec::new());
-        }
+    for value in items {
         if !valid_tool_id(&value) || !(3..=128).contains(&value.len()) {
-            return Err(SkillParseError::InvalidTool(value));
-        }
-        if tools.len() >= MAX_ALLOWED_TOOLS {
             return Err(SkillParseError::InvalidTool(value));
         }
         if !seen.insert(value.clone()) {
             return Err(SkillParseError::DuplicateTool(value));
         }
+        if tools.len() >= MAX_ALLOWED_TOOLS {
+            return Err(SkillParseError::InvalidTool(value));
+        }
         tools.push(value);
     }
-    // The manifest stores tools sorted, and validates that invariant. Sorting
-    // here rather than relying on SKILL.md authoring order keeps the generated
-    // manifest byte-identical for two skills that list the same tools.
+    // The manifest stores tools sorted and validates that invariant, so two
+    // skills listing the same tools generate byte-identical manifests.
     tools.sort();
     Ok(tools)
 }
@@ -644,56 +601,20 @@ fn parse_capabilities(
     nodes: &[BlockNode],
     agent: &str,
 ) -> Result<Vec<Capability>, SkillParseError> {
-    let sections = nodes
-        .iter()
-        .enumerate()
-        .filter_map(|(index, node)| match node {
-            BlockNode::Heading(heading) if heading.level == 2 => {
-                literal_inline_text(&heading.children)
-                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("capabilities needed"))
-                    .then_some(index)
-            }
-            _ => None,
-        })
-        .collect::<Vec<_>>();
-    let section = match sections.as_slice() {
-        [] => return Err(SkillParseError::MissingCapabilitiesSection),
-        [section] => *section,
-        _ => return Err(SkillParseError::AmbiguousCapabilitiesSection),
-    };
-    let lists = nodes[section + 1..]
-        .iter()
-        .take_while(|node| !matches!(node, BlockNode::Heading(_)))
-        .filter_map(|node| match node {
-            BlockNode::List(list) => Some(list),
-            _ => None,
-        })
-        .collect::<Vec<_>>();
-    let list = match lists.as_slice() {
-        [] => return Err(SkillParseError::MissingCapabilitiesList),
-        [list] => *list,
-        _ => return Err(SkillParseError::AmbiguousCapabilitiesSection),
+    let Some(items) = section_items(
+        nodes,
+        "capabilities needed",
+        SkillParseError::MissingCapabilitiesSection,
+        SkillParseError::MissingCapabilitiesList,
+        SkillParseError::AmbiguousCapabilitiesSection,
+        SkillParseError::InvalidCapability,
+    )?
+    else {
+        return Ok(Vec::new());
     };
     let mut capabilities = Vec::new();
     let mut seen = BTreeSet::new();
-    for child in &list.children {
-        let blocks = match child {
-            ListChildNode::ListItem(item) => &item.children,
-            ListChildNode::TaskItem(item) => &item.children,
-        };
-        // Literal only, for the same reason as the tools section: an image's
-        // alt text would grant `fs:write:/` while rendering as a picture.
-        let Some(value) = literal_item_text(blocks).map(|text| text.trim().to_string()) else {
-            return Err(SkillParseError::InvalidCapability(
-                block_text(blocks).trim().to_string(),
-            ));
-        };
-        if value.eq_ignore_ascii_case("none") {
-            if list.children.len() != 1 {
-                return Err(SkillParseError::InvalidCapability(value));
-            }
-            return Ok(Vec::new());
-        }
+    for value in items {
         let (specification, justification) = value
             .split_once(" | ")
             .map_or((value.as_str(), None), |(left, right)| {
@@ -865,36 +786,6 @@ fn literal_item_text(blocks: &[BlockNode]) -> Option<String> {
         [BlockNode::Paragraph(paragraph)] => literal_inline_text(&paragraph.children),
         _ => None,
     }
-}
-
-/// Count level-2 "tools needed" headings ANYWHERE, including nested blocks.
-///
-/// The section scan runs over top-level children only, so a decoy
-/// `## Tools needed` inside a block quote is neither matched nor counted. That
-/// lets an author stage a document whose visible declaration is not the
-/// effective one: a prominent quoted "Tools needed / none" above a real
-/// section granting anything. Counting nested occurrences makes that
-/// ambiguous rather than silently ignored.
-fn count_tools_headings(nodes: &[BlockNode]) -> usize {
-    nodes
-        .iter()
-        .map(|node| match node {
-            BlockNode::Heading(heading) if heading.level == 2 => usize::from(
-                literal_inline_text(&heading.children)
-                    .is_some_and(|text| text.trim().eq_ignore_ascii_case("tools needed")),
-            ),
-            BlockNode::Blockquote(value) => count_tools_headings(&value.children),
-            BlockNode::List(value) => value
-                .children
-                .iter()
-                .map(|child| match child {
-                    ListChildNode::ListItem(item) => count_tools_headings(&item.children),
-                    ListChildNode::TaskItem(item) => count_tools_headings(&item.children),
-                })
-                .sum(),
-            _ => 0,
-        })
-        .sum()
 }
 
 fn inline_text(nodes: &[InlineNode]) -> String {

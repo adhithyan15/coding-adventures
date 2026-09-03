@@ -53,7 +53,7 @@ impl HostProfile {
     /// Three of the five fields map straight across, and the mapping that is
     /// *not* made is the one worth stating. `HostProfile::capabilities` holds
     /// D18D **tool-capability** names, matched against a `ToolDefinition`'s
-    /// `required_capabilities` (`smart_home`, `smart_home.events`). It is fed
+    /// `required_capabilities` (colon-delimited, `smart_home:read`). It is fed
     /// from `manifest.tool_capabilities`, **never** from `manifest
     /// .capabilities`, which holds spec-13 operating-system triples like
     /// `fs:read:/x`. They are different namespaces that happen to share a
@@ -66,6 +66,20 @@ impl HostProfile {
         profile_id: impl Into<String>,
         manifest: &AgentManifest,
     ) -> Result<Self, HostRuntimeError> {
+        // Validate the INPUT, not only the output. `HostProfile::validate` has
+        // no notion of manifest `version`, so on its own it drops the one
+        // invariant that matters most here: `allowed_tools` is v3/v4-only and
+        // `tool_capabilities` is v4-only. Without this a hand-built v1
+        // manifest -- a version that by contract declares no tool surface at
+        // all -- yields a fully working profile. `AgentManifest`'s fields are
+        // all `pub` and `parse_skill` already builds one struct-literally, so
+        // "it came from the parser" is not an assumption this can make.
+        manifest
+            .validate()
+            .map_err(|error| HostRuntimeError::InvalidField {
+                field: "manifest".to_string(),
+                message: error.to_string(),
+            })?;
         let profile = Self {
             profile_id: profile_id.into(),
             host_id: manifest.agent.clone(),
@@ -73,9 +87,9 @@ impl HostProfile {
             allowed_tools: manifest.allowed_tools.clone(),
             capabilities: manifest.tool_capabilities.clone(),
         };
-        // Re-validate rather than trusting the manifest's own checks: this
-        // type has bounds of its own, and a manifest built in memory has not
-        // necessarily been through `AgentManifest::validate`.
+        // Validate the profile's own bounds too. The manifest check above
+        // covers the version-to-field binding this type knows nothing about;
+        // this covers label shapes, the empty-catalog rule, and duplicates.
         profile.validate()?;
         Ok(profile)
     }
@@ -1365,6 +1379,57 @@ mod tests {
             .contains(&"smart_home.discover".to_string()));
         assert!(!profile.has_capability("smart_home:read"));
         assert_eq!(profile.max_tier, PrivilegeTier::Tier0);
+    }
+
+    #[test]
+    fn a_hand_built_manifest_cannot_smuggle_a_tool_surface_past_its_version() {
+        // The legacy test above goes through parse_manifest, so it pins the
+        // PARSER's guarantee, not the derivation's -- it cannot fail if this
+        // regresses. AgentManifest's fields are all pub, so a caller can set
+        // version back to 1 while keeping a v4 tool surface. HostProfile
+        // ::validate has no notion of version and would happily accept it.
+        let mut manifest = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 4,
+              "agent": "weather-agent",
+              "description": "Reports a concise local weather forecast.",
+              "privilege_tier": 0,
+              "channels": {"reads": {"in-channel": 1}, "writes": {"out-channel": 1}},
+              "capabilities": [],
+              "allowed_tools": ["artifact.write"],
+              "tool_capabilities": ["smart_home:read"],
+              "justification": "Exercises the version-binding check in from_manifest."
+            }"#,
+        )
+        .expect("manifest parses");
+
+        manifest.version = 1;
+        assert!(matches!(
+            HostProfile::from_manifest("orchestrator-1", &manifest),
+            Err(HostRuntimeError::InvalidField { .. })
+        ));
+
+        // Unsorted and over-length scopes are likewise the manifest's rules,
+        // not this type's, and must still be refused here.
+        let mut unsorted = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 4,
+              "agent": "weather-agent",
+              "description": "Reports a concise local weather forecast.",
+              "privilege_tier": 0,
+              "channels": {"reads": {"in-channel": 1}, "writes": {"out-channel": 1}},
+              "capabilities": [],
+              "allowed_tools": ["artifact.write"],
+              "tool_capabilities": ["a:x", "b:y"],
+              "justification": "Exercises the version-binding check in from_manifest."
+            }"#,
+        )
+        .expect("manifest parses");
+        unsorted.tool_capabilities = vec!["b:y".to_string(), "a:x".to_string()];
+        assert!(matches!(
+            HostProfile::from_manifest("orchestrator-1", &unsorted),
+            Err(HostRuntimeError::InvalidField { .. })
+        ));
     }
 
     #[test]
