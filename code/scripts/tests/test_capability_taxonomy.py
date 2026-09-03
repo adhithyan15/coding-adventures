@@ -157,6 +157,38 @@ class CapabilityTaxonomyTest(unittest.TestCase):
         duplicated["allowed_tools"] = ["artifact.write", "artifact.write"]
         self.assertTrue(list(validator.iter_errors(duplicated)))
 
+        # Schema v4 adds tool_capabilities: D18D capability SCOPES, matched
+        # against a ToolDefinition's required_capabilities. Colon-delimited
+        # (smart_home:read) -- a different separator and a different namespace
+        # from both tool identifiers and the OS capability triples.
+        v4 = dict(v3)
+        v4["version"] = 4
+        v4["tool_capabilities"] = ["smart_home:read", "smart_home:write"]
+        validator.validate(v4)
+
+        v4_empty = dict(v4)
+        v4_empty["tool_capabilities"] = []
+        validator.validate(v4_empty)
+
+        v4_missing = {k: v for k, v in v4.items() if k != "tool_capabilities"}
+        self.assertTrue(list(validator.iter_errors(v4_missing)))
+
+        # v3 carried allowed_tools but granted no tool capabilities.
+        v3_smuggled = dict(v4)
+        v3_smuggled["version"] = 3
+        self.assertTrue(list(validator.iter_errors(v3_smuggled)))
+
+        for bad in ("smart_home::read", ":read", "smart_home:", "smart home:read", ""):
+            malformed = dict(v4)
+            malformed["tool_capabilities"] = [bad]
+            self.assertTrue(
+                list(validator.iter_errors(malformed)), f"must reject {bad!r}"
+            )
+
+        v4_dup = dict(v4)
+        v4_dup["tool_capabilities"] = ["smart_home:read", "smart_home:read"]
+        self.assertTrue(list(validator.iter_errors(v4_dup)))
+
         invalid = dict(current)
         invalid["channels"] = {
             "reads": {},

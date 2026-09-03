@@ -134,7 +134,7 @@ mod tests {
     use coding_adventures_ed25519::generate_keypair;
     use std::time::{SystemTime, UNIX_EPOCH};
 
-    const SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nReport a brief forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
+    const SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nReport a brief forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n\n## Tool capabilities needed\n- none\n";
 
     fn package_dir(label: &str) -> PathBuf {
         std::env::temp_dir().join(format!(

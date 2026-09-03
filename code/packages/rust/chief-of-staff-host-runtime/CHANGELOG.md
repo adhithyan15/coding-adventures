@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add `HostProfile::from_manifest`, deriving a host profile from a verified
+  agent manifest so the surface a supervisor enforces comes from bytes inside
+  the integrity boundary rather than operator config.
+- `HostProfile::capabilities` is fed from `manifest.tool_capabilities`, never
+  from `manifest.capabilities`: the first holds D18D scopes like
+  `smart_home:read`, the second holds spec-13 operating-system triples like
+  `fs:read:/x`. Crossing them would grant tool access on the strength of an
+  unrelated operating-system declaration.
+
 - Add `check_registration` to `HostProfileRuntime` and
   `OrchestratorProfileRuntime`: reports whether a definition would be accepted
   without registering it, so a caller wiring several related tools can pre-flight
