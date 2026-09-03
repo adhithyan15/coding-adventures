@@ -9,7 +9,7 @@ headword: "മുടി"
 gloss: "hair"
 romanization: "muṭi"
 concept_tag: ML-NOUN-HAIR
-prerequisites: [ML-C47-tooth]
+prerequisites: [ML-C47-tooth, ML-C45-grandmother]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C47-BODY-03]
 practises:
-  knowledge: [ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03]
+  knowledge: [ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-GRANDMOTHER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam keeps രോമം (*rōmaṁ*), a Sanskrit word, for hair on the body
 Three. A leg, a tooth, hair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-GRANDMOTHER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *muṭi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *muṭi*, then *thala*, so the head and what grows on it sit together]
+- [YOU RECALL: say *muttaśśi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03] -->

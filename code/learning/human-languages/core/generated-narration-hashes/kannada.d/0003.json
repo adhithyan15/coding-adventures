@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 3,
-  "sourceHash": "fnv1a64:20401f59edddb996",
+  "sourceHash": "fnv1a64:d8c8b5cff9f2016d",
   "lessonIds": [
     "KA-C03-hege",
     "KA-S03-sign-virama",
@@ -16,7 +16,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch03.txt",
   "json": "kannada/narration/ch03.json",
-  "textHash": "fnv1a64:35552763e86652a7",
-  "jsonHash": "fnv1a64:733012546ec36153",
+  "textHash": "fnv1a64:ab0f1be41c09f381",
+  "jsonHash": "fnv1a64:110c61f7f2c3f82c",
   "findings": []
 }

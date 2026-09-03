@@ -9,7 +9,7 @@ headword: "നൂല്"
 gloss: "thread"
 romanization: "nūlŭ"
 concept_tag: ML-NOUN-THREAD
-prerequisites: [ML-C62-rope]
+prerequisites: [ML-C62-rope, ML-C60-goat]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C62-HAND-02]
 practises:
-  knowledge: [ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02]
+  knowledge: [ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C60-ANIMAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It closes on the bare *l* of *cōṟu* and *vērŭ*: the consonant with its vowe
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C60-ANIMAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nūlŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kayaṟ*, then *nūlŭ*, and say which of the two is thicker]
+- [YOU RECALL: read **ആട്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02] -->

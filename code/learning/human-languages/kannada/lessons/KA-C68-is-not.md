@@ -9,7 +9,7 @@ headword: "ಅಲ್ಲ"
 gloss: "is not (that) — the other negative"
 romanization: "alla"
 concept_tag: KA-NEG-ALLA
-prerequisites: [KA-C67-and-too, KA-S135-letter-a, KA-C01-illa, KA-C41-deixis-system, KA-C49-true, KA-C52-chair, KA-C52-door, KA-C47-stomach, KA-C47-finger]
+prerequisites: [KA-C67-and-too, KA-S135-letter-a, KA-C01-illa, KA-C41-deixis-system, KA-C49-true, KA-C52-chair, KA-C52-door, KA-C47-stomach, KA-C47-finger, KA-C66-grass]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C68-DENY-01, KA-GRAMMAR-C68-DENY-02, KA-PRAGMATICS-C68-DENY-03]
 practises:
-  knowledge: [KA-GRAMMAR-C01-ILLA-02, KA-GRAMMAR-C68-DENY-02, KA-LEX-C01-ILLA-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-02, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C49-REPLY-01, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C67-LINK-01, KA-LEX-C68-DENY-01, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-134, KA-SCRIPT-RECOG-135]
+  knowledge: [KA-GRAMMAR-C01-ILLA-02, KA-GRAMMAR-C68-DENY-02, KA-LEX-C01-ILLA-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-02, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C49-REPLY-01, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C67-LINK-01, KA-LEX-C68-DENY-01, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-134, KA-SCRIPT-RECOG-135, KA-LEX-C66-FIELD-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -78,7 +78,7 @@ of it, it is gentle. Both are ordinary.
 A second negative, and the first way to disagree.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C01-ILLA-02, KA-GRAMMAR-C68-DENY-02, KA-LEX-C01-ILLA-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-02, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C49-REPLY-01, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C67-LINK-01, KA-LEX-C68-DENY-01, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-134, KA-SCRIPT-RECOG-135] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C01-ILLA-02, KA-GRAMMAR-C68-DENY-02, KA-LEX-C01-ILLA-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-02, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C49-REPLY-01, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C67-LINK-01, KA-LEX-C68-DENY-01, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-134, KA-SCRIPT-RECOG-135, KA-LEX-C66-FIELD-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *alla*]
@@ -88,6 +88,7 @@ A second negative, and the first way to disagree.
 - [YOU RECALL: say *mattu* once more]
 - [YOU RECALL: say *ಮ* once more]
 - [YOU RECALL: from much earlier — say *kurci*, *bāgilu*, *hoṭṭe*, *beraḷu*, and say what each one means]
+- [YOU RECALL: say *hullu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C01-ILLA-02, KA-GRAMMAR-C68-DENY-02, KA-LEX-C01-ILLA-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-02, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-C49-REPLY-01, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C67-LINK-01, KA-LEX-C68-DENY-01, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-134, KA-SCRIPT-RECOG-135] -->

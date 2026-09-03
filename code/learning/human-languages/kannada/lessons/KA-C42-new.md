@@ -9,7 +9,7 @@ headword: "ಹೊಸ"
 gloss: "new"
 romanization: "hosa"
 concept_tag: KA-ADJ-NEW
-prerequisites: [KA-C42-good]
+prerequisites: [KA-C42-good, KA-C41-this]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C42-ADJ-04]
 practises:
-  knowledge: [KA-LEX-C42-ADJ-02, KA-LEX-C42-ADJ-03, KA-LEX-C42-ADJ-04]
+  knowledge: [KA-LEX-C42-ADJ-02, KA-LEX-C42-ADJ-03, KA-LEX-C42-ADJ-04, KA-LEX-C41-DEIXIS-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-04, KA-LEX-C41-DEIXIS-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಹೊಸ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **ಇದು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-04] -->

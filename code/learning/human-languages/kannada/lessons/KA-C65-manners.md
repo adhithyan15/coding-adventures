@@ -9,7 +9,7 @@ headword: "ಸೌಜನ್ಯ"
 gloss: "courtesy, good manners"
 romanization: "saujanya"
 concept_tag: KA-NOUN-COURTESY
-prerequisites: [KA-C65-trust]
+prerequisites: [KA-C65-trust, KA-C63-health]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C65-MANNERS-05]
 practises:
-  knowledge: [KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05]
+  knowledge: [KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05, KA-LEX-C63-HEALTH-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the word for everything this book has been quietly teaching alongside the 
 Five: ವಿನಂತಿ, ಅನುಮತಿ, ಸಂಕೋಚ, ನಂಬಿಕೆ, ಸೌಜನ್ಯ. Enough to name what you have been doing since the thank-you word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05, KA-LEX-C63-HEALTH-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *saujanya*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dhanyavāda* to close]
+- [YOU RECALL: say *ārōgya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05] -->

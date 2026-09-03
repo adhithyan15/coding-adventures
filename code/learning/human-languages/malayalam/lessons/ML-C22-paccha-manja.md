@@ -9,7 +9,7 @@ headword: പച്ച, മഞ്ഞ
 gloss: green and yellow — paccha matches Tamil's paccai almost exactly (the same pan-Dravidian *pac- root already seen in Kannada and Telugu); manja is a completely separate native Dravidian root, a doublet of manjal ("turmeric"), matching Tamil's own mañcaḷ — a third, independent solution to this arc's recurring green/yellow puzzle
 romanization: "pacca, mañña"
 concept_tag: ML-COLOUR-GREEN-YELLOW
-prerequisites: [ML-C11-nirangal, ML-C21-naaya-poocha]
+prerequisites: [ML-C11-nirangal, ML-C21-naaya-poocha, ML-C17-ucha-paathira]
 sounds: [malayalam-chillu-l, malayalam-virama-geminate]
 roots: [proto-dravidian-pac-green, dravidian-mancal-turmeric]
 etymology_hook: "പച്ച (paccha, 'green') ← Proto-Dravidian *pac-, matching Tamil's பச்சை (paccai) almost exactly; മഞ്ഞ (mañña, 'yellow') is a doublet of മഞ്ഞൾ (maññaḷ, 'turmeric'), from a SEPARATE native Dravidian root matching Tamil's மஞ்சள் (mañcaḷ) — unlike Telugu, where green and yellow are doublets of ONE root, Malayalam's green and yellow are two independent native Dravidian word-families that happen to sit side by side"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02]
 practises:
-  knowledge: [ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02]
+  knowledge: [ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02, ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,7 +62,7 @@ single pattern holds across all three languages — the honest answer is that
 each solved "green vs. yellow" its own way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02, ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "പച്ച" — green, matching Tamil paccai]
@@ -70,6 +70,7 @@ each solved "green vs. yellow" its own way.
   entirely]
 - [YOU SAY: the contrast — paccha and mañña are NOT doublets of each other,
   unlike Telugu's pacca/pasupu]
+- [YOU RECALL: say *ucca*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02] -->

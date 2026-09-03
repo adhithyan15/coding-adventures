@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Five Words That Join",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c4ed631ecfa6984a",
+  "sourceHash": "fnv1a64:e597b119dce00b3a",
   "lessons": [
     {
       "id": "ML-C64-then",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaf632ea1dea77fa",
+      "sourceHash": "fnv1a64:82bea164578d98af",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śari*, then *pinne*, as though agreeing and going on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kayaṟ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kayaṟ*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1edbf20ef4ecbb55",
+      "sourceHash": "fnv1a64:84cab55801bb7c69",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pinne*, then *uṭane*, and say which of the two leaves a gap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read നൂല്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **നൂല്**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9581e87a46ea34c1",
+      "sourceHash": "fnv1a64:44a3da337b9d29d3",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ippōḷ*, then *cilappōḷ*, and say which of the two is certain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sūci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sūci*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a44aa23ea801ca16",
+      "sourceHash": "fnv1a64:7975ec5c8b13ac19",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kuṟaccŭ*, then *mātraṁ*, and say which one sets a limit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ചൂല്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ചൂല്**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54ef12595b4ea47b",
+      "sourceHash": "fnv1a64:82d70503ca376177",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *pinne*, *uṭane*, *cilappōḷ*, *mātraṁ*, *ennāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say muṟaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *muṟaṁ*]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: ಸೋಮವಾರ ಮಂಗಳವಾರ ಬುಧವಾರ ಗುರ�
 gloss: the seven weekdays — fully Sanskritic, like Hindi, but Sunday uses a DIFFERENT sun-name
 romanization: "sōmavāra maṅgaḷavāra budhavāra guruvāra śukravāra śanivāra bhānuvāra"
 concept_tag: KA-DAYS-WEEK
-prerequisites: [KA-C09-kshamisi]
+prerequisites: [KA-C09-kshamisi, KA-C07-eelu, KA-C07-entu]
 sounds: [kannada-anusvara, kannada-conjunct-kra]
 roots: [sanskrit-planet-words]
 etymology_hook: "Kannada's week is fully Sanskritic like Hindi's — Somavāra, Maṅgaḷavāra… — but Sunday is Bhānuvāra ('day of light'), a different Sanskrit sun-name than Hindi's Ravivāra"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C10-VAARA-01]
 practises:
-  knowledge: [KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01]
+  knowledge: [KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01, KA-LEX-C07-EELU-01, KA-ETYMON-C07-NUMBERS-6-10-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,7 +60,7 @@ sun, and different languages downstream picked different ones for their
 week.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01, KA-LEX-C07-EELU-01, KA-ETYMON-C07-NUMBERS-6-10-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Somavāra, Maṅgaḷavāra, Budhavāra, Guruvāra, Śukravāra,
@@ -68,6 +68,7 @@ week.
 - [YOU SAY: the different one — "Bhānuvāra," Sunday]
 - [YOU SAY: the contrast — Hindi says Ravivāra (Ravi), Kannada says Bhānuvāra
   (Bhānu) — two different Sanskrit sun-names]
+- [YOU RECALL: say *ēḷu*, then read **ಎಂಟು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01] -->

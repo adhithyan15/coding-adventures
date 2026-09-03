@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 35,
-  "sourceHash": "fnv1a64:cf4d737163378ab5",
+  "sourceHash": "fnv1a64:fcce18915b711da8",
   "lessonIds": [
     "KA-C35-kutumba",
     "KA-C35-snehita"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "kannada/narration/ch35.txt",
   "json": "kannada/narration/ch35.json",
-  "textHash": "fnv1a64:2c89f727d977e1c7",
-  "jsonHash": "fnv1a64:b8a990c9b5846109",
+  "textHash": "fnv1a64:b80247ec3cdab350",
+  "jsonHash": "fnv1a64:0773c69f0daf6521",
   "findings": []
 }

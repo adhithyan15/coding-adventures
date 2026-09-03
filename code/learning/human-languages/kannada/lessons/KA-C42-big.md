@@ -9,7 +9,7 @@ headword: "ದೊಡ್ಡ"
 gloss: "big"
 romanization: "doḍḍa"
 concept_tag: KA-ADJ-BIG
-prerequisites: []
+prerequisites: [KA-C39-kaapi]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C42-ADJ-01]
 practises:
-  knowledge: [KA-LEX-C42-ADJ-01]
+  knowledge: [KA-LEX-C42-ADJ-01, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -47,11 +47,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-01, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ದೊಡ್ಡ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *kāphi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-01] -->

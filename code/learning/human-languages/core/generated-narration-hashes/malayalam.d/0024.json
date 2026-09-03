@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 24,
-  "sourceHash": "fnv1a64:fc55961f988dd256",
+  "sourceHash": "fnv1a64:668a4e76037da3a1",
   "lessonIds": [
     "ML-C24-rathri",
     "ML-C24-native-night-words"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch24.txt",
   "json": "malayalam/narration/ch24.json",
-  "textHash": "fnv1a64:72d6a4b2acb37a70",
-  "jsonHash": "fnv1a64:4dffe0009e275ec1",
+  "textHash": "fnv1a64:f6c7b82461f370ff",
+  "jsonHash": "fnv1a64:e5b21c5d88616023",
   "findings": []
 }

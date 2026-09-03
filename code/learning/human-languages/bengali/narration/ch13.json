@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2f48e809f0afe858",
+  "sourceHash": "fnv1a64:8e690aa14aa31ecf",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -643,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4043ec5f818ab9e6",
+      "sourceHash": "fnv1a64:79d01fcc7594fe31",
       "notice": null,
       "blocks": [
         {
@@ -762,6 +762,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the root and its odd English relative — \"dṛś … dragon\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bôlā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bôlā*]"
             }
           ]
         },

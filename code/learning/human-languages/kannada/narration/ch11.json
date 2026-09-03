@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f35e2344b40c8082",
+  "sourceHash": "fnv1a64:48d2a34915cf180d",
   "lessons": [
     {
       "id": "KA-C11-bannagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0436ae318dc67a3",
+      "sourceHash": "fnv1a64:be6b26e0c124db4a",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the contrast — Kannada's week is Sanskritic, but its colors (except blue) are native]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ombattu, then read ಹತ್ತು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ombattu*, then read **ಹತ್ತು**]"
             }
           ]
         },

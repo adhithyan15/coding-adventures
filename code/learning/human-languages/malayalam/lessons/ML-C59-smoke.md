@@ -9,7 +9,7 @@ headword: "പുക"
 gloss: "smoke"
 romanization: "puka"
 concept_tag: ML-NOUN-SMOKE
-prerequisites: [ML-C59-mud]
+prerequisites: [ML-C59-mud, ML-C57-nail]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C59-AIR-04]
 practises:
-  knowledge: [ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04]
+  knowledge: [ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04, ML-LEX-C57-FRAME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is a short word doing a wide job, which is common in this layer of the langua
 Four, and this one rises.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04, ML-LEX-C57-FRAME-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *puka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ceḷi*, then *puka*, and say which of the two you would see from a distance]
+- [YOU RECALL: read **നഖം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04] -->

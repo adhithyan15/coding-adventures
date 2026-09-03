@@ -9,7 +9,7 @@ headword: পরিবার
 romanization: pôribār
 gloss: family — literally "what surrounds you," a second word Bengali kept whole from Sanskrit rather than wearing down
 concept_tag: BN-PEOPLE-FAMILY
-prerequisites: [BN-C11-bondhu]
+prerequisites: [BN-C11-bondhu, BN-C09-jijnasa-kora, BN-C09-sahajjo-kora, BN-C09-bhalo-laga]
 sounds: [ri-short-i]
 roots: [pari-around, vr-cover]
 etymology_hook: "পরিবার is Sanskrit পরিবার parivāra, a second tatsama, built from pari- 'around' (PIE peri-, the same prefix inside English's own borrowed peri-, as in perimeter) plus √vṛ 'to cover, to surround' (PIE h₂wer-, whose secure cousins are Latin operiō and Lithuanian suverti — no English word is claimed here)"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C11-PORIBAR-01]
 practises:
-  knowledge: [BN-LEX-C11-BONDHU-01, BN-LEX-C11-PORIBAR-01]
+  knowledge: [BN-LEX-C11-BONDHU-01, BN-LEX-C11-PORIBAR-01, BN-LEX-C09-JIJNASA-01, BN-GRAMMAR-C09-KORA-02, BN-LEX-C09-SAHAJJO-01, BN-SOUND-C09-SAHAJJO-02, BN-LEX-C09-BHALOLAGA-01, BN-GRAMMAR-C09-DATIVE-02, BN-LEX-C09-BHALOBASA-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,13 +65,14 @@ together and a পরিবার is, at the root, **what stands around you and 
 you**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-PORIBAR-01, BN-LEX-C11-BONDHU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-PORIBAR-01, BN-LEX-C11-BONDHU-01, BN-LEX-C09-JIJNASA-01, BN-GRAMMAR-C09-KORA-02, BN-LEX-C09-SAHAJJO-01, BN-SOUND-C09-SAHAJJO-02, BN-LEX-C09-BHALOLAGA-01, BN-GRAMMAR-C09-DATIVE-02, BN-LEX-C09-BHALOBASA-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pôribār" — family]
 - [YOU SAY: "āmār pôribār" — my family]
 - [YOU SAY: the two pieces — "pari-, around … vṛ, to cover"]
 - [YOU SAY: a friend, then a family — "bôndhu … pôribār"]
+- [YOU RECALL: say *jijñāsā kôrā*, then read **সাহায্য করা**, then say *bhālo lāgā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-PORIBAR-01, BN-LEX-C11-BONDHU-01] -->

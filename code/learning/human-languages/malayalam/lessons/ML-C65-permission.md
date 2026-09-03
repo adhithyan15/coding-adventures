@@ -9,7 +9,7 @@ headword: "അനുവാദം"
 gloss: "permission"
 romanization: "anuvādaṁ"
 concept_tag: ML-NOUN-PERMISSION
-prerequisites: [ML-C65-request]
+prerequisites: [ML-C65-request, ML-C63-tiredness]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C65-ASK-02]
 practises:
-  knowledge: [ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02]
+  knowledge: [ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C63-FEEL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ So the shape of the courtesy is built into the word: somebody asks, and somebody
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C63-FEEL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *anuvādaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *apēkṣa*, then *anuvādaṁ*, and say which one comes first]
+- [YOU RECALL: read **ക്ഷീണം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02] -->

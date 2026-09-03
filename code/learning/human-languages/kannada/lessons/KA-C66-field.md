@@ -9,7 +9,7 @@ headword: "ಹೊಲ"
 gloss: "a field"
 romanization: "hola"
 concept_tag: KA-NOUN-FIELD
-prerequisites: [KA-C65-manners]
+prerequisites: [KA-C65-manners, KA-C64-after]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C66-FIELD-01]
 practises:
-  knowledge: [KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01]
+  knowledge: [KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01, KA-LEX-C64-JOIN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It lies past the edge of the ಹಳ್ಳಿ, along the ದಾರಿ you learned
 The first of five field words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01, KA-LEX-C64-JOIN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hola*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hola*, then *raita*, and say which one works the other]
+- [YOU RECALL: say *āmēle*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-04, KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01] -->

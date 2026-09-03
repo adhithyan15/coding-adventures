@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:18f17bb69723c60f",
+  "sourceHash": "fnv1a64:0b90104d3900e6ca",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb52d90ce2936a14",
+      "sourceHash": "fnv1a64:aaa8304f25ab2842",
       "notice": null,
       "blocks": [
         {
@@ -124,6 +124,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU HEAR: *anchu*; YOU SHOW: 5]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tāmasikkuka, then say jōli ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tāmasikkuka*, then say *jōli ceyyuka*]"
             }
           ]
         },
@@ -675,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f51f39db4797e23",
+      "sourceHash": "fnv1a64:d658b56d55ab0e04",
       "notice": null,
       "blocks": [
         {
@@ -780,6 +789,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU HEAR: *ompathu*; YOU SHOW: 9]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say -ikku, then say",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *-ikku*, then say **]"
             }
           ]
         },

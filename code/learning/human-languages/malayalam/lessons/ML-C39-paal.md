@@ -9,7 +9,7 @@ headword: പാൽ
 gloss: milk — native, matching Tamil exactly, and matching Kannada by the family's regular p-to-h shift
 romanization: paal
 concept_tag: ML-MILK
-prerequisites: [ML-C39-kaapi, ML-C15-vellam-ari]
+prerequisites: [ML-C39-kaapi, ML-C15-vellam-ari, ML-C36-makal, ML-C37-kannu]
 sounds: [malayalam-vowel-sign-aa, malayalam-chillu-l]
 roots: [proto-south-dravidian-pal-milk]
 etymology_hook: "പാൽ is native Dravidian, from Proto-South-Dravidian *pal, 'milk' -- Tamil keeps the same shape unchanged, paal; Kannada shows its own regular p-to-h sound law here too, haalu, the identical shift already documented across the family in words like pogu/hogu. Where Chapter 15's vellam broke from Tamil's water-word entirely, paal shows the opposite: perfect agreement"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02]
 practises:
-  knowledge: [ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02]
+  knowledge: [ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -61,7 +61,7 @@ shape, with only Kannada's regular sound law setting its form apart. Two
 everyday liquids, two entirely different outcomes.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dayavāyi oru pāl" — a milk, please]
@@ -70,6 +70,7 @@ everyday liquids, two entirely different outcomes.
 - [YOU SAY: water against milk — "veḷḷam broke away; pāl agrees"]
 - [YOU SAY: three drinks, once more — "chāya, kāppi, pāl"]
 - [YOU SAY: the long road, once more — "qahwah … kahve … caffè … kāppi"]
+- [YOU RECALL: say *makaḷ*, then read **കണ്ണ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02] -->

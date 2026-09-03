@@ -9,7 +9,7 @@ headword: "ಎಲೆ"
 gloss: "a leaf"
 romanization: "ele"
 concept_tag: KA-NOUN-LEAF
-prerequisites: [KA-C54-branch]
+prerequisites: [KA-C54-branch, KA-C52-rangoli]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C54-TREE-03]
 practises:
-  knowledge: [KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03]
+  knowledge: [KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C52-WELCOME-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The other big ಎಲೆ is the plantain leaf a meal is served on, which is a pla
 Three, and this one is handed to people.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C52-WELCOME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ele*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hasiru ele* — "a green leaf" — and *ele*, *kombe*, *mara* upward in order]
+- [YOU RECALL: say *raṅgōli*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03] -->

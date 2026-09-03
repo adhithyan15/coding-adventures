@@ -9,7 +9,7 @@ headword: "ಮರ"
 gloss: "a tree"
 romanization: "mara"
 concept_tag: KA-NOUN-TREE
-prerequisites: [KA-C53-cloud]
+prerequisites: [KA-C53-cloud, KA-C52-door]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C54-TREE-01]
 practises:
-  knowledge: [KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01]
+  knowledge: [KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01, KA-LEX-C52-WELCOME-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is also the first word of this chapter for a plain reason: everything else he
 The thing the next four words belong to.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01, KA-LEX-C52-WELCOME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mara*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *doḍḍa mara* — "a big tree" — with the describing word in front, where Kannada keeps it]
+- [YOU RECALL: say *bāgilu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01] -->

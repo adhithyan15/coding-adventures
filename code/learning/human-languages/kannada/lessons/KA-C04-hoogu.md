@@ -9,7 +9,7 @@ headword: ಹೋಗು
 gloss: to go (and ಬಾ, come)
 romanization: "hōgu"
 concept_tag: KA-VERB-HOOGU
-prerequisites: [KA-C03-naanu]
+prerequisites: [KA-C03-naanu, KA-C03-hege]
 sounds: [long-o]
 roots: [hoogu-go-dravidian, baa-come-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02]
 practises:
-  knowledge: [KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02]
+  knowledge: [KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02, KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -50,11 +50,12 @@ both, because Kannada — like every Dravidian language — does not say a plain
 "goodbye." It says "I go, and I **come back**."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02, KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hōgu" (go) and "bā" (come)]
 - [YOU SAY: why you need both to say goodbye (Kannada's farewell is "I'll go and come back")]
+- [YOU RECALL: say *hēge*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02] -->

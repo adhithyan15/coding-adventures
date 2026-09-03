@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 50,
-  "sourceHash": "fnv1a64:498b8217e561b143",
+  "sourceHash": "fnv1a64:2200f62eb17c6716",
   "lessonIds": [
     "ML-C50-now",
     "ML-C50-day-after",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch50.txt",
   "json": "malayalam/narration/ch50.json",
-  "textHash": "fnv1a64:3b51f74b641f5599",
-  "jsonHash": "fnv1a64:fff45bfe9d2ad246",
+  "textHash": "fnv1a64:3e15f14856fee305",
+  "jsonHash": "fnv1a64:c54141891a92e3b6",
   "findings": []
 }

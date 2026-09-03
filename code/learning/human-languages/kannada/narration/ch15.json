@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7b500e540e4c924e",
+  "sourceHash": "fnv1a64:b1c9daff8e832574",
   "lessons": [
     {
       "id": "KA-C15-niiru-akki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e75f2043dbe5a5b9",
+      "sourceHash": "fnv1a64:10a799c749d9f7ef",
       "notice": null,
       "blocks": [
         {
@@ -102,6 +102,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"anna\" — cooked rice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say appa amma aṇṇa tamma akka taṅgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *appa amma aṇṇa tamma akka taṅgi*]"
             }
           ]
         },

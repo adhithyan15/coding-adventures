@@ -9,7 +9,7 @@ headword: "കാൽ"
 gloss: "leg, foot"
 romanization: "kāl"
 concept_tag: ML-NOUN-LEG
-prerequisites: [ML-C46-book]
+prerequisites: [ML-C46-book, ML-C44-write]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C47-BODY-01]
 practises:
-  knowledge: [ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01]
+  knowledge: [ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01, ML-LEX-WRITE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That final ൽ is a chillu — a consonant written with no vowel after it and no
 The first of five more body words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01, ML-LEX-WRITE] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kāl*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāl*, then *kaṇṇŭ*, so the bottom and the top sit together]
+- [YOU RECALL: say *eḻutū*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01] -->

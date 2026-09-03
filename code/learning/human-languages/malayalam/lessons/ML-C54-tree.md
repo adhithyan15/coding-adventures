@@ -9,7 +9,7 @@ headword: "മരം"
 gloss: "a tree"
 romanization: "maraṁ"
 concept_tag: ML-NOUN-TREE
-prerequisites: [ML-C53-sunshine]
+prerequisites: [ML-C53-sunshine, ML-C52-door]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C54-TREE-01]
 practises:
-  knowledge: [ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01]
+  knowledge: [ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01, ML-LEX-C52-WELCOME-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kerala's own tree, the coconut, gets a compound built on this one, and the ordin
 The thing the rest of this run takes apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01, ML-LEX-C52-WELCOME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *veyil*, then *maraṁ*, and say which of the two the other one stands in]
+- [YOU RECALL: say *vātil*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-04, ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01] -->

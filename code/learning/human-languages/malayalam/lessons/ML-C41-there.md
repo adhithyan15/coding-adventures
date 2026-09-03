@@ -9,7 +9,7 @@ headword: "അവിടെ"
 gloss: "there — where I am not"
 romanization: "aviṭe"
 concept_tag: ML-DEIXIS-THERE
-prerequisites: [ML-C41-here]
+prerequisites: [ML-C41-here, ML-C38-hrudayam]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C41-DEIXIS-04]
 practises:
-  knowledge: [ML-LEX-C41-DEIXIS-02, ML-LEX-C41-DEIXIS-03, ML-LEX-C41-DEIXIS-04]
+  knowledge: [ML-LEX-C41-DEIXIS-02, ML-LEX-C41-DEIXIS-03, ML-LEX-C41-DEIXIS-04, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-04, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "അവിടെ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **ഹൃദയം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-04] -->

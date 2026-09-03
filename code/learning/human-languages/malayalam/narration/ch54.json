@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "A Tree, Part by Part",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:883b7e1f06e26fc7",
+  "sourceHash": "fnv1a64:b0dd5e0bfca5e432",
   "lessons": [
     {
       "id": "ML-C54-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e568bd057f0dd85",
+      "sourceHash": "fnv1a64:1016f5a91ec961b7",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *veyil*, then *maraṁ*, and say which of the two the other one stands in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vātil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vātil*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dde763c3c941db25",
+      "sourceHash": "fnv1a64:bf62d4ad1bae50b9",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *maraṁ*, then *kompŭ*, and name two other things the second word covers]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read കസേര",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **കസേര**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c35f45508765fec9",
+      "sourceHash": "fnv1a64:93d93275370a092d",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kompŭ*, then *taṭi*, and say which of the two you could saw]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kōlaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kōlaṁ*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dacec0a7a005719c",
+      "sourceHash": "fnv1a64:ca21544614854db4",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *taṭi*, then *vērŭ*, and say which end of the tree each one names]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read പൂവ്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **പൂവ്**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f46f5956a1f5550",
+      "sourceHash": "fnv1a64:daf032e4e540258d",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *maraṁ*, *kompŭ*, *taṭi*, *vērŭ*, *vittŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say māla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *māla*]"
             }
           ]
         },

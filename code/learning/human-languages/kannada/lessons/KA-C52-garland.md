@@ -9,7 +9,7 @@ headword: "ಹೂಮಾಲೆ"
 gloss: "a garland"
 romanization: "hūmāle"
 concept_tag: KA-NOUN-GARLAND
-prerequisites: [KA-C52-flower]
+prerequisites: [KA-C52-flower, KA-C50-farewell]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C52-WELCOME-05]
 practises:
-  knowledge: [KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05]
+  knowledge: [KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05, KA-LEX-C50-LEAVE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Five things a Kannada welcome puts between the street and the guest: the door, t
 Five, and the last of them is half inherited and half borrowed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05, KA-LEX-C50-LEAVE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hūmāle*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *hūvu* and *hūmāle* one after the other]
+- [YOU RECALL: say *bīḷkoḍuge*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04, KA-LEX-C52-WELCOME-05] -->

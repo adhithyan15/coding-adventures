@@ -9,7 +9,7 @@ headword: "ಅಲ್ವಾ"
 gloss: "isn't it? — the tag on the end"
 romanization: "alvā"
 concept_tag: KA-Q-TAG
-prerequisites: [KA-C69-is-it, KA-C42-good, KA-C53-moon, KA-C44-listen, KA-C44-look, KA-C43-give]
+prerequisites: [KA-C69-is-it, KA-C42-good, KA-C53-moon, KA-C44-listen, KA-C44-look, KA-C43-give, KA-C67-or]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C69-ASK-03, KA-PRAGMATICS-C69-ASK-04]
 practises:
-  knowledge: [KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C69-ASK-02, KA-LEX-C41-DEIXIS-01, KA-LEX-C42-ADJ-03, KA-LEX-C46-ASK-05, KA-LEX-C53-SKY-03, KA-LEX-C68-DENY-01, KA-LEX-C69-ASK-01, KA-LEX-C69-ASK-03, KA-LEX-GIVE, KA-LEX-LISTEN, KA-LEX-LOOK, KA-PRAGMATICS-C69-ASK-04]
+  knowledge: [KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C69-ASK-02, KA-LEX-C41-DEIXIS-01, KA-LEX-C42-ADJ-03, KA-LEX-C46-ASK-05, KA-LEX-C53-SKY-03, KA-LEX-C68-DENY-01, KA-LEX-C69-ASK-01, KA-LEX-C69-ASK-03, KA-LEX-GIVE, KA-LEX-LISTEN, KA-LEX-LOOK, KA-PRAGMATICS-C69-ASK-04, KA-LEX-C67-LINK-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -67,7 +67,7 @@ person a share of it.
 A question you can ask about anything, and a tag that softens it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C69-ASK-02, KA-LEX-C41-DEIXIS-01, KA-LEX-C42-ADJ-03, KA-LEX-C46-ASK-05, KA-LEX-C53-SKY-03, KA-LEX-C68-DENY-01, KA-LEX-C69-ASK-01, KA-LEX-C69-ASK-03, KA-LEX-GIVE, KA-LEX-LISTEN, KA-LEX-LOOK, KA-PRAGMATICS-C69-ASK-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C69-ASK-02, KA-LEX-C41-DEIXIS-01, KA-LEX-C42-ADJ-03, KA-LEX-C46-ASK-05, KA-LEX-C53-SKY-03, KA-LEX-C68-DENY-01, KA-LEX-C69-ASK-01, KA-LEX-C69-ASK-03, KA-LEX-GIVE, KA-LEX-LISTEN, KA-LEX-LOOK, KA-PRAGMATICS-C69-ASK-04, KA-LEX-C67-LINK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *alla*, then *allavā*, then *alvā*]
@@ -76,6 +76,7 @@ A question you can ask about anything, and a tag that softens it.
 - [YOU RECALL: say *gottā*, then answer it]
 - [YOU RECALL: say *hālū illa, nīrū illa* once more]
 - [YOU RECALL: from much earlier — say *candra*, *kēḷu*, *nōḍu*, *koḍu*, and say what each one means]
+- [YOU RECALL: read **ಅಥವಾ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C69-ASK-02, KA-LEX-C41-DEIXIS-01, KA-LEX-C42-ADJ-03, KA-LEX-C46-ASK-05, KA-LEX-C53-SKY-03, KA-LEX-C68-DENY-01, KA-LEX-C69-ASK-01, KA-LEX-C69-ASK-03, KA-LEX-GIVE, KA-LEX-LISTEN, KA-LEX-LOOK, KA-PRAGMATICS-C69-ASK-04] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 15,
-  "sourceHash": "fnv1a64:a61a482fceb0b26c",
+  "sourceHash": "fnv1a64:58ad0b5fd55ddcf6",
   "lessonIds": [
     "ML-C15-vellam-ari",
     "ML-S119-vowel-sign-oo"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch15.txt",
   "json": "malayalam/narration/ch15.json",
-  "textHash": "fnv1a64:2c5198597ed37aa9",
-  "jsonHash": "fnv1a64:a3269b8601d8ebc3",
+  "textHash": "fnv1a64:b95c9cfb40acbdbe",
+  "jsonHash": "fnv1a64:551a20057a400092",
   "findings": []
 }

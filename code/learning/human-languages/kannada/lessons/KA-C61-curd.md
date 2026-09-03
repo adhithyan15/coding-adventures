@@ -9,7 +9,7 @@ headword: "ಮೊಸರು"
 gloss: "curd"
 romanization: "mosaru"
 concept_tag: KA-NOUN-CURD
-prerequisites: [KA-C60-bird]
+prerequisites: [KA-C60-bird, KA-C59-wind]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C61-KITCHEN-01]
 practises:
-  knowledge: [KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01]
+  knowledge: [KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01, KA-LEX-C59-GROUND-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It closes a meal rather than opening one. ಮೊಸರು over ಅನ್ನ is t
 The first of five things in a Kannada kitchen.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01, KA-LEX-C59-GROUND-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mosaru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hālu*, then *mosaru*, and say which one waits overnight]
+- [YOU RECALL: say *gāḷi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01] -->

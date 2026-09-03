@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Child, Son, Daughter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:014db59c41aead44",
+  "sourceHash": "fnv1a64:52f63c2d1c648f02",
   "lessons": [
     {
       "id": "ML-C36-kutti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fde1b043470849f6",
+      "sourceHash": "fnv1a64:0e8847fc8088f62d",
       "notice": null,
       "blocks": [
         {
@@ -115,6 +115,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the six family people-words, and the group word — \"acchan, amma … kuṭumbaṁ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cintikkuka, then read മനസ്സിലാക്കുക",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cintikkuka*, then read **മനസ്സിലാക്കുക**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f74ebcffed0c792",
+      "sourceHash": "fnv1a64:7e025050183c6f7e",
       "notice": null,
       "blocks": [
         {
@@ -242,6 +251,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the friend-word, once more — \"suhṛttŭ\" — su plus hṛd]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read വായിക്കുക",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **വായിക്കുക**]"
             }
           ]
         },
@@ -277,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21a25656345c2de8",
+      "sourceHash": "fnv1a64:da4d5db117c446b0",
       "notice": null,
       "blocks": [
         {
@@ -382,6 +400,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: general, then specific, twice over — \"kuṭṭi … makan … makaḷ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eḻutuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eḻutuka*]"
             }
           ]
         },

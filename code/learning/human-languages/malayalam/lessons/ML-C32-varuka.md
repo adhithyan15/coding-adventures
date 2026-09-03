@@ -9,7 +9,7 @@ headword: വരുക
 gloss: to come — and the past tense, the one slot where a Malayalam verb can still surprise you
 romanization: varuka
 concept_tag: VERB-COME
-prerequisites: [ML-C32-pokuka]
+prerequisites: [ML-C32-pokuka, ML-C24-rathri]
 sounds: [va-letter, gemination-nn]
 roots: [dravidian-vaa-come]
 etymology_hook: "വരുക is native Dravidian *vā-/*var-, the same verb as Tamil வா, Kannada ಬಾ and Telugu రా; its present and future are regular but its past reshapes the stem to വന്നു, which is where Malayalam keeps all of its irregularity"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02]
 practises:
-  knowledge: [ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02]
+  knowledge: [ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02, ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -90,13 +90,14 @@ behind it. A Malayalam verb costs you three forms. A Tamil one costs three
 tenses times six persons.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02, ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the command — "vā!"]
 - [YOU SAY: the three times — "varunnu … vannu … varuṁ"]
 - [YOU SAY: the pair, past against past — "pōyi … vannu"]
 - [YOU SAY: the goodbye you now understand — "pōyi varāṁ"]
+- [YOU RECALL: say *rāthri*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02] -->

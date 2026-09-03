@@ -9,7 +9,7 @@ headword: നെഞ്ച്
 gloss: chest — Malayalam's other heart, native this time, and the one everyday idiom reaches for
 romanization: nenchŭ
 concept_tag: ML-CHEST-NATIVE
-prerequisites: [ML-C38-hrudayam, ML-C13-shareera-bhaagangal]
+prerequisites: [ML-C38-hrudayam, ML-C13-shareera-bhaagangal, ML-C36-kutti]
 sounds: [malayalam-nya, malayalam-chandrakkala]
 roots: [dravidian-nenchu-chest]
 etymology_hook: "നെഞ്ച് is native Dravidian, cognate with Tamil's own நெஞ்சு/நெஞ்சம் (nenju/nenjam) for chest -- and where ഹൃദയം names the organ and the Sanskrit-flavoured abstraction, നെഞ്ച് is the word everyday idiom actually reaches for: നെഞ്ചിടിപ്പ് (nenchidippu), a pounding heart from fear or excitement, literally 'chest-beat.' Two hearts, one Sanskrit and formal, one native and physical -- the same selective-borrowing pattern Chapter 2's santoshham beside nandi already showed"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02]
 practises:
-  knowledge: [ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02]
+  knowledge: [ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,7 +64,7 @@ words, were native throughout; **ഹൃദയം** and **നെഞ്ച്** sh
 carrying one word of each kind, side by side.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ente nenchŭ" — my chest]
@@ -72,6 +72,7 @@ carrying one word of each kind, side by side.
 - [YOU SAY: the idiom — "nenchiṭippŭ" — chest-beat, a pounding heart]
 - [YOU SAY: thala, kai, hṛdayaṁ, nenchŭ — the body words so far]
 - [YOU SAY: mouth, once more — "vāy"]
+- [YOU RECALL: read **കുട്ടി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02] -->

@@ -9,7 +9,7 @@ headword: "കുറച്ച്"
 gloss: "a little, a few"
 romanization: "kuṟaccŭ"
 concept_tag: ML-WORD-A-LITTLE
-prerequisites: [ML-C58-less]
+prerequisites: [ML-C58-less, ML-C56-knife]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C58-ANSWER-03]
 practises:
-  knowledge: [ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03]
+  knowledge: [ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C56-HOUSE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam gets a great deal out of a single root by varying the tail on it, and 
 Three, and the last two share a root.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C56-HOUSE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuṟaccŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuṟavŭ*, then *kuṟaccŭ*, and say which of the two you would use asking for rice]
+- [YOU RECALL: say *katti*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03] -->

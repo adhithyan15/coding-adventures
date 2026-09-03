@@ -9,7 +9,7 @@ headword: രാത്രി
 gloss: "night" — the Sanskrit tatsama already shortened inside paathira, with a different PIE root from Latin nox
 romanization: "rāthri"
 concept_tag: TIME-NIGHT
-prerequisites: [ML-C17-paathira, ML-C23-naal]
+prerequisites: [ML-C17-paathira, ML-C23-naal, ML-C20-pathinonnu-irupathu]
 sounds: [malayalam-virama-ta, malayalam-vowel-sign-i]
 roots: [sanskrit-ratri]
 etymology_hook: "rāthri is the Sanskrit night-word shortened inside paathira; its PIE rest root differs from Latin nox"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02]
 practises:
-  knowledge: [ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02]
+  knowledge: [ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -61,12 +61,13 @@ might be old cousins — but genuinely **aren't**. Same false-cognate story,
 now confirmed across a second Indo-Aryan-rooted borrowing.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "rāthri" — "night," already hiding, shortened, inside pāthirā]
 - [YOU SAY: the honest PIE echo — *h₁reh₁-, "to rest," like Hindi's raat,
   NOT related to Latin's nox]
+- [YOU RECALL: say *pathinonnŭ — irupathŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02] -->

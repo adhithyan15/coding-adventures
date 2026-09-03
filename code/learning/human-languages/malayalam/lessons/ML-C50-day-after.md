@@ -9,7 +9,7 @@ headword: "മറ്റന്നാൾ"
 gloss: "the day after tomorrow"
 romanization: "maṟṟannāḷ"
 concept_tag: ML-WORD-DAY-AFTER-TOMORROW
-prerequisites: [ML-C50-now]
+prerequisites: [ML-C50-now, ML-C48-student]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C50-LEAVE-02]
 practises:
-  knowledge: [ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02]
+  knowledge: [ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C48-ROLE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada builds its own with the same idea and different parts, ನಾಡಿದ�
 Two: now, and the day after tomorrow.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C48-ROLE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maṟṟannāḷ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippōḷ*, then *maṟṟannāḷ*, the nearest time and a far one]
+- [YOU RECALL: read **വിദ്യാർത്ഥി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02] -->

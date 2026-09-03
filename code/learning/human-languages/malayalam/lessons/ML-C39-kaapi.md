@@ -9,7 +9,7 @@ headword: കാപ്പി
 gloss: coffee — an English colonial-era loan, itself from Arabic by way of Turkish and Italian; tea and coffee arrived by opposite roads
 romanization: kaapi
 concept_tag: ML-COFFEE
-prerequisites: [ML-C39-chaaya]
+prerequisites: [ML-C39-chaaya, ML-C36-makan]
 sounds: [malayalam-vowel-sign-aa, malayalam-geminate-ppa]
 roots: [arabic-qahwa-coffee]
 etymology_hook: "കാപ്പി comes from English coffee, borrowed during the colonial period and reshaped to Malayalam's own sound pattern; coffee itself is Arabic qahwah, which became Turkish kahve, then Italian caffe, then English coffee, before finally landing in Kerala as kaappi. chaaya walked overland from China through Persia; kaappi sailed from Arabia through Europe -- two drinks, two opposite roads, meeting on the same tea-shop counter"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02]
 practises:
-  knowledge: [ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02]
+  knowledge: [ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,13 +60,14 @@ and only then into Malayalam. Two drinks, two opposite roads — one over
 land, one over sea — meeting on the very same tea-shop counter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dayavāyi oru kāppi" — a coffee, please]
 - [YOU SAY: the long road — "qahwah … kahve … caffè … coffee … kāppi"]
 - [YOU SAY: two drinks, two roads — "chāya," overland; "kāppi," by sea]
 - [YOU SAY: two hearts, still — "hṛdayaṁ … nenchŭ"]
+- [YOU RECALL: read **മകൻ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02] -->

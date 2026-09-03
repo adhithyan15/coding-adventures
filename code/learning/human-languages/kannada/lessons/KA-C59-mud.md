@@ -9,7 +9,7 @@ headword: "ಕೆಸರು"
 gloss: "mud"
 romanization: "kesaru"
 concept_tag: KA-NOUN-MUD
-prerequisites: [KA-C59-sand]
+prerequisites: [KA-C59-sand, KA-C57-shoulder]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C59-GROUND-04]
 practises:
-  knowledge: [KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04]
+  knowledge: [KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04, KA-LEX-C57-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Then, as everywhere, it goes figurative. To throw ಕೆಸರು at somebody is
 Four, and this one the season makes.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04, KA-LEX-C57-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kesaru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maraḷu*, then *kesaru*, and say which one the rain makes]
+- [YOU RECALL: read **ಭುಜ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04] -->

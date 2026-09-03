@@ -9,7 +9,7 @@ headword: എന്ത്
 gloss: what
 romanization: "entŭ"
 concept_tag: QUESTION-WHAT
-prerequisites: [ML-C02-nii-ningal]
+prerequisites: [ML-C02-nii-ningal, ML-C02-enre, ML-C02-aanu]
 sounds: [ntu-conjunct]
 roots: [yaa-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-ENTU-01]
 practises:
-  knowledge: [ML-LEX-ENTU-01]
+  knowledge: [ML-LEX-ENTU-01, ML-LEX-ENRE-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -50,11 +50,12 @@ reviews_of: [ML-C02-nii-ningal, ML-C02-enre-peru-aanu]
 (where).
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENTU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENTU-01, ML-LEX-ENRE-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "entŭ"]
 - [YOU SAY: the question family — entŭ, ār, eviṭe]
+- [YOU RECALL: say *enṟe*, then read **ആണ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENTU-01] -->

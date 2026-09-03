@@ -9,7 +9,7 @@ headword: "ಯಾರು"
 gloss: "who? — asking about a person"
 romanization: "yāru"
 concept_tag: KA-DEIXIS-WHO
-prerequisites: [KA-C41-there]
+prerequisites: [KA-C41-there, KA-C38-hrudaya]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C41-DEIXIS-05]
 practises:
-  knowledge: [KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04, KA-LEX-C41-DEIXIS-05]
+  knowledge: [KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04, KA-LEX-C41-DEIXIS-05, KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **e-** for ask — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-05, KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಯಾರು" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *hṛdaya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-05] -->

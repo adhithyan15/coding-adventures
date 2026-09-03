@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f8cfe20a43e46d43",
+  "sourceHash": "fnv1a64:2035a00e1dae3222",
   "lessons": [
     {
       "id": "ML-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8759b0e37b4727f7",
+      "sourceHash": "fnv1a64:01678528641a647c",
       "notice": null,
       "blocks": [
         {
@@ -86,6 +86,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cevi, then read മൂക്ക്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cevi*, then read **മൂക്ക്**]"
             }
           ]
         },
@@ -121,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b675b98675515c91",
+      "sourceHash": "fnv1a64:538a8b65a484e77b",
       "notice": null,
       "blocks": [
         {
@@ -188,6 +197,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read വായ്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **വായ്**]"
             }
           ]
         },
@@ -325,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95dd69c56e7339d3",
+      "sourceHash": "fnv1a64:cd5fbec767b8fa7c",
       "notice": null,
       "blocks": [
         {
@@ -392,6 +410,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ഹൃദയം",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ഹൃദയം**]"
             }
           ]
         },
@@ -427,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f17bc0f4c817bf8",
+      "sourceHash": "fnv1a64:4bf45f7df7d3cf93",
       "notice": null,
       "blocks": [
         {
@@ -494,6 +521,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nenchŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nenchŭ*]"
             }
           ]
         },
@@ -529,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f1204d16700995d",
+      "sourceHash": "fnv1a64:ce340843258efede",
       "notice": null,
       "blocks": [
         {
@@ -596,6 +632,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ചായ, then say kaapi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ചായ**, then say *kaapi*]"
             }
           ]
         },

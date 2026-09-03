@@ -9,7 +9,7 @@ headword: "ഭാര്യ"
 gloss: "wife"
 romanization: "bhārya"
 concept_tag: ML-NOUN-WIFE
-prerequisites: [ML-C45-husband]
+prerequisites: [ML-C45-husband, ML-C43-sleep]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-WIFE]
 practises:
-  knowledge: [ML-LEX-HUSBAND, ML-LEX-WIFE]
+  knowledge: [ML-LEX-HUSBAND, ML-LEX-WIFE, ML-LEX-SLEEP]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ The same root *bhṛ* as the last word, ending differently: 'she who is to be su
 That closes the run: grandfather, grandmother, husband, wife.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-HUSBAND, ML-LEX-WIFE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-HUSBAND, ML-LEX-WIFE, ML-LEX-SLEEP] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bhārya*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *bharttāvŭ*, and name the root they share]
+- [YOU RECALL: read **ഉറങ്ങൂ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-HUSBAND, ML-LEX-WIFE] -->

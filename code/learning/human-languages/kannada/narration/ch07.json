@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Counting One to Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cf18af1248ec6ab2",
+  "sourceHash": "fnv1a64:76b1d2d214eff293",
   "lessons": [
     {
       "id": "KA-C07-ondu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:906018bdd381bc0e",
+      "sourceHash": "fnv1a64:60cc72b82b726c0c",
       "notice": null,
       "blocks": [
         {
@@ -99,6 +99,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"Tamil oṉṟu, Kannada ondu — same word, new coat\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mātanāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mātanāḍu*]"
             }
           ]
         },
@@ -134,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3f5a60cdd9056b2",
+      "sourceHash": "fnv1a64:851deae4ac2e813b",
       "notice": null,
       "blocks": [
         {
@@ -210,6 +219,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the count so far — \"ondu, eraḍu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಇರು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಇರು**]"
             }
           ]
         },
@@ -245,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc7d038d5535c581",
+      "sourceHash": "fnv1a64:fca84c5aaf9bcb80",
       "notice": null,
       "blocks": [
         {
@@ -321,6 +339,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the count so far — \"ondu, eraḍu, mūru\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kelasa māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kelasa māḍu*]"
             }
           ]
         },
@@ -525,7 +552,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f74d25df204c2aa8",
+      "sourceHash": "fnv1a64:3267472a74cc4699",
       "notice": null,
       "blocks": [
         {
@@ -601,6 +628,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the count so far — \"ondu, eraḍu, mūru, nālku\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read -ಗೆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **-ಗೆ**]"
             }
           ]
         },
@@ -1257,7 +1293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e79742b400e8e91",
+      "sourceHash": "fnv1a64:d5aba7c58c876997",
       "notice": null,
       "blocks": [
         {
@@ -1333,6 +1369,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the count so far — \"…ēḷu, eṇṭu, ombattu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ondu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ondu*]"
             }
           ]
         },
@@ -1368,7 +1413,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0c4ece9748023f0",
+      "sourceHash": "fnv1a64:4d04dcfa19342017",
       "notice": null,
       "blocks": [
         {
@@ -1448,6 +1493,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all ten — \"ondu, eraḍu, mūru, nālku, aidu, āru, ēḷu, eṇṭu, ombattu, hattu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eraḍu, then say mūru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eraḍu*, then say *mūru*]"
             }
           ]
         },

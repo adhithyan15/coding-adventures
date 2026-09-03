@@ -9,7 +9,7 @@ headword: "ಓದಲು"
 gloss: "in order to read"
 romanization: "ōdalu"
 concept_tag: KA-CLAUSE-PURPOSE
-prerequisites: [KA-C73-very, KA-C33-oodu, KA-C32-hoogu, KA-C57-back]
+prerequisites: [KA-C73-very, KA-C33-oodu, KA-C32-hoogu, KA-C57-back, KA-C71-when, KA-C71-which, KA-C72-when-clause]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C73-ABLE-02, KA-GRAMMAR-C73-ABLE-03]
 practises:
-  knowledge: [KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C72-WANT-02, KA-GRAMMAR-C72-WANT-04, KA-GRAMMAR-C73-ABLE-03, KA-LEX-C32-HOOGU-01, KA-LEX-C33-OODU-01, KA-LEX-C46-ASK-05, KA-LEX-C57-BODY-02, KA-LEX-C69-ASK-01, KA-LEX-C72-WANT-03, KA-LEX-C73-ABLE-01, KA-LEX-C73-ABLE-02]
+  knowledge: [KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C72-WANT-02, KA-GRAMMAR-C72-WANT-04, KA-GRAMMAR-C73-ABLE-03, KA-LEX-C32-HOOGU-01, KA-LEX-C33-OODU-01, KA-LEX-C46-ASK-05, KA-LEX-C57-BODY-02, KA-LEX-C69-ASK-01, KA-LEX-C72-WANT-03, KA-LEX-C73-ABLE-01, KA-LEX-C73-ABLE-02, KA-LEX-C71-MORE-04, KA-LEX-C71-MORE-05, KA-GRAMMAR-C71-MORE-06, KA-LEX-C72-WANT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -64,7 +64,7 @@ and *to* for those three; Kannada needs three shapes of one verb.
 A reason to do something, said as part of the same sentence.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C72-WANT-02, KA-GRAMMAR-C72-WANT-04, KA-GRAMMAR-C73-ABLE-03, KA-LEX-C32-HOOGU-01, KA-LEX-C33-OODU-01, KA-LEX-C46-ASK-05, KA-LEX-C57-BODY-02, KA-LEX-C69-ASK-01, KA-LEX-C72-WANT-03, KA-LEX-C73-ABLE-01, KA-LEX-C73-ABLE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C72-WANT-02, KA-GRAMMAR-C72-WANT-04, KA-GRAMMAR-C73-ABLE-03, KA-LEX-C32-HOOGU-01, KA-LEX-C33-OODU-01, KA-LEX-C46-ASK-05, KA-LEX-C57-BODY-02, KA-LEX-C69-ASK-01, KA-LEX-C72-WANT-03, KA-LEX-C73-ABLE-01, KA-LEX-C73-ABLE-02, KA-LEX-C71-MORE-04, KA-LEX-C71-MORE-05, KA-GRAMMAR-C71-MORE-06, KA-LEX-C72-WANT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ōdu*, then *ōdalu*]
@@ -74,6 +74,7 @@ A reason to do something, said as part of the same sentence.
 - [YOU RECALL: say *gottā* once more]
 - [YOU RECALL: say *nanage cahā bēku* once more]
 - [YOU RECALL: from much earlier — say *bennu*, and say what each one means]
+- [YOU RECALL: read **ಯಾವಾಗ**, then say *yāva*, then read **ಬಂದಾಗ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C72-WANT-02, KA-GRAMMAR-C72-WANT-04, KA-GRAMMAR-C73-ABLE-03, KA-LEX-C32-HOOGU-01, KA-LEX-C33-OODU-01, KA-LEX-C46-ASK-05, KA-LEX-C57-BODY-02, KA-LEX-C69-ASK-01, KA-LEX-C72-WANT-03, KA-LEX-C73-ABLE-01, KA-LEX-C73-ABLE-02] -->

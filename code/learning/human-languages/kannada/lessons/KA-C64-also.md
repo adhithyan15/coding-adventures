@@ -9,7 +9,7 @@ headword: "ಕೂಡ"
 gloss: "also, too"
 romanization: "kūḍa"
 concept_tag: KA-WORD-ALSO
-prerequisites: [KA-C64-after]
+prerequisites: [KA-C64-after, KA-C62-needle]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C64-JOIN-02]
 practises:
-  knowledge: [KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02]
+  knowledge: [KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C62-MADE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Take care with the middle letter. ಕೂಡ and ಕೂದಲು from the body ch
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C62-MADE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kūḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nānu*, then *nānu kūḍa*, and say which one adds somebody]
+- [YOU RECALL: read **ಸೂಜಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02] -->

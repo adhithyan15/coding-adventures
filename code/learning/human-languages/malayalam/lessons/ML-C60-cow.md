@@ -9,7 +9,7 @@ headword: "പശു"
 gloss: "a cow"
 romanization: "paśu"
 concept_tag: ML-NOUN-COW
-prerequisites: [ML-C59-ember]
+prerequisites: [ML-C59-ember, ML-C58-more]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C60-ANIMAL-01]
 practises:
-  knowledge: [ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01]
+  knowledge: [ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01, ML-LEX-C58-ANSWER-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The milk-word *pāl* comes out of a പശു, and so does most of what a Kerala
 The first of five animals.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01, ML-LEX-C58-ANSWER-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paśu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paśu*, then *pāl*, and say which one gives the other]
+- [YOU RECALL: say *kūṭutal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01] -->

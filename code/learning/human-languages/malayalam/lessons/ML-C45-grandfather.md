@@ -9,7 +9,7 @@ headword: "മുത്തച്ഛൻ"
 gloss: "grandfather"
 romanization: "muttacchan"
 concept_tag: ML-NOUN-GRANDFATHER
-prerequisites: [ML-C44-write]
+prerequisites: [ML-C44-write, ML-C42-old]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-GRANDFATHER]
 practises:
-  knowledge: [ML-LEX-WRITE, ML-LEX-GRANDFATHER]
+  knowledge: [ML-LEX-WRITE, ML-LEX-GRANDFATHER, ML-LEX-C42-ADJ-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ Two pieces, both audible: *mutta-*, 'elder, senior', and *acchan*, the 'father' 
 The first of four family words. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-WRITE, ML-LEX-GRANDFATHER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-WRITE, ML-LEX-GRANDFATHER, ML-LEX-C42-ADJ-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *muttacchan*]
 - [YOU SAY: it once more, slowly, hearing the two halves]
 - [YOU SAY: it after *eḻutū*, so the two sit together]
+- [YOU RECALL: say *paḻaya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-WRITE, ML-LEX-GRANDFATHER] -->

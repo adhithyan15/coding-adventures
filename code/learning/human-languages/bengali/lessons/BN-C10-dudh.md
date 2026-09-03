@@ -9,7 +9,7 @@ headword: দুধ
 romanization: dudh
 gloss: milk — a word whose spelling could ask for a trailing vowel but doesn't, and a root whose one secure English cousin is not the word it looks like
 concept_tag: BN-FOOD-MILK
-prerequisites: [BN-C10-jol]
+prerequisites: [BN-C10-jol, BN-C07-jana]
 sounds: [silent-final-vowel]
 roots: [duh-milk]
 etymology_hook: "দুধ is Sanskrit *dugdha*, the past participle of √duh 'to milk', from PIE dʰewgʰ- 'to produce, to yield' — its one secure English cousin is doughty, 'valiant', by way of Old English dohtig; the look-alike dough is unrelated, from a different PIE root, dʰeyǵʰ-, 'to knead'"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C10-DUDH-01, BN-SOUND-C10-DUDH-02]
 practises:
-  knowledge: [BN-LEX-C10-JOL-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C10-CHA-01, BN-SOUND-C09-SAHAJJO-02, BN-LEX-C10-DUDH-01, BN-SOUND-C10-DUDH-02]
+  knowledge: [BN-LEX-C10-JOL-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C10-CHA-01, BN-SOUND-C09-SAHAJJO-02, BN-LEX-C10-DUDH-01, BN-SOUND-C10-DUDH-02, BN-LEX-C07-JANA-01, BN-GRAMMAR-C07-JANA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -75,13 +75,14 @@ from a completely different PIE root, **\*dʰeyǵʰ-**, "to knead, to mould." A
 close sound, two unrelated histories.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-DUDH-01, BN-SOUND-C10-DUDH-02, BN-LEX-C10-JOL-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-DUDH-01, BN-SOUND-C10-DUDH-02, BN-LEX-C10-JOL-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C07-JANA-01, BN-GRAMMAR-C07-JANA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dudh" — no trailing vowel]
 - [YOU SAY: the offer — "dudh khān"]
 - [YOU SAY: the two endings compared — "sāhājjo … dudh"]
 - [YOU SAY: three drinks so far — "chā khān … jôl khān … dudh khān"]
+- [YOU RECALL: say *jānā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-DUDH-01, BN-SOUND-C10-DUDH-02, BN-SOUND-C09-SAHAJJO-02] -->

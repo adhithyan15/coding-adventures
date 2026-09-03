@@ -9,7 +9,7 @@ headword: "ബഹുമാനം"
 gloss: "respect"
 romanization: "bahumānaṁ"
 concept_tag: ML-NOUN-RESPECT
-prerequisites: [ML-C51-favour]
+prerequisites: [ML-C51-favour, ML-C49-certainly]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C51-COURTESY-03]
 practises:
-  knowledge: [ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03]
+  knowledge: [ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C49-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada does not use this word for respect; it says ಗೌರವ (*gaurava*), wh
 Three. Gratitude, a favour, respect.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C49-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bahumānaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bahumānaṁ*, then *manassilākkuka*, and find the piece they share]
+- [YOU RECALL: say *tīrccayāyuṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03] -->

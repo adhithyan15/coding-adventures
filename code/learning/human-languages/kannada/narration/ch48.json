@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ffde59b78e8c7ab",
+  "sourceHash": "fnv1a64:77d98fc28741f77b",
   "lessons": [
     {
       "id": "KA-C48-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28900c7176dac826",
+      "sourceHash": "fnv1a64:94417b79fbd20c9b",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śikṣaka*, then ask *nimma hesaru ēnu?* as though meeting one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say haṇṇu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *haṇṇu*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae84824bf8e27606",
+      "sourceHash": "fnv1a64:946ce63b337e5d0c",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śikṣaka*, then *vidyārthi*, and say which of the two is doing the seeking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಬಟ್ಟೆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಬಟ್ಟೆ**]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbb7441d5e3f416c",
+      "sourceHash": "fnv1a64:0a2c65f7b7de52c7",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vidyārthi*, then *vaidya*, and hear *vid-* survive in both]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dīpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dīpa*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a22a02f52d3ba6f8",
+      "sourceHash": "fnv1a64:2dc73143279d0f3a",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all four, and say which one did not come from Sanskrit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಉಪ್ಪು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಉಪ್ಪು**]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:133fd2121f7b405e",
+      "sourceHash": "fnv1a64:0262ae509347e36e",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then name the two that share a root]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pustaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pustaka*]"
             }
           ]
         },

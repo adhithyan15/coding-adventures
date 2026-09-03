@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals Around a House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2ceb8a7f27805d9c",
+  "sourceHash": "fnv1a64:167dd526895b21dc",
   "lessons": [
     {
       "id": "ML-C60-cow",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57d6593df7c06c45",
+      "sourceHash": "fnv1a64:c19bc9200fac945a",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *paśu*, then *pāl*, and say which one gives the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kūṭutal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kūṭutal*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1f346d81b1bd519",
+      "sourceHash": "fnv1a64:f756d7216661618d",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nāṭŭ*, then *āṭŭ*, and say which of the two is an animal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read കുറവ്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **കുറവ്**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92590b8023dfc72f",
+      "sourceHash": "fnv1a64:7a82d6d47ffd8887",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kōḻi*, then *puḻa*, and say which sound the two have in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuṟaccŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuṟaccŭ*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2aafc0debd45c539",
+      "sourceHash": "fnv1a64:ef3f3ddf4144e4a0",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kākka*, then *kōḻi*, and say which of the two is kept and which turns up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read വേണ്ട",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **വേണ്ട**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:741c3e6535400da2",
+      "sourceHash": "fnv1a64:d9e20819d1d054a8",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *paśu*, *āṭŭ*, *kōḻi*, *kākka*, *āna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pōruṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pōruṁ*]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Five More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0d32e2ee7f86d5d1",
+  "sourceHash": "fnv1a64:6d252340b1e2cb12",
   "lessons": [
     {
       "id": "ML-C57-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf499bdbbe7f7629",
+      "sourceHash": "fnv1a64:eaab8f11a1558d66",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *peṭṭi*, then *kaḻuttŭ*, and hold the ഴ in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puḻa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puḻa*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c90641032b3bd70",
+      "sourceHash": "fnv1a64:f165a9813f788f91",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kaḻuttŭ*, then *mutukŭ*, and place each one with a hand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read പാറ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **പാറ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73d367ede8877586",
+      "sourceHash": "fnv1a64:208d3990ee396095",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mutukŭ*, then *cuṇṭŭ*, and curl the tongue back for the middle of the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nāṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nāṭŭ*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae39d647287d0394",
+      "sourceHash": "fnv1a64:043e7fb833b6d99b",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nakhaṁ*, then the English word for it, and hear how far apart they have drifted]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read വഴി",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **വഴി**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc3dc9c30a30af85",
+      "sourceHash": "fnv1a64:6158b90733e8eb8a",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *kaḻuttŭ*, *mutukŭ*, *cuṇṭŭ*, *nakhaṁ*, *ellŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vayal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vayal*]"
             }
           ]
         },

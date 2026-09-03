@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e375774bdd801998",
+  "sourceHash": "fnv1a64:7f2b9c16d73e21c0",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -457,7 +457,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b87fe8059252b77f",
+      "sourceHash": "fnv1a64:f6817eb926826ec9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -536,6 +536,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *enṟe* once with its meaning, \"my\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read നന്ദി",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **നന്ദി**]"
             }
           ]
         },
@@ -893,7 +902,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a20af427ec2c826d",
+      "sourceHash": "fnv1a64:91dfdf8c6d706be2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -987,6 +996,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the contrast — Tamil *eṉ peyar Arun* (no verb) vs. Malayalam *enṟe pēru Arun āṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say athe, then say illa, then read ശരി",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *athe*, then say *illa*, then read **ശരി**]"
             }
           ]
         },
@@ -1457,7 +1475,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0bcbfee0925f7555",
+      "sourceHash": "fnv1a64:dc96de2ca1e144e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1538,6 +1556,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"nī\" (familiar), \"niṅṅaḷ\" (respectful)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read പേര് (pēr)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **പേര്**]"
             }
           ]
         },
@@ -1897,7 +1924,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9454cf6b9835206f",
+      "sourceHash": "fnv1a64:acf532e5288ba272",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1976,6 +2003,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the question family — entŭ, ār, eviṭe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say enṟe, then read ആണ് (āṇŭ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *enṟe*, then read **ആണ്**]"
             }
           ]
         },

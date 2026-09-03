@@ -9,7 +9,7 @@ headword: "ಹಗ್ಗ"
 gloss: "a rope"
 romanization: "hagga"
 concept_tag: KA-NOUN-ROPE
-prerequisites: [KA-C62-needle]
+prerequisites: [KA-C62-needle, KA-C60-hen]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C62-MADE-03]
 practises:
-  knowledge: [KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03]
+  knowledge: [KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C60-ANIMAL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ In a ಹಳ್ಳಿ yard it is the thing at the end of which the ಹಸು stan
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C60-ANIMAL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hagga*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nūlu*, then *hagga*, and say which one holds a cow]
+- [YOU RECALL: say *kōḷi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03] -->

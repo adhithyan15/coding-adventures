@@ -9,7 +9,7 @@ headword: "ಸಕ್ಕರೆ"
 gloss: "sugar"
 romanization: "sakkare"
 concept_tag: KA-NOUN-SUGAR
-prerequisites: [KA-C61-jaggery]
+prerequisites: [KA-C61-jaggery, KA-C59-fire]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C61-KITCHEN-05]
 practises:
-  knowledge: [KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05]
+  knowledge: [KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05, KA-LEX-C59-GROUND-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The coffee-word and the tea-word each reached Kannada after a long journey inwar
 Five: ಮೊಸರು, ತುಪ್ಪ, ಎಣ್ಣೆ, ಬೆಲ್ಲ, ಸಕ್ಕರೆ. Enough to say what is in the food you are given.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05, KA-LEX-C59-GROUND-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sakkare*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then give your name to the person cooking]
+- [YOU RECALL: say *beṅki*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04, KA-LEX-C61-KITCHEN-05] -->

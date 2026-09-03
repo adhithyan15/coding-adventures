@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "Hunger, Sleep and Health",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ba827695e2beb87a",
+  "sourceHash": "fnv1a64:a9b525cb5c0e5796",
   "lessons": [
     {
       "id": "KA-C63-hunger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfd38571cbe97733",
+      "sourceHash": "fnv1a64:a2d733fd57ab9c03",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *hasivu*, then *nanage hasivu*, and say who is hungry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mosaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mosaru*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe1ae06904095062",
+      "sourceHash": "fnv1a64:b1cb3ce2e74ee43a",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *hasivu*, then *nidde*, and say which one a night fixes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ತುಪ್ಪ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ತುಪ್ಪ**]"
             }
           ]
         },
@@ -267,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:774c39fe418ab7fc",
+      "sourceHash": "fnv1a64:a29146ae790479a8",
       "notice": null,
       "blocks": [
         {
@@ -354,6 +372,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *jvara*, then *vaidya*, and say which one you go to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eṇṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eṇṇe*]"
             }
           ]
         },
@@ -389,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba60decf65c29c0a",
+      "sourceHash": "fnv1a64:b918fb9565c07bd4",
       "notice": null,
       "blocks": [
         {
@@ -476,6 +503,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nōvu*, then *tale nōvu*, then *hoṭṭe nōvu*, and say where it hurts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಬೆಲ್ಲ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಬೆಲ್ಲ**]"
             }
           ]
         },
@@ -511,7 +547,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:082b7b0b468dab29",
+      "sourceHash": "fnv1a64:bbcb53b1826b9071",
       "notice": null,
       "blocks": [
         {
@@ -598,6 +634,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *nīvu hēgiddīrā* to whoever asked you first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sakkare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sakkare*]"
             }
           ]
         },

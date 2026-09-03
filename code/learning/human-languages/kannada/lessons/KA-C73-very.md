@@ -9,7 +9,7 @@ headword: "ತುಂಬಾ"
 gloss: "very, a lot"
 romanization: "tumbā"
 concept_tag: KA-ADV-VERY
-prerequisites: [KA-C72-prefer, KA-C42-adjective-system, KA-C58-more, KA-C57-neck, KA-C07-aaru, KA-C07-aidu, KA-C07-naalku]
+prerequisites: [KA-C72-prefer, KA-C42-adjective-system, KA-C58-more, KA-C57-neck, KA-C07-aaru, KA-C07-aidu, KA-C07-naalku, KA-C70-because, KA-C71-another]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C73-ABLE-01]
 practises:
-  knowledge: [KA-GRAMMAR-C42-ADJ-SYSTEM, KA-GRAMMAR-C72-WANT-02, KA-LEX-C07-AIDU-01, KA-LEX-C07-NAALKU-01, KA-LEX-C07-NUMBERS-6-10-01, KA-LEX-C42-ADJ-01, KA-LEX-C57-BODY-01, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C72-WANT-01, KA-LEX-C72-WANT-06, KA-LEX-C73-ABLE-01, KA-SCRIPT-RECOG-136]
+  knowledge: [KA-GRAMMAR-C42-ADJ-SYSTEM, KA-GRAMMAR-C72-WANT-02, KA-LEX-C07-AIDU-01, KA-LEX-C07-NAALKU-01, KA-LEX-C07-NUMBERS-6-10-01, KA-LEX-C42-ADJ-01, KA-LEX-C57-BODY-01, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C72-WANT-01, KA-LEX-C72-WANT-06, KA-LEX-C73-ABLE-01, KA-SCRIPT-RECOG-136, KA-LEX-C70-TELL-04, KA-GRAMMAR-C70-TELL-05, KA-LEX-C71-MORE-01, KA-GRAMMAR-C71-MORE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -59,7 +59,7 @@ Every adjective in this book, turned up. Six adjectives times one
 intensifier is twelve things you can now say about a thing.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C42-ADJ-SYSTEM, KA-GRAMMAR-C72-WANT-02, KA-LEX-C07-AIDU-01, KA-LEX-C07-NAALKU-01, KA-LEX-C07-NUMBERS-6-10-01, KA-LEX-C42-ADJ-01, KA-LEX-C57-BODY-01, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C72-WANT-01, KA-LEX-C72-WANT-06, KA-LEX-C73-ABLE-01, KA-SCRIPT-RECOG-136] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C42-ADJ-SYSTEM, KA-GRAMMAR-C72-WANT-02, KA-LEX-C07-AIDU-01, KA-LEX-C07-NAALKU-01, KA-LEX-C07-NUMBERS-6-10-01, KA-LEX-C42-ADJ-01, KA-LEX-C57-BODY-01, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C72-WANT-01, KA-LEX-C72-WANT-06, KA-LEX-C73-ABLE-01, KA-SCRIPT-RECOG-136, KA-LEX-C70-TELL-04, KA-GRAMMAR-C70-TELL-05, KA-LEX-C71-MORE-01, KA-GRAMMAR-C71-MORE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tumbā*]
@@ -69,6 +69,7 @@ intensifier is twelve things you can now say about a thing.
 - [YOU RECALL: say *ೂ* once more]
 - [YOU RECALL: say *bandāga* once more]
 - [YOU RECALL: from much earlier — say *kuttige*, *āru*, *aidu*, *nālku*, and say what each one means]
+- [YOU RECALL: say *ēkendare*, then read **ಇನ್ನೊಂದು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C42-ADJ-SYSTEM, KA-GRAMMAR-C72-WANT-02, KA-LEX-C07-AIDU-01, KA-LEX-C07-NAALKU-01, KA-LEX-C07-NUMBERS-6-10-01, KA-LEX-C42-ADJ-01, KA-LEX-C57-BODY-01, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C72-WANT-01, KA-LEX-C72-WANT-06, KA-LEX-C73-ABLE-01, KA-SCRIPT-RECOG-136] -->

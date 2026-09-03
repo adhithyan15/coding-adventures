@@ -9,7 +9,7 @@ headword: "ಹಳ್ಳಿ"
 gloss: "a village"
 romanization: "haḷḷi"
 concept_tag: KA-NOUN-VILLAGE
-prerequisites: [KA-C55-hill]
+prerequisites: [KA-C55-hill, KA-C53-star]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C55-ROAD-04]
 practises:
-  knowledge: [KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04]
+  knowledge: [KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04, KA-LEX-C53-SKY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Tamil kept *paḷḷi* too and steered it a different way, toward a place of res
 Four, and this one is signposted the length of the state.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04, KA-LEX-C53-SKY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *haḷḷi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *haṇṇu*, then *haḷḷi*, and hear the one law opening both]
+- [YOU RECALL: read **ಚುಕ್ಕಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04] -->

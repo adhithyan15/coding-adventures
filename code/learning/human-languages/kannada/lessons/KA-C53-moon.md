@@ -9,7 +9,7 @@ headword: "ಚಂದ್ರ"
 gloss: "the moon"
 romanization: "candra"
 concept_tag: KA-NOUN-MOON
-prerequisites: [KA-C53-sunshine]
+prerequisites: [KA-C53-sunshine, KA-C51-respect]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C53-SKY-03]
 practises:
-  knowledge: [KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03]
+  knowledge: [KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C51-COURTESY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada's own moon-word is ತಿಂಗಳು (*tiṅgaḷu*), and that word als
 Three, and two of them borrowed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C51-COURTESY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *candra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśa*, then *candra*, and say which of the two is the container]
+- [YOU RECALL: say *gaurava*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03] -->

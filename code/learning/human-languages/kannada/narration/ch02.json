@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a60c919edf747232",
+  "sourceHash": "fnv1a64:bc900007c42d34b4",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -402,7 +402,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd7bab74a793d065",
+      "sourceHash": "fnv1a64:d49b8b4e1f202128",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -483,6 +483,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"nīnu\" (familiar), \"nīvu\" (respectful)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say namaskāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *namaskāra*]"
             }
           ]
         },
@@ -518,7 +527,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1efabba512322276",
+      "sourceHash": "fnv1a64:9714b9213f8ea1c9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -597,6 +606,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the question family — ēnu, yāru, elli]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಧನ್ಯವಾದ, then say haudu, then say illa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಧನ್ಯವಾದ**, then say *haudu*, then say *illa*]"
             }
           ]
         },

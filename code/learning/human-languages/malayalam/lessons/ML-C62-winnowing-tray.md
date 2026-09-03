@@ -9,7 +9,7 @@ headword: "മുറം"
 gloss: "a winnowing tray"
 romanization: "muṟaṁ"
 concept_tag: ML-NOUN-WINNOWING-TRAY
-prerequisites: [ML-C62-broom]
+prerequisites: [ML-C62-broom, ML-C60-elephant]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C62-HAND-05]
 practises:
-  knowledge: [ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05]
+  knowledge: [ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05, ML-LEX-C60-ANIMAL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Its work needs the wind. Grain is tossed up off the മുറം and *kāṟṟ�
 Five, and every one of them came off somebody's hands: rope, thread, a needle, a broom and a winnowing tray.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05, ML-LEX-C60-ANIMAL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *muṟaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kayaṟ*, *nūlŭ*, *sūci*, *cūlŭ*, *muṟaṁ*]
+- [YOU RECALL: say *āna*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05] -->

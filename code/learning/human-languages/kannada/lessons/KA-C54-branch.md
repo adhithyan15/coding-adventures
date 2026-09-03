@@ -9,7 +9,7 @@ headword: "ಕೊಂಬೆ"
 gloss: "a branch"
 romanization: "kombe"
 concept_tag: KA-NOUN-BRANCH
-prerequisites: [KA-C54-tree]
+prerequisites: [KA-C54-tree, KA-C52-chair]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C54-TREE-02]
 practises:
-  knowledge: [KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02]
+  knowledge: [KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C52-WELCOME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ English does the reverse trick and puts the tree onto the animal, calling the br
 Two: the tree, and what comes out of it sideways.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C52-WELCOME-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kombe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mara*, then *kombe*, and say which one holds the other up]
+- [YOU RECALL: read **ಕುರ್ಚಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02] -->

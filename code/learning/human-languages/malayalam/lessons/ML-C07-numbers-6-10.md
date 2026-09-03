@@ -8,7 +8,7 @@ type: word
 headword: "aaru ezhu ettu ompathu pathu"
 gloss: hear and say six to ten before meeting their written forms
 concept_tag: ML-NUMBERS-6-10
-prerequisites: [ML-W07-numbers-1-5-dictation]
+prerequisites: [ML-W07-numbers-1-5-dictation, ML-C06-dative-ikku, ML-C07-numbers-1-5]
 sounds: [malayalam-inherent-a, chandrakkala, zha-llla]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Malayalam and Tamil preserve the rare zh sound in seven, while neighbouring cousins changed it"
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03]
 practises:
-  knowledge: [ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03]
+  knowledge: [ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,11 +64,12 @@ ten. Before *p*, the older *n* becomes *m*. Say *on-pathu* slowly, then let it
 settle into *ompathu*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03] -->
 
 - [YOU SAY: *aaru, ezhu, ettu, ompathu, pathu*]
 - [YOU HEAR: *ezhu*; YOU SHOW: 7]
 - [YOU HEAR: *ompathu*; YOU SHOW: 9]
+- [YOU RECALL: say *-ikku*, then say **]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03] -->

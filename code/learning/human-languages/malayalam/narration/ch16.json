@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:deaefbb11818dc4b",
+  "sourceHash": "fnv1a64:96d0bb95f2aa6c65",
   "lessons": [
     {
       "id": "ML-C16-kollavarsham-maasangal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09a17f02406eb19f",
+      "sourceHash": "fnv1a64:2ef8e593884abe88",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the contrast — Tamil uses nakshatras, Malayalam uses zodiac signs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say karuppŭ veḷḷa cuvappŭ nīla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *karuppŭ veḷḷa cuvappŭ nīla*]"
             }
           ]
         },

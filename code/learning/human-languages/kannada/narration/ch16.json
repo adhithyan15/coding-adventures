@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e3a39671976a3d83",
+  "sourceHash": "fnv1a64:bbe59189b4377be2",
   "lessons": [
     {
       "id": "KA-C16-tingalugalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5b052d6fa2021a9",
+      "sourceHash": "fnv1a64:898e249c46c4c301",
       "notice": null,
       "blocks": [
         {
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the honest point — shared with Hindi, unlike Tamil/Malayalam's own calendars]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tale kai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tale kai*]"
             }
           ]
         },

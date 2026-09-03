@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b99b6040e01c707",
+  "sourceHash": "fnv1a64:caf4ccb94c02a2d6",
   "lessons": [
     {
       "id": "KA-C61-curd",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4222df96d2b1fed",
+      "sourceHash": "fnv1a64:19585fa709e42f2c",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *hālu*, then *mosaru*, and say which one waits overnight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gāḷi*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83785303bfcdf8bb",
+      "sourceHash": "fnv1a64:09b25c457d1d58ae",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mosaru*, then *tuppa*, and say which one is poured]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಮಂಜು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಮಂಜು**]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a62736603136fedf",
+      "sourceHash": "fnv1a64:1cb7f5013c45180e",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tuppa*, then *eṇṇe*, and say which one starts as a seed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say maraḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *maraḷu*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3334b553a047db62",
+      "sourceHash": "fnv1a64:821bcfe081e9076e",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bella*, then *uppu*, and say which two go into the same pot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಕೆಸರು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಕೆಸರು**]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf6d326bffda53c6",
+      "sourceHash": "fnv1a64:3527c55bf88199b1",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then give your name to the person cooking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say beṅki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *beṅki*]"
             }
           ]
         },

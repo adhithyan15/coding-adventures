@@ -9,7 +9,7 @@ headword: "ಕೊಡೆ"
 gloss: "an umbrella"
 romanization: "koḍe"
 concept_tag: KA-NOUN-UMBRELLA
-prerequisites: [KA-C62-broom]
+prerequisites: [KA-C62-broom, KA-C60-bird]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C62-MADE-05]
 practises:
-  knowledge: [KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05]
+  knowledge: [KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05, KA-LEX-C60-ANIMAL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Put ದಯವಿಟ್ಟು in front of any of this chapter's five and you have
 Five: ನೂಲು, ಸೂಜಿ, ಹಗ್ಗ, ಪೊರಕೆ, ಕೊಡೆ. Enough to ask a household politely for the thing you need.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05, KA-LEX-C60-ANIMAL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *koḍe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dayaviṭṭu* in front of the one you want]
+- [YOU RECALL: say *hakki*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05] -->

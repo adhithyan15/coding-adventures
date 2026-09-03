@@ -9,7 +9,7 @@ headword: "പഴയ"
 gloss: "old — of a thing, not of a person"
 romanization: "paḻaya"
 concept_tag: ML-ADJ-OLD
-prerequisites: [ML-C42-new]
+prerequisites: [ML-C42-new, ML-C41-that, ML-C41-here]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C42-ADJ-05]
 practises:
-  knowledge: [ML-LEX-C42-ADJ-03, ML-LEX-C42-ADJ-04, ML-LEX-C42-ADJ-05]
+  knowledge: [ML-LEX-C42-ADJ-03, ML-LEX-C42-ADJ-04, ML-LEX-C42-ADJ-05, ML-LEX-C41-DEIXIS-02, ML-LEX-C41-DEIXIS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-05, ML-LEX-C41-DEIXIS-02, ML-LEX-C41-DEIXIS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "പഴയ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *atŭ*, then read **ഇവിടെ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-05] -->

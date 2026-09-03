@@ -9,7 +9,7 @@ headword: "ಸಂಕೋಚ"
 gloss: "hesitancy, holding back"
 romanization: "saṅkōca"
 concept_tag: KA-NOUN-HESITANCY
-prerequisites: [KA-C65-permission]
+prerequisites: [KA-C65-permission, KA-C63-fever]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C65-MANNERS-03]
 practises:
-  knowledge: [KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03]
+  knowledge: [KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C63-HEALTH-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the one word in this chapter you will hear said to you rather than by you.
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C63-HEALTH-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *saṅkōca*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *saṅkōca*, then *bēḍa*, and say what a host tells a guest]
+- [YOU RECALL: say *jvara*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03] -->

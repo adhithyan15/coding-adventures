@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fbfe7a4a41c2f02a",
+  "sourceHash": "fnv1a64:9f7d272e33093b43",
   "lessons": [
     {
       "id": "BN-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b18c0007021dbb80",
+      "sourceHash": "fnv1a64:18f1ef77431ae164",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the family — *nām* / English *name* / Latin *nōmen* / Greek *onoma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dhônyobad, then say hyã / nā, then say āchchhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dhônyobad*, then say *hyã / nā*, then say *āchchhā*]"
             }
           ]
         },
@@ -133,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:489b5fab3a994630",
+      "sourceHash": "fnv1a64:e2e5665b03a74971",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: does it change for a man vs. a woman? (No — Bengali has no gender)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āshi*]"
             }
           ]
         },
@@ -600,7 +618,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8d0f192a1e710171",
+      "sourceHash": "fnv1a64:6c3f08e64113ef97",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -708,6 +726,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: which you use on first meeting (*āpni*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read নাম (nām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **নাম**]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: "ನಿದ್ದೆ"
 gloss: "sleep"
 romanization: "nidde"
 concept_tag: KA-NOUN-SLEEP
-prerequisites: [KA-C63-hunger]
+prerequisites: [KA-C63-hunger, KA-C61-ghee]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C63-HEALTH-02]
 practises:
-  knowledge: [KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02]
+  knowledge: [KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C61-KITCHEN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It takes the same frame ಹಸಿವು took: ನನಗೆ ನಿದ್ದೆ. L
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C61-KITCHEN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nidde*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hasivu*, then *nidde*, and say which one a night fixes]
+- [YOU RECALL: read **ತುಪ್ಪ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02] -->

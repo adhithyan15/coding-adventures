@@ -9,7 +9,7 @@ headword: "നോക്കൂ"
 gloss: "look"
 romanization: "nōkkū"
 concept_tag: ML-VERB-LOOK
-prerequisites: []
+prerequisites: [ML-C42-big]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-LOOK]
 practises:
-  knowledge: [ML-LEX-LOOK]
+  knowledge: [ML-LEX-LOOK, ML-LEX-C42-ADJ-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,12 @@ The same *nōkk-* stem as Kannada's *nōḍu*, with Malayalam's courteous long *
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LOOK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LOOK, ML-LEX-C42-ADJ-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nōkkū*]
 - [YOU SAY: it once more, slowly]
-
+- [YOU RECALL: say *valiya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LOOK] -->

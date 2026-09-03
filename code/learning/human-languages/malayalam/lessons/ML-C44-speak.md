@@ -9,7 +9,7 @@ headword: "സംസാരിക്കൂ"
 gloss: "speak"
 romanization: "saṁsārikkū"
 concept_tag: ML-VERB-SPEAK
-prerequisites: [ML-C44-listen]
+prerequisites: [ML-C44-listen, ML-C42-good]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-SPEAK]
 practises:
-  knowledge: [ML-LEX-LISTEN, ML-LEX-SPEAK]
+  knowledge: [ML-LEX-LISTEN, ML-LEX-SPEAK, ML-LEX-C42-ADJ-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ From Sanskrit *saṁsāra* — literally 'going around together'. The everyday M
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LISTEN, ML-LEX-SPEAK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LISTEN, ML-LEX-SPEAK, ML-LEX-C42-ADJ-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *saṁsārikkū*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *kēḷkkū*, so the two sit together]
+- [YOU RECALL: say *nalla*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LISTEN, ML-LEX-SPEAK] -->

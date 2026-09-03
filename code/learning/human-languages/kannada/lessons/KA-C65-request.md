@@ -9,7 +9,7 @@ headword: "ವಿನಂತಿ"
 gloss: "a request"
 romanization: "vinanti"
 concept_tag: KA-NOUN-REQUEST
-prerequisites: [KA-C64-in-that-case]
+prerequisites: [KA-C64-in-that-case, KA-C63-hunger]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C65-MANNERS-01]
 practises:
-  knowledge: [KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01]
+  knowledge: [KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01, KA-LEX-C63-HEALTH-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Sanskrit, and its shape says *a bending* — the asker lowers himself a little, 
 The first of five courtesy words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01, KA-LEX-C63-HEALTH-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vinanti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dayaviṭṭu*, then *vinanti*, and say which one goes inside a sentence]
+- [YOU RECALL: say *hasivu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01] -->

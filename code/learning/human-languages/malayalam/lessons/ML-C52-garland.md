@@ -9,7 +9,7 @@ headword: "മാല"
 gloss: "a garland"
 romanization: "māla"
 concept_tag: ML-NOUN-GARLAND
-prerequisites: [ML-C52-flower]
+prerequisites: [ML-C52-flower, ML-C50-farewell]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C52-WELCOME-05]
 practises:
-  knowledge: [ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05]
+  knowledge: [ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05, ML-LEX-C50-LEAVE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ And that closes the door: the way in, the seat, the pattern on the ground, the f
 Five, and the run is closed: a door, a chair, the pattern at the threshold, a flower, a garland.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05, ML-LEX-C50-LEAVE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *māla*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *vātil*, *kasēra*, *kōlaṁ*, *pūvŭ*, *māla*]
+- [YOU RECALL: say *viṭa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05] -->

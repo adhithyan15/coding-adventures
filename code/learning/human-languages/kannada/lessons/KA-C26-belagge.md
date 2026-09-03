@@ -9,7 +9,7 @@ headword: ಬೆಳಗ್ಗೆ
 gloss: "morning" (beḷagge) — genuine native Dravidian, from beḷagu ("to shine, to dawn") + beḷaku ("light"); unlike Kannada's Sanskrit tatsama day/night/noon words (dina, ratri, madhyāhna), this one is Kannada's own
 romanization: "beḷagge"
 concept_tag: TIME-MORNING
-prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C23-dina, KA-C24-ratri]
+prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C23-dina, KA-C24-ratri, KA-C20-hannondu-ippattu]
 sounds: [kannada-conjunct-gge, kannada-vowel-sign-e]
 roots: [proto-dravidian-belaku-light]
 etymology_hook: "ಬೆಳಗ್ಗೆ (beḷagge, 'morning') is native Dravidian, from ಬೆಳಗು (beḷagu, 'to shine, to become bright, to dawn') and ಬೆಳಕು (beḷaku, 'light') — unlike EVERY other everyday time-word already met in Kannada's arc, ದಿನ/dina ('day'), ರಾತ್ರಿ/ratri ('night'), and ಮಧ್ಯಾಹ್ನ/madhyāhna ('noon') — all genuine Sanskrit tatsama borrowings — ಬೆಳಗ್ಗೆ is the odd one out, Kannada's own word, no Sanskrit involved"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02]
 practises:
-  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03, KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02]
+  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03, KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,13 +67,14 @@ already met, plus *hagalu*). It just lost the everyday job to
 narrower, or archaic, roles by their own Sanskrit competitors.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03, KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03, KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "beḷagge" — "morning," native Dravidian]
 - [YOU SAY: the root — beḷagu, "to shine, to dawn," and beḷaku, "light"]
 - [YOU SAY: the contrast — dina, ratri, madhyāhna are all Sanskrit;
   beḷagge is genuinely Kannada's own]
+- [YOU RECALL: say *hannondu — ippattu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03, KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02] -->

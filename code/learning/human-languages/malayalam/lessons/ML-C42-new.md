@@ -9,7 +9,7 @@ headword: "പുതിയ"
 gloss: "new"
 romanization: "putiya"
 concept_tag: ML-ADJ-NEW
-prerequisites: [ML-C42-good]
+prerequisites: [ML-C42-good, ML-C41-this]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C42-ADJ-04]
 practises:
-  knowledge: [ML-LEX-C42-ADJ-02, ML-LEX-C42-ADJ-03, ML-LEX-C42-ADJ-04]
+  knowledge: [ML-LEX-C42-ADJ-02, ML-LEX-C42-ADJ-03, ML-LEX-C42-ADJ-04, ML-LEX-C41-DEIXIS-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-04, ML-LEX-C41-DEIXIS-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "പുതിയ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **ഇത്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-04] -->

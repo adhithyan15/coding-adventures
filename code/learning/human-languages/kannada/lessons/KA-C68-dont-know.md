@@ -9,7 +9,7 @@ headword: "ಗೊತ್ತಿಲ್ಲ"
 gloss: "I don't know"
 romanization: "gottilla"
 concept_tag: KA-PHRASE-DONTKNOW
-prerequisites: [KA-C68-neither, KA-C32-gottu, KA-C06-dative-subject, KA-C46-salt, KA-C46-lamp, KA-C46-cloth, KA-C46-fruit]
+prerequisites: [KA-C68-neither, KA-C32-gottu, KA-C06-dative-subject, KA-C46-salt, KA-C46-lamp, KA-C46-cloth, KA-C46-fruit, KA-C66-crop]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C68-DENY-05]
 practises:
-  knowledge: [KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C32-GOTTU-02, KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C32-GOTTU-01, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C67-LINK-03, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05]
+  knowledge: [KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C32-GOTTU-02, KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C32-GOTTU-01, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C67-LINK-03, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05, KA-LEX-C66-FIELD-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -57,7 +57,7 @@ On its own, ಗೊತ್ತಿಲ್ಲ is a complete and perfectly polite answe
 The most useful three syllables an A1 speaker owns.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C32-GOTTU-02, KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C32-GOTTU-01, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C67-LINK-03, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C32-GOTTU-02, KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C32-GOTTU-01, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C67-LINK-03, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05, KA-LEX-C66-FIELD-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gottu*, then *gottilla*]
@@ -66,6 +66,7 @@ The most useful three syllables an A1 speaker owns.
 - [YOU RECALL: say "neither milk nor water"]
 - [YOU RECALL: say *ādare* once more]
 - [YOU RECALL: from much earlier — say *uppu*, *dīpa*, *baṭṭe*, *haṇṇu*, and say what each one means]
+- [YOU RECALL: say *beḷe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C32-GOTTU-02, KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C32-GOTTU-01, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C67-LINK-03, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05] -->

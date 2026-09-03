@@ -9,7 +9,7 @@ headword: ಕಪ್ಪು ಬಿಳಿ ಕೆಂಪು ನೀಲಿ
 gloss: black, white, red, blue — Kannada's own basic colors, and the same shared Sanskrit blue
 romanization: "kappu biḷi kempu nīli"
 concept_tag: KA-COLOUR-BASIC
-prerequisites: [KA-C10-vaara]
+prerequisites: [KA-C10-vaara, KA-C07-ombattu, KA-C07-hattu]
 sounds: [kannada-anusvara, kannada-virama-geminate]
 roots: [dravidian-native-colors, sanskrit-nila]
 etymology_hook: "ಕಪ್ಪು/ಬಿಳಿ/ಕೆಂಪು (black/white/red) are native Dravidian, unlike Kannada's fully-Sanskritic day-names — but ನೀಲಿ (blue) is Sanskrit, same root as Tamil/Hindi/Malayalam"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02]
 practises:
-  knowledge: [KA-LEX-C10-VAARA-01, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02]
+  knowledge: [KA-LEX-C10-VAARA-01, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-LEX-C07-OMBATTU-01, KA-ETYMON-C07-NUMBERS-6-10-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -55,13 +55,14 @@ it's specifically **blue** that pulls in the Sanskrit word, across all four
 Dravidian languages and Hindi alike.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C10-VAARA-01, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C10-VAARA-01, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-LEX-C07-OMBATTU-01, KA-ETYMON-C07-NUMBERS-6-10-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kappu, biḷi, kempu" — black, white, red]
 - [YOU SAY: "nīli" — blue, the shared Sanskrit word]
 - [YOU SAY: the contrast — Kannada's week is Sanskritic, but its colors
   (except blue) are native]
+- [YOU RECALL: say *ombattu*, then read **ಹತ್ತು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C10-VAARA-01, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02] -->

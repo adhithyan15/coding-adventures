@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "The Heart",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6c8e5d8c58edf304",
+  "sourceHash": "fnv1a64:ea67d666012e31c9",
   "lessons": [
     {
       "id": "KA-C38-hrudaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dd42b39cf2f06260",
+      "sourceHash": "fnv1a64:ec61e45350376b78",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -131,6 +131,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: seven body words now — \"tale, kai, kaṇṇu, kivi, mūgu, bāyi, hṛdaya\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuṭumba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuṭumba*]"
             }
           ]
         },

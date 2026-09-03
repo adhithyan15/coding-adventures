@@ -9,7 +9,7 @@ headword: സുഹൃത്ത്
 gloss: friend — Sanskrit "good-heart," a root this chapter's own heart-word will meet again
 romanization: suhṛttŭ
 concept_tag: ML-FRIEND
-prerequisites: [ML-C35-kudumbam]
+prerequisites: [ML-C35-kudumbam, ML-C32-tinnuka, ML-C32-kaanuka, ML-C32-ariyuka]
 sounds: [malayalam-vowel-sign-vocalic-r, malayalam-geminate-tta]
 roots: [sanskrit-su-good, sanskrit-hrid-heart]
 etymology_hook: "സുഹൃത്ത് is Sanskrit सुहृद् (suhṛd), literally 'good-heart' -- सु su 'good' plus हृद् hṛd 'heart,' the very root a later chapter meets again as ഹൃദയം; the everyday spoken alternative is കൂട്ടുകാരൻ/കൂട്ടുകാരി (kūṭṭukāran/kūṭṭukāri), a native കൂട്ട് 'joining, group' plus the agentive -കാരൻ/-കാരി, itself from Sanskrit कार 'maker, doer' -- so even Malayalam's more casual word for friend leans on a Sanskrit-derived ending"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02]
 practises:
-  knowledge: [ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02]
+  knowledge: [ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C32-TINNUKA-01, ML-CONCEPT-C32-TINNUKA-02, ML-CONCEPT-C32-KAANUKA-01, ML-CONCEPT-C32-KAANUKA-02, ML-CONCEPT-C32-ARIYUKA-01, ML-CONCEPT-C32-ARIYUKA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -78,13 +78,14 @@ sometimes it means splicing a Dravidian root and a Sanskrit ending into a
 single new word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C32-TINNUKA-01, ML-CONCEPT-C32-TINNUKA-02, ML-CONCEPT-C32-KAANUKA-01, ML-CONCEPT-C32-KAANUKA-02, ML-CONCEPT-C32-ARIYUKA-01, ML-CONCEPT-C32-ARIYUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ithu ente suhṛttāṇŭ" — this is my friend]
 - [YOU SAY: the casual alternative — "kūṭṭukāran, kūṭṭukāri"]
 - [YOU SAY: the two pieces — "su," good, plus "hṛd," heart]
 - [YOU SAY: family and friend, one chapter — "kuṭumbaṁ … suhṛttŭ"]
+- [YOU RECALL: read **തിന്നുക**, then say *kāṇuka*, then read **അറിയുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02] -->

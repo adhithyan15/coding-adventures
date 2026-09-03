@@ -9,7 +9,7 @@ headword: ഉച്ച
 gloss: noon, most likely from a different Sanskrit metaphor than Kannada and Telugu — height rather than middle
 romanization: "ucca"
 concept_tag: ML-TIME-NOON
-prerequisites: [ML-C16-kollavarsham-maasangal]
+prerequisites: [ML-C16-kollavarsham-maasangal, ML-C12-kudumbam]
 sounds: [malayalam-virama-cha, malayalam-vowel-sign-aa]
 roots: [sanskrit-ucca-high]
 etymology_hook: "ഉച്ച (ucha, noon) most likely shares its root with Tamil உச்சி and Kannada ಉಚ್ಚಿ (ucci, 'peak, crown, zenith') — and per Wiktionary, THAT family is itself a Sanskrit borrowing, from ucca, 'high,' not a native Dravidian word; so Malayalam's noon may be just as Sanskrit-derived as Kannada's madhyāhna, only from a DIFFERENT Sanskrit root (height, not middle)"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02]
 practises:
-  knowledge: [ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02]
+  knowledge: [ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,13 +67,14 @@ Sanskrit-rooted as *madhyāhna* — it's simply a *different* Sanskrit root
 different is the **metaphor**, not necessarily the **language of origin**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ucha" — noon, "the peak" — compare Tamil's "ucci"]
 - [YOU SAY: the honest contrast — Kannada/Telugu's noon word means
   "middle"; Malayalam's most likely means "peak" — both probably still
   Sanskrit, just different Sanskrit roots]
+- [YOU RECALL: say *acchan amma cēṭṭan aniyan cēcci aniyatti*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02] -->

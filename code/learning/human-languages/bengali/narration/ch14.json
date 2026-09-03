@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c81909e55ed7177e",
+  "sourceHash": "fnv1a64:af7da8853d1d6ca9",
   "lessons": [
     {
       "id": "BN-C08-bhaba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:340dc262df593b6a",
+      "sourceHash": "fnv1a64:07b9ffad4bc9cfcb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -151,6 +151,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: see, then make-see — \"dækhā … dækhāno\" — and eat, then feed — \"khāwā … khāwāno\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kāj kôrā, then say thākā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kāj kôrā*, then say *thākā*]"
             }
           ]
         },

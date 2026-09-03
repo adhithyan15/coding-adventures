@@ -9,7 +9,7 @@ headword: "കതിര്"
 gloss: "an ear of ripe paddy"
 romanization: "katirŭ"
 concept_tag: ML-NOUN-EAR-OF-GRAIN
-prerequisites: [ML-C66-grass]
+prerequisites: [ML-C66-grass, ML-C64-sometimes]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C66-PADDY-03]
 practises:
-  knowledge: [ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03]
+  knowledge: [ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C64-SMALL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A field of കതിര് is a field ready. Everything in this chapter after th
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C64-SMALL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *katirŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *veyil*, then *katirŭ*, and say what the two have in common]
+- [YOU RECALL: say *cilappōḷ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03] -->

@@ -9,7 +9,7 @@ headword: "എവിടെ"
 gloss: "where? — asking about a place"
 romanization: "eviṭe"
 concept_tag: ML-DEIXIS-WHERE
-prerequisites: [ML-C41-who]
+prerequisites: [ML-C41-who, ML-C39-chaaya, ML-C39-kaapi]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C41-DEIXIS-06]
 practises:
-  knowledge: [ML-LEX-C41-DEIXIS-04, ML-LEX-C41-DEIXIS-05, ML-LEX-C41-DEIXIS-06]
+  knowledge: [ML-LEX-C41-DEIXIS-04, ML-LEX-C41-DEIXIS-05, ML-LEX-C41-DEIXIS-06, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **e-** for ask — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-06, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "എവിടെ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **ചായ**, then say *kaapi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-06] -->

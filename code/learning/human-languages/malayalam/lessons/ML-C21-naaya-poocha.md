@@ -9,7 +9,7 @@ headword: നായ, പൂച്ച
 gloss: dog and cat — naaya continues the solid, ancient native Dravidian dog-root shared with Kannada and Tamil, no mystery; poocha matches Tamil's everyday cat-word closely, part of the pattern where Dravidian genuinely splits on "cat" more than "dog"
 romanization: "nāya, pūcca"
 concept_tag: ML-ANIMALS
-prerequisites: [ML-C20-pathinonnu-irupathu]
+prerequisites: [ML-C20-pathinonnu-irupathu, ML-C16-kollavarsham-maasangal]
 sounds: [malayalam-vowel-sign-aa, malayalam-geminate-ch]
 roots: [dravidian-naay-dog, dravidian-punai-cat]
 etymology_hook: "നായ (nāya, 'dog') continues the same solid, native Proto-Dravidian root as Kannada's naayi and Tamil's naay — no mystery, unlike the tangled dog-words of Spanish, Hindi, and English; പൂച്ച (pūcha, 'cat') closely matches Tamil's everyday word pūnai, part of a family distinct from Kannada's bekku and Telugu's pilli — Dravidian genuinely splits more on 'cat' than on 'dog'"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C21-NAAYA-POOCHA-01, ML-CONCEPT-C21-NAAYA-POOCHA-02]
 practises:
-  knowledge: [ML-CONCEPT-C21-NAAYA-POOCHA-01, ML-CONCEPT-C21-NAAYA-POOCHA-02]
+  knowledge: [ML-CONCEPT-C21-NAAYA-POOCHA-01, ML-CONCEPT-C21-NAAYA-POOCHA-02, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,11 +57,12 @@ Proto-Dravidian root of its own, most likely the source behind Sanskrit's
 just these four Dravidian languages, even though "dog" mostly agrees.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C21-NAAYA-POOCHA-01, ML-CONCEPT-C21-NAAYA-POOCHA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C21-NAAYA-POOCHA-01, ML-CONCEPT-C21-NAAYA-POOCHA-02, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nāya" — dog, same solid root as Kannada and Tamil]
 - [YOU SAY: "pūcha" — cat, matching Tamil's everyday word closely]
+- [YOU RECALL: say *ciṅṅaṁ kanni tulāṁ vṛścikaṁ dhanu makaraṁ kuṁbhaṁ mīnaṁ mēṭaṁ iṭavaṁ mithunaṁ karkkaṭakaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C21-NAAYA-POOCHA-01, ML-CONCEPT-C21-NAAYA-POOCHA-02] -->

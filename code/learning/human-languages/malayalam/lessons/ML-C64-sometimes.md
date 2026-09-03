@@ -9,7 +9,7 @@ headword: "ചിലപ്പോൾ"
 gloss: "sometimes"
 romanization: "cilappōḷ"
 concept_tag: ML-WORD-SOMETIMES
-prerequisites: [ML-C64-soon]
+prerequisites: [ML-C64-soon, ML-C62-needle]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C64-SMALL-03]
 practises:
-  knowledge: [ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03]
+  knowledge: [ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C62-HAND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is the word a Malayali reaches for when hedging: not a denial, only a fence a
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C62-HAND-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cilappōḷ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippōḷ*, then *cilappōḷ*, and say which of the two is certain]
+- [YOU RECALL: say *sūci*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03] -->

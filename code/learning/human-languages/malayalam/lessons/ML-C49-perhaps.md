@@ -9,7 +9,7 @@ headword: "ഒരുപക്ഷേ"
 gloss: "perhaps"
 romanization: "orupakṣē"
 concept_tag: ML-WORD-PERHAPS
-prerequisites: [ML-C49-certainly]
+prerequisites: [ML-C49-certainly, ML-C47-finger]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C49-REPLY-04]
 practises:
-  knowledge: [ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04]
+  knowledge: [ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04, ML-LEX-C47-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada hedges with ಬಹುಶಃ (*bahuśaḥ*), a wholly Sanskrit word meani
 Four. True, enough, certainly, perhaps.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04, ML-LEX-C47-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *orupakṣē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *orupakṣē*, then *tīrccayāyuṁ*, the hedge and the promise]
+- [YOU RECALL: read **വിരൽ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04] -->

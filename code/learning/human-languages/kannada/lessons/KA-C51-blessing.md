@@ -9,7 +9,7 @@ headword: "ಆಶೀರ್ವಾದ"
 gloss: "a blessing"
 romanization: "āśīrvāda"
 concept_tag: KA-NOUN-BLESSING
-prerequisites: [KA-C51-respect]
+prerequisites: [KA-C51-respect, KA-C49-perhaps]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C51-COURTESY-04]
 practises:
-  knowledge: [KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04]
+  knowledge: [KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04, KA-LEX-C49-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Now look hard at the second half. ವಾದ is the same *-vāda* this book hande
 Four, and the fourth one is built exactly like the first word of this book.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04, KA-LEX-C49-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āśīrvāda*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āśīrvāda*, then *dhanyavāda*, and hear *-vāda* close both]
+- [YOU RECALL: read **ಬಹುಶಃ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04] -->

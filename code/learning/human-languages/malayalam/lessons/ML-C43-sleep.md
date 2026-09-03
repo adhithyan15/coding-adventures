@@ -9,7 +9,7 @@ headword: "ഉറങ്ങൂ"
 gloss: "sleep"
 romanization: "uṟaṅṅū"
 concept_tag: ML-VERB-SLEEP
-prerequisites: [ML-C43-run]
+prerequisites: [ML-C43-run, ML-C41-who]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-SLEEP]
 practises:
-  knowledge: [ML-LEX-RUN, ML-LEX-SLEEP]
+  knowledge: [ML-LEX-RUN, ML-LEX-SLEEP, ML-LEX-C41-DEIXIS-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ Same softening vowel — said to a child at night rather than as an order.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-RUN, ML-LEX-SLEEP] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-RUN, ML-LEX-SLEEP, ML-LEX-C41-DEIXIS-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uṟaṅṅū*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *ōṭū*, so the two sit together]
+- [YOU RECALL: read **ആര്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-RUN, ML-LEX-SLEEP] -->

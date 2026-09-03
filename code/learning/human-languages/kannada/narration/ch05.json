@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8a3f3bd72f20fb2a",
+  "sourceHash": "fnv1a64:f0f216cdd576cc84",
   "lessons": [
     {
       "id": "KA-C05-maatanaadu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:627723b5c5cfb7bb",
+      "sourceHash": "fnv1a64:ac3f65e3116b348c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -126,6 +126,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the word \"speech\" inside it (*mātu*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nānu, then read ಚೆನ್ನಾಗಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nānu*, then read **ಚೆನ್ನಾಗಿ**]"
             }
           ]
         },
@@ -464,7 +473,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4ebc10e0ed85da92",
+      "sourceHash": "fnv1a64:97ead52324285627",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -563,6 +572,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: where \"in\" (*-alli*) sits — glued to the end of the noun]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಹೋಗು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಹೋಗು**]"
             }
           ]
         },

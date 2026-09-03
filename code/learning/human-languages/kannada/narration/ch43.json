@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6a2f6cb5132d84c8",
+  "sourceHash": "fnv1a64:5f3b5836ac2fa18b",
   "lessons": [
     {
       "id": "KA-C43-come",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5592c331578e3ede",
+      "sourceHash": "fnv1a64:36f1d63b190dcfbb",
       "notice": null,
       "blocks": [
         {
@@ -93,6 +93,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say alli, then read ಯಾರು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *alli*, then read **ಯಾರು**]"
             }
           ]
         },
@@ -128,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0bef99fe63b694f",
+      "sourceHash": "fnv1a64:fcb15e9056078195",
       "notice": null,
       "blocks": [
         {
@@ -211,6 +220,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *bā*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಎಲ್ಲಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಎಲ್ಲಿ**]"
             }
           ]
         },
@@ -364,7 +382,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:420e2e0c6eccc68d",
+      "sourceHash": "fnv1a64:729f11dfc98ad964",
       "notice": null,
       "blocks": [
         {
@@ -447,6 +465,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *nillu*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ದೊಡ್ಡ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ದೊಡ್ಡ**]"
             }
           ]
         },

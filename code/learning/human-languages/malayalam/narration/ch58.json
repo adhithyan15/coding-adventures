@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Five More Short Answers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5033ac718df05111",
+  "sourceHash": "fnv1a64:018c1842ebaff1db",
   "lessons": [
     {
       "id": "ML-C58-more",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:320e53186cfd7f22",
+      "sourceHash": "fnv1a64:fb891e6a8d6127ac",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ellŭ*, then *kūṭutal*, and stretch the long vowel at the front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pāya*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9c434c93e7ad7bb",
+      "sourceHash": "fnv1a64:7d258d38a6c44bfc",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kūṭutal*, then *kuṟavŭ*, and hear the two tails matching]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read കൊട്ട",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **കൊട്ട**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05e34dfa4cba381a",
+      "sourceHash": "fnv1a64:882aa40fe49ce011",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kuṟavŭ*, then *kuṟaccŭ*, and say which of the two you would use asking for rice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say katti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *katti*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7ec2bc2cfedf73f",
+      "sourceHash": "fnv1a64:d0c6fb356195b02a",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vēṇṭa*, gently, then *vēṇṭa* again, firmly, and hear the difference the tone makes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read പാത്രം",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **പാത്രം**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:477dc29942606fee",
+      "sourceHash": "fnv1a64:e5d580d7727487b1",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *kūṭutal*, *kuṟavŭ*, *kuṟaccŭ*, *vēṇṭa*, *pōruṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say peṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *peṭṭi*]"
             }
           ]
         },

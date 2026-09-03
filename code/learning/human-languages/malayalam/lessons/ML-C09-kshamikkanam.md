@@ -9,7 +9,7 @@ headword: ക്ഷമിക്കണം
 gloss: (you) should forgive / sorry (kṣamikkaṇaṁ — from kṣamikkuka "to forgive," Sanskrit kṣama + necessitative -aṇaṁ)
 romanization: "kṣamikkaṇaṁ"
 concept_tag: COURTESY-SORRY
-prerequisites: [ML-C08-dayavayi]
+prerequisites: [ML-C08-dayavayi, ML-C07-numbers-6-10]
 sounds: [malayalam-conjunct-kssa, malayalam-geminate-kka]
 roots: [kshama-sanskrit]
 etymology_hook: "ക്ഷമിക്കണം kṣamikkaṇaṁ ← Sanskrit kṣama 'forgiveness' + Malayalam verb-making -ikkuka + the SAME necessitative -aṇaṁ noted in ദയവായി's lesson"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03]
 practises:
-  knowledge: [ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03]
+  knowledge: [ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03, ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -73,13 +73,14 @@ speakers reach just as often for the plain imperative **ക്ഷമിക്ക
 borrowed English **"sorry."**
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03, ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kṣama" — the Sanskrit noun, forgiveness]
 - [YOU SAY: the verb — "kṣamikkuka," to forgive — then "kṣamikkaṇaṁ," you
   should forgive]
 - [YOU SAY: the plainer version — "kṣamikkū," using the ‑ū ending you know]
+- [YOU RECALL: say **]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03] -->

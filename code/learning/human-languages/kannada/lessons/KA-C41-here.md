@@ -9,7 +9,7 @@ headword: "ಇಲ್ಲಿ"
 gloss: "here — where I am"
 romanization: "illi"
 concept_tag: KA-DEIXIS-HERE
-prerequisites: [KA-C41-that]
+prerequisites: [KA-C41-that, KA-C37-moogu]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C41-DEIXIS-03]
 practises:
-  knowledge: [KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03]
+  knowledge: [KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-03, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಇಲ್ಲಿ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *mūgu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-03] -->

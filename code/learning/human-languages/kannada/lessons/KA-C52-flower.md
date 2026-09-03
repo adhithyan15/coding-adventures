@@ -9,7 +9,7 @@ headword: "ಹೂವು"
 gloss: "a flower"
 romanization: "hūvu"
 concept_tag: KA-NOUN-FLOWER
-prerequisites: [KA-C52-rangoli]
+prerequisites: [KA-C52-rangoli, KA-C50-set-out]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C52-WELCOME-04]
 practises:
-  knowledge: [KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04]
+  knowledge: [KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04, KA-LEX-C50-LEAVE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada's ಹೂವು shows the law at its very clearest. There is almost nothi
 Four. A door, a chair, the pattern, a flower.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04, KA-LEX-C50-LEAVE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hūvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hūvu*, then *haṇṇu* and *hallu*, three inherited words with one *h* each]
+- [YOU RECALL: read **ಹೊರಡು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04] -->

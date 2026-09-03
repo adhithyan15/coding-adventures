@@ -9,7 +9,7 @@ headword: "വൈദ്യൻ"
 gloss: "a doctor"
 romanization: "vaidyan"
 concept_tag: ML-NOUN-DOCTOR
-prerequisites: [ML-C48-student]
+prerequisites: [ML-C48-student, ML-C46-lamp]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C48-ROLE-03]
 practises:
-  knowledge: [ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03]
+  knowledge: [ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C46-ASK-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ In a Kerala street today the word usually points at a practitioner of the tradit
 Three. A teacher, a student, a doctor.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C46-ASK-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vaidyan*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vidyārtthi*, then *vaidyan*, and find the piece they share]
+- [YOU RECALL: say *viḷakkŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03] -->

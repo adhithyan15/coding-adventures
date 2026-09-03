@@ -9,7 +9,7 @@ headword: തല കൈ
 gloss: head and hand — matching Tamil's native pair almost exactly
 romanization: "thala kai"
 concept_tag: ML-BODY-BASIC
-prerequisites: [ML-C12-kudumbam]
+prerequisites: [ML-C12-kudumbam, ML-C08-dayavayi]
 sounds: [malayalam-vowel-sign-ai]
 roots: [dravidian-tala-kai]
 etymology_hook: "തല thala (head) and കൈ kai (hand) are native Dravidian, matching Tamil's talai/kai closely — unlike the family words, Malayalam stays close to Tamil here"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01]
 practises:
-  knowledge: [ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01]
+  knowledge: [ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,12 +49,13 @@ that Malayalam and Tamil's vocabulary agreement varies concept by concept,
 not uniformly.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "thala" — head]
 - [YOU SAY: "kai" — hand]
 - [YOU SAY: the match — nearly identical to Tamil's talai/kai]
+- [YOU RECALL: say *dayavāyi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->

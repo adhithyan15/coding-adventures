@@ -9,7 +9,7 @@ headword: "ಹಸಿವು"
 gloss: "hunger"
 romanization: "hasivu"
 concept_tag: KA-NOUN-HUNGER
-prerequisites: [KA-C62-umbrella]
+prerequisites: [KA-C62-umbrella, KA-C61-curd]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C63-HEALTH-01]
 practises:
-  knowledge: [KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01]
+  knowledge: [KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01, KA-LEX-C61-KITCHEN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It begins like ಹಸು and has nothing to do with cows. Two words can share an
 The first of five words for how a body is.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01, KA-LEX-C61-KITCHEN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hasivu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hasivu*, then *nanage hasivu*, and say who is hungry]
+- [YOU RECALL: say *mosaru*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-04, KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01] -->

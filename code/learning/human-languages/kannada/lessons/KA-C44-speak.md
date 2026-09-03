@@ -9,7 +9,7 @@ headword: "ಮಾತಾಡು"
 gloss: "speak"
 romanization: "mātāḍu"
 concept_tag: KA-VERB-SPEAK
-prerequisites: [KA-C44-listen]
+prerequisites: [KA-C44-listen, KA-C42-new]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-SPEAK]
 practises:
-  knowledge: [KA-LEX-LISTEN, KA-LEX-SPEAK]
+  knowledge: [KA-LEX-LISTEN, KA-LEX-SPEAK, KA-LEX-C42-ADJ-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ Built from *māta*, 'word' — itself from Sanskrit — plus *āḍu*, 'to play'
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LISTEN, KA-LEX-SPEAK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LISTEN, KA-LEX-SPEAK, KA-LEX-C42-ADJ-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mātāḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *kēḷu*, so the two sit together]
+- [YOU RECALL: say *hosa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LISTEN, KA-LEX-SPEAK] -->

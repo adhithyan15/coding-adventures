@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:5e36805feea12384",
+  "sourceHash": "fnv1a64:47255bb8c560ea3e",
   "lessons": [
     {
       "id": "KA-C32-iru",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40d798f77eb73a92",
+      "sourceHash": "fnv1a64:b886ec9accde6fa6",
       "notice": null,
       "blocks": [
         {
@@ -300,6 +300,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the sisters that kept the p — Telugu \"pōvu\", Malayalam \"pōkuka\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ರಾತ್ರಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ರಾತ್ರಿ**]"
             }
           ]
         },
@@ -335,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2eafbee0d63279d",
+      "sourceHash": "fnv1a64:31a6d55274c98175",
       "notice": null,
       "blocks": [
         {
@@ -473,6 +482,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the two Kannada laws together — \"vā … bā\" and \"pōgu … hōgu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say beḷagge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *beḷagge*]"
             }
           ]
         },

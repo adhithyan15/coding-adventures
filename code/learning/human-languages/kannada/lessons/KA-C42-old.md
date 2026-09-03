@@ -9,7 +9,7 @@ headword: "ಹಳೆಯ"
 gloss: "old — of a thing, not of a person"
 romanization: "haḷeya"
 concept_tag: KA-ADJ-OLD
-prerequisites: [KA-C42-new]
+prerequisites: [KA-C42-new, KA-C41-that, KA-C41-here]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C42-ADJ-05]
 practises:
-  knowledge: [KA-LEX-C42-ADJ-03, KA-LEX-C42-ADJ-04, KA-LEX-C42-ADJ-05]
+  knowledge: [KA-LEX-C42-ADJ-03, KA-LEX-C42-ADJ-04, KA-LEX-C42-ADJ-05, KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-05, KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಹಳೆಯ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *adu*, then read **ಇಲ್ಲಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-05] -->

@@ -9,7 +9,7 @@ headword: ನೀನು / ನೀವು
 gloss: you (familiar / respectful)
 romanization: "nīnu / nīvu"
 concept_tag: PRONOUN-YOU
-prerequisites: [KA-C02-hesaru]
+prerequisites: [KA-C02-hesaru, KA-C01-namaskara]
 sounds: [long-ii]
 roots: [niin-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C02-NIINU-NIIVU-01, KA-GRAMMAR-C02-NIINU-NIIVU-02]
 practises:
-  knowledge: [KA-LEX-C02-NIINU-NIIVU-01, KA-GRAMMAR-C02-NIINU-NIIVU-02]
+  knowledge: [KA-LEX-C02-NIINU-NIIVU-01, KA-GRAMMAR-C02-NIINU-NIIVU-02, KA-LEX-C01-NAMASKARA-01, KA-ETYMON-C01-NAMASKARA-02, KA-ETYMON-C01-NAMASKARA-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -55,10 +55,11 @@ politeness-by-plural as Tamil *nīṅgaḷ* and French *vous*: one respected per
 addressed as "you all." For a first meeting, **nīvu**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-NIINU-NIIVU-01, KA-GRAMMAR-C02-NIINU-NIIVU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-NIINU-NIIVU-01, KA-GRAMMAR-C02-NIINU-NIIVU-02, KA-LEX-C01-NAMASKARA-01, KA-ETYMON-C01-NAMASKARA-02, KA-ETYMON-C01-NAMASKARA-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nīnu" (familiar), "nīvu" (respectful)]
+- [YOU RECALL: say *namaskāra*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-NIINU-NIIVU-01, KA-GRAMMAR-C02-NIINU-NIIVU-02] -->

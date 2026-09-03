@@ -9,7 +9,7 @@ headword: "ಚುಕ್ಕಿ"
 gloss: "a star; a dot"
 romanization: "cukki"
 concept_tag: KA-NOUN-STAR
-prerequisites: [KA-C53-moon]
+prerequisites: [KA-C53-moon, KA-C51-blessing]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C53-SKY-04]
 practises:
-  knowledge: [KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04]
+  knowledge: [KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04, KA-LEX-C51-COURTESY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The borrowed word for a star is ನಕ್ಷತ್ರ (*nakṣatra*), and that i
 Four, and this one reaches back down to the doorstep.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04, KA-LEX-C51-COURTESY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cukki*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cukki*, then *raṅgōli*, and say how the two meet on the ground]
+- [YOU RECALL: read **ಆಶೀರ್ವಾದ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04] -->

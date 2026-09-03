@@ -9,7 +9,7 @@ headword: ಮಗ
 gloss: son — the same root as "child," with its ending changed
 romanization: maga
 concept_tag: KA-SON
-prerequisites: [KA-C36-magu]
+prerequisites: [KA-C36-magu, KA-C33-artha-maadiko]
 sounds: [kannada-inherent-a]
 roots: [proto-dravidian-maka-child]
 etymology_hook: "ಮಗ is the same Proto-Dravidian *maka root as ಮಗು, with the plain inherent -a ending standing in for 'male' — the same family of forms that Dravidianists reconstruct as *magan across the sisters, worn down in Kannada to a single open vowel"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02]
 practises:
-  knowledge: [KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02]
+  knowledge: [KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-LEX-C33-ARTHA-MAADIKO-01, KA-GRAMMAR-C33-ARTHA-MAADIKO-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -56,12 +56,13 @@ Kannada is the branch that wore the ending down to a single open vowel.
 Tamil keeps more of the shape: **மகன்** (*makaṉ*), "son."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C33-ARTHA-MAADIKO-01, KA-GRAMMAR-C33-ARTHA-MAADIKO-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ivanu nanna maga" — he is my son]
 - [YOU SAY: the near pair — "magu … maga"]
 - [YOU SAY: Kannada's worn form, then Tamil's fuller one — "maga … makaṉ"]
+- [YOU RECALL: read **ಅರ್ಥಮಾಡಿಕೊ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02] -->

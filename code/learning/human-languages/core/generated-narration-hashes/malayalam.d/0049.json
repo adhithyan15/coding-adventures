@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 49,
-  "sourceHash": "fnv1a64:15bd8bc9de4a43dc",
+  "sourceHash": "fnv1a64:19a1750ec6a8930f",
   "lessonIds": [
     "ML-C49-true",
     "ML-C49-enough",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch49.txt",
   "json": "malayalam/narration/ch49.json",
-  "textHash": "fnv1a64:7f668a60e3c98dd7",
-  "jsonHash": "fnv1a64:8738765f50f2bf94",
+  "textHash": "fnv1a64:52aa0015d01791b8",
+  "jsonHash": "fnv1a64:9da8818bdb2e48eb",
   "findings": []
 }

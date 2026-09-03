@@ -9,7 +9,7 @@ headword: "ಒಳ್ಳೆಯ"
 gloss: "good"
 romanization: "oḷḷeya"
 concept_tag: KA-ADJ-GOOD
-prerequisites: [KA-C42-small]
+prerequisites: [KA-C42-small, KA-C40-oota]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C42-ADJ-03]
 practises:
-  knowledge: [KA-LEX-C42-ADJ-01, KA-LEX-C42-ADJ-02, KA-LEX-C42-ADJ-03]
+  knowledge: [KA-LEX-C42-ADJ-01, KA-LEX-C42-ADJ-02, KA-LEX-C42-ADJ-03, KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-03, KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಒಳ್ಳೆಯ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *ūṭa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-03] -->

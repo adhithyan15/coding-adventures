@@ -9,7 +9,7 @@ headword: "അത്"
 gloss: "that one — the thing over there"
 romanization: "atŭ"
 concept_tag: ML-DEIXIS-THAT
-prerequisites: [ML-C41-this]
+prerequisites: [ML-C41-this, ML-C37-vaay]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C41-DEIXIS-02]
 practises:
-  knowledge: [ML-LEX-C41-DEIXIS-01, ML-LEX-C41-DEIXIS-02]
+  knowledge: [ML-LEX-C41-DEIXIS-01, ML-LEX-C41-DEIXIS-02, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-02, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "അത്" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **വായ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-02] -->

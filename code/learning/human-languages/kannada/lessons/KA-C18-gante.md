@@ -9,7 +9,7 @@ headword: ಗಂಟೆ
 gloss: hour — the SAME Sanskrit "bell" word behind Hindi's ghantā, borrowed via Prakrit
 romanization: "gaṇṭe"
 concept_tag: KA-TIME-HOUR
-prerequisites: [KA-C17-madhyaahna-madhyaraatri]
+prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C15-niiru-akki]
 sounds: [kannada-anusvara, kannada-vowel-sign-e]
 roots: [sanskrit-ghanta-bell]
 etymology_hook: "ಗಂಟೆ (gaṇṭe, 'hour') is related to Sanskrit घण्टा (ghaṇṭā, 'bell') — the SAME word and the SAME bell-strikes-the-hour logic as Hindi's ghanṭā, unlike Tamil's most-likely-native maṇi"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03]
 practises:
-  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03]
+  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,12 +68,13 @@ Kannada simply pairs the cardinal number with *gaṇṭe* — no ordinal/cardina
 like Arabic's, no singular/plural verb switch like Hindi's *bajnā*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "gaṇṭe" — hour, also "bell"]
 - [YOU SAY: "ondu gaṇṭe" — one o'clock]
 - [YOU SAY: "eraḍu gaṇṭe" — two o'clock]
+- [YOU RECALL: say *nīru akki anna*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03] -->

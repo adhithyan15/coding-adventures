@@ -9,7 +9,7 @@ headword: লাল
 romanization: lal
 gloss: red — a jeweler's word before it was a color word, and the identical Persian loan Hindi already teaches
 concept_tag: BN-COLOR-RED
-prerequisites: [BN-C13-sbagotom]
+prerequisites: [BN-C13-sbagotom, BN-C12-chokh, BN-C12-mukh, BN-C12-nak]
 sounds: [long-aa-review]
 roots: [laal-persian-gem]
 etymology_hook: "লাল is borrowed from Persian laAl, which first named a specific deep-red gemstone (a ruby or spinel) and only later widened to mean the color itself -- the identical loan Hindi already teaches for the identical reason, so Bengali and Hindi did not each separately develop a word for red; they inherited the same one from the same Persian jeweler's vocabulary"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C14-LAL-01]
 practises:
-  knowledge: [BN-LEX-C13-SBAGOTOM-01, BN-LEX-C13-MAFKORBEN-01, BN-GRAMMAR-C13-FUTURE-POLITE-02, BN-LEX-C14-LAL-01]
+  knowledge: [BN-LEX-C13-SBAGOTOM-01, BN-LEX-C13-MAFKORBEN-01, BN-GRAMMAR-C13-FUTURE-POLITE-02, BN-LEX-C14-LAL-01, BN-LEX-C12-CHOKH-01, BN-LEX-C12-MUKH-01, BN-LEX-C12-NAK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,12 +65,13 @@ into both languages by the same jewelers' trade routes rather than
 independently invented twice.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-LAL-01, BN-LEX-C13-SBAGOTOM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-LAL-01, BN-LEX-C13-SBAGOTOM-01, BN-LEX-C12-CHOKH-01, BN-LEX-C12-MUKH-01, BN-LEX-C12-NAK-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "lāl" — red]
 - [YOU SAY: "lāl chā" — tea without milk]
 - [YOU SAY: what it named first — "a ruby, not a color"]
+- [YOU RECALL: say *chokh*, then read **মুখ**, then say *nāk*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-LAL-01, BN-LEX-C13-MAFKORBEN-01, BN-GRAMMAR-C13-FUTURE-POLITE-02] -->

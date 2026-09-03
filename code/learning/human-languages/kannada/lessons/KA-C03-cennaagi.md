@@ -9,7 +9,7 @@ headword: ಚೆನ್ನಾಗಿ
 gloss: well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ"
 romanization: "cennāgi"
 concept_tag: WORD-WELL
-prerequisites: [KA-C03-naanu, KA-C03-niivu-hegiddiira]
+prerequisites: [KA-C03-naanu, KA-C03-niivu-hegiddiira, KA-C02-enu]
 sounds: [ca-sound, double-nn]
 roots: [cennu-good-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C03-CENNAAGI-01, KA-ETYMON-C03-CENNAAGI-02, KA-LEX-C03-CENNAAGI-03]
 practises:
-  knowledge: [KA-LEX-C03-CENNAAGI-01, KA-ETYMON-C03-CENNAAGI-02, KA-LEX-C03-CENNAAGI-03]
+  knowledge: [KA-LEX-C03-CENNAAGI-01, KA-ETYMON-C03-CENNAAGI-02, KA-LEX-C03-CENNAAGI-03, KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,12 +62,13 @@ am well**" (*cennāgi* + *iddēne*, "I am"). The whole exchange:
 > — *nānu cennāgiddēne, dhanyavāda.* ("I'm well, thank you.")
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-CENNAAGI-01, KA-ETYMON-C03-CENNAAGI-02, KA-LEX-C03-CENNAAGI-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-CENNAAGI-01, KA-ETYMON-C03-CENNAAGI-02, KA-LEX-C03-CENNAAGI-03, KA-LEX-C02-ENU-01, KA-ETYMON-C02-ENU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "cennāgi" (the ಚ = "ch")]
 - [YOU SAY: the full reply — *nānu cennāgiddēne*]
 - [YOU SAY: what *cennu* means at root ("good / beautiful")]
+- [YOU RECALL: say *ēnu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C03-CENNAAGI-02, KA-LEX-C03-CENNAAGI-03] -->

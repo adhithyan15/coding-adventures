@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:51e78cedadaca4ec",
+  "sourceHash": "fnv1a64:b3971e0b0dd418cd",
   "lessons": [
     {
       "id": "ML-C05-samsaarikkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aae640f270d5ab07",
+      "sourceHash": "fnv1a64:c6714895b99b0867",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -142,6 +142,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"he speaks\" — *avan saṁsārikkunnu* (the same verb!)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pōkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pōkuka*]"
             }
           ]
         },
@@ -1570,7 +1579,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c33675736dff8c33",
+      "sourceHash": "fnv1a64:ea53c5e76c405ddf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1681,6 +1690,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the Tamil verb that is the *same word* as *ceyyuka* (*sey*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say saṁsārikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *saṁsārikkuka*]"
             }
           ]
         },

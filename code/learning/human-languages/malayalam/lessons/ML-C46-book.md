@@ -9,7 +9,7 @@ headword: "പുസ്തകം"
 gloss: "a book"
 romanization: "pustakaṁ"
 concept_tag: ML-NOUN-BOOK
-prerequisites: [ML-C46-salt]
+prerequisites: [ML-C46-salt, ML-C44-speak]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C46-ASK-05]
 practises:
-  knowledge: [ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05]
+  knowledge: [ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05, ML-LEX-SPEAK]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam also says *granthaṁ* for a book of weight and age, another Sanskrit 
 Five, and the run is closed: a fruit, a cloth, a lamp, salt, a book.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05, ML-LEX-SPEAK] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pustakaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *paḻaṁ*, *tuṇi*, *viḷakkŭ*, *uppŭ*, *pustakaṁ*]
+- [YOU RECALL: say *saṁsārikkū*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04, ML-LEX-C46-ASK-05] -->

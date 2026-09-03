@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Eye, Mouth, Nose, and Heart",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1475f85f69163ffc",
+  "sourceHash": "fnv1a64:562b27f4a8cc3b32",
   "lessons": [
     {
       "id": "BN-C12-chokh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4cb8765d18b50c47",
+      "sourceHash": "fnv1a64:d9dd8d1b982021eb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -131,6 +131,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the other \"see\" verb you already own — \"dækhā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dudh, then read ভাত",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dudh*, then read **ভাত**]"
             }
           ]
         },
@@ -313,7 +322,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:46a667aa66aadf07",
+      "sourceHash": "fnv1a64:20ce7559bee31f89",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -425,6 +434,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: three of this chapter's words — \"chokh … mukh … nāk\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bôndhu, then read পরিবার",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bôndhu*, then read **পরিবার**]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: নেওয়া
 romanization: neowā
 gloss: to take — and the verb that finishes other verbs
 concept_tag: VERB-TAKE
-prerequisites: [BN-C08-lekha]
+prerequisites: [BN-C08-lekha, BN-C06-numbers-1-5, BN-C07-howa]
 sounds: [wa-ending, long-e]
 roots: [ni-lead]
 etymology_hook: "নেওয়া is Sanskrit √nī 'to lead, to carry away' — a root with no living English descendant, which is said plainly rather than papered over; its working life in Bengali is as the verb that ends a compound, so লিখে নেওয়া is 'write it down' and নিয়ে আসা is 'bring'"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02]
 practises:
-  knowledge: [BN-LEX-C07-HOWA-01, BN-LEX-C07-JAOWA-01, BN-LEX-C07-ASHA-01, BN-LEX-C07-KHAOWA-01, BN-LEX-C07-DEKHA-01, BN-LEX-C08-LEKHA-01, BN-GRAMMAR-C08-LEKHA-02, BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02]
+  knowledge: [BN-LEX-C07-HOWA-01, BN-LEX-C07-JAOWA-01, BN-LEX-C07-ASHA-01, BN-LEX-C07-KHAOWA-01, BN-LEX-C07-DEKHA-01, BN-LEX-C08-LEKHA-01, BN-GRAMMAR-C08-LEKHA-02, BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02, BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS, BN-GRAMMAR-C07-HOWA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -80,13 +80,14 @@ is a noun as readily as লেখা was: **দেওয়া-নেওয়�
 "giving-and-taking," is the everyday word for dealings between people.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02, BN-LEX-C07-JAOWA-01, BN-LEX-C07-ASHA-01, BN-LEX-C08-LEKHA-01, BN-GRAMMAR-C08-LEKHA-02, BN-LEX-C07-HOWA-01, BN-LEX-C07-KHAOWA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02, BN-LEX-C07-JAOWA-01, BN-LEX-C07-ASHA-01, BN-LEX-C08-LEKHA-01, BN-GRAMMAR-C08-LEKHA-02, BN-LEX-C07-HOWA-01, BN-LEX-C07-KHAOWA-01, BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS, BN-GRAMMAR-C07-HOWA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "neowā" — take — then "āmi nii"]
 - [YOU SAY: the same tail four times — "hôwā, jāwā, khāwā, neowā"]
 - [YOU SAY: write it down — "likhe neowā"]
 - [YOU SAY: bring, then take away — "niye āsā … niye jāwā"]
+- [YOU RECALL: say *ek dui tin chār pā̃ch*, then read **হওয়া**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02, BN-LEX-C07-ASHA-01, BN-LEX-C07-JAOWA-01, BN-GRAMMAR-C08-LEKHA-02, BN-LEX-C07-DEKHA-01] -->

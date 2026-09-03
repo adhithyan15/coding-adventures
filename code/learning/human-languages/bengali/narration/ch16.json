@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Tea, Water, Milk, and Rice",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b0369f5dfdde1482",
+  "sourceHash": "fnv1a64:1cfd3ab5a503bf59",
   "lessons": [
     {
       "id": "BN-C10-cha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:066fc17282b6f1f1",
+      "sourceHash": "fnv1a64:66335a8a826a516c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -155,6 +155,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: last lesson's line again — \"āmār chā bhālo lāge\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jāwā, then read আসা",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jāwā*, then read **আসা**]"
             }
           ]
         },
@@ -190,7 +199,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:19bef7db2a4e338d",
+      "sourceHash": "fnv1a64:05de40dac78891c9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -306,6 +315,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: tea, then water — \"chā khān … jôl khān\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read খাওয়া, then say dækhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **খাওয়া**, then say *dækhā*]"
             }
           ]
         },
@@ -360,7 +378,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e148a82499ff05d3",
+      "sourceHash": "fnv1a64:92f0e3bfbec92cee",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -483,6 +501,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: three drinks so far — \"chā khān … jôl khān … dudh khān\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jānā*]"
             }
           ]
         },

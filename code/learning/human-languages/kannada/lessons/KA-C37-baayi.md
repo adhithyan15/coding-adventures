@@ -9,7 +9,7 @@ headword: ಬಾಯಿ
 gloss: mouth — a word this book has already shown you twice, in two sound-law tables, without ever saying what it means
 romanization: bāyi
 concept_tag: KA-MOUTH
-prerequisites: [KA-C37-moogu, KA-C33-bare, KA-C32-baa]
+prerequisites: [KA-C37-moogu, KA-C33-bare, KA-C32-baa, KA-C34-sahaya-maadu]
 sounds: [kannada-ba, kannada-vowel-sign-i]
 roots: [dravidian-vaay-mouth, proto-dravidian-v-to-b]
 etymology_hook: "ಬಾಯಿ answers Tamil வாய் (vāy), 'mouth,' through the very v → b law that turned Tamil வா (vā) into Kannada's ಬಾ and Tamil வரை (varai) into ಬರೆ — Chapters 32 and 33 both used bāyi as a worked example of that law in their own etymology notes, before this book ever taught what the word means; this is the third clean instance of the law, after come and write"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02]
 practises:
-  knowledge: [KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C32-BAA-01, KA-ETYMON-C33-BARE-02, KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02]
+  knowledge: [KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C32-BAA-01, KA-ETYMON-C33-BARE-02, KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02, KA-LEX-C34-SAHAYA-MAADU-01, KA-ETYMON-C34-SAHAYA-MAADU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,12 +65,13 @@ worked example, neither time explained. Here is what it means:
 Three clean proofs of one law, and this lesson finally cashes in the third.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C32-BAA-01, KA-ETYMON-C33-BARE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C32-BAA-01, KA-ETYMON-C33-BARE-02, KA-LEX-C34-SAHAYA-MAADU-01, KA-ETYMON-C34-SAHAYA-MAADU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nanna bāyi" — my mouth]
 - [YOU SAY: the three proofs — "vā, bā … varai, bare … vāy, bāyi"]
 - [YOU SAY: all six body words — "tale, kai, kaṇṇu, kivi, mūgu, bāyi"]
+- [YOU RECALL: read **ಸಹಾಯ ಮಾಡು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C32-BAA-01, KA-ETYMON-C33-BARE-02] -->

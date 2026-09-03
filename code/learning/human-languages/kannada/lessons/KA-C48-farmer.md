@@ -9,7 +9,7 @@ headword: "ರೈತ"
 gloss: "a farmer"
 romanization: "raita"
 concept_tag: KA-NOUN-FARMER
-prerequisites: [KA-C48-doctor]
+prerequisites: [KA-C48-doctor, KA-C46-salt]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C48-ROLE-04]
 practises:
-  knowledge: [KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04]
+  knowledge: [KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04, KA-LEX-C46-ASK-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada has an older and homelier word beside it — ಒಕ್ಕಲಿಗ (*okk
 Four. A teacher, a student, a doctor, a farmer.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04, KA-LEX-C46-ASK-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *raita*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all four, and say which one did not come from Sanskrit]
+- [YOU RECALL: read **ಉಪ್ಪು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04] -->

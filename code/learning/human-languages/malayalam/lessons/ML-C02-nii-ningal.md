@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01]
 practises:
-  knowledge: [ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01]
+  knowledge: [ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01, ML-LEX-PERU-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -56,10 +56,11 @@ shared politeness-by-plural, same idea as French *vous*. For a first meeting,
 **niṅṅaḷ**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01, ML-LEX-PERU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nī" (familiar), "niṅṅaḷ" (respectful)]
+- [YOU RECALL: read **പേര്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01] -->

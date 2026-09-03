@@ -9,7 +9,7 @@ headword: "ಕಾಲು"
 gloss: "leg, foot"
 romanization: "kālu"
 concept_tag: KA-NOUN-LEG
-prerequisites: [KA-C46-book]
+prerequisites: [KA-C46-book, KA-C44-write]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C47-BODY-01]
 practises:
-  knowledge: [KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01]
+  knowledge: [KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01, KA-LEX-WRITE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Set that beside ಕೈ, the hand-word, which wore down so far that the family re
 The first of five more body words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01, KA-LEX-WRITE] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kālu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kālu*, then *tale*, so the top and the bottom sit together]
+- [YOU RECALL: say *bare*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01] -->

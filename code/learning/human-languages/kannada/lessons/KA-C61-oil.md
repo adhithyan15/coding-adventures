@@ -9,7 +9,7 @@ headword: "ಎಣ್ಣೆ"
 gloss: "oil"
 romanization: "eṇṇe"
 concept_tag: KA-NOUN-OIL
-prerequisites: [KA-C61-ghee]
+prerequisites: [KA-C61-ghee, KA-C59-sand]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C61-KITCHEN-03]
 practises:
-  knowledge: [KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03]
+  knowledge: [KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C59-GROUND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ There is a small joke in this for you. The friend-word ಸ್ನೇಹಿತ was
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C59-GROUND-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *eṇṇe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tuppa*, then *eṇṇe*, and say which one starts as a seed]
+- [YOU RECALL: say *maraḷu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03] -->

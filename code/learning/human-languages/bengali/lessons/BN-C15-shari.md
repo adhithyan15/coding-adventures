@@ -9,7 +9,7 @@ headword: শাড়ি
 romanization: shari
 gloss: sari — a Sanskrit word for a strip of cloth that walked, almost unchanged, straight into English
 concept_tag: BN-CLOTHING-SARI
-prerequisites: [BN-C15-jama]
+prerequisites: [BN-C15-jama, BN-C14-shada, BN-C14-shobuj]
 sounds: [talobyo-sha-new]
 roots: [shati-strip-of-cloth]
 etymology_hook: "shARi traces to Sanskrit shATI shATI, 'a strip of cloth, a garment', worn down through Middle Indic sADI into Bengali and Hindi's shared shARi/sARi -- and unlike every other word this book has traced into English by deep sound change or a shared PIE root, this one entered English directly, in the modern era, as a straightforward loanword: 'sari'"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C15-SHARI-01]
 practises:
-  knowledge: [BN-LEX-C15-JAMA-01, BN-LEX-C15-SHARI-01, BN-LEX-C15-KAPOR-01]
+  knowledge: [BN-LEX-C15-JAMA-01, BN-LEX-C15-SHARI-01, BN-LEX-C15-KAPOR-01, BN-LEX-C14-SHADA-01, BN-LEX-C14-SHOBUJ-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,13 +68,14 @@ entered English directly, in the modern era, as an ordinary borrowed word:
 carried whole into another language's dictionary.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-SHARI-01, BN-LEX-C15-JAMA-01, BN-LEX-C15-KAPOR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-SHARI-01, BN-LEX-C15-JAMA-01, BN-LEX-C15-KAPOR-01, BN-LEX-C14-SHADA-01, BN-LEX-C14-SHOBUJ-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "shāṛi" — sari]
 - [YOU SAY: "lāl shāṛi" — a red sari]
 - [YOU SAY: the second s-letter — "শ, beside স"]
 - [YOU SAY: three garments so far — "kāpoṛ … jāmā … shāṛi"]
+- [YOU RECALL: say *shada*, then read **সবুজ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-SHARI-01] -->

@@ -9,7 +9,7 @@ headword: "ಕೊಡು"
 gloss: "give"
 romanization: "koḍu"
 concept_tag: KA-VERB-GIVE
-prerequisites: [KA-C43-stand]
+prerequisites: [KA-C43-stand, KA-C42-big]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-GIVE]
 practises:
-  knowledge: [KA-LEX-STAND, KA-LEX-GIVE]
+  knowledge: [KA-LEX-STAND, KA-LEX-GIVE, KA-LEX-C42-ADJ-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ The everyday 'give'. Politeness is added with a separate word, not by altering t
 One more everyday action. That closes the run: four everyday actions, each met on its own.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-STAND, KA-LEX-GIVE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-STAND, KA-LEX-GIVE, KA-LEX-C42-ADJ-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *koḍu*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *nillu*, so the two sit together]
+- [YOU RECALL: read **ದೊಡ್ಡ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-STAND, KA-LEX-GIVE] -->

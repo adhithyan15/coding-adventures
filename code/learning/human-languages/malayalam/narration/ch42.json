@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:796736ad2cc5607a",
+  "sourceHash": "fnv1a64:29675bdd36e9126e",
   "lessons": [
     {
       "id": "ML-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4170d3e1af4c1a97",
+      "sourceHash": "fnv1a64:3739d720662bea08",
       "notice": null,
       "blocks": [
         {
@@ -86,6 +86,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paal*]"
             }
           ]
         },
@@ -227,7 +236,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ed7a8b52f8cf5af",
+      "sourceHash": "fnv1a64:8b5ac8a241134efb",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +307,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ūṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ūṇ*]"
             }
           ]
         },
@@ -333,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb77b2102be615ef",
+      "sourceHash": "fnv1a64:16a671a67e51ec57",
       "notice": null,
       "blocks": [
         {
@@ -404,6 +422,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ഇത്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ഇത്**]"
             }
           ]
         },
@@ -439,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4945c17b7576975c",
+      "sourceHash": "fnv1a64:1735a31d742db1b0",
       "notice": null,
       "blocks": [
         {
@@ -510,6 +537,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say atŭ, then read ഇവിടെ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *atŭ*, then read **ഇവിടെ**]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: "ಬೀಳ್ಕೊಡುಗೆ"
 gloss: "a send-off, a farewell"
 romanization: "bīḷkoḍuge"
 concept_tag: KA-NOUN-FAREWELL
-prerequisites: [KA-C50-set-out]
+prerequisites: [KA-C50-set-out, KA-C48-guest]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C50-LEAVE-05]
 practises:
-  knowledge: [KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05]
+  knowledge: [KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C48-ROLE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Five words for going: now, the day after tomorrow, a journey, to set out, and th
 Five words for going, and a way to end a visit without repeating yourself.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C48-ROLE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bīḷkoḍuge*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *bīḷkoḍuge* and the *koḍu* hiding inside it]
+- [YOU RECALL: say *atithi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05] -->

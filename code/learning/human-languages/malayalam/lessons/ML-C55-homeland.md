@@ -9,7 +9,7 @@ headword: "നാട്"
 gloss: "home country, the place you are from"
 romanization: "nāṭŭ"
 concept_tag: ML-NOUN-HOMELAND
-prerequisites: [ML-C55-rock]
+prerequisites: [ML-C55-rock, ML-C53-moon]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C55-GROUND-03]
 practises:
-  knowledge: [ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03]
+  knowledge: [ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C53-SKY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Its opposite is കാട് (*kāṭŭ*), the forest — settled ground against
 Three, and this one is the question you get asked.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C53-SKY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nāṭŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nāṭŭ*, then *kāṭŭ*, and hear how little separates the tame from the wild]
+- [YOU RECALL: say *candran*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03] -->

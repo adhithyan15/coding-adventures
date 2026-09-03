@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friends",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cf4d737163378ab5",
+  "sourceHash": "fnv1a64:fcce18915b711da8",
   "lessons": [
     {
       "id": "KA-C35-kutumba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:426a4f44bc8687c2",
+      "sourceHash": "fnv1a64:6d604d32648534d2",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"nanage kannaḍa iṣṭa\" — once more, no verb in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iru, then read ಹೋಗು, then say bā / baru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iru*, then read **ಹೋಗು**, then say *bā / baru*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8225512e39400e14",
+      "sourceHash": "fnv1a64:c29cf5286b15edd5",
       "notice": null,
       "blocks": [
         {
@@ -241,6 +250,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: family, then friend — \"kuṭumba … snēhita\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ತಿನ್ನು, then say nōḍu, then read ಗೊತ್ತು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ತಿನ್ನು**, then say *nōḍu*, then read **ಗೊತ್ತು**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friend",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d4c53114c5c117a8",
+  "sourceHash": "fnv1a64:0024b86dd5752deb",
   "lessons": [
     {
       "id": "ML-C35-kudumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26fa2bb56fe8050a",
+      "sourceHash": "fnv1a64:79c7feb6c66aaaa1",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: bare against dressed — \"kuṭumba\" (Kannada), \"kuṭumbaṁ\" (Malayalam)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say uṇṭŭ, then read പോകുക, then say varuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *uṇṭŭ*, then read **പോകുക**, then say *varuka*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:936becdfd0d822fb",
+      "sourceHash": "fnv1a64:2c79894a97fcb1e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -265,6 +274,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: family and friend, one chapter — \"kuṭumbaṁ … suhṛttŭ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read തിന്നുക, then say kāṇuka, then read അറിയുക",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **തിന്നുക**, then say *kāṇuka*, then read **അറിയുക**]"
             }
           ]
         },

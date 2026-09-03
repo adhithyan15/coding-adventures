@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 50,
-  "sourceHash": "fnv1a64:d47d05e11d6581aa",
+  "sourceHash": "fnv1a64:5483e53d31ff6726",
   "lessonIds": [
     "KA-C50-now",
     "KA-C50-day-after",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch50.txt",
   "json": "kannada/narration/ch50.json",
-  "textHash": "fnv1a64:7682cee09871cab9",
-  "jsonHash": "fnv1a64:92c5137f25e1eaa1",
+  "textHash": "fnv1a64:c35c3c5f62c3e925",
+  "jsonHash": "fnv1a64:19c6dc630b427103",
   "findings": []
 }
