@@ -184,3 +184,43 @@ fn landform_secondary_feature_plateau_citation_is_the_pages_whole_sentence() {
         "the plateau corroboration is a contiguous page span: {out}"
     );
 }
+
+
+const LANDFORM_CANYON_PIN: &str = r#""bindings":{"F":"continuous_slope_at_bottom"},"citations":[{"source":"Low-lying land bordered by higher ground; especially elongate, relatively large gently sloping depressions of the Earth's surface, commonly situated between two mountains or between ranges of hills or mountains, and often containing a stream with an outlet.","locator":"https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3","trust":"authoritative","corroborations":[{"source":"Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent, have flat or nearly smooth surfaces but are often dissected by deep valleys and surmounted by high hills or mountains, and have a large part of their total surface at or near the summit level.","locator":"https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"},{"source":"Relatively narrow, deep depressions with steep sides, the bottom of which generally has a continuous slope","locator":"https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"}"#;
+
+#[test]
+fn landform_canyon_citation_carries_no_full_stop_the_page_lacks() {
+    // NOT "reground": installment 4b's test in this same file already uses that
+    // tag, and scratch() keys on tag + pid while cargo runs a binary's tests as
+    // parallel threads of ONE process. The two tests shared a directory and one
+    // overwrote the other's case.adj, so this test silently executed 4b's
+    // plateau query instead of the canyon one.
+    let dir = scratch("canyon_period_4d");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"landform-secondary-feature.adj\"\n? landform_secondary_feature(canyon, $F)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The USGS thesaurus ends this definition WITHOUT a period -- a bracketed
+    // source citation follows it on the page:
+    //
+    //   canyons Relatively narrow, deep depressions with steep sides, the
+    //   bottom of which generally has a continuous slope [NIMA GEONet ...]
+    //
+    // The shipped value had a full stop. One character, existing nowhere on the
+    // page, in a field whose whole contract is that its bytes are on that page.
+    // It reads like punctuation hygiene, which is exactly why no screen built
+    // for quotes, elisions or dashes could see it.
+    //
+    // THE PIN REACHES THE SECOND CORROBORATION. The repaired value is the canyon
+    // `cites`; a pin stopping at the envelope would stay green if the period
+    // came back.
+    assert!(
+        out.contains(LANDFORM_CANYON_PIN),
+        "the canyon corroboration matches its page: {out}"
+    );
+}

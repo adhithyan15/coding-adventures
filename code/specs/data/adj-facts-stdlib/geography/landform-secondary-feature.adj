@@ -19,7 +19,8 @@
 %     "...commonly limited on at least one side by an abrupt descent..."
 %
 %   canyon → continuous_slope_at_bottom
-%     "...the bottom of which generally has a continuous slope."
+%     "...the bottom of which generally has a continuous slope"
+%     (no full stop: on the page a bracketed source citation follows)
 %
 %   canyon → steep_sides
 %     "Relatively narrow, deep depressions with steep sides..."
@@ -77,6 +78,6 @@ table landform_secondary_feature {
     trust authoritative
 
     cites "Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent, have flat or nearly smooth surfaces but are often dissected by deep valleys and surmounted by high hills or mountains, and have a large part of their total surface at or near the summit level." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
-    cites "Relatively narrow, deep depressions with steep sides, the bottom of which generally has a continuous slope." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    cites "Relatively narrow, deep depressions with steep sides, the bottom of which generally has a continuous slope" locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
     cites "Regions of general uniform slope, comparatively level and of considerable extent." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
 }
