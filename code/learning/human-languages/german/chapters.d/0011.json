@@ -1,16 +1,24 @@
 {
   "chapter": 11,
-  "title": "Telling the Time",
-  "label": "ch:time",
-  "canDo": "I can ask for and tell the time in German.",
+  "title": "The German Weekend",
+  "label": "ch:ge-wochenende",
+  "canDo": "I can name both German words for Saturday and the word for Sunday, and say which of them German inherited and which it bought.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C08-mittag-mitternacht",
+    "lesson": "GE-C07-wochentage-2",
     "kind": "task",
-    "summary": "Complete GE-C08-mittag-mitternacht, the canonical closing checkpoint, and demonstrate the chapter promise: ask for and tell the time in German.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The weekend is where the weekday pattern breaks a second time. Samstag is not Saturn's day but the Sabbath — Hebrew shabbāt by way of Greek — while Sonntag is the sun's, a day the Church renamed in Romance and left alone here. It closes on Sonnabend, the northern Saturday, which is transparent the moment Sonne and Abend are both owned.",
+    "assesses": [
+      "GE-LEX-SONNE-01",
+      "GE-LEX-SONNTAG-01",
+      "GE-ETYMON-SONNTAG-SUN-01",
+      "GE-LEX-SABBAT-01",
+      "GE-LEX-SAMSTAG-01",
+      "GE-ETYMON-SAMSTAG-SABBAT-01",
+      "GE-LEX-SONNABEND-01"
+    ],
+    "note": "Chapter 11 is generated from schema-v2 lessons, so the payoff is atom-scored. It introduces 7 atoms, under the maxNewAtomsPerChapter of 12: the seven weekdays were split across two chapters at the .tex's own weekday/weekend seam, because eighteen atoms in one chapter is a cram. Lesson ids keep the GE-C07-* prefix."
   }
 }

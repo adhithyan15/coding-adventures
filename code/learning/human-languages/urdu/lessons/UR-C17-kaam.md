@@ -9,7 +9,7 @@ headword: کام
 romanization: kām
 gloss: work — inherited from Sanskrit karman, whose borrowed twin English spells karma
 concept_tag: UR-WORK
-prerequisites: [UR-C17-yih]
+prerequisites: [UR-C17-yih, UR-C13-kala, UR-C13-nila, UR-C14-qamiz]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-karman, pie-kwer]
 etymology_hook: kām comes down from Sanskrit karman "act, deed, work" through Prakrit kamma, worn short by ordinary use; the very same Sanskrit word was later borrowed into English untouched as karma, so the everyday Urdu word for a day's work and the English word for cosmic consequence are one word that took two roads -- the inherited one that shortened it and the scholarly one that kept it whole.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-KAAM, UR-ETYMON-KAAM-KARMA, UR-LEX-YIH, UR-SCRIPT-SEVEN-READ-01, UR-REGISTER-TWO-ROADS-ONE-ROOT]
+  knowledge: [UR-LEX-KAAM, UR-ETYMON-KAAM-KARMA, UR-LEX-YIH, UR-SCRIPT-SEVEN-READ-01, UR-REGISTER-TWO-ROADS-ONE-ROOT, UR-LEX-KALA, UR-ETYMON-KALA-DRAVIDIAN, UR-GRAMMAR-ADJECTIVE-AGREEMENT, UR-LEX-NILA, UR-ETYMON-NILA-ANILINE, UR-LEX-QAMIZ, UR-ETYMON-QAMIZ-CHEMISE, UR-SCRIPT-QAMIZ-LETTERS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -79,13 +79,14 @@ A caution worth keeping: Urdu has a **second** *kām*, from Sanskrit *kāma*
 means the working one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAAM, UR-ETYMON-KAAM-KARMA, UR-LEX-YIH] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAAM, UR-ETYMON-KAAM-KARMA, UR-LEX-YIH, UR-LEX-KALA, UR-ETYMON-KALA-DRAVIDIAN, UR-GRAMMAR-ADJECTIVE-AGREEMENT, UR-LEX-NILA, UR-ETYMON-NILA-ANILINE, UR-LEX-QAMIZ, UR-ETYMON-QAMIZ-CHEMISE, UR-SCRIPT-QAMIZ-LETTERS] -->
 
 - [YOU READ: کام — name the three letters from the right, then say it]
 - [YOU SAY: **kām** — work; then **yih kām**]
 - [YOU WRITE: کام — three letters, right to left, letting the line fall]
 - [YOU TRACE: **kām** ← Prakrit *kamma* ← Sanskrit *karman* → borrowed into
   English as **karma**]
+- [YOU RECALL: read **کالا**, then say *nīlā*, then say *qamīz*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAAM, UR-ETYMON-KAAM-KARMA] -->

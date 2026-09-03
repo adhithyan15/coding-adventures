@@ -9,7 +9,7 @@ headword: آنکھ
 romanization: āṅkh
 gloss: eye — a fifth base letter for the two-eyed he, and another real cousin of an English word
 concept_tag: UR-EYE
-prerequisites: [UR-C10-naak]
+prerequisites: [UR-C10-naak, UR-C08-lena]
 sounds: [rtl, alif-madd, do-chashmi-he, nasal-vowel]
 roots: [sanskrit-akshi, pie-hekw]
 etymology_hook: āṅkh continues Sanskrit akṣi, from Proto-Indo-European *h₃ekʷ- "eye, to see" — the same root behind English eye, so this is the third settled Indo-European cousin this chapter has found, after nāk and before dil.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-NAAK, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-SCRIPT-DO-CHASHMI-HE, UR-LEX-AANKH, UR-ETYMON-AANKH-EYE]
+  knowledge: [UR-LEX-NAAK, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-SCRIPT-DO-CHASHMI-HE, UR-LEX-AANKH, UR-ETYMON-AANKH-EYE, UR-LEX-LENA, UR-SCRIPT-YE-THIRD-VALUE, UR-ETYMON-LENA-TAKE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -72,12 +72,13 @@ This chapter has now found two settled Indo-European cousins in a row —
 **ناک**/*nose*, **آنکھ**/*eye* — after **کان**'s honest dead end.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AANKH, UR-ETYMON-AANKH-EYE, UR-SCRIPT-DO-CHASHMI-HE, UR-LEX-NAAK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AANKH, UR-ETYMON-AANKH-EYE, UR-SCRIPT-DO-CHASHMI-HE, UR-LEX-NAAK, UR-LEX-LENA, UR-SCRIPT-YE-THIRD-VALUE, UR-ETYMON-LENA-TAKE] -->
 
 - [YOU SAY: **āṅkh** — eye; then **merī āṅkh**]
 - [YOU NASALIZE: **ā** through the nose, no separate **n**]
 - [YOU COUNT: five letters now carrying **ھ** — *jīm, ṭe, ṛe, che, kāf*]
 - [YOU CONNECT: **āṅkh** ← *\*h₃ekʷ-* → English **eye**]
+- [YOU RECALL: say *lenā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AANKH, UR-ETYMON-AANKH-EYE, UR-SCRIPT-DO-CHASHMI-HE] -->

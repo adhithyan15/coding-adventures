@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C09-jahreszeiten",
     "language": "german",
-    "chapter": 12,
-    "sequence": 250,
+    "chapter": 13,
+    "sequence": 260,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a4874c7be9420a39"
+    "sourceHash": "fnv1a64:a13849b7556d79fd"
   },
   "findings": []
 }

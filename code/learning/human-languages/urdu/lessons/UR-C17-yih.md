@@ -9,7 +9,7 @@ headword: یہ
 romanization: yih
 gloss: this — the nearer of Urdu's two pointing words, and a word whose second letter you cannot yet write
 concept_tag: UR-THIS
-prerequisites: [UR-C16-practice]
+prerequisites: [UR-C16-practice, UR-C12-roti, UR-C13-lal, UR-C13-safed]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-iyam]
 etymology_hook: yih descends from Old Indo-Aryan *iyam / *idam, the near demonstrative of Sanskrit, and it keeps the same job it had then -- pointing at the thing beside you rather than the thing across the room; its far partner voh comes from the matching *asau line, so Urdu's two pointing words are a pair inherited whole rather than a pair invented.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-YIH, UR-SCRIPT-SEVEN-READ-01, UR-LEX-KAAN, UR-LEX-NAAK]
+  knowledge: [UR-LEX-YIH, UR-SCRIPT-SEVEN-READ-01, UR-LEX-KAAN, UR-LEX-NAAK, UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE, UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-LEX-SAFED, UR-ETYMON-SAFED-WHITE-PIE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -78,13 +78,14 @@ still missing from your hand.
 That is what this chapter buys back.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH, UR-LEX-KAAN, UR-LEX-NAAK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH, UR-LEX-KAAN, UR-LEX-NAAK, UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE, UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-LEX-SAFED, UR-ETYMON-SAFED-WHITE-PIE] -->
 
 - [YOU SAY: **yih** — this]
 - [YOU SAY: **yih kān**, then **yih nāk**, pointing each time]
 - [YOU READ: کان and ناک, naming their letters from the right]
 - [YOU SAY: the near word **yih**, and name what it still needs to become a
   sentence — *hai*]
+- [YOU RECALL: say *roṭī*, then read **لال**, then say *safed*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH] -->

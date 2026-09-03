@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Meeting Comes Off the Page",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8a07942fc3430309",
+  "sourceHash": "fnv1a64:4c1e5eb1c397c19c",
   "lessons": [
     {
       "id": "UR-C18-aam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3168522cb36105ee",
+      "sourceHash": "fnv1a64:27d8c5a794f326be",
       "notice": null,
       "blocks": [
         {
@@ -129,6 +129,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TRACE: English **mango** ← Portuguese *manga* ← Tamil and Malayalam *māṅkāy* — a different road, from a different family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ṭopī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ṭopī*]"
             }
           ]
         },

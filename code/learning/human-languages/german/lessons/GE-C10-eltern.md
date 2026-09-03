@@ -1,7 +1,7 @@
 ---
 id: GE-C10-eltern
-sequence: 255
-chapter: 13
+sequence: 265
+chapter: 14
 type: word
 headword: der Vater, die Mutter
 gloss: father and mother — Grimm's law makes them twins of English father/mother

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C20-entschuldigung
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 670
-chapter: 28
+sequence: 680
+chapter: 29
 type: word
 headword: Entschuldigung
 gloss: sorry / excuse me (literally "un-guilting," from Schuld "guilt/fault")

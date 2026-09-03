@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C17-kopf-haupt
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 620
-chapter: 25
+sequence: 630
+chapter: 26
 type: etymology
 headword: Kopf / Haupt
 gloss: the cup-word and the inherited Germanic head-word

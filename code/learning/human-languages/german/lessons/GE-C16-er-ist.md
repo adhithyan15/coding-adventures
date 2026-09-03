@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-er-ist
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 465
-chapter: 21
+sequence: 475
+chapter: 22
 type: phrase
 headword: er ist
 gloss: he is — the form that also serves sie, es and das, and the one that matches Latin est

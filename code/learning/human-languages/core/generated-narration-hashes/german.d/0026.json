@@ -1,16 +1,17 @@
 {
   "language": "german",
   "chapter": 26,
-  "sourceHash": "fnv1a64:8e49adf7db5c531a",
+  "sourceHash": "fnv1a64:a9d0b813ea0a99a9",
   "lessonIds": [
-    "GE-C18-ja",
-    "GE-C18-nein"
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "german/narration/ch26.txt",
   "json": "german/narration/ch26.json",
-  "textHash": "fnv1a64:21e8a45d50483ab8",
-  "jsonHash": "fnv1a64:5bc6da245fe6302d",
+  "textHash": "fnv1a64:7ac594b710bebe03",
+  "jsonHash": "fnv1a64:68ebf1b58988d30a",
   "findings": []
 }

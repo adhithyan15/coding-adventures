@@ -1,16 +1,16 @@
 {
   "language": "german",
   "chapter": 14,
-  "sourceHash": "fnv1a64:f8130aa58cf677ca",
+  "sourceHash": "fnv1a64:87ad80469ae4615b",
   "lessonIds": [
-    "GE-C11-brot",
-    "GE-C11-wasser-wein"
+    "GE-C10-eltern",
+    "GE-C10-geschwister"
   ],
   "voiceLessons": 2,
   "drivablePrefix": 2,
   "text": "german/narration/ch14.txt",
   "json": "german/narration/ch14.json",
-  "textHash": "fnv1a64:f879da82df06bad8",
-  "jsonHash": "fnv1a64:a43912715a5907d7",
+  "textHash": "fnv1a64:21dd0a267dc61470",
+  "jsonHash": "fnv1a64:31e2d160001b8450",
   "findings": []
 }

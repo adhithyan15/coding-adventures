@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C07-freitag",
+    "language": "german",
+    "chapter": 10,
+    "sequence": 233,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6429150d1548c7b9"
+  },
+  "findings": []
+}

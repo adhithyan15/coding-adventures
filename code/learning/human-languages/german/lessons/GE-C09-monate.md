@@ -1,7 +1,7 @@
 ---
 id: GE-C09-monate
-sequence: 245
-chapter: 12
+sequence: 255
+chapter: 13
 type: word
 headword: die Monate
 gloss: the months — Latin loans, like the clock-word Uhr

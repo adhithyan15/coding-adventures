@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-praeteritum-practice
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 435
-chapter: 20
+sequence: 445
+chapter: 21
 type: practice
 headword: (practice)
 gloss: chapter payoff — the two pasts said back to back until it is audible that nothing about the meaning has moved

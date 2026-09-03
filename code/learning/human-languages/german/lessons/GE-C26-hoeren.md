@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C26-hoeren
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 820
-chapter: 34
+sequence: 830
+chapter: 35
 type: word
 headword: hören
 gloss: to hear — the same verb as English hear, and the closing of a chapter of four things you do without going anywhere

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C14-jahr
 spine_node: SPINE-TIME-OF-DAY
-sequence: 492
-chapter: 22
+sequence: 502
+chapter: 23
 type: word
 headword: das Jahr
 gloss: the year — and Jahre, its plural, which is the form the age sentence needs

@@ -1,56 +1,75 @@
 ---
+schema_version: 2
 id: GE-C07-wochentage-2
-sequence: 230
-chapter: 10
-type: word
-headword: Samstag, Sonntag
-gloss: the weekend (Saturday, Sunday) — the Sabbath and the Sun
-concept_tag: GE-DAYS-WEEKEND
-prerequisites: [GE-C07-wochentage-1]
-sounds: [diphthong-ei, vowel-o]
-roots: [sabbatum-latin, germanic-gods]
-etymology_hook: "Samstag ← Sabbat (the Sabbath, via Greek sábbaton) — NOT Saturn, unlike English Saturday; Sonntag = 'Sun's day' = Sunday"
-est_minutes: 4
-reviews_of: [GE-C07-wochentage-1, GE-C06-zahlen-6-10]
+spine_node: SPINE-TIME-OF-DAY
+sequence: 241
+chapter: 11
+type: practice
+headword: (practice)
+gloss: chapter payoff — all seven days, and the two places the pattern broke
+concept_tag: CH11-PRACTICE
+prerequisites: [GE-C07-sonne, GE-C07-sonntag, GE-C07-sabbat, GE-C07-samstag, GE-C07-sonnabend]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GE-LEX-SONNE-01, GE-LEX-SONNTAG-01, GE-ETYMON-SONNTAG-SUN-01, GE-LEX-SABBAT-01, GE-LEX-SAMSTAG-01, GE-ETYMON-SAMSTAG-SABBAT-01, GE-LEX-SONNABEND-01, GE-LEX-MONTAG-01, GE-LEX-DIENSTAG-01, GE-LEX-MITTWOCH-01, GE-LEX-DONNERSTAG-01, GE-LEX-FREITAG-01, GE-GRAMMAR-GOTT-PLUS-TAG-01]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-SONNE-01, GE-LEX-SONNTAG-01, GE-ETYMON-SONNTAG-SUN-01, GE-LEX-SABBAT-01, GE-LEX-SAMSTAG-01, GE-ETYMON-SAMSTAG-SABBAT-01, GE-LEX-SONNABEND-01, GE-LEX-MONTAG-01, GE-LEX-DIENSTAG-01, GE-LEX-MITTWOCH-01, GE-LEX-DONNERSTAG-01, GE-LEX-FREITAG-01, GE-GRAMMAR-GOTT-PLUS-TAG-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C07-samstag, GE-C07-sonntag, GE-C07-wochentage-1]
 ---
 
-# Samstag and Sonntag — the German weekend
+# Practice — all seven
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SONNTAG-01, GE-LEX-SAMSTAG-01] -->
 
-[PAUSE 2s] Two weekend days, and one more surprise: German's Saturday is **not**
-Saturn's day — it's the **Sabbath**, sharing its root with the Romance languages,
-not with English *Saturday*. Sunday, though, stays the Sun's.
+[PAUSE 2s] No new words. Seven days, five gods, and two places where something
+else got in.
 
-## The two days, taken apart
+## Grammar Lens: the whole week
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MONTAG-01, GE-LEX-DIENSTAG-01, GE-LEX-MITTWOCH-01, GE-LEX-DONNERSTAG-01, GE-LEX-FREITAG-01, GE-LEX-SAMSTAG-01, GE-LEX-SONNTAG-01] -->
 
-| German | ← | meaning | note |
-|---|---|---|---|
-| **Samstag** | *Sabbat* ← Greek *sábbaton* ← Hebrew *shabbāt* | the "**Sabbath**" | **not** Saturn! Reached German through Greek-speaking Christians |
-| **Sonntag** | *Sun* + *Tag* (*Sonne* "sun") | "the **Sun's** day" | = English **Sun**day; a rare Germanic day the Church left alone |
+| German | what is in it |
+|---|---|
+| *Montag* | the moon |
+| *Dienstag* | Tiw |
+| *Mittwoch* | mid-week — the Church took the god out |
+| *Donnerstag* | Donar |
+| *Freitag* | Frija |
+| *Samstag* | the Sabbath — bought, not inherited |
+| *Sonntag* | the sun |
 
-- **Samstag** surprises everyone: where English kept the Roman planet
-  (**Satur**day = Saturn), German took the **Sabbath** — Greek *sábbaton* (from
-  Hebrew *shabbāt*, "to rest") travelled up through the early Church into German as
-  *Sabbat → Samstag*. So German *Samstag* and Spanish *sábado* are the **same
-  Sabbath**, while English alone still points at Saturn. (In northern Germany you
-  also hear **Sonnabend**, "Sun-eve," the evening before Sunday.)
-- **Sonntag** is simply "the **Sun's** day," *Sonne* + *Tag* — the exact twin of
-  English **Sun**day. Here Germanic and English agree, and the Church didn't
-  rename it (unlike Romance, which made it "the Lord's day," *domingo/dimanche*).
+Five gods, one edit, one import. Run them in order until the list is one motion
+rather than seven remembered words.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MONTAG-01, GE-LEX-SONNTAG-01, GE-LEX-SONNABEND-01, GE-ETYMON-SAMSTAG-SABBAT-01, GE-GRAMMAR-GOTT-PLUS-TAG-01, GE-LEX-SONNE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: the full week — "Montag … Freitag, Samstag, Sonntag"]
-- [YOU SAY: "Samstag = Sabbath (not Saturn!)", "Sonntag = Sun's day = Sunday"]
-- [YOU SAY: the contrast — "German Samstag / Spanish sábado, both the Sabbath;
-  English Saturday keeps Saturn"]
+- [YOU SAY: all seven in order, from *Montag* to *Sonntag*]
+- [YOU SAY: the two Saturdays — "Samstag, Sonnabend"]
+- [YOU SAY: the two breaks — "Mittwoch: no god. Samstag: not Germanic."]
+- [YOU SAY: the shape that holds for the other five — "a god, then Tag"]
+
+[REPEAT x2] "Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-SONNTAG-SUN-01, GE-ETYMON-SAMSTAG-SABBAT-01, GE-LEX-MITTWOCH-01, GE-LEX-SABBAT-01] -->
 
-[PAUSE 3s] Give all seven German days. (*Montag … Sonntag*.) Where does *Samstag*
-come from, and how does English differ? (The **Sabbath** — *sábbaton/shabbāt*;
-English *Saturday* keeps **Saturn**.) What does *Sonntag* mean, and its English
-twin? ("The **Sun's** day"; *Sunday*.) Next chapter builds on this toward telling
-the time.
+[PAUSE 3s] Run all seven without prompting. Which day has no god?
+(***Mittwoch***.) Which is not a Germanic word at all? (***Samstag*** — the
+Sabbath.) Which day did the Church rename in Romance but leave alone here?
+(***Sonntag***.) Which day has two names? (**Saturday** — *Samstag* and
+*Sonnabend*.)
