@@ -1,16 +1,21 @@
 {
   "language": "german",
   "chapter": 17,
-  "sourceHash": "fnv1a64:7a5945ded38e124d",
+  "sourceHash": "fnv1a64:f9fd4413fa33c770",
   "lessonIds": [
     "GE-C11-brot",
+    "GE-C11-brot-bread",
+    "GE-C11-wasser",
+    "GE-C11-wasser-water",
+    "GE-C11-wein",
+    "GE-C11-wein-vinum",
     "GE-C11-wasser-wein"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "german/narration/ch17.txt",
   "json": "german/narration/ch17.json",
-  "textHash": "fnv1a64:c09365ed1b66092b",
-  "jsonHash": "fnv1a64:f86d4447ae0a0d96",
+  "textHash": "fnv1a64:d33da866ce00351f",
+  "jsonHash": "fnv1a64:b8bff1a7c49fa7f8",
   "findings": []
 }

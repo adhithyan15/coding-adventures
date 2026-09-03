@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 16,
-  "sourceHash": "fnv1a64:a2f146574616b85e",
+  "sourceHash": "fnv1a64:acf5a4dfb8fcd708",
   "lessonIds": [
     "GE-C10-vater",
     "GE-C10-vater-pater",
@@ -21,7 +21,7 @@
   "drivablePrefix": 13,
   "text": "german/narration/ch16.txt",
   "json": "german/narration/ch16.json",
-  "textHash": "fnv1a64:f8ace45ea21cb6c7",
-  "jsonHash": "fnv1a64:16379659f3da3bf4",
+  "textHash": "fnv1a64:b9a2c55ba47463aa",
+  "jsonHash": "fnv1a64:98c4a61642e860b2",
   "findings": []
 }
