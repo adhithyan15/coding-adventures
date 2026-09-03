@@ -1,27 +1,39 @@
 {
   "chapter": 30,
-  "title": "Coffee, Tea, and Milk",
-  "label": "ch:ge-coffee-tea-milk",
-  "canDo": "I can politely ask for coffee, tea, or milk in German, and say which of the three words is native and which two are loans.",
+  "title": "Taking, Asking, Helping, Liking",
+  "label": "ch:ge-doing-verbs",
+  "canDo": "I can say I take, I ask, I help and I like in German, sort all eight verbs of these two chapters into the three present-tense patterns, and use gern to say I like doing something.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GE-C28-milch",
+    "lesson": "GE-C25-moegen-lieben",
     "kind": "production",
-    "summary": "The chapter closes on Milch, the native word beside two loans: the reader produces all three drinks with der/die articles, extends Chapter 19's Wasser, bitte pattern to Kaffee, bitte and Tee, bitte, and states each word's route — Kaffee overland through Arabic, Turkish and Italian; Tee by sea from Hokkien Chinese by way of Dutch; Milch never borrowed at all. It reaches back to Chapter 19's bitte pattern and rescues Chapter 27's final atoms, GE-LEX-SCHLIESSEN-10 and GE-ETYMON-SCHLIESSEN-11, which no lesson had revisited.",
+    "summary": "The chapter closes on mögen, lieben and gern: the reader produces all eight ich forms of Chapters 24 and 25, sorts them into vowel-stays, vowel-breaks and the old third pattern, hangs gern on four verbs already learned, and runs the nine-word cousin roll-call. It reaches back to every atom of Chapter 24 and to Chapters 21 and 22 — Ich mag das Wetter, Ich mag die Katze, Der Hund mag Wasser.",
     "assesses": [
-      "GE-LEX-KAFFEE-02",
-      "GE-SOUND-KAFFEE-03",
-      "GE-ETYMON-KAFFEE-04",
-      "GE-LEX-TEE-02",
-      "GE-SOUND-TEE-03",
-      "GE-ETYMON-TEE-04",
-      "GE-LEX-MILCH-02",
-      "GE-SOUND-MILCH-03",
-      "GE-ETYMON-MILCH-04",
-      "GE-LEX-BITTE-PLEASE-02",
-      "GE-PHRASE-WASSER-BITTE-03"
+      "GE-LEX-NEHMEN-02",
+      "GE-ETYMON-NEHMEN-03",
+      "GE-FALSEFRIEND-BEKOMMEN-04",
+      "GE-LEX-FRAGEN-05",
+      "GE-ETYMON-FRAGEN-06",
+      "GE-LEX-HELFEN-07",
+      "GE-ETYMON-HELFEN-08",
+      "GE-LEX-MOEGEN-LIEBEN-09",
+      "GE-ETYMON-MOEGEN-LIEBEN-10",
+      "GE-GRAMMAR-GERN-11",
+      "GE-LEX-DENKEN-02",
+      "GE-ETYMON-DENKEN-03",
+      "GE-FALSEFRIEND-ALSO-04",
+      "GE-LEX-VERSTEHEN-05",
+      "GE-ETYMON-VERSTEHEN-06",
+      "GE-LEX-LESEN-07",
+      "GE-ETYMON-LESEN-08",
+      "GE-GRAMMAR-STRONG-VOWEL-09",
+      "GE-LEX-SCHREIBEN-10",
+      "GE-ETYMON-SCHREIBEN-11",
+      "GE-LEX-HUND-02",
+      "GE-LEX-KATZE-04",
+      "GE-LEX-WETTER-02"
     ]
   }
 }

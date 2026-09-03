@@ -1,18 +1,18 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:a4a8a06a30e22f30",
+  "sourceHash": "fnv1a64:b3b022a98b072c50",
   "lessonIds": [
-    "GE-C27-gehen",
-    "GE-C27-laufen",
-    "GE-C27-oeffnen",
-    "GE-C27-schliessen"
+    "GE-C24-denken",
+    "GE-C24-verstehen",
+    "GE-C24-lesen",
+    "GE-C24-schreiben"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "german/narration/ch29.txt",
   "json": "german/narration/ch29.json",
-  "textHash": "fnv1a64:49f181abc8bc5b89",
-  "jsonHash": "fnv1a64:253b2d15a34ad813",
+  "textHash": "fnv1a64:88c3d31ef96c5d77",
+  "jsonHash": "fnv1a64:8b836e0189eaf3ad",
   "findings": []
 }

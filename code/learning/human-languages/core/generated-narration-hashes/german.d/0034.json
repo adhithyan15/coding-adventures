@@ -1,0 +1,17 @@
+{
+  "language": "german",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:1b60e422785f5267",
+  "lessonIds": [
+    "GE-C29-freund",
+    "GE-C29-freundin",
+    "GE-C29-familie"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "german/narration/ch34.txt",
+  "json": "german/narration/ch34.json",
+  "textHash": "fnv1a64:48b1f664c22c03a3",
+  "jsonHash": "fnv1a64:10536ffb95765161",
+  "findings": []
+}

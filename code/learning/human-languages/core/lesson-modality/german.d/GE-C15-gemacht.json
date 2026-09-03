@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C15-gemacht",
+    "language": "german",
+    "chapter": 15,
+    "sequence": 320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:267b34bec02452b4"
+  },
+  "findings": []
+}

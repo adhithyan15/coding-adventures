@@ -1,0 +1,13 @@
+{
+  "id": "HI-EXT-71-TODAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is happening today, add one thing to another, and say that something is very much so.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C71-today",
+    "HI-C71-also",
+    "HI-C71-very"
+  ]
+}

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 29,
-  "title": "Going, Running, Opening, Closing",
+  "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a4a8a06a30e22f30",
+  "sourceHash": "fnv1a64:b3b022a98b072c50",
   "lessons": [
     {
-      "id": "GE-C27-gehen",
-      "sequence": 830,
-      "title": "gehen — go, and the word German never needed for walk",
-      "headword": "gehen",
-      "romanization": "gehen",
-      "gloss": "to go, and to walk — because German has no separate word for walking, and English's walk turns out to be a word about cloth",
+      "id": "GE-C24-denken",
+      "sequence": 710,
+      "title": "denken — the verb that was inside danke all along",
+      "headword": "denken",
+      "romanization": "denken",
+      "gloss": "to think — the verb you already met hiding inside danke, and the same inherited word as English think",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed4853661dd27a63",
+      "sourceHash": "fnv1a64:9a1a6a0561aaae5c",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four verbs that stayed put — sitting, standing, sleeping, hearing. Now a chapter that moves, opening on the verb German uses where English has two."
+              "text": "You learned early on that danke is built on a verb meaning \"to think.\" Here is that verb, with its own forms at last."
             }
           ]
         },
@@ -46,80 +46,76 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "h-silent-lengthening — the h is silent and lengthens: gehen = GAY-en, built exactly like stehen, SHTAY-en."
+              "text": "vowel-e-german — a short, open e."
             },
             {
               "kind": "speech",
-              "text": "ge-prefix — ge- at the front is said guh, never jee."
+              "text": "ng-cluster — n before k is the ng of sing: denken = DENG-ken."
             }
           ]
         },
         {
           "index": 2,
           "type": "input",
-          "title": "You'll want to know: gehen",
+          "title": "You'll want to know: denken",
           "segments": [
             {
               "kind": "speech",
-              "text": "gehen means \"to go\" — and also \"to walk.\" German does not split those."
+              "text": "denken means \"to think,\" with the same audible endings you drilled on wohnen, machen and lernen:"
             },
             {
               "kind": "speech",
-              "text": "ich gehe, wir gehen."
+              "text": "ich denke — I think, wir denken — we think."
             },
             {
               "kind": "speech",
-              "text": "du gehst, ihr geht."
+              "text": "du denkst — you think, ihr denkt — you all think."
             },
             {
               "kind": "speech",
-              "text": "er geht, sie gehen."
+              "text": "er denkt — he thinks, sie denken — they think."
             },
             {
               "kind": "speech",
-              "text": "Ich stehe. Ich gehe."
+              "text": "Ich denke, also bin ich. — \"I think, therefore I am.\""
             },
             {
               "kind": "speech",
-              "text": "Two verbs cut to the same short shape, each with a silent h propping the vowel up. Say them together and you hear a matched pair: SHTAY-en, GAY-en."
+              "text": "It also carries the weather straight into a new sentence:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich denke, es ist kalt. — \"I think it is cold.\""
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: two languages, two borrowed pasts",
+          "title": "The word, taken apart: think, thank, and one shifted consonant",
           "segments": [
             {
               "kind": "speech",
-              "text": "gehen is Proto-Germanic gāną and English go is the same inherited word, Old English gān."
+              "text": "denken is Proto-Germanic þankijaną. English think is that same inherited word — a loan in neither direction."
             },
             {
               "kind": "speech",
-              "text": "Both languages then hit the same problem: the verb had no usable past, and each went shopping. English took went, really the past of wend, and left wend stranded. German took ging and gegangen from another old verb, ganganą, \"to walk\" — which English still owns in gangway, gangplank, and Scots gang, \"to go.\""
+              "text": "One consonant separates them, and you have been taught how to read it. With Haupt beside head you met Grimm's law, which turned Proto-Indo-European k into Germanic h. The same law turned PIE t into Germanic þ, the th sound. English kept it and spells it th: think. German later softened it to d."
             },
             {
               "kind": "speech",
-              "text": "Gegangen carries the same ge- you met on gehören: an old prefix German fastens to a past participle."
-            },
-            {
-              "kind": "speech",
-              "text": "Beyond Germanic, be honest — the deeper root of go is disputed, with no agreed list of cousins. It is the one verb here that cannot be followed back."
+              "text": "Germanic þankō meant both \"a thought\" and \"gratitude\" — hence German Dank and Gedanke, and English thank beside think. To thank was to hold someone in thought. German also kept a sibling verb, dünken, \"to seem\"; English had that one too and let it collapse into think."
             }
           ]
         },
         {
           "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: English's walk is about cloth",
+          "type": "grammar",
+          "title": "Grammar Lens: also does not mean \"also\"",
           "segments": [
             {
               "kind": "speech",
-              "text": "Because walk is not an old word for travelling on foot. Old English wealcan meant \"to roll, to toss,\" and its German cousin walken still means what it always meant: to full cloth, to work wool by trampling it."
-            },
-            {
-              "kind": "speech",
-              "text": "English promoted that trampling verb around 1200. German never did, so gehen covers both jobs."
+              "text": "In Ich denke, also bin ich, the word also means \"therefore.\" English also is eall swā, \"all so,\" meaning likewise; German also is al + so, meaning thus. Same bricks, different building. A German saying also is drawing a conclusion, not adding to a list."
             }
           ]
         },
@@ -137,56 +133,56 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich gehe, du gehst, er geht\"",
+              "instruction": "\"ich denke, du denkst, er denkt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich gehe, du gehst, er geht\"]"
+              "source": "[YOU SAY: \"ich denke, du denkst, er denkt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the matched pair — \"Ich stehe. Ich gehe.\"",
+              "instruction": "\"wir denken, ihr denkt, sie denken\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the matched pair — \"Ich stehe. Ich gehe.\"]"
+              "source": "[YOU SAY: \"wir denken, ihr denkt, sie denken\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the borrowed pasts — \"go/went\" beside \"gehen/ging/gegangen\"",
+              "instruction": "\"Ich denke, also bin ich.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the borrowed pasts — \"go/went\" beside \"gehen/ging/gegangen\"]"
+              "source": "[YOU SAY: \"Ich denke, also bin ich.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "where English kept the other verb — \"gangway, gangplank\"",
+              "instruction": "\"Ich denke, es ist kalt. Das Wetter ist gut.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: where English kept the other verb — \"gangway, gangplank\"]"
+              "source": "[YOU SAY: \"Ich denke, es ist kalt. Das Wetter ist gut.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the ge- on both — \"gehören, gegangen\"",
+              "instruction": "the family — \"denken, danke, Dank, Gedanke\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the *ge-* on both — \"gehören, gegangen\"]"
+              "source": "[YOU SAY: the family — \"denken, danke, Dank, Gedanke\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what walken does — it fulls cloth, it does not travel",
+              "instruction": "the shift — PIE t, Germanic th, German d: think, denken",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what *walken* does — it fulls cloth, it does not travel]"
+              "source": "[YOU SAY: the shift — PIE *t*, Germanic *th*, German *d*: think, denken]"
             }
           ]
         },
@@ -203,26 +199,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the du and er forms. (Du gehst, er geht.) Which English verb is gehen? (Go, and walk as well.) Where did went come from? (From wend.) What does German's cousin of walk mean? (To full cloth.) How far back can gehen be traced? (Not past Germanic.)"
+              "text": "Which chapter-3 word is built on denken? (Danke.) Is English think a borrowing? (No — both inherited þankijaną.) Which law turned PIE t into the Germanic th German made a d? (Grimm's law, as in Haupt and head.) What does German also mean? (Therefore.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C27-laufen",
-      "sequence": 840,
-      "title": "laufen — the verb that lies across English's line",
-      "headword": "laufen",
-      "romanization": "laufen",
-      "gloss": "to run — and to walk, because German draws the line in a different place from English, with rennen at the fast end",
+      "id": "GE-C24-verstehen",
+      "sequence": 720,
+      "title": "verstehen — standing around a thing until you see it",
+      "headword": "verstehen",
+      "romanization": "verstehen",
+      "gloss": "to understand — literally \"to stand around a thing\", the same picture English built independently in understand",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dfa4ffbfd8d3a9c",
+      "sourceHash": "fnv1a64:8056cea233d31739",
       "notice": null,
       "blocks": [
         {
@@ -238,7 +234,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ich gehe covers going and walking. German has two words for run, and one of them is not only about running."
+              "text": "You can say ich denke. Thinking happens in the Kopf; this is the verb for when it lands — and English built its own word from the same picture, separately."
             }
           ]
         },
@@ -249,97 +245,66 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-au — au is the ow of house: laufen = LOW-fen."
+              "text": "v-as-f — German v is said f, so ver- is fair-."
             },
             {
               "kind": "speech",
-              "text": "diphthong-eu — äu is the oy of boy: läuft = LOYFT."
+              "text": "h-silent-lengthening — the h is silent; it marks the vowel before it as long. verstehen = fair-SHTAY-en."
             }
           ]
         },
         {
           "index": 2,
           "type": "input",
-          "title": "You'll want to know: laufen",
+          "title": "You'll want to know: verstehen",
           "segments": [
             {
               "kind": "speech",
-              "text": "laufen means \"to run\" — and often \"to walk.\""
+              "text": "verstehen means \"to understand,\" with the ordinary endings:"
             },
             {
               "kind": "speech",
-              "text": "ich laufe, wir laufen."
+              "text": "ich verstehe, wir verstehen."
             },
             {
               "kind": "speech",
-              "text": "du läufst, ihr lauft."
+              "text": "du verstehst, ihr versteht."
             },
             {
               "kind": "speech",
-              "text": "er läuft, sie laufen."
+              "text": "er versteht, sie verstehen."
             },
             {
               "kind": "speech",
-              "text": "The schlafen break is here too, in the same du and er slot: au brightens to äu."
-            },
-            {
-              "kind": "speech",
-              "text": "Der Hund läuft."
+              "text": "Ich verstehe. — said on its own, constantly. Ich verstehe Deutsch. — \"I understand German.\""
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the line is not where you expect",
+          "type": "etymology",
+          "title": "The word, taken apart: one picture, built twice",
           "segments": [
             {
               "kind": "speech",
-              "text": "English draws a hard line between walk and run. German draws it elsewhere, and leaves one verb lying across it."
+              "text": "Break it in two: ver- plus stehen, \"to stand.\" Stehen is English stand, the same inherited word, Proto-Germanic standaną. The prefix ver- is old and worn, and here it carries its ancient sense \"around, about.\" So verstehen is literally \"to stand around\" a thing."
             },
             {
               "kind": "speech",
-              "text": "gehen — on foot, unhurried."
+              "text": "Now English. Understand is under + stand — and that under is not \"underneath.\" The usual explanation is that Old English under also carried the sense \"among, between,\" a cousin of Latin inter; so understand is \"to stand among\" a thing. That reading is standard but not certain, and no honest account will claim otherwise."
             },
             {
               "kind": "speech",
-              "text": "laufen — on foot at any speed at all."
+              "text": "Either way the important fact holds: each language welded a prefix onto its own inherited verb \"to stand\" and got a word for comprehension. Neither borrowed the compound. The green-and-yellow lesson showed the same move with grün: Germanic and Latin each built \"green\" from a verb for \"grow,\" independently. This is that coincidence one family closer in."
             },
             {
               "kind": "speech",
-              "text": "rennen — flat out. ich renne, du rennst, er rennt."
-            },
-            {
-              "kind": "speech",
-              "text": "So Wir laufen is \"we're walking\" or \"we're running,\" and only the situation tells you which. That holds across most of Germany. In Austria it does not: there laufen means run. This book teaches the German usage."
-            },
-            {
-              "kind": "speech",
-              "text": "Der Hund rennt. — no ambiguity left."
+              "text": "The verb underneath is one of the family's biggest roots, PIE steh₂-: German der Verstand (\"reason\"), English stand, stead, stall, and — from Latin's stāre — state, station, stable, constant."
             }
           ]
         },
         {
           "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart: laufen is leap",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "laufen is Proto-Germanic hlaupaną, and English kept it as leap — Old English hlēapan. One more p against f, the second shift, on the pattern of helfen/help, offen/open and schlafen/sleep."
-            },
-            {
-              "kind": "speech",
-              "text": "English holds three more scraps: lope, and — through Dutch relatives of the same verb — elope and interloper, both people running off. Outside Germanic there are no secure cousins."
-            },
-            {
-              "kind": "speech",
-              "text": "Rennen is a sharper story. Germanic had rinnaną, \"to run, to flow,\" and beside it a causative rannijaną, \"to make something run.\" German fused the two into rennen and kept rinnen, \"to trickle,\" alongside. English fused the same two into run — one merger, carried out separately in each language."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -352,61 +317,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich laufe, du läufst, er läuft\" — LOW-fuh, LOYFST, LOYFT",
+              "instruction": "\"ich verstehe, du verstehst, er versteht\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich laufe, du läufst, er läuft\" — *LOW-fuh, LOYFST, LOYFT*]"
+              "source": "[YOU SAY: \"ich verstehe, du verstehst, er versteht\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three speeds — \"Ich gehe. Ich laufe. Ich renne.\"",
+              "instruction": "\"Ich verstehe Deutsch.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three speeds — \"Ich gehe. Ich laufe. Ich renne.\"]"
+              "source": "[YOU SAY: \"Ich verstehe Deutsch.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Der Hund läuft. Der Hund rennt.\"",
+              "instruction": "both verbs — \"Ich denke. Ich verstehe.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Der Hund läuft. Der Hund rennt.\"]"
+              "source": "[YOU SAY: both verbs — \"Ich denke. Ich verstehe.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the p/f row now four long — \"helfen/help, offen/open, schlafen/sleep, laufen/leap\"",
+              "instruction": "the pieces — \"ver- + stehen\" beside \"under + stand\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the *p*/*f* row now four long — \"helfen/help, offen/open, schlafen/sleep, laufen/leap\"]"
+              "source": "[YOU SAY: the pieces — \"ver- + stehen\" beside \"under + stand\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the runaways — \"lope, elope, interloper\"",
+              "instruction": "the parallel — like grün beside viridis, built, not shared",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the runaways — \"lope, elope, interloper\"]"
+              "source": "[YOU SAY: the parallel — like *grün* beside *viridis*, built, not shared]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the doubled merger — \"rinnen, rennen\" beside English's one run",
+              "instruction": "where it happens — \"der Kopf\" — and what stands in it, \"der Verstand\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the doubled merger — \"rinnen, rennen\" beside English's one *run*]"
+              "source": "[YOU SAY: where it happens — \"der Kopf\" — and what stands in it, \"der Verstand\"]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -418,26 +383,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the du and er forms of laufen. (Du läufst, er läuft — au to äu.) Which English verb is laufen? (Leap — and it means run.) Which German verb means only \"run fast\"? (Rennen.) Does Wir laufen mean walking or running? (Either — except in Austria, where it is running.) Say \"the dog runs.\" (Der Hund rennt.)"
+              "text": "What are the two pieces of verstehen? (Ver- + stehen.) Which English verb is stehen? (Stand.) Did English borrow understand from German? (No — each built its own compound.) How solid is the \"under = among\" account? (Standard, but not certain.) Say \"I think\" and \"I understand.\" (Ich denke. Ich verstehe.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C27-oeffnen",
-      "sequence": 850,
-      "title": "öffnen — open, which was always the word up",
-      "headword": "öffnen",
-      "romanization": "öffnen",
-      "gloss": "to open — built on offen, which is English open, which is really the word up; and the doorway into German's separable verbs",
+      "id": "GE-C24-lesen",
+      "sequence": 730,
+      "title": "lesen — gathering, and the first verb that changes its vowel",
+      "headword": "lesen",
+      "romanization": "lesen",
+      "gloss": "to read — a verb that first meant \"to gather\", and the first one in this book whose vowel changes in the du and er forms",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e2c3b58ea1eb768",
+      "sourceHash": "fnv1a64:126cdd21540f8432",
       "notice": null,
       "blocks": [
         {
@@ -453,7 +418,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ich gehe. Ich laufe. Ich renne. Now something done with the hands, and the German habit that breaks a verb in two."
+              "text": "Every German verb so far has kept its vowel in every form. This one does not — and its older meaning is gathering."
             }
           ]
         },
@@ -464,84 +429,72 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "umlaut-oe — ö is the e of bed with rounded lips."
+              "text": "long-e — a long e, English ay without the glide."
             },
             {
               "kind": "speech",
-              "text": "fn-cluster — -fn- runs straight together: öffnen = UFF-nen."
+              "text": "s-voiced — a single s between vowels buzzes like z: LAY-zen."
             }
           ]
         },
         {
           "index": 2,
           "type": "input",
-          "title": "You'll want to know: öffnen",
+          "title": "You'll want to know: lesen",
           "segments": [
             {
               "kind": "speech",
-              "text": "öffnen means \"to open.\""
+              "text": "lesen means \"to read.\""
             },
             {
               "kind": "speech",
-              "text": "ich öffne, wir öffnen."
+              "text": "ich lese — I read, wir lesen — we read."
             },
             {
               "kind": "speech",
-              "text": "du öffnest, ihr öffnet."
+              "text": "du liest — you read, ihr lest — you all read."
             },
             {
               "kind": "speech",
-              "text": "er öffnet, sie öffnen."
+              "text": "er liest — he reads, sie lesen — they read."
             },
             {
               "kind": "speech",
-              "text": "An extra e slips in for du, er and ihr, because öffnst cannot be said. Now a noun you already have, whose d is spoken as a t:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich öffne die Hand. — \"I open my hand.\" (dee Hant)."
+              "text": "Ich lese Deutsch. — \"I read German.\""
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a verb that comes apart",
+          "title": "Grammar Lens: the vowel that breaks in the middle",
           "segments": [
             {
               "kind": "speech",
-              "text": "Öffnen is the neutral, slightly formal word. What people say out loud is aufmachen, and both halves are yours already: auf from auf Wiedersehen, machen from your first verbs."
+              "text": "Four forms keep the e of lesen. Two swap it for a long ie: du liest, er liest."
             },
             {
               "kind": "speech",
-              "text": "Here is the German part. In an ordinary sentence, the prefix leaves the verb and waits at the end:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich mache die Hand auf. — literally \"I make the hand up.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Machen takes the slot after ich; auf goes to the back and sits there. German does this to hundreds of verbs, and calls them separable."
+              "text": "That is the mark of a strong verb: the vowel changes inside the word, in exactly two present-tense forms — du and er/sie/es. Nothing else moves; the endings stay the familiar -e / -st / -t. It is a rule about a whole class of verbs, not about lesen."
             }
           ]
         },
         {
           "index": 4,
           "type": "etymology",
-          "title": "The word, taken apart: open was never a root",
+          "title": "The word, taken apart: reading is picking up",
           "segments": [
             {
               "kind": "speech",
-              "text": "Behind the verb is the adjective offen, \"open\" — which the doing verbs already put beside open as a p-to-f pair from the second shift."
+              "text": "lesen is Proto-Germanic lesaną, \"to gather.\" That sense still lives in die Weinlese, the grape harvest — the wine-gathering, built on the Wein you already have. Reading came second: you pick the letters up, one after another."
             },
             {
               "kind": "speech",
-              "text": "The better secret is that neither word is a root. Old English open goes back to Proto-Germanic upana-, \"put up,\" formed on the word that is now English up — it has the shape of a past participle, though no such verb \"to up\" is attested. German ran the same sum and got offen, which is why offen and auf are relatives and not merely neighbours."
+              "text": "Now the trap. Latin legere also meant \"to gather,\" also came to mean \"to read,\" and stands behind legible, lecture, lesson and collect. It looks like one shared word. It probably is not: the sounds do not correspond as they should, and the standard account ties lesen to a separate root, whose clearest cousin is Lithuanian lèsti, \"to peck up grain.\" Treat it as you treated grün beside viridis."
             },
             {
               "kind": "speech",
-              "text": "So aufmachen is not a quaint compound. It is the ancient recipe for \"open,\" rebuilt out loud — and German pulls it apart every time you use it."
+              "text": "English read is a third story: Old English rædan, \"to advise,\" which is German raten and das Rätsel (\"riddle\"). Lesen and read are no relation."
             }
           ]
         },
@@ -559,56 +512,56 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich öffne, du öffnest, er öffnet\" — the extra e",
+              "instruction": "\"ich lese, du liest, er liest\" — hear the vowel break",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich öffne, du öffnest, er öffnet\" — the extra *e*]"
+              "source": "[YOU SAY: \"ich lese, du liest, er liest\" — hear the vowel break]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich öffne die Hand.\" — dee Hant",
+              "instruction": "\"wir lesen, ihr lest, sie lesen\" — and back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich öffne die Hand.\" — *dee Hant*]"
+              "source": "[YOU SAY: \"wir lesen, ihr lest, sie lesen\" — and back]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the split — \"Ich mache die Hand auf.\"",
+              "instruction": "\"Ich lese Deutsch. Ich verstehe Deutsch.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the split — \"Ich mache die Hand auf.\"]"
+              "source": "[YOU SAY: \"Ich lese Deutsch. Ich verstehe Deutsch.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the p/f pair — \"offen/open\"",
+              "instruction": "the old meaning — \"die Weinlese\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the *p*/*f* pair — \"offen/open\"]"
+              "source": "[YOU SAY: the old meaning — \"die Weinlese\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what it is made of — \"auf, up, offen, open\"",
+              "instruction": "the three so far — \"denken, verstehen, lesen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what it is made of — \"auf, up, offen, open\"]"
+              "source": "[YOU SAY: the three so far — \"denken, verstehen, lesen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the feet verbs before the hand one — \"Ich gehe. Ich laufe. Ich renne.\"",
+              "instruction": "why lesen is not legere — the reason grün is not viridis",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the feet verbs before the hand one — \"Ich gehe. Ich laufe. Ich renne.\"]"
+              "source": "[YOU SAY: why *lesen* is not *legere* — the reason *grün* is not *viridis*]"
             }
           ]
         },
@@ -625,26 +578,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the du and er forms. (Du öffnest, er öffnet.) Which older word is offen built from? (Auf — English up.) Where does auf go in Ich mache die Hand auf? (To the end.) What is such a verb called? (Separable.) How is the d of Hand spoken? (As a t.)"
+              "text": "Which two forms of a strong verb break their vowel, and what are they here? (Du and er/sie/es — du liest, er liest.) What did lesen mean first? (To gather — die Weinlese.) Is it Latin legere? (Probably not — the sounds do not correspond.) And English read? (No relation — it meant \"to advise,\" and is German raten.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C27-schliessen",
-      "sequence": 860,
-      "title": "schließen — the second verb English lost",
-      "headword": "schließen",
-      "romanization": "schließen",
-      "gloss": "to close — the second verb in these chapters that German kept and English lost, and the one that locked up Schloss, Schlüssel and Schluss",
+      "id": "GE-C24-schreiben",
+      "sequence": 740,
+      "title": "schreiben — the one borrowed verb",
+      "headword": "schreiben",
+      "romanization": "schreiben",
+      "gloss": "to write — the one verb in this chapter German did not inherit but borrowed, from Latin scribere",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:235ac9a94c13abcb",
+      "sourceHash": "fnv1a64:f5096038344944ec",
       "notice": null,
       "blocks": [
         {
@@ -660,7 +613,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can open a hand two ways, ich öffne and ich mache … auf. Closing works the same, and the closing verb has the stranger history."
+              "text": "Three verbs in, all three English's own blood relatives. The fourth breaks the run: German borrowed it; English did not."
             }
           ]
         },
@@ -671,88 +624,68 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ie-long-ee — ie is a long ee: schließen = SHLEE-sen."
+              "text": "sch-sh — sch is one sound, English sh."
             },
             {
               "kind": "speech",
-              "text": "eszett — ß is a sharp s, and it appears here because the ee before it is long."
+              "text": "diphthong-ei — ei is said eye: schreiben = SHRY-ben."
             }
           ]
         },
         {
           "index": 2,
           "type": "input",
-          "title": "You'll want to know: schließen",
+          "title": "You'll want to know: schreiben",
           "segments": [
             {
               "kind": "speech",
-              "text": "schließen means \"to close,\" and also \"to lock.\""
+              "text": "schreiben means \"to write.\""
             },
             {
               "kind": "speech",
-              "text": "ich schließe, wir schließen."
+              "text": "ich schreibe — I write, wir schreiben — we write."
             },
             {
               "kind": "speech",
-              "text": "du schließt, ihr schließt."
+              "text": "du schreibst — you write, ihr schreibt — you all write."
             },
             {
               "kind": "speech",
-              "text": "er schließt, sie schließen."
+              "text": "er schreibt — he writes, sie schreiben — they write."
             },
             {
               "kind": "speech",
-              "text": "Its everyday partner is zumachen — zu plus machen — splitting exactly as aufmachen did:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich schließe die Hand. Ich mache die Hand zu."
-            },
-            {
-              "kind": "speech",
-              "text": "The vowel shortens in the past, and the moment it does the ß becomes ss: schließen, but schloss."
+              "text": "Ich schreibe Deutsch., Die Hand schreibt."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: a verb with no English cousin",
+          "type": "grammar",
+          "title": "Grammar Lens: strong, but not here",
           "segments": [
             {
               "kind": "speech",
-              "text": "schließen is Proto-Germanic sleutaną, \"to shut, to bolt.\" Dutch kept it as sluiten. English has nothing — no inherited cousin at all."
-            },
-            {
-              "kind": "speech",
-              "text": "So English closes things with borrowed and unrelated words. Close is Latin claudere, by way of French. Shut is native but a different verb entirely: Old English scyttan, to shoot a bolt across a door."
-            },
-            {
-              "kind": "speech",
-              "text": "That makes two verbs here with the same shape of story. The doing verbs gave you nehmen, which English lost to Norse take. This is the second."
-            },
-            {
-              "kind": "speech",
-              "text": "On the verb it kept, German built a household: das Schloss, a lock — and, because a castle is the locked place, a castle; der Schlüssel, a key; der Schluss, the end. English says conclusion for that last one, from claudere — the same idea out of the other family's parts."
-            },
-            {
-              "kind": "speech",
-              "text": "A link between the Germanic verb and Latin claudere has been proposed. It is not established."
+              "text": "Lesen taught you to watch du and er. Here: du schreibst, er schreibt — the vowel does not move. Schreiben is strong (its past is schrieb), but its present is smooth. So the rule is exact: a strong verb may break its vowel there. Hold the pair: du liest, but du schreibst."
             }
           ]
         },
         {
           "index": 4,
-          "type": "notice",
-          "title": "What you've built across these two chapters",
+          "type": "etymology",
+          "title": "The word, taken apart: a Latin verb that became German",
           "segments": [
             {
               "kind": "speech",
-              "text": "Eight verbs, and a whole small morning:"
+              "text": "schreiben is Latin scrībere, and before that \"to scratch.\" German took it in with the writing itself, and early: the loan passed through German sound changes — sc- became sch- — and joined the native strong verbs, its past becoming schrieb. A late loan would have done neither."
             },
             {
               "kind": "speech",
-              "text": "Ich schlafe. Ich höre. Ich stehe. Ich gehe. Ich laufe. Ich renne. Ich sitze. Ich mache die Hand auf. Ich mache die Hand zu."
+              "text": "English refused it. Write is Old English wrītan, also \"to scratch,\" because runes were cut; German reißen and ritzen are its relatives. Two languages, two writing-words, both meaning scratch. Latin's verb reached English anyway: scribe, script, describe, transcript."
+            },
+            {
+              "kind": "speech",
+              "text": "And one closes a circle back to die Hand. German Hand has no Latin cousin — Latin says manus — yet manus reached German as a loan: Manuskript. Manu- is manus, the hand; -skript is scrīptum, this verb. A Manuskript is written by hand: the Latin hand-word German never inherited, bolted to the Latin writing-verb it did."
             }
           ]
         },
@@ -770,65 +703,65 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich schließe, du schließt, er schließt\"",
+              "instruction": "\"Die Hand schreibt. Ich schreibe Deutsch.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich schließe, du schließt, er schließt\"]"
+              "source": "[YOU SAY: \"Die Hand schreibt. Ich schreibe Deutsch.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"Ich mache die Hand auf. Ich mache die Hand zu.\"",
+              "instruction": "the four \"I\" forms — \"ich denke, ich verstehe, ich lese, ich schreibe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"Ich mache die Hand auf. Ich mache die Hand zu.\"]"
+              "source": "[YOU SAY: the four \"I\" forms — \"ich denke, ich verstehe, ich lese, ich schreibe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the spelling swap — \"schließen, schloss\"",
+              "instruction": "the four \"he\" forms — \"er denkt, er versteht, er liest, er schreibt\" — only liest broke",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the spelling swap — \"schließen, schloss\"]"
+              "source": "[YOU SAY: the four \"he\" forms — \"er denkt, er versteht, er liest, er schreibt\" — only *liest* broke]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the household — \"Schloss, Schlüssel, Schluss\"",
+              "instruction": "three inherited, one borrowed — \"denken/think, verstehen/stand, lesen/gather\", then \"schreiben/scrībere\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the household — \"Schloss, Schlüssel, Schluss\"]"
+              "source": "[YOU SAY: three inherited, one borrowed — \"denken/think, verstehen/stand, lesen/gather\", then \"schreiben/scrībere\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two lost verbs — \"nehmen, schließen; English took take and close\"",
+              "instruction": "denken's d — PIE t, Germanic th: Grimm's law",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two lost verbs — \"nehmen, schließen; English took *take* and *close*\"]"
+              "source": "[YOU SAY: denken's *d* — PIE *t*, Germanic *th*: Grimm's law]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four p/f pairs — \"helfen/help, offen/open, schlafen/sleep, laufen/leap\"",
+              "instruction": "\"Ich denke, also bin ich.\" — and what also does",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four *p*/*f* pairs — \"helfen/help, offen/open, schlafen/sleep, laufen/leap\"]"
+              "source": "[YOU SAY: \"Ich denke, also bin ich.\" — and what *also* does]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole morning — \"Ich schlafe. Ich höre. Ich stehe. Ich gehe. Ich laufe. Ich renne. Ich sitze.\"",
+              "instruction": "Manuskript — manus plus scrīptum",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole morning — \"Ich schlafe. Ich höre. Ich stehe. Ich gehe. Ich laufe. Ich renne. Ich sitze.\"]"
+              "source": "[YOU SAY: *Manuskript* — *manus* plus *scrīptum*]"
             }
           ]
         },
@@ -845,7 +778,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the du and er forms. (Du schließt, er schließt.) Which English verb is the cousin of schließen? (None — English lost it.) Where did close and shut come from? (Latin, and from shoot.) Name three words German hung on the verb. (Schloss, Schlüssel, Schluss.) Close your hand, both ways, then run the eight verbs."
+              "text": "Say all four \"I\" forms. (Ich denke, ich verstehe, ich lese, ich schreibe.) Which is the loan? (Schreiben, from scrībere, \"to scratch\" — as English write also meant.) Which \"he\" form breaks its vowel? (Only liest.) Which half of Manuskript did German never inherit? (Manus, its own Hand.) And German also? (Therefore.)"
             }
           ]
         }

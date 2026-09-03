@@ -1,18 +1,15 @@
 {
   "language": "german",
   "chapter": 27,
-  "sourceHash": "fnv1a64:730a024bb6551ecd",
+  "sourceHash": "fnv1a64:719319b9feb2b5de",
   "lessonIds": [
-    "GE-C25-nehmen",
-    "GE-C25-fragen",
-    "GE-C25-helfen",
-    "GE-C25-moegen-lieben"
+    "GE-C22-hund-katze"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "german/narration/ch27.txt",
   "json": "german/narration/ch27.json",
-  "textHash": "fnv1a64:d0df55e78b8cedbc",
-  "jsonHash": "fnv1a64:d6ad3ad9e9611974",
+  "textHash": "fnv1a64:e843087271be2662",
+  "jsonHash": "fnv1a64:09770c6b16136324",
   "findings": []
 }

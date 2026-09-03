@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 33,
-  "title": "Arm, Finger, Foot, Heart",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ec657b1c19751aac",
+  "title": "Coffee, Tea, and Milk",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:a2236571e96fcc26",
   "lessons": [
     {
-      "id": "GE-C31-arm",
-      "sequence": 970,
-      "title": "der Arm — the word Hand's own table already named",
-      "headword": "der Arm",
-      "romanization": "der Arm",
-      "gloss": "arm — named on the Hand table and now finally taught, a word Grimm's law never had to touch",
+      "id": "GE-C28-kaffee",
+      "sequence": 870,
+      "title": "der Kaffee — the drink that closes one chapter and opens another",
+      "headword": "der Kaffee",
+      "romanization": "der Kaffee",
+      "gloss": "coffee — a loanword that crossed from Arabic to German by way of Turkish and Italian, and the first word in a new polite request",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fcd03f74eb19cbf",
+      "sourceHash": "fnv1a64:3d5033c8bb991eeb",
       "notice": null,
       "blocks": [
         {
@@ -35,52 +35,52 @@
             },
             {
               "kind": "speech",
-              "text": "The Hand lesson ran a table — Hand, Arm, Finger, Fuß, Herz — to show how closely German and English match on the body. Only Hand was actually taught. Here is the second name from that table."
+              "text": "The last chapter ended by closing a hand. Now open the day with something to drink — and a new use for a request pattern you already own."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: der Arm",
+          "title": "You'll want to know: der Kaffee",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Arm — arm. Masculine."
+              "text": "der Kaffee — coffee. Masculine."
             },
             {
               "kind": "speech",
-              "text": "Das ist der Arm. — \"This/That is the arm.\""
+              "text": "Bitte taught you a complete polite request out of two known words: Wasser, bitte. The same pattern takes any drink you can name:"
             },
             {
               "kind": "speech",
-              "text": "Plural: die Arme."
+              "text": "Kaffee, bitte. — Coffee, please."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: an open a",
+          "title": "Sounds you'll need: where the stress falls",
           "segments": [
             {
               "kind": "speech",
-              "text": "Arm is said almost exactly as it is spelled, with German's open ah vowel: Arm = AHRM. Of everything in this chapter, it is the smallest gap between the German word and its English cousin."
+              "text": "Kaffee is said two ways, and both are standard: many speakers in the north stress the first syllable, KAF-fay; many in the south, and most international learners' material, stress the second, kaf-FAY. Unlike gehen and laufen's Germany/Austria split, this one is not regional in any strict sense — you will hear both from native speakers in the same city."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: too close to shift",
+          "title": "The word, taken apart: a Turkish word wearing an Italian coat",
           "segments": [
             {
               "kind": "speech",
-              "text": "Arm is Proto-Germanic armaz, the direct cousin of English arm, from Proto-Indo-European h₂er-, \"to fit together, to join.\" That same root, by a separate Latin path, gave English art (a fitting-together of skill) and harmony by way of Greek."
+              "text": "Kaffee is a loanword, and a young one by this book's standard — nothing like Wein's two-thousand-year-old borrowing from Latin vīnum. The word travelled Arabic qahwa becomes Ottoman Turkish kahve becomes Italian caffè becomes German Kaffee. English coffee and French café took the same Italian step, which is why the whole spread of European words for the drink still rhymes with each other despite crossing four language families to get here."
             },
             {
               "kind": "speech",
-              "text": "Vater/father and Fuß/foot both show Grimm's law loudly, because their starting consonants were exactly the ones the law changed. Arm shows why the law is a rule about specific sounds, not a blanket difference between German and English: the consonants in armaz were never in the law's path, so nothing had to move, and Arm and arm still look like the same word today for the same reason Hand and hand do."
+              "text": "The last chapter closed on schließen, a verb Proto-Germanic built and English lost outright. Kaffee is the opposite kind of word: nothing here is inherited, and nothing needed to be — German simply took the whole word, sound and all, the way it took Wein centuries earlier."
             }
           ]
         },
@@ -98,29 +98,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Arm\" — AHRM; \"die Arme\"",
+              "instruction": "\"der Kaffee\" — either stress, both correct",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Arm\" — *AHRM*; \"die Arme\"]"
+              "source": "[YOU SAY: \"der Kaffee\" — either stress, both correct]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist der Arm.\"",
+              "instruction": "\"Kaffee, bitte.\" — the bitte pattern, one word swapped",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Arm.\"]"
+              "source": "[YOU SAY: \"Kaffee, bitte.\" — the *bitte* pattern, one word swapped]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the point — \"Grimm's law only moves the sounds in its path; Arm's sounds were never in it\"",
+              "instruction": "the route — \"qahwa, kahve, caffè, Kaffee\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the point — \"Grimm's law only moves the sounds in its path; Arm's sounds were never in it\"]"
+              "source": "[YOU SAY: the route — \"qahwa, kahve, caffè, Kaffee\"]"
             }
           ]
         },
@@ -137,26 +137,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"arm\" with its article and plural. (Der Arm, die Arme.) Which earlier table already named this word? (Hand's table — Hand, Arm, Finger, Fuß, Herz.) Why does Arm look almost identical to English arm, when Vater/father do not? (Its sounds were never in Grimm's law's path.)"
+              "text": "Give \"coffee\" with its article. (Der Kaffee.) Ask for it politely. (Kaffee, bitte.) Name the three languages the word crossed before German. (Arabic, Turkish, Italian.) Is Kaffee inherited like schließen, or borrowed like Wein? (Borrowed.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C31-finger",
-      "sequence": 980,
-      "title": "der Finger — maybe \"one of the five\"",
-      "headword": "der Finger",
-      "romanization": "der Finger",
-      "gloss": "finger — identical to its English cousin, and possibly, though not certainly, built on the word for \"five\"",
+      "id": "GE-C28-tee",
+      "sequence": 880,
+      "title": "der Tee — the same loan as English, by the same ship",
+      "headword": "der Tee",
+      "romanization": "der Tee",
+      "gloss": "tea — a word that looks like its English cousin and is not said like it, and travelled to Europe by sea rather than overland",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0cc4121a1b8234",
+      "sourceHash": "fnv1a64:052ea6f183d033f5",
       "notice": null,
       "blocks": [
         {
@@ -172,185 +172,48 @@
             },
             {
               "kind": "speech",
-              "text": "The third name from the Hand table, and the first numbers come back for a cameo."
+              "text": "Kaffee came overland through Turkey and Italy. The next drink took a completely different road — by sea."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: der Finger",
+          "title": "You'll want to know: der Tee",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Finger — finger. Masculine, spelled and said almost exactly like English."
+              "text": "der Tee — tea. Masculine."
             },
             {
               "kind": "speech",
-              "text": "Das ist der Finger. — \"This/That is the finger.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Finger — unchanged, one of the small set of German plurals that add nothing at all."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: possibly the fiver",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Finger is Proto-Germanic fingraz, inherited straight into English with no change of shape at all — the closest match of any word in this chapter."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: a tempting but unproven link",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You were taught fünf, \"five,\" from Germanic fimf. One proposed account connects fingraz to that very number, as if a finger were once simply \"one of the five.\" It is a satisfying story, and it shows up often — but it is reported by standard references as plausible, not proven: the sound changes needed to get from fimf to fingraz are not fully regular, so the link stays a proposal rather than a settled fact. Held loosely, the way hören held \"sharp-eared\"."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der Finger\" — \"die Finger\", unchanged plural",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Finger\" — \"die Finger\", unchanged plural]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Das ist der Finger.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Finger.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the maybe-link — \"Finger, fünf — plausible, not proven\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the maybe-link — \"Finger, fünf — plausible, not proven\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"finger\" with its article and plural. (Der Finger, die Finger — unchanged.) What number might Finger be built on, and how certain is that link? (Fünf, \"five\" — plausible, not proven.) Name one other word in this book that carries the same kind of unsettled-but-cited etymology. (Hören's \"sharp-eared\" account.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C31-fuss",
-      "sequence": 990,
-      "title": "der Fuß — Grimm's law, on a second word",
-      "headword": "der Fuß",
-      "romanization": "der Fuß",
-      "gloss": "foot — the fourth name from the Hand table, and the same p-to-f Grimm's law pattern Vater already taught",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:2b047032c098449c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One name left on the Hand table, and it turns out to run the very same sound-law you already learned on a completely different word."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: der Fuß",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "der Fuß — foot. Masculine."
-            },
-            {
-              "kind": "speech",
-              "text": "Das ist der Fuß. — \"This/That is the foot.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Füße — the umlaut marking more than one, the same fronting pattern behind Mann becomes Männer."
+              "text": "Tee, bitte. — Tea, please."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: ß after a long vowel",
+          "title": "Sounds you'll need: not the English vowel",
           "segments": [
             {
               "kind": "speech",
-              "text": "Fuß = FOOSS, a long u followed by the sharp s spelled ß. The colour words already gave you the rule this word follows exactly: ß after a long vowel, ss after a short one — the same reason weiß keeps its ß while Fluss does not."
+              "text": "Tee is spelled almost exactly like the English word it translates, and said nothing like it. German ee is a long, steady ay: Tee = TAY, not tea's ee. Looking alike on the page and sounding different is its own small trap — worth naming so it doesn't catch you."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: p becomes f, a second time",
+          "title": "The word, taken apart: the other half of the tea map",
           "segments": [
             {
               "kind": "speech",
-              "text": "Fuß is Proto-Germanic fōts, cousin of English foot, from Proto-Indo-European pṓds. That opening p becomes f is the very shift Vater/father showed you — Grimm's law, run again here on an unrelated word, with the identical result: Latin kept the old p in ped- (giving English pedal, pedestrian), Germanic moved it to f in both Fuß and foot."
+              "text": "Tee is Hokkien Chinese tê, the word for the plant in the coastal Chinese dialect that Dutch traders dealt with directly. Dutch thee carried it into Europe by sea, and German took the word from Dutch — the same route English tea followed, which is why Tee and tea match as closely as they do."
             },
             {
               "kind": "speech",
-              "text": "This chapter has now shown you two shapes of Grimm's law and one word that never needed it at all: Vater and Fuß both shift p becomes f; Arm sits outside the law's reach entirely, unchanged in both languages."
+              "text": "That is not the only road this word took. Languages reached by the overland trade routes out of northern China took a different syllable of the same Chinese word: Hindi chai, Russian chai, Turkish çay. One plant, one Chinese word, two pronunciations of it — split by whether a language got the word from a ship or a caravan. Kaffee's three-hop route through Turkish and Italian was its own single path; tea forked into two."
             }
           ]
         },
@@ -368,29 +231,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Fuß\" — FOOSS; \"die Füße\"",
+              "instruction": "\"der Tee\" — say it TAY, not tea",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Fuß\" — *FOOSS*; \"die Füße\"]"
+              "source": "[YOU SAY: \"der Tee\" — say it *TAY*, not *tea*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist der Fuß.\"",
+              "instruction": "\"Tee, bitte.\" — \"Kaffee, bitte.\" — same pattern, two drinks",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Fuß.\"]"
+              "source": "[YOU SAY: \"Tee, bitte.\" — \"Kaffee, bitte.\" — same pattern, two drinks]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the shift, twice — \"Vater/father, Fuß/foot — both p to f\"",
+              "instruction": "the fork — \"tê, thee, Tee, tea\" by sea; \"chai, chai, çay\" overland",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the shift, twice — \"Vater/father, Fuß/foot — both p to f\"]"
+              "source": "[YOU SAY: the fork — \"tê, thee, Tee, tea\" by sea; \"chai, chai, çay\" overland]"
             }
           ]
         },
@@ -407,26 +270,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"foot\" with its article and plural. (Der Fuß, die Füße.) Which family word already showed this same sound-law step? (Vater/father, both p becomes f.) Why does Fuß keep its ß while Fluss does not? (Long vowel before it, by the eszett rule.)"
+              "text": "Give \"tea\" with its article, and say it correctly. (Der Tee — TAY.) Which language gave German the word, and by what route? (Hokkien Chinese tê, by way of Dutch sea trade.) Name one language that got the same Chinese word overland instead. (Hindi, Russian, or Turkish.) Does Tee sound the way it's spelled in English? (No — same letters, different vowel.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C31-herz",
-      "sequence": 1000,
-      "title": "das Herz — the body list, complete at last",
-      "headword": "das Herz",
-      "romanization": "das Herz",
-      "gloss": "heart — the last name from the Hand table, closing it with the same k-to-h Grimm's law swap already heard on hören and Hund",
+      "id": "GE-C28-milch",
+      "sequence": 890,
+      "title": "die Milch — the one that was never borrowed",
+      "headword": "die Milch",
+      "romanization": "die Milch",
+      "gloss": "milk — the native Germanic word that closes this trio, standing beside two loanwords the way Wasser once stood beside the loanword Wein",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f5368ee1938e690",
+      "sourceHash": "fnv1a64:a0f63e64f995d260",
       "notice": null,
       "blocks": [
         {
@@ -442,68 +305,53 @@
             },
             {
               "kind": "speech",
-              "text": "The Hand lesson printed a five-word table and taught you one of them. This lesson teaches the fifth and closes it."
+              "text": "Kaffee came from Arabic by way of Turkish and Italian. Tee came from Chinese by way of Dutch. The third drink needed no ship and no caravan — German already had it."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: das Herz",
+          "title": "You'll want to know: die Milch",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Herz — heart. Neuter — the one organ word in this chapter that breaks the masculine pattern of Arm, Finger and Fuß."
+              "text": "die Milch — milk. Feminine."
             },
             {
               "kind": "speech",
-              "text": "Das ist das Herz. — \"This/That is the heart.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Plural: die Herzen."
+              "text": "Milch, bitte. — Milk, please."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: a short e",
+          "title": "Sounds you'll need: the other ch",
           "segments": [
             {
               "kind": "speech",
-              "text": "Herz takes a short, open e, as in English bed: Herz = HAIRTS, the z said ts, exactly as in Katze."
+              "text": "German's ch is not one sound but two. After a back vowel like the a of Nacht, it is a rasp at the back of the throat. After a front vowel or consonant like the i of Milch, it is soft, made further forward — closer to a hissed h. Say ich (your own word for \"I\") right before Milch and you are making the same sound twice."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: the same k-to-h swap, a third time",
+          "title": "The word, taken apart: a verb that became its own product",
           "segments": [
             {
               "kind": "speech",
-              "text": "Herz is Proto-Germanic hertan, cousin of English heart, from Proto-Indo-European ḱērd-. The opening consonant is Grimm's law again — old k became Germanic h — the identical step already heard on hören (against Greek akoúein, English acoustic) and on Hund (against Latin canis). Three separate words, one law, heard a third time: k stays k in the languages that didn't shift, and softens to h in every Germanic one."
+              "text": "Milch is native Germanic, from meluks, and further back from Proto-Indo-European h₂melg-, \"to milk\" — the action came first, and the word for the substance is simply that verb, frozen into a noun. English milk is the exact same word, inherited rather than borrowed, which makes it the cousin of German Melker (\"milker\") the way denken is the cousin of Dank."
             },
             {
               "kind": "speech",
-              "text": "That five-word list is finally complete. Hand was taught that chapter; Arm, Finger, Fuß and now Herz waited fourteen chapters for their turn. All five are native Germanic, all five are direct cousins of their English translations, and not one of them was borrowed from anywhere."
+              "text": "So the trio closes the way the food lesson did: Wasser was native beside the loanword Wein; here, Milch is native beside the loanwords Kaffee and Tee. Two loans, one inherited word, in both chapters — but this time the loans arrived from opposite directions on the map, one overland and one by sea, and only the native word needed no journey at all."
             }
           ]
         },
         {
           "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: the whole chapter, run once more",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Run this chapter's four words back to back: der Arm, said almost exactly as spelled, sitting outside Grimm's law entirely; der Finger, identical to English and maybe — not certainly — built on fünf; der Fuß, the p becomes f Grimm's-law twin of Vater, its ß long-vowel-marked exactly as Chapter 13 taught; and das Herz, the k becomes h twin of hören and Hund. Four words, four different sound-law stories, and not one of them borrowed."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -516,43 +364,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Herz\" — HAIRTS; \"die Herzen\"",
+              "instruction": "\"die Milch\" — the soft ch, as in ich",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Herz\" — *HAIRTS*; \"die Herzen\"]"
+              "source": "[YOU SAY: \"die Milch\" — the soft *ch*, as in *ich*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist das Herz.\"",
+              "instruction": "all three requests — \"Kaffee, bitte. Tee, bitte. Milch, bitte.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist das Herz.\"]"
+              "source": "[YOU SAY: all three requests — \"Kaffee, bitte. Tee, bitte. Milch, bitte.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole list, complete — \"Hand, Arm, Finger, Fuß, Herz\"",
+              "instruction": "the shape of the chapter — \"Wasser native, Wein borrowed; Milch native, Kaffee and Tee borrowed\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole list, complete — \"Hand, Arm, Finger, Fuß, Herz\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the k-to-h swap, three times — \"Hund/canis, hören/akoúein, Herz/kardia\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the k-to-h swap, three times — \"Hund/canis, hören/akoúein, Herz/kardia\"]"
+              "source": "[YOU SAY: the shape of the chapter — \"Wasser native, Wein borrowed; Milch native, Kaffee and Tee borrowed\"]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -564,7 +403,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"heart\" with its article and plural. (Das Herz, die Herzen.) Which two earlier words showed the same Grimm's-law k becomes h swap? (Hören and Hund.) Name all five words from that original table, now that all five are taught. (Hand, Arm, Finger, Fuß, Herz.) Which one breaks the chapter's masculine pattern, and how? (Herz — it is neuter.)"
+              "text": "Give \"milk\" with its article. (Die Milch.) Is it native or borrowed? (Native — inherited meluks, the twin of English milk.) Which two drinks in this chapter were borrowed, and from where? (Kaffee from Arabic/Turkish/Italian; Tee from Hokkien Chinese by way of Dutch.) Which earlier chapter set up the exact same native/borrowed shape? (Chapter 11 — Wasser and Wein.)"
             }
           ]
         }

@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Today, and How Much",
+  "label": "ch:hi-today-and-how-much",
+  "canDo": "I can place a thing in today, add myself to it, and raise it when I ask after somebody.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C71-very",
+    "kind": "production",
+    "summary": "Complete HI-C71-very and say all three words in order, then say something is very big and add yourself to it.",
+    "assesses": [
+      "HI-LEX-C71-TODAY-01",
+      "HI-LEX-C71-TODAY-02",
+      "HI-LEX-C71-TODAY-03"
+    ]
+  }
+}

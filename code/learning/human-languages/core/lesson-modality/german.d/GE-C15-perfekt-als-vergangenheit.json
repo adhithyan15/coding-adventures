@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C15-perfekt-als-vergangenheit",
+    "language": "german",
+    "chapter": 16,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1eb801b9d913c0bc"
+  },
+  "findings": []
+}

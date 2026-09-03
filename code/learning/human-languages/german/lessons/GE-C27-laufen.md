@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C27-laufen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 840
-chapter: 29
+chapter: 32
 type: word
 headword: laufen
 gloss: to run — and to walk, because German draws the line in a different place from English, with rennen at the fast end

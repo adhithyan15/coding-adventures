@@ -1,12 +1,9 @@
 {
   "language": "german",
   "chapter": 28,
-  "sourceHash": "fnv1a64:730246f9e9394ddc",
+  "sourceHash": "fnv1a64:6a3bac54c033a4a3",
   "lessonIds": [
-    "GE-C26-sitzen",
-    "GE-C26-stehen",
-    "GE-C26-schlafen",
-    "GE-C26-hoeren"
+    "GE-C23-gruen-gelb"
   ],
-  "tex": "german/book/chapters/ch28-still-verbs.tex"
+  "tex": "german/book/chapters/ch28-green-and-yellow.tex"
 }

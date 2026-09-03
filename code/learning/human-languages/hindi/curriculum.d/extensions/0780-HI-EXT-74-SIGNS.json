@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-74-SIGNS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read open, closed, entrance and exit on a sign, and say that something is late.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C74-open",
+    "HI-C74-closed",
+    "HI-C74-entrance",
+    "HI-C74-exit",
+    "HI-C74-late"
+  ]
+}

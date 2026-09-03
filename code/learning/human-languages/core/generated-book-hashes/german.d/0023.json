@@ -1,9 +1,10 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:34a0c67c71a3465a",
+  "sourceHash": "fnv1a64:5fca83d30632f7df",
   "lessonIds": [
-    "GE-C21-das-wetter"
+    "GE-C18-ja",
+    "GE-C18-nein"
   ],
-  "tex": "german/book/chapters/ch23-weather.tex"
+  "tex": "german/book/chapters/ch23-yes-and-no.tex"
 }

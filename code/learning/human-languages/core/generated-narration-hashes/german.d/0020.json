@@ -1,16 +1,22 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:ad80ca4a441c5d52",
+  "sourceHash": "fnv1a64:e56fcb325aa4aff7",
   "lessonIds": [
-    "GE-C18-ja",
-    "GE-C18-nein"
+    "GE-C16-ich-war",
+    "GE-C16-du-warst",
+    "GE-C16-er-war",
+    "GE-C16-wir-waren",
+    "GE-C16-drei-wurzeln",
+    "GE-C16-suppletion",
+    "GE-C16-haeufig-unregelmaessig",
+    "GE-C16-war-practice"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch20.txt",
   "json": "german/narration/ch20.json",
-  "textHash": "fnv1a64:fb2dbae72067d9e2",
-  "jsonHash": "fnv1a64:c232c1efa97f10d5",
+  "textHash": "fnv1a64:708aa481bcbedc27",
+  "jsonHash": "fnv1a64:64991607603e88de",
   "findings": []
 }

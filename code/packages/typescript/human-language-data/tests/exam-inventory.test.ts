@@ -1241,3 +1241,155 @@ describe("the committed Kannada A1 inventory", () => {
     );
   }, 60_000);
 });
+
+describe("the committed Malayalam A1 inventory", () => {
+  const inventory = loadExamInventory("malayalam", "A1");
+  const spanish = loadExamInventory("spanish", "A1");
+
+  it("keeps every point's probe key, and never an empty probe", () => {
+    for (const point of inventory.points) {
+      expect(point, `${point.id} has no probe key`).toHaveProperty("probe");
+      expect(Array.isArray(point.probe) ? point.probe.length : 1, point.id).toBeGreaterThan(0);
+    }
+  });
+
+  it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
+    // The rule HL-C290 calls out by name, and the reason this file was
+    // generated from a table rather than hand-written: a probe pointing at an
+    // id somebody expects a future lesson to introduce resolves to "not
+    // introduced" forever and sits in the report indistinguishable from the
+    // honest gaps around it. Every probe here was checked against the merged
+    // tree's atom set before the file was emitted, and the first draft was
+    // refused by that check for inventing four `ML-SCRIPT-DIGIT-*` ids where
+    // the corpus actually has `ML-SCRIPT-DIGITS-1-3-07` and its three siblings.
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "malayalam");
+    const unknown: string[] = [];
+    for (const point of inventory.points) {
+      for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+    }
+    expect(unknown).toEqual([]);
+  }, 60_000);
+
+  it("keeps the derivation total in both directions", () => {
+    // Every Spanish point derives into some Malayalam point, and none is
+    // dropped. `notTransferred` is EMPTY on purpose: the points whose honest
+    // Malayalam answer is "there is no such thing here" -- article
+    // contractions, capital letters, written accents -- are enumerated as
+    // points recording the absence rather than dropped from the walk, because
+    // HL-C290 settled that restating a question around the target language's
+    // machinery IS deriving it.
+    const proxy = (inventory as unknown as {
+      proxy: { notTransferred: { spanishPoints: string[]; why: string }[] };
+    }).proxy;
+    const dropped = new Set(proxy.notTransferred.flatMap((entry) => entry.spanishPoints));
+    for (const entry of proxy.notTransferred) expect(entry.why.trim().length).toBeGreaterThan(0);
+    const derived = new Set(
+      inventory.points.flatMap((point) => (point as unknown as { derivedFrom: string[] }).derivedFrom),
+    );
+    const sourceIds = new Set(spanish.points.map((point) => point.id));
+    for (const id of derived) expect(sourceIds.has(id), `derivedFrom names unknown ${id}`).toBe(true);
+    for (const id of dropped) expect(sourceIds.has(id), `notTransferred names unknown ${id}`).toBe(true);
+    expect([...derived].filter((id) => dropped.has(id)), "derived AND dropped").toEqual([]);
+    const unaccounted = [...sourceIds].filter((id) => !derived.has(id) && !dropped.has(id));
+    expect(unaccounted, "Spanish points that went missing from the walk").toEqual([]);
+  });
+
+  it("marks its own points as its own, in both directions", () => {
+    for (const point of inventory.points) {
+      const cast = point as unknown as { derivedFrom: string[]; malayalamSpecific?: boolean };
+      expect(cast.malayalamSpecific === true, point.id).toBe(cast.derivedFrom.length === 0);
+    }
+    // Deliberately none. Every Malayalam column here answers a demand some
+    // Spanish point also makes, even where the machinery is unrecognisable --
+    // a dative subject doing what gustar does, a question particle doing what
+    // inversion does, a verb that never agrees answering fourteen paradigm
+    // points at once. If a later tranche adds a point with no Spanish question
+    // behind it, this assertion is where it has to be declared.
+    const specific = inventory.points.filter(
+      (point) => (point as unknown as { derivedFrom: string[] }).derivedFrom.length === 0,
+    );
+    expect(specific.map((point) => point.id)).toEqual([]);
+  });
+
+  it("refuses to borrow an authority it does not have", () => {
+    expect(inventory.about).toMatch(/PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS/);
+    expect(inventory.about).toMatch(/Kerala Sahitya Akademi/);
+    expect(inventory.about).toMatch(/Kerala's state school syllabi/);
+    expect(inventory.source).toMatch(/^PROJECT-DEFINED\./);
+    expect(inventory.about).toMatch(/EXAM ENVELOPE: NONE EXISTS/);
+    expect(inventory.about).toMatch(/no malayalam\/task-shapes\/ and no malayalam\/mocks\//);
+    expect(inventory.about).toMatch(/NOT SEARCHED, BY INSTRUCTION/);
+    expect(isExamInventoryComplete(inventory)).toBe(false);
+    for (const dimension of EXAM_CONTENT_DIMENSIONS) {
+      expect(inventory.scope[dimension].status, dimension).toBe("partial");
+    }
+  });
+
+  it("says the register column was MEASURED here and not carried over from Tamil", () => {
+    // The instruction this file was written under: where a track's
+    // exam-levels.json entry carries no caveat, measure rather than importing
+    // another track's shape. Tamil has a diglossia caveat and a register
+    // column; Malayalam has no caveat, and the column it does get is a
+    // DIFFERENT axis found by counting this corpus's own register fields.
+    expect(inventory.about).toMatch(/THE REGISTER COLUMN IS MEASURED, NOT BORROWED/);
+    expect(inventory.about).toMatch(/does not claim a literary\/spoken\s*\n?\s*diglossia/);
+    const register = inventory.points.filter((point) =>
+      point.category.startsWith("Bhaashaabhedam"),
+    );
+    expect(register).toHaveLength(5);
+  });
+
+  it("names an anchor for every point, and says what kind of anchor it is", () => {
+    const anchors = (inventory as unknown as {
+      anchors: { id: string; kind: string; title: string; note: string }[];
+    }).anchors;
+    expect(Array.isArray(anchors)).toBe(true);
+    expect(new Set(anchors.map((anchor) => anchor.kind))).toEqual(
+      new Set(["sourced-proxy", "external-framework", "project-owned", "editorial"]),
+    );
+    for (const anchor of anchors) expect(anchor.note.trim().length, anchor.id).toBeGreaterThan(0);
+    const known = new Set(anchors.map((anchor) => anchor.id));
+    for (const point of inventory.points) {
+      const ids = (point as unknown as { anchorIds?: string[] }).anchorIds;
+      expect(ids?.length, `${point.id} names no anchor`).toBeGreaterThan(0);
+      for (const id of ids ?? []) expect(known.has(id), `${point.id} cites unknown anchor ${id}`).toBe(true);
+    }
+  });
+
+  it("reports a joining column of 2 out of 11, and a script 9 characters short", () => {
+    // Pinned so a future tranche has to say which points it moved. It may rise;
+    // a fall means coverage was lost and wants explaining.
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage.enumerated).toBe(243);
+    expect(coverage.covered).toBe(162);
+    expect(coverage.unmapped).toBe(81);
+    expect(coverage.partial).toBe(0);
+    // THE HEADLINE. Malayalam joins clauses with a clitic -um for "and", a
+    // quotative ennu for "that", and participles for everything else, and the
+    // corpus teaches none of them. Chapter 64 is called "Five Words That Join"
+    // and four of its five words are adverbs -- pinne, udane, chilappol,
+    // maathram -- so only ennaal ("but") is a real connective. The second
+    // covered point is the -i participle inside the goodbye poyi varaam, which
+    // the corpus teaches without ever naming it as a way of joining clauses.
+    // Same shape as Kannada's chapter 64 finding, measured independently.
+    const joining = coverage.byCategory["Samuchayam (joining and subordination)"]!;
+    expect(joining).toEqual({ enumerated: 11, covered: 2 });
+    // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
+    // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
+    // distinct characters its headwords use -- 87 per cent. The nine open ones,
+    // by the number of headwords needing them: sha (14), lla (10), chillu-rr
+    // (8), nga (8), the ai sign (5), dha (5), ba (3), kha (3), cha (2).
+    expect(coverage.byCategory["Lipi (script and orthography)"]!).toEqual({
+      enumerated: 16,
+      covered: 11,
+    });
+    // The two columns that carry this track.
+    expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
+    expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
+    expect(formatExamCoverage(coverage)).toContain(
+      "malayalam A1 (partial inventory): 162/243 points covered (67%)",
+    );
+  }, 60_000);
+});

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:663bddac3f375ffe",
+  "lessonIds": [
+    "HI-C68-country",
+    "HI-C68-india",
+    "HI-C68-city",
+    "HI-C68-language",
+    "HI-C68-english"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch75.txt",
+  "json": "hindi/narration/ch75.json",
+  "textHash": "fnv1a64:a217f900341a7b80",
+  "jsonHash": "fnv1a64:eeabdf68949e217f",
+  "findings": []
+}

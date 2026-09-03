@@ -1,4 +1,4 @@
-# Session Map — German Chapters 1–4 and 16–18
+# Session Map — German Chapters 1–5 and 14–21
 
 How the lessons compose into commute sessions. Mechanics in
 [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md); same
@@ -133,7 +133,79 @@ now come before the sentences that need them.
 
 Reviews of earlier words fold into each session per the interval schedule.
 
-## Chapters 16, 17 and 18 — sein, its past, and the past built on it
+## Chapter 14 — To Have
+
+Chapter 5 taught the ending machine, so *haben* is met as the place that machine
+**fails**. It predicts four of the six forms correctly, so those share one
+session that makes the reader build them; the two it gets wrong get a session
+each.
+
+| Session | What it adds |
+|---|---|
+| haben | the infinitive and the stem *hab-*; long *a*, as in *father* |
+| hab- through the machine | the four the endings already give you, built rather than read |
+| du hast | the first break — the *b* drops and the vowel shortens |
+| er hat | the second and last break; one form for *er*, *sie* and *es* |
+| der verlorene b | why both drop it, and English *he has* / archaic *thou hast* |
+| einen | "a" for the thing you have — the first sighting of the case system |
+| haben ist nicht habēre | the false cognate: *haben* is kin to *capture*, *habēre* to *give* |
+| practice | the six forms together for the first time, as a recap |
+
+The age half of the hand-written chapter is **not** here — it needs the copula,
+so it waits until after it.
+
+## Chapters 15, 16 and 17 — the participle, the Perfekt, and the Präteritum
+
+Split from one hand-written chapter. The material is a participle recipe, four
+person slots of a compound tense, and a second past tense that means the same
+thing as the first — twenty-four atoms at one per lesson, twice
+`maxNewAtomsPerChapter`, so it is three chapters rather than one dense one —
+this one, then 20 and 21, with the age chapter sitting between the first two so
+the present forms get used before the past arrives.
+
+### Chapter 15 — The Wrapped Participle
+
+| Session | What it adds |
+|---|---|
+| sagen | to say (= English *say*, with the *g* English thinned to *y*) |
+| gesagt | the first participle; the stem survives untouched in the middle |
+| ge-…-t | the recipe: a circumfix, not a prefix and a suffix that co-occur |
+| gemacht | the recipe on *machen*; one German word for *made* and *done* |
+| gelernt | the recipe on *lernen*; English marks the same idea only at the back |
+| gewohnt | the recipe on *wohnen*; English kept the old sense as *wont* |
+| ge- | Germanic \**ga-* "completely"; the fossil inside *enough* and *yclept* |
+| practice | the four participles together for the first time, as a recap |
+
+### Chapter 16 — The Past Built From Have
+
+| Session | What it adds |
+|---|---|
+| haben plus Partizip | the *Perfekt* recipe; only the helper agrees with anything |
+| ich habe gesagt | the first slot, and the first whole sentence about the past |
+| du hast gesagt | *haben* drops its *b*, exactly as English *thou hast* does |
+| er hat das gemacht | the second *b*-less form; the first word inside the bracket |
+| wir haben gesagt | the *wir* form is the infinitive over again |
+| das Partizip am Ende | the bracket: helper second, participle at the clause end |
+| gestern | yesterday — the word that fills the gap the bracket opens |
+| ich habe gesagt = I said | the translation trap: it is a plain past, not a perfect |
+| practice | the four slots together for the first time, as a recap |
+
+### Chapter 17 — The Simple Past
+
+| Session | What it adds |
+|---|---|
+| -te | the *Präteritum*: one word, and the same meaning as the *Perfekt* |
+| ich sagte | the pair said back to back for the first time |
+| ich machte | the stem never moves, whichever past you build |
+| the dental preterite | *sagte*, *walked*, *werkte* — one Germanic invention |
+| ich hatte | *haben*'s own past, and English *had* |
+| gesprochen oder geschrieben | speech takes one, narrative writing takes the other |
+| ich konnte | a modal, and a *Präteritum* everyone says out loud |
+| the survivors | the short list frequency protected, and why it is short |
+| areale Veränderung | German, French and Italian retreated together, by contact |
+| practice | both pasts, back to back, until nothing about the meaning moves |
+
+## Chapter 18 — I Am, You Are
 
 Split from one hand-written chapter. `sein` is the only German verb whose forms
 cannot be derived from its infinitive, so it is met one form per lesson and the
@@ -141,7 +213,6 @@ paradigm grid appears only at the end, as a recap of lessons already done. At
 one atom per grammar cell the material is twenty-four atoms, which is twice
 `maxNewAtomsPerChapter`, so it is three chapters rather than one dense one.
 
-### Chapter 16 — I Am, You Are
 
 | Session | What it adds |
 |---|---|
@@ -155,7 +226,24 @@ one atom per grammar cell the material is twenty-four atoms, which is twice
 | müde | tired — and an adjective after *sein* takes no ending |
 | practice | the six forms together for the first time, as a recap |
 
-### Chapter 17 — Three Verbs Under One Roof
+## Chapter 19 — Being Your Years
+
+Moved out of the hand-written *haben* chapter, because the sentence it teaches
+needs the copula. It sits directly after the chapter that supplies *ich bin* and
+*du bist*, which interrupts the *sein* arc on purpose: a reader who has just met
+six forms of a verb should use them for something real before meeting its past.
+
+| Session | What it adds |
+|---|---|
+| alt | old (= English *old*); after *sein* an adjective takes no ending |
+| das Jahr | the year — and the silent lengthening *h* `GE-C03-gehen` promised |
+| Jahr und alt | both inherited, not borrowed; *alt*'s Latin cousin inside *adult* |
+| Wie alt bist du? | the question, four words all already owned |
+| ich bin zwanzig Jahre alt | the answer, word for word the English sentence |
+| sein, nicht haben | Germanic **is** its years; Romance **has** them |
+| practice | asking and answering, with *haben* never once needed |
+
+## Chapter 20 — Three Verbs Under One Roof
 
 | Session | What it adds |
 |---|---|
@@ -168,7 +256,7 @@ one atom per grammar cell the material is twenty-four atoms, which is twice
 | why sein is a mess | frequency protects irregularity; analogy never reaches "to be" |
 | practice | the past assembled, and the account of the three roots |
 
-### Chapter 18 — The Past That Takes To Be
+## Chapter 21 — The Past That Takes To Be
 
 | Session | What it adds |
 |---|---|
@@ -184,5 +272,5 @@ one atom per grammar cell the material is twenty-four atoms, which is twice
 
 ## Next
 
-Chapter 6 — the numbers one to ten. Chapters 6–15 are still hand-written LaTeX;
+Chapter 6 — the numbers one to ten. Chapters 6–13 are still hand-written LaTeX;
 see `../BACKLOG.d/` for the retirement queue.

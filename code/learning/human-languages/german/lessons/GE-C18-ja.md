@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C18-ja
 spine_node: SPINE-RESPOND-BASIC
 sequence: 640
-chapter: 20
+chapter: 23
 type: word
 headword: ja
 gloss: yes

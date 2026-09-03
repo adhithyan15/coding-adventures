@@ -1,0 +1,17 @@
+{
+  "id": "GE-EXT-020-C-PRAETERITUM",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can recognise the German Präteritum in writing, produce the forms of it that people say out loud, and tell which of the two pasts a setting calls for.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C15-praeteritum",
+    "GE-C15-sagte",
+    "GE-C15-machte",
+    "GE-C15-hatte",
+    "GE-C15-register",
+    "GE-C15-konnte",
+    "GE-C15-hochfrequent"
+  ]
+}

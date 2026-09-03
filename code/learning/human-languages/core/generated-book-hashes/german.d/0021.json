@@ -1,9 +1,17 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:aba28617f531cab2",
+  "sourceHash": "fnv1a64:d4810ca8524018a1",
   "lessonIds": [
-    "GE-C19-bitte-requests"
+    "GE-C16-perfekt-sein",
+    "GE-C16-kommen",
+    "GE-C16-fahren",
+    "GE-C16-werden",
+    "GE-C16-bleiben",
+    "GE-C16-perfekt-sein-ausnahmen",
+    "GE-C16-perfekt-sein-agreement",
+    "GE-C16-partizip-attributiv",
+    "GE-C16-haben-oder-sein"
   ],
-  "tex": "german/book/chapters/ch21-please.tex"
+  "tex": "german/book/chapters/ch21-perfekt-sein.tex"
 }

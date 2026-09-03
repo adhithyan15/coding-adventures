@@ -59,4 +59,4 @@ supported script practice, not independent form writing.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-FORM-LABEL-NAME-01] -->
 <!-- hl-activity: {"id":"HI-A1F01-name-label-meaning","kind":"text","assesses":["HI-FORM-LABEL-NAME-01"],"prompt":"A Hindi form shows नाम. What information belongs on that line?","answer":"name","accepted":[],"feedback":{"correct":"नाम labels the name field.","incorrect":"Point to नाम and say name once."},"response_seconds":8} -->
 
-Find **नाम** among **काम · नाम · दाम** without writing the other words.
+Find **नाम** among **काम · नाम · शाम** without writing the other words.

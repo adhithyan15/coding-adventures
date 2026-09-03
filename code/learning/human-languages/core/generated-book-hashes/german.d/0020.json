@@ -1,10 +1,16 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:9c5feb748c016424",
+  "sourceHash": "fnv1a64:ed08f85dee439119",
   "lessonIds": [
-    "GE-C18-ja",
-    "GE-C18-nein"
+    "GE-C16-ich-war",
+    "GE-C16-du-warst",
+    "GE-C16-er-war",
+    "GE-C16-wir-waren",
+    "GE-C16-drei-wurzeln",
+    "GE-C16-suppletion",
+    "GE-C16-haeufig-unregelmaessig",
+    "GE-C16-war-practice"
   ],
-  "tex": "german/book/chapters/ch20-yes-and-no.tex"
+  "tex": "german/book/chapters/ch20-drei-wurzeln.tex"
 }

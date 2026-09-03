@@ -1,19 +1,21 @@
 {
   "chapter": 22,
-  "title": "Sorry",
-  "label": "ch:ge-sorry",
-  "canDo": "I can apologise or excuse myself in German with Entschuldigung, and reach for es tut mir leid when I mean it more.",
+  "title": "Head and Hand",
+  "label": "ch:ge-head-and-hand",
+  "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "GE-C20-entschuldigung",
+    "lesson": "GE-C17-hand",
     "kind": "production",
-    "summary": "Say Schuld, then Entschuldigung as the 'un-guilting' built on it, and switch to es tut mir leid for real regret rather than a bump in the hallway. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
     "assesses": [
-      "GE-LEX-ENTSCHULDIGUNG-02",
-      "GE-ETYMON-ENTSCHULDIGUNG-03",
-      "GE-PRAGMATICS-SORRY-04"
-    ]
+      "GE-LEX-HAND-02",
+      "GE-SOUND-HAND-03",
+      "GE-ETYMON-HAND-04",
+      "GE-ETYMON-HAND-MANUS-05"
+    ],
+    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
   }
 }

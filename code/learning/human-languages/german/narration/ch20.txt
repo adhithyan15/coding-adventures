@@ -1,69 +1,276 @@
-German, chapter 20: Yes and No.
-2 lessons. All 2 can be done entirely by ear.
+German, chapter 20: Three Verbs Under One Roof.
+8 lessons. All 8 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-ja — yes.
+Lesson 1 of 8.
+ich war — "I was".
 
 Warm-up.
 [pause 2 seconds]
-The easiest German word to say, and one English almost shares.
+You know the simple past is mostly a written tense in German, and that a handful of very common verbs keep it in speech. This is the most common of them.
 
-The word, taken apart.
-ja = yes. Said yah — remember German j is pronounced like English y, never the English "j."
-It's an ancient Germanic word, and English kept the very same root in the one word that still clearly shows it:
-yea — the old, formal "yes" (the yeas and the nays in a vote) — this is ja's direct cousin, same Proto-Germanic root.
-aye — the sailor's and parliament's "yes" (Aye, aye, captain) — sounds like a cousin, but its origin is actually uncertain; it may come from a different word entirely, so don't bank on it.
-So German ja and English yea are the same little word, split between two cousin languages. (English's everyday yes is a compound of that same yea with an old "be it so.")
+You'll want to know: ich war.
+ich war — "I was."
+Nobody says ich bin gewesen in ordinary speech when ich war will do. This is the past-tense form Germans actually use, in every region, out loud.
+And hear the shape of it. Bin has a b. Ist has an s and a t. War has a w and an r, and no sound in common with either. That is now three completely unalike stems inside one verb.
 
-Grammar Lens: A German habit to file away.
-German also has a third answer-word, doch, for one special job: contradicting a negative — exactly like French si. If someone says something isn't so and you insist it is, you say doch, not ja:
-Du kommst nicht? ("You're not coming?") — Doch! ("Yes I am!")
-You'll drill doch on its own later; for now, keep ja for a plain yes and know doch is waiting for the contradictions.
+Sounds you'll need.
+w-as-v — German w is English v, so war begins like var.
+vowel-a-long — the a is long and open, the a of English father.
+r-final — the final r softens towards a vowel rather than curling.
+The result sounds close to English var, and nothing like English war.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ja" — yah, the j like English y]
+[your turn — say: "ich war" — var, long open a]
 [pause 8 seconds for the answer]
-[your turn — say: the English cousin — "yea… ja" (and maybe aye)]
+[your turn — say: "ich bin … ich war" — now and then]
 [pause 8 seconds for the answer]
-[your turn — say: the contradiction preview — "Du kommst nicht? — Doch!"]
+[your turn — say: "Ich war müde."]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich bin, ich war."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I was." (Ich war.) How does the w sound? (Like English v.) Is this form used in speech or only in writing? (In speech, everywhere — it is one of the survivors.) How many unlike stems does this verb now have? (Three.) Next: the same form for du.
+
+
+Lesson 2 of 8.
+du warst — "you were".
+
+Warm-up.
+[pause 2 seconds]
+You have ich war. The familiar "you" wants the ending it always wants.
+
+You'll want to know: du warst.
+du warst — "you were."
+War plus -st, with nothing else moved. The same ending that made bist out of bin, and gehst out of gehen.
+So the past tense of this verb is better behaved than its present: you take one stem, war-, and add ordinary endings to it. Everything difficult about sein happens in the present.
+
+Sounds you'll need.
+u-long — du keeps its long rounded oo.
+final-t — and warst ends on the fully released t German always gives you, after the s. Say the s and the t both: varst.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "du warst" — varst, both consonants released]
+[pause 8 seconds for the answer]
+[your turn — say: "ich war … du warst"]
+[pause 8 seconds for the answer]
+[your turn — say: "du bist … du warst" — now and then]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich war, du warst."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "you were," to a friend. (Du warst.) Which ending is that? (-st.) Which stem is it added to? (War-.) Is the past of this verb regular or irregular in its endings? (Regular — one stem, ordinary endings.) Next: the form for everyone else, and a surprise.
+
+
+Lesson 3 of 8.
+er war — "he was".
+
+Warm-up.
+[pause 2 seconds]
+In the present, ich and er took different words — bin against ist. In the past they take the same one.
+
+You'll want to know: er war.
+er war — "he was."
+Not a new form. It is war, unchanged, the very word you learned for ich. And as with ist, it covers sie war ("she was"), es war ("it was") and das war ("that was") as well.
+This is a habit of the German simple past, not a quirk of this verb: the I-form and the he-form are always identical there. Ich sagte and er sagte. Ich hatte and er hatte. The present tense never does this; the past always does.
+
+Sounds you'll need.
+r-final — two softening r sounds in a row now, one closing er and one closing war. Neither curls.
+vowel-a-long — and the long open a between them carries the phrase.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "er war, sie war, es war"]
+[pause 8 seconds for the answer]
+[your turn — say: "Das war gut."]
+[pause 8 seconds for the answer]
+[your turn — say: "ich war … er war" — the same word twice]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Das war gut."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "he was." (Er war.) How is it different from ich war? (It isn't — same word.) Does the present do that? (No — bin against ist.) Say "that was good." (Das war gut.) Next: the plural.
+
+
+Lesson 4 of 8.
+wir waren — "we were".
+
+Warm-up.
+[pause 2 seconds]
+One more form, and the verb is finished — present and past, all of it.
+
+You'll want to know: wir waren.
+wir waren — "we were."
+War plus the plural ending -en, the one wir takes on every verb. And just as sind served three subjects at once, waren covers sie waren ("they were") and Sie waren ("you were," politely) with no change.
+The one plural form left over is ihr wart, for a group of friends. It takes the plural-you -t, and it is the rarest form in the whole verb.
+
+The word, taken apart.
+English does the identical thing and nobody notices:
+[a table of 2 rows, read aloud]
+singular. German: war. English: was.
+plural. German: waren. English: were.
+An s in the singular, an r in the plural, in both languages, inherited from the same ancestor. English was/were and German war/waren are the same pair of words.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "wir waren, sie waren, Sie waren"]
+[pause 8 seconds for the answer]
+[your turn — say: "ich war, du warst, er war, wir waren"]
+[pause 8 seconds for the answer]
+[your turn — say: "war — was; waren — were"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich war, wir waren."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "we were." (Wir waren.) Which English pair matches war/waren? (Was/were.) What is the plural ending on it? (-en.) Say "they were." (Sie waren.) Next: why one verb needed three different stems.
+
+
+Lesson 5 of 8.
+bin, ist, war — three verbs under one roof.
+
+Warm-up.
+[pause 2 seconds]
+Say bin, ist, war one after another. They do not look like forms of the same word — and they aren't.
+
+The word, taken apart.
+Three separate Proto-Indo-European verbs each handed German a slice of this paradigm, and each of them left cousins in languages you can check:
+[a table of 3 rows, read aloud]
+forms: ist, sind, seid, sein. from: h₁es- — "to be". which also gave: Latin est, sunt; French est, sont.
+forms: bin, bist. from: bʰuH- — "to grow, become". which also gave: English be; Latin fuī.
+forms: war, waren. from: wes- — "to dwell, remain". which also gave: English was, were.
+Read the middle row again. bʰuH- did not mean "to be" at all. It meant "to grow" — and the reason English says be and German says bin is that a verb about growing got promoted into a verb about existing, in both languages, before either of them existed.
+The bottom row is the same story with a different verb: wes- meant "to dwell, to remain." Staying somewhere became having been.
+
+Why it's said this way.
+Bin has a cousin further afield than English. Latin fuī, "I was," is from the same bʰuH- — and fuī is the direct source of Spanish fui, "I was / I went."
+So German bin and Spanish fui are the same ancient word. One landed in the present tense, the other in the past, and the two languages now use it to mean opposite ends of time.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three roots — "ist from h₁es-, bin from bʰuH-, war from wes-"]
+[pause 8 seconds for the answer]
+[your turn — say: "ist — est — is"]
+[pause 8 seconds for the answer]
+[your turn — say: "war — was; waren — were"]
+[pause 8 seconds for the answer]
+[your turn — say: the cousin abroad — "German bin, Spanish fui, one root"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say yes in German? (ja, yah.) How is the j pronounced? (Like English y.) Which English word is ja's firm direct cousin? (yea — aye only looks like one; its origin is uncertain.) What German word answers yes specifically to contradict a negative? (doch.)
+How many ancient roots is sein built from? (Three.) Which one gives ist — and which Latin word proves it? (h₁es-; Latin est.) What did the root behind bin originally mean? ("To grow, to become.") Which Spanish word shares it? (Fui.) Which root gives English was and were? (wes-, the same one as war.) Next: the name for what this verb is doing.
 
 
-Lesson 2 of 2.
-nein — no.
+Lesson 6 of 8.
+Suppletion — filling a verb in from another verb.
 
 Warm-up.
 [pause 2 seconds]
-German's "no" is a tiny sentence with a number hidden inside it.
+Three roots, one verb. There is a name for that, and once you have it you will find the same thing in English.
+
+Grammar Lens: what suppletion is.
+When one verb's forms are filled in from a different verb, that is suppletion.
+Sein has no forms of its own for "I am" or "I was." It borrowed them, long ago, from two other verbs, and then all three grew together into a single paradigm that native speakers use without ever noticing the seam.
 
 The word, taken apart.
-nein = no. Said to rhyme with English nine (the ei in German is always eye).
-Take it apart and it's two words fused: ni + ein — literally "not one." English did the exact same trick: ne + one becomes none. So German nein and English none are the same idea — "not a single one" — hardened into a bare "no."
+English does the identical thing with its own commonest verbs, and you have never thought twice about it:
+[a table of 3 rows, read aloud]
+present: go. past: went. where the past came from: wend, a different verb entirely.
+present: am. past: was. where the past came from: the same wes- that gave German war.
+present: good. past: better. where the past came from: a different word again.
+Went belonged to wend — "to make one's way," still alive in wend your way. English took it, gave it to go, and left wend with a regular past of its own. That is precisely what German did to build sein.
+Suppletion is not a German oddity, and it is not rare. It is simply what languages do to the words they use most — and every language you have looked at in this book has done it to its verb for "to be."
 
-Why it's said this way: One "no" runs across the whole chain.
-That n‑ at the front is not a coincidence. A single ancient sound — linguists write it PIE ne — is the negator behind an astonishing sweep of languages you're learning:
+Guided Practice.
+[pause 1 second]
+[your turn — say: the definition — "one verb's forms, filled in from another verb"]
+[pause 8 seconds for the answer]
+[your turn — say: "go, went" — English doing it]
+[pause 8 seconds for the answer]
+[your turn — say: "bin, war" — German doing it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is suppletion? (One verb's forms filled in from another verb.) Name the English example. (Go / went.) Which verb did went actually belong to? (Wend.) How many verbs are hiding inside sein? (Three.) Next: why this always happens to the commonest words.
+
+
+Lesson 7 of 8.
+Why "to be" is the messiest word in every language — why the most-used words are the most irregular — a rule, not bad luck.
+
+Warm-up.
+[pause 2 seconds]
+Every language you have ever met has a broken verb for "to be." That is too consistent to be an accident, and it isn't one.
+
+Grammar Lens: frequency protects irregularity.
+The most-used words are the most irregular.
+Regularity spreads by analogy. You meet an unfamiliar verb, you do not know its forms, so you guess them from the pattern — the -e, -st, -t, -en machine you learned early. Guess often enough and the guess becomes the form: the odd old shape is sanded down and the verb joins the regular crowd.
+But you never have to guess at "to be." You hear it a hundred times a day, from the day you start speaking. Every one of those hearings reinforces the strange shape faster than analogy can wear it away.
+Rare words get regularised. Common words are protected fossils.
+
+Why it's said this way.
+This also tells you where the irregularity will sit inside a verb, and sein proves it. Its present tense — the part you say constantly — is the wreckage: three roots, five unlike forms. Its past tense, which you say far less often, has quietly become well-behaved: one stem war-, ordinary endings, warst built exactly like bist was not.
+So the mess is not spread evenly. It clusters where the traffic is.
+The practical consequence is a comfort. There is no long list of verbs this strange, because a verb has to be this common to survive being this strange — and there are only a handful of words in any language that common.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the rule — "the most-used words are the most irregular"]
+[pause 8 seconds for the answer]
+[your turn — say: why — "you never have to guess at them"]
+[pause 8 seconds for the answer]
+[your turn — say: "bin, bist, ist" against "war, warst, waren" — mess, then order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+State the rule. (The most-used words are the most irregular.) What spreads regularity? (Analogy — guessing from the pattern.) Why does analogy never reach "to be"? (You never have to guess at it.) Which half of sein is the tidy half? (The past — one stem, ordinary endings.) Next: the chapter together.
+
+
+Lesson 8 of 8.
+Practice — was, were, and why.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Present and past, side by side, and then the account of how one verb ended up like this.
+
+Grammar Lens: the past, assembled.
+Six forms, one stem, four endings, no surprises. Said in order:
+ich war, du warst, er war — and the first and third are the same word, which the present tense would never allow;
+wir waren, ihr wart, sie waren.
+Compare that with the present, where five different shapes came from three different verbs. The past of sein is the part of the paradigm that behaved.
+
+The exchange.
 [a table of 4 rows, read aloud]
-from PIE ne: Latin, nōn becomes Spanish no, French non.
-from PIE ne: German, nein (ni-ein).
-from PIE ne: Hindi, nahīṃ (from na).
-from PIE ne: English, no, not, none.
-Learn nein and you've really met the same "n‑of‑no" that will greet you again in Hindi, and that also sits inside Spanish and French. One negative, half the world.
+Wo warst du? means Where were you?
+Ich war in Berlin. means I was in Berlin.
+Wie war es? means How was it?
+Es war gut. Aber ich bin müde. means It was good. But I am tired.
+Wo ("where") and in are read straight off the English here; neither is asked of you yet.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "nein" — rhymes with nine]
+[your turn — say: "ich war, du warst, er war, wir waren, ihr wart, sie waren"]
 [pause 8 seconds for the answer]
-[your turn — say: taken apart — "ni + ein = not one", like English none]
+[your turn — say: the pairs — "ich bin / ich war", "wir sind / wir waren"]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "nōn… non… nein… nahīṃ" — all the PIE ne]
+[your turn — say: the three roots — "ist, bin, war — three verbs"]
 [pause 8 seconds for the answer]
+[your turn — say: the whole exchange, both voices]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Wie war es? Es war gut."
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say no in German? (nein, rhymes with nine.) What two words is it fused from, and what do they mean? (ni + ein — "not one.") Which English word is built the same way? (none = ne + one.) What ancient sound links German nein, Latin nōn and Hindi nahīṃ? (PIE ne, the negator.)
+Run the six past forms. Which two are identical? (Ich war and er war.) Name the three roots this verb is built from, by their German forms. (Ist, bin, war.) What is the technical name for that? (Suppletion.) Why has nothing tidied this verb up? (It is too common — you never guess at it, so analogy never reaches it.) Next: the past tense that is built on this verb rather than out of it.

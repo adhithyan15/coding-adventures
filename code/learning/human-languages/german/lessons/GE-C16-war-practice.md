@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-war-practice
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 415
-chapter: 17
+sequence: 545
+chapter: 20
 type: practice
 headword: (practice)
 gloss: chapter payoff — the past of sein, and the three roots that explain the whole verb

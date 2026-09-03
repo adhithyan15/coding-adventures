@@ -1,0 +1,21 @@
+{
+  "id": "GE-PATH-020",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix",
+    "GE-C15-partizip-practice"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-020-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "GE-EXT-020-CONSOLIDATION"
+  ]
+}

@@ -1,21 +1,23 @@
 {
   "chapter": 19,
-  "title": "Head and Hand",
-  "label": "ch:ge-head-and-hand",
-  "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
+  "title": "Being Your Years",
+  "label": "ch:ge-alter",
+  "canDo": "I can ask how old somebody is and say my own age in German, using the verb German insists on for it.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C17-hand",
-    "kind": "production",
-    "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
+    "lesson": "GE-C14-alter-practice",
+    "kind": "task",
+    "summary": "This material was the second half of the hand-written haben chapter, and it could not stay there: ich bin zwanzig Jahre alt needs ich bin, and Wie alt bist du? needs du bist — both of which the chapter on sein teaches. It sits here instead, immediately after that chapter, where every word it needs is already owned, and it closes the haben chapter's open question by showing the one everyday sentence where German refuses that verb.",
     "assesses": [
-      "GE-LEX-HAND-02",
-      "GE-SOUND-HAND-03",
-      "GE-ETYMON-HAND-04",
-      "GE-ETYMON-HAND-MANUS-05"
+      "GE-LEX-ALT-01",
+      "GE-LEX-JAHR-01",
+      "GE-ETYMON-JAHR-ALT-01",
+      "GE-LEX-WIE-ALT-BIST-DU-01",
+      "GE-LEX-ICH-BIN-JAHRE-ALT-01",
+      "GE-GRAMMAR-ALTER-MIT-SEIN-01"
     ],
-    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
+    "note": "Chapter 19 is generated from schema-v2 lessons, so the payoff is atom-scored. Lesson ids keep the GE-C14-* prefix because that is the chapter they were written for; the Spanish convention lets ids stay put while chapter numbers move."
   }
 }

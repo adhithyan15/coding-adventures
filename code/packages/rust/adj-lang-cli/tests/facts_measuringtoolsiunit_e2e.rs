@@ -130,3 +130,50 @@ fn graduated_cylinder_abstains_honestly_as_volume_is_a_derived_not_base_unit() {
         "a graduated cylinder measures volume, a DERIVED SI quantity (m3), not one of the 7 BASE quantities si_base_unit tables -- honest abstention, never invented: {out}"
     );
 }
+
+// THE WARRANT IS PINNED VIA `steps`, NOT `citations` -- AND THE FIRST ATTEMPT
+// AT THIS PIN WAS WRONG IN AN INSTRUCTIVE WAY.
+//
+// installment 4a re-grounded this rule's `source` on the page's whole sentence.
+// A citation-only pin was written first, and the RESTORE-THE-FRAGMENT mutation
+// came back GREEN -- it did not fail when the value was un-repaired. I recorded
+// that as "the two citations are indistinguishable, so no pin is possible",
+// because this rule imports ../metrology/si-base-units.adj whose `source`,
+// `locator` and `trust` are byte-identical to this rule's warrant.
+//
+// THE BYTE-IDENTITY IS REAL; THE CONCLUSION WAS NOT. Review disproved it against
+// the binary. `citations` carries LEAF-FACT citations only -- the rule's own
+// warrant never appears there at all, which is why the citation-only pin could
+// not see the mutation. The warrant IS emitted in `steps`, tagged
+// "kind":"rule" with the rule's own goal, while the imported table's identical
+// sentence appears as "kind":"fact" with goal si_base_unit(...). The two are
+// perfectly distinguishable there.
+//
+// This library's own header says so at :39-43 ("A query's `steps` trail
+// therefore shows THREE entries..."). The excuse contradicted the file it was
+// written in.
+const MEASURING_TOOL_SI_UNIT_WARRANT_PIN: &str = r#"{"kind":"rule","step":0,"depth":0,"goal":"measuring_tool_si_unit(thermometer, U, S)","source":"The SI is made up of 7 base units that define the 22 derived units with special names and symbols, which are illustrated in NIST SP 1247, SI Base Units Relationship Poster.","locator":"https://www.nist.gov/pml/owm/metric-si/si-units","trust":"authoritative""#;
+
+#[test]
+fn measuring_tool_si_unit_warrant_is_the_pages_whole_sentence() {
+    let dir = scratch("reground");
+    place_libs(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"chemistry/measuring-tool-si-unit.adj\"
+         ? measuring_tool_si_unit(thermometer, $U, $S)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Anchored on the RULE step -- kind, goal, source, locator and trust in one
+    // contiguous span -- so the imported table's identical sentence cannot
+    // satisfy it. Restoring the fragment reddens this; it did not redden the
+    // citation-only pin.
+    assert!(
+        out.contains(MEASURING_TOOL_SI_UNIT_WARRANT_PIN),
+        "the rule's own warrant is the page's whole sentence: {out}"
+    );
+}

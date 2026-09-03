@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C29-freundin
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 910
-chapter: 31
+chapter: 34
 type: word
 headword: die Freundin
 gloss: friend (female) — built on Freund with the native feminine suffix -in, the same suffix English kept in exactly one fossil word, vixen

@@ -1,0 +1,18 @@
+{
+  "id": "GE-EXT-020-B-PERFEKT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce each person of the German Perfekt on its own — ich habe, du hast, er hat, wir haben — and leave the participle at the end of the clause where German wants it.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C15-perfekt",
+    "GE-C15-ich-habe-gesagt",
+    "GE-C15-du-hast-gesagt",
+    "GE-C15-er-hat-gemacht",
+    "GE-C15-wir-haben-gesagt",
+    "GE-C15-partizip-am-ende",
+    "GE-C15-gestern",
+    "GE-C15-perfekt-als-vergangenheit"
+  ]
+}

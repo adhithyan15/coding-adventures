@@ -1,0 +1,21 @@
+{
+  "chapter": 81,
+  "title": "Words on the Door",
+  "label": "ch:hi-words-on-the-door",
+  "canDo": "I can read whether a place is open or closed, find the entrance and the exit, and understand that a train is late before I take my leave.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C74-late",
+    "kind": "production",
+    "summary": "Complete HI-C74-late and say all five words in order, then say that the train is late.",
+    "assesses": [
+      "HI-LEX-C74-SIGNS-01",
+      "HI-LEX-C74-SIGNS-02",
+      "HI-LEX-C74-SIGNS-03",
+      "HI-LEX-C74-SIGNS-04",
+      "HI-LEX-C74-SIGNS-05"
+    ]
+  }
+}

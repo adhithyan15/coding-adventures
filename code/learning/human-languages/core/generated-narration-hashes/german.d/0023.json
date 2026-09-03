@@ -1,15 +1,16 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:c7b01257ba0e9086",
+  "sourceHash": "fnv1a64:deacda4eaf80e6ae",
   "lessonIds": [
-    "GE-C21-das-wetter"
+    "GE-C18-ja",
+    "GE-C18-nein"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "german/narration/ch23.txt",
   "json": "german/narration/ch23.json",
-  "textHash": "fnv1a64:5d69f3c248244be3",
-  "jsonHash": "fnv1a64:de6aa465d81b7e4b",
+  "textHash": "fnv1a64:092874cf5e3755f9",
+  "jsonHash": "fnv1a64:2481446db3627e95",
   "findings": []
 }

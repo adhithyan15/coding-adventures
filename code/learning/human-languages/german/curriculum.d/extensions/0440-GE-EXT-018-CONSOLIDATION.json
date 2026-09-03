@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-018-CONSOLIDATION",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can run all six forms of haben in either direction and hear which two drop the b.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C14-practice"
+  ]
+}

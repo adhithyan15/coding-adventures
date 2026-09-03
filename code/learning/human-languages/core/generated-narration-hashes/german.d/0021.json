@@ -1,15 +1,23 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:dfb796de425240ab",
+  "sourceHash": "fnv1a64:285db0aad67d872a",
   "lessonIds": [
-    "GE-C19-bitte-requests"
+    "GE-C16-perfekt-sein",
+    "GE-C16-kommen",
+    "GE-C16-fahren",
+    "GE-C16-werden",
+    "GE-C16-bleiben",
+    "GE-C16-perfekt-sein-ausnahmen",
+    "GE-C16-perfekt-sein-agreement",
+    "GE-C16-partizip-attributiv",
+    "GE-C16-haben-oder-sein"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch21.txt",
   "json": "german/narration/ch21.json",
-  "textHash": "fnv1a64:090c901d05b51694",
-  "jsonHash": "fnv1a64:5a6f655ecefeefd0",
+  "textHash": "fnv1a64:a14811441791d9fe",
+  "jsonHash": "fnv1a64:5ef1b3d3570dd379",
   "findings": []
 }

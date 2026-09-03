@@ -1,0 +1,14 @@
+{
+  "id": "HI-PATH-71-TODAY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "HI-C71-today",
+    "HI-C71-also",
+    "HI-C71-very"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-71-TODAY"
+  ],
+  "after": []
+}

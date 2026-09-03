@@ -1,0 +1,21 @@
+{
+  "chapter": 79,
+  "title": "What It Costs",
+  "label": "ch:hi-what-it-costs",
+  "canDo": "I can ask what something costs, say that it is expensive, and say that I am buying it.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "HI-C72-buy",
+    "kind": "production",
+    "summary": "Complete HI-C72-buy and say all five words in order, then ask what a thing costs and call it expensive.",
+    "assesses": [
+      "HI-LEX-C72-COST-01",
+      "HI-LEX-C72-COST-02",
+      "HI-LEX-C72-COST-03",
+      "HI-LEX-C72-COST-04",
+      "HI-LEX-C72-COST-05"
+    ]
+  }
+}

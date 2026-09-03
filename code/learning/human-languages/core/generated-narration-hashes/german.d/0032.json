@@ -1,18 +1,18 @@
 {
   "language": "german",
   "chapter": 32,
-  "sourceHash": "fnv1a64:8910eb5f7f5ef320",
+  "sourceHash": "fnv1a64:63a250fb9b31af38",
   "lessonIds": [
-    "GE-C30-auge",
-    "GE-C30-ohr",
-    "GE-C30-mund",
-    "GE-C30-nase"
+    "GE-C27-gehen",
+    "GE-C27-laufen",
+    "GE-C27-oeffnen",
+    "GE-C27-schliessen"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "german/narration/ch32.txt",
   "json": "german/narration/ch32.json",
-  "textHash": "fnv1a64:867395852e8a67c9",
-  "jsonHash": "fnv1a64:4c2984fa8fd42f82",
+  "textHash": "fnv1a64:8852b8b1efa6606d",
+  "jsonHash": "fnv1a64:0ef8611da98d6c68",
   "findings": []
 }

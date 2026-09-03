@@ -1,22 +1,24 @@
 {
   "chapter": 20,
-  "title": "Yes and No",
-  "label": "ch:ge-yes-and-no",
-  "canDo": "I can answer yes or no in German and take nein apart into ni + ein, the same 'not one' English froze into none.",
+  "title": "Three Verbs Under One Roof",
+  "label": "ch:ge-sein-drei-wurzeln",
+  "canDo": "I can put the German verb for “to be” into the past, and say why its forms look like three unrelated words — because they are.",
   "spineNodes": [
-    "SPINE-RESPOND-BASIC"
+    "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C18-nein",
-    "kind": "production",
-    "summary": "Say nein to rhyme with nine, split it into ni + ein and match it to English none, then run the PIE \\*ne chain — nōn, non, nein, nahīṃ.",
+    "lesson": "GE-C16-war-practice",
+    "kind": "task",
+    "summary": "The past of sein is the tidy half of the verb: one stem war-, ordinary endings, and ich war identical to er war. The chapter teaches those four cells one at a time and then answers the question the present tense raised — bin, ist and war come from three different Proto-Indo-European verbs, which is called suppletion, and it survives because the words you never have to guess at are the words analogy never reaches.",
     "assesses": [
-      "GE-LEX-JA-02",
-      "GE-LEX-NEIN-02",
-      "GE-SOUND-NEIN-03",
-      "GE-ETYMON-NEIN-04",
-      "GE-ETYMON-NEGATION-05"
+      "GE-GRAMMAR-SEIN-ICH-WAR-01",
+      "GE-GRAMMAR-SEIN-DU-WARST-01",
+      "GE-GRAMMAR-SEIN-ER-WAR-01",
+      "GE-GRAMMAR-SEIN-WIR-WAREN-01",
+      "GE-ETYMON-SEIN-DREI-WURZELN-01",
+      "GE-GRAMMAR-SUPPLETION-01",
+      "GE-GRAMMAR-HAEUFIG-UNREGELMAESSIG-01"
     ],
-    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess ja."
+    "note": "Split out of the hand-written chapter 16, which carried the present, the past and the sein-perfect in one chapter and could not hold them inside maxNewAtomsPerChapter at one atom per grammar cell. The payoff claims all seven of this chapter's atoms: the practice lesson drills the four past cells and then asks for the three roots, the name suppletion, and the reason the verb was never tidied up."
   }
 }

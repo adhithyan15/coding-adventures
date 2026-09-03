@@ -1,18 +1,15 @@
 {
   "language": "german",
   "chapter": 26,
-  "sourceHash": "fnv1a64:97bd382b6178ea48",
+  "sourceHash": "fnv1a64:37bc8851fea19aa2",
   "lessonIds": [
-    "GE-C24-denken",
-    "GE-C24-verstehen",
-    "GE-C24-lesen",
-    "GE-C24-schreiben"
+    "GE-C21-das-wetter"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "german/narration/ch26.txt",
   "json": "german/narration/ch26.json",
-  "textHash": "fnv1a64:a6ad73f1d01ca5e6",
-  "jsonHash": "fnv1a64:22a31a07091323f7",
+  "textHash": "fnv1a64:9506f749caeb3b58",
+  "jsonHash": "fnv1a64:fc1ad96d2df57e6b",
   "findings": []
 }

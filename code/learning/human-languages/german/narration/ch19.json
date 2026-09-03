@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 19,
-  "title": "Head and Hand",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:00cc8efa17211e12",
+  "title": "Being Your Years",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:0523814dcbbb1478",
   "lessons": [
     {
-      "id": "GE-C17-kopf",
-      "sequence": 610,
-      "title": "Der Kopf — “the head”",
-      "headword": "der Kopf",
-      "romanization": "der Kopf",
-      "gloss": "the head — masculine, capitalised, with final pf",
+      "id": "GE-C14-alt",
+      "sequence": 491,
+      "title": "alt — \"old\"",
+      "headword": "alt",
+      "romanization": "alt",
+      "gloss": "old — the adjective the German age sentence is built on",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c80cb4b92700915",
+      "sourceHash": "fnv1a64:5b9487c0d2f54522",
       "notice": null,
       "blocks": [
         {
@@ -35,76 +35,46 @@
             },
             {
               "kind": "speech",
-              "text": "Learn the first body part with its article and its characteristic final sound."
+              "text": "You can say ich bin müde. Here is a second adjective to put in the same slot, and it opens a sentence you will be asked for constantly."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: der Kopf",
+          "title": "You'll want to know: alt",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Kopf — the head."
+              "text": "alt — \"old.\""
             },
             {
               "kind": "speech",
-              "text": "It is masculine and capitalised because every German noun begins with a capital letter."
+              "text": "One syllable. It behaves exactly as müde did: after sein an adjective takes no ending at all, so ich bin alt needs nothing added."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the same word as English old, and you can nearly hear it — German kept the a where English rounded it."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: Make the -pf sequence",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "At the end of Kopf, close for p and release directly into f. English has no identical native ending, so practise it slowly:"
+              "text": "vowel-a — short and clipped, the a of English hat."
             },
             {
               "kind": "speech",
-              "text": "Ko-p-f becomes Kopf."
+              "text": "d-t-final — the -lt closes crisply, both consonants sounded."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Kopf + Schmerzen",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A useful phrase is:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich habe Kopfschmerzen. — I have a headache."
-            },
-            {
-              "kind": "speech",
-              "text": "German compounds simply place nouns together: Kopf (head) + Schmerzen (pains)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart: The old cup",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Kopf originally meant a cup or bowl. It is related to English cup; both were early borrowings of Late Latin cuppa. A container word became slang for the skull and eventually took over the everyday job."
-            },
-            {
-              "kind": "speech",
-              "text": "German’s older inherited head-word did not disappear completely. The next micro-lesson follows it into compounds and compares the same container metaphor in French."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,29 +87,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“der Kopf” — release p into f",
+              "instruction": "\"alt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “der Kopf” — release *p* into *f*]"
+              "source": "[YOU SAY: \"alt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Ich habe Kopfschmerzen.”",
+              "instruction": "the pair — \"alt, old\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Ich habe Kopfschmerzen.”]"
+              "source": "[YOU SAY: the pair — \"alt, old\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Kopf — cup or bowl”",
+              "instruction": "with the verb — \"ich bin alt\", \"ich bin müde\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Kopf — cup or bowl”]"
+              "source": "[YOU SAY: with the verb — \"ich bin alt\", \"ich bin müde\"]"
             },
             {
               "kind": "repeat",
@@ -148,12 +118,12 @@
             },
             {
               "kind": "speech",
-              "text": "“Der Kopf — masculine, capitalised.”"
+              "text": "\"alt, alt — old.\""
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -165,26 +135,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say “the head.” (Der Kopf.) Give its gender. (Masculine.) Why the capital? (It is a noun.) What did Kopf first mean? (A cup or bowl.) Name the related English word. (Cup.) Next: find the inherited word Haupt."
+              "text": "Say \"old.\" (Alt.) Does it take an ending after bin? (No.) Which English word is it? (Old.) Next: the noun that goes with it."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C17-kopf-haupt",
-      "sequence": 620,
-      "title": "Kopf / Haupt — two head-words",
-      "headword": "Kopf / Haupt",
-      "romanization": "Kopf / Haupt",
-      "gloss": "the cup-word and the inherited Germanic head-word",
+      "id": "GE-C14-jahr",
+      "sequence": 492,
+      "title": "das Jahr — \"the year\"",
+      "headword": "das Jahr",
+      "romanization": "das Jahr",
+      "gloss": "the year — and Jahre, its plural, which is the form the age sentence needs",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92f79f5677c8f810",
+      "sourceHash": "fnv1a64:6ccbe0e72a8a7c62",
       "notice": null,
       "blocks": [
         {
@@ -200,73 +170,605 @@
             },
             {
               "kind": "speech",
-              "text": "Kopf began as “cup.” German’s inherited word for “head” is Haupt, a cousin of English head and Latin caput."
+              "text": "A noun you have already met inside a longer word, now on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Jahr",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Jahr — \"the year.\" Plural: die Jahre."
+            },
+            {
+              "kind": "speech",
+              "text": "Capitalised, because it is a noun and German capitalises all of them. The plural adds -e and takes die, as plurals do."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen it before without being told: die Jahreszeiten, the seasons, is \"the year's times.\" The year was sitting inside that word the whole time."
+            },
+            {
+              "kind": "speech",
+              "text": "The age sentence wants the plural — you are so many Jahre old — so it is Jahre that will do the work from here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "j-as-y — German j is the y of English yes. So Jahr opens like year, not like jar."
+            },
+            {
+              "kind": "speech",
+              "text": "h-silent-lengthening — that h is not pronounced. It is the silent lengthening h you met inside gehen, and Jahr was named there as one of the three words that hide it, beside sehr and Ihnen. Here it is."
+            },
+            {
+              "kind": "speech",
+              "text": "long-a — so the vowel runs long: YAAR. Say it beside English year and the two are almost the same noise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"das Jahr\" — j as y, h silent, a long",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"das Jahr\" — *j* as *y*, *h* silent, *a* long]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "singular and plural — \"das Jahr, die Jahre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: singular and plural — \"das Jahr, die Jahre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where you had already met it — \"die Jahreszeiten\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where you had already met it — \"die Jahreszeiten\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"das Jahr, die Jahre.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the year.\" (Das Jahr.) And the plural. (Die Jahre.) How is the J sounded? (Like English y.) What is the h doing? (Lengthening the vowel — it is not pronounced.) Which longer word has Jahr inside? (Jahreszeiten.) Next: where Jahr and alt both come from."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-jahr-alt",
+      "sequence": 493,
+      "title": "Jahr and alt, taken apart",
+      "headword": "Jahr und alt",
+      "romanization": "Jahr und alt",
+      "gloss": "both words are English wearing German spelling, and alt has a Latin cousin hiding in adult",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:424d536bfd145b63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words, both inherited rather than borrowed, and one of them has a Latin cousin you would never guess."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: inherited Haupt",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "language",
-                "inherited form"
+                "German",
+                "from",
+                "English"
               ],
-              "columns": 2,
-              "rowCount": 3,
+              "columns": 3,
+              "rowCount": 2,
               "utterances": [
-                "language: Latin. inherited form: caput.",
-                "language: German. inherited form: Haupt.",
-                "language: English. inherited form: head."
+                "German: Jahr. from: Germanic jēra. English: year.",
+                "German: alt. from: Germanic aldaz. English: old."
               ]
             },
             {
               "kind": "speech",
-              "text": "The initial k becomes h relationship reflects Grimm’s law, the same systematic Germanic sound shift seen in Latin pater beside English father. The later consonants have their own history; use the initial pair as the clear signal."
+              "text": "Neither line passes through Latin, which is worth noticing in a chapter about age: German borrowed its month names wholesale from Latin, and kept its own words for the year and for being old."
             },
             {
               "kind": "speech",
-              "text": "Haupt survives in compounds and formal vocabulary:"
+              "text": "Now the cousin. The root behind aldaz also went into Latin, as alere — \"to nourish, to grow.\" From alere English took adult, which is literally \"grown up.\""
             },
             {
               "kind": "speech",
-              "text": "Hauptstadt — capital, literally “head city”;"
+              "text": "So alt and adult are the same idea taken down two roads: something that has been fed and has grown. Ageing as growth rather than as decay, which is a kinder picture than English usually admits to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two twins — \"Jahr, year; alt, old\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two twins — \"Jahr, year; alt, old\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin cousin — \"alt, alere, adult\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin cousin — \"alt, alere, adult\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the root meant — \"to nourish, to grow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the root meant — \"to nourish, to grow\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "speech",
-              "text": "Hauptbahnhof — main station;"
+              "text": "\"Jahr, year. Alt, old.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Hauptsache — main thing."
+              "text": "Which English word is Jahr? (Year.) And alt? (Old.) Which English word comes from alt's Latin cousin? (Adult.) What did that cousin mean? (\"To nourish, to grow.\") Next: the question you will be asked with these two words."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-wie-alt-bist-du",
+      "sequence": 494,
+      "title": "Wie alt bist du?",
+      "headword": "Wie alt bist du?",
+      "romanization": "Wie alt bist du?",
+      "gloss": "how old are you — word for word the English question, built from four words you own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee4b78a113da420c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have wie, you have alt, and you have du bist. That is the whole question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Wie alt bist du?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wie alt bist du? — \"How old are you?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, and every one of them is already yours. Read it against the English and nothing has moved: how — old — are — you."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a coincidence to be grateful for; it is inheritance. Neither language borrowed this question from the other. They have been asking it the same way since before either was called German or English."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb sits second, as it does in every German statement and question with a question word in front — Wie first, bist second, and the rest behind."
+            },
+            {
+              "kind": "speech",
+              "text": "To someone you would address formally, it is Wie alt sind Sie? — the same question with the polite form of the verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Wie alt bist du?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Wie alt bist du?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it against the English — \"how old are you; wie alt bist du\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it against the English — \"how old are you; wie alt bist du\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the formal one — \"Wie alt sind Sie?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the formal one — \"Wie alt sind Sie?\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Wie alt bist du?\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask how old someone is, informally. (Wie alt bist du?) And formally. (Wie alt sind Sie?) Which word sits second? (Bist.) How many of the four words were new? (None.) Next: how to answer it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-alter",
+      "sequence": 495,
+      "title": "ich bin zwanzig Jahre alt",
+      "headword": "ich bin zwanzig Jahre alt",
+      "romanization": "ich bin zwanzig Jahre alt",
+      "gloss": "I am twenty years old — the answer, word for word the English sentence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21887bbbfce50a1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The answer, and it is as English as the question was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ich bin zwanzig Jahre alt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ich bin zwanzig Jahre alt. — \"I am twenty years old.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, that is the English sentence: I — am — twenty — years — old. Put any number you own in the middle and the sentence is yours."
+            },
+            {
+              "kind": "speech",
+              "text": "And German shortens it the same way English does. Ich bin zwanzig is complete and ordinary, exactly as \"I'm twenty\" is — the Jahre alt can go, and in speech usually does."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice which verb is doing the work: bin. Not habe. Hold on to that, because it is the whole point of the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich bin zwanzig Jahre alt.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich bin zwanzig Jahre alt.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the short form — \"Ich bin zwanzig.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the short form — \"Ich bin zwanzig.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own age, in both lengths",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own age, in both lengths]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question and the answer together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question and the answer together]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ich bin zwanzig Jahre alt.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am twenty years old.\" (Ich bin zwanzig Jahre alt.) Shorten it. (Ich bin zwanzig.) Which verb does it use? (Bin.) Which does it not use? (Habe.) Next: why that choice puts German and English on one side and every Romance language on the other."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-alter-sein-haben",
+      "sequence": 496,
+      "title": "sein, not haben",
+      "headword": "sein, nicht haben",
+      "romanization": "sein, nicht haben",
+      "gloss": "Germanic IS its years where Romance HAS them — the one place German refuses haben",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcb97dca83b8fe7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You spent a whole chapter on haben. Here is the everyday sentence where German refuses to let you use it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: you ARE your years",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "German states age with sein, never with haben."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich habe zwanzig Jahre is not German. It is not a clumsy way of putting it; it is not a sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Look what happens when you line the languages up:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "how age works",
+                "literally"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "language: German. how age works: ich bin … Jahre alt. literally: I am …",
+                "language: English. how age works: I am twenty. literally: I am …",
+                "language: French. how age works: j'ai vingt ans. literally: I have …",
+                "language: Spanish. how age works: tengo veinte años. literally: I have …",
+                "language: Italian. how age works: ho venti anni. literally: I have …",
+                "language: Portuguese. how age works: tenho vinte anos. literally: I have …"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two on one side, four on the other, and the line falls exactly where the families do."
             }
           ]
         },
         {
           "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: Two container metaphors",
+          "title": "Why it's said this way",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "language",
-                "everyday word",
-                "older picture"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "language: German. everyday word: Kopf. older picture: cuppa, cup.",
-                "language: French. everyday word: tête. older picture: testa, pot."
-              ]
+              "kind": "speech",
+              "text": "Romance has its years; Germanic is its years. Age as something you carry against age as something you are — two pictures of the same fact, and each family committed to one of them long ago."
             },
             {
               "kind": "speech",
-              "text": "Both languages independently promoted a vessel-word to “head,” while keeping the older head-root in words for chiefs, capitals, or main things. The vocabulary sources are both Latin loans, but the metaphor was applied separately: heads look like bowls in many languages."
+              "text": "What makes German's choice worth pointing at is that German did not hold the Latin line out generally. Its month names are Latin borrowings wholesale; Januar, Februar and the rest came in and stayed. But on this sentence, said several times a week for a lifetime, German kept its own logic."
+            },
+            {
+              "kind": "speech",
+              "text": "The words a language uses most are the ones it is least willing to trade — which is the same force that keeps its commonest verbs irregular."
             }
           ]
         },
@@ -284,29 +786,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Kopf — everyday cup-word”",
+              "instruction": "the rule — \"age takes sein, not haben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Kopf — everyday cup-word”]"
+              "source": "[YOU SAY: the rule — \"age takes sein, not haben\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Haupt — inherited head-word”",
+              "instruction": "the two sides — \"ich bin zwanzig; j'ai vingt ans\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Haupt — inherited head-word”]"
+              "source": "[YOU SAY: the two sides — \"ich bin zwanzig; j'ai vingt ans\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hauptstadt, Hauptbahnhof”",
+              "instruction": "the picture — \"Romance has its years, Germanic is its years\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hauptstadt, Hauptbahnhof”]"
+              "source": "[YOU SAY: the picture — \"Romance has its years, Germanic is its years\"]"
             },
             {
               "kind": "repeat",
@@ -315,7 +817,7 @@
             },
             {
               "kind": "speech",
-              "text": "“Kopf took the job; Haupt stayed in compounds.”"
+              "text": "\"Ich bin zwanzig Jahre alt — bin, not habe.\""
             }
           ]
         },
@@ -332,43 +834,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which word is everyday “head”? (Kopf.) Which inherited word survives in compounds? (Haupt.) Name two compounds. (Hauptstadt, Hauptbahnhof.) What parallel metaphor did French use? (Tête, originally a pot.) Next: the hand."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GE-C17-kopf-haupt-compound-word",
-              "prompt": "Which inherited German head-word survives in compounds such as Hauptstadt?",
-              "assesses": [
-                "GE-LEX-HAUPT-02"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "haupt"
-              ],
-              "feedback": {
-                "correct": "Correct: Haupt is the inherited head-word retained in compounds.",
-                "incorrect": "The inherited word is Haupt, as in Hauptstadt and Hauptbahnhof."
-              }
+              "text": "Which verb does German use for age? (Sein.) Which does French use? (Avoir — \"to have\".) Which two languages sit together here? (German and English.) Did German borrow its month names from Latin? (Yes — which is what makes keeping this sentence its own worth noticing.) Next: the chapter said through."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C17-hand",
-      "sequence": 630,
-      "title": "die Hand — \"the hand\"",
-      "headword": "die Hand",
-      "romanization": "die Hand",
-      "gloss": "the hand — the same word as English, and unrelated to Romance manus",
+      "id": "GE-C14-alter-practice",
+      "sequence": 497,
+      "title": "Practice — asking and answering an age",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — asking and answering an age, and hearing which verb German reaches for",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b988a8f481b8e089",
+      "sourceHash": "fnv1a64:e9efded092152285",
       "notice": null,
       "blocks": [
         {
@@ -384,41 +869,15 @@
             },
             {
               "kind": "speech",
-              "text": "After the tangle of Kopf and Haupt, here is the easiest word in the chapter — and a useful lesson about when languages don't match."
+              "text": "No new words. One question, one answer, and one thing to keep hearing: which verb carries it."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: die Hand",
+          "title": "The exchange",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "die Hand — the hand. Feminine, and spelled exactly like English."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: Final devoicing",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "One pronunciation note: the final d is said as a t. German devoices a consonant at the end of a word, so Hand ends like English hunt — but with the open ah of Tag, not hunt's vowel. Add an ending and the d comes back: die Hände (\"the hands\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: It is the English word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Hand is Germanic handuz, and English inherited it directly. Same word, same meaning, two thousand years apart. German and English are close relatives, and body parts are where you feel it most:"
-            },
             {
               "kind": "table",
               "headers": [
@@ -428,55 +887,21 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "Hand means hand.",
-                "Arm means arm.",
-                "Finger means finger.",
-                "Fuß means foot.",
-                "Herz means heart."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: Where the family tree stops",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Now the interesting part. Every Romance language builds \"hand\" on Latin manus:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "French, la main.",
-                "Italian, la mano.",
-                "Portuguese, a mão.",
-                "Spanish, la mano."
+                "Wie alt bist du? means How old are you?",
+                "Zwanzig Jahre alt. Und du? means Twenty years old. And you?",
+                "Ich bin achtzehn. means I am eighteen.",
+                "Und du bist müde. means And you are tired.",
+                "Aber nicht alt! means But not old!"
               ]
             },
             {
               "kind": "speech",
-              "text": "And Germanic — German, English — has handuz, which is not related to manus at all. The two families simply have different words here."
-            },
-            {
-              "kind": "speech",
-              "text": "That is worth noticing, because these connections keep turning up, and it can start to feel as though everything must connect. It doesn't. Indo-European languages share a great deal, and then diverge, and \"hand\" is one of the places where they diverged early and completely."
-            },
-            {
-              "kind": "speech",
-              "text": "The Latin word did reach German — but only as borrowed vocabulary: Manuskript, Maniküre, manuell. Learned imports, sitting beside the native word without displacing it."
+              "text": "Every line runs on the same verb, and two of them drop it the way speech does — zwanzig Jahre alt answers the question on its own. Nothing here needs haben, and the last two lines put müde and alt side by side in the slot they share."
             }
           ]
         },
         {
-          "index": 5,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -489,43 +914,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die Hand\" — final d said as t",
+              "instruction": "the question, then your own answer",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Hand\" — final **d** said as **t**]"
+              "source": "[YOU SAY: the question, then your own answer]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the plural, and hear the d return — \"die Hände\"",
+              "instruction": "the answer short, then long",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the plural, and hear the *d* return — \"die Hän**d**e\"]"
+              "source": "[YOU SAY: the answer short, then long]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Germanic set — \"Hand, Arm, Finger, Fuß, Herz\"",
+              "instruction": "the two sides — \"ich bin zwanzig; j'ai vingt ans\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Germanic set — \"Hand, Arm, Finger, Fuß, Herz\"]"
+              "source": "[YOU SAY: the two sides — \"ich bin zwanzig; j'ai vingt ans\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the gap — \"main, mano, mão … but Hand\"",
+              "instruction": "the twins — \"Jahr, year; alt, old; alt, adult\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the gap — \"*main*, *mano*, *mão* … but **Hand**\"]"
+              "source": "[YOU SAY: the twins — \"Jahr, year; alt, old; alt, adult\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both voices]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Wie alt bist du? Ich bin zwanzig Jahre alt.\""
             }
           ]
         },
         {
-          "index": 6,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -537,7 +980,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the hand.\" (Die Hand — feminine.) How is the final d pronounced, and why? (As a t — German devoices final consonants; the d returns in Hände.) Is Hand related to French main? (No — Germanic handuz against Latin manus; the families differ here.) How did manus reach German anyway? (As borrowed learned words — Manuskript, manuell.) Next: the rest of the body."
+              "text": "Ask someone's age. (Wie alt bist du?) Answer with your own, both long and short. Which verb does German use, and which does it refuse? (Sein; not haben.) Which English word shares a root with alt? (Adult.) Which four languages say \"I have twenty years\"? (French, Spanish, Italian, Portuguese.)"
             }
           ]
         }

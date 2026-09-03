@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:6947b9bc690a380a",
+  "lessonIds": [
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix",
+    "GE-C15-partizip-practice"
+  ],
+  "tex": "german/book/chapters/ch15-partizip.tex"
+}

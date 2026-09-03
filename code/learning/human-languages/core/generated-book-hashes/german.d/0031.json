@@ -1,11 +1,12 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:f4477f44bed36642",
+  "sourceHash": "fnv1a64:69359461e5537341",
   "lessonIds": [
-    "GE-C29-freund",
-    "GE-C29-freundin",
-    "GE-C29-familie"
+    "GE-C26-sitzen",
+    "GE-C26-stehen",
+    "GE-C26-schlafen",
+    "GE-C26-hoeren"
   ],
-  "tex": "german/book/chapters/ch31-friend-and-family.tex"
+  "tex": "german/book/chapters/ch31-still-verbs.tex"
 }

@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-68-ORIGIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name my country, my city and the languages I speak.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C68-country",
+    "HI-C68-india",
+    "HI-C68-city",
+    "HI-C68-language",
+    "HI-C68-english"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:7cfc5c2c563cb0ab",
+  "lessonIds": [
+    "GE-C30-auge",
+    "GE-C30-ohr",
+    "GE-C30-mund",
+    "GE-C30-nase"
+  ],
+  "tex": "german/book/chapters/ch35-face-parts.tex"
+}
