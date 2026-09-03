@@ -12,7 +12,7 @@ headword: "सोपानम्"
 gloss: "a stair"
 romanization: "sopānam"
 concept_tag: SA-DWELL-SOPANA
-prerequisites: [SA-C47-window]
+prerequisites: [SA-C47-window, SA-C45-evening, SA-C46-light]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C47-DWELL-03]
 practises:
-  knowledge: [SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03]
+  knowledge: [SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C45-DAYTIME-03, SA-LEX-C46-LIGHT-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It stayed home and stayed itself: Hindi and Marathi both keep *sopān* for a sta
 The way up, added to the wall and the window.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C45-DAYTIME-03, SA-LEX-C46-LIGHT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sopānam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vātāyanam*, then *sopānam*]
+- [YOU RECALL: say *sāyam*, then read **प्रकाशः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03] -->

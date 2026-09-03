@@ -12,7 +12,7 @@ headword: "नृत्यति"
 gloss: "he, she or it dances"
 romanization: "nṛtyati"
 concept_tag: SA-VERB-DANCE
-prerequisites: []
+prerequisites: [SA-C19-six, SA-C19-seven]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-DANCE]
 practises:
-  knowledge: [SA-LEX-DANCE]
+  knowledge: [SA-LEX-DANCE, SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,12 @@ From **√नृत्** (*nṛt*), 'to dance'. It gives *nṛtya*, the danced h
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DANCE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DANCE, SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nṛtyati*]
 - [YOU SAY: it again, to someone standing in a doorway]
-
+- [YOU RECALL: say *ṣaṭ*, then read **सप्त**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DANCE] -->

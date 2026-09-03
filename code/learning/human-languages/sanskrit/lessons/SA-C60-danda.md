@@ -70,7 +70,7 @@ the rest.
 ## Writing: ।
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-DANDA-01] -->
 
-- **1.** draw a single vertical stroke top-to-bottom, the height of a letter, just after the last letter of the sentence
+- **1.** draw a single vertical stroke top-to-bottom, the height of a letter, immediately after the last letter of the sentence
 
 **Pen lifts: 0.** The stroke is one movement and there is nothing to add to it.
 

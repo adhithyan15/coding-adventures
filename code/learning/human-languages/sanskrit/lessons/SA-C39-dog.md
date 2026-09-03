@@ -12,7 +12,7 @@ headword: "शुनकः"
 gloss: "a dog"
 romanization: "śunakaḥ"
 concept_tag: SA-ANIMAL-SHUNAKA
-prerequisites: [SA-C39-fish]
+prerequisites: [SA-C39-fish, SA-C37-congratulations, SA-C38-sand]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C39-ANIMAL-04]
 practises:
-  knowledge: [SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04]
+  knowledge: [SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04, SA-LEX-C37-COURTESY-04, SA-LEX-C38-EARTH-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ The small ending on **शुनकः** is the difference between naming a speci
 A dog, in the small friendly form of a very old word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04, SA-LEX-C37-COURTESY-04, SA-LEX-C38-EARTH-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śunakaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *matsyaḥ*, then *śunakaḥ*]
+- [YOU RECALL: read **अभिनन्दनम्**, then say *sikatā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04] -->

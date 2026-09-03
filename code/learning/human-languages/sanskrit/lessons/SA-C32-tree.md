@@ -12,7 +12,7 @@ headword: "तरुः"
 gloss: "a tree"
 romanization: "taruḥ"
 concept_tag: SA-TREE-TARU
-prerequisites: [SA-C31-snow]
+prerequisites: [SA-C31-snow, SA-C30-door, SA-C31-sky]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C32-TREE-01]
 practises:
-  knowledge: [SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01]
+  knowledge: [SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01, SA-LEX-C30-WELCOME-01, SA-LEX-C31-SKY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Sanskrit keeps several names for a tree — *vṛkṣa*, *druma*, and this one �
 One tree, picked out of a forest you already know.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01, SA-LEX-C30-WELCOME-01, SA-LEX-C31-SKY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *taruḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *himam*, then *taruḥ*]
+- [YOU RECALL: say *dvāram*, then read **आकाशः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01] -->

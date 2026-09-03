@@ -12,7 +12,7 @@ headword: "नीलः"
 gloss: "blue"
 romanization: "nīlaḥ"
 concept_tag: SA-COLOUR-NILA
-prerequisites: [SA-C44-green]
+prerequisites: [SA-C44-green, SA-C42-much, SA-C43-honest]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C44-COLOUR-05]
 practises:
-  knowledge: [SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05]
+  knowledge: [SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05, SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ So a Sanskrit colour word is sitting inside a modern chemistry term, carried the
 Five colours: white, dark, yellow, green and blue.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05, SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nīlaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *śvetaḥ* and *nīlaḥ* together]
+- [YOU RECALL: say *bahu*, then read **सरलः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05] -->

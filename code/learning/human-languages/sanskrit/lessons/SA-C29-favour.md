@@ -12,7 +12,7 @@ headword: "उपकारः"
 gloss: "a favour, a good turn"
 romanization: "upakāraḥ"
 concept_tag: SA-COURTESY-FAVOUR
-prerequisites: [SA-C29-bow]
+prerequisites: [SA-C29-bow, SA-C27-true, SA-C28-auspicious]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C29-COURTESY-04]
 practises:
-  knowledge: [SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04]
+  knowledge: [SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04, SA-LEX-C27-REPLY-04, SA-LEX-C28-LEAVE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ So a favour is *a doing-toward*. And you have already seen *kāra* once, in न�
 A second word built from the doing-root you already had.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04, SA-LEX-C27-REPLY-04, SA-LEX-C28-LEAVE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *upakāraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *karomi*, then *namaskāraḥ*, then *upakāraḥ*]
+- [YOU RECALL: read **सत्यम्**, then say *śubham*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04] -->

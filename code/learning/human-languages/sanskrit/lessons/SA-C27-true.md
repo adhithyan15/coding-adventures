@@ -12,7 +12,7 @@ headword: "सत्यम्"
 gloss: "true; the truth"
 romanization: "satyam"
 concept_tag: SA-REPLY-TRUE
-prerequisites: [SA-C27-enough]
+prerequisites: [SA-C27-enough, SA-C25-tooth, SA-C26-guest]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C27-REPLY-04]
 practises:
-  knowledge: [SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04]
+  knowledge: [SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04, SA-LEX-C25-BODY-04, SA-LEX-C26-ROLE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Look at what it is made of. *Sat-* is the being-form of that same root *as* you 
 A third word from the be-verb, and truth defined as what is.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04, SA-LEX-C25-BODY-04, SA-LEX-C26-ROLE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *satyam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *asti*, *astu*, *satyam* — three from one root, in that order]
+- [YOU RECALL: read **दन्तः**, then say *atithiḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04] -->

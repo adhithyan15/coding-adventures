@@ -12,7 +12,7 @@ headword: "शाकम्"
 gloss: "a vegetable, a green"
 romanization: "śākam"
 concept_tag: SA-FOOD-SHAKA
-prerequisites: [SA-C40-butter]
+prerequisites: [SA-C40-butter, SA-C38-sand, SA-C39-dog]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C40-FOOD-04]
 practises:
-  knowledge: [SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04]
+  knowledge: [SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04, SA-LEX-C38-EARTH-04, SA-LEX-C39-ANIMAL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ No cousin outside India has been agreed for it. The word stayed home, and it is 
 Leaves on the plant, and leaves in the pot.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04, SA-LEX-C38-EARTH-04, SA-LEX-C39-ANIMAL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śākam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *navanītam*, then *śākam*]
+- [YOU RECALL: read **सिकता**, then say *śunakaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04] -->

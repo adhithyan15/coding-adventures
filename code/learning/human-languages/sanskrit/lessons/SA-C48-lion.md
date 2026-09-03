@@ -12,7 +12,7 @@ headword: "सिंहः"
 gloss: "a lion"
 romanization: "siṁhaḥ"
 concept_tag: SA-BEAST-SIMHA
-prerequisites: [SA-C47-floor]
+prerequisites: [SA-C47-floor, SA-C46-sun, SA-C47-wall]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C48-BEAST-01]
 practises:
-  knowledge: [SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01]
+  knowledge: [SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01, SA-LEX-C46-LIGHT-01, SA-LEX-C47-DWELL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Its own parentage is unsettled — no cousin outside the family has been agreed 
 A word you had already met twice, now yours to say.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01, SA-LEX-C46-LIGHT-01, SA-LEX-C47-DWELL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *siṁhaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *talam*, then *siṁhaḥ*]
+- [YOU RECALL: say *raviḥ*, then read **भित्तिः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01] -->

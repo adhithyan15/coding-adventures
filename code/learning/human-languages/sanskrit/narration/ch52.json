@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Two Things Joined",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:01c79afcccd46aca",
+  "sourceHash": "fnv1a64:1d27bcd80c5a5050",
   "lessons": [
     {
       "id": "SA-C52-ca",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef4c20217f926433",
+      "sourceHash": "fnv1a64:4c5d9940b351f851",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Read the phrase again and notice that nothing sits between the two nouns at all: they are simply placed side by side, and च (ca) at the back is what tells you they were a pair."
+              "text": "English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Read the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair."
             },
             {
               "kind": "speech",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4e55bcbb5893061",
+      "sourceHash": "fnv1a64:a5174181dd504b8b",
       "notice": null,
       "blocks": [
         {
@@ -193,7 +193,7 @@
             },
             {
               "kind": "speech",
-              "text": "Everything you have just learnt about च is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence."
+              "text": "Everything the last lesson said about च is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence."
             },
             {
               "kind": "speech",

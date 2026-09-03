@@ -12,7 +12,7 @@ headword: "छाया"
 gloss: "shade, a shadow"
 romanization: "chāyā"
 concept_tag: SA-LIGHT-CHAYA
-prerequisites: [SA-C46-light]
+prerequisites: [SA-C46-light, SA-C44-green, SA-C45-month]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C46-LIGHT-04]
 practises:
-  knowledge: [SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04]
+  knowledge: [SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04, SA-LEX-C44-COLOUR-04, SA-LEX-C45-DAYTIME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Greek *skiā*, "shadow", is the same word, and English *shine* is usually put in
 The thing the parasol makes, told apart from the parasol.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04, SA-LEX-C44-COLOUR-04, SA-LEX-C45-DAYTIME-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chāyā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *prakāśaḥ*, then *chāyā*]
+- [YOU RECALL: read **हरितः**, then say *māsaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04] -->

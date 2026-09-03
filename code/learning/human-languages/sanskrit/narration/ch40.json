@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6bb2d7f9994ec44d",
+  "sourceHash": "fnv1a64:9f8a465c2ef5c1ea",
   "lessons": [
     {
       "id": "SA-C40-curd",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6933e3187c385887",
+      "sourceHash": "fnv1a64:29bd5c44a69e3e5e",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sarpaḥ*, then *dadhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say agniḥ, then read धेनुः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *agniḥ*, then read **धेनुः**]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb35d492f78f98a1",
+      "sourceHash": "fnv1a64:14971f7fe7c40bf4",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dadhi*, then *śarkarā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read भस्म, then say vihagaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **भस्म**, then say *vihagaḥ*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9950d2fb0c0c970f",
+      "sourceHash": "fnv1a64:2208c7a25ba3506a",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śarkarā*, then *navanītam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śilā, then read मत्स्यः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śilā*, then read **मत्स्यः**]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce57180945005c00",
+      "sourceHash": "fnv1a64:04d620582e8d325c",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *navanītam*, then *śākam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read सिकता, then say śunakaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **सिकता**, then say *śunakaḥ*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0f03bdb915f95f4",
+      "sourceHash": "fnv1a64:c563d1f092449097",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *dadhi* and *modakaḥ* together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mṛttikā, then read सर्पः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mṛttikā*, then read **सर्पः**]"
             }
           ]
         },

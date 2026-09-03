@@ -12,7 +12,7 @@ headword: "हिमम्"
 gloss: "snow, frost"
 romanization: "himam"
 concept_tag: SA-SKY-HIMA
-prerequisites: [SA-C31-wind]
+prerequisites: [SA-C31-wind, SA-C29-fortunate, SA-C30-anjali]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C31-SKY-05]
 practises:
-  knowledge: [SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05]
+  knowledge: [SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05, SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its cousins name the season rather than the snow: Greek *kheimōn* and Latin *hi
 Five things overhead, and a mountain range whose name you can now take apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05, SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *himam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say what *Himālaya* means]
+- [YOU RECALL: say *dhanyaḥ*, then read **अञ्जलिः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05] -->

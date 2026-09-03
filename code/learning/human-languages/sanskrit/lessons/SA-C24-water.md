@@ -12,7 +12,7 @@ headword: "जलम्"
 gloss: "water (the stuff, not the drink)"
 romanization: "jalam"
 concept_tag: SA-NOUN-WATER-JALA
-prerequisites: [SA-C23-daughter]
+prerequisites: [SA-C23-daughter, SA-C22-hear, SA-C23-father]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C24-ASK-01]
 practises:
-  knowledge: [SA-LEX-SON, SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01]
+  knowledge: [SA-LEX-SON, SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01, SA-LEX-HEAR, SA-LEX-FATHER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Sanskrit keeps several words here — *jalam*, *pānīyam*, *udakam*, *āpaḥ* 
 Two words for water now, and a reason to prefer one over the other.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-SON, SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-SON, SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01, SA-LEX-HEAR, SA-LEX-FATHER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *jalam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pānīyam*, then *jalam*, and say which one you would ask for at a table]
+- [YOU RECALL: say *śṛṇoti*, then read **पिता**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-SON, SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01] -->

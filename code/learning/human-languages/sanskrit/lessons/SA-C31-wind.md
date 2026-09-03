@@ -12,7 +12,7 @@ headword: "वायुः"
 gloss: "wind, air"
 romanization: "vāyuḥ"
 concept_tag: SA-SKY-VAYU
-prerequisites: [SA-C31-star]
+prerequisites: [SA-C31-star, SA-C29-favour, SA-C30-garland]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C31-SKY-04]
 practises:
-  knowledge: [SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04]
+  knowledge: [SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04, SA-LEX-C29-COURTESY-04, SA-LEX-C30-WELCOME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English *wind* is the same word worn down, and so are German *Wind*, Gothic *win
 A fourth thing overhead — the one you feel rather than the one you look for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04, SA-LEX-C29-COURTESY-04, SA-LEX-C30-WELCOME-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vāyuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *candraḥ*, *tārā*, then *vāyuḥ*]
+- [YOU RECALL: read **उपकारः**, then say *mālā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04] -->

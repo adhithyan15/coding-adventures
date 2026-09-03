@@ -12,7 +12,7 @@ headword: "शुभम्"
 gloss: "good, auspicious"
 romanization: "śubham"
 concept_tag: SA-LEAVE-AUSPICIOUS
-prerequisites: [SA-C28-journey]
+prerequisites: [SA-C28-journey, SA-C26-guest, SA-C27-true]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C28-LEAVE-04]
 practises:
-  knowledge: [SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04]
+  knowledge: [SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04, SA-LEX-C26-ROLE-04, SA-LEX-C27-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It is a wishing word, and it goes in front of what you wish for. **शुभा 
 A wish you can attach to a journey or to a night.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04, SA-LEX-C26-ROLE-04, SA-LEX-C27-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śubham*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śubhā yātrā*, then *śubhā rātriḥ*]
+- [YOU RECALL: read **अतिथिः**, then say *satyam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04] -->

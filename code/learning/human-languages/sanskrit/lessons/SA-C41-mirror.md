@@ -12,7 +12,7 @@ headword: "दर्पणः"
 gloss: "a mirror"
 romanization: "darpaṇaḥ"
 concept_tag: SA-CRAFT-DARPANA
-prerequisites: [SA-C41-boat]
+prerequisites: [SA-C41-boat, SA-C39-dog, SA-C40-vegetable]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C41-CRAFT-04]
 practises:
-  knowledge: [SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04]
+  knowledge: [SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04, SA-LEX-C39-ANIMAL-04, SA-LEX-C40-FOOD-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Hindi *darpaṇ* is the same word, unchanged.
 A mirror, named for vanity rather than for glass.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04, SA-LEX-C39-ANIMAL-04, SA-LEX-C40-FOOD-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *darpaṇaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *plavaḥ*, then *darpaṇaḥ*]
+- [YOU RECALL: read **शुनकः**, then say *śākam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04] -->

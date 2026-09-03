@@ -12,7 +12,7 @@ headword: "मृत्तिका"
 gloss: "soil"
 romanization: "mṛttikā"
 concept_tag: SA-EARTH-MRTTIKA
-prerequisites: [SA-C38-sand]
+prerequisites: [SA-C38-sand, SA-C36-rightly, SA-C37-blessing]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C38-EARTH-05]
 practises:
-  knowledge: [SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05]
+  knowledge: [SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05, SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Eastward it wore down into Hindi *miṭṭī*, still the ordinary word for the g
 Five things underfoot and in the hearth: fire, ash, stone, sand, soil.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05, SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mṛttikā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *agniḥ* and *mṛttikā* together]
+- [YOU RECALL: say *samyak*, then read **आशीर्वादः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05] -->

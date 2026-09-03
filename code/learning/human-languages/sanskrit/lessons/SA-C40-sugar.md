@@ -12,7 +12,7 @@ headword: "शर्करा"
 gloss: "sugar"
 romanization: "śarkarā"
 concept_tag: SA-FOOD-SHARKARA
-prerequisites: [SA-C40-curd]
+prerequisites: [SA-C40-curd, SA-C38-ash, SA-C39-bird]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C40-FOOD-02]
 practises:
-  knowledge: [SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02]
+  knowledge: [SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C38-EARTH-02, SA-LEX-C39-ANIMAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Feminine, ending in **-आ**, like माला and शिला.
 The Sanskrit word inside every European sugar.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C38-EARTH-02, SA-LEX-C39-ANIMAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śarkarā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dadhi*, then *śarkarā*]
+- [YOU RECALL: read **भस्म**, then say *vihagaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02] -->

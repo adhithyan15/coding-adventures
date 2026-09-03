@@ -12,7 +12,7 @@ headword: "वैद्यः"
 gloss: "a physician"
 romanization: "vaidyaḥ"
 concept_tag: SA-PERSON-PHYSICIAN
-prerequisites: [SA-C26-guest]
+prerequisites: [SA-C26-guest, SA-C24-lamp, SA-C25-hair]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C26-ROLE-05]
 practises:
-  knowledge: [SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05]
+  knowledge: [SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05, SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That root is one of the great travellers: Latin *vidēre*, "to see" — *video*,
 Five roles: teacher, student, king, guest, physician.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05, SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vaidyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, and name the two that make a pair]
+- [YOU RECALL: say *dīpaḥ*, then read **केशः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05] -->

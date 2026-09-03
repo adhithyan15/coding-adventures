@@ -12,7 +12,7 @@ headword: "समुद्रः"
 gloss: "the sea"
 romanization: "samudraḥ"
 concept_tag: SA-LAND-SAMUDRA
-prerequisites: [SA-C33-town]
+prerequisites: [SA-C33-town, SA-C31-snow, SA-C32-wood]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C33-LAND-05]
 practises:
-  knowledge: [SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05]
+  knowledge: [SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05, SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That *sam-* at the front is the one inside **संस्कृतम्**, "put
 Five pieces of country, and the place a river finishes.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05, SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *samudraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say where a *nadī* ends]
+- [YOU RECALL: say *himam*, then read **दारु**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05] -->

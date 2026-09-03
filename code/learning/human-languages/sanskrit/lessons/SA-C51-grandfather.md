@@ -12,7 +12,7 @@ headword: "पितामहः"
 gloss: "a grandfather"
 romanization: "pitāmahaḥ"
 concept_tag: SA-KIN-PITAMAHA
-prerequisites: [SA-C51-wife]
+prerequisites: [SA-C51-wife, SA-C49-only, SA-C50-voice]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C51-KIN-03]
 practises:
-  knowledge: [SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03]
+  knowledge: [SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C49-REPLY-03, SA-LEX-C50-SOUND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Sanskrit keeps the two sides of a family apart, so this word does not stretch to
 A new word made of two old ones.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C49-REPLY-03, SA-LEX-C50-SOUND-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pitāmahaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *patnī*, then *pitāmahaḥ*]
+- [YOU RECALL: say *kevalam*, then read **वाणी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03] -->

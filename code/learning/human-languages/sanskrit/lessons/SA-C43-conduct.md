@@ -12,7 +12,7 @@ headword: "विनयः"
 gloss: "good conduct, training"
 romanization: "vinayaḥ"
 concept_tag: SA-COURTESY-VINAYA
-prerequisites: [SA-C43-hospitality]
+prerequisites: [SA-C43-hospitality, SA-C41-pot, SA-C42-suddenly]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C43-COURTESY-02]
 practises:
-  knowledge: [SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02]
+  knowledge: [SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C41-CRAFT-02, SA-LEX-C42-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ The Buddhist books of monastic training carry this word as their name.
 Manners understood as training rather than as polish.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C41-CRAFT-02, SA-LEX-C42-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vinayaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ātithyam*, then *vinayaḥ*]
+- [YOU RECALL: read **कलशः**, then say *sahasā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02] -->

@@ -12,7 +12,7 @@ headword: "सायम्"
 gloss: "evening"
 romanization: "sāyam"
 concept_tag: SA-DAYTIME-SAYAM
-prerequisites: [SA-C45-noon]
+prerequisites: [SA-C45-noon, SA-C43-humility, SA-C44-yellow]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C45-DAYTIME-03]
 practises:
-  knowledge: [SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03]
+  knowledge: [SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C43-COURTESY-03, SA-LEX-C44-COLOUR-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It rests on a piece meaning "to finish, to let go", so evening is named as the s
 Both ends of the daylight, and the middle between them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C43-COURTESY-03, SA-LEX-C44-COLOUR-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sāyam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *madhyāhnaḥ*, then *sāyam*]
+- [YOU RECALL: say *namratā*, then read **पीतः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03] -->

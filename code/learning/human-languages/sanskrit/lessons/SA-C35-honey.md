@@ -12,7 +12,7 @@ headword: "मधु"
 gloss: "honey"
 romanization: "madhu"
 concept_tag: SA-HOUSE-MADHU
-prerequisites: [SA-C35-milk]
+prerequisites: [SA-C35-milk, SA-C33-bridge, SA-C34-neck]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C35-HOUSE-02]
 practises:
-  knowledge: [SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02]
+  knowledge: [SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C33-LAND-02, SA-LEX-C34-LIMB-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Almost nothing in this book has cousins this far-flung. English *mead* is the sa
 Honey, and a word that reached from Ireland to China.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C33-LAND-02, SA-LEX-C34-LIMB-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *madhu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dugdham*, then *madhu*]
+- [YOU RECALL: read **सेतुः**, then say *grīvā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02] -->

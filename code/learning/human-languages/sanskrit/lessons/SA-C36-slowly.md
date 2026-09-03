@@ -12,7 +12,7 @@ headword: "मन्दम्"
 gloss: "slowly, gently"
 romanization: "mandam"
 concept_tag: SA-REPLY-MANDA
-prerequisites: [SA-C36-likewise]
+prerequisites: [SA-C36-likewise, SA-C34-blood, SA-C35-book]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C36-REPLY-04]
 practises:
-  knowledge: [SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04]
+  knowledge: [SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04, SA-LEX-C34-LIMB-04, SA-LEX-C35-HOUSE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ This is the word you want when somebody is talking faster than you can follow, a
 The repair word for a conversation moving too fast.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04, SA-LEX-C34-LIMB-04, SA-LEX-C35-HOUSE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mandam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṛpayā mandam*, said kindly]
+- [YOU RECALL: read **रक्तम्**, then say *pustakam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04] -->

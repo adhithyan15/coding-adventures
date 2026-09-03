@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 24,
-  "sourceHash": "fnv1a64:8b056dd4608b997e",
+  "sourceHash": "fnv1a64:00bb3eb42c076cb2",
   "lessonIds": [
     "SA-C24-water",
     "SA-C24-rice",
@@ -15,7 +15,7 @@
   "drivablePrefix": 3,
   "text": "sanskrit/narration/ch24.txt",
   "json": "sanskrit/narration/ch24.json",
-  "textHash": "fnv1a64:1d99cba2c5648967",
-  "jsonHash": "fnv1a64:be0b08f9cc235c38",
+  "textHash": "fnv1a64:37d85bdd511ee2e0",
+  "jsonHash": "fnv1a64:d20151928b433a82",
   "findings": []
 }

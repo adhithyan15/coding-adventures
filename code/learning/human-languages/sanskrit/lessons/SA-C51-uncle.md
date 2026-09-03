@@ -12,7 +12,7 @@ headword: "मातुलः"
 gloss: "a mother's brother"
 romanization: "mātulaḥ"
 concept_tag: SA-KIN-MATULA
-prerequisites: [SA-C51-grandmother]
+prerequisites: [SA-C51-grandmother, SA-C49-oh, SA-C50-verse]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C51-KIN-05]
 practises:
-  knowledge: [SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04, SA-LEX-C51-KIN-05]
+  knowledge: [SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04, SA-LEX-C51-KIN-05, SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Latin drew it in the same place: *avunculus* was the mother's brother, and it is
 Five more of a household: a husband, a wife, a grandfather, a grandmother, a mother's brother.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04, SA-LEX-C51-KIN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04, SA-LEX-C51-KIN-05, SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mātulaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *patiḥ* and *mātulaḥ* together]
+- [YOU RECALL: say *aho*, then read **श्लोकः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04, SA-LEX-C51-KIN-05] -->
