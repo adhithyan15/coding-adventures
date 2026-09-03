@@ -1386,8 +1386,22 @@ jobs:
           cache: true
 
       - name: Install cargo-tarpaulin
+        # PINNED, and --locked. An unpinned `cargo install` means coverage can
+        # break with no repo change, and it already did once:
+        # `chief-of-staff-biometric-approval` passed on the ptrace engine on
+        # 2026-08-14 and SIGILLed months later on untouched code -- the tool
+        # moved, not the crate.
+        #
+        # Diff-based CI hides that failure mode. A package is only rebuilt when
+        # it changes, so tool drift sits dormant until an unrelated PR triggers
+        # a near-full rebuild, and then looks like THAT PR's fault. Pinning
+        # turns a mystery into a one-line, reviewable bump.
+        #
+        # `--locked` matters as much as the version: without it Cargo resolves
+        # tarpaulin's own dependency tree fresh, so a patch release in any
+        # transitive dep reintroduces exactly the drift the pin removes.
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
-        run: cargo install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin --version 0.35.2 --locked
 
       - name: Set up Elixir
         # Pure-BEAM packages run executable BUILD_windows fronts on the pinned

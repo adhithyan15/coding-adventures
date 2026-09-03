@@ -996,9 +996,19 @@ kernel cannot be bypassed by application code.
 |------|----------------|-----------|--------|
 | 1 | Push commit with socket code | Layer 3 (Linter) | CI fails — raw `socket` import flagged |
 | 2 | Disable linter in BUILD file | Layer 4 (CI Gate) | Independent static analysis detects `net:connect` not in manifest |
-| 3 | Edit manifest to add `net:connect` | Layer 5 (Hardware Key) | **Blocked** — no signed approval, YubiKey required |
+| 3 | Edit manifest to add `net:connect` | Layer 5 (Hardware Key) | **Refused at signing** — no signed approval, YubiKey required |
 
-**Outcome:** Attack requires 3 separate commits. Stopped at hardware-key gate.
+**Outcome:** Attack requires 3 separate commits and is refused at the
+hardware-key gate before anything is signed.
+
+**What "refused" means here, and what it does not.** Layers 3-5 detect an
+undeclared capability and decline to sign it. They do not prevent the code from
+executing if it is run some other way — a linter is not a boundary, and a CI
+gate is not present at runtime. Under D18S S-B1 the only things that make an
+operation *impossible* are the OS sandbox and the broker. These layers make the
+declaration honest and the review tractable, which is what stops this attack
+from reaching a signed artifact in the first place; they are not what would stop
+already-running code.
 
 ### Scenario 2: Create a new malicious package
 
@@ -1007,7 +1017,7 @@ kernel cannot be bypassed by application code.
 | Step | Attacker Action | Layer Hit | Result |
 |------|----------------|-----------|--------|
 | 1 | Create package with undeclared network access | Layer 4 (CI Gate) | Static analysis detects `net:connect` outside the effective zero-capability profile |
-| 2 | Add manifest with `net:connect` | Layer 5 (Hardware Key) | **Blocked** — no signed approval |
+| 2 | Add manifest with `net:connect` | Layer 5 (Hardware Key) | **Refused at signing** — no signed approval |
 | 3 | Even if bypassed, trigger publish | Registry gate | PyPI Trusted Publisher not registered for this name |
 
 **Outcome:** New packages face the strictest barriers.
