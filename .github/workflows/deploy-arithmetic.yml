@@ -67,7 +67,7 @@ jobs:
         run: (cd code/programs/typescript/arithmetic-visualizer && npm run build)
 
       - name: Deploy to GitHub Pages (arithmetic/ subdirectory)
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: code/programs/typescript/arithmetic-visualizer/dist
