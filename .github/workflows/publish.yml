@@ -129,7 +129,7 @@ jobs:
         run: python -m build "${{ needs.parse-tag.outputs.pkg_dir }}"
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
         with:
           packages-dir: "${{ needs.parse-tag.outputs.pkg_dir }}/dist/"
 
@@ -207,7 +207,7 @@ jobs:
           cp "${{ needs.parse-tag.outputs.pkg_dir }}/dist/"*.tar.gz dist/ 2>/dev/null || true
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
         with:
           packages-dir: dist/
 
