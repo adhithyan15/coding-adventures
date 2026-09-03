@@ -1,19 +1,22 @@
 {
   "chapter": 23,
-  "title": "Please",
-  "label": "ch:ge-please",
-  "canDo": "I can ask politely for something in German by putting bitte after the thing I want — Wasser, bitte.",
+  "title": "Yes and No",
+  "label": "ch:ge-yes-and-no",
+  "canDo": "I can answer yes or no in German and take nein apart into ni + ein, the same 'not one' English froze into none.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-RESPOND-BASIC"
   ],
   "payoff": {
-    "lesson": "GE-C19-bitte-requests",
-    "kind": "task",
-    "summary": "Assemble a complete polite request out of two words already learned — Wasser, bitte — and hear the request still living inside bitte via bitten, English bid and bead. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "lesson": "GE-C18-nein",
+    "kind": "production",
+    "summary": "Say nein to rhyme with nine, split it into ni + ein and match it to English none, then run the PIE \\*ne chain — nōn, non, nein, nahīṃ.",
     "assesses": [
-      "GE-LEX-BITTE-PLEASE-02",
-      "GE-PHRASE-WASSER-BITTE-03",
-      "GE-ETYMON-BITTE-04"
-    ]
+      "GE-LEX-JA-02",
+      "GE-LEX-NEIN-02",
+      "GE-SOUND-NEIN-03",
+      "GE-ETYMON-NEIN-04",
+      "GE-ETYMON-NEGATION-05"
+    ],
+    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess ja."
   }
 }

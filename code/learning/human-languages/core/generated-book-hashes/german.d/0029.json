@@ -1,12 +1,12 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:a414c36bc1f01b70",
+  "sourceHash": "fnv1a64:50d4de68543af423",
   "lessonIds": [
-    "GE-C25-nehmen",
-    "GE-C25-fragen",
-    "GE-C25-helfen",
-    "GE-C25-moegen-lieben"
+    "GE-C24-denken",
+    "GE-C24-verstehen",
+    "GE-C24-lesen",
+    "GE-C24-schreiben"
   ],
-  "tex": "german/book/chapters/ch29-doing-verbs.tex"
+  "tex": "german/book/chapters/ch29-mind-verbs.tex"
 }

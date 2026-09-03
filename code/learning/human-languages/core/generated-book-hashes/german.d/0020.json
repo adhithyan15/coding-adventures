@@ -1,17 +1,16 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:0530f8fb6a577af7",
+  "sourceHash": "fnv1a64:ed08f85dee439119",
   "lessonIds": [
-    "GE-C16-perfekt-sein",
-    "GE-C16-kommen",
-    "GE-C16-fahren",
-    "GE-C16-werden",
-    "GE-C16-bleiben",
-    "GE-C16-perfekt-sein-ausnahmen",
-    "GE-C16-perfekt-sein-agreement",
-    "GE-C16-partizip-attributiv",
-    "GE-C16-haben-oder-sein"
+    "GE-C16-ich-war",
+    "GE-C16-du-warst",
+    "GE-C16-er-war",
+    "GE-C16-wir-waren",
+    "GE-C16-drei-wurzeln",
+    "GE-C16-suppletion",
+    "GE-C16-haeufig-unregelmaessig",
+    "GE-C16-war-practice"
   ],
-  "tex": "german/book/chapters/ch20-perfekt-sein.tex"
+  "tex": "german/book/chapters/ch20-drei-wurzeln.tex"
 }

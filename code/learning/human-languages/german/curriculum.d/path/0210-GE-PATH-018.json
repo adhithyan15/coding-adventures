@@ -2,9 +2,20 @@
   "id": "GE-PATH-018",
   "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
   "lessons": [
-    "GE-C14-haben"
+    "GE-C14-haben",
+    "GE-C14-hab-stamm",
+    "GE-C14-du-hast",
+    "GE-C14-er-hat",
+    "GE-C14-b-verlust",
+    "GE-C14-einen",
+    "GE-C14-habere",
+    "GE-C14-practice"
   ],
   "before": [],
-  "inline": [],
-  "after": []
+  "inline": [
+    "GE-EXT-018-HABEN"
+  ],
+  "after": [
+    "GE-EXT-018-CONSOLIDATION"
+  ]
 }

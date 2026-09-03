@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C25-nehmen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 750
-chapter: 29
+chapter: 30
 type: word
 headword: nehmen
 gloss: to take — the verb English lost, though it left numb and nimble behind as fossils

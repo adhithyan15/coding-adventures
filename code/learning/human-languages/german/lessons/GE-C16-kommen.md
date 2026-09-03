@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-kommen
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 565
-chapter: 20
+chapter: 21
 type: word
 headword: kommen
 gloss: to come — English come with one consonant shifted, and the second verb of the sein family

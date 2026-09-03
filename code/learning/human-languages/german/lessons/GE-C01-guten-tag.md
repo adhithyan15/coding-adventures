@@ -11,7 +11,7 @@ concept_tag: GREETING-DAY
 prerequisites: [GE-C01-gut, GE-C01-tag]
 sounds: [vowel-u-german]
 roots: [godaz, dagaz]
-etymology_hook: Guten Tag is a frozen accusative: the -en is the masculine ending of the fuller wish ich wunsche einen guten Tag
+etymology_hook: Guten Tag is a frozen accusative: the -en is the masculine object ending, left behind by the fuller wish it was cut from
 duration:
   max_seconds: 240
 requires:
@@ -57,10 +57,11 @@ polite "hello" for daytime. Said *GOO-ten tahk*.
 Like every Germanic and Romance adjective, German *gut* **agrees** with its
 noun — but German adjectives agree in *more* dimensions than Spanish or
 French: not just gender and number, but **case** (the noun's job in the
-sentence). *Guten Tag* is a frozen piece of a fuller phrase: *ich wünsche einen
-guten Tag*, "I wish a good day." In that fuller thought, "a good day" is the *object* of the
-wish (the accusative case). For a masculine noun in that role, *gut* takes the
-ending **-en**: *guten*.
+sentence). *Guten Tag* is a frozen piece of a longer wish — "I wish you a good
+day" — and in that fuller thought, "a good day" is the *object* of the wishing
+(the accusative case). For a masculine noun in that role, *gut* takes the
+ending **-en**: *guten*. The rest of the wish fell away and left the ending
+behind.
 
 Don't try to master German's ending system now — it's a later chapter. Just
 bank two things: (1) German adjectives take endings that shift with gender,

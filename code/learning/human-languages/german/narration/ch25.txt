@@ -1,33 +1,33 @@
-German, chapter 25: Weather.
+German, chapter 25: Sorry.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-das Wetter, es regnet — German's own native words, English's own cousins.
+Entschuldigung — “sorry” / “excuse me”.
 
 Warm-up.
 [pause 2 seconds]
-Every Romance language you've met so far shares the exact same Latin word for "weather" (tempus). German breaks completely from that family — with a word that's actually a much closer cousin of English.
+You already know bitte does triple duty for "please," "you're welcome," and "here you go." German's word for sorry is just as hard-working: Entschuldigung covers both "excuse me" and "I'm sorry."
 
-The two words: das Wetter and weather.
-das Wetter = "weather" — from Proto-Germanic wedrą — the exact same word as English weather itself (both descend from the same Germanic ancestor, not one borrowed from the other). Unlike Spanish's tiempo, French's temps, or Latin's own tempus-family, German's weather word has no connection to Latin at all — it's a native Germanic inheritance, cousin to English rather than to Romance.
+The word, taken apart.
+ent- = a "removal / undoing" prefix — the same shape as in entdecken ("un-cover" becomes discover) or entfernen ("un-distance" becomes remove).
+Schuld = "guilt, fault, blame" (also, separately, "debt" — a Schuld can be money owed or wrong done).
+-igung = a noun-forming suffix, roughly "-ing/-ation."
+So Entschuldigung is literally "an un-guilting" — the act of removing blame. Saying it hands the guilt back: I release you from any fault (when getting someone's attention or brushing past) or I ask you to release me from mine (when apologizing).
+Schuld has a striking cousin: it traces to the same ancient Germanic root as English shall and should — a verb that originally meant "to owe." Schuld (what is owed, guilt) and shall (what one is obliged to do) are, at root, the same idea of an obligation outstanding.
 
-Grammar Lens: Es ist heiß / Es ist kalt.
-Es ist heiß. — "It's hot." — literally "it is hot." Es ist kalt. — "It's cold." — literally "it is cold."
-German uses sein ("to be") here — matching the same "be" pattern you already met in German's own AGE lesson (ich bin zwanzig), not the Romance "make" periphrasis (hacer/faire).
-
-The word, taken apart: es regnet.
-Es regnet. — "It's raining." — from regnen from Proto-Germanic regnōną — the same root as English rain. Just like Wetter/ "weather," this is a genuine Germanic cousin-pair, not a shared Latin borrowing the way Spanish's llueve and French's pleut are.
+Why it's said this way: Everyday repair and deeper regret.
+For deeper regret — real sorrow, not a bump in the hallway — German often reaches for es tut mir leid, literally "it does to-me sorrow":
+es = "it," tut = "does" (from tun, "to do"), mir = "to me," Leid = "sorrow, suffering" (a cousin of English loath, both from a root meaning "hateful, painful").
+Use Entschuldigung for the everyday sorry/excuse-me (stepping on a foot, interrupting), and es tut mir leid when you mean it more — condolences, a real regret. The two overlap; native speakers move between them by feel.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Wetter" — weather, the same word as English "weather"]
+[your turn — say: "Schuld" — guilt/fault — then "Entschuldigung," sorry / excuse me]
 [pause 8 seconds for the answer]
-[your turn — say: "Es ist heiß. Es ist kalt." — it's hot/cold]
-[pause 8 seconds for the answer]
-[your turn — say: "Es regnet" — it's raining, same root as English "rain"]
+[your turn — say: the deeper phrase — "es tut mir leid," it pains me / I'm so sorry]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does Wetter come from Latin, like the Romance languages' weather words? (No — it's native Germanic, the same word as English "weather.") What verb does German use for "it's hot/cold" — sein ("be") or a hacer-style "make"? (Sein, "to be" — matching German's own AGE pattern.) What English word is regnet related to? (Rain — same Proto-Germanic root, regnōną.)
+What does Entschuldigung literally mean, piece by piece? ("Un-guilting" — ent- "away" + Schuld "guilt/fault.") What English word shares Schuld's ancient root? (Shall/should — both from a root meaning "to owe.") What's the deeper phrase for real regret? (Es tut mir leid, "it does to me sorrow.")

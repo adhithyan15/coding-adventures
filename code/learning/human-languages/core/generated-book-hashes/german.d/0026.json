@@ -1,9 +1,9 @@
 {
   "language": "german",
   "chapter": 26,
-  "sourceHash": "fnv1a64:32804035bd315f67",
+  "sourceHash": "fnv1a64:3166d3496cfe664b",
   "lessonIds": [
-    "GE-C22-hund-katze"
+    "GE-C21-das-wetter"
   ],
-  "tex": "german/book/chapters/ch26-dog-and-cat.tex"
+  "tex": "german/book/chapters/ch26-weather.tex"
 }

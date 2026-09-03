@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C31-arm",
     "language": "german",
-    "chapter": 35,
+    "chapter": 36,
     "sequence": 970,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1c2c59dbb5383259"
+    "sourceHash": "fnv1a64:1bfffbe291936a5a"
   },
   "findings": []
 }
