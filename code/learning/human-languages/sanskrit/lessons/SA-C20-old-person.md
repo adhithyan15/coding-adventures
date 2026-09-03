@@ -12,7 +12,7 @@ headword: "वृद्धः"
 gloss: "an old person, an elder"
 romanization: "vṛddhaḥ"
 concept_tag: SA-NOUN-ELDER
-prerequisites: [SA-C20-child]
+prerequisites: [SA-C20-child, SA-C18-from-where, SA-C19-nine]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C20-PERSON-04]
 practises:
-  knowledge: [SA-LEX-C20-PERSON-03, SA-LEX-C20-PERSON-04]
+  knowledge: [SA-LEX-C20-PERSON-03, SA-LEX-C20-PERSON-04, SA-LEX-C18-ASK-04, SA-LEX-C19-NUM-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -61,12 +61,13 @@ Four people — and a pair of words that shows why a one-word gloss is sometimes
 lie by omission.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-03, SA-LEX-C20-PERSON-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-03, SA-LEX-C20-PERSON-04, SA-LEX-C18-ASK-04, SA-LEX-C19-NUM-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vṛddhaḥ* — "an elder"]
 - [YOU SAY: which of *purātana* and *vṛddha* you would use for a temple]
 - [YOU SAY: what √वृध् means (to grow)]
+- [YOU RECALL: read **कुतः**, then say *navan*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-03, SA-LEX-C20-PERSON-04] -->

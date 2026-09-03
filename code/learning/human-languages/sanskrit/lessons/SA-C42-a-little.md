@@ -12,7 +12,7 @@ headword: "किञ्चित्"
 gloss: "a little, somewhat"
 romanization: "kiñcit"
 concept_tag: SA-REPLY-KINCIT
-prerequisites: [SA-C42-mostly]
+prerequisites: [SA-C42-mostly, SA-C40-vegetable, SA-C41-mirror]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C42-REPLY-04]
 practises:
-  knowledge: [SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04]
+  knowledge: [SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04, SA-LEX-C40-FOOD-04, SA-LEX-C41-CRAFT-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It is किम्, the *what* you have been asking with since your first questi
 A small helping of an answer.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04, SA-LEX-C40-FOOD-04, SA-LEX-C41-CRAFT-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kiñcit*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *prāyaḥ*, then *kiñcit*]
+- [YOU RECALL: read **शाकम्**, then say *darpaṇaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04] -->

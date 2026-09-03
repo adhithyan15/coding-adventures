@@ -12,7 +12,7 @@ headword: "हस्तः"
 gloss: "hand"
 romanization: "hastaḥ"
 concept_tag: SA-BODY-HAND
-prerequisites: [SA-C24-lamp]
+prerequisites: [SA-C24-lamp, SA-C23-father, SA-C24-water]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C25-BODY-01]
 practises:
-  knowledge: [SA-LEX-C24-ASK-04, SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-01]
+  knowledge: [SA-LEX-C24-ASK-04, SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-01, SA-LEX-FATHER, SA-LEX-C24-ASK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its cousins run west rather than into Europe: Avestan *zasta*, Old Persian *dast
 A sixth part of the body, and a cousin found next door rather than in Rome.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-04, SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-04, SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-01, SA-LEX-FATHER, SA-LEX-C24-ASK-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hastaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hastaḥ*, then *akṣi* and *hastaḥ* together]
+- [YOU RECALL: say *pitā*, then read **जलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-04, SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-01] -->

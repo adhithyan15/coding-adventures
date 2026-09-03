@@ -12,7 +12,7 @@ headword: "शय्या"
 gloss: "a bed"
 romanization: "śayyā"
 concept_tag: SA-HOUSE-SHAYYA
-prerequisites: [SA-C35-book]
+prerequisites: [SA-C35-book, SA-C33-sea, SA-C34-body]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C35-HOUSE-05]
 practises:
-  knowledge: [SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05]
+  knowledge: [SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05, SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its cousins settle rather than sleep: Greek *keitai*, "he lies"; Latin *cīvis*,
 Five things in a house, and a bed with a city inside it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05, SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śayyā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say which one came in from Persian]
+- [YOU RECALL: say *samudraḥ*, then read **देहः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05] -->

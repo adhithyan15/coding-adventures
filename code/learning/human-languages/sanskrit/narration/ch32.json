@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Tree and What Grows",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5ae146cb4fdddbb6",
+  "sourceHash": "fnv1a64:8d00b7682048d07e",
   "lessons": [
     {
       "id": "SA-C32-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22138c588a194beb",
+      "sourceHash": "fnv1a64:5750335f730657fb",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *himam*, then *taruḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dvāram, then read आकाशः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dvāram*, then read **आकाशः**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f1dfd63858bc75d",
+      "sourceHash": "fnv1a64:2bfbdbaaf3da78dc",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *taruḥ*, then *patram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read आसनम्, then say candraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **आसनम्**, then say *candraḥ*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:375a432728790671",
+      "sourceHash": "fnv1a64:ada150c7affe00eb",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *patram*, then *tṛṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puṣpam, then read तारा",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puṣpam*, then read **तारा**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c85e36b2c31ab60",
+      "sourceHash": "fnv1a64:ff3f805f498188c0",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *taruḥ*, then *latā*, in the order they grow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read माला, then say vāyuḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **माला**, then say *vāyuḥ*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4896549bfb77ad18",
+      "sourceHash": "fnv1a64:b8297d23eb0fae97",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then name the English word hiding in *dāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say añjaliḥ, then read हिमम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *añjaliḥ*, then read **हिमम्**]"
             }
           ]
         },

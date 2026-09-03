@@ -12,7 +12,7 @@ headword: "क्षम्यताम्"
 gloss: "pardon me; let it be forgiven"
 romanization: "kṣamyatām"
 concept_tag: SA-COURTESY-PARDON
-prerequisites: [SA-C29-please]
+prerequisites: [SA-C29-please, SA-C27-well-done, SA-C28-day-after]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C29-COURTESY-02]
 practises:
-  knowledge: [SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02]
+  knowledge: [SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C27-REPLY-02, SA-LEX-C28-LEAVE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Notice that Sanskrit has now given you three of these impersonal commands: अ�
 An apology that never names who should do the forgiving.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C27-REPLY-02, SA-LEX-C28-LEAVE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kṣamyatām*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *astu*, then *kṣamyatām*, and say what both leave out]
+- [YOU RECALL: read **साधु**, then say *paraśvaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02] -->

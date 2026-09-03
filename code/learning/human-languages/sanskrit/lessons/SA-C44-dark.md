@@ -12,7 +12,7 @@ headword: "श्यामः"
 gloss: "dark, black"
 romanization: "śyāmaḥ"
 concept_tag: SA-COLOUR-SHYAMA
-prerequisites: [SA-C44-white]
+prerequisites: [SA-C44-white, SA-C42-suddenly, SA-C43-conduct]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C44-COLOUR-02]
 practises:
-  knowledge: [SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02]
+  knowledge: [SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C42-REPLY-02, SA-LEX-C43-COURTESY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ No European cousin has been agreed. The word stayed home, and *Śyām* and *Śy�
 Dark, with a rain cloud in it rather than ash.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C42-REPLY-02, SA-LEX-C43-COURTESY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śyāmaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śvetaḥ*, then *śyāmaḥ*]
+- [YOU RECALL: read **सहसा**, then say *vinayaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02] -->

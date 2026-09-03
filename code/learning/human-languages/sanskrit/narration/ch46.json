@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Sun and Shade",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0585a1c36ced89e6",
+  "sourceHash": "fnv1a64:75e7fd2d0e43bbbc",
   "lessons": [
     {
       "id": "SA-C46-sun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b0d4041d608e31e",
+      "sourceHash": "fnv1a64:0418bf0aa3f21424",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *saṁvatsaraḥ*, then *raviḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śvetaḥ, then read प्रातः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śvetaḥ*, then read **प्रातः**]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e62d9bbd3ca03ee",
+      "sourceHash": "fnv1a64:fdbcc4239066b161",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *raviḥ*, then *raśmiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read श्यामः, then say madhyāhnaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **श्यामः**, then say *madhyāhnaḥ*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9852851a1c85159e",
+      "sourceHash": "fnv1a64:cfde9de761bd80b5",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *raśmiḥ*, then *prakāśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pītaḥ, then read सायम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pītaḥ*, then read **सायम्**]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:188007aeb72c2ba7",
+      "sourceHash": "fnv1a64:1630c031361ea99b",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *prakāśaḥ*, then *chāyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read हरितः, then say māsaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **हरितः**, then say *māsaḥ*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2249bfe24c9f5c9f",
+      "sourceHash": "fnv1a64:b2a92e87e60de945",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *raviḥ* and *tāpaḥ* together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nīlaḥ, then read संवत्सरः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nīlaḥ*, then read **संवत्सरः**]"
             }
           ]
         },

@@ -12,7 +12,7 @@ headword: "प्रायः"
 gloss: "mostly, for the most part"
 romanization: "prāyaḥ"
 concept_tag: SA-REPLY-PRAYAH
-prerequisites: [SA-C42-suddenly]
+prerequisites: [SA-C42-suddenly, SA-C40-butter, SA-C41-boat]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C42-REPLY-03]
 practises:
-  knowledge: [SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03]
+  knowledge: [SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C40-FOOD-03, SA-LEX-C41-CRAFT-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Beside सर्वम्, which claims everything, **प्रायः** claim
 A reply that is honest about not being certain.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C40-FOOD-03, SA-LEX-C41-CRAFT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *prāyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sahasā*, then *prāyaḥ*]
+- [YOU RECALL: say *navanītam*, then read **प्लवः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03] -->

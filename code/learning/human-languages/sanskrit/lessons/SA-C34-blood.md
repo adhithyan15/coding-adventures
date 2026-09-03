@@ -12,7 +12,7 @@ headword: "रक्तम्"
 gloss: "blood"
 romanization: "raktam"
 concept_tag: SA-LIMB-RAKTA
-prerequisites: [SA-C34-bone]
+prerequisites: [SA-C34-bone, SA-C32-vine, SA-C33-town]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C34-LIMB-04]
 practises:
-  knowledge: [SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04]
+  knowledge: [SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04, SA-LEX-C32-TREE-04, SA-LEX-C33-LAND-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The same root gives **राग** (*rāga*), which is a colour, a passion and a 
 Blood, named for its colour rather than for what it is.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04, SA-LEX-C32-TREE-04, SA-LEX-C33-LAND-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *raktam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *asthi*, then *raktam*]
+- [YOU RECALL: read **लता**, then say *puram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04] -->

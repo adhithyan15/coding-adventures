@@ -12,7 +12,7 @@ headword: "आशीर्वादः"
 gloss: "a blessing"
 romanization: "āśīrvādaḥ"
 concept_tag: SA-COURTESY-ASHIRVADA
-prerequisites: [SA-C37-congratulations]
+prerequisites: [SA-C37-congratulations, SA-C35-bed, SA-C36-rightly]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C37-COURTESY-05]
 practises:
-  knowledge: [SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05]
+  knowledge: [SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05, SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That second piece is the one inside **धन्यवादः**, the thanks you
 Five courtesies, and the piece shared by a blessing and a thanks.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05, SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āśīrvādaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *āśīrvādaḥ* and *dhanyavādaḥ* together]
+- [YOU RECALL: say *śayyā*, then read **सम्यक्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05] -->

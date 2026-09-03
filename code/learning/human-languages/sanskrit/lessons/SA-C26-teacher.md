@@ -12,7 +12,7 @@ headword: "गुरुः"
 gloss: "a teacher, and the word for heavy"
 romanization: "guruḥ"
 concept_tag: SA-PERSON-TEACHER
-prerequisites: [SA-C25-hair]
+prerequisites: [SA-C25-hair, SA-C24-water, SA-C25-hand]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C26-ROLE-01]
 practises:
-  knowledge: [SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01]
+  knowledge: [SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01, SA-LEX-C24-ASK-01, SA-LEX-C25-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The heavy-word travelled: Latin *gravis* — whence *grave*, *gravity*, *aggrava
 A word you already knew in English, returned to its first meaning.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01, SA-LEX-C24-ASK-01, SA-LEX-C25-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *guruḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guruḥ*, and say both of its meanings]
+- [YOU RECALL: say *jalam*, then read **हस्तः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01] -->

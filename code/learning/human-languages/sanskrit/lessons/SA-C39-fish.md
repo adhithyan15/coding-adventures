@@ -12,7 +12,7 @@ headword: "मत्स्यः"
 gloss: "a fish"
 romanization: "matsyaḥ"
 concept_tag: SA-ANIMAL-MATSYA
-prerequisites: [SA-C39-bird]
+prerequisites: [SA-C39-bird, SA-C37-gracious, SA-C38-stone]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C39-ANIMAL-03]
 practises:
-  knowledge: [SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03]
+  knowledge: [SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C37-COURTESY-03, SA-LEX-C38-EARTH-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Westward there is nothing to point at: no agreed European cousin has been found.
 A fish, and a word that travelled east but not west.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C37-COURTESY-03, SA-LEX-C38-EARTH-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *matsyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vihagaḥ*, then *matsyaḥ*]
+- [YOU RECALL: say *prasannaḥ*, then read **शिला**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03] -->

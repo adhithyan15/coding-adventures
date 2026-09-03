@@ -12,7 +12,7 @@ headword: "पुष्पम्"
 gloss: "a flower"
 romanization: "puṣpam"
 concept_tag: SA-WELCOME-FLOWER
-prerequisites: [SA-C30-seat]
+prerequisites: [SA-C30-seat, SA-C28-journey, SA-C29-bow]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C30-WELCOME-03]
 practises:
-  knowledge: [SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03]
+  knowledge: [SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C28-LEAVE-03, SA-LEX-C29-COURTESY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ You already have **फलम्**, the fruit, and now the flower that precedes i
 A flower to set beside the fruit you already had.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C28-LEAVE-03, SA-LEX-C29-COURTESY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *puṣpam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puṣpam*, then *phalam*, and say them as one pair]
+- [YOU RECALL: say *yātrā*, then read **प्रणामः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03] -->

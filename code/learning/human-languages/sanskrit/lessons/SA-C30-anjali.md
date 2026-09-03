@@ -12,7 +12,7 @@ headword: "अञ्जलिः"
 gloss: "the two hands cupped together"
 romanization: "añjaliḥ"
 concept_tag: SA-WELCOME-ANJALI
-prerequisites: [SA-C30-garland]
+prerequisites: [SA-C30-garland, SA-C28-svasti, SA-C29-fortunate]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C30-WELCOME-05]
 practises:
-  knowledge: [SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05]
+  knowledge: [SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05, SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The root means "to anoint, to smear", and the cupped hands were first of all a v
 Five steps of a welcome — door, seat, flower, garland, and the hands themselves.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05, SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *añjaliḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *namaste* and name what your hands are doing]
+- [YOU RECALL: say *svasti*, then read **धन्यः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05] -->

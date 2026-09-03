@@ -12,7 +12,7 @@ headword: "पुस्तकम्"
 gloss: "a book"
 romanization: "pustakam"
 concept_tag: SA-HOUSE-PUSTAKA
-prerequisites: [SA-C35-salt]
+prerequisites: [SA-C35-salt, SA-C33-town, SA-C34-blood]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C35-HOUSE-04]
 practises:
-  knowledge: [SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04]
+  knowledge: [SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04, SA-LEX-C33-LAND-04, SA-LEX-C34-LIMB-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Hindi *pustak*, Bengali *pustak*, Kannada *pustaka*, Telugu *pustakam* and Tamil
 A book, and the one borrowed word in the chapter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04, SA-LEX-C33-LAND-04, SA-LEX-C34-LIMB-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pustakam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *lavaṇam*, then *pustakam*]
+- [YOU RECALL: read **पुरम्**, then say *raktam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04] -->

@@ -12,7 +12,7 @@ headword: "धेनुः"
 gloss: "a cow"
 romanization: "dhenuḥ"
 concept_tag: SA-ANIMAL-DHENU
-prerequisites: [SA-C38-soil]
+prerequisites: [SA-C38-soil, SA-C37-peace, SA-C38-fire]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C39-ANIMAL-01]
 practises:
-  knowledge: [SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01]
+  knowledge: [SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01, SA-LEX-C37-COURTESY-01, SA-LEX-C38-EARTH-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It stands on *dhe*, "to suckle" — a root that reaches a long way west: Latin *
 The animal behind the milk word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01, SA-LEX-C37-COURTESY-01, SA-LEX-C38-EARTH-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dhenuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mṛttikā*, then *dhenuḥ*]
+- [YOU RECALL: say *śāntiḥ*, then read **अग्निः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01] -->

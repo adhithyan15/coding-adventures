@@ -12,7 +12,7 @@ headword: "इदानीम्"
 gloss: "now"
 romanization: "idānīm"
 concept_tag: SA-LEAVE-NOW
-prerequisites: [SA-C27-thus]
+prerequisites: [SA-C27-thus, SA-C26-teacher, SA-C27-so-be-it]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C28-LEAVE-01]
 practises:
-  knowledge: [SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01]
+  knowledge: [SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C26-ROLE-01, SA-LEX-C27-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It is built on the near-pointing stem you met with एतत्, "this one". The
 A time word built out of the pointing system, and a way to leave.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C26-ROLE-01, SA-LEX-C27-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *idānīm*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *idānīm*, then *gacchāmi idānīm* as one phrase]
+- [YOU RECALL: say *guruḥ*, then read **अस्तु**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01] -->

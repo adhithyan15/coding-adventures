@@ -12,7 +12,7 @@ headword: "दुग्धम्"
 gloss: "milk"
 romanization: "dugdham"
 concept_tag: SA-HOUSE-DUGDHA
-prerequisites: [SA-C34-body]
+prerequisites: [SA-C34-body, SA-C33-river, SA-C34-arm]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C35-HOUSE-01]
 practises:
-  knowledge: [SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01]
+  knowledge: [SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01, SA-LEX-C33-LAND-01, SA-LEX-C34-LIMB-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It comes from *duh*, "to milk", so **दुग्धम्** is "the milked thin
 The second word for milk, and the one you would be handed today.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01, SA-LEX-C33-LAND-01, SA-LEX-C34-LIMB-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dugdham*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dehaḥ*, then *dugdham*]
+- [YOU RECALL: say *nadī*, then read **बाहुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01] -->

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Verbs of Mind and Motion",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:bc0860bb2af59ffc",
+  "sourceHash": "fnv1a64:41bd00f1ca7762da",
   "lessons": [
     {
       "id": "SA-C22-hear",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12fdd64d6c004816",
+      "sourceHash": "fnv1a64:5124e4d9a2f3f371",
       "notice": null,
       "blocks": [
         {
@@ -93,6 +93,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say naraḥ, then read नारी",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *naraḥ*, then read **नारी**]"
             }
           ]
         },
@@ -128,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c17557ad54be36b",
+      "sourceHash": "fnv1a64:b76b54e87501f422",
       "notice": null,
       "blocks": [
         {
@@ -211,6 +220,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *śṛṇoti*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read बालः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **बालः**]"
             }
           ]
         },
@@ -246,7 +264,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24244c71a556d2a0",
+      "sourceHash": "fnv1a64:83d99fbbcd30ea2f",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +347,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *nayati*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vṛddhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vṛddhaḥ*]"
             }
           ]
         },
@@ -364,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39e35add44f74de9",
+      "sourceHash": "fnv1a64:2f6a26b5202d5557",
       "notice": null,
       "blocks": [
         {
@@ -447,6 +474,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *krīḍati*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read जनः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **जनः**]"
             }
           ]
         },

@@ -12,7 +12,7 @@ headword: "शृणोति"
 gloss: "he, she or it hears"
 romanization: "śṛṇoti"
 concept_tag: SA-VERB-HEAR
-prerequisites: []
+prerequisites: [SA-C20-man, SA-C20-woman]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-HEAR]
 practises:
-  knowledge: [SA-LEX-HEAR]
+  knowledge: [SA-LEX-HEAR, SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,12 @@ From **√श्रु** (*śru*), 'to hear' — the same root as Latin *clueo* 
 One more everyday action. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HEAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HEAR, SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śṛṇoti*]
 - [YOU SAY: it once more, slowly]
-
+- [YOU RECALL: say *naraḥ*, then read **नारी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HEAR] -->

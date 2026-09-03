@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 30,
-  "sourceHash": "fnv1a64:6133e4ed9fb27fe7",
+  "sourceHash": "fnv1a64:60f34dfc3c5541af",
   "lessonIds": [
     "SA-C30-door",
     "SA-C30-seat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch30.txt",
   "json": "sanskrit/narration/ch30.json",
-  "textHash": "fnv1a64:3d47f78534d5f535",
-  "jsonHash": "fnv1a64:1a14247e209ccd01",
+  "textHash": "fnv1a64:ff2931464782bb3d",
+  "jsonHash": "fnv1a64:85e26da04f64b1c3",
   "findings": []
 }

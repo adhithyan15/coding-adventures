@@ -12,7 +12,7 @@ headword: "केवलम्"
 gloss: "only, merely"
 romanization: "kevalam"
 concept_tag: SA-REPLY4-KEVALA
-prerequisites: [SA-C49-as]
+prerequisites: [SA-C49-as, SA-C47-stair, SA-C48-goat]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C49-REPLY-03]
 practises:
-  knowledge: [SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03]
+  knowledge: [SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C47-DWELL-03, SA-LEX-C48-BEAST-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It also stands alone. Asked how much of a thing there is, **केवलम्**
 A word that narrows whatever it stands in front of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C47-DWELL-03, SA-LEX-C48-BEAST-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kevalam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *yathā*, then *kevalam*]
+- [YOU RECALL: say *sopānam*, then read **छागः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03] -->

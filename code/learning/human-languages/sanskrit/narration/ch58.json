@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "What Pleases Me",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:88d8e544316777a2",
+  "sourceHash": "fnv1a64:dad230a2705b7c98",
   "lessons": [
     {
       "id": "SA-C58-mahyam",
@@ -327,7 +327,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e280b762d3a66af7",
+      "sourceHash": "fnv1a64:a04fe791b6f9d6a3",
       "notice": null,
       "blocks": [
         {
@@ -343,7 +343,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I like the fruit\" in Sanskrit, and name the subject of the sentence you just said."
+              "text": "Say \"I like the fruit\" in Sanskrit, and name the subject of the sentence you said."
             }
           ]
         },

@@ -12,7 +12,7 @@ headword: "पुरम्"
 gloss: "a town, a walled town"
 romanization: "puram"
 concept_tag: SA-LAND-PURA
-prerequisites: [SA-C33-mountain]
+prerequisites: [SA-C33-mountain, SA-C31-wind, SA-C32-vine]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C33-LAND-04]
 practises:
-  knowledge: [SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04]
+  knowledge: [SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C31-SKY-04, SA-LEX-C32-TREE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its Greek cousin is *polis*, behind *police*, *policy*, *politics* and every *-p
 A town, and the reason *police* and *Nagpur* are relatives.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C31-SKY-04, SA-LEX-C32-TREE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *puram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *parvataḥ*, then *puram*]
+- [YOU RECALL: read **वायुः**, then say *latā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04] -->

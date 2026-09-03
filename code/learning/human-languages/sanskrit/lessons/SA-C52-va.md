@@ -44,7 +44,7 @@ reviews_of: [SA-C52-ca, SA-C51-uncle]
 
 **वा** (*vā*) — "or".
 
-Everything you have just learnt about **च** is true of **वा**, unchanged. It is
+Everything the last lesson said about **च** is true of **वा**, unchanged. It is
 an enclitic; it goes after the second item; it cannot open a sentence.
 
 > **पानीयं क्षीरं वा** — *pānīyaṁ kṣīraṁ vā* — **water or milk**

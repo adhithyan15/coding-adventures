@@ -12,7 +12,7 @@ headword: "सेतुः"
 gloss: "a bridge, a causeway"
 romanization: "setuḥ"
 concept_tag: SA-LAND-SETU
-prerequisites: [SA-C33-river]
+prerequisites: [SA-C33-river, SA-C31-moon, SA-C32-leaf]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C33-LAND-02]
 practises:
-  knowledge: [SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02]
+  knowledge: [SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C31-SKY-02, SA-LEX-C32-TREE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The causeway between India and Lanka is the *Rāma-setu*, and that is this word,
 A bridge, and a word that means the tying rather than the crossing.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C31-SKY-02, SA-LEX-C32-TREE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *setuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadī*, then *setuḥ*]
+- [YOU RECALL: read **चन्द्रः**, then say *patram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02] -->

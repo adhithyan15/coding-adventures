@@ -12,7 +12,7 @@ headword: "शान्तिः"
 gloss: "peace, stillness"
 romanization: "śāntiḥ"
 concept_tag: SA-COURTESY-SHANTI
-prerequisites: [SA-C36-rightly]
+prerequisites: [SA-C36-rightly, SA-C35-milk, SA-C36-also]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C37-COURTESY-01]
 practises:
-  knowledge: [SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01]
+  knowledge: [SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01, SA-LEX-C35-HOUSE-01, SA-LEX-C36-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ A great many Sanskrit texts close on it, said three times over, once for each of
 A word for peace, and the way Sanskrit texts stop.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01, SA-LEX-C35-HOUSE-01, SA-LEX-C36-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śāntiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *samyak*, then *śāntiḥ*]
+- [YOU RECALL: say *dugdham*, then read **अपि**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01] -->

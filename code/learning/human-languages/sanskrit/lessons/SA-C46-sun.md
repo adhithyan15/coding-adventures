@@ -12,7 +12,7 @@ headword: "रविः"
 gloss: "the sun"
 romanization: "raviḥ"
 concept_tag: SA-LIGHT-RAVI
-prerequisites: [SA-C45-year]
+prerequisites: [SA-C45-year, SA-C44-white, SA-C45-morning]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C46-LIGHT-01]
 practises:
-  knowledge: [SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01]
+  knowledge: [SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01, SA-LEX-C44-COLOUR-01, SA-LEX-C45-DAYTIME-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Sanskrit keeps several sun-words and this one has no agreed cousin outside India
 The third thing overhead, beside the sky and the moon.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01, SA-LEX-C44-COLOUR-01, SA-LEX-C45-DAYTIME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *raviḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *saṁvatsaraḥ*, then *raviḥ*]
+- [YOU RECALL: say *śvetaḥ*, then read **प्रातः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01] -->
