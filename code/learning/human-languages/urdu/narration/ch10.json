@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Words on the Face",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f53e1edfd3d3198c",
+  "sourceHash": "fnv1a64:0d38898305516864",
   "lessons": [
     {
       "id": "UR-C10-kaan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1bdbc9ad25ec370",
+      "sourceHash": "fnv1a64:3722bf98268c6f80",
       "notice": null,
       "blocks": [
         {
@@ -104,6 +104,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU NAME: what's uncertain about *karṇa*'s own origin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sochnā, then say samajhnā, then say paṛhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sochnā*, then say *samajhnā*, then say *paṛhnā*]"
             }
           ]
         },
@@ -143,7 +152,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:873115c134810e46",
+      "sourceHash": "fnv1a64:29994a2156ae6462",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -253,6 +262,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONTRAST: **merā kān** — **merī nāk**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say likhnā, then say pūchhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *likhnā*, then say *pūchhnā*]"
             }
           ]
         },
@@ -311,7 +329,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8757547df3558a4f",
+      "sourceHash": "fnv1a64:26660bf76704fea0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -425,6 +443,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: **āṅkh** ← *\\*h₃ekʷ-* → English **eye**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lenā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lenā*]"
             }
           ]
         },

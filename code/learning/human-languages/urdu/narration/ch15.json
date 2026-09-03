@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Rain, Sun, Wind, Heat, Cold",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9be67799a10f2144",
+  "sourceHash": "fnv1a64:645582ad8c8682b6",
   "lessons": [
     {
       "id": "UR-C15-barish",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e2abec3a3171bed",
+      "sourceHash": "fnv1a64:82d553370ef466be",
       "notice": null,
       "blocks": [
         {
@@ -109,6 +109,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *āj bārish hai, is liye merā koṭ chāhiye.* — \"Today there's rain, so I need my coat.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āṅkh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āṅkh*]"
             }
           ]
         },
@@ -148,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e052edbcc4d96779",
+      "sourceHash": "fnv1a64:3adaf91a64f82a55",
       "notice": null,
       "blocks": [
         {
@@ -238,6 +247,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *āj bārish hai yā dhūp?* — \"Is it rain today, or sunshine?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read منہ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **منہ**]"
             }
           ]
         },
@@ -277,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a22579c2e490dfeb",
+      "sourceHash": "fnv1a64:9c115f71ec4da52b",
       "notice": null,
       "blocks": [
         {
@@ -367,6 +385,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: **ہوا** ← Persian ← Arabic **hawā**, a loan of a loan]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dil*]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: کہاں
 romanization: kahāṅ
 gloss: where — the fourth member of Urdu's k- question family, and a cousin of English where by way of PIE *kʷis
 concept_tag: UR-WHERE
-prerequisites: [UR-C17-kaam, UR-W05-he]
+prerequisites: [UR-C17-kaam, UR-W05-he, UR-C14-juta]
 sounds: [rtl, short-vowels-unwritten, nasal-vowel]
 roots: [sanskrit-kasmin, pie-kwis]
 etymology_hook: kahāṅ descends through Prakrit kahiṅ from Sanskrit kasmin, the locative of the interrogative stem ka- , itself from Proto-Indo-European *kʷis -- the same root that gives Urdu kyā, kaun, kab and kaise their shared opening k, Latin quis and quid, and the entire English wh- family: who, what, when, where; Urdu marks its questions with k where English marks them with wh, and the two marks are the same inherited consonant taking two different journeys out of PIE.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-KAHAN, UR-ETYMON-K-QUESTION-FAMILY, UR-LEX-KYA, UR-LEX-KAISE-KAISI, UR-LEX-YIH, UR-SCRIPT-HE-01]
+  knowledge: [UR-LEX-KAHAN, UR-ETYMON-K-QUESTION-FAMILY, UR-LEX-KYA, UR-LEX-KAISE-KAISI, UR-LEX-YIH, UR-SCRIPT-HE-01, UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-SCRIPT-TE-VS-TTE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -79,13 +79,14 @@ So a learner meeting **کہاں** is not memorising an arbitrary shape. They are
 meeting a relative of the word they already use for the same job.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAHAN, UR-ETYMON-K-QUESTION-FAMILY, UR-LEX-KYA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAHAN, UR-ETYMON-K-QUESTION-FAMILY, UR-LEX-KYA, UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-SCRIPT-TE-VS-TTE] -->
 
 - [YOU SAY: **kahāṅ** — where; then **yih kahāṅ?**]
 - [YOU SAY: the five k- question words — **kyā, kahāṅ, kaun, kab, kaise**]
 - [YOU READ: کیا and کہاں, naming their letters from the right]
 - [YOU TRACE: **kahāṅ** ← Prakrit *kahiṅ* ← Sanskrit *kasmin* ← PIE
   *\*kʷis* → English **where**, Latin **quis**]
+- [YOU RECALL: say *jūtā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAHAN, UR-ETYMON-K-QUESTION-FAMILY] -->

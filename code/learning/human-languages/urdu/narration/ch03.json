@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b6c8f1de756acfd9",
+  "sourceHash": "fnv1a64:e7f5ea809abec376",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a2cbd495648d6c5",
+      "sourceHash": "fnv1a64:7aa6c5012a68c1b8",
       "notice": null,
       "blocks": [
         {
@@ -247,6 +247,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the family — **kyā, what, who, which**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say salām, then say shukriyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *salām*, then say *shukriyā*]"
             }
           ]
         },

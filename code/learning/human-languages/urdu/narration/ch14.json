@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Four Things You Wear",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0c55f4aaa0d8c167",
+  "sourceHash": "fnv1a64:cf499bace00f79c1",
   "lessons": [
     {
       "id": "UR-C14-qamiz",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfa0fc41fa9ff231",
+      "sourceHash": "fnv1a64:cd63e5c175178280",
       "notice": null,
       "blocks": [
         {
@@ -419,6 +419,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kālā jūtā* and *safed ṭopī* together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kān*]"
             }
           ]
         },

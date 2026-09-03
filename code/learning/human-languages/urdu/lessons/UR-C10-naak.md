@@ -9,7 +9,7 @@ headword: ناک
 romanization: nāk
 gloss: nose — the same three letters as کان, read in reverse, and a real cousin of the English word this time
 concept_tag: UR-NOSE
-prerequisites: [UR-C10-kaan]
+prerequisites: [UR-C10-kaan, UR-C07-likhna, UR-C08-puchhna]
 sounds: [rtl, long-a]
 roots: [sanskrit-nas, pie-nehs]
 etymology_hook: nāk continues Sauraseni Prakrit ṇakka, from Proto-Indo-Iranian *náHs, from Proto-Indo-European *néh₂s "nose" — the same root English nose comes from, so unlike kān's dead end, nāk and nose are real cousins.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-ETYMON-NAAK-NOSE]
+  knowledge: [UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-ETYMON-NAAK-NOSE, UR-LEX-LIKHNA, UR-REGISTER-WRITING-BORROWED, UR-LEX-PUCHHNA, UR-ETYMON-PUCHHNA-ASK, UR-REGISTER-TWO-ROADS-ONE-ROOT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -69,13 +69,14 @@ not: *nāk* and *nose* are genuine cousins, joining *bhāī* and *brother*
 as this book's settled Indo-European matches.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-ETYMON-NAAK-NOSE, UR-LEX-KAAN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-ETYMON-NAAK-NOSE, UR-LEX-KAAN, UR-LEX-LIKHNA, UR-REGISTER-WRITING-BORROWED, UR-LEX-PUCHHNA, UR-ETYMON-PUCHHNA-ASK, UR-REGISTER-TWO-ROADS-ONE-ROOT] -->
 
 - [YOU SAY: **nāk** — nose; then **merī nāk**]
 - [YOU SPELL: **kān** forward, then **nāk** — the same three letters,
   reversed]
 - [YOU CONNECT: **nāk** ← *\*néh₂s* → English **nose**, real cousins]
 - [YOU CONTRAST: **merā kān** — **merī nāk**]
+- [YOU RECALL: say *likhnā*, then say *pūchhnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-ETYMON-NAAK-NOSE] -->

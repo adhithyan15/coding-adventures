@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b7d090d6fee67411",
+  "sourceHash": "fnv1a64:d5610fff27cd01b3",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23c862a272e3546c",
+      "sourceHash": "fnv1a64:95ede26f4ac7a140",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU POINT: broad final **ے** versus long-*ī* **ی**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nahī̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nahī̃*]"
             }
           ]
         },
@@ -740,7 +749,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cccf79b3efd38e46",
+      "sourceHash": "fnv1a64:c1b03f4bdfc4f7cb",
       "notice": null,
       "blocks": [
         {
@@ -817,6 +826,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: Urdu **ٹھیک** ↔ Hindi *ṭhīk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āp / tum / tū, then say kyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āp / tum / tū*, then say *kyā*]"
             }
           ]
         },

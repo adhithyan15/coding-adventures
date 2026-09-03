@@ -9,7 +9,7 @@ headword: ٹھیک
 romanization: ṭhīk
 gloss: fine, well, correct
 concept_tag: WORD-WELL
-prerequisites: [UR-C04-main-hun]
+prerequisites: [UR-C04-main-hun, UR-C03-aap-tum-tu, UR-C03-kya]
 sounds: [rtl, retroflex-aspirated-th, long-i]
 roots: [shared-hindustani-thik]
 etymology_hook: Thik is shared everyday Hindustani vocabulary; Urdu writes it ٹھیک, while Hindi writes the very same word in its own script.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK]
+  knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK, UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU, UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,11 +60,12 @@ practice may show both scripts only after each form has been learned in its own
 right.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK, UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU, UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY] -->
 
 - [YOU SAY: **ṭhīk** — fine, well]
 - [YOU FEEL: tongue slightly back, then a small puff]
 - [YOU CONNECT: Urdu **ٹھیک** ↔ Hindi *ṭhīk*]
+- [YOU RECALL: say *āp / tum / tū*, then say *kyā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK] -->
