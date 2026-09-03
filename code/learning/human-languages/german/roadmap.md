@@ -126,11 +126,19 @@ Spanish and French where a contrast helps. The recurring decoder is the
   German never split the meaning and never needed the loan. Closes on
   ***Lenz***, the older poetic spring, unneeded and unretired. **Authored.**
 
-- **Ch. 16 — Family**: the mirror of the months — **Vater/Mutter** are **inherited
-  Germanic** (NOT Latin loans), Grimm's-law twins of English *father/mother* (*V* = *f*)
-  → **Bruder/Schwester** (Germanic twins of *brother/sister*; **Geschwister** "siblings"
-  via the collective **ge-**). The standout: family is native where the months were
-  borrowed. **Authored.**
+- **Ch. 16 — The pair that proves Grimm's law**: the mirror of the months. Every
+  word here is **inherited**, where every month name was bought, and the reason is
+  the same rule the book keeps returning to: words used every hour resist
+  replacement, and Rome ran the calendar but not anybody's household. Four people
+  and one law with four verdicts — ***Vater*** against *pater*, **p → f**;
+  ***Mutter*** against *mater*, **t → th** and then German's own later shift again;
+  ***Bruder*** against *frater*, where the swap runs the **opposite** way because
+  the two words began from different ancient sounds, which is what makes the law a
+  law rather than a preference; and ***Schwester*** against *soror*, which did not
+  move at all, because Grimm's law touches stops and leaves an *s* alone. Closes on
+  the two plural-only collectives: ***die Eltern***, a comparative frozen into a
+  noun — "the older ones" — and ***die Geschwister***, gathered with the collective
+  **Ge-** on a stem meaning *sister*, covering the brothers regardless. **Authored.**
 
 - **Ch. 17 — Food (bread, water, wine)**: **Brot** (**inherited Germanic** twin of
   English *bread*, NOT Latin *pānis*; introduces the neuter **das** + capitalized
