@@ -1,7 +1,7 @@
 ---
 id: GE-C09-jahreszeiten
-sequence: 250
-chapter: 12
+sequence: 260
+chapter: 13
 type: word
 headword: die Jahreszeiten
 gloss: the seasons — native Germanic, unlike the Latin months

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 57,
-  "sourceHash": "fnv1a64:f4f881474d19f9b2",
+  "sourceHash": "fnv1a64:cdc3a54456aa11c5",
   "lessonIds": [
     "TA-C57-wind",
     "TA-C57-sand",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch57.txt",
   "json": "tamil/narration/ch57.json",
-  "textHash": "fnv1a64:57b7800fcb3e2ac3",
-  "jsonHash": "fnv1a64:0839f215d2b02f4a",
+  "textHash": "fnv1a64:6d285e0a2c1b84f0",
+  "jsonHash": "fnv1a64:d03cef32e4aa1f55",
   "findings": []
 }

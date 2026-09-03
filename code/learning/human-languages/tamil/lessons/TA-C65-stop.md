@@ -9,7 +9,7 @@ headword: "நிறுத்து"
 gloss: "stop"
 romanization: "niṟuttu"
 concept_tag: TA-VERB-NIRUTTU
-prerequisites: [TA-C65-walk, TA-W21-read-kudi]
+prerequisites: [TA-C65-walk, TA-W21-read-kudi, TA-C63-hesitancy, TA-C64-crop]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C65-DOING-03]
 practises:
-  knowledge: [TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-SCRIPT-READ-KUDI-01]
+  knowledge: [TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-SCRIPT-READ-KUDI-01, TA-LEX-C63-MANNERS-03, TA-LEX-C64-HARVEST-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -61,13 +61,14 @@ Across the family: Kannada ನಿಲ್ಲಿಸು (*nillisu*) and Malayalam �
 Three doings, and the first pair that undoes itself: *naḍa* against *niṟuttu*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-LEX-C63-MANNERS-03, TA-LEX-C64-HARVEST-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *niṟuttu*]
 - [YOU SAY: *naḍa*, then *niṟuttu* — moving, then halted]
 - [YOU SAY: *niṟuttu* the way you would call it across a street]
 - [YOU SAY: *vāṉilai*, and name the piece of it this verb is related to]
+- [YOU RECALL: say *tayakkam*, then read **பயிர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03] -->

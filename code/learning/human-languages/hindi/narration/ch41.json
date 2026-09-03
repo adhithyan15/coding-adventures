@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c1fa31ce6ffc5af9",
+  "sourceHash": "fnv1a64:343312c6f7d879a5",
   "lessons": [
     {
       "id": "HI-C41-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02153beb49774e8e",
+      "sourceHash": "fnv1a64:9130763b7014a024",
       "notice": null,
       "blocks": [
         {
@@ -86,6 +86,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dost, then read यह, then say vah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dost*, then read **यह**, then say *vah*]"
             }
           ]
         },
@@ -121,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce4d68ec0d2df5a2",
+      "sourceHash": "fnv1a64:92995d15052b2feb",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +201,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read बच्चा, then say yahā̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **बच्चा**, then say *yahā̃*]"
             }
           ]
         },
@@ -227,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:449e0380eb405e6f",
+      "sourceHash": "fnv1a64:63540b06bdb5eeab",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +316,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ādmī, then read वहाँ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ādmī*, then read **वहाँ**]"
             }
           ]
         },
@@ -333,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ee8c29daae8c76c",
+      "sourceHash": "fnv1a64:0dfb7f32b610d2e0",
       "notice": null,
       "blocks": [
         {
@@ -404,6 +431,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aurat / mahilā / strī, then say kaun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aurat / mahilā / strī*, then say *kaun*]"
             }
           ]
         },
@@ -439,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:435f7b15c2afad39",
+      "sourceHash": "fnv1a64:9505558e0ff76c69",
       "notice": null,
       "blocks": [
         {
@@ -510,6 +546,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once with a word you already know after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kahā̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kahā̃*]"
             }
           ]
         },

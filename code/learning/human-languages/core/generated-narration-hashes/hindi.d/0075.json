@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 75,
-  "sourceHash": "fnv1a64:663bddac3f375ffe",
+  "sourceHash": "fnv1a64:a46518dcf7972ea2",
   "lessonIds": [
     "HI-C68-country",
     "HI-C68-india",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch75.txt",
   "json": "hindi/narration/ch75.json",
-  "textHash": "fnv1a64:a217f900341a7b80",
-  "jsonHash": "fnv1a64:eeabdf68949e217f",
+  "textHash": "fnv1a64:167bc9216543818d",
+  "jsonHash": "fnv1a64:44616c2c5258471f",
   "findings": []
 }

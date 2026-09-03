@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 58,
-  "sourceHash": "fnv1a64:76204ac3b7665f74",
+  "sourceHash": "fnv1a64:bbfbad6a01d83a5f",
   "lessonIds": [
     "TA-C58-cow",
     "TA-C58-goat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch58.txt",
   "json": "tamil/narration/ch58.json",
-  "textHash": "fnv1a64:8219618b822437f5",
-  "jsonHash": "fnv1a64:67ed5bc2a2f7d7bc",
+  "textHash": "fnv1a64:16f6f096a49ca706",
+  "jsonHash": "fnv1a64:59cdee6ac75dacd5",
   "findings": []
 }

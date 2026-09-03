@@ -1,0 +1,4436 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY BENGALI EXAMINING OR LANGUAGE BODY. core/exam-levels.json records bengali as exam 'no widely-sat ladder', basis 'editorial', so there is nothing here to defer to. West Bengal and Bangladesh school boards and the Bangla Academy examinations exist, but they are built for children schooled in Bengali or for literary attainment, not for an adult second-language learner against CEFR can-do descriptors, and neither was consulted. Read 'A1' here as the CEFR descriptor -- can greet, introduce oneself, and handle a short exchange in everyday spoken Bengali -- and as a measuring stick this project built for itself.\n\nEXAM ENVELOPE: NONE EXISTS. There is no bengali/task-shapes/, no bengali/mocks/ and no bengali/assessment.json. So unlike Arabic, whose A1 task shape is sourced from a real external test, nothing here can say which paper item demands which word. Where such a file could write 'the paper asks for X', this one can only write 'an A1 learner needs X'. That is a weaker claim and is stated as one.\n\nTHE TRACK OWNS NO HAND-WRITTEN CHAPTERS, WHICH MAKES THESE NUMBERS TRUSTWORTHY. core/book-generation.d/handwritten.d/ contains eight entries and all eight are German. A hand-written chapter owns no atom and therefore cannot be probed, so an inventory measured against a track that has them reports its hand-written content as absent -- the caveat recorded on French. Bengali is clear of it: every one of its 26 chapters is generated from the lessons this file probes.\n\nTHE REGISTER COLUMN IS DERIVED FROM LESSON BODIES, NOT FROM FRONTMATTER, AND THE VARIETY FIELD IS AN ARTEFACT. All 139 lessons declare register 'neutral'. The `variety` field takes three values and none of them carries register information: it is 'standard' for every one of the 60 writing lessons, 'standard-bengali' for chapters C01-C05 and the retrieval chapter, and 'standard-colloquial' for C06-C15 -- perfectly predicted by the lesson id prefix, which is to say by when the lesson was written. A tool trusting either field would report that this track makes no register distinction at all. It teaches one: the three-way tui/tumi/apni ladder in chapter 3, and the respect ENDING on the verb across chapter 13.\n\nSEARCH FOR AN EXTERNAL SOURCE: NOT SEARCHED, BY INSTRUCTION. The project settled at HL-C287/HL-C290 that the proxy derivation is the method for tracks with no sat ladder, and the search was deliberately not redone for Bengali. Saying so is what keeps 'we did not look' from reading as 'there is nothing to find'.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is the Instituto Cervantes Plan Curricular inventories. The proxy supplies the LEVEL and the shape of the columns; every Bengali exponent is this project's choice, and every point records which Spanish point or points it was derived from.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Spanish is a proxy for LEVEL, never for grammar: each point was read as 'what must an A1 learner be able to do here', and the Bengali exponent that carries the same load was then chosen. Where Bengali carries the load with machinery Spanish has not got -- a classifier, a case suffix, a dative experiencer, a respect ending on the verb -- the point is restated around the Bengali machinery and its Spanish origin recorded in derivedFrom. Restating IS deriving; only two Spanish points yield nothing at all and both are in proxy.notTransferred."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "core/spine.json declares pre-A1 through C2 and core/exam-levels.json maps bengali onto CEFR with mapping 'cefr'. Used for the functional and register columns, where the proxy's exponents are too Spanish-specific to transfer."
+    },
+    {
+      "id": "BN-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/bengali/ -- 139 lessons, 26 chapters, 154 schema-v2 knowledge atoms",
+      "note": "Coverage is measured, not asserted. A point counts as covered only when every atom named in its probe is introduced by a lesson in this track. The atom set was re-derived from the merged tree with the package's own trackIntroducedAtoms, and every probe was checked against it before this file was committed. Sixty of the 139 lessons are script lessons, which is the largest script strand in the corpus after Tamil's."
+    },
+    {
+      "id": "BN-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.bengali",
+      "note": "Records bengali as exam 'no widely-sat ladder', basis 'editorial', mapping 'cefr' -- and, unlike tracks.tamil, tracks.sanskrit, tracks.arabic and tracks.urdu, carries NO caveat. That absence was not filled in by importing another track's: the register column below was MEASURED against this corpus, and BN-A1-REG-05 records what a caveat would have to say."
+    },
+    {
+      "id": "ED-BENGALI",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Bengali",
+      "note": "There is no Bengali examining body to defer to. Every judgement in this file is the project's own and is attributable to nobody else."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-ART-02"
+        ],
+        "why": "Contractions of a preposition with the definite article (al, del). Bengali has neither a preposition nor an article, so there is no pair to contract and nothing a lesson could teach. The absence of the article itself IS enumerated, at BN-A1-DET-01; this entry is only about the contraction."
+      },
+      {
+        "spanishPoints": [
+          "A1-PRON-07"
+        ],
+        "why": "The exclamative que with an adjective (que bonito!). Bengali exclaims with an intonation contour plus কী, and কী is already enumerated as the interrogative at BN-A1-PRON-07 and BN-A1-QUE-01. Splitting one word into two points because Spanish spells its two uses differently would be counting the proxy's morphology rather than Bengali's, so the exclamative use yields no separate point."
+      }
+    ]
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the CEFR Companion Volume A1 descriptors",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Bengali is this project's choice every time, and a function inventory without its exponents is half a source. Bengali has no checked-in mock or task shape to pin an exponent against, so no note here can say which paper item needs a word."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence, coordination and subordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS MOST AND STILL DOES NOT CLOSE. Walking the Spanish grammar column surfaced demands no reading of the Bengali corpus alone would have raised -- a classifier standing in for the article, a genitive doing the possessive's work, a locative for 'where you live', an object case on animates. But six points have no Spanish origin at all and are flagged bengaliSpecific: the animate/inanimate split, verb vowel harmony, the -আনো causative, suffix stacking order, the respect ending on the verb, and Bengali's own written diglossia. Everything else answers a demand some Spanish point also makes, even where the machinery differs completely, and records which one."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "the proxy's orthography columns, plus a direct character census of the corpus taken with the package's own measureScriptClosure",
+      "note": "The census was TAKEN rather than assumed, and it does not match any sibling track's shape: 34 glyphs taught against 45 shown, 11 never taught, 21 closure violations, and headwordsWithoutRomanization exactly 0. Tamil measured 52 of 52 with no violations; Arabic measures 30 of 45 with 57; Bengali sits between them. The dimension stays partial for a reason of its own as well: no ductus data for this script exists anywhere in the repository, so stroke order cannot be taught, cannot be filmstripped, and cannot be closed by authoring -- it is research (HL-C212)."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "the proxy's twenty notional-specific domains (A1-NE01 to A1-NE20) and its seven general-notion blocks",
+      "note": "The domain list is the proxy's and it transfers cleanly, because what a beginner talks about is not language-specific. Which words fill each domain is entirely this project's choice. The distribution is severely uneven and that is the finding: colours, drink, family, body and clothing are complete or nearly so, while thirty-odd domains hold no Bengali word at all -- and there is no number above five, no time word, no place name and no digit."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, and its `note` names what is missing so the file reads as a work queue rather than a score. Every atom named in a probe was checked to exist before this file was committed: a probe naming an atom that does not exist would report 'not covered' forever and would be indistinguishable from real debt.",
+  "points": [
+    {
+      "id": "BN-A1-N-01",
+      "category": "Bishheshyo (the noun)",
+      "label": "proper nouns: a personal name, given in an introduction and used in address",
+      "probe": [
+        "BN-CONCEPT-C02-NAAM-01",
+        "BN-CONCEPT-C02-AMARNAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "নাম and the frame আমার নাম … are both taught in chapter 3, and the frame is what an introduction actually uses. Bengali drops the copula here, which the lesson names."
+    },
+    {
+      "id": "BN-A1-N-02",
+      "category": "Bishheshyo (the noun)",
+      "label": "place names: the town, the region or the country you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-N-01",
+        "A1-NE20-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT, and the corpus comes closer than it looks. কলকাতা appears exactly once, in the prose of BN-C05-thaka, and is not a headword, so no atom carries it; বাংলা is taught only as the LANGUAGE inside আমি বাংলা বলি. There is no word for country, city, town or village anywhere in 139 lessons, so a learner can say which language they speak and never where they live. The cheapest fix is one lesson on দেশ ('country') plus one settlement name."
+    },
+    {
+      "id": "BN-A1-N-03",
+      "category": "Bishheshyo (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT AS A CLASS. কাল is the only time noun in the corpus and it is locked inside the farewell কাল দেখা হবে, taught for the joke that it means both yesterday and tomorrow rather than as a noun a learner can reuse. There is no দিন, রাত, সকাল, সন্ধ্যা or ঘণ্টা. This blocks BN-A1-NG4-01 and BN-A1-NG4-02 as well."
+    },
+    {
+      "id": "BN-A1-N-04",
+      "category": "Bishheshyo (the noun)",
+      "label": "Bengali marks no grammatical gender anywhere in the sentence",
+      "probe": [
+        "BN-GRAMMAR-C07-ASHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-N-03",
+        "A1-N-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Restated, not transferred. Spanish spends two points on -o/-a gender and on heteronyms like padre/madre. What an A1 learner of Bengali must handle is that NOTHING agrees for gender: আসা's lesson teaches exactly that, from the other end — the verb never asks whether a man or a woman is speaking. Bengali is unusual among Indo-Aryan languages in this, and the corpus says so."
+    },
+    {
+      "id": "BN-A1-N-05",
+      "category": "Bishheshyo (the noun)",
+      "label": "number: the animate plural -রা and the inanimate -গুলো",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT, and cheap. গুলো has ZERO occurrences in 139 files and every one of the eight raw matches for রা is a substring of করা, খাওয়া, ভাবা's প্রose or similar. A learner who owns four family words, four body words, five colours and four garments cannot say more than one of any of them. One lesson naming both suffixes would pluralise every noun in the book."
+    },
+    {
+      "id": "BN-A1-N-06",
+      "category": "Bishheshyo (the noun)",
+      "label": "the animate/inanimate split, which is what actually governs the plural and the classifier",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [],
+      "bengaliSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish sorts nouns by gender, Bengali by animacy, and the split drives both the plural suffix (-রা against -গুলো) and which classifier a counted noun takes. Nothing in the corpus names it. Bengali-specific and untaught."
+    },
+    {
+      "id": "BN-A1-ADJ-01",
+      "category": "Bisheshon (the adjective)",
+      "label": "qualifying adjectives, attributive and predicative",
+      "probe": [
+        "BN-CONCEPT-C03-BHALO-01",
+        "BN-LEX-C14-KALO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "ভালো is taught predicatively in আমি ভালো আছি in chapter 5, and the chapter-23 colours are attributive. Both uses exist in the corpus, which is what the point asks."
+    },
+    {
+      "id": "BN-A1-ADJ-02",
+      "category": "Bisheshon (the adjective)",
+      "label": "the adjective never agrees: one form for every noun it describes",
+      "probe": [
+        "BN-LEX-C14-NIL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Restated around the Bengali machinery. Spanish needs two points for adjective gender and adjective number; Bengali needs one, and it is a point about an absence. নীল's lesson states it in those words — one form for every noun it describes — which is exactly the fact an A1 candidate must hold."
+    },
+    {
+      "id": "BN-A1-ADJ-03",
+      "category": "Bisheshon (the adjective)",
+      "label": "position: the adjective stands before its noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Never stated. The five colours and ভালো are always taught as bare words or as predicates; no lesson puts an adjective in front of a noun and names the order. Spanish's point exists because Spanish puts it after, so the contrast is worth one sentence in whichever lesson first says লাল জামা."
+    },
+    {
+      "id": "BN-A1-ADJ-04",
+      "category": "Bisheshon (the adjective)",
+      "label": "relational adjectives: naming where a person is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and blocked behind BN-A1-N-02. No gentilic exists in the corpus — nothing for বাঙালি, ভারতীয় or বাংলাদেশী — so a learner cannot describe a person by origin at all."
+    },
+    {
+      "id": "BN-A1-ADJ-05",
+      "category": "Bisheshon (the adjective)",
+      "label": "degree: খুব ('very') in front of an adjective",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. খুব appears nowhere, and neither does বেশ or একটু, so no adjective in the corpus can be intensified or softened. This is one word that would upgrade every one of the eleven adjectives already taught."
+    },
+    {
+      "id": "BN-A1-DET-01",
+      "category": "Nirdeshok (definiteness, and the article Bengali has not got)",
+      "label": "Bengali has no article; a bare noun is definite or indefinite by context",
+      "probe": [
+        "BN-CONCEPT-C02-AMARNAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Restated as an absence, which is the demand an A1 learner really faces: not to look for a word that is not there. আমার নাম … is the corpus's clearest bare-noun sentence and its lesson makes the omission explicit, though of the copula rather than of the article."
+    },
+    {
+      "id": "BN-A1-DET-02",
+      "category": "Nirdeshok (definiteness, and the article Bengali has not got)",
+      "label": "the classifier -টা / -টি, which does the definite article's work",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ART-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT, and it is the single most Bengali thing missing from this file. Bengali cannot count a noun or definitise one without a classifier, so numbers 1-5 in chapter 12 are taught as a recitation a learner cannot attach to any of the sixty nouns the book owns. Teaching -টা alone would make 'the shirt', 'the cup of tea' and 'two brothers' sayable."
+    },
+    {
+      "id": "BN-A1-DET-03",
+      "category": "Nirdeshok (definiteness, and the article Bengali has not got)",
+      "label": "একটা as the indefinite: 'a shirt', 'a friend'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ART-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and blocked behind the same missing classifier. এক is taught as a numeral in chapter 12 and read in chapter 24; একটা is never formed."
+    },
+    {
+      "id": "BN-A1-DEM-01",
+      "category": "Nirdeshak (demonstratives and deixis)",
+      "label": "the near/far demonstrative pair এই and ওই",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "ABSENT ENTIRELY: এই returns zero matches in 139 files and ওই returns zero. A learner cannot point at anything. Spanish spends three points on a three-way deixis; Bengali needs one lesson for a two-way one, and has none."
+    },
+    {
+      "id": "BN-A1-DEM-02",
+      "category": "Nirdeshak (demonstratives and deixis)",
+      "label": "position: the demonstrative stands before the noun and coexists with the classifier",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and downstream of BN-A1-DEM-01 and BN-A1-DET-02 together. Unlike Spanish, where the demonstrative and the article are mutually exclusive, Bengali stacks এই + noun + -টা, and that is the structural fact the point becomes here."
+    },
+    {
+      "id": "BN-A1-DEM-03",
+      "category": "Nirdeshak (demonstratives and deixis)",
+      "label": "the neuter/impersonal 'this' as a sentence subject: এটা কী?",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. কী is taught in chapter 3 as the question word inside তোমার নাম কী, but there is no এটা to ask it about, so the commonest beginner sentence in any language — 'what is this?' — cannot be said."
+    },
+    {
+      "id": "BN-A1-POS-01",
+      "category": "Odhikar (possession)",
+      "label": "the possessive of the first person: আমার",
+      "probe": [
+        "BN-CONCEPT-C02-AMAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Taught in chapter 3 as a word in its own right, ahead of the frame that uses it. Bengali builds the possessive by putting the pronoun in the genitive rather than by a separate paradigm, which BN-A1-KAR-02 records."
+    },
+    {
+      "id": "BN-A1-POS-02",
+      "category": "Odhikar (possession)",
+      "label": "the possessive of the second person, at all three respect levels: তোর / তোমার / আপনার",
+      "probe": [
+        "BN-CONCEPT-C02-TOMARNAAMKI-01",
+        "BN-CONCEPT-C02-TUMIAPNI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "তোমার is taught inside তোমার নাম কী, and আপনার is given in the same lesson's prose as the respectful swap. This is one of only two places the register ladder is atomised at all — see BN-A1-REG-01."
+    },
+    {
+      "id": "BN-A1-POS-03",
+      "category": "Odhikar (possession)",
+      "label": "possessives for several possessors, and for the third person: আমাদের, তার",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-POS-02",
+        "A1-POS-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. There is no plural pronoun of any person in the corpus and no third-person pronoun, so possession is available for exactly two of the six persons Spanish enumerates."
+    },
+    {
+      "id": "BN-A1-Q-01",
+      "category": "Shongkhya (numerals and quantity)",
+      "label": "cardinal numerals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "STOPS AT FIVE, and that is the finding. এক দুই তিন চার পাঁচ are taught in a single chapter-12 lesson and nothing goes further. Six to ten, then the teens, then twenty, are the cheapest large win in this file: an A1 candidate is expected to give an age, a telephone number and a price, and none of the three is reachable from five."
+    },
+    {
+      "id": "BN-A1-Q-02",
+      "category": "Shongkhya (numerals and quantity)",
+      "label": "the numeral used in counting, as against the numeral used with a noun",
+      "probe": [
+        "BN-LEX-NUMBERS-ONE-TO-FIVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered only in the recitation sense. এক থেকে পাঁচ is taught as a sequence; because the classifier is untaught (BN-A1-DET-02) the numbers cannot be attached to any noun, so the point is covered and its neighbour above is not, which is exactly the distinction worth keeping visible."
+    },
+    {
+      "id": "BN-A1-Q-03",
+      "category": "Shongkhya (numerals and quantity)",
+      "label": "the Bengali digits ০ ১ ২ ৩ ৪ ৫ ৬ ৭ ৮ ৯ as written shapes",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "NOT ONE DIGIT IS TAUGHT. Bengali has its own numeral shapes and the script strand — sixty lessons, the largest script strand in the corpus after Tamil's — teaches none of them. Chapter 24's BN-W02-tin-read reads তিন, the WORD, not ৩. Every price, date, clock time and page number in written Bengali is unreadable."
+    },
+    {
+      "id": "BN-A1-Q-04",
+      "category": "Shongkhya (numerals and quantity)",
+      "label": "ordinal numerals: প্রথম, দ্বিতীয়",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. No ordinal exists in the corpus, so nothing can be put in a sequence — not a floor, not a date, not a turn."
+    },
+    {
+      "id": "BN-A1-Q-05",
+      "category": "Shongkhya (numerals and quantity)",
+      "label": "quantifiers: অনেক ('much, many') and একটু ('a little')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. The corpus has no quantifier of any kind, so nothing can be asked for in an amount — a real block on the food chapter, where চা, দুধ, জল and ভাত are all taught and none can be asked for in a quantity."
+    },
+    {
+      "id": "BN-A1-Q-06",
+      "category": "Shongkhya (numerals and quantity)",
+      "label": "যথেষ্ট / বেশ ('enough, quite a lot')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-Q-04",
+        "A1-NG2-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and lower priority than BN-A1-Q-05 above it. Recorded so the walk over the Spanish quantifier column is total."
+    },
+    {
+      "id": "BN-A1-PRON-01",
+      "category": "Shorbonam (pronouns)",
+      "label": "the first-person subject pronoun আমি",
+      "probe": [
+        "BN-CONCEPT-C03-AMI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Taught in chapter 5 and read in chapter 6. It is also the only subject pronoun in the corpus that is not a second person."
+    },
+    {
+      "id": "BN-A1-PRON-02",
+      "category": "Shorbonam (pronouns)",
+      "label": "the second-person subject pronouns তুই / তুমি / আপনি",
+      "probe": [
+        "BN-CONCEPT-C02-TUMIAPNI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "All three are given in one chapter-3 lesson, which is the corpus's densest register moment. তুমি is the one drilled; তুই and আপনি are named and used in prose but never practised alone."
+    },
+    {
+      "id": "BN-A1-PRON-03",
+      "category": "Shorbonam (pronouns)",
+      "label": "third-person pronouns, which Bengali also grades for respect: সে / তিনি / ও",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT — there is no third person anywhere in the corpus. Every sentence a learner can build is about themselves or their listener, so nobody can be talked ABOUT. This is the largest single hole in the pronoun column and it also blocks the whole of BN-A1-FUN-F1-02."
+    },
+    {
+      "id": "BN-A1-PRON-04",
+      "category": "Shorbonam (pronouns)",
+      "label": "plural pronouns: আমরা, তোমরা, তারা",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, on the same footing as BN-A1-N-05: Bengali's plural machinery is absent in both the noun and the pronoun."
+    },
+    {
+      "id": "BN-A1-PRON-05",
+      "category": "Shorbonam (pronouns)",
+      "label": "the object form of a pronoun: আমাকে, তোমাকে",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02",
+        "A1-PRON-08",
+        "A1-SV-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught as a form, and NEARLY reachable. The dative frame is taught — ভালো লাগা's lesson introduces BN-GRAMMAR-C09-DATIVE-02, 'good sticks to me' — but the pronoun that fills its slot is never given, so the frame is taught with no filler."
+    },
+    {
+      "id": "BN-A1-PRON-06",
+      "category": "Shorbonam (pronouns)",
+      "label": "the dative experiencer, which is how Bengali says 'I like'",
+      "probe": [
+        "BN-GRAMMAR-C09-DATIVE-02",
+        "BN-LEX-C09-BHALOLAGA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01",
+        "A1-F3-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Restated around Bengali's own machinery and COVERED. Spanish reaches this with an indirect-object clitic and gustar; Bengali puts the experiencer in the dative and leaves the liked thing as subject. Chapter 15 teaches ভালো লাগা and names the construction, and teaches ভালোবাসা beside it."
+    },
+    {
+      "id": "BN-A1-PRON-07",
+      "category": "Shorbonam (pronouns)",
+      "label": "the interrogative pronoun কী ('what')",
+      "probe": [
+        "BN-CONCEPT-C02-KI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Taught in chapter 3 as its own word, ahead of the question that uses it. It is one of only two question words in the corpus."
+    },
+    {
+      "id": "BN-A1-PRON-08",
+      "category": "Shorbonam (pronouns)",
+      "label": "the reflexive নিজে",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Spanish spends a point on reflexive se because so much of its everyday verb stock is pronominal; Bengali's নিজে is rarer at A1 and this is correspondingly the lowest-priority null in this column."
+    },
+    {
+      "id": "BN-A1-ADV-01",
+      "category": "Kriya-bisheshon (adverbs)",
+      "label": "polarity: হ্যাঁ and না as complete answers",
+      "probe": [
+        "BN-CONCEPT-C01-HYANNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-F1-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Taught in the first chapter, written in chapter 4 and retrieved in chapter 26. It is the most heavily revisited pair in the track."
+    },
+    {
+      "id": "BN-A1-ADV-02",
+      "category": "Kriya-bisheshon (adverbs)",
+      "label": "manner: ভালো ('well') as an answer about state",
+      "probe": [
+        "BN-CONCEPT-C03-BHALO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04",
+        "A1-NG6-01",
+        "A1-NG6-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "ভালো is the most-used word in the book by the corpus's own account, and carries both the adjective and the adverb job."
+    },
+    {
+      "id": "BN-A1-ADV-03",
+      "category": "Kriya-bisheshon (adverbs)",
+      "label": "time deixis: আজ, কাল, এখন",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "ONLY কাল EXISTS, and only inside a fixed farewell. There is no আজ ('today') and no এখন ('now') anywhere, so nothing can be located in time relative to the moment of speaking. Pairs with BN-A1-N-03; one lesson could close both."
+    },
+    {
+      "id": "BN-A1-ADV-04",
+      "category": "Kriya-bisheshon (adverbs)",
+      "label": "place deixis: এখানে, ওখানে",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Absent: এখানে returns zero matches in 139 files. Nothing can be located in space, which also blocks BN-A1-FUN-NG3-01."
+    },
+    {
+      "id": "BN-A1-ADV-05",
+      "category": "Kriya-bisheshon (adverbs)",
+      "label": "repetition: আবার ('again')",
+      "probe": [
+        "BN-CONCEPT-C04-ABAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Taught as its own word in chapter 7, ahead of আবার দেখা হবে, and read in chapter 8. The corpus's habit of teaching the pieces before the phrase pays off here."
+    },
+    {
+      "id": "BN-A1-ADV-06",
+      "category": "Kriya-bisheshon (adverbs)",
+      "label": "additive connectives: -ও ('also'), আর ('and then')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. The clitic -ও is one character and would let a learner say 'me too', which is a stock A1 turn. See the joining column, which is empty for the same reason."
+    },
+    {
+      "id": "BN-A1-ADV-07",
+      "category": "Kriya-bisheshon (adverbs)",
+      "label": "the interrogative adverb কেমন ('how')",
+      "probe": [
+        "BN-CONCEPT-C03-KEMON-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "Taught in chapter 5 and read in chapter 6. With কী it is one of the two question words the corpus owns."
+    },
+    {
+      "id": "BN-A1-ADV-08",
+      "category": "Kriya-bisheshon (adverbs)",
+      "label": "কেন ('why') against কারণ ('because')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "NEITHER EXISTS: কেন returns zero matches and কারণ returns zero. A learner cannot ask for a reason or give one, which is the point Spanish makes with por qué against porque and which no amount of vocabulary substitutes for."
+    },
+    {
+      "id": "BN-A1-V-01",
+      "category": "Kriya (the verb)",
+      "label": "the dictionary form of a Bengali verb, which is also a noun",
+      "probe": [
+        "BN-LEX-C08-LEKHA-01",
+        "BN-GRAMMAR-C08-LEKHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED and taught deliberately: লেখা's lesson is built around the fact that the citation form is quietly a verbal noun, which is the property that makes Bengali's dictionary form unlike Spanish's infinitive."
+    },
+    {
+      "id": "BN-A1-V-02",
+      "category": "Kriya (the verb)",
+      "label": "the simple present, first person: আমি বলি, আমি বুঝি",
+      "probe": [
+        "BN-CONCEPT-C05-AMIBANGLABOLI-01",
+        "BN-GRAMMAR-C08-BOJHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED. আমি বাংলা বলি is a whole first-person present sentence in chapter 11, and the chapter-14 verbs give the -ই ending with the vowel harmony that comes with it."
+    },
+    {
+      "id": "BN-A1-V-03",
+      "category": "Kriya (the verb)",
+      "label": "the simple present across the persons, and the respect endings that go with them",
+      "probe": [
+        "BN-GRAMMAR-C07-JAOWA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and this is where Bengali's respect ladder actually lives. যাওয়া's lesson teaches that the verb ending, not a separate pronoun paradigm, carries how much respect is being paid — আপনি যান against তুমি যাও against তুই যা."
+    },
+    {
+      "id": "BN-A1-V-04",
+      "category": "Kriya (the verb)",
+      "label": "the two be-verbs: আছে for existing and being somewhere, হওয়া for becoming and for identity",
+      "probe": [
+        "BN-LEX-C07-HOWA-01",
+        "BN-GRAMMAR-C07-HOWA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and restated. Spanish needs ser/estar/haber/ir in one point; Bengali's split is different and narrower, and হওয়া's lesson is explicitly about what আছে cannot do. আছি itself is taught in chapter 5 inside আমি ভালো আছি."
+    },
+    {
+      "id": "BN-A1-V-05",
+      "category": "Kriya (the verb)",
+      "label": "the zero copula: 'my name is X' has no verb at all",
+      "probe": [
+        "BN-CONCEPT-C02-AMARNAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-OS-05",
+        "A1-SV-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and it is the first grammatical fact the track teaches. The chapter-3 lesson is titled around the missing 'is'."
+    },
+    {
+      "id": "BN-A1-V-06",
+      "category": "Kriya (the verb)",
+      "label": "the future: দেখা হবে",
+      "probe": [
+        "BN-CONCEPT-C04-DEKHAHOBE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered in one form only. হবে is taught inside the farewell and its lesson explains the impersonal 'seeing will happen' construction, but no other verb is put in the future and the ending is not generalised."
+    },
+    {
+      "id": "BN-A1-V-07",
+      "category": "Kriya (the verb)",
+      "label": "the past tense, in any person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08"
+      ],
+      "bengaliSpecific": false,
+      "note": "COMPLETELY ABSENT. Spanish spends five A1 points on the past because a candidate is expected to say what they did; the Bengali corpus has no past-tense form of any of its seventeen verbs. Nothing that happened can be reported. This is the single largest grammar gap in the file and it is worth a chapter, not a lesson."
+    },
+    {
+      "id": "BN-A1-V-08",
+      "category": "Kriya (the verb)",
+      "label": "the perfect, and the compound tenses built on a participle",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "bengaliSpecific": false,
+      "note": "Absent, and downstream of BN-A1-V-07: with no past there is no participle to compound. Recorded separately because Bengali's perfect is built differently from its simple past and would not come free with it."
+    },
+    {
+      "id": "BN-A1-V-09",
+      "category": "Kriya (the verb)",
+      "label": "the imperative, and the polite request built on the future",
+      "probe": [
+        "BN-GRAMMAR-C10-KHAN-REQUEST-02",
+        "BN-GRAMMAR-C13-FUTURE-POLITE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01",
+        "A1-F4-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and by the softened form rather than the bare one. চা খান is taught as a polite offer in chapter 16, and মাফ করবেন's lesson teaches the future-as-request softening explicitly. The blunt imperative (খাও, বলো) is never given, which is the right way round for a beginner but is worth saying."
+    },
+    {
+      "id": "BN-A1-V-10",
+      "category": "Kriya (the verb)",
+      "label": "the conjunctive participle in -ে, which is how Bengali chains two actions",
+      "probe": [
+        "BN-GRAMMAR-C13-KORE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-13",
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and it is the most valuable single atom in the corpus for the joining column. দয়া করে is taught as 'having done a kindness', and its lesson names the -ে participle as the pattern. Nothing else builds on it, so the machinery is present and unused."
+    },
+    {
+      "id": "BN-A1-V-11",
+      "category": "Kriya (the verb)",
+      "label": "the conjunct verb: a noun plus করা, which is how Bengali makes new verbs",
+      "probe": [
+        "BN-CONCEPT-C05-KAJKORA-01",
+        "BN-GRAMMAR-C09-KORA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED and taught three times over — কাজ করা, জিজ্ঞাসা করা, দয়া করে — with the chapter-15 lesson calling it 'the door into a thousand verbs'. It is the corpus's strongest piece of productive grammar."
+    },
+    {
+      "id": "BN-A1-V-12",
+      "category": "Kriya (the verb)",
+      "label": "the compound verb, where a second verb finishes the first",
+      "probe": [
+        "BN-GRAMMAR-C09-NEOWA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED. নেওয়া's lesson teaches the verb that finishes other verbs, which is a construction Spanish has no equivalent of and which an A1 learner of Bengali meets in the first conversation they overhear."
+    },
+    {
+      "id": "BN-A1-V-13",
+      "category": "Kriya (the verb)",
+      "label": "vowel harmony inside the verb: বুঝি against বোঝে",
+      "probe": [
+        "BN-GRAMMAR-C08-BOJHA-02",
+        "BN-GRAMMAR-C08-BHABA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [],
+      "bengaliSpecific": true,
+      "note": "NO SPANISH ORIGIN: Bengali raises the stem vowel before certain endings, so one verb has two written stems, and a learner who does not know it reads বুঝি and বোঝে as two words. Chapters 14 teaches it twice. Bengali-specific and covered."
+    },
+    {
+      "id": "BN-A1-V-14",
+      "category": "Kriya (the verb)",
+      "label": "the causative in -আনো, which turns 'see' into 'show'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [],
+      "bengaliSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish makes a causative with hacer plus an infinitive, so no A1 point asks about a causative SUFFIX. Bengali's -আনো is mentioned in the prose of BN-C12-hridoy and BN-C08-bhaba as a forward reference and is never taught. Bengali-specific and untaught."
+    },
+    {
+      "id": "BN-A1-KAR-01",
+      "category": "Karok (case and postpositions)",
+      "label": "the object case -কে, on people",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Spanish's point is that a human direct object takes the preposition a; Bengali's answer is a case suffix on animates, and the same demand is behind both. No lesson introduces it."
+    },
+    {
+      "id": "BN-A1-KAR-02",
+      "category": "Karok (case and postpositions)",
+      "label": "the genitive -র / -এর, which is how possession is built",
+      "probe": [
+        "BN-CONCEPT-C02-AMAR-01",
+        "BN-CONCEPT-C02-TOMARNAAMKI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED IN THE PRONOUN ONLY. আমার and তোমার are both genitives and both taught, but no lesson puts -র on a noun, so 'my brother's name' cannot be built even though every word in it is taught."
+    },
+    {
+      "id": "BN-A1-KAR-03",
+      "category": "Karok (case and postpositions)",
+      "label": "the locative -এ / -তে, for 'in' and 'at'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-NG3-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. কলকাতায় appears in the prose of BN-C05-thaka and is a locative, but it is neither a headword nor an atom, so the suffix is shown and never named. Pairs with BN-A1-ADV-04: nothing in the corpus can be located anywhere."
+    },
+    {
+      "id": "BN-A1-KAR-04",
+      "category": "Karok (case and postpositions)",
+      "label": "postpositions: সঙ্গে ('with'), জন্য ('for'), থেকে ('from')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02",
+        "A1-NG3-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "None of the three is taught. থেকে is the one that matters most, because it is how a learner says where they are from, and it is blocked behind BN-A1-N-02 as well."
+    },
+    {
+      "id": "BN-A1-KAR-05",
+      "category": "Karok (case and postpositions)",
+      "label": "one suffix at a time, in a fixed order, is how Bengali builds a phrase",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [],
+      "bengaliSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish marks these relations with free-standing prepositions before the noun, so no point asks how suffixes stack. Bengali stacks classifier, plural and case in a fixed order after the noun, and a learner who does not know the order cannot parse a single written phrase. Bengali-specific and untaught."
+    },
+    {
+      "id": "BN-A1-KAR-06",
+      "category": "Karok (case and postpositions)",
+      "label": "circumstantial phrases, and Bengali's verb-final word order",
+      "probe": [
+        "BN-CONCEPT-C05-AMIBANGLABOLI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-SN-02",
+        "A1-SN-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED by the one full sentence the corpus builds. আমি বাংলা বলি puts the object before the verb and its lesson says so, which is the word-order fact a Spanish speaker most needs and the agreement facts Spanish's own points ask about do not apply here at all."
+    },
+    {
+      "id": "BN-A1-SEN-01",
+      "category": "Bakyo (the sentence)",
+      "label": "the affirmative declarative",
+      "probe": [
+        "BN-CONCEPT-C05-AMIBANGLABOLI-01",
+        "BN-CONCEPT-C02-AMARNAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Two whole declaratives exist in the corpus, one verbless and one with a verb, and both are taught as frames a learner fills."
+    },
+    {
+      "id": "BN-A1-SEN-02",
+      "category": "Bakyo (the sentence)",
+      "label": "the negative declarative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "SEE THE NEGATION COLUMN. না is taught only as the standalone answer 'no'; there is no negated sentence anywhere in the corpus."
+    },
+    {
+      "id": "BN-A1-SEN-03",
+      "category": "Bakyo (the sentence)",
+      "label": "the yes-or-no question, marked by intonation alone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Bengali turns a statement into a question with intonation and no word order change, which is one sentence of explanation and would double what a learner can do with every frame already taught."
+    },
+    {
+      "id": "BN-A1-SEN-04",
+      "category": "Bakyo (the sentence)",
+      "label": "the content question, with the asking word in situ",
+      "probe": [
+        "BN-CONCEPT-C02-TOMARNAAMKI-01",
+        "BN-CONCEPT-C03-TUMIKEMONACHHO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and worth a note: Bengali leaves কী where the answer would stand rather than fronting it, so তোমার নাম কী is literally 'your name what'. Both taught questions show it."
+    },
+    {
+      "id": "BN-A1-SEN-05",
+      "category": "Bakyo (the sentence)",
+      "label": "the existential sentence: আছে for 'there is'",
+      "probe": [
+        "BN-CONCEPT-C03-BHALO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered thinly. আছি is taught inside আমি ভালো আছি and আছে appears in four lesson bodies, but the existential use — 'there is tea' — is never the point of a lesson, so the atom is present and the function is not drilled."
+    },
+    {
+      "id": "BN-A1-SEN-06",
+      "category": "Bakyo (the sentence)",
+      "label": "transitive and intransitive verbs side by side",
+      "probe": [
+        "BN-LEX-C07-KHAOWA-01",
+        "BN-LEX-C07-JAOWA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-OS-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by the verb stock rather than by a lesson about it: খাওয়া takes an object and যাওয়া does not, and both are taught in chapter 13."
+    },
+    {
+      "id": "BN-A1-SEN-07",
+      "category": "Bakyo (the sentence)",
+      "label": "the vocative, and addressing somebody by a kin term",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Bengali addresses almost everybody by a kin term — দাদা, দিদি — and the corpus teaches ভাই and বোন as nouns without ever using them in address, which is the everyday use."
+    },
+    {
+      "id": "BN-A1-QUE-01",
+      "category": "Proshno (questions)",
+      "label": "কী ('what') as the workhorse question word",
+      "probe": [
+        "BN-CONCEPT-C02-KI-01",
+        "BN-CONCEPT-C02-TOMARNAAMKI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Taught as a word and then in a frame, which is this track's standard shape and its best one."
+    },
+    {
+      "id": "BN-A1-QUE-02",
+      "category": "Proshno (questions)",
+      "label": "কেমন ('how')",
+      "probe": [
+        "BN-CONCEPT-C03-KEMON-01",
+        "BN-CONCEPT-C03-TUMIKEMONACHHO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "Same shape as কী: the word first, the exchange second, and a written form in chapter 6."
+    },
+    {
+      "id": "BN-A1-QUE-03",
+      "category": "Proshno (questions)",
+      "label": "কে ('who')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06",
+        "A1-F1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. The two raw matches for কে in lesson bodies are the object suffix -কে and a syllable inside another word, checked in context; the question word is absent. With no third-person pronoun either (BN-A1-PRON-03), nobody can be asked about."
+    },
+    {
+      "id": "BN-A1-QUE-04",
+      "category": "Proshno (questions)",
+      "label": "কোথায় ('where')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-NG3-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Absent: zero matches in 139 files. This is the question an A1 candidate is asked in the first minute of any speaking test."
+    },
+    {
+      "id": "BN-A1-QUE-05",
+      "category": "Proshno (questions)",
+      "label": "কখন ('when')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-NG4-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Absent: zero matches. Blocked with the whole time column."
+    },
+    {
+      "id": "BN-A1-QUE-06",
+      "category": "Proshno (questions)",
+      "label": "কত ('how much, how many')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06",
+        "A1-NG2-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Absent: zero matches. With no quantifier (BN-A1-Q-05) and no numeral above five (BN-A1-Q-01), price and age are both unreachable."
+    },
+    {
+      "id": "BN-A1-QUE-07",
+      "category": "Proshno (questions)",
+      "label": "the tag question: তাই না?",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Both halves exist in the corpus as separate ideas but the tag is never formed."
+    },
+    {
+      "id": "BN-A1-NEG-01",
+      "category": "Nishedh (negation)",
+      "label": "না as a complete answer",
+      "probe": [
+        "BN-CONCEPT-C01-HYANNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Taught in chapter 1, written in chapter 4, retrieved in chapter 26. It is the only negation in the corpus."
+    },
+    {
+      "id": "BN-A1-NEG-02",
+      "category": "Nishedh (negation)",
+      "label": "না after a verb, which is how Bengali negates a sentence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT, AND THIS IS THE FUNCTIONAL HOLE A BEGINNER HITS FIRST. Bengali puts না AFTER the verb — আমি বুঝি না, 'I do not understand'. আমি বুঝি is taught, in chapter 14; না is taught, in chapter 1; the two are never put together anywhere in 139 lessons. The single most useful sentence a beginner can say cannot be said, and no coverage percentage surfaces that. One sentence in the বোঝা lesson would close it."
+    },
+    {
+      "id": "BN-A1-NEG-03",
+      "category": "Nishedh (negation)",
+      "label": "নয় / নই, the negative of the zero copula",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-OS-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Absent: নয় returns zero matches. আমার নাম … is taught as a frame with no verb, and the frame cannot be denied."
+    },
+    {
+      "id": "BN-A1-NEG-04",
+      "category": "Nishedh (negation)",
+      "label": "নেই, the negative of আছে",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Absent: নেই returns zero matches. Bengali uses a separate word rather than না for 'there is not', so this does not come free with BN-A1-NEG-02 and is recorded on its own."
+    },
+    {
+      "id": "BN-A1-NEG-05",
+      "category": "Nishedh (negation)",
+      "label": "negative coordination: না … না",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and downstream of the empty joining column below."
+    },
+    {
+      "id": "BN-A1-JOIN-01",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "আর / এবং ('and') joining two nouns",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "ABSENT. আর returns ZERO occurrences in 139 files and এবং returns zero. A learner who owns four family words, four body words, five colours, four garments and four foods cannot say 'rice and water'."
+    },
+    {
+      "id": "BN-A1-JOIN-02",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "-ও, the clitic that also means 'and'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Bengali's second coordinator is a single suffixed vowel, which makes it the cheapest possible lesson in this column, and it is not there."
+    },
+    {
+      "id": "BN-A1-JOIN-03",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "বা ('or')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-CO-03",
+        "A1-F3-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "ABSENT. The three raw matches for বা were checked in context and every one is a substring of ভাবা, বোঝা or a similar headword. Without it, no alternative can be offered, which also blocks BN-A1-FUN-F3-02."
+    },
+    {
+      "id": "BN-A1-JOIN-04",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "কিন্তু ('but')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "bengaliSpecific": false,
+      "note": "ABSENT: zero matches. Spanish gives adversative coordination its own A1 point and also uses pero as a counter-argument device (A1-F2-09); Bengali can do neither."
+    },
+    {
+      "id": "BN-A1-JOIN-05",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "distributive joining: একটা … আরেকটা",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and blocked behind the missing classifier as well."
+    },
+    {
+      "id": "BN-A1-JOIN-06",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "যে, the complementiser: 'I think THAT …'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "ABSENT: zero matches. No opinion can be reported, which is why the whole opinion block of the functional column is null."
+    },
+    {
+      "id": "BN-A1-JOIN-07",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "যে as a relative pronoun, and the যে … সে correlative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Bengali's relative clause is a correlative pair rather than a Spanish-style postnominal que, so this is a restatement rather than a transfer — and the whole construction is absent."
+    },
+    {
+      "id": "BN-A1-JOIN-08",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "কারণ ('because')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "ABSENT: zero matches, on both halves of Spanish's por qué / porque pair."
+    },
+    {
+      "id": "BN-A1-JOIN-09",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "যখন ('when') as a clause joiner",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "bengaliSpecific": false,
+      "note": "ABSENT: zero matches."
+    },
+    {
+      "id": "BN-A1-JOIN-10",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "purpose: -তে / জন্য plus a verbal noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. The verbal noun itself IS taught — লেখা's lesson is built on it — so the missing half is only the suffix, which makes this one of the cheaper nulls in the column."
+    },
+    {
+      "id": "BN-A1-JOIN-11",
+      "category": "Shomuchchoy (joining and subordination)",
+      "label": "the -ে participle as the everyday way to join two clauses",
+      "probe": [
+        "BN-GRAMMAR-C13-KORE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-V-13",
+        "A1-SUB-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "THE ONE COVERED POINT IN THIS COLUMN, and it is covered by accident. দয়া করে teaches the conjunctive participle because 'please' happens to be built out of one; no lesson uses it to join two clauses of the learner's own. Bengali's ordinary way of saying 'I came and sat down' is exactly this participle, so the machinery is taught and never pointed at the job it exists for."
+    },
+    {
+      "id": "BN-A1-REG-01",
+      "category": "Bhashar star (register)",
+      "label": "the three-way তুই / তুমি / আপনি ladder, and choosing a rung",
+      "probe": [
+        "BN-CONCEPT-C02-TUMIAPNI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and it is the corpus's densest single lesson. All three pronouns are given at once with a note that Bengali grades respect where English no longer does."
+    },
+    {
+      "id": "BN-A1-REG-02",
+      "category": "Bhashar star (register)",
+      "label": "the respect ladder lives in the VERB ending, not only in the pronoun",
+      "probe": [
+        "BN-GRAMMAR-C07-JAOWA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [],
+      "bengaliSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish marks respect with a pronoun (usted) plus third-person agreement, so no A1 point asks about a respect suffix on the verb. যাওয়া's lesson says the ending is where the ladder actually lives, and চapters 13's other five verbs drill আপনি আসেন, আপনি জানেন, আপনি খান. Bengali-specific and covered."
+    },
+    {
+      "id": "BN-A1-REG-03",
+      "category": "Bhashar star (register)",
+      "label": "the West Bengal / Bangladesh lexical split: জল against পানি",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [],
+      "bengaliSpecific": true,
+      "note": "NO SPANISH ORIGIN: the PCIC has no point about a national lexical split because A1 Spanish does not force one. জল's lesson MENTIONS পানি as the Bangladesh-register word in a single clause of prose and introduces no atom for it, so a learner taught only জল will not be understood in Dhaka. Bengali-specific, mentioned and untaught."
+    },
+    {
+      "id": "BN-A1-REG-04",
+      "category": "Bhashar star (register)",
+      "label": "চলিতভাষা against সাধুভাষা: Bengali's own written diglossia",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [],
+      "bengaliSpecific": true,
+      "note": "NO SPANISH ORIGIN, AND MEASURED HERE RATHER THAN IMPORTED FROM TAMIL. Neither চলিত nor সাধু appears anywhere in 139 lessons, in either script or romanisation. Modern written Bengali is চলিত and the corpus teaches it, correctly and silently — but a learner who opens a book printed before 1950, or a legal document, meets সাধুভাষা with no warning that it exists. Bengali-specific and untaught. This is a NOTE in a lesson, not a chapter."
+    },
+    {
+      "id": "BN-A1-REG-05",
+      "category": "Bhashar star (register)",
+      "label": "core.exam-levels.json records no caveat for bengali, and one is owed",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [],
+      "bengaliSpecific": true,
+      "note": "NO SPANISH ORIGIN. tracks.bengali reads exam 'no widely-sat ladder', basis 'editorial', mapping 'cefr' and carries NO caveat — unlike tracks.tamil, tracks.sanskrit, tracks.arabic and tracks.urdu, all of which do. Do not read that absence as 'there is nothing to warn about': the four points above this one are what a caveat would say. Recorded as a point rather than left as a remark so that it is measured and not merely observed."
+    },
+    {
+      "id": "BN-A1-SND-01",
+      "category": "Uchcharon (pronunciation)",
+      "label": "the inherent vowel, which is an ô and not an a",
+      "probe": [
+        "BN-SOUND-C09-SAHAJJO-02",
+        "BN-SOUND-INHERENT-O-NOT-IN-NUMBERS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED TWICE, from both ends: সাহায্য is the word that finally shows the inherent vowel being pronounced, and the numbers lesson teaches where it is NOT. This is the single most important pronunciation fact in Bengali and the corpus treats it as such."
+    },
+    {
+      "id": "BN-A1-SND-02",
+      "category": "Uchcharon (pronunciation)",
+      "label": "the four-way consonant grid: voiced against voiceless, plain against breathy",
+      "probe": [
+        "BN-SCRIPT-DHA-01",
+        "BN-SCRIPT-KHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by the script strand rather than by a pronunciation lesson: chapters 8 and 9 walk the grid row by row and name each cell as they teach its letter."
+    },
+    {
+      "id": "BN-A1-SND-03",
+      "category": "Uchcharon (pronunciation)",
+      "label": "nasalised vowels, and the চন্দ্রবিন্দু that writes them",
+      "probe": [
+        "BN-SCRIPT-CHANDRABINDU-01",
+        "BN-SCRIPT-CHANDRABINDU-NASAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02",
+        "A1-O2-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered, and revisited in chapter 26. Restated: Spanish's second accentuation point is about a diacritic that distinguishes two spellings of one word, and the chandrabindu is the Bengali mark that does exactly that job. হ্যাঁ is nasal and না is not, so the contrast is load-bearing from the first chapter."
+    },
+    {
+      "id": "BN-A1-SND-04",
+      "category": "Uchcharon (pronunciation)",
+      "label": "the retroflex flap ড়, which Sanskrit never wrote",
+      "probe": [
+        "BN-SOUND-C08-PORA-02",
+        "BN-SCRIPT-DDA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered from both sides: পড়া teaches the sound and BN-W04-dda teaches the dot that makes the letter."
+    },
+    {
+      "id": "BN-A1-SND-05",
+      "category": "Uchcharon (pronunciation)",
+      "label": "the aspiration contrast heard rather than seen: দুধ",
+      "probe": [
+        "BN-SOUND-C10-DUDH-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered. দুধ is plain then breathy in one word, which is the cheapest possible minimal pair and the corpus uses it."
+    },
+    {
+      "id": "BN-A1-SND-06",
+      "category": "Uchcharon (pronunciation)",
+      "label": "vowel harmony as a SOUND rule, stated once for all verbs",
+      "probe": [
+        "BN-GRAMMAR-C08-BOJHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered inside the verb lessons. It is filed here as well as under BN-A1-V-13 because a learner meets it as a pronunciation surprise before they meet it as morphology."
+    },
+    {
+      "id": "BN-A1-SND-07",
+      "category": "Uchcharon (pronunciation)",
+      "label": "stress and phrase rhythm",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and honestly so: Bengali stress is initial and largely predictable, but no lesson says so, and the pronunciation-reference page carries no atom, so no probe can reach whatever it does contain."
+    },
+    {
+      "id": "BN-A1-LIP-01",
+      "category": "Lipi (script and orthography)",
+      "label": "the মাত্রা headline, and that Bengali hangs from a line rather than sitting on one",
+      "probe": [
+        "BN-SCRIPT-KA-01",
+        "BN-SCRIPT-MA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by the first script chapter, which teaches the headline as it teaches the first letters rather than as a separate fact."
+    },
+    {
+      "id": "BN-A1-LIP-02",
+      "category": "Lipi (script and orthography)",
+      "label": "consonant letters carry a built-in vowel",
+      "probe": [
+        "BN-SCRIPT-NA-01",
+        "BN-SCRIPT-HA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered in chapter 2. ন's lesson is explicitly about an inherent vowel that is not 'a', which is where the script strand and BN-A1-SND-01 meet."
+    },
+    {
+      "id": "BN-A1-LIP-03",
+      "category": "Lipi (script and orthography)",
+      "label": "vowel signs (মাত্রা) attach to a consonant",
+      "probe": [
+        "BN-SCRIPT-AA-MATRA-01",
+        "BN-SCRIPT-I-MATRA-01",
+        "BN-SCRIPT-U-MATRA-01",
+        "BN-SCRIPT-E-MATRA-01",
+        "BN-SCRIPT-O-MATRA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered five times over. The i-sign lesson makes the point that matters most — the sign is written BEFORE the consonant it is heard after."
+    },
+    {
+      "id": "BN-A1-LIP-04",
+      "category": "Lipi (script and orthography)",
+      "label": "independent vowel letters, for a word that starts with a vowel",
+      "probe": [
+        "BN-SCRIPT-AA-01",
+        "BN-SCRIPT-I-INDEP-01",
+        "BN-SCRIPT-E-INDEP-01",
+        "BN-SCRIPT-O-INDEP-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered for four vowels. The corpus never teaches অ, ই's long twin ঈ, or উ as independent letters, so the pairing is taught as a principle on an incomplete set."
+    },
+    {
+      "id": "BN-A1-LIP-05",
+      "category": "Lipi (script and orthography)",
+      "label": "the হসন্ত, and conjunct consonants",
+      "probe": [
+        "BN-SCRIPT-HASANTA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered as a principle in chapter 2. Bengali has several hundred conjuncts and the corpus teaches the mechanism plus whichever conjuncts its own headwords need, which is the right trade at A1."
+    },
+    {
+      "id": "BN-A1-LIP-06",
+      "category": "Lipi (script and orthography)",
+      "label": "the নুক্তা, the dot that changes a letter's job",
+      "probe": [
+        "BN-SCRIPT-NUKTA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered in chapter 10."
+    },
+    {
+      "id": "BN-A1-LIP-07",
+      "category": "Lipi (script and orthography)",
+      "label": "reading a whole taught word off the page",
+      "probe": [
+        "BN-SCRIPT-NOMOSHKAR-READ-01",
+        "BN-SCRIPT-NAAM-READ-01",
+        "BN-SCRIPT-BHALO-READ-01",
+        "BN-SCRIPT-HRIDOY-READ-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, AND IT IS THIS TRACK'S REAL STRENGTH. Twenty-one lessons exist whose whole job is to read a word the learner already says, and they run from chapter 2 to chapter 24. No other track in the corpus interleaves reading this tightly."
+    },
+    {
+      "id": "BN-A1-LIP-08",
+      "category": "Lipi (script and orthography)",
+      "label": "every letter a lesson puts in front of the reader has been taught first",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "MEASURED, NOT ASSUMED, AND NOT CLOSED: 34 glyphs taught against 45 shown, 11 never taught, and 21 lessons still ask a reader to decode a shape nobody gave them. The eleven, by how many lessons want each: ঞ 5 · থ 3 · ষ 3 · ঝ 3 · ফ 3 · শ 3 · ঃ 2 · ূ 1 · ং 1 · ট 1 · ঙ 1. Six of the twenty-one violations want ঞ or ষ and both have a real Bengali word waiting (জিজ্ঞাসা, ওষুধ), so those two are worth about six lessons between them."
+    },
+    {
+      "id": "BN-A1-LIP-09",
+      "category": "Lipi (script and orthography)",
+      "label": "stroke order: how each letter is actually written by hand",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "NOT MERELY UNTAUGHT — THE DATA DOES NOT EXIST. `code/packages/typescript/script-ductus/src/strokes/` covers twelve scripts and Bengali is not one of them: no `strokes/bengali*`, no registry entry, nothing. Arabic has 32 sourced glyph records and Urdu-Nastaliq 30; Bengali has zero. This is HL-C212, and it is RESEARCH — stroke order must be sourced and cited, never invented — so it cannot be closed by authoring. It also blocks the filmstrip work outright, because a filmstrip is rendered from ductus strokes."
+    },
+    {
+      "id": "BN-A1-LIP-10",
+      "category": "Lipi (script and orthography)",
+      "label": "the writing-stage ladder: observe-trace, guided-copy, delayed-copy, dictation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught AS DECLARED DATA, though not as practice. Bengali's sixty script lessons already do observe-trace, guided-copy and delayed-copy work; none of them declares a writing stage, so every gate that reads the ladder reports Bengali as absent from it. This is annotation, not authoring, and it is the cheapest item in this column."
+    },
+    {
+      "id": "BN-A1-LIP-11",
+      "category": "Lipi (script and orthography)",
+      "label": "the Bengali digits, and reading a number off a page",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Zero of ten taught — see BN-A1-Q-03. Filed in both columns because it is simultaneously a lexical gap and a script gap, and closing it in one place closes it in both."
+    },
+    {
+      "id": "BN-A1-LIP-12",
+      "category": "Lipi (script and orthography)",
+      "label": "Bengali has no letter case, so there is nothing to capitalise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Recorded so the walk is total rather than because work is owed. Spanish spends two points on capitalisation; the Bengali answer is that the distinction does not exist. A learner does still need to be TOLD that, which is why this is a point and not a `notTransferred` entry — one sentence, in the first script lesson."
+    },
+    {
+      "id": "BN-A1-LIP-13",
+      "category": "Lipi (script and orthography)",
+      "label": "the দাঁড়ি ।, which ends a Bengali sentence where a full stop would",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O3-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT, and it is the most visible thing about a page of Bengali. The corpus writes its example sentences with Latin full stops throughout. One character."
+    },
+    {
+      "id": "BN-A1-LIP-14",
+      "category": "Lipi (script and orthography)",
+      "label": "the punctuation Bengali borrowed from English: comma, question mark, quotation marks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught as a set. Bengali took every mark except the full stop from English, which is one lesson's worth of good news, and no lesson says it."
+    },
+    {
+      "id": "BN-A1-LIP-15",
+      "category": "Lipi (script and orthography)",
+      "label": "romanisation: every headword in this track carries one",
+      "probe": [
+        "BN-SCRIPT-TUMI-READ-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, AND MEASURED AT ZERO EXCEPTIONS: `headwordsWithoutRomanization` is 0 across all 139 lessons, against 37 for Arabic. Every Bengali word a lesson shows can be pronounced by a reader who cannot yet read the script, which is what makes the script strand safe to interleave."
+    },
+    {
+      "id": "BN-A1-LIP-16",
+      "category": "Lipi (script and orthography)",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-EXAM-LEVELS",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Recorded as one point rather than three because Bengali does not distinguish them the way the PCIC does."
+    },
+    {
+      "id": "BN-A1-FUN-01",
+      "category": "Byabohar (communicative functions)",
+      "label": "greet",
+      "probe": [
+        "BN-CONCEPT-C01-NOMOSHKAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F6-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "নমস্কার is taught in the first lesson, with the palms-together gesture named, and read in chapter 2."
+    },
+    {
+      "id": "BN-A1-FUN-02",
+      "category": "Byabohar (communicative functions)",
+      "label": "respond to a greeting",
+      "probe": [
+        "BN-CONCEPT-C01-NOMOSHKAR-01",
+        "BN-CONCEPT-C03-TUMIKEMONACHHO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "নমস্কার answers itself, and the chapter-5 exchange gives the second turn."
+    },
+    {
+      "id": "BN-A1-FUN-03",
+      "category": "Byabohar (communicative functions)",
+      "label": "take leave",
+      "probe": [
+        "BN-CONCEPT-C01-ASHI-01",
+        "BN-CONCEPT-C04-ABARDEKHAHOBE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-11",
+        "A1-F6-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "TWO farewells are taught and both are idiomatic: আসি literally means 'I'll come [again]', and আবার দেখা হবে is 'seeing will happen again'. The corpus explains both rather than glossing them."
+    },
+    {
+      "id": "BN-A1-FUN-04",
+      "category": "Byabohar (communicative functions)",
+      "label": "say goodbye for a named later time",
+      "probe": [
+        "BN-CONCEPT-C04-KALDEKHAHOBE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "bengaliSpecific": false,
+      "note": "কাল দেখা হবে is taught with the কাল puzzle — the same word for yesterday and tomorrow — which is a memorable way in and the only time word the book owns."
+    },
+    {
+      "id": "BN-A1-FUN-05",
+      "category": "Byabohar (communicative functions)",
+      "label": "introduce oneself by name",
+      "probe": [
+        "BN-CONCEPT-C02-AMARNAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F1-01",
+        "A1-F1-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by the frame, and by the two lessons that teach its pieces first."
+    },
+    {
+      "id": "BN-A1-FUN-06",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask somebody's name",
+      "probe": [
+        "BN-CONCEPT-C02-TOMARNAAMKI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered at the তুমি rung, with the আপনার swap given in the same lesson's prose."
+    },
+    {
+      "id": "BN-A1-FUN-07",
+      "category": "Byabohar (communicative functions)",
+      "label": "respond to an introduction",
+      "probe": [
+        "BN-CONCEPT-C02-ALAAP-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "আলাপ করে ভালো লাগলো is taught whole, and its literal reading — 'having made acquaintance, it felt good' — previews both the participle and the dative experiencer the book teaches later."
+    },
+    {
+      "id": "BN-A1-FUN-08",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask how somebody is",
+      "probe": [
+        "BN-CONCEPT-C03-TUMIKEMONACHHO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered at the তুমি rung, with আপনি কেমন আছেন in the prose."
+    },
+    {
+      "id": "BN-A1-FUN-09",
+      "category": "Byabohar (communicative functions)",
+      "label": "say how you are",
+      "probe": [
+        "BN-CONCEPT-C03-BHALO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "আমি ভালো আছি is the reply half and it is taught as a whole sentence, which also carries the corpus's only copula."
+    },
+    {
+      "id": "BN-A1-FUN-10",
+      "category": "Byabohar (communicative functions)",
+      "label": "thank",
+      "probe": [
+        "BN-CONCEPT-C01-DHONNOBAD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "ধন্যবাদ, taught in chapter 1 and retrieved in chapter 26."
+    },
+    {
+      "id": "BN-A1-FUN-11",
+      "category": "Byabohar (communicative functions)",
+      "label": "reply to thanks",
+      "probe": [
+        "BN-CONCEPT-C03-KONOBEPARNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F4-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "কোনো ব্যাপার না does the job, and note that it is the ONLY place না appears after another word anywhere in the corpus — as a fixed chunk, not as a rule (BN-A1-NEG-02)."
+    },
+    {
+      "id": "BN-A1-FUN-12",
+      "category": "Byabohar (communicative functions)",
+      "label": "apologise",
+      "probe": [
+        "BN-LEX-C13-DUKKHITO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and worth saying plainly because it is not true of every track in this project: Bengali HAS a word for sorry. দুঃখিত is taught in chapter 22."
+    },
+    {
+      "id": "BN-A1-FUN-13",
+      "category": "Byabohar (communicative functions)",
+      "label": "say excuse me, and get somebody's attention",
+      "probe": [
+        "BN-LEX-C13-MAFKORBEN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-06",
+        "A1-F6-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED. মাফ করবেন is taught beside দুঃখিত, softened by the future rather than by an imperative, which its lesson explains."
+    },
+    {
+      "id": "BN-A1-FUN-14",
+      "category": "Byabohar (communicative functions)",
+      "label": "say please",
+      "probe": [
+        "BN-LEX-C13-DOYAKORE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "দয়া করে is taught with its literal reading, and its lesson is where the conjunctive participle enters the book."
+    },
+    {
+      "id": "BN-A1-FUN-15",
+      "category": "Byabohar (communicative functions)",
+      "label": "welcome somebody",
+      "probe": [
+        "BN-LEX-C13-SBAGOTOM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "স্বাগতম, taught in chapter 22 with its 'a good coming' etymology."
+    },
+    {
+      "id": "BN-A1-FUN-16",
+      "category": "Byabohar (communicative functions)",
+      "label": "show that you are following what is said",
+      "probe": [
+        "BN-CONCEPT-C01-ACHCHHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "আচ্ছা is taught in the first chapter as exactly this — the word that keeps a Bengali conversation moving — which is unusually early and unusually right for a beginner."
+    },
+    {
+      "id": "BN-A1-FUN-17",
+      "category": "Byabohar (communicative functions)",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "BN-CONCEPT-C01-HYANNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F1-05",
+        "A1-F2-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "হ্যাঁ / না covers the minimum. Agreement beyond a bare yes has no exponent (see BN-A1-FUN-18)."
+    },
+    {
+      "id": "BN-A1-FUN-18",
+      "category": "Byabohar (communicative functions)",
+      "label": "agree and disagree with an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-F2-07",
+        "A1-NG6-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught beyond হ্যাঁ / না. There is no ঠিক আছে ('all right'), no একমত, and no adversative কিন্তু to disagree with, so a conversation cannot be had about anything."
+    },
+    {
+      "id": "BN-A1-FUN-19",
+      "category": "Byabohar (communicative functions)",
+      "label": "say what you like",
+      "probe": [
+        "BN-LEX-C09-BHALOLAGA-01",
+        "BN-GRAMMAR-C09-DATIVE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F3-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and it is the corpus's most sophisticated single construction: the dative experiencer, taught with the metaphor 'good sticks to me'."
+    },
+    {
+      "id": "BN-A1-FUN-20",
+      "category": "Byabohar (communicative functions)",
+      "label": "say what you love",
+      "probe": [
+        "BN-LEX-C09-BHALOBASA-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F3-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "ভালোবাসা is taught beside ভালো লাগা in the same lesson, and the contrast between them is the lesson's point."
+    },
+    {
+      "id": "BN-A1-FUN-21",
+      "category": "Byabohar (communicative functions)",
+      "label": "say what you want",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F3-04",
+        "A1-F3-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. চাই ('I want') is absent, which is the exponent an A1 speaking task most often needs and which would also make the food chapter usable."
+    },
+    {
+      "id": "BN-A1-FUN-22",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask about and state a plan or an intention",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and blocked behind the thin future (BN-A1-V-06): হবে exists only inside a farewell, so no intention can be expressed."
+    },
+    {
+      "id": "BN-A1-FUN-23",
+      "category": "Byabohar (communicative functions)",
+      "label": "state what you do: work, and speaking a language",
+      "probe": [
+        "BN-CONCEPT-C05-KAJKORA-01",
+        "BN-CONCEPT-C05-AMIBANGLABOLI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG7-02",
+        "A1-NE07-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED. কাজ করা and আমি বাংলা বলি are both chapter 11, and between them they are the only two things a learner can say about their own life."
+    },
+    {
+      "id": "BN-A1-FUN-24",
+      "category": "Byabohar (communicative functions)",
+      "label": "say where you live",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE10-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "HALF TAUGHT, WHICH IS WORSE THAN NEITHER. থাকা ('to live, to stay') is taught in chapter 11 and there is no place name and no locative case to use with it, so the verb sits in the book with nothing it can say. See BN-A1-N-02 and BN-A1-KAR-03; one lesson closes all three."
+    },
+    {
+      "id": "BN-A1-FUN-25",
+      "category": "Byabohar (communicative functions)",
+      "label": "give and ask for an age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG5-04",
+        "A1-NE03-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and triply blocked: no numeral above five, no কত, no বছর. Age is asked in the first minute of every A1 speaking test."
+    },
+    {
+      "id": "BN-A1-FUN-26",
+      "category": "Byabohar (communicative functions)",
+      "label": "give a telephone number or an address",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01",
+        "A1-NE09-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and blocked behind the numerals in the same way."
+    },
+    {
+      "id": "BN-A1-FUN-27",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask for a thing, politely",
+      "probe": [
+        "BN-GRAMMAR-C10-KHAN-REQUEST-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F4-02",
+        "A1-NE05-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED for one thing: চা খান is taught as a polite offer in chapter 16. Without a quantifier or a classifier the pattern does not generalise to the other three foods."
+    },
+    {
+      "id": "BN-A1-FUN-28",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "BN-LEX-C09-SAHAJJO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered lexically. সাহায্য is taught with করা beside it, so সাহায্য করুন is a step away, and no lesson takes that step."
+    },
+    {
+      "id": "BN-A1-FUN-29",
+      "category": "Byabohar (communicative functions)",
+      "label": "offer and invite",
+      "probe": [
+        "BN-GRAMMAR-C10-KHAN-REQUEST-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by the same chapter-16 offer. It is the corpus's only invitation of any kind."
+    },
+    {
+      "id": "BN-A1-FUN-30",
+      "category": "Byabohar (communicative functions)",
+      "label": "accept or decline an offer",
+      "probe": [
+        "BN-CONCEPT-C01-HYANNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered at the bare-minimum level only: হ্যাঁ or না. There is no softened decline, which is what politeness at A1 actually consists of."
+    },
+    {
+      "id": "BN-A1-FUN-31",
+      "category": "Byabohar (communicative functions)",
+      "label": "give an order or an instruction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. The polite request is taught (BN-A1-V-09) and the plain imperative never is. Correct order of priorities, still a gap."
+    },
+    {
+      "id": "BN-A1-FUN-32",
+      "category": "Byabohar (communicative functions)",
+      "label": "grant or refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. No modal verb of any kind exists in the corpus."
+    },
+    {
+      "id": "BN-A1-FUN-33",
+      "category": "Byabohar (communicative functions)",
+      "label": "say you understand, or that you do not",
+      "probe": [
+        "BN-LEX-C08-BOJHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-14",
+        "A1-F2-15"
+      ],
+      "bengaliSpecific": false,
+      "note": "HALF COVERED, AND THE MISSING HALF IS THE ONE THAT MATTERS. আমি বুঝি is taught in chapter 14. আমি বুঝি না is not sayable, because sentence negation is untaught (BN-A1-NEG-02). A beginner needs the negative far more often than the positive."
+    },
+    {
+      "id": "BN-A1-FUN-34",
+      "category": "Byabohar (communicative functions)",
+      "label": "say you know a fact, or know a person",
+      "probe": [
+        "BN-LEX-C07-JANA-01",
+        "BN-GRAMMAR-C07-JANA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-NG7-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and Bengali makes a distinction Spanish also makes: জানা for facts against চেনা for people. চেনা is named in the জানা lesson's prose but introduces no atom of its own."
+    },
+    {
+      "id": "BN-A1-FUN-35",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask a question of any kind, as a speech act",
+      "probe": [
+        "BN-LEX-C09-JIJNASA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered as a verb rather than as a performed act: জিজ্ঞাসা করা is taught, and the two questions the book can actually ask are the two in BN-A1-QUE-01 and BN-A1-QUE-02."
+    },
+    {
+      "id": "BN-A1-FUN-36",
+      "category": "Byabohar (communicative functions)",
+      "label": "give an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-11",
+        "A1-F2-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT, AND STRUCTURALLY BLOCKED. ভাবা ('to think') is taught in chapter 14, and there is no যে to attach a clause to it (BN-A1-JOIN-06), so 'I think that …' cannot be built even though its verb is in the book."
+    },
+    {
+      "id": "BN-A1-FUN-37",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask for and give an evaluation",
+      "probe": [
+        "BN-CONCEPT-C03-BHALO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-03",
+        "A1-F2-04",
+        "A1-NG6-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered only by ভালো. There is no খারাপ ('bad'), so nothing can be evaluated negatively — one word."
+    },
+    {
+      "id": "BN-A1-FUN-38",
+      "category": "Byabohar (communicative functions)",
+      "label": "express approval or disapproval",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and blocked behind the same missing খারাপ."
+    },
+    {
+      "id": "BN-A1-FUN-39",
+      "category": "Byabohar (communicative functions)",
+      "label": "express certainty, or the lack of it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-10",
+        "A1-F2-12",
+        "A1-NG1-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. There is no হয়তো ('perhaps'), no নিশ্চয়ই, and no way to hedge, so every sentence a learner can build is a flat assertion."
+    },
+    {
+      "id": "BN-A1-FUN-40",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask about and state an ability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. পারা ('to be able') is absent, which is the exponent the PCIC's own point names in its Spanish form and the one an A1 candidate needs to say what they can and cannot do."
+    },
+    {
+      "id": "BN-A1-FUN-41",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask somebody to repeat, or to speak slowly",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "UNTAUGHT, AND IT IS A REPAIR GAP RATHER THAN A VOCABULARY ONE. বলা is taught in chapter 11 and আবার in chapter 7; আবার বলুন ('say it again') is two taught words away and is never assembled. With BN-A1-NEG-02 this is the second half of a beginner's whole repair kit and neither half exists."
+    },
+    {
+      "id": "BN-A1-FUN-42",
+      "category": "Byabohar (communicative functions)",
+      "label": "open and close a conversation",
+      "probe": [
+        "BN-CONCEPT-C01-NOMOSHKAR-01",
+        "BN-CONCEPT-C04-ABARDEKHAHOBE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered at both ends, and the chapter practice lessons rehearse the whole shape."
+    },
+    {
+      "id": "BN-A1-FUN-43",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask for a person, on the telephone or at a door",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and blocked behind the missing third person (BN-A1-PRON-03)."
+    },
+    {
+      "id": "BN-A1-FUN-44",
+      "category": "Byabohar (communicative functions)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Low priority; recorded so the functional walk is total."
+    },
+    {
+      "id": "BN-A1-FUN-45",
+      "category": "Byabohar (communicative functions)",
+      "label": "congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-10"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. No word for a birthday, a wedding or a festival exists, so there is nothing to congratulate anybody on."
+    },
+    {
+      "id": "BN-A1-FUN-46",
+      "category": "Byabohar (communicative functions)",
+      "label": "propose a toast",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-09"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. The lowest-priority function in this column for this track."
+    },
+    {
+      "id": "BN-A1-FUN-47",
+      "category": "Byabohar (communicative functions)",
+      "label": "offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. দুঃখিত is taught for 'sorry' in the apology sense only, and its lesson is explicit that the two senses are different."
+    },
+    {
+      "id": "BN-A1-FUN-48",
+      "category": "Byabohar (communicative functions)",
+      "label": "count aloud",
+      "probe": [
+        "BN-LEX-NUMBERS-ONE-TO-FIVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered to five and no further. See BN-A1-Q-01."
+    },
+    {
+      "id": "BN-A1-FUN-49",
+      "category": "Byabohar (communicative functions)",
+      "label": "say what colour something is",
+      "probe": [
+        "BN-LEX-C14-KALO-01",
+        "BN-LEX-C14-LAL-01",
+        "BN-LEX-C14-NIL-01",
+        "BN-LEX-C14-SHADA-01",
+        "BN-LEX-C14-SHOBUJ-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and it is one of only three complete lexical sets in the corpus. All five colours are taught in one chapter and all five are read in chapter 24."
+    },
+    {
+      "id": "BN-A1-FUN-50",
+      "category": "Byabohar (communicative functions)",
+      "label": "name what you can see, hear or feel",
+      "probe": [
+        "BN-LEX-C07-DEKHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered for sight only. দেখা is taught; শোনা ('to hear') is absent, so half of the perception pair is missing."
+    },
+    {
+      "id": "BN-A1-FUN-51",
+      "category": "Byabohar (communicative functions)",
+      "label": "read something aloud off a page",
+      "probe": [
+        "BN-LEX-C08-PORA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and the corpus means it: পড়া's lesson is placed so that the learner reads the word for reading. Twenty-one reading lessons back it up."
+    },
+    {
+      "id": "BN-A1-FUN-52",
+      "category": "Byabohar (communicative functions)",
+      "label": "write something down",
+      "probe": [
+        "BN-LEX-C08-LEKHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered as a verb. What a learner can actually write by hand is a different question, and BN-A1-LIP-09 answers it: no stroke data exists for this script."
+    },
+    {
+      "id": "BN-A1-FUN-53",
+      "category": "Byabohar (communicative functions)",
+      "label": "come and go",
+      "probe": [
+        "BN-LEX-C07-ASHA-01",
+        "BN-LEX-C07-JAOWA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04",
+        "A1-NG3-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered. আসা and যাওয়া are taught in the same chapter and the pairing is deliberate."
+    },
+    {
+      "id": "BN-A1-FUN-54",
+      "category": "Byabohar (communicative functions)",
+      "label": "take something",
+      "probe": [
+        "BN-LEX-C09-NEOWA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered, and taught with the compound-verb use beside it."
+    },
+    {
+      "id": "BN-A1-LEX-01",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "parts of the body",
+      "probe": [
+        "BN-LEX-C12-CHOKH-01",
+        "BN-LEX-C12-HRIDOY-01",
+        "BN-LEX-C12-MUKH-01",
+        "BN-LEX-C12-NAK-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Four words, all in chapter 20, and every one of them read in chapter 21. Complete as a starter set; no হাত, no পা, no মাথা."
+    },
+    {
+      "id": "BN-A1-LEX-02",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "physical characteristics",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Nothing describes a person's height, build, hair or eyes, so no person can be described at all."
+    },
+    {
+      "id": "BN-A1-LEX-03",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "actions and positions of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. No sitting, standing, walking or sleeping."
+    },
+    {
+      "id": "BN-A1-LEX-04",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and blocked behind the missing খারাপ as much as behind any missing noun."
+    },
+    {
+      "id": "BN-A1-LEX-05",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "personal data: name, age, address, telephone",
+      "probe": [
+        "BN-CONCEPT-C02-NAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered for the NAME only, which is one field of four. See BN-A1-FUN-25 and BN-A1-FUN-26 for the other three."
+    },
+    {
+      "id": "BN-A1-LEX-06",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "documents: passport, identity card",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-07",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "personal objects",
+      "probe": [
+        "BN-LEX-C15-CHOSHMA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by one word. চশমা is taught in the clothing chapter, and it is the only personal object in the corpus."
+    },
+    {
+      "id": "BN-A1-LEX-08",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "family relationships",
+      "probe": [
+        "BN-LEX-C11-BHAI-01",
+        "BN-LEX-C11-BON-01",
+        "BN-LEX-C11-PORIBAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered. ভাই, বোন and পরিবার are taught in chapter 18 and ভাই and পরিবার are read in chapter 19. No parents: neither মা nor বাবা is taught, which is a surprising hole in an otherwise complete set."
+    },
+    {
+      "id": "BN-A1-LEX-09",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "social relationships: friend, colleague",
+      "probe": [
+        "BN-LEX-C11-BONDHU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by বন্ধু, taught in the same chapter as the family words."
+    },
+    {
+      "id": "BN-A1-LEX-10",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "celebrations and family, social and religious occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. No পূজা, no ঈদ, no বিয়ে, no জন্মদিন — which for a Bengali curriculum is a conspicuous absence rather than a routine one."
+    },
+    {
+      "id": "BN-A1-LEX-11",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the meals of the day",
+      "probe": [
+        "BN-LEX-C10-BHAT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered obliquely. ভাত is taught as the meal itself as well as the grain, and its lesson says so, but no meal is named as a meal."
+    },
+    {
+      "id": "BN-A1-LEX-12",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "drink",
+      "probe": [
+        "BN-LEX-C10-CHA-01",
+        "BN-LEX-C10-DUDH-01",
+        "BN-LEX-C10-JOL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, and it is the corpus's best-served domain after the colours: tea, milk and water, all in chapter 16, all read in chapter 17."
+    },
+    {
+      "id": "BN-A1-LEX-13",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "foodstuffs",
+      "probe": [
+        "BN-LEX-C10-BHAT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03",
+        "A1-NE05-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by rice alone. For a Bengali book that is a defensible first word and a thin domain: no মাছ, no ডাল, no রুটি, no ডিম."
+    },
+    {
+      "id": "BN-A1-LEX-14",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the restaurant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Nothing can be ordered, paid for or asked about."
+    },
+    {
+      "id": "BN-A1-LEX-15",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "educational institutions, staff and students",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. No স্কুল, no শিক্ষক, no ছাত্র."
+    },
+    {
+      "id": "BN-A1-LEX-16",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "learning and teaching",
+      "probe": [
+        "BN-LEX-C08-PORA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by পড়া, which in Bengali means both to read and to study — the lesson makes that point."
+    },
+    {
+      "id": "BN-A1-LEX-17",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the education system: timetable, examinations and marks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE06-03",
+        "A1-NE06-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-18",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "classroom language, and teaching materials",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. There is no word for a book (বই returns zero matches), which for a book is worth noticing."
+    },
+    {
+      "id": "BN-A1-LEX-19",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "professions and posts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Not one occupation is named, so the commonest A1 self-introduction after the name cannot be given."
+    },
+    {
+      "id": "BN-A1-LEX-20",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "working activity",
+      "probe": [
+        "BN-CONCEPT-C05-KAJKORA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by কাজ করা, taught in chapter 11, and it is the only word about work in the corpus."
+    },
+    {
+      "id": "BN-A1-LEX-21",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "workplaces, tools and work clothing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-22",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "unemployment, job-seeking, rights and the characteristics of a worker",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Merged into one point because at A1 the three PCIC subsections amount to the same absent domain here."
+    },
+    {
+      "id": "BN-A1-LEX-23",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "free time and entertainment",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-24",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "sport and games",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-25",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "shows and exhibitions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE08-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-26",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "information and communication media",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-04",
+        "A1-NE09-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-27",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "written correspondence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE09-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-28",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the telephone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE09-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-29",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the internet, and dictating an e-mail address",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE09-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and doubly blocked: there is no Latin alphabet lesson and no digit lesson to dictate with."
+    },
+    {
+      "id": "BN-A1-LEX-30",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "types and parts of a dwelling",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. ঘর returns zero matches in 139 files."
+    },
+    {
+      "id": "BN-A1-LEX-31",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "domestic activities",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE10-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-32",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "household objects and furniture",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE10-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-33",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "housing: buying, selling, renting",
+      "probe": [
+        "BN-CONCEPT-C05-THAKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by থাকা alone, which is the verb for living somewhere rather than for any transaction. See BN-A1-FUN-24 for why the verb has nothing to work with."
+    },
+    {
+      "id": "BN-A1-LEX-34",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the postal service and other public services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-35",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "financial services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE11-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-36",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "health services and centres of care",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE11-03",
+        "A1-NE13-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-37",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "shopping: places, people and activities",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Nothing can be bought, which with the missing numerals makes the whole transactional half of A1 unreachable."
+    },
+    {
+      "id": "BN-A1-LEX-38",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "clothing, footwear and accessories",
+      "probe": [
+        "BN-LEX-C15-JAMA-01",
+        "BN-LEX-C15-KAPOR-01",
+        "BN-LEX-C15-SHARI-01",
+        "BN-LEX-C15-CHOSHMA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "COVERED, four words in chapter 25 — and note that this domain is one of the fifty the SPANISH inventory reports as uncovered. Bengali is ahead of the proxy here."
+    },
+    {
+      "id": "BN-A1-LEX-39",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "payment",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03",
+        "A1-NE15-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. টাকা returns zero matches, which is the one money word a Bengali beginner would meet first."
+    },
+    {
+      "id": "BN-A1-LEX-40",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "health and illness",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-41",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "medicine and medicines",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE13-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. ওষুধ is named in HL-C218 as one of the two words that would close the ষ script gap, so the lexical and the script queue point at the same lesson here."
+    },
+    {
+      "id": "BN-A1-LEX-42",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE13-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-43",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "travel objects and documents",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-44",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "accommodation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE14-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-45",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the transport system",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE14-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-46",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "commerce, businesses, industry and energy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02",
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, merged into one point for the same reason as BN-A1-LEX-22."
+    },
+    {
+      "id": "BN-A1-LEX-47",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "computing and new technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-48",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "government, politics and the law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-49",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "artistic disciplines, music, dance and the visual arts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, merged. For a language whose learners overwhelmingly arrive through its songs, this is the domain whose absence is hardest to defend."
+    },
+    {
+      "id": "BN-A1-LEX-50",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "literature",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE18-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. No word for a book, a poem or a story."
+    },
+    {
+      "id": "BN-A1-LEX-51",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "cinema and theatre",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE18-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-52",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "religion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught as vocabulary. নমস্কার carries a religious gesture and its lesson describes it, but no atom names anything in this domain."
+    },
+    {
+      "id": "BN-A1-LEX-53",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the universe and space",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-54",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "geography: country, town, city, capital",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught — the same hole as BN-A1-N-02, filed here so the domain walk is total."
+    },
+    {
+      "id": "BN-A1-LEX-55",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "urban and rural spaces",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-56",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "climate and weather",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. No বৃষ্টি, no গরম, no ঠান্ডা — and weather is the stock A1 small-talk topic in every syllabus that has one."
+    },
+    {
+      "id": "BN-A1-LEX-57",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "fauna",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-58",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "flora",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-59",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "the clock and the parts of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. See BN-A1-N-03: there is no time noun in the corpus at all."
+    },
+    {
+      "id": "BN-A1-LEX-60",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "days of the week, months and seasons",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Bengali has its own six-season calendar as well as the Gregorian months, and neither is anywhere in the corpus."
+    },
+    {
+      "id": "BN-A1-LEX-61",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "before and after: ordering events in time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, and downstream of the missing past tense as much as of the missing vocabulary."
+    },
+    {
+      "id": "BN-A1-LEX-62",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "relative position: near, far, right, left",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. Nothing can be placed relative to anything else."
+    },
+    {
+      "id": "BN-A1-LEX-63",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "existence and presence",
+      "probe": [
+        "BN-CONCEPT-C03-BHALO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered thinly by আছি. See BN-A1-SEN-05."
+    },
+    {
+      "id": "BN-A1-LEX-64",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "general quality, and locating an event in time",
+      "probe": [
+        "BN-LEX-C07-HOWA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-03",
+        "A1-NG1-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered by হওয়া, which is the verb Spanish reaches for with ser in both of these. The corpus teaches the verb and never these uses of it."
+    },
+    {
+      "id": "BN-A1-LEX-65",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-66",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "value and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, on the same footing as BN-A1-LEX-39."
+    },
+    {
+      "id": "BN-A1-LEX-67",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "attractiveness, interest, ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NG6-08",
+        "A1-NG6-10"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught, merged. These are the three points the SPANISH file closed most recently, which is a useful reminder that the proxy is a moving target and this file measures the corpus, not the proxy."
+    },
+    {
+      "id": "BN-A1-LEX-68",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "acceptability, and open against closed",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-05",
+        "A1-NG5-05"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "BN-A1-LEX-69",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "age and old age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "bengaliSpecific": false,
+      "note": "Untaught. See BN-A1-FUN-25."
+    },
+    {
+      "id": "BN-A1-LEX-70",
+      "category": "Shobdobhandar (lexicon by domain)",
+      "label": "reflection and knowledge as notions",
+      "probe": [
+        "BN-LEX-C08-BHABA-01",
+        "BN-LEX-C07-JANA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "BN-CORPUS",
+        "ED-BENGALI"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "bengaliSpecific": false,
+      "note": "Covered. ভাবা and জানা are both taught, and ভাবা's lesson is one of the corpus's best on how a Bengali verb is built."
+    }
+  ]
+}

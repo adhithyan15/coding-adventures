@@ -9,7 +9,7 @@ headword: "மரம்"
 gloss: "a tree"
 romanization: "maram"
 concept_tag: TA-NOUN-TREE
-prerequisites: [TA-C51-cloud]
+prerequisites: [TA-C51-cloud, TA-C50-threshold, TA-C51-sky]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C52-TREE-01]
 practises:
-  knowledge: [TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01]
+  knowledge: [TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01, TA-LEX-C50-WELCOME-01, TA-LEX-C51-SKY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Proto-Dravidian **\*mar-**, and Malayalam did not lay a finger on it: മരം,
 The first of five pieces of one tree.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01, TA-LEX-C50-WELCOME-01, TA-LEX-C51-SKY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mēkam*, then *maram*, the cloud and what stands under it]
+- [YOU RECALL: say *vāsal*, then read **ஆகாயம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01] -->

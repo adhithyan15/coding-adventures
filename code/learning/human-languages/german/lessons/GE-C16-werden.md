@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-werden
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 575
-chapter: 24
+sequence: 585
+chapter: 25
 type: word
 headword: werden
 gloss: to become — the change-of-state half of the rule, in one word

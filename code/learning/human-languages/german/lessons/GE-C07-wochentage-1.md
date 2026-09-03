@@ -1,69 +1,73 @@
 ---
+schema_version: 2
 id: GE-C07-wochentage-1
-sequence: 227
+spine_node: SPINE-TIME-OF-DAY
+sequence: 235
 chapter: 10
-type: word
-headword: Montag, Dienstag, Mittwoch, Donnerstag, Freitag
-gloss: the weekdays (Monday–Friday) — Germanic gods, twins of the English days
-concept_tag: GE-DAYS-WEEKDAYS
-prerequisites: [GE-C06-zahlen-6-10]
-sounds: [diphthong-ei, ch-ach]
-roots: [germanic-gods, planet-gods]
-etymology_hook: "German weekdays are Germanic gods — twins of the English days (Donnerstag = Thor's day = Thursday), not Latin planets — except Mittwoch 'mid-week', which the Church substituted for Woden's day"
-est_minutes: 4
-reviews_of: [GE-C06-zahlen-6-10]
+type: practice
+headword: (practice)
+gloss: chapter payoff — the five weekdays, four gods and one Church edit
+concept_tag: CH10-PRACTICE
+prerequisites: [GE-C07-tag-muster, GE-C07-mond, GE-C07-montag, GE-C07-dienstag, GE-C07-donner, GE-C07-donnerstag, GE-C07-freitag, GE-C07-mittwoch]
+sounds: []
+roots: []
+duration:
+  max_seconds: 190
+requires:
+  knowledge: [GE-GRAMMAR-GOTT-PLUS-TAG-01, GE-LEX-MOND-01, GE-LEX-MONTAG-01, GE-LEX-DIENSTAG-01, GE-ETYMON-DIENSTAG-TIW-01, GE-LEX-DONNER-01, GE-LEX-DONNERSTAG-01, GE-ETYMON-DONNERSTAG-THOR-01, GE-LEX-FREITAG-01, GE-ETYMON-FREITAG-FRIJA-01, GE-LEX-MITTWOCH-01]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-GRAMMAR-GOTT-PLUS-TAG-01, GE-LEX-MOND-01, GE-LEX-MONTAG-01, GE-LEX-DIENSTAG-01, GE-ETYMON-DIENSTAG-TIW-01, GE-LEX-DONNER-01, GE-LEX-DONNERSTAG-01, GE-ETYMON-DONNERSTAG-THOR-01, GE-LEX-FREITAG-01, GE-ETYMON-FREITAG-FRIJA-01, GE-LEX-MITTWOCH-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C07-mittwoch, GE-C07-freitag, GE-C07-tag-muster]
 ---
 
-# Montag to Freitag — the gods of the Germanic week
+# Practice — the working week
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-GOTT-PLUS-TAG-01, GE-LEX-MONTAG-01] -->
 
-[PAUSE 2s] Just as with the numbers, German goes its **Germanic** way here — and
-lands right next to **English**. The Romans named the weekdays for planet-gods
-(*Mars, Mercury, Jupiter, Venus*); the Germanic peoples swapped in **their own
-gods**, and German and English inherited that same set. *Donnerstag* and
-*Thursday* are the same god.
+[PAUSE 2s] No new words. Five days, four gods, and one day where the god was
+taken out.
 
-## Sounds you'll need
+## Grammar Lens: the five, assembled
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MONTAG-01, GE-LEX-DIENSTAG-01, GE-LEX-MITTWOCH-01, GE-LEX-DONNERSTAG-01, GE-LEX-FREITAG-01] -->
 
-- `diphthong-ei` — **-tag** ("day") is easy; watch **Freitag** = *FRY-tahk*.
-- `ch-ach` — **Mittwoch** ends in the raspy *ch*: *MIT-vokh*.
+| German | who is in it |
+|---|---|
+| *Montag* | the moon |
+| *Dienstag* | Tiw, the war-god |
+| *Mittwoch* | nobody — "mid-week" |
+| *Donnerstag* | Donar, the thunder-god |
+| *Freitag* | Frija, the goddess |
 
-## The pattern: [Germanic god] + Tag ("day")
-
-**Tag** = "day" (cousin of English *day*). Before it, a god — the Germanic
-counterpart of the Roman planet:
-
-| German | god | = English | (Roman planet it replaced) |
-|---|---|---|---|
-| **Montag** | the **Moon** (*Mond*) | **Mon**day | Moon |
-| **Dienstag** | **Tiw/Ziu**, the war-god | **Tues**day | Mars |
-| **Mittwoch** | *(none — "mid-week")* | *Wednes*day (Woden) | Mercury |
-| **Donnerstag** | **Donar** = **Thor** (*Donner* "thunder") | **Thurs**day | Jupiter |
-| **Freitag** | **Frija/Frigg**, love-goddess | **Fri**day | Venus |
-
-Two showpieces:
-
-- **Donnerstag ↔ Thursday.** *Donner* is German for "thunder," and *Donar* was the
-  Germanic thunder-god — the one the Norse called **Thor**. So *Donnerstag* =
-  "Thor's day" = *Thursday*, standing in for the Roman *Jupiter* (the sky-thunder
-  king). Same god-slot, three names.
-- **Mittwoch is the odd one out.** It should be "Wodan's day" (as English keeps
-  **Wednes**day = Woden's day). But the medieval Church disliked naming a day for
-  the chief pagan god, so German replaced it with plain **Mittwoch**, "**mid-week**"
-  — a religious edit, just like Portuguese numbering its days.
+Four of the five carry a god and end in *Tag*. The one that does neither is the
+one the Church rewrote.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MONTAG-01, GE-LEX-DIENSTAG-01, GE-LEX-DONNERSTAG-01, GE-LEX-FREITAG-01, GE-LEX-MITTWOCH-01, GE-ETYMON-DONNERSTAG-THOR-01, GE-LEX-MOND-01, GE-LEX-DONNER-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Montag, Dienstag, Mittwoch, Donnerstag, Freitag"]
-- [YOU SAY: "Donnerstag = Thor's day = Thursday"; "Freitag = Frigg = Friday"]
-- [YOU SAY: the exception — "Mittwoch = mid-week" (not Woden, unlike English
-  Wednesday)]
+- [YOU SAY: the five in order — "Montag, Dienstag, Mittwoch, Donnerstag, Freitag"]
+- [YOU SAY: them against the English — "Monday, Tuesday, Wednesday, Thursday, Friday"]
+- [YOU SAY: the gods — "the moon, Tiw, nobody, Donar, Frija"]
+- [YOU SAY: the two nouns you own underneath — "der Mond, der Donner"]
+
+[REPEAT x2] "Montag, Dienstag, Mittwoch, Donnerstag, Freitag."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MITTWOCH-01, GE-ETYMON-DIENSTAG-TIW-01, GE-ETYMON-FREITAG-FRIJA-01, GE-GRAMMAR-GOTT-PLUS-TAG-01] -->
 
-[PAUSE 3s] Are German days named for planets or gods, and like which language?
-(Germanic **gods** — like English.) What does *Donnerstag* mean, and its English
-twin? ("Thor's day" — *Donner* "thunder"; *Thursday*.) Why is *Mittwoch* different?
-(The Church replaced "Woden's day" with "mid-week.") Next: the **weekend**.
+[PAUSE 3s] Run the five without prompting. Which one has no god in it?
+(***Mittwoch***.) Which has a goddess? (***Freitag*** — Frija.) Which two are
+built on nouns you can say on their own? (***Montag*** **from** *Mond*,
+***Donnerstag*** **from** *Donner*.) Next: the weekend, where the pattern breaks
+a second time.

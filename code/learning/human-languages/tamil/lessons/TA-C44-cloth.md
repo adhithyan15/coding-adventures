@@ -9,7 +9,7 @@ headword: "துணி"
 gloss: "cloth"
 romanization: "tuṇi"
 concept_tag: TA-NOUN-CLOTH
-prerequisites: [TA-C44-fruit]
+prerequisites: [TA-C44-fruit, TA-C42-sit, TA-C43-child]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C44-ASK-02]
 practises:
-  knowledge: [TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02]
+  knowledge: [TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-SIT, TA-LEX-CHILD]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Malayalam keeps തുണി unchanged. Telugu and Kannada reach for something e
 Two: something to eat and something to wear.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-SIT, TA-LEX-CHILD] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tuṇi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paḻam*, then *tuṇi*, so the two sit together]
+- [YOU RECALL: read **உட்கார்**, then say *kuḻandai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02] -->

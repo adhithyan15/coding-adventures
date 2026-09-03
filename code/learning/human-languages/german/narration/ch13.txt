@@ -1,69 +1,74 @@
-German, chapter 13: Family.
+German, chapter 13: Months and Seasons.
 2 lessons. All 2 can be done entirely by ear.
 
 
 Lesson 1 of 2.
-der Vater, die Mutter — the family that proves Grimm's law.
+die Monate — Rome's calendar in German.
 
 Warm-up.
 [pause 2 seconds]
-Back in the months chapter, German borrowed its calendar from Latin (Januar, März…). Family is the opposite story: Vater and Mutter are not borrowed — they are inherited Germanic words, blood cousins of English father and mother. And the sound-law that links them, Grimm's law, is written right on their faces.
+Here's the German pattern again. Its numbers are homegrown (eins, zwei), its weekday-gods are Germanic (Donnerstag). But its months — like its clock-word Uhr — are borrowed straight from Latin. Time-reckoning, again, came to the German world from Rome.
 
-Taken apart.
-der Vater ("father") — note the spelling V, but it is pronounced f (FAH-ter). from PIE ph₂tḗr.
-die Mutter ("mother"). from PIE méh₂tēr.
-Articles: der Vater (masculine), die Mutter (feminine).
-
-Grimm's law, on display.
-Grimm's law is the great sound-shift that split the Germanic languages (English, German, Dutch…) off from the rest. Watch what it did to the same PIE words that Latin kept as pater/māter:
-[a table of 2 rows, read aloud]
-PIE: ph₂tḗr. Latin (French): pater (père). Germanic (English / German): father / Vater (V = f).
-PIE: méh₂tēr. Latin (French): māter (mère). Germanic (English / German): mother / Mutter.
-p becomes f: Latin kept the p (pater); Germanic turned it to f — English father, German Vater (the V is just an old spelling of that f sound).
-t becomes th becomes d: the middle consonant became English th (mother) and then, in German's later shift, d/t (Mutter).
-So German and English agree here (both f-, both m-) precisely because they are both Germanic — while French/Latin sit on the other side of Grimm's line. The month names were Latin tourists; Vater and Mutter are natives.
+The months, taken apart.
+[a table of 12 rows, read aloud]
+German: Januar. from Latin: Januarius. who / what: Janus, god of doors & beginnings.
+German: Februar. from Latin: Februarius. who / what: the Februa purification festival.
+German: März. from Latin: Martius. who / what: Mars, the war-god — the same Mars as English Tuesday / French mardi.
+German: April. from Latin: Aprilis. who / what: perhaps aperire "to open".
+German: Mai. from Latin: Maius. who / what: Maia, goddess of growth.
+German: Juni. from Latin: Junius. who / what: Juno, queen of the gods.
+German: Juli. from Latin: Julius. who / what: Julius Caesar.
+German: August. from Latin: Augustus. who / what: the emperor Augustus.
+German: September. from Latin: september. who / what: "7th" (septem).
+German: Oktober. from Latin: october. who / what: "8th" (octo).
+German: November. from Latin: november. who / what: "9th" (novem).
+German: Dezember. from Latin: december. who / what: "10th" (decem).
+Two familiar payoffs:
+März = Mars. German borrowed the Roman war-god's month whole — the same god behind English March and, as Tuesday (Tiw = Mars), behind German's own Dienstag. The god came in twice, once by name, once by translation.
+September–Dezember = 7–10. Even in German, these keep the Latin numbers septem…decem (the Roman year began in March). So German's own numbers are sieben, acht, neun, zehn — but its month names count in Latin.
+Three layers of the German calendar, three origins: numbers native, weekdays Germanic gods, months (and the clock, Uhr) Latin.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der Vater, die Mutter" — Vater with an f sound]
+[your turn — say: the twelve — "Januar, Februar, März … November, Dezember"]
 [pause 8 seconds for the answer]
-[your turn — say: the twin test — "Vater / father, Mutter / mother — both Germanic"]
+[your turn — say: "März = Mars = Dienstag's god (Tiw)"]
 [pause 8 seconds for the answer]
-[your turn — say: contrast — "German months = Latin (Januar); German family = Germanic (Vater)"]
+[your turn — say: "September = 7, Dezember = 10 — Latin numbers in German months"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "father" and "mother" with articles, minding the pronunciation. (der Vater — f sound — die Mutter.) Why do German Vater and English father match, while French père differs? (German & English are both Germanic — Grimm's law shifted p becomes f in both; French kept Latin's p.) How does this chapter contrast with the months chapter? (Months were borrowed from Latin; family is inherited Germanic.) Next: Bruder and Schwester.
+Are German month names native or borrowed, and like which other German word? (Borrowed from Latin — like the clock-word Uhr.) What links März to Dienstag? (The war-god Mars = Germanic Tiw.) Why is Dezember Latin for "ten"? (The Roman year began in March.) Next: the seasons — where German goes native again.
 
 
 Lesson 2 of 2.
-der Bruder, die Schwester — and the word for "siblings".
+die Jahreszeiten — the seasons go native.
 
 Warm-up.
 [pause 2 seconds]
-The parent pair proved German and English are Germanic twins. The sibling pair does it again: Bruder ("brother") and Schwester ("sister") are the near-identical cousins of the English words — no translation really needed, just an ear for the German sounds.
+The months were Latin. The seasons swing back to native German — and one of them, Herbst, is the same word as English harvest. The word for "season" itself is transparent: Jahres-zeit = "year-time."
 
-Taken apart.
-der Bruder ("brother") from PIE bʰréh₂tēr — the same root as Latin frāter (French frère), but here kept with a b- (Grimm's law changed bʰ becomes b), exactly like English brother.
-die Schwester ("sister") from PIE swésōr. The German sch spells an sh sound; strip it back and Schwester is English sister and Latin soror, all one root.
-
-The collective — Geschwister.
-German has a tidy word English lacks: die Geschwister = "siblings," brothers-and-sisters together. It is built with the ge- prefix, an old collective marker ("a set of…") on Schwester — the same ge- that bundles mountains into a Gebirge ("range") and lets German gather a family in one word.
-The four family words now stand as a Germanic set beside the Romance ones:
-[a table of 2 rows, read aloud]
-German: Vater / Mutter. English: father / mother. (Romance cousin): père / mère.
-German: Bruder / Schwester. English: brother / sister. (Romance cousin): frère / sœur.
+The four seasons, taken apart.
+[a table of 4 rows, read aloud]
+German: der Frühling (spring). =: früh "early" + -ling. English twin: early-season (from früh, cousin of English early).
+German: der Sommer (summer). =: native Germanic. English twin: summer.
+German: der Herbst (autumn). =: native Germanic. English twin: harvest.
+German: der Winter (winter). =: native Germanic. English twin: winter.
+All four are homegrown Germanic, and three are the plain twins of English summer, winter, and — the surprise — harvest:
+Frühling is built from früh ("early") — literally the "early-season," the year's first. (German also uses Lenz, an old poetic word for spring.)
+Herbst corresponds to harvest. They're the same Germanic word: the reaping season. English kept harvest but narrowed it to the act of gathering and reached for Latin-derived autumn for the season; German kept the old word for the season itself. Two languages, one word, split in meaning.
+So the German year splits cleanly: Latin for the months (like Uhr, the clock), native Germanic for the seasons (like the numbers and Mittag/Mitternacht).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der Bruder, die Schwester" — Schw- = shv]
+[your turn — say: "der Frühling, der Sommer, der Herbst, der Winter"]
 [pause 8 seconds for the answer]
-[your turn — say: the twin test — "Bruder / brother, Schwester / sister"]
+[your turn — say: the twins — "Sommer/summer, Winter/winter, Herbst/harvest"]
 [pause 8 seconds for the answer]
-[your turn — say: "die Geschwister — the ge- bundles them into 'siblings'"]
+[your turn — say: "Frühling = früh (early) + -ling — the early season"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "brother" and "sister" with articles. (der Bruder, die Schwester.) Why do they match English so closely? (Both Germanic — same PIE roots, no Grimm's-law gap between them.) What does Geschwister mean, and what does the ge- do? ("Siblings"; ge- is a collective prefix, "a set of.") Next chapter: putting the family into sentences.
+Are German seasons native or Latin, unlike the months? (Native Germanic.) What English word is Herbst the twin of, and what happened to it? (Harvest — English narrowed it to the reaping act and took autumn from Latin for the season.) What is Frühling built from? (früh "early" — the early season.) Next chapter builds on this toward family and food.

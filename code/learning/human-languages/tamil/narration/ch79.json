@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9e92fc28f8f61a96",
+  "sourceHash": "fnv1a64:f1612ee6d83e49b3",
   "lessons": [
     {
       "id": "TA-C79-when-question",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43489bb7440fcb97",
+      "sourceHash": "fnv1a64:b635e45f796875b1",
       "notice": null,
       "blocks": [
         {
@@ -146,6 +146,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RETURN TO: say *-um*, *kaḷam* and *ēṉ* — three distances back — then say when one of them happens]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sol*]"
             }
           ]
         },

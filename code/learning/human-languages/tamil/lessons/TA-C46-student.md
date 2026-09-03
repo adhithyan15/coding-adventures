@@ -9,7 +9,7 @@ headword: "மாணவன்"
 gloss: "a student"
 romanization: "māṇavaṉ"
 concept_tag: TA-ROLE-STUDENT
-prerequisites: [TA-C46-teacher]
+prerequisites: [TA-C46-teacher, TA-C44-cloth, TA-C45-ear]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C46-ROLE-02]
 practises:
-  knowledge: [TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02]
+  knowledge: [TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C44-ASK-02, TA-LEX-C45-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Change the ending and the person changes with it: *māṇavi* is a girl studying
 Two: the one who teaches and the one who is taught.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C44-ASK-02, TA-LEX-C45-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *māṇavaṉ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āsiriyar*, then *māṇavaṉ*, so the pair sit together]
+- [YOU RECALL: read **துணி**, then say *kādu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02] -->

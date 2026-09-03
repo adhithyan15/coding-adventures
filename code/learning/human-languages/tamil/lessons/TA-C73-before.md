@@ -9,7 +9,7 @@ headword: "முன்பு"
 gloss: "before, earlier"
 romanization: "muṉbu"
 concept_tag: TA-ADVERB-BEFORE
-prerequisites: [TA-W28-read-inru]
+prerequisites: [TA-W28-read-inru, TA-C71-run, TA-C72-sorrow]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C73-WHEN-03]
 practises:
-  knowledge: [TA-LEX-C73-WHEN-02, TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03]
+  knowledge: [TA-LEX-C73-WHEN-02, TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03, TA-LEX-C71-DAY-03, TA-LEX-C72-FEEL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,13 +54,14 @@ read a moment ago inside இன்று.
 Before and after, and a day on each side of today.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-02, TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-02, TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03, TA-LEX-C71-DAY-03, TA-LEX-C72-FEEL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *muṉbu*]
 - [YOU SAY: *piṟaku*, then *muṉbu* — the two directions in time]
 - [YOU SAY: *nēṟṟu*, then *muṉbu* — one is a day, one is any earlier moment]
 - [YOU RECALL: say *nēṟṟu*, then read **இன்று**, then say *muṉbu*]
+- [YOU RECALL: say *ōḍu*, then read **வருத்தம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-02, TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03] -->

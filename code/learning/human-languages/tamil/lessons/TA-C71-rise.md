@@ -9,7 +9,7 @@ headword: "எழு"
 gloss: "to get up, to rise"
 romanization: "eḻu"
 concept_tag: TA-VERB-EZHU
-prerequisites: [TA-C70-roof]
+prerequisites: [TA-C70-roof, TA-C69-vehicle, TA-C70-table]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C71-DAY-01]
 practises:
-  knowledge: [TA-LEX-C70-ROOM-04, TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01]
+  knowledge: [TA-LEX-C70-ROOM-04, TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01, TA-LEX-C69-GOING-01, TA-LEX-C70-ROOM-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,12 +55,13 @@ letter apart, and swapping them changes what you said.
 The first of five things a day is made of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-04, TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-04, TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01, TA-LEX-C69-GOING-01, TA-LEX-C70-ROOM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *eḻu*]
 - [YOU SAY: *eḻu*, then *eḻudu* — and say which one is "write"]
 - [YOU RECALL: say *tarai*, then say *kūrai*, then say *eḻu*]
+- [YOU RECALL: say *vaṇḍi*, then read **மேசை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-04, TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01] -->

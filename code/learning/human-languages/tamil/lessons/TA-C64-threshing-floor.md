@@ -9,7 +9,7 @@ headword: "களம்"
 gloss: "a threshing floor"
 romanization: "kaḷam"
 concept_tag: TA-NOUN-THRESHING-FLOOR
-prerequisites: [TA-C64-crop]
+prerequisites: [TA-C64-crop, TA-C62-at-once, TA-C63-trust]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C64-HARVEST-04]
 practises:
-  knowledge: [TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04]
+  knowledge: [TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04, TA-LEX-C62-JOIN-04, TA-LEX-C63-MANNERS-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is not காலம், the season word you already have. This one is short a
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04, TA-LEX-C62-JOIN-04, TA-LEX-C63-MANNERS-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaḷam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaḷam*, then *nel*, and say what is brought to which]
+- [YOU RECALL: read **உடனே**, then say *nambikkai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04] -->

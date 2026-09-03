@@ -12,7 +12,7 @@ headword: "बस"
 gloss: "enough, that's all"
 romanization: "bas"
 concept_tag: HI-WORD-ENOUGH
-prerequisites: [HI-C48-true]
+prerequisites: [HI-C48-true, HI-C46-finger, HI-C47-student]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C48-REPLY-02]
 practises:
-  knowledge: [HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02]
+  knowledge: [HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C46-BODY-02, HI-LEX-C47-ROLE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Doubled, *bas bas*, it is the polite way to say enough while somebody is still s
 Two, and both are one syllable.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C46-BODY-02, HI-LEX-C47-ROLE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bas*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bas*, then *sac*, one after the other, as answers]
+- [YOU RECALL: say *uṅglī*, then say *chātra*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02] -->

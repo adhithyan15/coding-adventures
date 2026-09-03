@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eb8078c264cd76c2",
+  "sourceHash": "fnv1a64:3492707c6079d84d",
   "lessons": [
     {
       "id": "HI-C54-cow",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ae67b111bad4c59",
+      "sourceHash": "fnv1a64:eff95cd7d8cffd7a",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gāy*, and hear the *c-* of *cow* inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chāval, then read कंधा",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chāval*, then read **कंधा**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:656b443d6d6284af",
+      "sourceHash": "fnv1a64:63e99539aa74da6d",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ghoṛā*, then *gāy* — the one that was replaced, the one that was not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read दाल, then say ghuṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **दाल**, then say *ghuṭnā*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38030e0239bd9b2b",
+      "sourceHash": "fnv1a64:002b41abf6c451c7",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *machhlī*, and remember it is feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tel, then say māthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tel*, then say *māthā*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:214bdb2c58316474",
+      "sourceHash": "fnv1a64:bdeaee1a38caa4b5",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *chiṛiyā*, small and feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read चीनी, then say pīṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **चीनी**, then say *pīṭh*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d03fc5d72428a16",
+      "sourceHash": "fnv1a64:bf8d78280631c36c",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bakrī*, *gāy*, *ghoṛā*, *machhlī*, *chiṛiyā* — name them round]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sabzī, then read होंठ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sabzī*, then read **होंठ**]"
             }
           ]
         },

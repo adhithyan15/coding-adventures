@@ -9,7 +9,7 @@ headword: "பயம்"
 gloss: "fear"
 romanization: "payam"
 concept_tag: TA-NOUN-FEAR
-prerequisites: [TA-C72-anger]
+prerequisites: [TA-C72-anger, TA-C70-bed, TA-C71-sleep]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C72-FEEL-02]
 practises:
-  knowledge: [TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02]
+  knowledge: [TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02, TA-LEX-C70-ROOM-02, TA-LEX-C71-DAY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ feeling-nouns with that ending.
 Two, and both of them end the same way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02, TA-LEX-C70-ROOM-02, TA-LEX-C71-DAY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *payam*]
 - [YOU SAY: *kōpam*, then *payam* — and say what both endings have in common]
 - [YOU RECALL: say *viḷaiyāḍu*, then say *kōpam*, then say *payam*]
+- [YOU RECALL: read **கட்டில்**, then say *tūṅgu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02] -->

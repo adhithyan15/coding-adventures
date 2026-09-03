@@ -12,7 +12,7 @@ headword: "घुटना"
 gloss: "a knee"
 romanization: "ghuṭnā"
 concept_tag: HI-NOUN-KNEE
-prerequisites: [HI-C53-shoulder]
+prerequisites: [HI-C53-shoulder, HI-C51-garland, HI-C52-lentils]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C53-BODY-02]
 practises:
-  knowledge: [HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02]
+  knowledge: [HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C51-WELCOME-02, HI-LEX-C52-KITCHEN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Be careful with this one in a dictionary: घुटना is also a verb meaning
 The second of five, and a word with a twin that means something else entirely.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C51-WELCOME-02, HI-LEX-C52-KITCHEN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ghuṭnā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ghuṭnā*, then *kandhā* — the joint low, the joint high]
+- [YOU RECALL: read **माला**, then say *dāl*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02] -->

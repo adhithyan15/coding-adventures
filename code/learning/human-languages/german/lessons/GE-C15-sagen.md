@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-sagen
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 305
-chapter: 18
+sequence: 315
+chapter: 19
 type: word
 headword: sagen
 gloss: to say — the verb this chapter builds its past tense on

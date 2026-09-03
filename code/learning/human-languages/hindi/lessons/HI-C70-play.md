@@ -12,7 +12,7 @@ headword: "खेलना"
 gloss: "to play"
 romanization: "khelnā"
 concept_tag: VERB-PLAY
-prerequisites: [HI-C70-game, HI-C69-go]
+prerequisites: [HI-C70-game, HI-C69-go, HI-C68-india, HI-C69-railway]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C70-LEISURE-02]
 practises:
-  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C69-GOING-05]
+  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C69-GOING-05, HI-LEX-C68-ORIGIN-02, HI-LEX-C69-GOING-02]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,13 +60,14 @@ made — the ending is a tool, not a list to memorise.
 A game, and the doing word that comes out of it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C69-GOING-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C69-GOING-05, HI-LEX-C68-ORIGIN-02, HI-LEX-C69-GOING-02] -->
 
 [PAUSE 1s]
 - [YOU RECALL: read **जाना**, then say it without looking]
 - [YOU SAY: *khel*, then *khelnā*]
 - [YOU SAY: *maiṁ kheltā hūṁ*]
 - [YOU WRITE: खेल, then add ना to the end of it]
+- [YOU RECALL: read **भारत**, then say *rel*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02] -->

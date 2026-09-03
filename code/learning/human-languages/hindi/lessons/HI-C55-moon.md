@@ -12,7 +12,7 @@ headword: "चाँद"
 gloss: "the moon"
 romanization: "chā̃d"
 concept_tag: HI-NOUN-MOON
-prerequisites: [HI-C55-sun]
+prerequisites: [HI-C55-sun, HI-C53-knee, HI-C54-horse]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C55-SKY-02]
 practises:
-  knowledge: [HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02]
+  knowledge: [HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C53-BODY-02, HI-LEX-C54-ANIMAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The same root surfaces in Latin *candēre*, 'to shine white' — which is where 
 The second of five, and a word that means 'the shining one'.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C53-BODY-02, HI-LEX-C54-ANIMAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chā̃d*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chā̃d*, then *sūraj* — night first, then day]
+- [YOU RECALL: say *ghuṭnā*, then say *ghoṛā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02] -->

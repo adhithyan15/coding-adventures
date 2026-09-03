@@ -9,7 +9,7 @@ headword: "சேறு"
 gloss: "mud"
 romanization: "sēṟu"
 concept_tag: TA-NOUN-MUD
-prerequisites: [TA-C57-sand]
+prerequisites: [TA-C57-sand, TA-C55-lip, TA-C56-less]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C57-FIRE-03]
 practises:
-  knowledge: [TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03]
+  knowledge: [TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C55-BODY-03, TA-LEX-C56-AMOUNT-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil keeps *cakati* as well, for the thicker and dirtier kind. சேறு is 
 Three: air, dry ground, and wet ground.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C55-BODY-03, TA-LEX-C56-AMOUNT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sēṟu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maṇal*, then *sēṟu*, dry ground and wet]
+- [YOU RECALL: say *utaṭu*, then read **குறைவு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03] -->

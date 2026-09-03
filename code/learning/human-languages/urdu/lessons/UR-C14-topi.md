@@ -9,7 +9,7 @@ headword: ٹوپی
 romanization: ṭopī
 gloss: cap, hat — an honest dead end backward, and the word English borrowed as topee going forward
 concept_tag: UR-CAP
-prerequisites: [UR-C14-juta]
+prerequisites: [UR-C14-juta, UR-C10-kaan]
 sounds: [rtl, retroflex-t, long-i]
 roots: [prakrit-topia]
 etymology_hook: ṭopī is inherited from Sauraseni Prakrit ṭopiā, "helmet," related to Sanskrit ṭopikā -- and no further root is documented behind that. But moving forward rather than backward, English borrowed the word directly: topee, first recorded 1825-35, is from Hindi ṭopī, "hat." Unlike nīlā's cousin nīlī, which took four languages to reach English, ṭopī went straight across.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-GRAMMAR-WELLBEING-WORD-ORDER, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS]
+  knowledge: [UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-GRAMMAR-WELLBEING-WORD-ORDER, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,7 +65,7 @@ languages and a chemistry lab to become English *aniline*. **ٹوپی** simply
 walked straight into English as itself.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-LEX-JUTA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-LEX-JUTA, UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN] -->
 
 - [YOU SAY: **ṭopī** — cap; then **merī ṭopī safed hai**]
 - [YOU NAME: **ٹوپی**'s own root stops at Prakrit — a dead end, like
@@ -73,6 +73,7 @@ walked straight into English as itself.
 - [YOU CONNECT: **ṭopī** → English **topee**, borrowed directly, no
   intermediate language]
 - [YOU SAY: *kālā jūtā* and *safed ṭopī* together]
+- [YOU RECALL: say *kān*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-GRAMMAR-WELLBEING-WORD-ORDER, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS] -->

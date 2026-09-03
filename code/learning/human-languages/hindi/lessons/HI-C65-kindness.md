@@ -12,7 +12,7 @@ headword: "मेहरबानी"
 gloss: "kindness"
 romanization: "mehrabānī"
 concept_tag: HI-NOUN-KINDNESS
-prerequisites: [HI-C64-more]
+prerequisites: [HI-C64-more, HI-C63-hunger, HI-C64-now]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C65-GRACE-01]
 practises:
-  knowledge: [HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01]
+  knowledge: [HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01, HI-LEX-C63-STATE-01, HI-LEX-C64-MEASURE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Two words in your Hindi now begin *meh-* and are not related at all: मेह�
 The first of five words for asking well.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01, HI-LEX-C63-STATE-01, HI-LEX-C64-MEASURE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mehrabānī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mehrabānī*, then *mehmān*, and say which one is the guest]
+- [YOU RECALL: say *bhūkh*, then read **अब**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01] -->

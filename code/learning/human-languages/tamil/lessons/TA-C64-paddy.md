@@ -9,7 +9,7 @@ headword: "நெல்"
 gloss: "paddy"
 romanization: "nel"
 concept_tag: TA-NOUN-PADDY
-prerequisites: [TA-C63-humility]
+prerequisites: [TA-C63-humility, TA-C62-only, TA-C63-request]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C64-HARVEST-01]
 practises:
-  knowledge: [TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01]
+  knowledge: [TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01, TA-LEX-C62-JOIN-01, TA-LEX-C63-MANNERS-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada ಭತ್ತ (*bhatta*) and Telugu వరి (*vari*) each have their ow
 The first of five field words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01, TA-LEX-C62-JOIN-01, TA-LEX-C63-MANNERS-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nel*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nel*, then *arisi*, and say which one the husk is still on]
+- [YOU RECALL: say *maṭṭum*, then read **வேண்டுகோள்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01] -->

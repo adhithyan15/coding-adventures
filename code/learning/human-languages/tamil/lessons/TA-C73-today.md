@@ -9,7 +9,7 @@ headword: "இன்று"
 gloss: "today"
 romanization: "iṉṟu"
 concept_tag: TA-ADVERB-TODAY
-prerequisites: [TA-C72-cry]
+prerequisites: [TA-C72-cry, TA-C71-rise, TA-C72-anger]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C73-WHEN-01]
 practises:
-  knowledge: [TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01]
+  knowledge: [TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01, TA-LEX-C71-DAY-01, TA-LEX-C72-FEEL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,12 +55,13 @@ to say.
 The day you are standing in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01, TA-LEX-C71-DAY-01, TA-LEX-C72-FEEL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *iṉṟu*]
 - [YOU SAY: *nāḷ*, then *iṉṟu*, then *nāḷai*]
 - [YOU RECALL: say *siri*, then say *aḻu*, then say *iṉṟu*]
+- [YOU RECALL: say *eḻu*, then read **கோபம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01] -->

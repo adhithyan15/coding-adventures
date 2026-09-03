@@ -9,7 +9,7 @@ headword: "நெய்"
 gloss: "ghee"
 romanization: "ney"
 concept_tag: TA-NOUN-GHEE
-prerequisites: [TA-C59-curd]
+prerequisites: [TA-C59-curd, TA-C57-sand, TA-C58-goat]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C59-KITCHEN-02]
 practises:
-  knowledge: [TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02]
+  knowledge: [TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C57-FIRE-02, TA-LEX-C58-ANIMAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A spoon of it goes over hot சாதம் at the start of a meal on a day that
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C57-FIRE-02, TA-LEX-C58-ANIMAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ney*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tayir*, then *ney*, and say which one ends a meal and which one opens it]
+- [YOU RECALL: read **மணல்**, then say *āṭu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02] -->

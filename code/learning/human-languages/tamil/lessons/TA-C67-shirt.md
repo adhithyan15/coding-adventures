@@ -9,7 +9,7 @@ headword: "சட்டை"
 gloss: "a shirt"
 romanization: "saṭṭai"
 concept_tag: TA-NOUN-SHIRT
-prerequisites: [TA-C66-whichway-recall]
+prerequisites: [TA-C66-whichway-recall, TA-C66-up, TA-C66-down]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C67-WEAR-01]
 practises:
-  knowledge: [TA-LEX-C66-WHICHWAY-05, TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01]
+  knowledge: [TA-LEX-C66-WHICHWAY-05, TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01, TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -56,12 +56,13 @@ Say the middle hard. The doubled **ட்ட** in சட்டை is the same do
 The first of five things you can wear.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-05, TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-05, TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01, TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *saṭṭai*]
 - [YOU SAY: *tuṇi*, then *saṭṭai* — and say which one is still just cloth]
 - [YOU RECALL: say *valadu*, then say *iḍadu*, then say *saṭṭai*]
+- [YOU RECALL: say *mēlē*, then read **கீழே**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-05, TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01] -->

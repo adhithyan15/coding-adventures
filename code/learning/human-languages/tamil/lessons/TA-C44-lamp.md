@@ -9,7 +9,7 @@ headword: "விளக்கு"
 gloss: "a lamp"
 romanization: "viḷakku"
 concept_tag: TA-NOUN-LAMP
-prerequisites: [TA-C44-cloth]
+prerequisites: [TA-C44-cloth, TA-C42-read, TA-C43-son]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C44-ASK-03]
 practises:
-  knowledge: [TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03]
+  knowledge: [TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03, TA-LEX-READ, TA-LEX-SON]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A Tamil house lights one at dusk, at the doorway, and the word turns up wherever
 Three, and the third one shines.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03, TA-LEX-READ, TA-LEX-SON] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viḷakku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tuṇi*, then *viḷakku*, and hear the doubled letter in the second]
+- [YOU RECALL: say *paṭi*, then read **மகன்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03] -->

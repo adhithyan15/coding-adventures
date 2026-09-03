@@ -9,7 +9,7 @@ headword: "உள்ளே"
 gloss: "inside, in"
 romanization: "uḷḷē"
 concept_tag: TA-ADVERB-ULLE
-prerequisites: [TA-W22-read-mele]
+prerequisites: [TA-W22-read-mele, TA-C64-crop, TA-C65-stop]
 sounds: [tamil-double-lla]
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C66-WHICHWAY-03]
 practises:
-  knowledge: [TA-LEX-C66-WHICHWAY-02, TA-LEX-C66-WHICHWAY-03, TA-SCRIPT-READ-MELE-01]
+  knowledge: [TA-LEX-C66-WHICHWAY-02, TA-LEX-C66-WHICHWAY-03, TA-SCRIPT-READ-MELE-01, TA-LEX-C64-HARVEST-03, TA-LEX-C65-DOING-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -58,12 +58,13 @@ You have met that doubling before without being told it was the same thing:
 **வெள்ளை** (*veḷḷai*, "white") carries it too.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-02, TA-LEX-C66-WHICHWAY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-02, TA-LEX-C66-WHICHWAY-03, TA-LEX-C64-HARVEST-03, TA-LEX-C65-DOING-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uḷḷē* — hold the doubled ள]
 - [YOU SAY: *uḷḷē vā* — "come in"]
 - [YOU SAY: *mēlē*, *kīḻē*, *uḷḷē* — three place-words, one ending]
+- [YOU RECALL: say *payir*, then read **நிறுத்து**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-03] -->

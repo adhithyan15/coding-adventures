@@ -9,7 +9,7 @@ headword: "குறைவு"
 gloss: "a shortage, less than there should be"
 romanization: "kuṟaivu"
 concept_tag: TA-REPLY-LESS
-prerequisites: [TA-C56-a-lot]
+prerequisites: [TA-C56-a-lot, TA-C54-knife, TA-C55-lip]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C56-AMOUNT-03]
 practises:
-  knowledge: [TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03]
+  knowledge: [TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C54-HOUSE-03, TA-LEX-C55-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Telugu's word for the same ground is తక్కువ (*takkuva*).
 Three: a little, a lot, and not as much as there ought to be.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C54-HOUSE-03, TA-LEX-C55-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuṟaivu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *niṟaiya*, then *kuṟaivu*, plenty and then not enough]
+- [YOU RECALL: say *katti*, then read **உதடு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03] -->

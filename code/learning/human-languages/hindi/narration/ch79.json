@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "What It Costs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:234b1ada7c238df9",
+  "sourceHash": "fnv1a64:e495079dc437c707",
   "lessons": [
     {
       "id": "HI-C72-money",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56c6695090b11a8f",
+      "sourceHash": "fnv1a64:ac94c1c19f1f2bfc",
       "notice": null,
       "blocks": [
         {
@@ -119,6 +119,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: पैसा, and find the ै it shares with कैसे]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say khel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *khel*]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77409fa634b44515",
+      "sourceHash": "fnv1a64:59a8fea120198203",
       "notice": null,
       "blocks": [
         {
@@ -258,6 +267,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: पैसा once more, then रुपया beside the printed model]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read खेलना",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **खेलना**]"
             }
           ]
         },
@@ -293,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b918fe46fedc9ba",
+      "sourceHash": "fnv1a64:7523355f96c9962a",
       "notice": null,
       "blocks": [
         {
@@ -392,6 +410,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it again, pointing at something in the room]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say krikeṭ, then read आज",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *krikeṭ*, then read **आज**]"
             }
           ]
         },
@@ -427,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d3b0feb971ef750",
+      "sourceHash": "fnv1a64:9287b087ce9efc14",
       "notice": null,
       "blocks": [
         {
@@ -522,6 +549,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: महँगा, putting the ँ above the ह]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read गाना, then say bhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **गाना**, then say *bhī*]"
             }
           ]
         },
@@ -557,7 +593,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec698e81f72e555f",
+      "sourceHash": "fnv1a64:e5bdb576e0b81925",
       "notice": null,
       "blocks": [
         {
@@ -657,6 +693,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ārām, then read बहुत",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ārām*, then read **बहुत**]"
             }
           ]
         },

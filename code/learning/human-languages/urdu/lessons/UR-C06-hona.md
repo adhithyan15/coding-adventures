@@ -9,7 +9,7 @@ headword: ہونا
 romanization: honā
 gloss: to be — and the ending every Urdu verb wears when you name it
 concept_tag: VERB-BE
-prerequisites: [UR-C05-practice]
+prerequisites: [UR-C05-practice, UR-C04-thik]
 sounds: [rtl, long-a, long-u, short-vowels-unwritten]
 roots: [indo-aryan-ho, sanskrit-bhu, pie-bhuh]
 etymology_hook: honā descends from Sanskrit bhavati “becomes”, from PIE *bʰuH- — the root English wore down into be and Latin into future.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-LEX-HONA, UR-GRAMMAR-NA-INFINITIVE, UR-ETYMON-HONA-BE]
+  knowledge: [UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-LEX-HONA, UR-GRAMMAR-NA-INFINITIVE, UR-ETYMON-HONA-BE, UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -79,12 +79,13 @@ The root is Indo-European: \**bʰuH-*, “grow, become.” English kept it in
 “nature,” which English borrowed as **physics**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HONA, UR-GRAMMAR-NA-INFINITIVE, UR-ETYMON-HONA-BE, UR-LEX-HUN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HONA, UR-GRAMMAR-NA-INFINITIVE, UR-ETYMON-HONA-BE, UR-LEX-HUN, UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK] -->
 
 - [YOU SAY: **honā** — to be]
 - [YOU STRIP: **honā** minus **-nā** leaves the stem **ho-**]
 - [YOU READ: **ہونا** from the right edge]
 - [YOU CONNECT: **honā** ← Sanskrit *bhavati* → English **be**]
+- [YOU RECALL: say *ṭhīk*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HONA, UR-GRAMMAR-NA-INFINITIVE, UR-ETYMON-HONA-BE, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME] -->

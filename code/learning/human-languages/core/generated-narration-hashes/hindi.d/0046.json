@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 46,
-  "sourceHash": "fnv1a64:6ce53cfafe440d8d",
+  "sourceHash": "fnv1a64:4b01ba9822f9dfae",
   "lessonIds": [
     "HI-C46-hair",
     "HI-C46-finger",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch46.txt",
   "json": "hindi/narration/ch46.json",
-  "textHash": "fnv1a64:b00b6b07ee6afde4",
-  "jsonHash": "fnv1a64:be025952c23c9a51",
+  "textHash": "fnv1a64:ee9a7a11cec8fb96",
+  "jsonHash": "fnv1a64:65fec252d4e9f667",
   "findings": []
 }

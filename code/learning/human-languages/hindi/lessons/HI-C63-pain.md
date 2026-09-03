@@ -12,7 +12,7 @@ headword: "दर्द"
 gloss: "pain"
 romanization: "dard"
 concept_tag: HI-NOUN-PAIN
-prerequisites: [HI-C63-fever]
+prerequisites: [HI-C63-fever, HI-C61-stove, HI-C62-wood]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C63-STATE-05]
 practises:
-  knowledge: [HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05]
+  knowledge: [HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05, HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ A Persian word, *dard*, and it is usually traced to a very old root meaning 'to 
 Five: भूख, प्यास, नींद, बुख़ार, दर्द. Enough to answer honestly when someone asks how you are.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05, HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dard*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *ṭhīk*, if you are]
+- [YOU RECALL: say *chūlhā*, then read **लकड़ी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05] -->

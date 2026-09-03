@@ -9,7 +9,7 @@ headword: "உதடு"
 gloss: "a lip"
 romanization: "utaṭu"
 concept_tag: TA-NOUN-LIP
-prerequisites: [TA-C55-back]
+prerequisites: [TA-C55-back, TA-C53-field, TA-C54-knife]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C55-BODY-03]
 practises:
-  knowledge: [TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03]
+  knowledge: [TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C53-LAND-03, TA-LEX-C54-HOUSE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The ட in the middle is the one made with the tongue curled back. Keep it curle
 Three, and this one the three sisters worked out separately.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C53-LAND-03, TA-LEX-C54-HOUSE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *utaṭu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mutuku*, then *utaṭu*, and curl the tongue back for the ட]
+- [YOU RECALL: say *vayal*, then read **கத்தி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03] -->

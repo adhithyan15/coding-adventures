@@ -9,7 +9,7 @@ headword: "பசி"
 gloss: "hunger"
 romanization: "pasi"
 concept_tag: TA-NOUN-HUNGER
-prerequisites: [TA-C60-comb]
+prerequisites: [TA-C60-comb, TA-C59-curd, TA-C60-needle]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C61-FEEL-01]
 practises:
-  knowledge: [TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01]
+  knowledge: [TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01, TA-LEX-C59-KITCHEN-01, TA-LEX-C60-MADE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Set பசி beside பசு and only the last mark separates them: one ends o
 The first of five feelings.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01, TA-LEX-C59-KITCHEN-01, TA-LEX-C60-MADE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pasi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pasu*, then *pasi*, and hold the two endings apart]
+- [YOU RECALL: say *tayir*, then read **ஊசி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01] -->

@@ -1,22 +1,21 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:ff70d361fc3874ef",
+  "sourceHash": "fnv1a64:5ad848022d580fa5",
   "lessonIds": [
-    "GE-C16-ich-war",
-    "GE-C16-du-warst",
-    "GE-C16-er-war",
-    "GE-C16-wir-waren",
-    "GE-C16-drei-wurzeln",
-    "GE-C16-suppletion",
-    "GE-C16-haeufig-unregelmaessig",
-    "GE-C16-war-practice"
+    "GE-C14-alt",
+    "GE-C14-jahr",
+    "GE-C14-jahr-alt",
+    "GE-C14-wie-alt-bist-du",
+    "GE-C14-alter",
+    "GE-C14-alter-sein-haben",
+    "GE-C14-alter-practice"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 8,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "german/narration/ch23.txt",
   "json": "german/narration/ch23.json",
-  "textHash": "fnv1a64:8914588025876ba8",
-  "jsonHash": "fnv1a64:a1aad0abd5c35cc3",
+  "textHash": "fnv1a64:fc0818dc841abc90",
+  "jsonHash": "fnv1a64:09b0e7c3ae2a3bb6",
   "findings": []
 }

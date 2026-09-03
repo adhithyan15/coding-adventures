@@ -9,7 +9,7 @@ headword: "தயக்கம்"
 gloss: "hesitancy"
 romanization: "tayakkam"
 concept_tag: TA-NOUN-HESITANCY
-prerequisites: [TA-C63-permission]
+prerequisites: [TA-C63-permission, TA-C61-sleep, TA-C62-soon]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C63-MANNERS-03]
 practises:
-  knowledge: [TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03]
+  knowledge: [TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C61-FEEL-03, TA-LEX-C62-JOIN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The தயவு inside தயவுசெய்து opens the same way and is
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C61-FEEL-03, TA-LEX-C62-JOIN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tayakkam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tayakkam*, then *tayavu seytu*, and say which one is a giving]
+- [YOU RECALL: say *tūkkam*, then read **சீக்கிரம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03] -->

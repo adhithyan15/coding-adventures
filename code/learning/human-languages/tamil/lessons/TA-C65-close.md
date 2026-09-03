@@ -9,7 +9,7 @@ headword: "மூடு"
 gloss: "close, shut"
 romanization: "mūḍu"
 concept_tag: TA-VERB-MUUDU
-prerequisites: [TA-C65-open, TA-W21-read-kudi]
+prerequisites: [TA-C65-open, TA-W21-read-kudi, TA-C63-humility, TA-C64-harvest]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C65-DOING-05]
 practises:
-  knowledge: [TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04, TA-LEX-C65-DOING-05, TA-SCRIPT-READ-KUDI-01]
+  knowledge: [TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04, TA-LEX-C65-DOING-05, TA-SCRIPT-READ-KUDI-01, TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -67,7 +67,7 @@ Five everyday doings, in pairs: *sāppiḍu* with *kuḍi*, *naḍa* with *niṟ
 the cheapest way there is to hold two words instead of one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04, TA-LEX-C65-DOING-05, TA-SCRIPT-READ-KUDI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04, TA-LEX-C65-DOING-05, TA-SCRIPT-READ-KUDI-01, TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mūḍu*]
@@ -76,6 +76,7 @@ the cheapest way there is to hold two words instead of one.
 - [YOU SAY: for each of *naḍa* and *tiṟa*, the word that undoes it]
 - [YOU SAY: *taṇṇīr kuḍi*, then *kadavu*, then *mūḍu*]
 - [YOU READ: **குடி** — the one word of the five you have spelled out]
+- [YOU RECALL: say *paṇivu*, then read **அறுவடை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04, TA-LEX-C65-DOING-05] -->

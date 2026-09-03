@@ -12,7 +12,7 @@ headword: "मिठाई"
 gloss: "a sweet"
 romanization: "miṭhāī"
 concept_tag: HI-NOUN-SWEET
-prerequisites: [HI-C51-table]
+prerequisites: [HI-C51-table, HI-C49-meeting, HI-C50-salutation]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C51-WELCOME-05]
 practises:
-  knowledge: [HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05]
+  knowledge: [HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05, HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Nothing closes a welcome better: the garland at the door, the seat in the courty
 Five, and the run is closed: a flower, a garland, a courtyard, a table, a sweet.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05, HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *miṭhāī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *phūl*, *mālā*, *āṁgan*, *mez*, *miṭhāī*]
+- [YOU RECALL: say *mulāqāt*, then read **प्रणाम**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05] -->

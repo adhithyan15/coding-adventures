@@ -12,7 +12,7 @@ headword: "पड़ोसी"
 gloss: "a neighbour"
 romanization: "paṛosī"
 concept_tag: HI-NOUN-NEIGHBOUR
-prerequisites: [HI-C47-guest]
+prerequisites: [HI-C47-guest, HI-C45-soap, HI-C46-throat]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C47-ROLE-05]
 practises:
-  knowledge: [HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05]
+  knowledge: [HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05, HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Behind *paṛos* is Sanskrit *prati-veśa*, 'the dwelling opposite', on *veś-*,
 Five, and the run is closed: a teacher, a student, a farmer, a guest, a neighbour.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05, HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paṛosī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *śikṣak*, *chātra*, *kisān*, *mehmān*, *paṛosī*]
+- [YOU RECALL: say *sābun*, then read **गला**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05] -->

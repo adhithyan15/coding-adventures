@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "The Land",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5db0fbc58a27718f",
+  "sourceHash": "fnv1a64:f3898bd084620078",
   "lessons": [
     {
       "id": "TA-C53-river",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e1bda3d4093a56d",
+      "sourceHash": "fnv1a64:2c24d9baddfedad3",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vitai*, then *nadi*, the seed and the water that reaches it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ākāyam, then read மரம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ākāyam*, then read **மரம்**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f2481a971386528",
+      "sourceHash": "fnv1a64:e13e7156c709a87b",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nadi*, then *malai*, the water and the high ground behind it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read சூரியன், then say kiḷai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **சூரியன்**, then say *kiḷai*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54e6a50d4df88b3a",
+      "sourceHash": "fnv1a64:5c673380f10e4ed7",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *malai*, then *vayal*, the high ground and the flat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nilā, then read தளிர்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nilā*, then read **தளிர்**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b2144a24242f821",
+      "sourceHash": "fnv1a64:8ccf10323acd9840",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vayal*, then *pātai*, the field and the way to it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read விண்மீன், then say vēr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **விண்மீன்**, then say *vēr*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31f990c154c3fd37",
+      "sourceHash": "fnv1a64:9779969d8bd1f8f0",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *nadi*, *malai*, *vayal*, *pātai*, *kirāmam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mēkam, then read விதை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mēkam*, then read **விதை**]"
             }
           ]
         },

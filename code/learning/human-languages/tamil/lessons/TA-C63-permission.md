@@ -9,7 +9,7 @@ headword: "அனுமதி"
 gloss: "permission"
 romanization: "aṉumati"
 concept_tag: TA-NOUN-PERMISSION
-prerequisites: [TA-C63-request]
+prerequisites: [TA-C63-request, TA-C61-thirst, TA-C62-still]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C63-MANNERS-02]
 practises:
-  knowledge: [TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02]
+  knowledge: [TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C61-FEEL-02, TA-LEX-C62-JOIN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Hold it apart from விடை, which you already have. விடை is permiss
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C61-FEEL-02, TA-LEX-C62-JOIN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *aṉumati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aṉumati*, then *viḍai*, and say which of the two is only about leaving]
+- [YOU RECALL: read **தாகம்**, then say *iṉṉum*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02] -->

@@ -12,7 +12,7 @@ headword: "आँगन"
 gloss: "a courtyard"
 romanization: "āṁgan"
 concept_tag: HI-NOUN-COURTYARD
-prerequisites: [HI-C51-garland]
+prerequisites: [HI-C51-garland, HI-C49-journey, HI-C50-respect]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C51-WELCOME-03]
 practises:
-  knowledge: [HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03]
+  knowledge: [HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C49-LEAVE-03, HI-LEX-C50-COURTESY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The mark above the line marks a nasal that used to be a whole consonant, exactly
 Three, and this one is where you seat the guest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C49-LEAVE-03, HI-LEX-C50-COURTESY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āṁgan*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āṁgan*, then *mālā*, then *phūl*, back down the run]
+- [YOU RECALL: say *safar*, then read **आदर**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03] -->

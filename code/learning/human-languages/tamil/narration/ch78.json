@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Why, and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8f3b7986dff32528",
+  "sourceHash": "fnv1a64:a1a689599d0c0f14",
   "lessons": [
     {
       "id": "TA-C78-why",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5e112fccec06cde",
+      "sourceHash": "fnv1a64:0b59d23ab29edcdb",
       "notice": null,
       "blocks": [
         {
@@ -144,6 +144,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RETURN TO: say *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?*, say *nambikkai* and read **இன்று** — three distances back — then ask ஏன் about one of them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āṉāl*]"
             }
           ]
         },
@@ -179,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e320a12e9deb7b90",
+      "sourceHash": "fnv1a64:fb9227e738bd07d9",
       "notice": null,
       "blocks": [
         {
@@ -322,6 +331,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RETURN TO: say *sol*, *paṇivu* and *muṉbu* — three distances back — then ask ஏன் about one of them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read அல்லது, then say sol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **அல்லது**, then say *sol*]"
             }
           ]
         },

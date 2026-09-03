@@ -9,7 +9,7 @@ headword: بھائی
 romanization: bhāī
 gloss: brother — the first noun this book has taught with a real grammatical gender, and a genuine English cousin
 concept_tag: UR-BROTHER
-prerequisites: [UR-C08-pasand]
+prerequisites: [UR-C08-pasand, UR-C06-ana, UR-C06-bolna]
 sounds: [rtl, do-chashmi-he, hamza-ye]
 roots: [sanskrit-bhratr, pie-bhrehter]
 etymology_hook: bhāī descends from Sanskrit bhrā́tṛ, "brother," from Proto-Indo-Iranian *bʰráHtā, from Proto-Indo-European *bʰréh₂tēr — the very root English inherited as brother, so the two words are real cousins, not a coincidence like pasand's disputed Persian-Sanskrit near-miss.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER]
+  knowledge: [UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -82,12 +82,13 @@ Sanskrit and English are both Indo-European, so *bhāī* and *brother* are
 real relatives, not two languages landing on the same idea by accident.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-GRAMMAR-DATIVE-EXPERIENCER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE] -->
 
 - [YOU SAY: **bhāī** — brother; then **merā bhāī**]
 - [YOU NAME: the fourth *ye* shape — hamza above, between two vowels]
 - [YOU CONNECT: **bhāī** ← *bhrā́tṛ* → English **brother**, real cousins]
 - [YOU SAY: **mujhe paṛhnā pasand hai** once more, then **merā bhāī**]
+- [YOU RECALL: say *ānā*, then say *bolnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER] -->

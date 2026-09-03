@@ -12,7 +12,7 @@ headword: "फ़सल"
 gloss: "a crop"
 romanization: "fasal"
 concept_tag: HI-NOUN-CROP
-prerequisites: [HI-C66-seed]
+prerequisites: [HI-C66-seed, HI-C64-quickly, HI-C65-entreaty]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C66-FIELD-02]
 practises:
-  knowledge: [HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02]
+  knowledge: [HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C64-MEASURE-02, HI-LEX-C65-GRACE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ North India counts its year in two of them, the winter sowing and the monsoon so
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C64-MEASURE-02, HI-LEX-C65-GRACE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *fasal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *fasal*, then *kisān*, and say who watches the other]
+- [YOU RECALL: read **जल्दी**, then say *vintī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02] -->

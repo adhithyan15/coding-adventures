@@ -12,7 +12,7 @@ headword: "छोटा"
 gloss: "small"
 romanization: "choṭā"
 concept_tag: HI-ADJ-SMALL
-prerequisites: [HI-C41-big]
+prerequisites: [HI-C41-big, HI-C39-baccha, HI-C40-here]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C41-ADJ-02]
 practises:
-  knowledge: [HI-LEX-C41-ADJ-01, HI-LEX-C41-ADJ-02]
+  knowledge: [HI-LEX-C41-ADJ-01, HI-LEX-C41-ADJ-02, HI-CONCEPT-C39-BACCHA-01, HI-CONCEPT-C39-BACCHA-02, HI-LEX-C40-DEIXIS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,11 +52,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-02, HI-CONCEPT-C39-BACCHA-01, HI-CONCEPT-C39-BACCHA-02, HI-LEX-C40-DEIXIS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "छोटा" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **बच्चा**, then say *yahā̃*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-02] -->

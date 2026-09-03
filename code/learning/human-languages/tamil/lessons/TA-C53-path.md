@@ -9,7 +9,7 @@ headword: "பாதை"
 gloss: "a path"
 romanization: "pātai"
 concept_tag: TA-NOUN-PATH
-prerequisites: [TA-C53-field]
+prerequisites: [TA-C53-field, TA-C51-star, TA-C52-root]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C53-LAND-04]
 practises:
-  knowledge: [TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04]
+  knowledge: [TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04, TA-LEX-C51-SKY-04, TA-LEX-C52-TREE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil has *vaḻi* as well, and the two overlap less than they look as though th
 Four: three places, and now something joining them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04, TA-LEX-C51-SKY-04, TA-LEX-C52-TREE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pātai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vayal*, then *pātai*, the field and the way to it]
+- [YOU RECALL: read **விண்மீன்**, then say *vēr*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04] -->

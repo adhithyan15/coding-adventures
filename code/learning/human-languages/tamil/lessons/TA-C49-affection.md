@@ -9,7 +9,7 @@ headword: "அன்பு"
 gloss: "affection"
 romanization: "aṉbu"
 concept_tag: TA-COURTESY-AFFECTION
-prerequisites: [TA-C48-set-out]
+prerequisites: [TA-C48-set-out, TA-C47-true, TA-C48-now]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C49-COURTESY-01]
 practises:
-  knowledge: [TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01]
+  knowledge: [TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01, TA-LEX-C47-REPLY-01, TA-LEX-C48-LEAVE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A letter opens *aṉbuḷḷa*, "dear", which is literally 'having affection'. P
 The first of five courtesies.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01, TA-LEX-C47-REPLY-01, TA-LEX-C48-LEAVE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *aṉbu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aṉbu*, then *aṉbuḷḷa*, and hear the stem stay put]
+- [YOU RECALL: say *uṇmai*, then read **இப்போது**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01] -->

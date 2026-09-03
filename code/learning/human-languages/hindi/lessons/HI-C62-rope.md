@@ -12,7 +12,7 @@ headword: "रस्सी"
 gloss: "a rope"
 romanization: "rassī"
 concept_tag: HI-NOUN-ROPE
-prerequisites: [HI-C61-stove]
+prerequisites: [HI-C61-stove, HI-C60-monkey, HI-C61-vessel]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C62-HANDS-01]
 practises:
-  knowledge: [HI-LEX-C61-FIRE-04, HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01]
+  knowledge: [HI-LEX-C61-FIRE-04, HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01, HI-LEX-C60-YARD-01, HI-LEX-C61-FIRE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Hindi kept the thread and let the light go: रस्सी is plain rope, the k
 The first of five things hands work with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C61-FIRE-04, HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C61-FIRE-04, HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01, HI-LEX-C60-YARD-01, HI-LEX-C61-FIRE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *rassī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *rassī*, then *sūraj*, and say what the old word held in common]
+- [YOU RECALL: say *bandar*, then read **बर्तन**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C61-FIRE-04, HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01] -->

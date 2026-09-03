@@ -12,7 +12,7 @@ headword: "खेल"
 gloss: "a game"
 romanization: "khel"
 concept_tag: HI-NOUN-GAME
-prerequisites: [HI-C69-go, HI-C69-ticket]
+prerequisites: [HI-C69-go, HI-C69-ticket, HI-C68-country, HI-C69-vehicle]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C70-LEISURE-01]
 practises:
-  knowledge: [HI-LEX-C69-GOING-05, HI-LEX-C70-LEISURE-01, HI-LEX-C69-GOING-04]
+  knowledge: [HI-LEX-C69-GOING-05, HI-LEX-C70-LEISURE-01, HI-LEX-C69-GOING-04, HI-LEX-C68-ORIGIN-01, HI-LEX-C69-GOING-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -62,13 +62,14 @@ what separates खेल from क, and the difference changes the word.
 The first of five words for the hours after work.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C69-GOING-04, HI-LEX-C69-GOING-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C69-GOING-04, HI-LEX-C69-GOING-05, HI-LEX-C68-ORIGIN-01, HI-LEX-C69-GOING-01] -->
 
 [PAUSE 1s]
 - [YOU RECALL: say *ṭikaṭ*, then read **जाना** and say what it means]
 - [YOU HEAR: *khel*, with the breath on the first sound]
 - [YOU SAY: *khel*]
 - [YOU CONTRAST: *khel* said with the puff, and the same shape said without it]
+- [YOU RECALL: say *desh*, then read **गाड़ी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01] -->

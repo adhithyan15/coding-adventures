@@ -9,7 +9,7 @@ headword: کیا
 romanization: kyā
 gloss: what
 concept_tag: QUESTION-WHAT
-prerequisites: [UR-C03-aap-tum-tu]
+prerequisites: [UR-C03-aap-tum-tu, UR-C01-salam, UR-C01-shukriya]
 sounds: [rtl, consonantal-ye, long-a]
 roots: [sanskrit-kim, pie-question-kwo]
 etymology_hook: Urdu kyā continues the Indo-Aryan question family from Sanskrit kim and the ancient k-question root related to English wh- words.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY]
+  knowledge: [UR-LEX-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY, UR-LEX-SALAM, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,11 +60,12 @@ Indo-European *k/kw-* question family behind English **wh-** words such as
 you must read here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY, UR-LEX-SALAM, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA] -->
 
 - [YOU SAY: **kyā** — what]
 - [YOU READ: **کیا** as **k + yā**]
 - [YOU SAY: the family — **kyā, what, who, which**]
+- [YOU RECALL: say *salām*, then say *shukriyā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY] -->

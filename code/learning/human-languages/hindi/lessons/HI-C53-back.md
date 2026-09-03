@@ -12,7 +12,7 @@ headword: "पीठ"
 gloss: "the back"
 romanization: "pīṭh"
 concept_tag: HI-NOUN-BACK
-prerequisites: [HI-C53-forehead]
+prerequisites: [HI-C53-forehead, HI-C51-table, HI-C52-sugar]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C53-BODY-04]
 practises:
-  knowledge: [HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04]
+  knowledge: [HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04, HI-LEX-C51-WELCOME-04, HI-LEX-C52-KITCHEN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That is the same bargain that gave you कान out of *karṇa* when the ear w
 The fourth of five, and the second time you have seen that trade.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04, HI-LEX-C51-WELCOME-04, HI-LEX-C52-KITCHEN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pīṭh*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pīṭh*, then *kandhā* — the back and the shoulder above it]
+- [YOU RECALL: read **मेज़**, then say *chīnī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04] -->

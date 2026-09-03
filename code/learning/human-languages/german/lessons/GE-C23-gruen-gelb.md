@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C23-gruen-gelb
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 700
-chapter: 31
+sequence: 710
+chapter: 32
 type: word
 headword: grün, gelb
 gloss: green and yellow — grün is native Germanic, the direct cousin of English's OWN "green" (a different root entirely from Latin's viridis); gelb is native too, and is usually said to share its ultimate PIE root with French's jaune, though that particular link is less secure than it first appears

@@ -9,7 +9,7 @@ headword: "உப்பு"
 gloss: "salt"
 romanization: "uppu"
 concept_tag: TA-NOUN-SALT
-prerequisites: [TA-C44-lamp]
+prerequisites: [TA-C44-lamp, TA-C42-give, TA-C43-daughter]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C44-ASK-04]
 practises:
-  knowledge: [TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03, TA-LEX-C44-ASK-04]
+  knowledge: [TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03, TA-LEX-C44-ASK-04, TA-LEX-GIVE, TA-LEX-DAUGHTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A word that stable is usually a word nobody could do without. Salt is also how T
 Four, and this one has not changed in a very long time.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03, TA-LEX-C44-ASK-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03, TA-LEX-C44-ASK-04, TA-LEX-GIVE, TA-LEX-DAUGHTER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uppu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *viḷakku*, then *uppu*, and let the second one stop short]
+- [YOU RECALL: read **கொடு**, then say *makaḷ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03, TA-LEX-C44-ASK-04] -->

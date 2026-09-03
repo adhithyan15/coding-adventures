@@ -12,7 +12,7 @@ headword: दूध
 gloss: milk — masculine, and literally "the milked thing", a past participle that hardened into a noun
 romanization: "dūdh"
 concept_tag: HI-DRINK-MILK
-prerequisites: [HI-C37-chai, HI-C15-paani-roti]
+prerequisites: [HI-C37-chai, HI-C15-paani-roti, HI-C35-lena, HI-C35-puchna, HI-C35-madad]
 sounds: [devanagari-long-uu, aspirated-dha]
 roots: [dugdha-sanskrit, pie-dhewgh]
 etymology_hook: "दूध (dūdh) is Sanskrit दुग्ध (dugdha), which is not a noun but a past participle — 'milked' — so दूध names the liquid by what was done to it, exactly the trick पानी plays by naming water 'the drinkable thing'; the root दुह् duh- goes back to PIE *dʰewgʰ- 'to be strong, to yield', which also gives Greek teúkhein and English doughty, though English dough is NOT related and comes from a different root entirely"
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02]
 practises:
-  knowledge: [HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-CONCEPT-C37-CHAI-03, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C36-KURSI-01]
+  knowledge: [HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-CONCEPT-C37-CHAI-03, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C36-KURSI-01, HI-CONCEPT-C35-LENA-01, HI-CONCEPT-C35-LENA-02, HI-CONCEPT-C35-PUCHNA-01, HI-CONCEPT-C35-PUCHNA-02, HI-CONCEPT-C35-MADAD-01, HI-CONCEPT-C35-MADAD-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -74,7 +74,7 @@ comes from a different root meaning "to knead, to form." *Dūdh* and *dough* loo
 like cousins and are strangers.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-CONCEPT-C15-PAANI-ROTI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C35-LENA-01, HI-CONCEPT-C35-LENA-02, HI-CONCEPT-C35-PUCHNA-01, HI-CONCEPT-C35-PUCHNA-02, HI-CONCEPT-C35-MADAD-01, HI-CONCEPT-C35-MADAD-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dūdh*; then *ek dūdh dījie*]
@@ -82,6 +82,7 @@ like cousins and are strangers.
 - [YOU SAY: what each one literally is — *dugdha*, "the milked"; *pānīya*, "the
   drinkable"]
 - [YOU SAY: *dūdh* and *dough* — and that they are not related]
+- [YOU RECALL: say *lenā*, then say *pūchnā*, then read **मदद करना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C37-CHAI-01] -->

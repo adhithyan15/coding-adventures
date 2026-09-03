@@ -9,7 +9,7 @@ headword: "தளிர்"
 gloss: "a tender shoot"
 romanization: "taḷir"
 concept_tag: TA-NOUN-SHOOT
-prerequisites: [TA-C52-branch]
+prerequisites: [TA-C52-branch, TA-C50-flower, TA-C51-moon]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C52-TREE-03]
 practises:
-  knowledge: [TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03]
+  knowledge: [TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C50-WELCOME-03, TA-LEX-C51-SKY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The new growth at the end of a branch: the pale soft leaf before it hardens and 
 Three: the tree, the branch, and the newest thing on it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C50-WELCOME-03, TA-LEX-C51-SKY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *taḷir*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kiḷai*, then *taḷir*, the branch and the new thing on the end of it]
+- [YOU RECALL: say *malar*, then read **நிலா**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03] -->

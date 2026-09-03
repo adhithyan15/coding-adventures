@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-sie-sind",
     "language": "german",
-    "chapter": 21,
-    "sequence": 480,
+    "chapter": 22,
+    "sequence": 490,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e8682fbe66865f87"
+    "sourceHash": "fnv1a64:fe2906bca42a0803"
   },
   "findings": []
 }

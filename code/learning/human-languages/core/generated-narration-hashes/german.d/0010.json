@@ -1,16 +1,23 @@
 {
   "language": "german",
   "chapter": 10,
-  "sourceHash": "fnv1a64:a9e31376a23fe37e",
+  "sourceHash": "fnv1a64:fcd5032c5b1c20ed",
   "lessonIds": [
-    "GE-C07-wochentage-1",
-    "GE-C07-wochentage-2"
+    "GE-C07-tag-muster",
+    "GE-C07-mond",
+    "GE-C07-montag",
+    "GE-C07-dienstag",
+    "GE-C07-donner",
+    "GE-C07-donnerstag",
+    "GE-C07-freitag",
+    "GE-C07-mittwoch",
+    "GE-C07-wochentage-1"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
   "text": "german/narration/ch10.txt",
   "json": "german/narration/ch10.json",
-  "textHash": "fnv1a64:6ea4e649bdde4c42",
-  "jsonHash": "fnv1a64:198e9144c80f8e80",
+  "textHash": "fnv1a64:bd27d4bb7bbb4cc8",
+  "jsonHash": "fnv1a64:fe996ed3053f866e",
   "findings": []
 }

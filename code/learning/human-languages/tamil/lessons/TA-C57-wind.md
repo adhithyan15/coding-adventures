@@ -9,7 +9,7 @@ headword: "காற்று"
 gloss: "the wind"
 romanization: "kāṟṟu"
 concept_tag: TA-NOUN-WIND
-prerequisites: [TA-C56-let-it-be]
+prerequisites: [TA-C56-let-it-be, TA-C55-neck, TA-C56-a-little]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C57-FIRE-01]
 practises:
-  knowledge: [TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01]
+  knowledge: [TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01, TA-LEX-C55-BODY-01, TA-LEX-C56-AMOUNT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil's word covers both too: the breeze coming through a doorway and the air in
 The first of five things you can point at outdoors.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01, TA-LEX-C55-BODY-01, TA-LEX-C56-AMOUNT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kāṟṟu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākaṭṭum*, then *kāṟṟu*, and let the doubled ற hold]
+- [YOU RECALL: say *kaḻuttu*, then read **சிறிது**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01] -->

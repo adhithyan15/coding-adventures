@@ -9,7 +9,7 @@ headword: "புதிய"
 gloss: "new"
 romanization: "pudiya"
 concept_tag: TA-ADJ-NEW
-prerequisites: [TA-C41-good]
+prerequisites: [TA-C41-good, TA-C39-oru, TA-C40-who]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C41-ADJ-04]
 practises:
-  knowledge: [TA-LEX-C41-ADJ-02, TA-LEX-C41-ADJ-03, TA-LEX-C41-ADJ-04]
+  knowledge: [TA-LEX-C41-ADJ-02, TA-LEX-C41-ADJ-03, TA-LEX-C41-ADJ-04, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-C40-DEIXIS-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-04, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-C40-DEIXIS-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: "புதிய" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **ஒரு**, then say *yār*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-04] -->

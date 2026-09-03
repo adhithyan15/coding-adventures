@@ -9,7 +9,7 @@ headword: "கனல்"
 gloss: "an ember"
 romanization: "kaṉal"
 concept_tag: TA-NOUN-EMBER
-prerequisites: [TA-C57-smoke]
+prerequisites: [TA-C57-smoke, TA-C55-bone, TA-C56-let-it-be]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C57-FIRE-05]
 practises:
-  knowledge: [TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05]
+  knowledge: [TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05, TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the word Tamil reaches for when it means heat held rather than heat let go
 Wind, sand, mud, smoke, and the coal under the ash.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05, TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaṉal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kāṟṟu*, *maṇal*, *sēṟu*, *pukai*, *kaṉal*]
+- [YOU RECALL: say *elumbu*, then read **ஆகட்டும்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05] -->

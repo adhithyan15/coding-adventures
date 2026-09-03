@@ -9,7 +9,7 @@ headword: "பழம்"
 gloss: "a fruit"
 romanization: "paḻam"
 concept_tag: TA-NOUN-FRUIT
-prerequisites: [TA-C43-family]
+prerequisites: [TA-C43-family, TA-C42-come]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C44-ASK-01]
 practises:
-  knowledge: [TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01]
+  knowledge: [TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-COME]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The ழ in the middle is the letter this book has already spent a writing lesson
 The first of five things you might ask somebody for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-COME] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paḻam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paḻam*, then *tayavu seytu paḻam koṭuṅgaḷ* — "please give a fruit"]
+- [YOU RECALL: say *vā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01] -->

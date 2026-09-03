@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "A Gift and a Feast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9aa22a156a82266f",
+  "sourceHash": "fnv1a64:fe5a6f4fa320b895",
   "lessons": [
     {
       "id": "HI-C57-present",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cea8509d55dac8c",
+      "sourceHash": "fnv1a64:adb0d2eaabb44cc3",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tohfā*, offered with both hands]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sūraj, then say saṛak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sūraj*, then say *saṛak*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5392d33ac7a0a77f",
+      "sourceHash": "fnv1a64:c73fa7dd9b07d43d",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dāvat*, and the *tohfā* you bring to it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read चाँद, then say gā̃v",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **चाँद**, then say *gā̃v*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c3db0265b623fad",
+      "sourceHash": "fnv1a64:4f0175cd1ff9ba72",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *thālī*, and on it the *dāl* and the *chāval*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tārā, then read बाज़ार",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tārā*, then read **बाज़ार**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77091759a09c51db",
+      "sourceHash": "fnv1a64:995509155d2afe2b",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *khushbū*, and hear ख़ुशी in its first half]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read बादल, then say dukān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **बादल**, then say *dukān*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77fd2c1a5aa7fa4a",
+      "sourceHash": "fnv1a64:ed75fbb7e34f4410",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *miṭhās*, and मिठाई beside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āsmān, then read खेत",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āsmān*, then read **खेत**]"
             }
           ]
         },

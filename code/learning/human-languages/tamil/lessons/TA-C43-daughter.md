@@ -9,7 +9,7 @@ headword: "மகள்"
 gloss: "daughter"
 romanization: "makaḷ"
 concept_tag: TA-NOUN-DAUGHTER
-prerequisites: [TA-C43-son]
+prerequisites: [TA-C43-son, TA-C41-new]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-DAUGHTER]
 practises:
-  knowledge: [TA-LEX-SON, TA-LEX-DAUGHTER]
+  knowledge: [TA-LEX-SON, TA-LEX-DAUGHTER, TA-LEX-C41-ADJ-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ The same *maka-* stem as the last lesson, with *-aḷ* where that word had *-a�
 One stem, two endings, two people. One more word closes the chapter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-SON, TA-LEX-DAUGHTER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-SON, TA-LEX-DAUGHTER, TA-LEX-C41-ADJ-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *makaḷ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *makaṉ*, and hear only the ending move]
+- [YOU RECALL: say *pudiya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-SON, TA-LEX-DAUGHTER] -->

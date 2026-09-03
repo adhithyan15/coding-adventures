@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "How Much and How Fast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4610a1f8ea462e7c",
+  "sourceHash": "fnv1a64:4facebbb7e99bad7",
   "lessons": [
     {
       "id": "HI-C64-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f390852a2437fdd1",
+      "sourceHash": "fnv1a64:8554157ed99d3f93",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ab*, then *abhī*, and say which one draws a line]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rassī, then read भूख",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rassī*, then read **भूख**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dd31d0b91667765",
+      "sourceHash": "fnv1a64:1625063fad93cf21",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *jaldī*, then *phir milenge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read सूई, then say pyās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **सूई**, then say *pyās*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:935e4f57118f289a",
+      "sourceHash": "fnv1a64:0be6302f5953f024",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dhīre*, then *jaldī*, and say which one you would ask a speaker for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ṭokrī, then read नींद",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ṭokrī*, then read **नींद**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a51e639d1c8f1a6a",
+      "sourceHash": "fnv1a64:be72e2835f8bd3b8",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kam*, then *kamrā*, and say which one is Persian]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read मिट्टी, then say bukhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **मिट्टी**, then say *bukhār*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db3847424e66a16c",
+      "sourceHash": "fnv1a64:a857bedc4f89d594",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *bilkul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lakṛī, then read दर्द",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lakṛī*, then read **दर्द**]"
             }
           ]
         },

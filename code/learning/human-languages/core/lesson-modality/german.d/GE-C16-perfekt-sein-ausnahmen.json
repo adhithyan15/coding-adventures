@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-perfekt-sein-ausnahmen",
     "language": "german",
-    "chapter": 24,
-    "sequence": 585,
+    "chapter": 25,
+    "sequence": 595,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:69cd6a5e7149338d"
+    "sourceHash": "fnv1a64:c1c41610ff510829"
   },
   "findings": []
 }

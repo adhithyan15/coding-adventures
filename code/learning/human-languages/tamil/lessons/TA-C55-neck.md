@@ -9,7 +9,7 @@ headword: "கழுத்து"
 gloss: "the neck"
 romanization: "kaḻuttu"
 concept_tag: TA-NOUN-NECK
-prerequisites: [TA-C54-box]
+prerequisites: [TA-C54-box, TA-C53-river, TA-C54-mat]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C55-BODY-01]
 practises:
-  knowledge: [TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01]
+  knowledge: [TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01, TA-LEX-C53-LAND-01, TA-LEX-C54-HOUSE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the neck outside and the throat inside, both in one word. A garland goes r
 The first of five more pieces of you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01, TA-LEX-C53-LAND-01, TA-LEX-C54-HOUSE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaḻuttu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *peṭṭi*, then *kaḻuttu*, and hold the ழ in the middle]
+- [YOU RECALL: say *nadi*, then read **பாய்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01] -->

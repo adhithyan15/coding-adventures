@@ -9,7 +9,7 @@ headword: "முதலில்"
 gloss: "first of all"
 romanization: "mutalil"
 concept_tag: TA-REPLY-FIRST-OF-ALL
-prerequisites: [TA-C62-at-once]
+prerequisites: [TA-C62-at-once, TA-C60-comb, TA-C61-pain]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C62-JOIN-05]
 practises:
-  knowledge: [TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05]
+  knowledge: [TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05, TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ With this one you can lay out a sequence end to end: முதலில், then
 Five, and the run is closed: only, still, soon, at once, and first of all.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05, TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mutalil*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *maṭṭum*, *iṉṉum*, *sīkkiram*, *uṭaṉē*, *mutalil*]
+- [YOU RECALL: say *sīppu*, then read **வலி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05] -->

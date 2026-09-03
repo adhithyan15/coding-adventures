@@ -9,7 +9,7 @@ headword: "செருப்பு"
 gloss: "a sandal, footwear"
 romanization: "seruppu"
 concept_tag: TA-NOUN-SANDAL
-prerequisites: [TA-C67-sari]
+prerequisites: [TA-C67-sari, TA-C66-right]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C67-WEAR-04]
 practises:
-  knowledge: [TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04]
+  knowledge: [TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04, TA-LEX-C66-WHICHWAY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ is the reason they get used every day.
 Four, and the run has reached the floor.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04, TA-LEX-C66-WHICHWAY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *seruppu*]
 - [YOU SAY: *seruppu*, then *vāsal* — and say which side of the door each one is on]
 - [YOU RECALL: read **சட்டை**, then say *puḍavai*, then say *seruppu*]
+- [YOU RECALL: read **வலது**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04] -->

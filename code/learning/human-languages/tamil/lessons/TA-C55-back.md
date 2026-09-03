@@ -9,7 +9,7 @@ headword: "முதுகு"
 gloss: "the back"
 romanization: "mutuku"
 concept_tag: TA-NOUN-BACK
-prerequisites: [TA-C55-neck]
+prerequisites: [TA-C55-neck, TA-C53-hill, TA-C54-basket]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C55-BODY-02]
 practises:
-  knowledge: [TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02]
+  knowledge: [TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C53-LAND-02, TA-LEX-C54-HOUSE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ To show somebody your முதுகு is to turn away from them, in Tamil muc
 Two: what a garland goes round, and what you turn on somebody.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C53-LAND-02, TA-LEX-C54-HOUSE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mutuku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaḻuttu*, then *mutuku*, the top of you and the length below it]
+- [YOU RECALL: read **மலை**, then say *kūṭai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02] -->

@@ -9,7 +9,7 @@ headword: چائے
 romanization: chāy
 gloss: tea — Persian again, this time by an overland road from Chinese, and the hamza-ye letter's second word
 concept_tag: UR-TEA
-prerequisites: [UR-C12-pani]
+prerequisites: [UR-C12-pani, UR-C08-pasand]
 sounds: [rtl, hamza-ye, long-a]
 roots: [chinese-cha, persian-chay]
 etymology_hook: chāy is borrowed from Classical Persian chāy, which traces to Northern Chinese chá, carried overland through Central Asia into Persian before reaching Urdu; tea that instead reached Europe by sea kept a different southern-Chinese form, which is why English says tea and not chai -- one drink, two words, depending on whether it travelled by land or by sea.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-SCRIPT-HAMZA-YE, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD]
+  knowledge: [UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-SCRIPT-HAMZA-YE, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD, UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -74,12 +74,13 @@ says *thé* instead of *chai*. One drink, two words, sorted by whether it
 travelled by land or by water.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD, UR-SCRIPT-HAMZA-YE, UR-LEX-PANI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD, UR-SCRIPT-HAMZA-YE, UR-LEX-PANI, UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER] -->
 
 - [YOU SAY: **chāy** — tea; then **merī chāy**]
 - [YOU NAME: the hamza-ye letter's two words so far — **bhāī**, **chāy**]
 - [YOU SAY: the road — **chá … chāy … chāy**]
 - [YOU CONTRAST: **merā pānī** — **merī chāy**]
+- [YOU RECALL: say *pasand*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD, UR-SCRIPT-HAMZA-YE] -->

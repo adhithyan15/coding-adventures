@@ -12,7 +12,7 @@ headword: "बोलना"
 gloss: "to speak"
 romanization: "bolnā"
 concept_tag: HI-VERB-SPEAK
-prerequisites: [HI-C43-listen]
+prerequisites: [HI-C43-listen, HI-C41-new]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-SPEAK]
 practises:
-  knowledge: [HI-LEX-LISTEN, HI-LEX-SPEAK]
+  knowledge: [HI-LEX-LISTEN, HI-LEX-SPEAK, HI-LEX-C41-ADJ-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ reviews_of: [HI-C43-listen]
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LISTEN, HI-LEX-SPEAK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LISTEN, HI-LEX-SPEAK, HI-LEX-C41-ADJ-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bolnā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *sunnā*, so the two sit together]
+- [YOU RECALL: say *nayā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LISTEN, HI-LEX-SPEAK] -->

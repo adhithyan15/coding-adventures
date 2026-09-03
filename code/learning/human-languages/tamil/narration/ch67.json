@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "What You Wear",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:35387da4a17391ea",
+  "sourceHash": "fnv1a64:652e5f060c1f6d8b",
   "lessons": [
     {
       "id": "TA-C67-shirt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:276ea307ddfe4d8b",
+      "sourceHash": "fnv1a64:f2f02708ed14fa8b",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *valadu*, then say *iḍadu*, then say *saṭṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mēlē, then read கீழே",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mēlē*, then read **கீழே**]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea3733025de10583",
+      "sourceHash": "fnv1a64:345ea6fb57c67409",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *iḍadu*, then say *saṭṭai*, then say *vēṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read உள்ளே",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **உள்ளே**]"
             }
           ]
         },
@@ -420,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1c544ef5969b753",
+      "sourceHash": "fnv1a64:aad118d7cf926c67",
       "notice": null,
       "blocks": [
         {
@@ -511,6 +529,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *vēṭṭi*, then read **சட்டை**, then say *puḍavai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say veḷiyē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *veḷiyē*]"
             }
           ]
         },
@@ -546,7 +573,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5110b09670b854ef",
+      "sourceHash": "fnv1a64:0e3f80a2c5e0e081",
       "notice": null,
       "blocks": [
         {
@@ -633,6 +660,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: read **சட்டை**, then say *puḍavai*, then say *seruppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read வலது",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **வலது**]"
             }
           ]
         },
@@ -668,7 +704,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:536476300311f74a",
+      "sourceHash": "fnv1a64:07aee1d1db6e286e",
       "notice": null,
       "blocks": [
         {
@@ -759,6 +795,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *puḍavai*, then say *seruppu*, then say *toppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iḍadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iḍadu*]"
             }
           ]
         },

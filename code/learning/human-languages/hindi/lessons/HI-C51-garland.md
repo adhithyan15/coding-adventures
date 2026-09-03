@@ -12,7 +12,7 @@ headword: "माला"
 gloss: "a garland"
 romanization: "mālā"
 concept_tag: HI-NOUN-GARLAND
-prerequisites: [HI-C51-flower]
+prerequisites: [HI-C51-flower, HI-C49-day-after, HI-C50-favour]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C51-WELCOME-02]
 practises:
-  knowledge: [HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02]
+  knowledge: [HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C49-LEAVE-02, HI-LEX-C50-COURTESY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Around the neck of a guest it is a welcome. Around the frame of a photograph it 
 Two: a flower and a garland made of them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C49-LEAVE-02, HI-LEX-C50-COURTESY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mālā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mālā*, then *phūl*, the string and the thing it is made of]
+- [YOU RECALL: read **परसों**, then say *ehsān*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02] -->

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8aca9a4408d40821",
+  "sourceHash": "fnv1a64:57e7b6ffc54c0e69",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16223dcb09af3fa2",
+      "sourceHash": "fnv1a64:02ee721fb877bed9",
       "notice": null,
       "blocks": [
         {
@@ -124,6 +124,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: **honā** ← Sanskrit *bhavati* → English **be**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ṭhīk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ṭhīk*]"
             }
           ]
         },
@@ -515,7 +524,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5eb3de496892f19d",
+      "sourceHash": "fnv1a64:0d2f16aa47c74222",
       "notice": null,
       "blocks": [
         {
@@ -609,6 +618,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **آنا**, starting from *alif madd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say khudā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *khudā*]"
             }
           ]
         },
@@ -1020,7 +1038,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34ae576a8b5a8ee8",
+      "sourceHash": "fnv1a64:9abb1c27cc5c973c",
       "notice": null,
       "blocks": [
         {
@@ -1127,6 +1145,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: **jānnā** ← *jñā-* → English **know**, **notice**, **diagnosis**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hāfiz, then say honā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hāfiz*, then say *honā*]"
             }
           ]
         },

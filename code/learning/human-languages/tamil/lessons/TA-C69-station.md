@@ -9,7 +9,7 @@ headword: "நிலையம்"
 gloss: "a station"
 romanization: "nilaiyam"
 concept_tag: TA-NOUN-STATION
-prerequisites: [TA-C69-road]
+prerequisites: [TA-C69-road, TA-C67-cap, TA-C68-bag]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C69-GOING-05]
 practises:
-  knowledge: [TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02, TA-LEX-C69-GOING-05]
+  knowledge: [TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02, TA-LEX-C69-GOING-05, TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,13 +55,14 @@ own, and from here on you can start looking for the pieces.
 Five, and the chapter runs end to end.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02, TA-LEX-C69-GOING-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02, TA-LEX-C69-GOING-05, TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nilaiyam*]
 - [YOU SAY: *vāṉilai*, then *nilaiyam*, and name the piece they share]
 - [YOU SAY: all five — *vaṇḍi*, *pērundu*, *rayil*, *sālai*, *nilaiyam*]
 - [YOU RECALL: say *rayil*, then say *sālai*, then say *nilaiyam*]
+- [YOU RECALL: say *toppi*, then read **பை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02, TA-LEX-C69-GOING-05] -->

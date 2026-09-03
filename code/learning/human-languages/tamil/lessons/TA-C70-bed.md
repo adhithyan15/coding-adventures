@@ -9,7 +9,7 @@ headword: "கட்டில்"
 gloss: "a bed"
 romanization: "kaṭṭil"
 concept_tag: TA-NOUN-BED
-prerequisites: [TA-C70-table]
+prerequisites: [TA-C70-table, TA-C68-price, TA-C69-bus]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C70-ROOM-02]
 practises:
-  knowledge: [TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01, TA-LEX-C70-ROOM-02]
+  knowledge: [TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01, TA-LEX-C70-ROOM-02, TA-LEX-C68-SHOP-02, TA-LEX-C69-GOING-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -56,12 +56,13 @@ after it to lean on.
 Two, and you can now name where you sleep.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01, TA-LEX-C70-ROOM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01, TA-LEX-C70-ROOM-02, TA-LEX-C68-SHOP-02, TA-LEX-C69-GOING-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaṭṭil*]
 - [YOU SAY: *tūkkam*, then *kaṭṭil* — the thing and the place]
 - [YOU RECALL: say *nilaiyam*, then say *mēsai*, then say *kaṭṭil*]
+- [YOU RECALL: read **விலை**, then say *pērundu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01, TA-LEX-C70-ROOM-02] -->

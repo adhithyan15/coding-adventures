@@ -12,7 +12,7 @@ headword: "अच्छा"
 gloss: "good"
 romanization: "acchā"
 concept_tag: HI-ADJ-GOOD
-prerequisites: [HI-C41-small]
+prerequisites: [HI-C41-small, HI-C39-aadmi, HI-C40-there]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C41-ADJ-03]
 practises:
-  knowledge: [HI-LEX-C41-ADJ-01, HI-LEX-C41-ADJ-02, HI-LEX-C41-ADJ-03]
+  knowledge: [HI-LEX-C41-ADJ-01, HI-LEX-C41-ADJ-02, HI-LEX-C41-ADJ-03, HI-CONCEPT-C39-AADMI-01, HI-CONCEPT-C39-AADMI-02, HI-LEX-C40-DEIXIS-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,11 +52,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-03, HI-CONCEPT-C39-AADMI-01, HI-CONCEPT-C39-AADMI-02, HI-LEX-C40-DEIXIS-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "अच्छा" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *ādmī*, then read **वहाँ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-03] -->

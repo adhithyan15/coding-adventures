@@ -12,7 +12,7 @@ headword: "ज़्यादा"
 gloss: "a lot, more"
 romanization: "zyādā"
 concept_tag: HI-ADV-MORE
-prerequisites: [HI-C64-little]
+prerequisites: [HI-C64-little, HI-C62-wood, HI-C63-pain]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C64-MEASURE-05]
 practises:
-  knowledge: [HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05]
+  knowledge: [HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05, HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The nukta under the ज़ is doing real work, the same as in ज़रूर. D
 Five: अब, जल्दी, धीरे, कम, ज़्यादा. Enough to answer how much and how fast.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05, HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *zyādā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *bilkul*]
+- [YOU RECALL: say *lakṛī*, then read **दर्द**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05] -->

@@ -12,7 +12,7 @@ headword: "छात्र"
 gloss: "a student"
 romanization: "chātra"
 concept_tag: HI-NOUN-STUDENT
-prerequisites: [HI-C47-teacher]
+prerequisites: [HI-C47-teacher, HI-C45-cloth, HI-C46-finger]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C47-ROLE-02]
 practises:
-  knowledge: [HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02]
+  knowledge: [HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C45-ASK-02, HI-LEX-C46-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The feminine is *chātrā*. The transparent alternative is *vidyārthī*, 'one w
 Two: a teacher and a student.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C45-ASK-02, HI-LEX-C46-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chātra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chātra*, then *śikṣak*, the pair that needs each other]
+- [YOU RECALL: say *kapṛā*, then say *uṅglī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02] -->

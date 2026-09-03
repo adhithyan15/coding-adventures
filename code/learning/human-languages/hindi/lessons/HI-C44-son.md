@@ -12,7 +12,7 @@ headword: "बेटा"
 gloss: "son"
 romanization: "beṭā"
 concept_tag: HI-NOUN-SON
-prerequisites: [HI-C43-write]
+prerequisites: [HI-C43-write, HI-C42-come]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-SON]
 practises:
-  knowledge: [HI-LEX-WRITE, HI-LEX-SON]
+  knowledge: [HI-LEX-WRITE, HI-LEX-SON, HI-LEX-COME]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ The everyday word, not the Sanskrit *putra* that formal Hindi holds in reserve. 
 The first of four words for the people around you. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-WRITE, HI-LEX-SON] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-WRITE, HI-LEX-SON, HI-LEX-COME] -->
 
 [PAUSE 1s]
 - [YOU SAY: *beṭā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *likhnā*, so the two sit together]
+- [YOU RECALL: say *ānā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-WRITE, HI-LEX-SON] -->

@@ -12,7 +12,7 @@ headword: "क्रिकेट"
 gloss: "cricket, the game"
 romanization: "krikeṭ"
 concept_tag: HI-NOUN-CRICKET
-prerequisites: [HI-C70-play]
+prerequisites: [HI-C70-play, HI-C68-city, HI-C69-station]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C70-LEISURE-03]
 practises:
-  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03]
+  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03, HI-LEX-C68-ORIGIN-03, HI-LEX-C69-GOING-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -61,12 +61,13 @@ puts three of this chapter's ideas into a single sentence.
 Three: खेल, खेलना, क्रिकेट. A game, playing it, and one to name.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03, HI-LEX-C68-ORIGIN-03, HI-LEX-C69-GOING-03] -->
 
 [PAUSE 1s]
 - [YOU READ: क्रिकेट, and find the ि sitting to the left of the stack]
 - [YOU SAY: *krikeṭ*]
 - [YOU SAY: *maiṁ krikeṭ kheltā hūṁ*]
+- [YOU RECALL: say *shahar*, then read **स्टेशन**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-03] -->

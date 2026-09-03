@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-muede",
     "language": "german",
-    "chapter": 21,
-    "sequence": 485,
+    "chapter": 22,
+    "sequence": 495,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:70d67f4cf8eac687"
+    "sourceHash": "fnv1a64:e2bbd2cb00a77165"
   },
   "findings": []
 }

@@ -9,7 +9,7 @@ headword: "எலும்பு"
 gloss: "a bone"
 romanization: "elumbu"
 concept_tag: TA-NOUN-BONE
-prerequisites: [TA-C55-nail]
+prerequisites: [TA-C55-nail, TA-C53-village, TA-C54-box]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C55-BODY-05]
 practises:
-  knowledge: [TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05]
+  knowledge: [TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05, TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Malayalam എല്ല് (*ellŭ*) and Telugu ఎముక (*emuka*) sit either
 Five more of you: neck, back, lip, nail, and what holds the whole lot up.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05, TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *elumbu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kaḻuttu*, *mutuku*, *utaṭu*, *nakam*, *elumbu*]
+- [YOU RECALL: say *kirāmam*, then read **பெட்டி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05] -->

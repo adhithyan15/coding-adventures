@@ -12,7 +12,7 @@ headword: "कम"
 gloss: "little, not much"
 romanization: "kam"
 concept_tag: HI-ADV-LITTLE
-prerequisites: [HI-C64-slowly]
+prerequisites: [HI-C64-slowly, HI-C62-clay, HI-C63-fever]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C64-MEASURE-04]
 practises:
-  knowledge: [HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04]
+  knowledge: [HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04, HI-LEX-C62-HANDS-04, HI-LEX-C63-STATE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ One warning, and it is about our letters rather than about Hindi. कमरा, 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04, HI-LEX-C62-HANDS-04, HI-LEX-C63-STATE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kam*, then *kamrā*, and say which one is Persian]
+- [YOU RECALL: read **मिट्टी**, then say *bukhār*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04] -->

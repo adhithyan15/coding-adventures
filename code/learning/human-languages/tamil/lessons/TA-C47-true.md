@@ -9,7 +9,7 @@ headword: "உண்மை"
 gloss: "the truth"
 romanization: "uṇmai"
 concept_tag: TA-REPLY-TRUE
-prerequisites: [TA-C46-guest]
+prerequisites: [TA-C46-guest, TA-C45-eye, TA-C46-teacher]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C47-REPLY-01]
 practises:
-  knowledge: [TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01]
+  knowledge: [TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01, TA-LEX-C45-BODY-01, TA-LEX-C46-ROLE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ As a reply it stands on its own. Somebody tells you something surprising and *u�
 The first of five short replies.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01, TA-LEX-C45-BODY-01, TA-LEX-C46-ROLE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uṇmai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uṇmai*, then *sari*, so the two agreements sit together]
+- [YOU RECALL: say *kaṇ*, then read **ஆசிரியர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01] -->

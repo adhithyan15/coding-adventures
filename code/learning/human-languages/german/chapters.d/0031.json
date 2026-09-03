@@ -1,21 +1,21 @@
 {
   "chapter": 31,
-  "title": "Green and Yellow",
-  "label": "ch:ge-green-and-yellow",
-  "canDo": "I can name green and yellow in German, and say why grün is English green's own cousin while gelb's link to French jaune is only probable.",
+  "title": "Dog and Cat",
+  "label": "ch:ge-dog-and-cat",
+  "canDo": "I can name a dog and a cat in German and say which of the two words German inherited and which one it borrowed.",
   "spineNodes": [
     "SPINE-DEFINITE-REFERENCE"
   ],
   "payoff": {
-    "lesson": "GE-C23-gruen-gelb",
+    "lesson": "GE-C22-hund-katze",
     "kind": "production",
-    "summary": "Say grün as the direct cousin of English green from a root unrelated to Latin viridis, say gelb, and state the gelb / jaune cousinhood as probable rather than airtight. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Say Hund beside English hound and the unexplained dog that displaced it, then say Katze and admit it is the borrowed Late Latin cattus — widespread, but not universal: Romanian pisică and Serbian mačka went their own way. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "GE-LEX-GRUEN-02",
-      "GE-ETYMON-GRUEN-03",
-      "GE-LEX-GELB-04",
-      "GE-ETYMON-GELB-05",
-      "GE-EVIDENCE-GELB-JAUNE-06"
+      "GE-LEX-HUND-02",
+      "GE-ETYMON-HUND-03",
+      "GE-LEX-KATZE-04",
+      "GE-ETYMON-KATZE-05",
+      "GE-EVIDENCE-CAT-WORDS-06"
     ]
   }
 }

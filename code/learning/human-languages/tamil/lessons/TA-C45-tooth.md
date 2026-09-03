@@ -9,7 +9,7 @@ headword: "பல்"
 gloss: "a tooth"
 romanization: "pal"
 concept_tag: TA-NOUN-TOOTH
-prerequisites: [TA-C45-nose]
+prerequisites: [TA-C45-nose, TA-C43-family, TA-C44-salt]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C45-BODY-04]
 practises:
-  knowledge: [TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03, TA-LEX-C45-BODY-04]
+  knowledge: [TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03, TA-LEX-C45-BODY-04, TA-LEX-FAMILY, TA-LEX-C44-ASK-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ In everyday speech it often comes out *pallu*, with the *l* doubled — which is
 Four, and the first one you can bite with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03, TA-LEX-C45-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03, TA-LEX-C45-BODY-04, TA-LEX-FAMILY, TA-LEX-C44-ASK-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mūkku*, then *pal*, and cut the second one short]
+- [YOU RECALL: read **குடும்பம்**, then say *uppu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03, TA-LEX-C45-BODY-04] -->

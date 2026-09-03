@@ -12,7 +12,7 @@ headword: "किसान"
 gloss: "a farmer"
 romanization: "kisān"
 concept_tag: HI-NOUN-FARMER
-prerequisites: [HI-C47-student]
+prerequisites: [HI-C47-student, HI-C45-lamp, HI-C46-ear]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C47-ROLE-03]
 practises:
-  knowledge: [HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03]
+  knowledge: [HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C45-ASK-03, HI-LEX-C46-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Latin reached for the same picture and got there with different material: *sulcu
 Three, and each one names work rather than family.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C45-ASK-03, HI-LEX-C46-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kisān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kisān*, then *chātra*, then *śikṣak*, back down the run]
+- [YOU RECALL: say *dīyā*, then read **कान**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03] -->

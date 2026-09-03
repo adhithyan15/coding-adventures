@@ -12,7 +12,7 @@ headword: "होंठ"
 gloss: "a lip"
 romanization: "hoṇṭh"
 concept_tag: HI-NOUN-LIP
-prerequisites: [HI-C53-back]
+prerequisites: [HI-C53-back, HI-C51-sweet, HI-C52-vegetable]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C53-BODY-05]
 practises:
-  knowledge: [HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05]
+  knowledge: [HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Do not reach for Latin *labium* as a cousin here — it is not one. Two Indo-Eur
 The fifth of five. That is the body, from the forehead down.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hoṇṭh*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hoṇṭh*, *māthā*, *kandhā*, *pīṭh*, *ghuṭnā* — top to bottom]
+- [YOU RECALL: say *miṭhāī*, then read **सब्ज़ी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05] -->

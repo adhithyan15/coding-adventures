@@ -9,7 +9,7 @@ headword: بارش
 romanization: bārish
 gloss: rain — Persian, built from "load" plus a noun-forming ending, and a dead end behind that
 concept_tag: UR-RAIN
-prerequisites: [UR-C14-koat]
+prerequisites: [UR-C14-koat, UR-C10-aankh]
 sounds: [rtl, long-a, sh]
 roots: [persian-baresh]
 etymology_hook: bārish is borrowed from Classical Persian bāriš, itself bār "load, downpour" plus the suffix -eš. No further Proto-Indo-European root is documented for that Persian base -- an honest dead end, the same shape as lāl.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-KOAT, UR-REGISTER-ENGLISH-LAYER, UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-SCRIPT-AAP-TUM-TU, UR-SCRIPT-HAFIZ]
+  knowledge: [UR-LEX-KOAT, UR-REGISTER-ENGLISH-LAYER, UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-SCRIPT-AAP-TUM-TU, UR-SCRIPT-HAFIZ, UR-LEX-AANKH, UR-ETYMON-AANKH-EYE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,7 +60,7 @@ documented behind that Persian base — an honest dead end, the same shape
 as **لال**'s.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-LEX-KOAT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-LEX-KOAT, UR-LEX-AANKH, UR-ETYMON-AANKH-EYE] -->
 
 - [YOU SAY: **bārish** — rain; then **bārish ho rahī hai**]
 - [YOU NAME: **بارش**'s two Persian parts — **bār** plus the **-eš**
@@ -69,6 +69,7 @@ as **لال**'s.
   Persian, and no further]
 - [YOU SAY: *āj bārish hai, is liye merā koṭ chāhiye.* — "Today there's rain,
   so I need my coat."]
+- [YOU RECALL: say *āṅkh*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-SCRIPT-AAP-TUM-TU, UR-SCRIPT-HAFIZ] -->

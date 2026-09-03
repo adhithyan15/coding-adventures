@@ -12,7 +12,7 @@ headword: "नींद"
 gloss: "sleep"
 romanization: "nīnd"
 concept_tag: HI-NOUN-SLEEP
-prerequisites: [HI-C63-thirst]
+prerequisites: [HI-C63-thirst, HI-C61-tumbler, HI-C62-basket]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C63-STATE-03]
 practises:
-  knowledge: [HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03]
+  knowledge: [HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C61-FIRE-03, HI-LEX-C62-HANDS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It patterns with भूख and प्यास: a speaker says नींद is c
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C61-FIRE-03, HI-LEX-C62-HANDS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nīnd*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nīnd*, then *rāt*, and say which one brings the other]
+- [YOU RECALL: say *gilās*, then read **टोकरी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03] -->

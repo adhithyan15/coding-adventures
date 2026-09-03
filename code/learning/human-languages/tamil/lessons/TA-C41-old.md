@@ -9,7 +9,7 @@ headword: "பழைய"
 gloss: "old — of a thing, not of a person"
 romanization: "paḻaiya"
 concept_tag: TA-ADJ-OLD
-prerequisites: [TA-C41-new]
+prerequisites: [TA-C41-new, TA-C40-where]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C41-ADJ-05]
 practises:
-  knowledge: [TA-LEX-C41-ADJ-03, TA-LEX-C41-ADJ-04, TA-LEX-C41-ADJ-05]
+  knowledge: [TA-LEX-C41-ADJ-03, TA-LEX-C41-ADJ-04, TA-LEX-C41-ADJ-05, TA-LEX-C40-DEIXIS-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-05, TA-LEX-C40-DEIXIS-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: "பழைய" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *eṅgē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-05] -->

@@ -1,7 +1,7 @@
 ---
 id: GE-C08-mittag-mitternacht
-sequence: 240
-chapter: 11
+sequence: 250
+chapter: 12
 type: word
 headword: Mittag, Mitternacht
 gloss: noon and midnight — native "mid-day" and "mid-night"

@@ -9,7 +9,7 @@ headword: "நேரம்"
 gloss: "time"
 romanization: "nēram"
 concept_tag: TA-LEAVE-TIME
-prerequisites: [TA-C48-now]
+prerequisites: [TA-C48-now, TA-C46-student, TA-C47-enough]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C48-LEAVE-02]
 practises:
-  knowledge: [TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02]
+  knowledge: [TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C46-ROLE-02, TA-LEX-C47-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Not the hour on the clock — that is *maṇi*, which you already have — but t
 Two: this moment, and the stuff moments are made of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C46-ROLE-02, TA-LEX-C47-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nēram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippōdu*, then *nēram*, so the two sit together]
+- [YOU RECALL: read **மாணவன்**, then say *pōdum*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02] -->

@@ -9,7 +9,7 @@ headword: "வேட்டி"
 gloss: "a veshti, the cloth a man wraps at the waist"
 romanization: "vēṭṭi"
 concept_tag: TA-NOUN-VESHTI
-prerequisites: [TA-C67-shirt]
+prerequisites: [TA-C67-shirt, TA-C66-inside]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C67-WEAR-02]
 practises:
-  knowledge: [TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02]
+  knowledge: [TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02, TA-LEX-C66-WHICHWAY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Its middle is the doubled ட you met one lesson ago in சட்டை, riding 
 Two garments, and the same doubled consonant in both.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02, TA-LEX-C66-WHICHWAY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vēṭṭi*]
 - [YOU SAY: *saṭṭai*, then *vēṭṭi* — and say which one was never cut]
 - [YOU RECALL: say *iḍadu*, then say *saṭṭai*, then say *vēṭṭi*]
+- [YOU RECALL: read **உள்ளே**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02] -->

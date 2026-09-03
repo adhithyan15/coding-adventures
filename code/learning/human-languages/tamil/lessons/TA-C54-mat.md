@@ -9,7 +9,7 @@ headword: "பாய்"
 gloss: "a mat"
 romanization: "pāy"
 concept_tag: TA-NOUN-MAT
-prerequisites: [TA-C53-village]
+prerequisites: [TA-C53-village, TA-C52-tree, TA-C53-river]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C54-HOUSE-01]
 practises:
-  knowledge: [TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01]
+  knowledge: [TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01, TA-LEX-C52-TREE-01, TA-LEX-C53-LAND-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The woven mat that is unrolled to sleep on and unrolled again for a guest to sit
 The first of five things a house puts in front of you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01, TA-LEX-C52-TREE-01, TA-LEX-C53-LAND-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pāy*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kirāmam*, then *pāy*, the village and what is unrolled for you in it]
+- [YOU RECALL: say *maram*, then read **நதி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01] -->

@@ -9,7 +9,7 @@ headword: "தரை"
 gloss: "the floor"
 romanization: "tarai"
 concept_tag: TA-NOUN-FLOOR
-prerequisites: [TA-C70-wall]
+prerequisites: [TA-C70-wall, TA-C68-buy, TA-C69-road]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C70-ROOM-04]
 practises:
-  knowledge: [TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03, TA-LEX-C70-ROOM-04]
+  knowledge: [TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03, TA-LEX-C70-ROOM-04, TA-LEX-C68-SHOP-04, TA-LEX-C69-GOING-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It ends in the **ை** again — the fifth word in three chapters to do so.
 Four, and the room has a bottom.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03, TA-LEX-C70-ROOM-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03, TA-LEX-C70-ROOM-04, TA-LEX-C68-SHOP-04, TA-LEX-C69-GOING-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tarai*]
 - [YOU SAY: *kōlam*, then *vāsal*, then *tarai* — and say where the design is drawn]
 - [YOU RECALL: read **மேசை**, then say *suvar*, then say *tarai*]
+- [YOU RECALL: read **வாங்கு**, then say *sālai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03, TA-LEX-C70-ROOM-04] -->

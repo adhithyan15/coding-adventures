@@ -12,7 +12,7 @@ headword: "प्यास"
 gloss: "thirst"
 romanization: "pyās"
 concept_tag: HI-NOUN-THIRST
-prerequisites: [HI-C63-hunger]
+prerequisites: [HI-C63-hunger, HI-C61-spoon, HI-C62-needle]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C63-STATE-02]
 practises:
-  knowledge: [HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02]
+  knowledge: [HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C61-FIRE-02, HI-LEX-C62-HANDS-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ From Sanskrit पिपासा (*pipāsā*), 'the wish to drink', on पा (*
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C61-FIRE-02, HI-LEX-C62-HANDS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pyās*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pyās*, then *pānī*, and say which one ends the other]
+- [YOU RECALL: read **चम्मच**, then say *sūī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02] -->

@@ -9,7 +9,7 @@ headword: "துடைப்பம்"
 gloss: "a broom"
 romanization: "tuṭaippam"
 concept_tag: TA-NOUN-BROOM
-prerequisites: [TA-C60-umbrella]
+prerequisites: [TA-C60-umbrella, TA-C58-crow, TA-C59-jaggery]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C60-MADE-04]
 practises:
-  knowledge: [TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04]
+  knowledge: [TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04, TA-LEX-C58-ANIMAL-04, TA-LEX-C59-KITCHEN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Three houses, three words again — Kannada ಪೊರಕೆ (*porake*), Telugu �
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04, TA-LEX-C58-ANIMAL-04, TA-LEX-C59-KITCHEN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tuṭaippam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tuṭaippam*, then *kōlam*, and say which one comes first]
+- [YOU RECALL: read **காக்கை**, then say *vellam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04] -->

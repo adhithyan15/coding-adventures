@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C31-arm
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 970
-chapter: 39
+sequence: 980
+chapter: 40
 type: word
 headword: der Arm
 gloss: arm — named on the *Hand* table and now finally taught, a word Grimm's law never had to touch

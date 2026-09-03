@@ -9,7 +9,7 @@ headword: "கயிறு"
 gloss: "a rope"
 romanization: "kayiṟu"
 concept_tag: TA-NOUN-ROPE
-prerequisites: [TA-C60-needle]
+prerequisites: [TA-C60-needle, TA-C58-goat, TA-C59-ghee]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C60-MADE-02]
 practises:
-  knowledge: [TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02]
+  knowledge: [TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C58-ANIMAL-02, TA-LEX-C59-KITCHEN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The ற at the end is the hard one — the same ற standing in ஆறு and in
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C58-ANIMAL-02, TA-LEX-C59-KITCHEN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kayiṟu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kayiṟu*, then *pasu*, and say which one holds the other]
+- [YOU RECALL: read **ஆடு**, then say *ney*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02] -->
