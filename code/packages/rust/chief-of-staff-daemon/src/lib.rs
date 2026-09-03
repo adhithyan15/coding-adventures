@@ -2826,7 +2826,7 @@ impl<B: StorageBackend + 'static> ModelToolDispatcher for D18dSmartHomeModelTool
         let requested_at = self.clock.now_ms().ok_or(DataPlaneFailure::Internal)?;
         let result = self
             .bridge
-            .invoke(&ToolInvocationRequest {
+            .invoke_for_agent(&ToolInvocationRequest {
                 call_id: call.call_id.clone(),
                 tool_id: call.name.clone(),
                 arguments,
