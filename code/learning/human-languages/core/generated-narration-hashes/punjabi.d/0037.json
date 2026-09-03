@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 37,
-  "sourceHash": "fnv1a64:d05fba8100958752",
+  "sourceHash": "fnv1a64:fa9134b124439629",
   "lessonIds": [
     "PA-C37-nahin-vaak",
     "PA-C37-samajh-nahin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch37.txt",
   "json": "punjabi/narration/ch37.json",
-  "textHash": "fnv1a64:a0ceb76cff523e00",
-  "jsonHash": "fnv1a64:ad5cffd3e8522e97",
+  "textHash": "fnv1a64:feac86b36bbc1b7a",
+  "jsonHash": "fnv1a64:8f3b9cbeb21b2efe",
   "findings": []
 }

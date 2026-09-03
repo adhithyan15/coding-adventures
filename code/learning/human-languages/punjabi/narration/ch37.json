@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "The Sentence That Says No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d05fba8100958752",
+  "sourceHash": "fnv1a64:fa9134b124439629",
   "lessons": [
     {
       "id": "PA-C37-nahin-vaak",
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61cd5af1a9f59809",
+      "sourceHash": "fnv1a64:b3468093871d0273",
       "notice": null,
       "blocks": [
         {
@@ -183,11 +183,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ — mainū̃ samajh nahī̃ āī — \"understanding did not come."
-            },
-            {
-              "kind": "speech",
-              "text": "to me\"."
+              "text": "ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ — mainū̃ samajh nahī̃ āī — \"understanding did not come to me\"."
             },
             {
               "kind": "speech",

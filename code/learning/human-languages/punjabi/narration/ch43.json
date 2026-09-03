@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Who, When, Where, How Many",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7dec2f4cd0310db2",
+  "sourceHash": "fnv1a64:0361bd9fa5a55673",
   "lessons": [
     {
       "id": "PA-C43-kaun",
@@ -309,7 +309,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:deffe4909f8ccea1",
+      "sourceHash": "fnv1a64:4062f5fa2bffae75",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -350,11 +350,11 @@
             },
             {
               "kind": "speech",
-              "text": "ਤ — ta, the plain dental, ਥ — tha, the same place with a push of."
+              "text": "ਤ — ta, the plain dental."
             },
             {
               "kind": "speech",
-              "text": "breath behind it."
+              "text": "ਥ — tha, the same place with a push of breath behind it."
             },
             {
               "kind": "speech",

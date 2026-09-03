@@ -46,7 +46,7 @@ verb **to understand**. And two chapters back, the word for **to me**.
 <!-- hl-knowledge: introduces=[PA-NEG-NOT-UNDERSTOOD-01]; assesses=[PA-LEX-MAINU, PA-GRAMMAR-DATIVE-LIKING, PA-NEG-CLAUSE-01] -->
 
 - **ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ** — *mainū̃ samajh nahī̃ āī* — "understanding did not come
-- to me"
+  to me"
 
 Punjabi does not make you the subject of understanding. It makes understanding
 something that **arrives**, and you are the one it arrives at — which is exactly

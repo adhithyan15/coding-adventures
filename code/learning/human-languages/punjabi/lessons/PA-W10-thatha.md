@@ -44,8 +44,8 @@ reviews_of: [PA-C42-oh-write]
 
 Keep **ਥ** visible beside **ਤ**, which you have had for a long time:
 
-- **ਤ** — *ta*, the plain dental · **ਥ** — *tha*, the same place with a push of
-- breath behind it
+- **ਤ** — *ta*, the plain dental
+- **ਥ** — *tha*, the same place with a push of breath behind it
 
 The tongue is in the same spot for both; the difference is the breath. Say *ta*
 with your hand in front of your mouth, then *tha*, and feel it.
