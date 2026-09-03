@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-016-D-ESSEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name bread, water and wine in German, the inherited word beside the two borrowed ones.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C11-brot",
+    "GE-C11-wasser-wein"
+  ]
+}

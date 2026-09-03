@@ -1,13 +1,13 @@
 {
-  "id": "GE-PATH-016",
+  "id": "GE-PATH-016-D",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GE-C08-uhr",
-    "GE-C08-mittag-mitternacht"
+    "GE-C11-brot",
+    "GE-C11-wasser-wein"
   ],
   "before": [],
   "inline": [
-    "GE-EXT-016-LANGUAGE-SPECIFIC"
+    "GE-EXT-016-D-ESSEN"
   ],
   "after": []
 }

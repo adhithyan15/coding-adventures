@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f3a76ee46b853033",
+  "sourceHash": "fnv1a64:eae9f8695eedffe4",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -378,7 +378,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6940f8047e65af12",
+      "sourceHash": "fnv1a64:29e1d22036cab5c2",
       "notice": null,
       "blocks": [
         {
@@ -443,7 +443,7 @@
             },
             {
               "kind": "speech",
-              "text": "One more thing coming later: German articles also change by case (their job in the sentence), so der has other forms (den, dem, des). Ignore that for now; just learn der / die / das as the three \"the\"s."
+              "text": "One more thing coming later: German articles also change by case (their job in the sentence), so der has other forms (den, dem, des). Ignore that for now; learn der / die / das as the three \"the\"s and leave it there."
             }
           ]
         },
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50ae2458056b90e8",
+      "sourceHash": "fnv1a64:ff17cc6d581a897e",
       "notice": null,
       "blocks": [
         {
@@ -535,7 +535,7 @@
             },
             {
               "kind": "speech",
-              "text": "Your first German noun. In Spanish \"day\" was día (via Latin); in French, jour (via a longer Latin detour). In German it's Tag — and it's simply English \"day\" with one consonant shifted."
+              "text": "Your first German noun. In Spanish \"day\" was día (via Latin); in French, jour (via a longer Latin detour). In German it's Tag — and it's English \"day\" with one consonant shifted, and nothing else."
             }
           ]
         },
@@ -557,7 +557,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tag = tahk — a long open a, the vowel of English father; Germans harden a final -g to a k (final devoicing), so Tag rhymes with English tock, not with English tag. German nouns are always Capitalized (every noun, not just names)."
+              "text": "Tag = tahk — a long open a, the vowel of English father; Germans harden a final -g to a k (final devoicing), so Tag rhymes with English tock, not with English tag. German nouns are always Capitalized (every noun, not only names)."
             }
           ]
         },
@@ -662,7 +662,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9aee5937d3eedb15",
+      "sourceHash": "fnv1a64:73113b87304e94e1",
       "notice": null,
       "blocks": [
         {
@@ -711,7 +711,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not just gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a longer wish — \"I wish you a good day\" — and in that fuller thought, \"a good day\" is the object of the wishing (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten. The rest of the wish fell away and left the ending behind."
+              "text": "Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not only gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a longer wish — \"I wish you a good day\" — and in that fuller thought, \"a good day\" is the object of the wishing (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten. The rest of the wish fell away and left the ending behind."
             },
             {
               "kind": "speech",
@@ -1702,7 +1702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f09b3a7f76a9b913",
+      "sourceHash": "fnv1a64:48b37cb5e294dbc3",
       "notice": null,
       "blocks": [
         {
@@ -1718,7 +1718,7 @@
             },
             {
               "kind": "speech",
-              "text": "No new words — just the day's arc, until the endings are automatic."
+              "text": "No new words — only the day's arc, until the endings are automatic."
             }
           ]
         },
