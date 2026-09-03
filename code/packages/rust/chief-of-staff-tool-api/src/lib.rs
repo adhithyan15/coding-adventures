@@ -448,7 +448,7 @@ impl JsonSchema {
                                 .reject_supplied_identities(child, &child_path, errors);
                         }
                         None if *allow_unknown_fields => {
-                            if names_an_agent(name) {
+                            if value_key_names_a_peer(name) {
                                 errors.push(issue(
                                     child_path.clone(),
                                     "field names an agent other than the caller",
@@ -1044,7 +1044,12 @@ fn reject_agent_identity_keys(
         JsonValue::Object(fields) => {
             for (name, child) in fields {
                 let child_path = format!("{path}.{name}");
-                if names_an_agent(name) {
+                if key_is_confusable(name) {
+                    errors.push(issue(
+                        child_path.clone(),
+                        "field name is not ASCII and cannot be checked in an undescribed position",
+                    ));
+                } else if value_key_names_a_peer(name) {
                     errors.push(issue(
                         child_path.clone(),
                         "field names an agent other than the caller",
@@ -1063,25 +1068,123 @@ fn reject_agent_identity_keys(
 }
 
 fn normalize_property_name(property: &str) -> String {
+    // Strips EVERY non-alphanumeric, not just `_` and `-`. Value-object keys
+    // are arbitrary JSON strings -- `validate_schema_key` constrains schema
+    // keys, not these -- so `"agent id"`, `"agent.id"` and a zero-width space
+    // inside `"agent\u200b_id"` are all writable and all reached the handler.
+    //
+    // Non-ASCII alphanumerics are kept as-is rather than folded, so a Cyrillic
+    // homoglyph does NOT become its Latin lookalike. That is deliberate: it
+    // means `\u0430gent_id` fails to match a Latin name, which is why
+    // `key_is_confusable` refuses non-ASCII keys in undescribed positions
+    // outright instead of trying to normalize them.
     property
         .chars()
-        .filter(|character| *character != '_' && *character != '-')
+        .filter(|character| character.is_alphanumeric())
         .flat_map(char::to_lowercase)
         .collect()
 }
 
+/// A key in an undescribed position that cannot be compared safely.
+///
+/// Homoglyph folding is a losing game, so a non-ASCII key where no schema says
+/// what belongs is refused rather than normalized. Described properties are
+/// unaffected -- their names come from the schema, not the caller.
+fn key_is_confusable(key: &str) -> bool {
+    !key.is_ascii()
+}
+
+/// Peer-naming stems, closed over the plural and id/name suffixes.
+///
+/// Built as stem-plus-suffix rather than a hand-kept list, because the
+/// hand-kept version had `fromagent`, `foragent` and `targetagent` but not
+/// `toagent` -- the gaps were systematic, not exotic.
+const PEER_STEMS: &[&str] = &[
+    "agent",
+    "peer",
+    "principal",
+    "recipient",
+    "consumer",
+    "receiver",
+    "originator",
+    "sender",
+    "delegate",
+    "assignee",
+    "impersonate",
+];
+
+/// Prefixes that turn a stem into a reference to somebody else.
+const PEER_PREFIXES: &[&str] = &[
+    "to",
+    "from",
+    "for",
+    "target",
+    "peer",
+    "other",
+    "runas",
+    "as",
+    "actingas",
+    "onbehalfof",
+];
+
+fn matches_peer_vocabulary(normalized: &str) -> bool {
+    let suffixes = ["", "s", "id", "ids", "name", "names"];
+    for stem in PEER_STEMS {
+        for suffix in suffixes {
+            let bare = format!("{stem}{suffix}");
+            if normalized == bare {
+                return true;
+            }
+            for prefix in PEER_PREFIXES {
+                if normalized == format!("{prefix}{bare}") {
+                    return true;
+                }
+            }
+            if normalized.ends_with(&bare) && normalized.len() > bare.len() {
+                // `consumer_agent_id`, `run_as_agent_id`, `delivery_peer_id`.
+                return true;
+            }
+        }
+    }
+    false
+}
+
+/// Names that are NOT peers despite matching the vocabulary.
+///
+/// Each is a real collision found in this repo, not a hypothetical:
+/// `user_agent` is an HTTP header; `useragentstring` likewise.
+const NOT_A_PEER: &[&str] = &["useragent", "useragentstring"];
+
 fn names_an_agent(property: &str) -> bool {
-    // Deliberately NOT a substring match on "agent". `user_agent` is an HTTP
-    // header, not a peer, and a check that fires on it is a check that gets
-    // relaxed after its first false positive rather than fixed. Names that do
-    // mean a peer are listed explicitly.
     let normalized = normalize_property_name(property);
-    if normalized == "useragent" {
+    if NOT_A_PEER.contains(&normalized.as_str()) {
         return false;
     }
     AGENT_IDENTITY_PROPERTY_NAMES.contains(&normalized.as_str())
-        || normalized.ends_with("agentid")
-        || normalized.starts_with("agentid")
+        || matches_peer_vocabulary(&normalized)
+}
+
+/// Whether a key in an *undescribed* position names a peer.
+///
+/// Narrower than [`names_an_agent`], and the difference is load-bearing. A
+/// schema property called `agent` is a tool asking the caller to name one. A
+/// key called `agent` inside an opaque blob is usually the blob's OWN
+/// identity -- `agent` is a first-class frontmatter key in this repo's skill
+/// manifest format, so rejecting it would make `skill.install` unable to
+/// accept any real manifest.
+///
+/// Likewise `host_id` and `hostname`: they ARE the agent id on a
+/// `HostProfile`, and they are also just machine names in a job spec. In a
+/// described position the schema settles which; in an opaque one nothing does,
+/// and refusing every job spec that names a machine buys nothing.
+fn value_key_names_a_peer(key: &str) -> bool {
+    const SELF_OR_MACHINE: &[&str] =
+        &["agent", "agents", "hostid", "hostname", "host", "principal"];
+    let normalized = normalize_property_name(key);
+    if SELF_OR_MACHINE.contains(&normalized.as_str()) {
+        return false;
+    }
+    names_an_agent(key)
 }
 
 /// Every position in a schema that names -- or could carry -- an agent identity.
@@ -5720,20 +5823,67 @@ mod tests {
                     JsonValue::Array(vec![obj(vec![("principal_id", text("peer-7"))])]),
                 )]),
             )]),
-            obj(vec![("host_id", text("peer-7"))]),
+            // Variants the first hand-kept list missed. The gaps were
+            // systematic: it had from/for/target-agent but not `to_agent`.
+            obj(vec![("to_agent", text("peer-7"))]),
+            obj(vec![("recipient_id", text("peer-7"))]),
+            obj(vec![("peers", JsonValue::Array(vec![text("peer-7")]))]),
+            obj(vec![("sender_id", text("peer-7"))]),
+            obj(vec![("run_as_agent", text("peer-7"))]),
+            obj(vec![("assignee", text("peer-7"))]),
+            // Normalization now strips every non-alphanumeric, so a space, a
+            // period and a zero-width space no longer smuggle a name past.
+            obj(vec![("agent id", text("peer-7"))]),
+            obj(vec![("agent.id", text("peer-7"))]),
+            obj(vec![("agent\u{200b}_id", text("peer-7"))]),
+            // A Cyrillic homoglyph is refused rather than folded: chasing
+            // lookalikes is a losing game, so a non-ASCII key in a position no
+            // schema describes is rejected outright.
+            obj(vec![("\u{430}gent_id", text("peer-7"))]),
         ];
         for value in cases {
             let report = schema.validate_supplied_value(&value);
             assert!(!report.ok, "an Any position must reject {value:?}");
+            // Either refusal is correct and says why: the name matched the
+            // peer vocabulary, or it was non-ASCII in a position no schema
+            // describes and so could not be compared safely.
             assert!(
-                report
-                    .errors
-                    .iter()
-                    .any(|error| error.message.contains("names an agent")),
+                report.errors.iter().any(|error| {
+                    error.message.contains("names an agent") || error.message.contains("not ASCII")
+                }),
                 "the error must say why, got {:?}",
                 report.errors
             );
         }
+    }
+
+    #[test]
+    fn an_opaque_blobs_own_identity_is_not_a_peer() {
+        // `agent` is a first-class frontmatter key in this repo's SKILL.md
+        // manifest format, so `skill.install`'s `manifest: Any` must still
+        // accept one -- rejecting it would make the tool unable to install any
+        // real skill. Likewise `host_id`/`hostname` in a job spec are usually
+        // a machine, and refusing every spec that names one buys nothing.
+        //
+        // The distinction is position, not spelling: as a SCHEMA property
+        // `agent` is a tool asking the caller to name one, and
+        // `names_an_agent` still says so.
+        let schema = JsonSchema::Any;
+        for allowed in [
+            obj(vec![("agent", text("weather-reporter"))]),
+            obj(vec![("host_id", text("laptop"))]),
+            obj(vec![("hostname", text("example.com"))]),
+        ] {
+            assert!(
+                schema.validate_supplied_value(&allowed).ok,
+                "an opaque blob's own identity must not be refused: {allowed:?}"
+            );
+        }
+        assert!(
+            names_an_agent("agent"),
+            "as a schema property it still counts"
+        );
+        assert!(!value_key_names_a_peer("agent"));
     }
 
     #[test]
