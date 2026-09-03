@@ -308,10 +308,101 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  build-compose:
+    name: Build the Compose Desktop app (${{ matrix.platform }})
+    needs: validate
+    strategy:
+      # Same reasoning as the desktop matrix: one platform failing should not
+      # hide whether the others work, and the publish job asserts the full
+      # payload set anyway.
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            runner: ubuntu-latest
+          - platform: macos
+            runner: macos-latest
+          - platform: windows
+            runner: windows-latest
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout the validated release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # `mosaic-compile` links `cairo-sys-rs` through the paint backend.
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
+
+      # The script builds the engine, emits the project, runs Gradle, and --
+      # the part that matters -- asserts the engine landed beside the host jar
+      # and still exports its symbols. Compose resolves `engram-capi` at
+      # RUNTIME, so a distribution built without that step compiles perfectly
+      # and launches into an app where every deck operation silently does
+      # nothing. Compiling is exactly the step that still succeeds.
+      - name: Build the Compose Desktop distribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash code/programs/mosaic/engram-app/scripts/build-native.sh \
+            --backend compose --output "$RUNNER_TEMP/engram-compose" --build
+
+      # `createDistributable` produces an application DIRECTORY -- a `.app`
+      # bundle on macOS, a plain tree elsewhere -- so the payload is a zip of
+      # it rather than a single installer file.
+      - name: Name the artifact for publication
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -euo pipefail
+          target="$(python code/scripts/engram_release.py compose-name \
+            --version "$RELEASE_VERSION" --platform "$PLATFORM")"
+          dist="$RUNNER_TEMP/engram-compose/compose/build/compose/binaries/main/app"
+          if [ ! -d "$dist" ]; then
+            echo "no Compose distribution at $dist" >&2
+            exit 1
+          fi
+          mkdir -p release-assets
+          ( cd "$dist" && zip -qry "$GITHUB_WORKSPACE/release-assets/$target" . )
+          ls -la release-assets
+
+      - name: Upload the Compose payload
+        uses: actions/upload-artifact@v7
+        with:
+          name: engram-compose-${{ matrix.platform }}
+          path: release-assets/*
+          if-no-files-found: error
+          retention-days: 7
+
   publish:
     name: Publish one Engram release
     if: github.event_name == 'workflow_dispatch'
-    needs: [validate, build-web, build-desktop]
+    needs: [validate, build-web, build-desktop, build-compose]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -359,7 +450,7 @@ jobs:
           files: release-assets/*
           fail_on_unmatched_files: true
           body: |
-            Engram ${{ needs.validate.outputs.version }} — web and desktop.
+            Engram ${{ needs.validate.outputs.version }} — web, desktop, and native.
 
             The browser app, built from the Mosaic package on the Rust core.
             **Anki import and export run in the browser** — legacy `.apkg` and
@@ -371,6 +462,15 @@ jobs:
             **Desktop builds are included** for Linux (AppImage), macOS (zip)
             and Windows (portable exe), built from the same Mosaic package on
             the same Rust core as the web build.
+
+            **A real native build is included** for Linux, macOS and Windows:
+            Compose Desktop, emitted from the same Mosaic package rather than a
+            web view in a wrapper. Each carries the `engram-capi` engine beside
+            its jar — the release lane asserts that, because the host resolves
+            the engine at runtime and an app missing it launches perfectly with
+            every deck operation silently unavailable.
+
+            These bundle a JVM, so they are larger than the Electron builds.
 
             The macOS and Windows builds are **unsigned**. macOS will refuse to
             open the app on first launch; right-click and choose Open, or clear
