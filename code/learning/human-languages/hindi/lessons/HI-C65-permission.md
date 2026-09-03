@@ -12,7 +12,7 @@ headword: "अनुमति"
 gloss: "permission"
 romanization: "anumati"
 concept_tag: HI-NOUN-PERMISSION
-prerequisites: [HI-C65-entreaty]
+prerequisites: [HI-C65-entreaty, HI-C63-sleep, HI-C64-slowly]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C65-GRACE-03]
 practises:
-  knowledge: [HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03]
+  knowledge: [HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C63-STATE-03, HI-LEX-C64-MEASURE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It is the formal one. On a form, at a desk, or in front of anyone whose yes carr
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C63-STATE-03, HI-LEX-C64-MEASURE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *anumati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anumati*, then *dhanyavād*]
+- [YOU RECALL: say *nīnd*, then read **धीरे**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03] -->

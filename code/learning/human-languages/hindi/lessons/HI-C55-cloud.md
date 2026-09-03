@@ -12,7 +12,7 @@ headword: "बादल"
 gloss: "a cloud"
 romanization: "bādal"
 concept_tag: HI-NOUN-CLOUD
-prerequisites: [HI-C55-star]
+prerequisites: [HI-C55-star, HI-C53-back, HI-C54-bird]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C55-SKY-04]
 practises:
-  knowledge: [HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04]
+  knowledge: [HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04, HI-LEX-C53-BODY-04, HI-LEX-C54-ANIMAL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That is worth marking. Three clean etymologies in a row can make the fourth look
 The fourth of five, and the first this chapter has had to hedge on.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04, HI-LEX-C53-BODY-04, HI-LEX-C54-ANIMAL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bādal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bādal*, and let the doubt sit there]
+- [YOU RECALL: read **पीठ**, then say *chiṛiyā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04] -->

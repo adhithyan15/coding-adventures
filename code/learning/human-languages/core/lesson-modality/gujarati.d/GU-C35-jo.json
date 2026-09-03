@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C35-jo",
+    "language": "gujarati",
+    "chapter": 39,
+    "sequence": 1980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af98d67c646d4a95"
+  },
+  "findings": []
+}

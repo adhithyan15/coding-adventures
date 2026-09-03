@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-044-KE-FRAMES",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can put a whole sentence inside another with ke, give an opinion, report what I know, write ke, and say I do not know.",
+  "prerequisites": [
+    "GU-EXT-043-JOIN-THREE"
+  ],
+  "lessons": [
+    "GU-C33-ke",
+    "GU-C33-vichaarun-ke",
+    "GU-C33-ke-write",
+    "GU-C33-jaanun-ke",
+    "GU-C33-ke-checkpoint"
+  ]
+}

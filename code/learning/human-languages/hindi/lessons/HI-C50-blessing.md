@@ -12,7 +12,7 @@ headword: "आशीर्वाद"
 gloss: "a blessing"
 romanization: "āśīrvād"
 concept_tag: HI-NOUN-BLESSING
-prerequisites: [HI-C50-respect]
+prerequisites: [HI-C50-respect, HI-C48-perhaps, HI-C49-set-out]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C50-COURTESY-04]
 practises:
-  knowledge: [HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04]
+  knowledge: [HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C48-REPLY-04, HI-LEX-C49-LEAVE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It travels downward. An elder gives आशीर्वाद; the younger person
 Four, and this one is given rather than said.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C48-REPLY-04, HI-LEX-C49-LEAVE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āśīrvād*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āśīrvād*, then *ādar*, the blessing and the respect that asks for it]
+- [YOU RECALL: read **शायद**, then say *nikalnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04] -->

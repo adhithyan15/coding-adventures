@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:b00b17a750a3f2a9",
+  "lessonIds": [
+    "GU-C36-te",
+    "GU-C36-ame-aapne",
+    "GU-C36-te-write",
+    "GU-C36-je",
+    "GU-C36-je-te"
+  ],
+  "tex": "gujarati/book/chapters/ch40-pronouns-and-relative.tex"
+}

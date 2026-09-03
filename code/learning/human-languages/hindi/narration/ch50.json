@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f7da3692a2674b4a",
+  "sourceHash": "fnv1a64:e152e80d5ed20c52",
   "lessons": [
     {
       "id": "HI-C50-gratitude",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:113449909a7e19cd",
+      "sourceHash": "fnv1a64:74196ed8e898ffd0",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ābhār*, then *mulāqāt*, the thanks and the meeting it ends]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sac, then say abhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sac*, then say *abhī*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7e79be0590a0f90",
+      "sourceHash": "fnv1a64:dbd5b94024f71f6e",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ehsān*, then *ābhār*, the favour and the thanks for it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read बस, then say parsoṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **बस**, then say *parsoṁ*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a10c88847c99cc9",
+      "sourceHash": "fnv1a64:42f15c8102ad5ef5",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ādar*, then *ehsān*, then *ābhār*, back down the run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zarūr, then read सफ़र",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zarūr*, then read **सफ़र**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3158e4c958c42073",
+      "sourceHash": "fnv1a64:1caf9a5f67fe7a92",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *āśīrvād*, then *ādar*, the blessing and the respect that asks for it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read शायद, then say nikalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **शायद**, then say *nikalnā*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4e75245f403b5c4",
+      "sourceHash": "fnv1a64:e518fb2afa7d7f88",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *ābhār*, *ehsān*, *ādar*, *āśīrvād*, *praṇām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bilkul, then read मुलाक़ात",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bilkul*, then read **मुलाक़ात**]"
             }
           ]
         },

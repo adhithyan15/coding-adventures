@@ -12,7 +12,7 @@ headword: "चिड़िया"
 gloss: "a small bird"
 romanization: "chiṛiyā"
 concept_tag: HI-NOUN-BIRD
-prerequisites: [HI-C54-fish]
+prerequisites: [HI-C54-fish, HI-C52-sugar, HI-C53-back]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C54-ANIMAL-04]
 practises:
-  knowledge: [HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04]
+  knowledge: [HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04, HI-LEX-C52-KITCHEN-04, HI-LEX-C53-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It is worth saying plainly that 'sounds like a bird' is a guess and not evidence
 The fourth of five, and a guess that this book will not make.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04, HI-LEX-C52-KITCHEN-04, HI-LEX-C53-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chiṛiyā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chiṛiyā*, small and feminine]
+- [YOU RECALL: read **चीनी**, then say *pīṭh*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04] -->

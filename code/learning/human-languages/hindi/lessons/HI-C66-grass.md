@@ -12,7 +12,7 @@ headword: "घास"
 gloss: "grass"
 romanization: "ghās"
 concept_tag: HI-NOUN-GRASS
-prerequisites: [HI-C66-grain]
+prerequisites: [HI-C66-grain, HI-C64-little, HI-C65-trust]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C66-FIELD-04]
 practises:
-  knowledge: [HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04]
+  knowledge: [HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04, HI-LEX-C64-MEASURE-04, HI-LEX-C65-GRACE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That is still how the word behaves. Cut घास travels home on a head or a bi
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04, HI-LEX-C64-MEASURE-04, HI-LEX-C65-GRACE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ghās*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ghās*, then *bhaĩs*, and say which one is waiting for the other]
+- [YOU RECALL: read **कम**, then say *bharosā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04] -->

@@ -12,7 +12,7 @@ headword: "वेटर"
 gloss: "a waiter"
 romanization: "veṭar"
 concept_tag: HI-NOUN-WAITER
-prerequisites: [HI-C73-bill]
+prerequisites: [HI-C73-bill, HI-C71-very, HI-C72-expensive]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C73-EATING-04]
 practises:
-  knowledge: [HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-03, HI-LEX-C73-EATING-04]
+  knowledge: [HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-03, HI-LEX-C73-EATING-04, HI-LEX-C71-TODAY-03, HI-LEX-C72-COST-04]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,12 +62,13 @@ word.
 Four, and the person you ask for the fourth thing.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-03, HI-LEX-C73-EATING-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-03, HI-LEX-C73-EATING-04, HI-LEX-C71-TODAY-03, HI-LEX-C72-COST-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *veṭar*]
 - [YOU SAY: *hoṭal*, then *veṭar*, then *bil*]
 - [YOU WRITE: वेटर, with व for the English w and ट for the English t]
+- [YOU RECALL: read **बहुत**, then say *mahãgā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-04] -->

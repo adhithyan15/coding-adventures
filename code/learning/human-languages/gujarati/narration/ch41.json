@@ -1,0 +1,604 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 41,
+  "title": "Who, Where, When, How Many",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ecaf12494660b641",
+  "lessons": [
+    {
+      "id": "GU-C37-kon",
+      "sequence": 2080,
+      "title": "કોણ (koṇ) — who",
+      "headword": "કોણ",
+      "romanization": "koṇ",
+      "gloss": "who — the question this book could not ask",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:6dff3dbeb514ceec",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the chapter behind you, the describing pair. And from chapter 3, the question word you have had longest."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "je … te …, and kem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *je … te …*, and *kem*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કોણ — koṇ — who."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the front of it. કેમ, કે, કોણ (koṇ) — the same ક- every time. Gujarati builds its question words on one stem, and once you have heard three of them the rest of the family announces itself."
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter is that family. Nothing in it is a new kind of thing; each lesson is one more question the same stem can ask."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇ? — flat, as a whole question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇ?* — flat, as a whole question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "kem? and koṇ? — why, and who.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *kem?* and *koṇ?* — why, and who.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "ask who someone is.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: ask who someone is.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask who. What do કેમ, કે and કોણ (koṇ) share? (The ક- at the front.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C37-kyaan",
+      "sequence": 2090,
+      "title": "ક્યાં (kyā̃) — where",
+      "headword": "ક્યાં",
+      "romanization": "kyā̃",
+      "gloss": "where — the question that finally reaches the places chapter",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3d7cb63cae71b5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, who. Then read the word for city, from the places chapter far behind you."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "શહેર",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **શહેર**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ક્યાં — kyā̃ — where."
+            },
+            {
+              "kind": "speech",
+              "text": "The same ક-, now with the ્ય you met inside જ્યારે. The dot above is the anusvara: the vowel goes through the nose, and leaving it off makes a different word."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the question the track has most plainly been missing. It teaches શહેર, ગામ, ઘર, શાળા and રસ્તો — city, village, home, school and road — and until this lesson there was no way to ask where any of them was."
+            },
+            {
+              "kind": "speech",
+              "text": "Read that row aloud before you go on. Those five words were written more than a hundred lessons ago and most of them have not been asked for since; reading them cold, here, is the point of putting them in this lesson rather than a shorter example."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyā̃? with the nasal audible.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyā̃?* with the nasal audible.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "ask where a place you can name is.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: ask where a place you can name is.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "koṇ? and kyā̃? — a person, a place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *koṇ?* and *kyā̃?* — a person, a place.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask where the school is. What does the mark above ક્યાં (kyā̃) do? (Sends the vowel through the nose.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C37-kyaan-write",
+      "sequence": 2100,
+      "title": "ક્યાં (kyā̃) reaches the page",
+      "headword": "ક્યાં",
+      "romanization": "kyā̃",
+      "gloss": "where, on the page — a conjunct and a dot, both already taught",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f86ded49bacc7607",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — four parts, none of them new"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — four parts, none of them new until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One chapter back you wrote તે. Write it once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — four parts, none of them new",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover ક્યાં (kyā̃) and take it apart in order:"
+            },
+            {
+              "kind": "speech",
+              "text": "ક, the ્ that binds it to, ય, then the ા stroke, and the ં dot above."
+            },
+            {
+              "kind": "speech",
+              "text": "Five signs, every one taught before chapter 30. This is the last word this run of chapters puts into the hand, and like every other one it spends nothing new."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ક્યાં (kyā̃) once with the model in view. Check the dot is present — without it the word is not this word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ક્યાં (kyā̃) from memory and check the dot. How many of its signs were new today? (None.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C37-kyaare",
+      "sequence": 2110,
+      "title": "ક્યારે (kyāre) — when",
+      "headword": "ક્યારે",
+      "romanization": "kyāre",
+      "gloss": "when — the question beside the જ્યારે that answers it",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ebc92becb7639b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back you wrote where. Two chapters back, the word that places one event against another."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ક્યાં (kyā̃), and jyāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ક્યાં**, and *jyāre*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put them side by side. This is the neatest pattern in the chapter:"
+            },
+            {
+              "kind": "speech",
+              "text": "ક્યારે (kyāre) — when?, જ્યારે — when …"
+            },
+            {
+              "kind": "speech",
+              "text": "One letter apart. The ક- asks; the જ- answers. You learned the answer two chapters ago without knowing it was half of a pair, and the question costs you almost nothing now."
+            },
+            {
+              "kind": "speech",
+              "text": "That pairing runs through the whole language — ક- for asking, જ- for the clause that answers, ત- for the thing pointed at. જે … તે … was the same system seen from the other side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "kyāre? and jyāre — question, then answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *kyāre?* and *jyāre* — question, then answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "ask kyāre?, then answer with a jyāre clause.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: ask *kyāre?*, then answer with a *jyāre* clause.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three fronts in a row — ka-, ja-, ta-.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three fronts in a row — *ka-*, *ja-*, *ta-*.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask when, then answer with a jyāre clause. What single letter separates the two words? (The first — ક asks, જ answers.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C37-ketla",
+      "sequence": 2120,
+      "title": "કેટલા (keṭlā) — how many",
+      "headword": "કેટલા",
+      "romanization": "keṭlā",
+      "gloss": "how many, how much — the last of the question family",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63c1d9c88bb0e4cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The three questions this chapter has given you so far. Say them in order."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "koṇ, kyā̃, kyāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *koṇ*, *kyā̃*, *kyāre*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કેટલા — keṭlā — how many, how much."
+            },
+            {
+              "kind": "speech",
+              "text": "The same ક- one last time, now asking about quantity. This is the question the market chapter needed and never had: the track teaches બજાર, દુકાન and પૈસા — market, shop and money — and could not ask the price of anything."
+            },
+            {
+              "kind": "speech",
+              "text": "Four questions, one stem:"
+            },
+            {
+              "kind": "speech",
+              "text": "કોણ (koṇ) who, ક્યાં (kyā̃) where, ક્યારે (kyāre) when, કેટલા (keṭlā) how many."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keṭlā? — flat, as a whole question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keṭlā?* — flat, as a whole question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "the four questions in a row, one breath each.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: the four questions in a row, one breath each.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "ask how many of something you can name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: ask how many of something you can name.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask all four questions of this chapter. What do they share, and where did you first meet that shared piece? (The ક-; in કેમ, in chapter 3.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

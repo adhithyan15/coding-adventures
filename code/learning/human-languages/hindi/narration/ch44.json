@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Sons, Daughters, and Everyone Else",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cf51f072e99f72ba",
+  "sourceHash": "fnv1a64:9652717dbad8c05a",
   "lessons": [
     {
       "id": "HI-C44-son",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c25440f01fc320d3",
+      "sourceHash": "fnv1a64:fce0b6a46f784b87",
       "notice": null,
       "blocks": [
         {
@@ -102,6 +102,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *likhnā*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ānā*]"
             }
           ]
         },
@@ -137,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cf2dff5347e4fa1",
+      "sourceHash": "fnv1a64:ce638728a2a6191b",
       "notice": null,
       "blocks": [
         {
@@ -220,6 +229,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *beṭā*, and hear only the last vowel move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read बैठना",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **बैठना**]"
             }
           ]
         },
@@ -255,7 +273,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b1acdd4352bc4e8",
+      "sourceHash": "fnv1a64:d92ec3ff5ad42964",
       "notice": null,
       "blocks": [
         {
@@ -338,6 +356,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *beṭī*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say khaṛā honā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *khaṛā honā*]"
             }
           ]
         },
@@ -373,7 +400,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dda555ce97bfb418",
+      "sourceHash": "fnv1a64:357ece5545e0251c",
       "notice": null,
       "blocks": [
         {
@@ -456,6 +483,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *parivār*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read देना",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **देना**]"
             }
           ]
         },

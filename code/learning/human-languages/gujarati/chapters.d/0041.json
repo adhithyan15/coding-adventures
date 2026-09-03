@@ -1,0 +1,22 @@
+{
+  "chapter": 41,
+  "title": "Who, Where, When, How Many",
+  "label": "ch:gu-question-words",
+  "canDo": "I can ask who, where, when and how many, and hear that every one of them is built on the same sound.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "GU-C37-ketla",
+    "kind": "task",
+    "summary": "The question family, and the pattern under it. Every Gujarati question word opens with ka-; the clause that answers opens with ja-; the thing pointed at opens with ta-. kyaare and jyaare differ by exactly one letter, so the answer taught two chapters ago turns out to have been half of a pair. kyaan finally lets the track ask where its own city, village, home, school and road are, and ketla lets it ask the price in a market it has taught since chapter 24.",
+    "assesses": [
+      "GU-Q-KON-01",
+      "GU-Q-KYAAN-01",
+      "GU-SCRIPT-KYAAN-01",
+      "GU-Q-KYAARE-01",
+      "GU-Q-KETLA-01"
+    ],
+    "note": "Realises QUESTION-WHERE, which SPINE-ASK-LOCATION has omitted since the track began. GU-A1-Q-06 (kevi rite, how) is deliberately left uncovered: one new item per lesson leaves no fifth slot for it, and it needs no new glyph, so it is a one-lesson job for the next tranche rather than a script problem."
+  }
+}

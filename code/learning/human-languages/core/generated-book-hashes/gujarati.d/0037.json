@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:58f036b20b4d7eb1",
+  "lessonIds": [
+    "GU-C33-ke",
+    "GU-C33-vichaarun-ke",
+    "GU-C33-ke-write",
+    "GU-C33-jaanun-ke",
+    "GU-C33-ke-checkpoint"
+  ],
+  "tex": "gujarati/book/chapters/ch37-that-clause.tex"
+}

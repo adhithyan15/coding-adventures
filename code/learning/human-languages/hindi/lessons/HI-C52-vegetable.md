@@ -12,7 +12,7 @@ headword: "सब्ज़ी"
 gloss: "a vegetable, vegetables"
 romanization: "sabzī"
 concept_tag: HI-NOUN-VEGETABLE
-prerequisites: [HI-C52-sugar]
+prerequisites: [HI-C52-sugar, HI-C50-salutation, HI-C51-sweet]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C52-KITCHEN-05]
 practises:
-  knowledge: [HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05]
+  knowledge: [HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05, HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ You have met this suffix already without being told: ख़ुशी (*khushī*)
 The fifth of five. The kitchen is stocked.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05, HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sabzī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sabzī*, then *dāl*, then *chāval* — say the shelf in order]
+- [YOU RECALL: say *praṇām*, then say *miṭhāī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05] -->

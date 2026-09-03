@@ -12,7 +12,7 @@ headword: "प्रवेश"
 gloss: "entrance"
 romanization: "pravesh"
 concept_tag: HI-NOUN-ENTRANCE
-prerequisites: [HI-C74-closed]
+prerequisites: [HI-C74-closed, HI-C72-price, HI-C73-bill]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C74-SIGNS-03]
 practises:
-  knowledge: [HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03]
+  knowledge: [HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03, HI-LEX-C72-COST-03, HI-LEX-C73-EATING-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -63,12 +63,13 @@ The opening प्र stacks प on र with the vowel-killer, as क्र did 
 Three: खुला, बंद, प्रवेश. Two states of a door and one of its two labels.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-02, HI-LEX-C74-SIGNS-03, HI-LEX-C72-COST-03, HI-LEX-C73-EATING-03] -->
 
 [PAUSE 1s]
 - [YOU READ: प्रवेश, and find the stacked प्र]
 - [YOU SAY: *pravesh*]
 - [YOU SAY: *pravesh band hai*]
+- [YOU RECALL: say *dām*, then read **बिल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-03] -->

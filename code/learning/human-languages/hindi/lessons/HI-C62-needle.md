@@ -12,7 +12,7 @@ headword: "सूई"
 gloss: "a needle"
 romanization: "sūī"
 concept_tag: HI-NOUN-NEEDLE
-prerequisites: [HI-C62-rope]
+prerequisites: [HI-C62-rope, HI-C60-snake, HI-C61-spoon]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C62-HANDS-02]
 practises:
-  knowledge: [HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02]
+  knowledge: [HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C60-YARD-02, HI-LEX-C61-FIRE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The same root gives सूचना, the word on every notice board and news bul
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C60-YARD-02, HI-LEX-C61-FIRE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūī*, then *kapṛā*, and say which one goes through the other]
+- [YOU RECALL: read **साँप**, then say *chammach*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02] -->

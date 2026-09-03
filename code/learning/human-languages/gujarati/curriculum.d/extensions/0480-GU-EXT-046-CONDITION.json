@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-046-CONDITION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can open a condition with jo, close it with to, write jo and tell it from the same signs inside a longer word, and time one event against another with jyaare.",
+  "prerequisites": [
+    "GU-EXT-045-REASONS"
+  ],
+  "lessons": [
+    "GU-C35-jo",
+    "GU-C35-jo-to",
+    "GU-C35-jo-write",
+    "GU-C35-jyaare",
+    "GU-C35-condition-checkpoint"
+  ]
+}

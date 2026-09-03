@@ -12,7 +12,7 @@ headword: "देश"
 gloss: "a country"
 romanization: "desh"
 concept_tag: HI-NOUN-COUNTRY
-prerequisites: [HI-C74-question-rise, HI-C74-na-tag, HI-A1F01-name-no-model, HI-C66-grass, HI-C66-well]
+prerequisites: [HI-C74-question-rise, HI-C74-na-tag, HI-A1F01-name-no-model, HI-C66-grass, HI-C66-well, HI-C71-kyon, HI-C72-kab]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C68-ORIGIN-01]
 practises:
-  knowledge: [HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-FORM-NAME-NO-MODEL-01, HI-LEX-C68-ORIGIN-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05]
+  knowledge: [HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-FORM-NAME-NO-MODEL-01, HI-LEX-C68-ORIGIN-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05, HI-JOIN-KYON-01, HI-JOIN-KAB-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -64,7 +64,7 @@ conversation that starts with a greeting reaches it within a minute.
 The first of five words for saying where you are from.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01, HI-JOIN-TAG-NA-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01, HI-JOIN-TAG-NA-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05, HI-JOIN-KYON-01, HI-JOIN-KAB-01] -->
 
 [PAUSE 1s]
 - [YOU RECALL: say *ghās*, then read **कुआँ** and say what it means]
@@ -72,6 +72,7 @@ The first of five words for saying where you are from.
 - [YOU SAY: *desh*]
 - [YOU SAY: *yah ek desh hai nā?* — last chapter's tag, on your new word]
 - [YOU READ: देश, then say what it means]
+- [YOU RECALL: say *kyoṁ*, then read **कब**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01] -->

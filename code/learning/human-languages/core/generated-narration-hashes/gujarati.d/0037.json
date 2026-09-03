@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:cb2f64ebf28b271d",
+  "lessonIds": [
+    "GU-C33-ke",
+    "GU-C33-vichaarun-ke",
+    "GU-C33-ke-write",
+    "GU-C33-jaanun-ke",
+    "GU-C33-ke-checkpoint"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "gujarati/narration/ch37.txt",
+  "json": "gujarati/narration/ch37.json",
+  "textHash": "fnv1a64:6a12f3252921f3c1",
+  "jsonHash": "fnv1a64:0093fee4f6c56a4f",
+  "findings": []
+}

@@ -12,7 +12,7 @@ headword: "मछली"
 gloss: "a fish"
 romanization: "machhlī"
 concept_tag: HI-NOUN-FISH
-prerequisites: [HI-C54-horse]
+prerequisites: [HI-C54-horse, HI-C52-oil, HI-C53-forehead]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C54-ANIMAL-03]
 practises:
-  knowledge: [HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03]
+  knowledge: [HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C52-KITCHEN-03, HI-LEX-C53-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The *-ī* on the end is the same feminine ending you have met on कुर्स
 The third of five, and another cluster that gave way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C52-KITCHEN-03, HI-LEX-C53-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *machhlī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *machhlī*, and remember it is feminine]
+- [YOU RECALL: say *tel*, then say *māthā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03] -->

@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "After the Work Is Done",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cd9e186e73b3c78c",
+  "sourceHash": "fnv1a64:900c090d24037901",
   "lessons": [
     {
       "id": "HI-C70-game",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f8a081dbda17263",
+      "sourceHash": "fnv1a64:937c9ef89ebf24f7",
       "notice": null,
       "blocks": [
         {
@@ -119,6 +119,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONTRAST: *khel* said with the puff, and the same shape said without it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say desh, then read गाड़ी",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *desh*, then read **गाड़ी**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13d3606b20217cf9",
+      "sourceHash": "fnv1a64:288c34c62aad5cc1",
       "notice": null,
       "blocks": [
         {
@@ -254,6 +263,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: खेल, then add ना to the end of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read भारत, then say rel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **भारत**, then say *rel*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fa9336e2278a1ed",
+      "sourceHash": "fnv1a64:91dd09a01f9b98f6",
       "notice": null,
       "blocks": [
         {
@@ -380,6 +398,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *maiṁ krikeṭ kheltā hūṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shahar, then read स्टेशन",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shahar*, then read **स्टेशन**]"
             }
           ]
         },
@@ -415,7 +442,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5041a8a2e393bfca",
+      "sourceHash": "fnv1a64:25897e959c391e04",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -515,6 +542,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: गाना, then खेलना under it, and look at the ending they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read भाषा, then say ṭikaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **भाषा**, then say *ṭikaṭ*]"
             }
           ]
         },
@@ -550,7 +586,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b5e2bb2b735df57",
+      "sourceHash": "fnv1a64:de77f966c819ca39",
       "notice": null,
       "blocks": [
         {
@@ -650,6 +686,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say angrezī, then read जाना",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *angrezī*, then read **जाना**]"
             }
           ]
         },

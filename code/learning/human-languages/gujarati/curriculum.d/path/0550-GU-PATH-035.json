@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-035",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "GU-C36-te",
+    "GU-C36-ame-aapne",
+    "GU-C36-te-write",
+    "GU-C36-je",
+    "GU-C36-je-te"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-047-PRONOUNS"
+  ],
+  "after": []
+}

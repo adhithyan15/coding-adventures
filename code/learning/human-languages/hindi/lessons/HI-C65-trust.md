@@ -12,7 +12,7 @@ headword: "भरोसा"
 gloss: "trust"
 romanization: "bharosā"
 concept_tag: HI-NOUN-TRUST
-prerequisites: [HI-C65-permission]
+prerequisites: [HI-C65-permission, HI-C63-fever, HI-C64-little]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C65-GRACE-04]
 practises:
-  knowledge: [HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04]
+  knowledge: [HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04, HI-LEX-C63-STATE-04, HI-LEX-C64-MEASURE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That picture runs through the way the word is said, too: a speaker puts भर�
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04, HI-LEX-C63-STATE-04, HI-LEX-C64-MEASURE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bharosā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bharosā*, then *dost*, and say who takes the weight]
+- [YOU RECALL: read **बुख़ार**, then say *kam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04] -->

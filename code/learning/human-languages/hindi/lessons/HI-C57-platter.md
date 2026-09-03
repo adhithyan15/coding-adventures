@@ -12,7 +12,7 @@ headword: "थाली"
 gloss: "a metal platter"
 romanization: "thālī"
 concept_tag: HI-NOUN-PLATTER
-prerequisites: [HI-C57-feast]
+prerequisites: [HI-C57-feast, HI-C55-star, HI-C56-market]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C57-GIFT-03]
 practises:
-  knowledge: [HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03]
+  knowledge: [HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C55-SKY-03, HI-LEX-C56-ROAD-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ A थाली is not a plate in the English sense but the round metal tray a wh
 The third of five, and the thing the दावत arrives on.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C55-SKY-03, HI-LEX-C56-ROAD-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *thālī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *thālī*, and on it the *dāl* and the *chāval*]
+- [YOU RECALL: say *tārā*, then read **बाज़ार**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03] -->
