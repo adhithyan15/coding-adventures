@@ -15,3 +15,6 @@ coding_adventures_sha256 = { path = "../sha256" }
 generic-job-protocol = { path = "../generic-job-protocol" }
 generic-job-runtime = { path = "../generic-job-runtime" }
 serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+chief-of-staff-skill-parser = { path = "../chief-of-staff-skill-parser" }

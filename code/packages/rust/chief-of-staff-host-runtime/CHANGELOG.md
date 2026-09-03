@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add `tests/skill_to_surface.rs`, an end-to-end test running a SKILL.md an
+  author could write through the signed manifest contract into a tool that
+  actually executes. Every link had unit tests proving its own half worked;
+  none proved the chain worked, and this repo has already produced three
+  boundaries sitting on paths production never takes.
+
 - Enforce D18S S-I7 in `HostProfileRuntime::check_registration`: a tool whose
   schema names another agent cannot be registered into an agent host. New
   `HostRuntimeError::ToolNamesAnotherAgent` names the tool and the offending
