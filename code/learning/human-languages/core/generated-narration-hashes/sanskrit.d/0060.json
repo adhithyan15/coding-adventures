@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:743380db5aa6fbdc",
+  "lessonIds": [
+    "SA-C60-danda"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch60.txt",
+  "json": "sanskrit/narration/ch60.json",
+  "textHash": "fnv1a64:6a8504b2dc821baa",
+  "jsonHash": "fnv1a64:75279eecd58b34eb",
+  "findings": []
+}

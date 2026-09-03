@@ -1,0 +1,164 @@
+Sanskrit, chapter 52: Two Things Joined.
+5 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 5.
+च (ca) — and.
+
+Warm-up.
+[pause 2 seconds]
+Two words back: what does mātāmahī mean, and who is a mātulaḥ? You can now name a great many things one at a time. You cannot yet name two.
+
+You'll want to know: च.
+च (ca) — "and".
+One syllable, and until this lesson the track had no way to put two things in one sentence. Everything you have learnt to name — a house, a river, a mother, a moon — you have named alone.
+च (ca) does not stand between the two things. It stands after the second one.
+अन्नं पानीयं च — annaṁ pānīyaṁ ca — food and water.
+English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Read the phrase again and notice that nothing sits between the two nouns at all: they are simply placed side by side, and च (ca) at the back is what tells you they were a pair.
+च can never begin a sentence. A word that must lean on the word before it is called an enclitic, and this is Sanskrit's commonest one.
+
+What you've built.
+Two things in one sentence, for the first time.
+
+Guided Practice.
+[pause 1 second]
+[your turn — recall: say mātulaḥ, then read मातामही and say what it means]
+[pause 8 seconds for the answer]
+[your turn — hear: annaṁ pānīyaṁ ca, said once slowly and once at speed]
+[pause 8 seconds for the answer]
+[your turn — say: annaṁ pānīyaṁ ca]
+[pause 8 seconds for the answer]
+[your turn — read: च (ca), and say where in the phrase it stands]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does च (ca) mean, and where does it stand? ("And", and after the second thing.) Say "food and water" once more.
+
+
+Lesson 2 of 5.
+वा (vā) — or.
+
+Warm-up.
+[pause 2 seconds]
+Say "food and water", and then say where च (ca) stood in it. Then say mātulaḥ, from two chapters back, and who it names.
+
+You'll want to know: वा.
+वा (vā) — "or".
+Everything you have just learnt about च is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence.
+पानीयं क्षीरं वा — pānīyaṁ kṣīraṁ vā — water or milk.
+So the two words share one slot, and swapping them swaps the meaning of the whole phrase without moving anything else:
+पानीयं क्षीरं च (ca) — water and milk पानीयं क्षीरं वा (vā) — water or milk.
+That is worth pausing on. In English and and or are two different words in the same middle position. In Sanskrit they are two different words in the same final position, and the sentence around them does not shift at all.
+
+What you've built.
+Both halves of the joining pair: च (ca) for both, वा (vā) for either.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: pānīyaṁ kṣīraṁ vā]
+[pause 8 seconds for the answer]
+[your turn — say: the same two nouns with च (ca) instead, and say what changed]
+[pause 8 seconds for the answer]
+[your turn — read: पानीयं क्षीरं वा (vā), then say what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of च (ca) and वा (vā) means "or"? Say "water or milk".
+
+
+Lesson 3 of 5.
+किन्तु (kintu) — but.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say "water or milk". Then say what किम् means on its own.
+
+You'll want to know: किन्तु.
+किन्तु (kintu) — "but".
+Look at it before you use it. It is किम् — the question word you have held since your first questions — welded to the small particle तु, "however". What-however. Sanskrit built its "but" out of a question and a shrug.
+And here is the thing that matters for using it: किन्तु (kintu) is not an enclitic. Unlike च (ca) and वा (vā) it does not lean backwards. It stands at the front of the clause it contradicts.
+बालः गच्छति किन्तु गुरुः न गच्छति bālaḥ gacchati kintu guruḥ na gacchati the boy goes, but the teacher does not go.
+Three joining words, two different habits. Say the rule to yourself once: च (ca) and वा (vā) go last, किन्तु (kintu) goes first.
+
+What you've built.
+Three joins: add, offer, contradict.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: bālaḥ gacchati kintu guruḥ na gacchati]
+[pause 8 seconds for the answer]
+[your turn — read: किन्तु (kintu), and find the किम् inside it]
+[pause 8 seconds for the answer]
+[your turn — contrast: वा (vā) at the end of its phrase, किन्तु (kintu) at the front of its clause]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does किन्तु (kintu) mean, and where does it stand? ("But", and first.) Say the boy-and-teacher sentence once more.
+
+
+Lesson 4 of 5.
+न … न (na … na) — neither … nor.
+
+Warm-up.
+[pause 2 seconds]
+Where does किन्तु (kintu) stand in its clause? And what does न mean on its own?
+
+Grammar Lens: the fourth join needs no new word.
+You have had न since the very first chapter. Said once it denies one thing. Said twice, once before each item, it denies both.
+न अन्नं न पानीयम् na annaṁ na pānīyam neither food nor water.
+There is no new vocabulary here at all. The join is made out of repetition, which is why Sanskrit never needed a word like English neither.
+Set the four joins of this chapter side by side and the pattern in their positions is the whole lesson:
+[a table of 4 rows, read aloud]
+join: च (ca). meaning: and. where it stands: after the second item.
+join: वा (vā). meaning: or. where it stands: after the second item.
+join: किन्तु (kintu). meaning: but. where it stands: first in its clause.
+join: न … न (na … na). meaning: neither … nor. where it stands: before each item.
+Three positions, four joins. Nothing else about the sentence moves.
+
+What you've built.
+Every basic join: both, either, contrary, and neither.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: na annaṁ na pānīyam]
+[pause 8 seconds for the answer]
+[your turn — say: bālaḥ na khādati — the boy does not eat — then double the न to deny both nouns]
+[pause 8 seconds for the answer]
+[your turn — read: न अन्नं न पानीयम्, then say what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does Sanskrit say "neither … nor"? (न before each item.) Say "neither food nor water".
+
+
+Lesson 5 of 5.
+च (ca), वा (vā), किन्तु (kintu), न … न (na … na) — the four joins.
+
+Warm-up.
+[pause 2 seconds]
+Name the two joins that stand after the second item.
+
+What you've built.
+Before this chapter every Sanskrit sentence you could build named exactly one thing. Four small words later you can name two, offer a choice between them, set one against the other, and refuse both.
+None of the four changed anything else in the sentence. That is the point worth carrying: Sanskrit joins by placing a particle, not by rearranging what is already there. When you meet the longer joins later — the ones that link whole clauses rather than nouns — they will behave the same way.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: annaṁ pānīyaṁ ca, then annaṁ pānīyaṁ vā, and say what changed]
+[pause 8 seconds for the answer]
+[your turn — say: pānīyaṁ kṣīraṁ vā]
+[pause 8 seconds for the answer]
+[your turn — say: na annaṁ na pānīyam]
+[pause 8 seconds for the answer]
+[your turn — recall: which of the four stands FIRST in its clause]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say all four joins in order, and for each one say where it stands.

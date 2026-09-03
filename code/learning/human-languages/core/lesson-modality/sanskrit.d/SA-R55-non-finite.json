@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R55-non-finite",
+    "language": "sanskrit",
+    "chapter": 55,
+    "sequence": 2680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:757c0dfbd4c919e1"
+  },
+  "findings": []
+}

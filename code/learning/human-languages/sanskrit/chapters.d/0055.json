@@ -1,0 +1,18 @@
+{
+  "chapter": 55,
+  "title": "Having Gone, and In Order to Go",
+  "label": "ch:sa-having-gone",
+  "canDo": "I can put two actions in one Sanskrit clause — one finished before the other with -त्वा, or one as the point of the other with -तुम्.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "SA-R55-non-finite",
+    "kind": "production",
+    "summary": "Complete SA-R55-non-finite and say both endings with one sentence apiece.",
+    "assesses": [
+      "SA-GRAMMAR-GERUND-TVA-01",
+      "SA-GRAMMAR-INFINITIVE-TUM-01"
+    ]
+  }
+}

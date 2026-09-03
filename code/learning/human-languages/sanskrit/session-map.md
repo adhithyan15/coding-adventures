@@ -100,6 +100,25 @@ and the Sanskrit-specific marks (visarga, conjuncts) — that word needs.
 | 46 | sahayyam-karoti | साहाय्यं करोति | noun + **करोति**; **सहाय** = *saha* "with" + √**इ** "go" — as Latin *comes* is *com-* + *īre*; Bengali still uses the word whole |
 | 47 | snihyati | स्निह्यति · प्रियम् | **स्निह्** "sticky, oily" before "fond"; **प्रिय** ← \**priHos* → *friend*, *free*, *Friday*, and → Hindi *piyā*; chapter payoff |
 
+## Chapters 52-61 — the joining column, the past, and the letter ऋ
+
+| Chapter | Lessons | Job |
+|---|---|---|
+| 52 | C52-ca, C52-va, C52-kintu, C52-na-na, R52-joins | four joins, three positions: enclitic, enclitic, clause-initial, doubled |
+| 53 | C53-yah, C53-sah, C53-yah-sah, C53-yatra-tatra, R53-correlative | the **य-** leg the deixis system never had, and the two-clause hinge it makes |
+| 54 | C54-iti, C54-iti-clause, R54-iti | the quotative, and the clause it turns into an object |
+| 55 | C55-gatva, C55-gantum, R55-non-finite | **-त्वा** orders two actions; **-तुम्** names one; Latin's supine is the same suffix |
+| 56 | C56-agacchat, C56-apathat, R56-past | the augment and the shortened ending, and Greek's **e-** doing the same job |
+| 57 | C57-shaknoti, C57-icchati | one socket, two verbs plugged into it |
+| 58 | C58-mahyam, C58-rocate, R58-likes | the dative experiencer; **रुच्** "to shine" is Latin *lūx* |
+| 59 | C59-desha, C59-bharatam, C59-bharatiyah, C59-bharatat | an answer for the **कुतः** the track had been asking for forty chapters |
+| 60 | C60-danda | one stroke, and everything Sanskrit does with words instead of marks |
+| 61 | C61-rtu, S225-letter-vocalic-r | vocabulary first, then the shape — the route HL-C217 requires |
+
+Every chapter opens by retrieving the preceding chapter's last items by name.
+The tranche's own thin-atom debt is **zero**: whole-track atoms revisited fewer
+than twice fell 89 -> 80, with nine rescued and none added.
+
 ## Next
 
 Finish Chapter 6 with numbers 6–10, then introduce the eight cases one at a time.

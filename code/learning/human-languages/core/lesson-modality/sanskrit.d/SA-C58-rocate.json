@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C58-rocate",
+    "language": "sanskrit",
+    "chapter": 58,
+    "sequence": 2750,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c0cce52bd589b964"
+  },
+  "findings": []
+}

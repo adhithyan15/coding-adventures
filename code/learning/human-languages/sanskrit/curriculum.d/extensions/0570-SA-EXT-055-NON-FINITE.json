@@ -1,0 +1,13 @@
+{
+  "id": "SA-EXT-055-NON-FINITE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the -tva gerund and the -tum infinitive to put two actions in one clause.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C55-gatva",
+    "SA-C55-gantum",
+    "SA-R55-non-finite"
+  ]
+}

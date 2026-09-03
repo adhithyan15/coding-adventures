@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:88d8e544316777a2",
+  "lessonIds": [
+    "SA-C58-mahyam",
+    "SA-C58-rocate",
+    "SA-R58-likes"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "sanskrit/narration/ch58.txt",
+  "json": "sanskrit/narration/ch58.json",
+  "textHash": "fnv1a64:2808b32593c4de51",
+  "jsonHash": "fnv1a64:ce8fbc75ab00ac65",
+  "findings": []
+}

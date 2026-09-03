@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-52-JOINS",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "SA-C52-ca",
+    "SA-C52-va",
+    "SA-C52-kintu",
+    "SA-C52-na-na",
+    "SA-R52-joins"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-052-JOINS"
+  ],
+  "after": []
+}

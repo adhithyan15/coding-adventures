@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-052-JOINS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can join two nouns with ca, offer a choice with va, contradict with kintu, and deny both with a doubled na.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C52-ca",
+    "SA-C52-va",
+    "SA-C52-kintu",
+    "SA-C52-na-na",
+    "SA-R52-joins"
+  ]
+}

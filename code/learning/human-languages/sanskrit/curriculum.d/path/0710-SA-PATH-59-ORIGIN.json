@@ -1,0 +1,15 @@
+{
+  "id": "SA-PATH-59-ORIGIN",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "SA-C59-desha",
+    "SA-C59-bharatam",
+    "SA-C59-bharatiyah",
+    "SA-C59-bharatat"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-059-ORIGIN"
+  ],
+  "after": []
+}

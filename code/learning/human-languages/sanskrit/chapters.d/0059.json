@@ -1,0 +1,20 @@
+{
+  "chapter": 59,
+  "title": "Where You Come From",
+  "label": "ch:sa-where-you-come-from",
+  "canDo": "I can name a country, name India, say that somebody is Indian, and answer कुतः with the ablative.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-C59-bharatat",
+    "kind": "production",
+    "summary": "Complete SA-C59-bharatat and answer कुतः out loud, then say that he comes from India.",
+    "assesses": [
+      "SA-LEX-C59-ORIGIN-01",
+      "SA-LEX-C59-ORIGIN-02",
+      "SA-LEX-C59-ORIGIN-03",
+      "SA-GRAMMAR-ABLATIVE-ORIGIN-01"
+    ]
+  }
+}

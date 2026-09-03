@@ -1,0 +1,14 @@
+{
+  "id": "SA-EXT-059-ORIGIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a country, name India, call somebody Indian, and say where they come from.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C59-desha",
+    "SA-C59-bharatam",
+    "SA-C59-bharatiyah",
+    "SA-C59-bharatat"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C57-icchati",
+    "language": "sanskrit",
+    "chapter": 57,
+    "sequence": 2730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03a5d4a6aee82c5c"
+  },
+  "findings": []
+}

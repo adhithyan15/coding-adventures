@@ -1,0 +1,18 @@
+{
+  "chapter": 58,
+  "title": "What Pleases Me",
+  "label": "ch:sa-what-pleases-me",
+  "canDo": "I can say what I like in Sanskrit, putting myself in the dative and the thing I like in the nominative as the subject.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "SA-R58-likes",
+    "kind": "production",
+    "summary": "Complete SA-R58-likes and say all three frames, naming the subject of each.",
+    "assesses": [
+      "SA-PRON-DATIVE-ME-01",
+      "SA-FRAME-ROCATE-01"
+    ]
+  }
+}

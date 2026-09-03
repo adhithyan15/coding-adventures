@@ -1,0 +1,455 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 55,
+  "title": "Having Gone, and In Order to Go",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:886dba400e7d53c1",
+  "lessons": [
+    {
+      "id": "SA-C55-gatva",
+      "sequence": 2660,
+      "title": "गत्वा (gatvā) — having gone",
+      "headword": "गत्वा",
+      "romanization": "gatvā",
+      "gloss": "having gone — the -त्वा form, which finishes one action before the next begins",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1dd5e7f5fb45d84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the teacher-and-boy sentence from the last chapter, and say where the inner clause stops. Then say gacchati and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one action finished, the next beginning",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every verb you have used so far has been the main verb of its sentence. Sanskrit has a form that is deliberately not the main verb: it names an action that finished before the main one started, and it never changes its ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Add -त्वा to the root and you have it."
+            },
+            {
+              "kind": "speech",
+              "text": "गम् becomes गत्वा (gatvā) — having gone पठ् becomes पठित्वा — having read."
+            },
+            {
+              "kind": "speech",
+              "text": "Now chain two actions in one clause, with one subject:"
+            },
+            {
+              "kind": "speech",
+              "text": "बालः गृहं गत्वा पठति bālaḥ gṛhaṁ gatvā paṭhati the boy, having gone home, reads."
+            },
+            {
+              "kind": "speech",
+              "text": "Three things make this form worth its own lesson:"
+            },
+            {
+              "kind": "speech",
+              "text": "It carries no person, no number and no tense. gatvā is the same word whoever went and whenever. The main verb at the end of the sentence carries all of that for both actions."
+            },
+            {
+              "kind": "speech",
+              "text": "Both actions belong to the same subject. The boy goes and the boy reads. If the subjects differed, this form could not be used."
+            },
+            {
+              "kind": "speech",
+              "text": "It orders the actions. gatvā paṭhati can only mean going first and reading second. English needs a word — after, then — to fix the order. Sanskrit fixes it with the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "This form has no English counterpart at all. Having gone is the nearest, and it is stiff in a way गत्वा (gatvā) is not: in Sanskrit this is ordinary, everyday, and extremely common."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two actions in one clause, in the order they happened."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gatvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gatvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ gṛhaṁ gatvā paṭhati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ gṛhaṁ gatvā paṭhati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭhitvā, and say which action it puts first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭhitvā*, and say which action it puts first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "गत्वा (gatvā), and name the ending that makes it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गत्वा**, and name the ending that makes it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the -त्वा ending do to a root? (Makes an action that finished before the main one.) Say the boy-goes-home-and-reads sentence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C55-gantum",
+      "sequence": 2670,
+      "title": "गन्तुम् (gantum) — to go",
+      "headword": "गन्तुम्",
+      "romanization": "gantum",
+      "gloss": "to go — the -तुम् infinitive, and the Latin supine that is the same ending",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2872f3254628374a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say गत्वा and what its ending does. Which of the two actions in gṛhaṁ gatvā paṭhati happened first?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the form that names the action itself",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-त्वा put an action before another one. -तुम् does something different: it names the action without placing it in time at all."
+            },
+            {
+              "kind": "speech",
+              "text": "गम् becomes गन्तुम् (gantum) — to go पठ् becomes पठितुम् — to read."
+            },
+            {
+              "kind": "speech",
+              "text": "Used on its own it says why:"
+            },
+            {
+              "kind": "speech",
+              "text": "बालः पठितुम् गच्छति bālaḥ paṭhitum gacchati the boy goes in order to read."
+            },
+            {
+              "kind": "speech",
+              "text": "Set the pair side by side and the division of labour is clean:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "ending",
+                "what it does"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "form: गत्वा (gatvā). ending: -त्वा. what it does: an action finished before the main one.",
+                "form: गन्तुम् (gantum). ending: -तुम्. what it does: the action named, with no time of its own."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part that is worth stopping for. Latin has a form called the supine, used after verbs of motion to say why you went — and it ends in -tum: īre dormītum, \"to go to sleep\"; spectātum venīre, \"to come to watch\". That is the same ending, in the same job, inherited from the same ancestor. Not a borrowing and not a coincidence: Sanskrit -तुम् and Latin -tum are one suffix, split apart before either language existed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both non-finite forms, and a reason to go somewhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gantum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gantum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ paṭhitum gacchati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ paṭhitum gacchati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "paṭhitvā gacchati and paṭhitum gacchati, and say what each one means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *paṭhitvā gacchati* and *paṭhitum gacchati*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "गन्तुम् (gantum), and name the Latin ending it matches",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गन्तुम्**, and name the Latin ending it matches]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending names the action itself, -त्वा or -तुम्? Say \"the boy goes in order to read\"."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R55-non-finite",
+      "sequence": 2680,
+      "title": "-त्वा, -तुम् — the two endings, reviewed",
+      "headword": "-त्वा · -तुम्",
+      "romanization": "-tvā · -tum",
+      "gloss": "the two non-finite endings, reviewed side by side",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:757c0dfbd4c919e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say गत्वा (gatvā) and गन्तुम् (gantum), and say which one puts its action first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both of these endings do the same large thing: they let a sentence hold two actions with one finite verb. Everything about person, number and tense is carried by the verb at the end; the extra action rides along uninflected."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why they matter more than their size suggests. Until this chapter a Sanskrit sentence in this book had exactly one action in it, unless two clauses were pinned together with a pronoun pair or with इति. From here a single clause can carry two."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the contrast, because it is the only thing you have to choose between:"
+            },
+            {
+              "kind": "speech",
+              "text": "-त्वा — the action happened first."
+            },
+            {
+              "kind": "speech",
+              "text": "-तुम् — the action is the point of the other one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ gṛhaṁ gatvā paṭhati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ gṛhaṁ gatvā paṭhati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ paṭhitum gacchati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ paṭhitum gacchati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "say which sentence has the reading happen first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: say which sentence has the reading happen first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the Latin ending that matches -तुम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the Latin ending that matches **-तुम्**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both endings and, for each, one sentence that uses it."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

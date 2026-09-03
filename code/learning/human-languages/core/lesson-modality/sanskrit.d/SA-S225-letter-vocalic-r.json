@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S225-letter-vocalic-r",
+    "language": "sanskrit",
+    "chapter": 61,
+    "sequence": 2830,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3ada4b02e0f6aef2",
+    "detachableSegments": [
+      "Script: ऋ",
+      "Writing: ऋ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

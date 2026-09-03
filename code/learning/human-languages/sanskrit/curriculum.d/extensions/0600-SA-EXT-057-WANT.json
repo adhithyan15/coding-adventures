@@ -1,0 +1,11 @@
+{
+  "id": "SA-EXT-057-WANT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what somebody wants to do, with icchati and the -tum form.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C57-icchati"
+  ]
+}

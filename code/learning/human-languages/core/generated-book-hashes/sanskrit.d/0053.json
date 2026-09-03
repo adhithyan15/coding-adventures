@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:9ec37a5242863a84",
+  "lessonIds": [
+    "SA-C53-yah",
+    "SA-C53-sah",
+    "SA-C53-yah-sah",
+    "SA-C53-yatra-tatra",
+    "SA-R53-correlative"
+  ],
+  "tex": "sanskrit/book/chapters/ch53-which-one-that-one.tex"
+}
