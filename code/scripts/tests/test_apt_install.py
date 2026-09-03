@@ -155,6 +155,7 @@ class PruneTests(unittest.TestCase):
                 ["bash", str(SCRIPT)],
                 env={
                     "PATH": "/usr/bin:/bin",
+                    "CI": "true",  # past the workstation guard, to the real check
                     "APT_SUDO": "",
                     "APT_SOURCES_DIR": str(sources_dir),
                     "APT_SOURCES_LIST": str(sources_list),
@@ -164,6 +165,29 @@ class PruneTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 2)
             self.assertIn("no packages given", result.stderr)
+
+    def test_refuses_to_run_outside_ci(self) -> None:
+        # It removes system apt sources with `sudo rm`. On a runner that is
+        # fine -- the VM is discarded. On a developer's machine it would
+        # silently delete their VS Code, dotnet, and moby repository config,
+        # and they would find out days later when updates stopped seeing them.
+        with tempfile.TemporaryDirectory() as tmp:
+            sources_dir, sources_list = _runner_layout(Path(tmp))
+            result = subprocess.run(
+                ["bash", str(SCRIPT), "libcairo2-dev"],
+                env={
+                    "PATH": "/usr/bin:/bin",
+                    "APT_SUDO": "",
+                    "APT_SOURCES_DIR": str(sources_dir),
+                    "APT_SOURCES_LIST": str(sources_list),
+                },
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 3)
+            self.assertIn("meant for CI", result.stderr)
+            # And it changed nothing on the way out.
+            self.assertIn("microsoft-prod.list", [p.name for p in sources_dir.iterdir()])
 
     def test_survives_a_missing_sources_directory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

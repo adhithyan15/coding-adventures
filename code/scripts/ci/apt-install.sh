@@ -48,6 +48,17 @@
 
 set -euo pipefail
 
+# This prunes system package sources with `sudo rm`. On a runner that is
+# correct -- the VM is discarded after the job. On a developer's machine it
+# would silently delete their VS Code, dotnet, and moby repository config, and
+# they would find out days later when an update stopped seeing them. So it
+# refuses to run outside CI unless someone says otherwise in as many words.
+if [[ -z "${CI:-}" && -z "${APT_INSTALL_FORCE:-}" && -z "${APT_PRUNE_ONLY:-}" ]]; then
+  echo "error: this script removes system apt sources and is meant for CI." >&2
+  echo "       Set APT_INSTALL_FORCE=1 if you really mean to run it here." >&2
+  exit 3
+fi
+
 SOURCES_DIR="${APT_SOURCES_DIR:-/etc/apt/sources.list.d}"
 SOURCES_LIST="${APT_SOURCES_LIST:-/etc/apt/sources.list}"
 
@@ -74,8 +85,13 @@ if [[ -d "$SOURCES_DIR" ]]; then
     # named `microsoft*` and, under `set -e`, take the job down with it.
     shopt -s nullglob
     for path in "$SOURCES_DIR"/$pattern; do
-      # Never a directory, and never something that merely resolves into the
-      # vendor name: only the list files themselves.
+      # `-f` FOLLOWS symlinks, so this does not exclude a link pointing at
+      # a vendor name -- it only decides whether to unlink. That is still the
+      # behaviour we want, because `rm -f` unlinks the link rather than its
+      # target, so nothing outside this directory is removed either way.
+      # Stated plainly because the earlier wording claimed the opposite, and a
+      # comment that overstates what a check does invites someone to lean on a
+      # guarantee that was never there.
       if [[ -f "$path" ]]; then
         $SUDO rm -f "$path"
         pruned+=("$(basename "$path")")
