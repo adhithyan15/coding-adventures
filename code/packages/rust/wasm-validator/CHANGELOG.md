@@ -2,6 +2,43 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.93] - 2026-09-02 - `I31ref`'s missing `<: Eqref`/`<: Anyref` edges (W39 slice 2)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5.
+
+`is_assignable`'s own W37 doc comment already flagged this exact gap:
+"the real GC proposal's own hierarchy is `struct <: eq <: any` ... `I31ref`'s
+own missing `<: Anyref`/`<: Eqref` edges are a separate, PRE-EXISTING gap
+this spec's own research flagged but did not fix, since no table
+declaration in this spec's corpus cluster needs it." That gap is no longer
+merely theoretical: `i31.wast`'s own `$anyref_global_of_i31ref` module
+(`(global $c anyref (ref.i31 (i32.const 1234)))`) exercises it directly,
+and only became REACHABLE once `wasm-wast-parser`'s W39 slice 2 fix let
+`(ref.cast i31ref ...)` parse at all (that module's two globals are read
+back via exactly that instruction, a few lines further down in the same
+module) -- so a module that previously failed to PARSE (masking this gap
+entirely) now parses successfully and reaches real VALIDATION, which
+immediately rejected it: `global #0 initializer: type mismatch, expected
+Anyref, found I31ref`.
+
+Fixed with two new direct arms in `is_assignable`, matching the exact
+"list each hop directly, no transitive closure" convention every other
+chain in this function already uses (`StructRefAny`/`ArrayRefAny`'s own
+W37/W38 arms immediately above): `(I31ref, Eqref)` and `(I31ref,
+Anyref)`. Completes the `i31 <: eq <: any` hop the function's own comment
+already documented as the real spec rule but never implemented.
+
+Caught by this slice's own corpus re-verification (`cargo run --release
+--bin wasm_conformance_report`, before/after diffed programmatically), not
+assumed: without this fix, `i31.wast`'s module-level validation failure
+cascaded into three MORE directives failing with "no module registered"
+(every subsequent `invoke`/`assert_return` against that module), turning
+what should have been 4 directives moving from `NotYetSupported` to `Pass`
+into a net REGRESSION (new `Fail`/`Trap` outcomes where there were
+previously none). With this fix, `i31.wast` moves cleanly from 46 to 42
+`not_yet_supported` with zero new failures anywhere -- see
+`wasm-execution`'s own CHANGELOG for the full corpus accounting.
+
 ## [0.2.92] - 2026-09-02 - `ref.eq` (`0xD3`) type-checking arm (W39 slice 1)
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 1 of 5. New

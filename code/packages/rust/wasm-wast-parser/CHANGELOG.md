@@ -1,5 +1,70 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.107 — 2026-09-02 — `ref.test`/`ref.cast` accept concrete struct/array and abstract heap types (W39 slice 2)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 2 of 5.
+
+**`ref.test`/`ref.cast`'s own encoder, extended.** Previously accepted only
+`ValueType::ConcreteFuncRef`/`NonNullConcreteFuncRef`; everything else fell
+into a mislabeled `"abstract heap type"` rejection, even a genuinely
+CONCRETE struct/array reference (Correction 2's own finding). Now accepts:
+- `StructRef`/`NonNullStructRef`/`ArrayRef`/`NonNullArrayRef` (2a): same
+  bare-LEB128-index encoding as concrete func, no format change -- the
+  struct/array index space is already `types.len() + k`.
+- `I31ref`/`Eqref`/`StructRefAny`/`ArrayRefAny`/`Anyref`/`Funcref`/
+  `Externref`/`Exnref`/the four bottom types (2b): a single tag byte, the
+  SAME bytes `parse_ref_null_heap_type` already establishes correct for
+  `ref.null`'s own heap-type immediate, reused verbatim.
+
+**New `heap_type_expr_is_nullable` helper.** Several abstract `ValueType`
+variants collapse multiple text-format spellings into one variant each
+(`i31ref`/`(ref null i31)`/`(ref i31)` all resolve to `I31ref`, same for
+`any`/`eq`/`struct`/`func`/`extern`) -- so nullability for these can't be
+read off the resolved `ValueType` the way the existing `ConcreteFuncRef`
+vs. `NonNullConcreteFuncRef` split lets the func case do. This new helper
+reads it directly off the S-expression shape instead: three-item `(ref
+null X)` is nullable, two-item `(ref X)` is non-null, every bare atom is
+nullable (the real GC-proposal text-format convention: the `ref` suffix
+always names the nullable form). Corpus-verified need: `ref_test.wast`'s
+own `(ref.test (ref any) x)` (non-null) directly alongside `(ref.test
+anyref x)` (nullable) in the SAME function, summed together -- both must
+resolve to the correct, DIFFERENT nullability for the sum to match the
+expected result.
+
+**Two abstract-heap-type parsing gaps handled LOCALLY, inside this
+encoder, NOT in the shared `parse_value_type`:**
+1. Non-null `(ref any)`/`(ref eq)`/`(ref struct)`/`(ref func)`/`(ref
+   extern)` -- `parse_value_type`'s own 2-item `(ref X)` branch only ever
+   special-cased `i31`/`array`; these five fell through to the generic
+   `(ref $t)` branch and errored as "expected an index." Real corpus need:
+   `ref_test.wast`'s own `(ref.test (ref any) ...)` etc., used directly as
+   `ref.test`'s type immediate.
+2. `(ref null any)` -- the 3-item null branch already recognized `func`/
+   `extern`/`i31`/`eq`/`struct` (W08/W20/W37) but never grew an `any` arm.
+   Real corpus need: `ref_cast.wast`'s own `(ref.cast (ref null any) ...)`.
+
+**Both were tried in `parse_value_type` itself FIRST, and reverted** after
+corpus re-verification caught a real regression: `ref_eq.wast`'s own
+`assert_invalid` cases rely on exactly this rejection to fail modules like
+`(func (param $r (ref func)) (result i32) (ref.eq (local.get $r) ...))`
+with "type mismatch" -- `wasm-validator`'s `ref.eq` arm doesn't do real
+per-operand type checking (see that crate's own CHANGELOG), so parsing was
+the only thing rejecting those three directives at all. Widening the
+SHARED function let them parse successfully instead, silently flipping
+three corpus directives from "correctly rejected" to "wrongly accepted."
+Fixed by matching these two shapes LOCALLY inside `ref.test`/`ref.cast`'s
+own encoder before ever calling `parse_value_type`, leaving that shared
+function's own behavior for every OTHER caller (params, locals, globals,
+block types) completely untouched.
+
+**Real corpus impact**: see `wasm-execution`'s own CHANGELOG for the full,
+honest per-file before/after numbers (`i31.wast` -4, `ref_test.wast` -3,
+`ref_cast.wast` -3 `not_yet_supported`, `ref_eq.wast`/`type-subtyping.wast`
+unchanged) and why most of `ref_test.wast`/`ref_cast.wast`'s remaining
+gap is a separate, independent `any.convert_extern`/`extern.convert_any`
+dependency (W39 slice 3), not something this slice's own scope could
+close.
+
 ## 0.1.106 — 2026-09-02 — add `ref.eq` (`0xD3`) text-format encoding (W39 slice 1)
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 1 of 5.

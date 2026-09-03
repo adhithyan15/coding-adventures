@@ -700,3 +700,105 @@ make a broken slice much harder to bisect.
 5. Final aggregate check: total corpus NYS drops by exactly 265 (not 307)
    relative to the pre-W39 baseline, with zero new `Fail`/regressions
    anywhere in the 257-file corpus.
+
+## Slice 2 implementation addendum (real findings, corrections to Design §2b)
+
+Per this campaign's own standing discipline, slice 2's implementation
+re-verified the spec's own text directly against current source and the
+pinned corpus before trusting it, and found four real corrections worth
+recording here for whoever reads this spec next (slices 3/4 in
+particular depend on some of these):
+
+**1. Design §2b undersold how much non-null abstract-heap-type support
+`ref.test`/`ref.cast` themselves need — it's not just `i31ref`.** The
+Design section's own framing suggested abstract-heap-type support was
+mostly about bare atoms like `i31ref` (Correction 2's own headline case).
+Direct read of `ref_test.wast`/`ref_cast.wast` shows the corpus uses the
+FULL non-null compound form too — `(ref.test (ref any) ...)`, `(ref eq)`,
+`(ref struct)`, `(ref func)`, `(ref extern)`, and `(ref.cast (ref null
+any) ...)` — none of which `wasm-wast-parser::parse_value_type` recognized
+even after the encoder's own match was widened, because its 2-item
+non-null `(ref X)` branch only ever special-cased `i31`/`array` (and its
+3-item null branch never grew an `any` arm at all). This needed real,
+additional parser work beyond what Design §2b described.
+
+**2. That additional parser work must NOT go into the shared
+`parse_value_type` — a real regression was found and reverted proving
+it.** The natural-looking fix (widen `parse_value_type`'s own non-null
+`(ref X)` branch to recognize `any`/`eq`/`struct`/`func`/`extern`, exactly
+mirroring how it already handles the nullable `(ref null X)` form) was
+tried first. Corpus re-verification caught it live: `ref_eq.wast`'s own
+`assert_invalid` cases (`(func (param $r (ref func)) ... (ref.eq
+(local.get $r) (local.get $r)))`, expected to be REJECTED as "type
+mismatch") started parsing successfully instead of failing to parse,
+because `wasm-validator`'s `ref.eq` arm does no real per-operand type
+checking (by design, matching this crate's established looseness) — with
+nothing left to reject them, three directives silently flipped from
+correctly-rejected to wrongly-accepted. The fix that shipped instead
+handles these five compound forms LOCALLY inside `ref.test`/`ref.cast`'s
+own encoder, before ever calling the shared `parse_value_type`, leaving
+every OTHER caller of that function (params, locals, globals, block
+types) completely unaffected. **Lesson for future slices touching shared
+text-format parsing helpers**: a widening that looks locally correct for
+one instruction can still be globally wrong for a DIFFERENT existing
+corpus case that depended on the old rejection — the full 257-file
+programmatic diff is what catches this, not reasoning about the one
+instruction in isolation.
+
+**3. A previously-latent, now-real bug: `ref_matches_concrete_type`'s
+func-vs-struct/array disambiguation (`type_idx < ctx.types.len()`) is
+unsound in general, not just an accepted simplification.** The comment
+this heuristic shipped with (W33 second slice) already knew it relied on
+"struct type k is at type-section index `types.len() + k`" — but that
+formula describes ONE binary-decoder convention, not a universal
+invariant `wasm-wast-parser` actually maintains. `wasm-wast-parser` gives
+every declared type (struct included) its own dummy slot in `types` too,
+so a module declaring struct types BEFORE any function needs a fresh,
+deduplicated signature registered (exactly `ref_test.wast`'s "Concrete
+Types" module: eight struct types declared first, its three functions
+share ONE signature registered only once their bodies are processed) ends
+up with LOW struct type indices sitting well inside `[0, ctx.types.len())`
+— the OLD heuristic would misclassify every one of them as a function
+type. This was invisible before this slice because the one pre-existing
+consumer (McCarthy `pair?`) always ran against a module where funcs
+happened to be declared first. Fixed by adding a real `type_kinds` field
+(mirroring `wasm_types::WasmModule::type_kinds` exactly) threaded from
+`wasm-wast-parser` through `wasm-runtime` into `wasm-execution`'s
+`WasmExecutionContext`, consulted directly instead of guessed from
+lengths — see `wasm-execution`'s own CHANGELOG for the exact bug account.
+**Slices 3/4, and any future slice adding a new dynamic-type-test
+instruction, should read off `ctx.type_kinds` (now available) rather than
+reintroduce a length-based guess.**
+
+**4. `I31ref`'s missing `<: Eqref`/`<: Anyref` subtyping edges (already
+flagged by `wasm-validator`'s own W37 doc comment as "pre-existing,
+research flagged but did not fix, since no table declaration in this
+spec's corpus cluster needs it") turned out to be load-bearing for THIS
+slice, not deferrable.** `i31.wast`'s own `$anyref_global_of_i31ref`
+module declares `(global $c anyref (ref.i31 (i32.const 1234)))` — this
+only became reachable once `(ref.cast i31ref ...)` (this slice's own
+Correction-2-case-2 fix) let that module parse at all; once reachable, it
+immediately failed real validation with the exact gap W37 had flagged.
+Fixing `is_assignable` with the two missing direct edges was necessary
+for slice 2's OWN stated i31.wast target (Correction 1's "4 in-scope
+directives") to actually close cleanly, rather than trading four
+`NotYetSupported` outcomes for three new `Fail`s. This closes that
+pre-existing gap completely; no future slice needs to revisit it.
+
+**Net corpus effect, measured (not the aspirational "closes most of
+ref_test.wast/ref_cast.wast" this spec's own "Recommended slice
+decomposition" projected)**: `i31.wast` 46→42 NYS (-4, exactly Correction
+1's prediction), `ref_test.wast` 71→68 NYS (-3), `ref_cast.wast` 45→42 NYS
+(-3). The much smaller-than-projected `ref_test.wast`/`ref_cast.wast`
+numbers are NOT a shortfall in this slice's own struct/array/abstract-
+heap-type work — both files split into an "Abstract Types" module (the
+bulk of each file, blocked entirely because its `init` function calls
+`any.convert_extern`/`extern.convert_any`, neither wired into `wasm-wast-
+parser`'s text parser at all) and a "Concrete Types" module (unblocked,
+and fully closed by this slice). Confirms the spec's own slice-3
+dependency note in the "Recommended slice decomposition" section, just
+with a MUCH larger fraction of both files gated on it than that section's
+own phrasing ("closes the remainder... that slice 2 alone doesn't")
+implied — in practice, slice 3 is a prerequisite for the LARGE majority of
+both files, not a small remainder. See `wasm-conformance`'s own CHANGELOG
+for the exact before/after table.
