@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Parse a required `## Tool capabilities needed` section into manifest
+  `tool_capabilities`, and emit schema v4.
+- Factor the section scan into one shared reader. The tools section copied the
+  capabilities section's shape and inherited its bug; a third copy would have
+  inherited it again.
+
 - Parse a required `## Tools needed` section into manifest `allowed_tools`, and
   emit schema v3. `- none` declares an empty tool surface, matching how
   `## Capabilities needed` already works.

@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [GE-LEX-ZAEHLEN-6-10-01, GE-LEX-SIEBEN-01, GE-LEX-ACHT-01, GE-LEX-NEUN-01, GE-LEX-ZEHN-01, GE-ETYMON-GERMANIC-SIBLINGS-02]
 introduces:
-  knowledge: [GE-GRAMMAR-NATIVE-VS-LOAN-01]
+  knowledge: [GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-CULTURE-ROMAN-YEAR-BEGAN-IN-MARCH-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [GE-CULTURE-ROMAN-YEAR-BEGAN-IN-MARCH-01]
 practises:
-  knowledge: [GE-LEX-ZAEHLEN-6-10-01, GE-ETYMON-GERMANIC-SIBLINGS-02, GE-LEX-SIEBEN-01, GE-LEX-ACHT-01, GE-LEX-NEUN-01, GE-LEX-ZEHN-01, GE-GRAMMAR-NATIVE-VS-LOAN-01]
+  knowledge: [GE-LEX-ZAEHLEN-6-10-01, GE-ETYMON-GERMANIC-SIBLINGS-02, GE-LEX-SIEBEN-01, GE-LEX-ACHT-01, GE-LEX-NEUN-01, GE-LEX-ZEHN-01, GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-CULTURE-ROMAN-YEAR-BEGAN-IN-MARCH-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -52,7 +52,7 @@ does English. Month names are the second kind: they arrived with the Roman
 calendar, and both languages took them whole.
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-SIEBEN-01, GE-LEX-ZEHN-01] -->
+<!-- hl-knowledge: introduces=[GE-CULTURE-ROMAN-YEAR-BEGAN-IN-MARCH-01]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-SIEBEN-01, GE-LEX-ZEHN-01] -->
 
 The Roman year began in **March**. Count from there and the last four months of
 the year land on the Latin words for seven, eight, nine and ten — which is why
@@ -85,7 +85,7 @@ already learned will still be German.
 - [YOU SAY: which kind of word a language keeps, and which it buys]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-CULTURE-ROMAN-YEAR-BEGAN-IN-MARCH-01] -->
 
 [PAUSE 3s] Did German borrow its numbers? (No — they are its own.) Did it borrow
 its month names? (Yes, from Latin, with the calendar.) Why do four of them carry

@@ -1,30 +1,27 @@
 {
   "chapter": 39,
-  "title": "Eyes, Ears, Mouth, Nose",
-  "label": "ch:ge-face-parts",
-  "canDo": "I can name the eye, ear, mouth, and nose in German, and say which of the four traces to a confirmed ancient root and which does not.",
+  "title": "Coffee, Tea, and Milk",
+  "label": "ch:ge-coffee-tea-milk",
+  "canDo": "I can politely ask for coffee, tea, or milk in German, and say which of the three words is native and which two are loans.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C30-nase",
+    "lesson": "GE-C28-milch",
     "kind": "production",
-    "summary": "The chapter closes on Nase, cousin of both English nose and Latin nasus by separate descent: the reader produces all four face parts with articles and plurals, names Auge and Ohr as words with confirmed Proto-Indo-European roots, names Mund as inherited but not traced further, and completes Chapter 17's face by running Kopf, Auge, Ohr, Mund, Nase, Hand together. It reaches back to Chapter 17's Kopf and Hand and to Chapter 26's hören, rescuing the disputed 'sharp-eared' link between hören and Ohr.",
+    "summary": "The chapter closes on Milch, the native word beside two loans: the reader produces all three drinks with der/die articles, extends Chapter 19's Wasser, bitte pattern to Kaffee, bitte and Tee, bitte, and states each word's route — Kaffee overland through Arabic, Turkish and Italian; Tee by sea from Hokkien Chinese by way of Dutch; Milch never borrowed at all. It reaches back to Chapter 19's bitte pattern and rescues Chapter 27's final atoms, GE-LEX-SCHLIESSEN-10 and GE-ETYMON-SCHLIESSEN-11, which no lesson had revisited.",
     "assesses": [
-      "GE-LEX-AUGE-02",
-      "GE-SOUND-AUGE-03",
-      "GE-ETYMON-AUGE-04",
-      "GE-LEX-OHR-02",
-      "GE-SOUND-OHR-03",
-      "GE-ETYMON-OHR-04",
-      "GE-LEX-MUND-02",
-      "GE-SOUND-MUND-03",
-      "GE-ETYMON-MUND-04",
-      "GE-LEX-NASE-02",
-      "GE-SOUND-NASE-03",
-      "GE-ETYMON-NASE-04",
-      "GE-LEX-KOPF-02",
-      "GE-LEX-HAND-02"
+      "GE-LEX-KAFFEE-02",
+      "GE-SOUND-KAFFEE-03",
+      "GE-ETYMON-KAFFEE-04",
+      "GE-LEX-TEE-02",
+      "GE-SOUND-TEE-03",
+      "GE-ETYMON-TEE-04",
+      "GE-LEX-MILCH-02",
+      "GE-SOUND-MILCH-03",
+      "GE-ETYMON-MILCH-04",
+      "GE-LEX-BITTE-PLEASE-02",
+      "GE-PHRASE-WASSER-BITTE-03"
     ]
   }
 }

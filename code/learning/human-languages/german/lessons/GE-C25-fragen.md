@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C25-fragen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 770
-chapter: 34
+sequence: 790
+chapter: 36
 type: word
 headword: fragen
 gloss: to ask — a weak verb whose vowel stays put, and whose closest English relatives came in from Latin as pray and precarious

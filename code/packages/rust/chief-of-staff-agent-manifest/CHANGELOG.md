@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Add schema-v4 `tool_capabilities`: the D18D tool-capability scopes granted to
+  an agent, matched against a `ToolDefinition`'s `required_capabilities`. This
+  is the last `HostProfile` field that had no signed source.
+- Deliberately NOT derived from `allowed_tools`. Deriving would make the
+  capability check always pass for an allowed tool, and would destroy the
+  property it exists for: a new version of a tool that starts requiring a new
+  capability is denied until the manifest is re-signed, so a tool cannot
+  silently widen what it does to already-approved agents.
+- Validate scopes as colon-delimited `[A-Za-z0-9_-]` (`smart_home:read`),
+  mirroring `chief-of-staff-host-runtime`'s `validate_capability` exactly. Note
+  the separator differs from a tool identifier's dot; `smart_home:read` is a
+  capability and `smart_home.discover` is a tool.
+- Add `MANIFEST_V3_VERSION`; v3 and v4 share the `allowed_tools` shape.
+
 - Add schema-v3 `allowed_tools`: the D18D tool identifiers an agent may call.
   Before v3 the signed manifest named no tools at all, so `HostProfile
   .allowed_tools` had no signed source and a profile-backed supervisor could not

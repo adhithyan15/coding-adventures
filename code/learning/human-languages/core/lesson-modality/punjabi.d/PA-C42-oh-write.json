@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-C42-oh-write",
+    "language": "punjabi",
+    "chapter": 42,
+    "sequence": 2440,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5a318adc310cf281",
+    "detachableSegments": [
+      "Script — two signs, neither new",
+      "Writing — guided copy, model in view"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C18-ja
 spine_node: SPINE-RESPOND-BASIC
-sequence: 650
-chapter: 27
+sequence: 670
+chapter: 29
 type: word
 headword: ja
 gloss: yes

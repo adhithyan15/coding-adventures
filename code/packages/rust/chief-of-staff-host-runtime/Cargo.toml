@@ -6,6 +6,7 @@ description = "Profile-gated D18D tool runtime for Chief of Staff hosts"
 license = "MIT"
 
 [dependencies]
+chief-of-staff-agent-manifest = { path = "../chief-of-staff-agent-manifest" }
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding-adventures-json-value = { path = "../json-value" }
 coding-adventures-json-serializer = { path = "../json-serializer" }

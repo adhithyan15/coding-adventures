@@ -1,22 +1,16 @@
 {
   "language": "german",
   "chapter": 18,
-  "sourceHash": "fnv1a64:9d2398d3e6ed9b0f",
+  "sourceHash": "fnv1a64:49fa731501984d4a",
   "lessonIds": [
-    "GE-C14-haben",
-    "GE-C14-hab-stamm",
-    "GE-C14-du-hast",
-    "GE-C14-er-hat",
-    "GE-C14-b-verlust",
-    "GE-C14-einen",
-    "GE-C14-habere",
-    "GE-C14-practice"
+    "GE-C12-elf-zwoelf",
+    "GE-C12-zahlen-13-20"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 8,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "german/narration/ch18.txt",
   "json": "german/narration/ch18.json",
-  "textHash": "fnv1a64:b51eb9411fa879d1",
-  "jsonHash": "fnv1a64:5231c64a30d72094",
+  "textHash": "fnv1a64:da5ba37df1f55216",
+  "jsonHash": "fnv1a64:5b11fd55c58529d9",
   "findings": []
 }

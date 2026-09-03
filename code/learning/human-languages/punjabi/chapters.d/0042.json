@@ -1,0 +1,22 @@
+{
+  "chapter": 42,
+  "title": "He, We, and the One Who",
+  "label": "ch:pa-pronouns-and-relative",
+  "canDo": "I can talk about somebody who is not present, say we, and describe a person instead of naming them.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C42-jo-oh",
+    "kind": "task",
+    "summary": "The absent third person, the missing we, and the relative. asi is the oddest gap in the inventory: the corpus teaches the first-person PLURAL future ending four separate times -- milaange, phir milaange, jaldi milaange, kall milaange -- so a reader has been saying we will meet for chapters without ever owning the word for we. jo completes the j- family and pairs with oh in the same two-ended shape as je ... taan.",
+    "assesses": [
+      "PA-PRON-OH-01",
+      "PA-PRON-ASI-01",
+      "PA-SCRIPT-OH-01",
+      "PA-PRON-JO-01",
+      "PA-JOIN-JO-OH-01"
+    ],
+    "note": "The relative takes a track-local concept rather than the canonical RELATIVE-CLAUSE, which the spine stages at B2. What is taught is the A1 use the inventory names."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-062-THAT-AND-WHY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can put a sentence inside another with ki, tell ki from ki on the page, give an opinion, ask why and answer it.",
+  "prerequisites": [
+    "PA-EXT-061-BUT-AND-DOUBLET"
+  ],
+  "lessons": [
+    "PA-C40-ki",
+    "PA-C40-sochda-ki",
+    "PA-C40-ki-write",
+    "PA-C40-kyon",
+    "PA-C40-kyunki"
+  ]
+}

@@ -39,14 +39,19 @@ it("keeps the Punjabi changelog free of literal patch markup", () => {
 // as a culture claim), which a schema-v1 lesson had no field to say.
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 226,
+    // 226 -> 261. Seven chapters of five, one new item per lesson, closing the
+    // Jorr column the A1 inventory measured at 0 of 11. One culture claim: the
+    // Sanskritic / Perso-Arabic pair rule, which the inventory said one lesson
+    // would close and which this book has owed since it taught dhanvaad and
+    // shukriya side by side in its first chapter.
+    lessons: 261,
     idioms: 6,
     senses: 3,
-    cultureClaims: 8,
+    cultureClaims: 9,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 226-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 261-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -61,8 +66,8 @@ it("keeps Punjabi's 226-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(226);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 226 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(261);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 261 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -156,6 +161,44 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "delayed-copy",
     "observe-trace",
     "delayed-copy",
+    // 51 -> 59. The joining tranche adds eight: PA-W10-thatha is the only new
+    // LETTER in seven chapters and contributes an observe-trace and a guided
+    // copy, and six word-writing lessons -- nahin, ate, par, ki, je, oh --
+    // contribute one guided copy each. Every one of those six spends ZERO new
+    // signs.
+    "guided-copy",
+    // 51 -> 59. The joining tranche adds eight: PA-W10-thatha is the only new
+    // LETTER in seven chapters and contributes an observe-trace and a guided
+    // copy, and six word-writing lessons -- nahin, ate, par, ki, je, oh --
+    // contribute one guided copy each. Every one of those six spends ZERO new
+    // signs.
+    "guided-copy",
+    // 51 -> 59. The joining tranche adds eight: PA-W10-thatha is the only new
+    // LETTER in seven chapters and contributes an observe-trace and a guided
+    // copy, and six word-writing lessons -- nahin, ate, par, ki, je, oh --
+    // contribute one guided copy each. Every one of those six spends ZERO new
+    // signs.
+    "guided-copy",
+    // 51 -> 59. The joining tranche adds eight: PA-W10-thatha is the only new
+    // LETTER in seven chapters and contributes an observe-trace and a guided
+    // copy, and six word-writing lessons -- nahin, ate, par, ki, je, oh --
+    // contribute one guided copy each. Every one of those six spends ZERO new
+    // signs.
+    "guided-copy",
+    // 51 -> 59. The joining tranche adds eight: PA-W10-thatha is the only new
+    // LETTER in seven chapters and contributes an observe-trace and a guided
+    // copy, and six word-writing lessons -- nahin, ate, par, ki, je, oh --
+    // contribute one guided copy each. Every one of those six spends ZERO new
+    // signs.
+    "guided-copy",
+    // 51 -> 59. The joining tranche adds eight: PA-W10-thatha is the only new
+    // LETTER in seven chapters and contributes an observe-trace and a guided
+    // copy, and six word-writing lessons -- nahin, ate, par, ki, je, oh --
+    // contribute one guided copy each. Every one of those six spends ZERO new
+    // signs.
+    "guided-copy",
+    "observe-trace",
+    "guided-copy",
   ]);
 });
 
@@ -635,7 +678,7 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // not because reinforcement got worse. The serviced-debt assertions above still hold
   // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
   // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
-  expect(report.summary.missedByWindow).toEqual({ R1: 48, R2: 113, R3: 175, R4: 92 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 54, R2: 127, R3: 215, R4: 111 });
 });
 
 it("services Punjabi's three-field R4 debt without moving the boundary forward", () => {

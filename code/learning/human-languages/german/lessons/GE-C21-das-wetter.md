@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C21-das-wetter
 spine_node: SPINE-TIME-OF-DAY
-sequence: 690
-chapter: 30
+sequence: 710
+chapter: 32
 type: phrase
 headword: das Wetter, es regnet
 gloss: weather — a NATIVE Germanic word, unlike Romance's shared Latin tempus family; Wetter is the SAME word as English "weather," and regnet is the SAME word as English "rain"

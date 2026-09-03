@@ -1,0 +1,695 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 42,
+  "title": "He, We, and the One Who",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b8bf8fa21831e5fc",
+  "lessons": [
+    {
+      "id": "PA-C42-oh",
+      "sequence": 2420,
+      "title": "ਉਹ (oh) — he, she, it",
+      "headword": "ਉਹ",
+      "romanization": "oh",
+      "gloss": "he, she, it - the pronoun for anyone who is not here",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21ae7246d8931259",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the chapter behind you, the word that names a purpose. And from chapters 2 and 3, the words for I and for you, both of them."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "laī — then maiṁ, and tū̃ / tusī̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *laī* — then *maiṁ*, and *tū̃* / *tusī̃*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ki — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *ki* — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "nahī̃ before the verb — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *nahī̃* before the verb — from five chapters back, cold]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have been able to talk about yourself and about the person in front of you since you first said ਮੈਂ. You have never been able to talk about anybody absent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਹ — oh — he, she, or it."
+            },
+            {
+              "kind": "speech",
+              "text": "One word, three English ones. Punjabi's third person does not make you choose a gender before you speak."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਹ (oh) also means that, pointing at something away from both of you. The pronoun and the pointing word are one word — which is the same doubling you have already seen, where ਤਾਂ at the head of a result was a demonstrative doing a joining job."
+            },
+            {
+              "kind": "speech",
+              "text": "With this the pronoun set is complete: ਮੈਂ, ਤੂੰ / ਤੁਸੀਂ, ਉਹ (oh)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ, tusī̃, oh — the three in a row.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ*, *tusī̃*, *oh* — the three in a row.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "a sentence about someone who is not in the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: a sentence about someone who is not in the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oh as that, pointing across the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oh* as *that*, pointing across the room.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many English pronouns does ਉਹ (oh) cover? (Three.) What else does the same word do? (Points: that.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C42-asi",
+      "sequence": 2430,
+      "title": "ਅਸੀਂ (asīṁ) — we",
+      "headword": "ਅਸੀਂ",
+      "romanization": "asīṁ",
+      "gloss": "we - the word behind an ending you have been saying for chapters",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c1d47309d0bbd30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, the pronoun for someone absent. And from the farewell chapters: say we will meet soon, and we will meet tomorrow."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "oh — then jaldī milāṁge, kall milāṁge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *oh* — then *jaldī milāṁge*, *kall milāṁge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "maiṁ sochdā hāṁ ki — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *maiṁ sochdā hāṁ ki* — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "mainū̃ samajh nahī̃ āī — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *mainū̃ samajh nahī̃ āī* — from five chapters back, cold]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਸੀਂ — asīṁ — we."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the odd thing, and it is worth stopping on. You have been saying we for chapters. The -ਾਂਗੇ ending on milāṁge is the first-person plural future — we will meet — and this book has taught it four separate times."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending was there. The pronoun was not. So a reader has been saying we will meet over and over without ever owning the word for we."
+            },
+            {
+              "kind": "speech",
+              "text": "Punjabi often leaves the pronoun out when the ending already carries it, which is why nothing sounded wrong. But you cannot say we on its own, or put it in front of anything else, until you have the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asīṁ, alone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asīṁ*, alone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asīṁ … milāṁge — the pronoun and the ending together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asīṁ … milāṁge* — the pronoun and the ending together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "maiṁ and asīṁ — one, then more than one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *maiṁ* and *asīṁ* — one, then more than one.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say we. Which ending have you been using for chapters that already meant it? (The -ਾਂਗੇ of milāṁge.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C42-oh-write",
+      "sequence": 2440,
+      "title": "ਉਹ (oh) reaches the page",
+      "headword": "ਉਹ",
+      "romanization": "oh",
+      "gloss": "he, she, it, on two signs already in the hand",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5a318adc310cf281",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — two signs, neither new"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — two signs, neither new until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One chapter back you wrote ਜੇ. Write it once from memory, then say the word for we."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — two signs, neither new",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉ — the u carrier, ਹ — ha."
+            },
+            {
+              "kind": "speech",
+              "text": "Both taught long ago. ਉ is the carrier you met when the book first showed a vowel standing on its own, and ਹ you have written since ਨਹੀਂ at the top of this run."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ਉਹ (oh) once with the model in view. Compare its first letter against the ਅ of ਅਤੇ — two different carriers, and the difference matters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ਉਹ (oh) from memory. How many of its signs were new? (None.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ਕਿ written — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ਕਿ** written — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ਨਹੀਂ written — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ਨਹੀਂ** written — from five chapters back, cold]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C42-jo",
+      "sequence": 2450,
+      "title": "ਜੋ (jo) — the one who",
+      "headword": "ਜੋ",
+      "romanization": "jo",
+      "gloss": "the one who, the thing that - the relative word",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6664304f2becf270",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back you wrote ਉਹ (oh). One chapter back, the two words that open a clause with ਜ."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ਉਹ (oh), then je, jadoṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ਉਹ**, then *je*, *jadoṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "kyoṁ — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *kyoṁ* — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "mainū̃ nahī̃ patā — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *mainū̃ nahī̃ patā* — from five chapters back, cold]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੋ — jo — the one who, the thing that."
+            },
+            {
+              "kind": "speech",
+              "text": "The third member of the family. ਜੇ supposes, ਜਦੋਂ times, and ਜੋ (jo) describes — and all three open their clause with the same letter."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੋ (jo) (what they do) … — \"the one who …\""
+            },
+            {
+              "kind": "speech",
+              "text": "Punjabi marks a describing clause at its front, the way it marked a condition with ਜੇ. Once you hear the ਜ, you know a clause is starting and that something will come back to be pointed at."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo, then something a person might do.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo*, then something a person might do.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "the three ਜ words in a row — je, jadoṁ, jo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: the three **ਜ** words in a row — *je*, *jadoṁ*, *jo*.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "describe someone instead of naming them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: describe someone instead of naming them.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Describe a person rather than naming them. What do the three ਜ words have in common? (Each opens its own clause.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C42-jo-oh",
+      "sequence": 2460,
+      "title": "ਜੋ … ਉਹ … (jo … oh …) — the one who … that one …",
+      "headword": "ਜੋ … ਉਹ …",
+      "romanization": "jo … oh …",
+      "gloss": "the one who... that one... - the relative pair, both ends marked",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d513662045b2ba9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter's three words, and the two-part condition from the chapter before."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "oh, asīṁ, jo — and je … tāṁ …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *oh*, *asīṁ*, *jo* — and *je … tāṁ …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "kyoṁki — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *kyoṁki* — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the repair kit — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the repair kit — from five chapters back, cold]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The pattern, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੋ (jo) (description), ਉਹ (oh) (the one meant)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the same shape as ਜੇ … ਤਾਂ …, and seeing that is most of the work. Punjabi marks both ends: the clause that describes, and the thing described. English collapses them — the one who came is my friend — and Punjabi keeps them visibly paired."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the whole system is visible:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਜ- opens the clause, ਉ- / ਤ- points at what it refers to."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੇ … ਤਾਂ, ਜੋ (jo) … ਉਹ (oh). One habit, and you have met it twice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "jo + a description, oh + who is meant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: *jo* + a description, *oh* + who is meant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the same idea with a plain name, then with the pair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the same idea with a plain name, then with the pair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je … tāṁ … then jo … oh … — hear that they are one shape.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je … tāṁ …* then *jo … oh …* — hear that they are one shape.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Describe someone with the pair. Which earlier pattern is this the same shape as? (ਜੇ … ਤਾਂ ….) Next chapter: the question words, all of them built on one letter."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

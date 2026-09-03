@@ -47,8 +47,8 @@ export default defineConfig({
               // A frontier import should stay small, but corpus-wide modes must
               // not fan out to one request per lesson.
               //
-              // Batches are grouped by a CHAPTER RANGE -- five chapters of one
-              // track's lesson series -- with a size cap kept only as a
+              // Batches are grouped by a CHAPTER RANGE -- LESSON_BAND_CHAPTERS
+              // chapters of one track's lesson series -- with a size cap kept only as a
               // backstop. That is issue #12918, and it replaces a grouping that
               // was track-then-size.
               //

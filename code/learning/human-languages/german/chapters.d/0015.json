@@ -1,16 +1,27 @@
 {
   "chapter": 15,
-  "title": "Bread, Water, Wine",
-  "label": "ch:food",
-  "canDo": "I can name and request bread, water, and wine in German.",
+  "title": "The Seasons Go Native",
+  "label": "ch:jahreszeiten",
+  "canDo": "I can name the four German seasons and say which of them German built and which it inherited.",
   "spineNodes": [
     "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C11-wasser-wein",
+    "lesson": "GE-C09-jahreszeiten",
     "kind": "task",
-    "summary": "Complete GE-C11-wasser-wein, the canonical closing checkpoint, and demonstrate the chapter promise: name and request bread, water, and wine in German.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The months were bought; the year, the time and the seasons were not. Jahr is English year, Zeit is English tide, and Jahreszeit is the two of them stuck together -- year-time -- where English borrowed season from French. Frühling was built inside German out of früh, and Herbst is English harvest: one inherited word that English narrowed to the act of gathering before buying Latin autumn for the season German never stopped naming with it.",
+    "assesses": [
+      "GE-LEX-JAHR-01",
+      "GE-LEX-ZEIT-01",
+      "GE-LEX-JAHRESZEIT-01",
+      "GE-LEX-FRUEH-01",
+      "GE-LEX-FRUEHLING-01",
+      "GE-LEX-SOMMER-01",
+      "GE-LEX-HERBST-01",
+      "GE-ETYMON-HERBST-HARVEST-01",
+      "GE-LEX-WINTER-01",
+      "GE-LEX-LENZ-01"
+    ],
+    "note": "Chapter 15 is generated from schema-v2 lessons and introduces GE-LEX-JAHR-01, which chapter 25 previously owned. The move is deliberate: the chapter glosses Jahreszeit as year-time, and glossing a compound with a word the reader has never been taught is the defect this migration keeps finding. Chapter 25 now spends the atom and introduces the plural instead."
   }
 }

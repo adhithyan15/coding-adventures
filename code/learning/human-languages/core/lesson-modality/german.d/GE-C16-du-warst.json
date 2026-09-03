@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-du-warst",
     "language": "german",
-    "chapter": 24,
-    "sequence": 525,
+    "chapter": 26,
+    "sequence": 545,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e315489a69379df8"
+    "sourceHash": "fnv1a64:4e6d67ce1268ec4c"
   },
   "findings": []
 }

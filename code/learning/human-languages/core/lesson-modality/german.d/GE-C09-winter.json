@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C09-winter",
+    "language": "german",
+    "chapter": 15,
+    "sequence": 279,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c499f42f8d6258ce"
+  },
+  "findings": []
+}

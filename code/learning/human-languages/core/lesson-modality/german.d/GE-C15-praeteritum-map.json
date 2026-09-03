@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-praeteritum-map",
     "language": "german",
-    "chapter": 21,
-    "sequence": 440,
+    "chapter": 23,
+    "sequence": 460,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:add9aea724d4339e"
+    "sourceHash": "fnv1a64:173fd4877ad03766"
   },
   "findings": []
 }

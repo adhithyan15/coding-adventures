@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:faf4e7e1e8fbd2d1",
+  "lessonIds": [
+    "PA-C39-par",
+    "PA-C39-lekin",
+    "PA-C39-par-write",
+    "PA-C39-doublet",
+    "PA-C39-but-checkpoint"
+  ],
+  "tex": "punjabi/book/chapters/ch39-but-twice-over.tex"
+}

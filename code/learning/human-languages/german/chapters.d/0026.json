@@ -1,21 +1,24 @@
 {
   "chapter": 26,
-  "title": "Head and Hand",
-  "label": "ch:ge-head-and-hand",
-  "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
+  "title": "Three Verbs Under One Roof",
+  "label": "ch:ge-sein-drei-wurzeln",
+  "canDo": "I can put the German verb for “to be” into the past, and say why its forms look like three unrelated words — because they are.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C17-hand",
-    "kind": "production",
-    "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
+    "lesson": "GE-C16-war-practice",
+    "kind": "task",
+    "summary": "The past of sein is the tidy half of the verb: one stem war-, ordinary endings, and ich war identical to er war. The chapter teaches those four cells one at a time and then answers the question the present tense raised — bin, ist and war come from three different Proto-Indo-European verbs, which is called suppletion, and it survives because the words you never have to guess at are the words analogy never reaches.",
     "assesses": [
-      "GE-LEX-HAND-02",
-      "GE-SOUND-HAND-03",
-      "GE-ETYMON-HAND-04",
-      "GE-ETYMON-HAND-MANUS-05"
+      "GE-GRAMMAR-SEIN-ICH-WAR-01",
+      "GE-GRAMMAR-SEIN-DU-WARST-01",
+      "GE-GRAMMAR-SEIN-ER-WAR-01",
+      "GE-GRAMMAR-SEIN-WIR-WAREN-01",
+      "GE-ETYMON-SEIN-DREI-WURZELN-01",
+      "GE-GRAMMAR-SUPPLETION-01",
+      "GE-GRAMMAR-HAEUFIG-UNREGELMAESSIG-01"
     ],
-    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
+    "note": "Split out of the hand-written chapter 16, which carried the present, the past and the sein-perfect in one chapter and could not hold them inside maxNewAtomsPerChapter at one atom per grammar cell. The payoff claims all seven of this chapter's atoms: the practice lesson drills the four past cells and then asks for the three roots, the name suppletion, and the reason the verb was never tidied up."
   }
 }

@@ -1,16 +1,21 @@
 {
   "language": "german",
   "chapter": 14,
-  "sourceHash": "fnv1a64:87ad80469ae4615b",
+  "sourceHash": "fnv1a64:1aade3cb90b99bdd",
   "lessonIds": [
-    "GE-C10-eltern",
-    "GE-C10-geschwister"
+    "GE-C09-juli",
+    "GE-C09-august",
+    "GE-C09-september",
+    "GE-C09-oktober",
+    "GE-C09-november",
+    "GE-C09-dezember",
+    "GE-C09-zahlmonate"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "german/narration/ch14.txt",
   "json": "german/narration/ch14.json",
-  "textHash": "fnv1a64:21dd0a267dc61470",
-  "jsonHash": "fnv1a64:31e2d160001b8450",
+  "textHash": "fnv1a64:e926e077313981d0",
+  "jsonHash": "fnv1a64:2e93329e91f23d3c",
   "findings": []
 }

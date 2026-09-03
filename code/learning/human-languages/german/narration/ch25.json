@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 25,
-  "title": "The Past That Takes To Be",
-  "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:fbefee05b0308466",
+  "title": "Being Your Years",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:08a79e9d4a65f1e1",
   "lessons": [
     {
-      "id": "GE-C16-perfekt-sein",
-      "sequence": 570,
-      "title": "ich bin gegangen — the perfect built on sein",
-      "headword": "ich bin gegangen",
-      "romanization": "ich bin gegangen",
-      "gloss": "the perfect built on sein — the family of verbs that refuses haben",
+      "id": "GE-C14-alt",
+      "sequence": 521,
+      "title": "alt — \"old\"",
+      "headword": "alt",
+      "romanization": "alt",
+      "gloss": "old — the adjective the German age sentence is built on",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6d6e4b1835c1f02",
+      "sourceHash": "fnv1a64:ea77a36f04de3f8f",
       "notice": null,
       "blocks": [
         {
@@ -35,69 +35,319 @@
             },
             {
               "kind": "speech",
-              "text": "You built the everyday past with haben — ich habe gelernt. A particular family of verbs refuses haben and takes this chapter's verb instead."
+              "text": "You can say ich bin müde. Here is a second adjective to put in the same slot, and it opens a sentence you will be asked for constantly."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: which verbs take sein",
+          "type": "input",
+          "title": "You'll want to know: alt",
           "segments": [
             {
               "kind": "speech",
-              "text": "Verbs of motion and change of state build their perfect with sein, not haben."
+              "text": "alt — \"old.\""
             },
             {
               "kind": "speech",
-              "text": "An action that leaves you somewhere else, or leaves you something else, takes sein. An ordinary activity that leaves you where you were keeps haben: ich habe gearbeitet, ich habe getanzt."
+              "text": "One syllable. It behaves exactly as müde did: after sein an adjective takes no ending at all, so ich bin alt needs nothing added."
             },
             {
               "kind": "speech",
-              "text": "Gehen is the model, and because every present form of sein now belongs to you, the whole thing reads off without a single new word:"
+              "text": "It is the same word as English old, and you can nearly hear it — German kept the a where English rounded it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-a — short and clipped, the a of English hat."
             },
+            {
+              "kind": "speech",
+              "text": "d-t-final — the -lt closes crisply, both consonants sounded."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"alt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"alt\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"alt, old\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"alt, old\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the verb — \"ich bin alt\", \"ich bin müde\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the verb — \"ich bin alt\", \"ich bin müde\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"alt, alt — old.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"old.\" (Alt.) Does it take an ending after bin? (No.) Which English word is it? (Old.) Next: the noun that goes with it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-jahr",
+      "sequence": 522,
+      "title": "die Jahre — the form the age sentence uses",
+      "headword": "die Jahre",
+      "romanization": "die Jahre",
+      "gloss": "the plural of das Jahr, which is the form the age sentence needs and the only form it uses",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6581390add8d8dd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A noun you were given ten chapters ago. The age sentence wants it in a shape you have not used yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Jahre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Jahre — the plural of das Jahr."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural adds -e and takes die, as plurals do, and it stays capitalised because German capitalises every noun in every number."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is why it matters. The age sentence counts, and a count takes a plural: you are so many Jahre old, never so many Jahr. From here on it is Jahre that does the work, and das Jahr that sits behind it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "j-as-y — German j is the y of English yes. So Jahr opens like year, not like jar."
+            },
+            {
+              "kind": "speech",
+              "text": "h-silent-lengthening — that h is not pronounced. It is the silent lengthening h you met inside gehen, and Jahr was named there as one of the three words that hide it, beside sehr and Ihnen. Here it is."
+            },
+            {
+              "kind": "speech",
+              "text": "long-a — so the vowel runs long: YAAR. Say it beside English year and the two are almost the same noise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "singular and plural — \"das Jahr, die Jahre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: singular and plural — \"das Jahr, die Jahre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plural alone, which is the one you need — \"die Jahre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plural alone, which is the one you need — \"die Jahre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words the sentence will need — \"Jahre, alt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words the sentence will need — \"Jahre, alt\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"das Jahr, die Jahre.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the year.\" (Das Jahr.) And the plural. (Die Jahre.) Which of the two does an age sentence use? (The plural — you are counted.) What does the plural add? (An -e, and die.) Next: where Jahr and alt both come from."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-jahr-alt",
+      "sequence": 523,
+      "title": "Jahr and alt, taken apart",
+      "headword": "Jahr und alt",
+      "romanization": "Jahr und alt",
+      "gloss": "both words are English wearing German spelling, and alt has a Latin cousin hiding in adult",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1132f6deb0feb440",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words, both inherited rather than borrowed, and one of them has a Latin cousin you would never guess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
             {
               "kind": "table",
               "headers": [
                 "German",
+                "from",
                 "English"
               ],
-              "columns": 2,
-              "rowCount": 4,
+              "columns": 3,
+              "rowCount": 2,
               "utterances": [
-                "ich bin gegangen means I went / I have gone.",
-                "du bist gegangen means you went.",
-                "er ist gegangen means he went.",
-                "wir sind gegangen means we went."
+                "German: Jahr. from: Germanic jēra. English: year.",
+                "German: alt. from: Germanic aldaz. English: old."
               ]
             },
             {
               "kind": "speech",
-              "text": "The recipe is the one you already know, with the helper swapped:"
+              "text": "Neither line passes through Latin, which is worth noticing in a chapter about age: German borrowed its month names wholesale from Latin, and kept its own words for the year and for being old."
             },
             {
               "kind": "speech",
-              "text": "present form of sein + past participle, and the participle goes last."
+              "text": "Now the cousin. The root behind aldaz also went into Latin, as alere — \"to nourish, to grow.\" From alere English took adult, which is literally \"grown up.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So alt and adult are the same idea taken down two roads: something that has been fed and has grown. Ageing as growth rather than as decay, which is a kinder picture than English usually admits to."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ge-prefix — gegangen opens with the same unstressed ge- that wrapped gelernt and gesagt. It is never stressed; the weight falls on -gang-."
-            },
-            {
-              "kind": "speech",
-              "text": "ich-laut — and ich keeps its soft ending right before it, so the phrase runs ich bin ge-GANG-en without a break."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,29 +360,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen\"",
+              "instruction": "the two twins — \"Jahr, year; alt, old\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen\"]"
+              "source": "[YOU SAY: the two twins — \"Jahr, year; alt, old\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — \"ich habe gelernt … ich bin gegangen\"",
+              "instruction": "the Latin cousin — \"alt, alere, adult\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"ich habe gelernt … ich bin gegangen\"]"
+              "source": "[YOU SAY: the Latin cousin — \"alt, alere, adult\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the rule — \"motion and change take sein\"",
+              "instruction": "what the root meant — \"to nourish, to grow\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the rule — \"motion and change take sein\"]"
+              "source": "[YOU SAY: what the root meant — \"to nourish, to grow\"]"
             },
             {
               "kind": "repeat",
@@ -141,12 +391,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich bin gegangen.\""
+              "text": "\"Jahr, year. Alt, old.\""
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -158,26 +408,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which family of verbs takes sein? (Motion and change of state.) Say \"I went.\" (Ich bin gegangen.) Where does the participle sit? (At the end.) Which helper does arbeiten take? (Haben — it is an activity, not a change.) Next: the first of the family, and it is the one you say most."
+              "text": "Which English word is Jahr? (Year.) And alt? (Old.) Which English word comes from alt's Latin cousin? (Adult.) What did that cousin mean? (\"To nourish, to grow.\") Next: the question you will be asked with these two words."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-kommen",
-      "sequence": 575,
-      "title": "kommen — \"to come\"",
-      "headword": "kommen",
-      "romanization": "kommen",
-      "gloss": "to come — English come with one consonant shifted, and the second verb of the sein family",
+      "id": "GE-C14-wie-alt-bist-du",
+      "sequence": 524,
+      "title": "Wie alt bist du?",
+      "headword": "Wie alt bist du?",
+      "romanization": "Wie alt bist du?",
+      "gloss": "how old are you — word for word the English question, built from four words you own",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:123394e75a13e025",
+      "sourceHash": "fnv1a64:f71400dfbe5dd129",
       "notice": null,
       "blocks": [
         {
@@ -193,65 +443,39 @@
             },
             {
               "kind": "speech",
-              "text": "Motion takes sein. Here is the motion verb you will use as often as gehen, and it is an English word you already own."
+              "text": "You have wie, you have alt, and you have du bist. That is the whole question."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: kommen",
+          "title": "You'll want to know: Wie alt bist du?",
           "segments": [
             {
               "kind": "speech",
-              "text": "kommen — \"to come.\""
+              "text": "Wie alt bist du? — \"How old are you?\""
             },
             {
               "kind": "speech",
-              "text": "ich bin gekommen — \"I came.\""
+              "text": "Four words, and every one of them is already yours. Read it against the English and nothing has moved: how — old — are — you."
             },
             {
               "kind": "speech",
-              "text": "The infinitive wears the -en you know. The participle is gekommen: the ge- wrap in front, and -en rather than -t at the back, because this is one of the old strong verbs rather than a regular one."
+              "text": "That is not a coincidence to be grateful for; it is inheritance. Neither language borrowed this question from the other. They have been asking it the same way since before either was called German or English."
             },
             {
               "kind": "speech",
-              "text": "Coming is arriving somewhere you were not. That is motion with a result, so it takes sein, exactly as gehen does."
+              "text": "The verb sits second, as it does in every German statement and question with a question word in front — Wie first, bist second, and the rest behind."
+            },
+            {
+              "kind": "speech",
+              "text": "To someone you would address formally, it is Wie alt sind Sie? — the same question with the polite form of the verb."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "kommen and English come are the same word, both from Germanic kwemaną. No Latin anywhere in the line — French venir and Spanish venir come from Latin venīre instead, which is where English gets advent, convene and venue."
-            },
-            {
-              "kind": "speech",
-              "text": "So English, as usual, owns both halves: the everyday come from the Germanic side, the formal convene from the Latin."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "vowel-o — the o is short and open, the vowel of English cot, not the uh English puts in come."
-            },
-            {
-              "kind": "speech",
-              "text": "ge-prefix — gekommen keeps the unstressed ge-; the stress is on -KOMM-."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -264,29 +488,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"kommen\" — short open o",
+              "instruction": "\"Wie alt bist du?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"kommen\" — short open *o*]"
+              "source": "[YOU SAY: \"Wie alt bist du?\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin gekommen\"",
+              "instruction": "it against the English — \"how old are you; wie alt bist du\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gekommen\"]"
+              "source": "[YOU SAY: it against the English — \"how old are you; wie alt bist du\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin gegangen … ich bin gekommen\"",
+              "instruction": "the formal one — \"Wie alt sind Sie?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gegangen … ich bin gekommen\"]"
+              "source": "[YOU SAY: the formal one — \"Wie alt sind Sie?\"]"
             },
             {
               "kind": "repeat",
@@ -295,12 +519,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich bin gekommen.\""
+              "text": "\"Wie alt bist du?\""
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -312,26 +536,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does kommen mean? (\"To come.\") Say \"I came.\" (Ich bin gekommen.) Which helper, and why? (Sein — it is motion.) Which English word is it? (Come.) Next: the verb that covers everything with a vehicle under it."
+              "text": "Ask how old someone is, informally. (Wie alt bist du?) And formally. (Wie alt sind Sie?) Which word sits second? (Bist.) How many of the four words were new? (None.) Next: how to answer it."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-fahren",
-      "sequence": 580,
-      "title": "fahren — \"to travel, to drive\"",
-      "headword": "fahren",
-      "romanization": "fahren",
-      "gloss": "to travel, to drive — motion with a vehicle under it, and English fare hiding inside",
+      "id": "GE-C14-alter",
+      "sequence": 525,
+      "title": "ich bin zwanzig Jahre alt",
+      "headword": "ich bin zwanzig Jahre alt",
+      "romanization": "ich bin zwanzig Jahre alt",
+      "gloss": "I am twenty years old — the answer, word for word the English sentence",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e633e0c73b333e64",
+      "sourceHash": "fnv1a64:8235042dc6f58f3c",
       "notice": null,
       "blocks": [
         {
@@ -347,80 +571,35 @@
             },
             {
               "kind": "speech",
-              "text": "Gehen is going on your feet. When there is a vehicle under you, German changes the verb."
+              "text": "The answer, and it is as English as the question was."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: fahren",
+          "title": "You'll want to know: ich bin zwanzig Jahre alt",
           "segments": [
             {
               "kind": "speech",
-              "text": "fahren — \"to travel, to go by vehicle, to drive.\""
+              "text": "Ich bin zwanzig Jahre alt. — \"I am twenty years old.\""
             },
             {
               "kind": "speech",
-              "text": "ich bin gefahren — \"I travelled, I drove.\""
+              "text": "Word for word, that is the English sentence: I — am — twenty — years — old. Put any number you own in the middle and the sentence is yours."
             },
             {
               "kind": "speech",
-              "text": "German keeps two verbs where English makes do with go. You gehen on foot and you fahren in anything with wheels — a car, a bus, a train, a bicycle. Getting that pair right is one of the first things that makes a learner sound German rather than translated."
+              "text": "And German shortens it the same way English does. Ich bin zwanzig is complete and ordinary, exactly as \"I'm twenty\" is — the Jahre alt can go, and in speech usually does."
             },
             {
               "kind": "speech",
-              "text": "It is motion, so the helper is sein."
+              "text": "Notice which verb is doing the work: bin. Not habe. Hold on to that, because it is the whole point of the next lesson."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "vowel-a-long — the a is long and open, as in war."
-            },
-            {
-              "kind": "speech",
-              "text": "h-silent-lengthening — and the h after it is the silent stretcher you met in gehen and sehen: it is not breathed, it only holds the vowel. FAH-ren rhymes with the way gehen and sehen are built."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "fahren is English fare — the old verb meaning \"to travel,\" which English demoted to a noun and then almost forgot. It is still there in:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English word",
-                "what it is really saying"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "English word: farewell. what it is really saying: travel well.",
-                "English word: thoroughfare. what it is really saying: a way you can travel through.",
-                "English word: seafaring. what it is really saying: sea-travelling.",
-                "English word: the fare you pay. what it is really saying: what the travelling costs."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So auf Wiedersehen and farewell are built the same way: both are a wish handed over at the door, one about seeing again, one about travelling well."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -433,38 +612,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"fahren\" — long a, silent h",
+              "instruction": "\"Ich bin zwanzig Jahre alt.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"fahren\" — long *a*, silent *h*]"
+              "source": "[YOU SAY: \"Ich bin zwanzig Jahre alt.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin gefahren\"",
+              "instruction": "the short form — \"Ich bin zwanzig.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gefahren\"]"
+              "source": "[YOU SAY: the short form — \"Ich bin zwanzig.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"gehen on foot, fahren with wheels\"",
+              "instruction": "your own age, in both lengths",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"gehen on foot, fahren with wheels\"]"
+              "source": "[YOU SAY: your own age, in both lengths]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"fahren — fare — farewell\"",
+              "instruction": "the question and the answer together",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"fahren — fare — farewell\"]"
+              "source": "[YOU SAY: the question and the answer together]"
             },
             {
               "kind": "repeat",
@@ -473,12 +652,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"Ich bin gefahren.\""
+              "text": "\"Ich bin zwanzig Jahre alt.\""
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -490,26 +669,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does fahren mean? (\"To travel, to go by vehicle.\") Which verb would you use walking to the shop? (Gehen.) Say \"I drove.\" (Ich bin gefahren.) Which English word is fahren? (Fare — as in farewell.) Next: the verb for becoming something else."
+              "text": "Say \"I am twenty years old.\" (Ich bin zwanzig Jahre alt.) Shorten it. (Ich bin zwanzig.) Which verb does it use? (Bin.) Which does it not use? (Habe.) Next: why that choice puts German and English on one side and every Romance language on the other."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-werden",
-      "sequence": 585,
-      "title": "werden — \"to become\"",
-      "headword": "werden",
-      "romanization": "werden",
-      "gloss": "to become — the change-of-state half of the rule, in one word",
+      "id": "GE-C14-alter-sein-haben",
+      "sequence": 526,
+      "title": "sein, not haben",
+      "headword": "sein, nicht haben",
+      "romanization": "sein, nicht haben",
+      "gloss": "Germanic IS its years where Romance HAS them — the one place German refuses haben",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a2e4c4de5168ae9",
+      "sourceHash": "fnv1a64:03bfa2392909486d",
       "notice": null,
       "blocks": [
         {
@@ -525,521 +704,48 @@
             },
             {
               "kind": "speech",
-              "text": "The rule has two halves. Gehen, kommen and fahren are the motion half. This one word is the whole of the other half."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: werden",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "werden — \"to become.\""
-            },
-            {
-              "kind": "speech",
-              "text": "ich bin geworden — \"I became.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Sein says what you are. Werden says what you turn into. Where sein sits still, werden moves — and that is exactly why it takes sein as its helper: becoming is change of state in its purest form."
-            },
-            {
-              "kind": "speech",
-              "text": "Ich bin müde geworden. — \"I got tired.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Notice what that sentence does. The adjective you learned with sein now describes an arrival rather than a condition. German makes the difference with the verb; English does it with be against get."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "w-as-v — the w is English v, as in war and wir."
-            },
-            {
-              "kind": "speech",
-              "text": "d-t-final — and in wird (\"he becomes\") the final d devoices to a t, the same rule that turned sind into zint."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "werden is a lost English verb — weorthan, \"to turn, to come to be\" — and its bones are still in the language:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English",
-                "the buried meaning"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "English: toward. the buried meaning: turning to.",
-                "English: backward. the buried meaning: turning back.",
-                "English: worth. the buried meaning: what a thing turns out to be."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So werden means \"to turn into,\" and every time you say toward you are using the same root without knowing it."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"werden\" — VAIR-den",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"werden\" — *VAIR-den*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin geworden\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin geworden\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Ich bin müde geworden.\" — \"I got tired\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich bin müde geworden.\" — \"I got tired\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"werden — toward — worth\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"werden — toward — worth\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Ich bin müde geworden.\""
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does werden mean? (\"To become.\") Why does it take sein? (It is change of state — the other half of the rule.) Say \"I became.\" (Ich bin geworden.) Which English words hide the same root? (Toward, backward, worth.) Next: the two verbs that break the rule by standing still."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-bleiben",
-      "sequence": 590,
-      "title": "bleiben — \"to stay\"",
-      "headword": "bleiben",
-      "romanization": "bleiben",
-      "gloss": "to stay — a verb that takes sein while meaning the exact opposite of change",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:030d4e12470987aa",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Werden takes sein because it is pure change. This verb takes sein too — and it means staying exactly where you are."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: bleiben",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bleiben — \"to stay, to remain.\""
-            },
-            {
-              "kind": "speech",
-              "text": "ich bin geblieben — \"I stayed.\""
-            },
-            {
-              "kind": "speech",
-              "text": "By the rule as stated, this verb should take haben. Staying is not motion and it is not change; it is the absence of both. It takes sein anyway, and every German learner meets it as a fact rather than a consequence."
-            },
-            {
-              "kind": "speech",
-              "text": "The honest way to hold it: bleiben is on the sein list because it is about where you are rather than what you do, and that is the deeper thing the motion rule was pointing at all along."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "diphthong-ei — ei is the eye vowel again, exactly as in sein. So bleiben is BLY-ben, never blee-ben. The two verbs of this chapter that break the rule both carry that vowel."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bleiben is be- plus an old Germanic verb lība-, \"to remain.\" English lost the verb and kept its leavings — literally: what remains after everything else has gone is what English calls the leftovers, and leave in the sense of what is left belongs to the same family."
-            },
-            {
-              "kind": "speech",
-              "text": "German still uses the verb every day; English kept only the residue of it, which is a fitting fate for a word meaning \"to be left over.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bleiben\" — BLY-ben, the eye vowel",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bleiben\" — *BLY-ben*, the *eye* vowel]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin geblieben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin geblieben\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the odd pair — \"ich bin geworden … ich bin geblieben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the odd pair — \"ich bin geworden … ich bin geblieben\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Ich bin geblieben.\""
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does bleiben mean? (\"To stay.\") Say \"I stayed.\" (Ich bin geblieben.) Does the motion rule predict its helper? (No — it has to be learned.) How is ei pronounced? (Like English eye.) Next: the rest of the verbs that have to be learned, including this chapter's own verb."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-perfekt-sein-ausnahmen",
-      "sequence": 595,
-      "title": "ich bin gewesen — and the rest of the learned list",
-      "headword": "ich bin gewesen",
-      "romanization": "ich bin gewesen",
-      "gloss": "the short learned list — the verbs on the sein side that the motion rule does not predict",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c1c41610ff510829",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Bleiben was the first verb the rule failed to predict. Here is the whole of the rest of that list, and it is short."
+              "text": "You spent a whole chapter on haben. Here is the everyday sentence where German refuses to let you use it."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the verbs you simply learn",
+          "title": "Grammar Lens: you ARE your years",
           "segments": [
             {
               "kind": "speech",
-              "text": "Besides motion and change, a small fixed set of verbs takes sein and has to be learned."
+              "text": "German states age with sein, never with haben."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich habe zwanzig Jahre is not German. It is not a clumsy way of putting it; it is not a sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Look what happens when you line the languages up:"
             },
             {
               "kind": "table",
               "headers": [
-                "verb",
-                "perfect",
-                "meaning"
+                "language",
+                "how age works",
+                "literally"
               ],
               "columns": 3,
               "rowCount": 6,
               "utterances": [
-                "verb: sein. perfect: ich bin gewesen. meaning: I have been.",
-                "verb: bleiben. perfect: ich bin geblieben. meaning: I stayed.",
-                "verb: gelingen. perfect: es ist gelungen. meaning: it succeeded.",
-                "verb: geschehen. perfect: es ist geschehen. meaning: it happened.",
-                "verb: passieren. perfect: es ist passiert. meaning: it happened.",
-                "verb: begegnen. perfect: ich bin begegnet. meaning: I met."
+                "language: German. how age works: ich bin … Jahre alt. literally: I am …",
+                "language: English. how age works: I am twenty. literally: I am …",
+                "language: French. how age works: j'ai vingt ans. literally: I have …",
+                "language: Spanish. how age works: tengo veinte años. literally: I have …",
+                "language: Italian. how age works: ho venti anni. literally: I have …",
+                "language: Portuguese. how age works: tenho vinte anos. literally: I have …"
               ]
             },
             {
               "kind": "speech",
-              "text": "Sein and bleiben head the list because they are the two that most clearly contradict the rule: one says a thing simply is, the other says it stays. The rest are events that arrive of their own accord — succeeding, happening, running into somebody — and German treats an arrival as a change."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Look closely at gewesen. Strip the ge- wrap and the -en ending and what is left is wes- — the third of the three roots inside this verb, the one that gave war and English was."
-            },
-            {
-              "kind": "speech",
-              "text": "So sein reaches for that root twice: once for its past tense, once for its participle. The infinitive comes from one root, the present from two, the past and participle from a third. There is no part of this verb that belongs to all of it."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin gewesen; ich bin geblieben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gewesen; ich bin geblieben\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"es ist passiert\" — \"it happened\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"es ist passiert\" — \"it happened\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"war … gewesen\" — the same root twice",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"war … gewesen\" — the same root twice]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ich bin gewesen.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name the two verbs at the head of the learned list. (Sein and bleiben.) Say \"I have been.\" (Ich bin gewesen.) Say \"it happened.\" (Es ist passiert — or es ist geschehen.) Which root is hiding inside gewesen? (wes-, the one behind war.) Next: the ending German does not put on any of these."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-perfekt-sein-agreement",
-      "sequence": 600,
-      "title": "gegangen — the participle that never changes",
-      "headword": "gegangen",
-      "romanization": "gegangen",
-      "gloss": "no agreement in the perfect — one participle for every subject, where French has four",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:252120ada8c61243",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "French draws the same have-against-be line German does. Here is the place the two languages part company, and German comes out easier."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: German agrees with nothing here",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Inside the perfect, the German participle takes no ending at all. Gegangen is gegangen for every person, number and gender."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "French",
-                "German"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "he went. French: il est allé. German: er ist gegangen.",
-                "she went. French: elle est allée. German: sie ist gegangen.",
-                "they went. French: ils sont allés. German: sie sind gegangen."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "French makes the participle agree with its subject and spells the agreement out three different ways. German changes the helper — ist, sind — and leaves the participle exactly where it found it."
-            },
-            {
-              "kind": "speech",
-              "text": "Old High German did inflect it here, at least some of the time. Modern German lost that, along with most of its other adjective-like endings in this position. So the simplicity is not a design; it is an erosion, and German happens to have come out ahead."
+              "text": "Two on one side, four on the other, and the line falls exactly where the families do."
             }
           ]
         },
@@ -1050,23 +756,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "It would be easy to assume German copied this split from Latin, the way it borrowed so much else. It did not."
+              "text": "Romance has its years; Germanic is its years. Age as something you carry against age as something you are — two pictures of the same fact, and each family committed to one of them long ago."
             },
             {
               "kind": "speech",
-              "text": "The haben-perfect and the sein-perfect are native Germanic developments. They grew up alongside the Romance ones rather than out of them: neighbouring languages drifting the same way over centuries of contact, the same areal spread that pushed the simple past out of everyday speech in French, German and Italian together."
+              "text": "What makes German's choice worth pointing at is that German did not hold the Latin line out generally. Its month names are Latin borrowings wholesale; Januar, Februar and the rest came in and stayed. But on this sentence, said several times a week for a lifetime, German kept its own logic."
             },
             {
               "kind": "speech",
-              "text": "Two things to carry forward, and they point in opposite directions:"
-            },
-            {
-              "kind": "speech",
-              "text": "the split between the two helpers is shared with French;"
-            },
-            {
-              "kind": "speech",
-              "text": "the agreement is not."
+              "text": "The words a language uses most are the ones it is least willing to trade — which is the same force that keeps its commonest verbs irregular."
             }
           ]
         },
@@ -1084,29 +782,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"er ist gegangen; sie ist gegangen; sie sind gegangen\"",
+              "instruction": "the rule — \"age takes sein, not haben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"er ist gegangen; sie ist gegangen; sie sind gegangen\"]"
+              "source": "[YOU SAY: the rule — \"age takes sein, not haben\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the participle, unchanged, three times — \"gegangen, gegangen, gegangen\"",
+              "instruction": "the two sides — \"ich bin zwanzig; j'ai vingt ans\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the participle, unchanged, three times — \"gegangen, gegangen, gegangen\"]"
+              "source": "[YOU SAY: the two sides — \"ich bin zwanzig; j'ai vingt ans\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the comparison — \"elle est allée … sie ist gegangen\"",
+              "instruction": "the picture — \"Romance has its years, Germanic is its years\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the comparison — \"elle est allée … sie ist gegangen\"]"
+              "source": "[YOU SAY: the picture — \"Romance has its years, Germanic is its years\"]"
             },
             {
               "kind": "repeat",
@@ -1115,7 +813,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"sie ist gegangen; sie sind gegangen.\""
+              "text": "\"Ich bin zwanzig Jahre alt — bin, not habe.\""
             }
           ]
         },
@@ -1132,26 +830,26 @@
             },
             {
               "kind": "speech",
-              "text": "Does the German participle agree with its subject in the perfect? (No — never.) What changes instead? (The helper — ist, sind.) Does French agree? (Yes.) Did German take this split from Latin? (No — it grew in parallel.) Next: the one place a German participle does take an ending."
+              "text": "Which verb does German use for age? (Sein.) Which does French use? (Avoir — \"to have\".) Which two languages sit together here? (German and English.) Did German borrow its month names from Latin? (Yes — which is what makes keeping this sentence its own worth noticing.) Next: the chapter said through."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-partizip-attributiv",
-      "sequence": 605,
-      "title": "der angekommene Zug — where the ending comes back",
-      "headword": "der angekommene Zug",
-      "romanization": "der angekommene Zug",
-      "gloss": "the one place a German participle does take an ending — standing in front of a noun",
+      "id": "GE-C14-alter-practice",
+      "sequence": 527,
+      "title": "Practice — asking and answering an age",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — asking and answering an age, and hearing which verb German reaches for",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11cdb39b3bcafd6e",
+      "sourceHash": "fnv1a64:6c136a3761421376",
       "notice": null,
       "blocks": [
         {
@@ -1167,195 +865,12 @@
             },
             {
               "kind": "speech",
-              "text": "The participle takes no ending in the perfect. That is a fact about the perfect, not about participles — and the difference matters."
+              "text": "No new words. One question, one answer, and one thing to keep hearing: which verb carries it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: in front of a noun, it inflects",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A German participle standing in front of a noun is working as an adjective, and it takes the endings adjectives take there."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "English"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "ein geschriebener Brief means a written letter.",
-                "der angekommene Zug means the arrived train.",
-                "die eingeschlafene Katze means the fallen-asleep cat."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle. (Katze, \"cat\", gets a lesson of its own later; here it is only carrying the ending.)"
-            },
-            {
-              "kind": "speech",
-              "text": "So German did not lose participle endings everywhere. It lost them in exactly one construction: the perfect."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ge-prefix — all three participles above still carry their ge- wrap, and it is still unstressed. In angekommen it has slid into the middle of the word, behind an-, which is where German puts it when a prefix comes first."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der angekommene Zug\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der angekommene Zug\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"die eingeschlafene Katze\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"die eingeschlafene Katze\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Katze\" (ending)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Katze\" (ending)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"die müde Mutter\" — an ordinary adjective doing the same thing",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"die müde Mutter\" — an ordinary adjective doing the same thing]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does a German participle still take an ending? (In front of a noun, as an adjective.) Where does it never take one? (In the perfect.) Say \"the arrived train.\" (Der angekommene Zug.) What is the participle behaving as, in that phrase? (An adjective.) Next: choosing between the two helpers, on the spot."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-haben-oder-sein",
-      "sequence": 610,
-      "title": "Practice — haben or sein?",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "chapter payoff — choosing between haben and sein until the choice is a reflex",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:b733c1066c278feb",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "No new words. The only skill left in this chapter is picking the right helper without stopping to think, and that is drill."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the whole family in one place",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "perfect",
-                "why"
-              ],
-              "columns": 3,
-              "rowCount": 8,
-              "utterances": [
-                "verb: gehen. perfect: ich bin gegangen. why: motion.",
-                "verb: kommen. perfect: ich bin gekommen. why: motion.",
-                "verb: fahren. perfect: ich bin gefahren. why: motion.",
-                "verb: werden. perfect: ich bin geworden. why: change of state.",
-                "verb: bleiben. perfect: ich bin geblieben. why: learned.",
-                "verb: sein. perfect: ich bin gewesen. why: learned.",
-                "verb: lernen. perfect: ich habe gelernt. why: ordinary activity.",
-                "verb: machen. perfect: ich habe gemacht. why: ordinary activity."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Read the right-hand column and you can see how much of the work the motion rule does on its own: only two rows have to be memorised outright."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "input",
           "title": "The exchange",
           "segments": [
@@ -1368,21 +883,21 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "Wo bist du gewesen? means Where have you been?",
-                "Ich bin nach Berlin gefahren. means I travelled to Berlin.",
-                "Und Anna? Ist sie gekommen? means And Anna? Did she come?",
-                "Anna ist zu Hause geblieben. means Anna stayed at home.",
-                "Ich habe viel gelernt. Jetzt bin ich müde. means I learned a lot. Now I am tired."
+                "Wie alt bist du? means How old are you?",
+                "Zwanzig Jahre alt. Und du? means Twenty years old. And you?",
+                "Ich bin achtzehn. means I am eighteen.",
+                "Und du bist müde. means And you are tired.",
+                "Aber nicht alt! means But not old!"
               ]
             },
             {
               "kind": "speech",
-              "text": "Note the third and fourth lines: ist sie gekommen, Anna ist geblieben — a feminine subject both times, and not one letter added to either participle."
+              "text": "Every line runs on the same verb, and two of them drop it the way speech does — zwanzig Jahre alt answers the question on its own. Nothing here needs haben, and the last two lines put müde and alt side by side in the slot they share."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1395,38 +910,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast pair — \"ich habe gelernt … ich bin gegangen\"",
+              "instruction": "the question, then your own answer",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast pair — \"ich habe gelernt … ich bin gegangen\"]"
+              "source": "[YOU SAY: the question, then your own answer]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"bin gekommen, bin gefahren, bin geworden, bin geblieben, bin gewesen\"",
+              "instruction": "the answer short, then long",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"bin gekommen, bin gefahren, bin geworden, bin geblieben, bin gewesen\"]"
+              "source": "[YOU SAY: the answer short, then long]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the French comparison — \"elle est allée … sie ist gegangen\", no ending at all",
+              "instruction": "the two sides — \"ich bin zwanzig; j'ai vingt ans\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the French comparison — \"elle est allée … sie ist gegangen\", no ending at all]"
+              "source": "[YOU SAY: the two sides — \"ich bin zwanzig; j'ai vingt ans\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the one place the ending returns — \"der angekommene Zug\"",
+              "instruction": "the twins — \"Jahr, year; alt, old; alt, adult\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the one place the ending returns — \"der angekommene Zug\"]"
+              "source": "[YOU SAY: the twins — \"Jahr, year; alt, old; alt, adult\"]"
             },
             {
               "kind": "prompt",
@@ -1444,27 +959,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich habe gelernt … ich bin gegangen.\""
+              "text": "\"Wie alt bist du? Ich bin zwanzig Jahre alt.\""
             }
           ]
         },
         {
-          "index": 4,
-          "type": "notice",
-          "title": "What you've built — where this volume pauses",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You have gone from guten Tag to two working past tenses, and the method has not changed once: take the word apart, find the English cousin sleeping inside it, and let the family tree do the memorising for you."
-            },
-            {
-              "kind": "speech",
-              "text": "The next volume picks the thread back up with describing what you see."
-            }
-          ]
-        },
-        {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1476,7 +976,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which helper for tanzen, \"to dance\"? (Haben — an activity.) Which for fahren? (Sein — motion.) Which two verbs on the sein list mean the opposite of change? (Sein and bleiben.) Say \"she stayed.\" (Sie ist geblieben — no ending on the participle.)"
+              "text": "Ask someone's age. (Wie alt bist du?) Answer with your own, both long and short. Which verb does German use, and which does it refuse? (Sein; not haben.) Which English word shares a root with alt? (Adult.) Which four languages say \"I have twenty years\"? (French, Spanish, Italian, Portuguese.)"
             }
           ]
         }

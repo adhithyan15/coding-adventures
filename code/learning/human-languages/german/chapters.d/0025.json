@@ -1,25 +1,23 @@
 {
   "chapter": 25,
-  "title": "The Past That Takes To Be",
-  "label": "ch:ge-perfekt-sein",
-  "canDo": "I can build the German past of verbs of motion and change with the verb for “to be” instead of the verb for “to have”, and say why the participle never changes.",
+  "title": "Being Your Years",
+  "label": "ch:ge-alter",
+  "canDo": "I can ask how old somebody is and say my own age in German, using the verb German insists on for it.",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-PAST"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C16-haben-oder-sein",
+    "lesson": "GE-C14-alter-practice",
     "kind": "task",
-    "summary": "Motion and change of state build their perfect on sein rather than haben — ich bin gegangen beside ich habe gelernt. The chapter teaches the rule, then the four verbs that follow it (kommen, fahren, werden, bleiben), then the short list that has to be learned outright, and finally the one place German is simpler than French: the participle in the perfect agrees with nothing at all.",
+    "summary": "This material was the second half of the hand-written haben chapter, and it could not stay there: ich bin zwanzig Jahre alt needs ich bin, and Wie alt bist du? needs du bist — both of which the chapter on sein teaches. It sits here instead, immediately after that chapter, where every word it needs is already owned, and it closes the haben chapter's open question by showing the one everyday sentence where German refuses that verb.",
     "assesses": [
-      "GE-GRAMMAR-PERFEKT-SEIN-01",
-      "GE-LEX-KOMMEN-01",
-      "GE-LEX-FAHREN-01",
-      "GE-LEX-WERDEN-01",
-      "GE-LEX-BLEIBEN-01",
-      "GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01",
-      "GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01",
-      "GE-GRAMMAR-PARTIZIP-ATTRIBUTIV-01"
+      "GE-LEX-ALT-01",
+      "GE-LEX-JAHR-01",
+      "GE-ETYMON-JAHR-ALT-01",
+      "GE-LEX-WIE-ALT-BIST-DU-01",
+      "GE-LEX-ICH-BIN-JAHRE-ALT-01",
+      "GE-GRAMMAR-ALTER-MIT-SEIN-01"
     ],
-    "note": "The second half of the hand-written chapter 16, now a chapter of its own. The payoff claims all eight atoms: the practice lesson runs the whole haben/sein table, the French comparison that shows the missing agreement, and the attributive participle that is the one place the ending returns."
+    "note": "Chapter 19 is generated from schema-v2 lessons, so the payoff is atom-scored. Lesson ids keep the GE-C14-* prefix because that is the chapter they were written for; the Spanish convention lets ids stay put while chapter numbers move."
   }
 }

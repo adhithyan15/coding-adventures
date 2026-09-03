@@ -233,6 +233,41 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 224 | 36 | PA-C36-kall-milaange | see you tomorrow |
 | 225 | 36 | PA-W09-aunkar | place the short-u mark below |
 | 226 | 36 | PA-C36-shubh-raat | good night, and write ਸ਼ੁਭ ਰਾਤ |
+| 227 | 37 | PA-C37-nahin-vaak | not, inside a sentence |
+| 228 | 37 | PA-C37-samajh-nahin | I did not understand |
+| 229 | 37 | PA-C37-nahin-write | not, on the page |
+| 230 | 37 | PA-C37-nahin-pata | I don't know |
+| 231 | 37 | PA-C37-nahin-checkpoint | contradiction and repair, scored as one performance |
+| 232 | 38 | PA-C38-ate | and |
+| 233 | 38 | PA-C38-ate-vaak | and, joining two whole sentences |
+| 234 | 38 | PA-C38-ate-write | and, on three signs taught long ago |
+| 235 | 38 | PA-C38-jaan | or |
+| 236 | 38 | PA-C38-na-na | neither … nor |
+| 237 | 39 | PA-C39-par | but |
+| 238 | 39 | PA-C39-lekin | but |
+| 239 | 39 | PA-C39-par-write | but, on two signs |
+| 240 | 39 | PA-C39-doublet | the pair rule |
+| 241 | 39 | PA-C39-but-checkpoint | contrast and the pair rule, scored as one performance |
+| 242 | 40 | PA-C40-ki | that |
+| 243 | 40 | PA-C40-sochda-ki | I think that... |
+| 244 | 40 | PA-C40-ki-write | that, on the page |
+| 245 | 40 | PA-C40-kyon | why |
+| 246 | 40 | PA-C40-kyunki | because |
+| 247 | 41 | PA-C41-je | if |
+| 248 | 41 | PA-C41-je-tan | if ... then ... |
+| 249 | 41 | PA-C41-je-write | if, on two signs already in the hand |
+| 250 | 41 | PA-C41-jadon | when |
+| 251 | 41 | PA-C41-lai | for, in order to |
+| 252 | 42 | PA-C42-oh | he, she, it |
+| 253 | 42 | PA-C42-asi | we |
+| 254 | 42 | PA-C42-oh-write | he, she, it, on two signs already in the hand |
+| 255 | 42 | PA-C42-jo | the one who, the thing that |
+| 256 | 42 | PA-C42-jo-oh | the one who ... that one ... |
+| 257 | 43 | PA-C43-kaun | who |
+| 258 | 43 | PA-C43-kadon | when |
+| 259 | 43 | PA-W10-thatha | the consonant tha |
+| 260 | 43 | PA-C43-kitthe | where |
+| 261 | 43 | PA-C43-kinne | how many, how much |
 
-After session 226, the track continues through the dependency-linked backlog;
+After session 261, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

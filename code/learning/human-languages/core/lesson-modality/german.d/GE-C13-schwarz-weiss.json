@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C13-schwarz-weiss",
     "language": "german",
-    "chapter": 17,
-    "sequence": 295,
+    "chapter": 19,
+    "sequence": 315,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f45a3d37f4f76fd7"
+    "sourceHash": "fnv1a64:993419f099a22484"
   },
   "findings": []
 }

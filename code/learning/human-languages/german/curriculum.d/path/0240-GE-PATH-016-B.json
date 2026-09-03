@@ -3,7 +3,14 @@
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
     "GE-C09-monate",
-    "GE-C09-jahreszeiten"
+    "GE-C09-januar",
+    "GE-C09-februar",
+    "GE-C09-maerz",
+    "GE-C09-maerz-mars",
+    "GE-C09-april",
+    "GE-C09-mai",
+    "GE-C09-juni",
+    "GE-C09-monate-praxis"
   ],
   "before": [],
   "inline": [

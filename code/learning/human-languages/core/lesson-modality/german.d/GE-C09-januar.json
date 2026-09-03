@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C09-januar",
+    "language": "german",
+    "chapter": 13,
+    "sequence": 256,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ddc78078dd9537e"
+  },
+  "findings": []
+}

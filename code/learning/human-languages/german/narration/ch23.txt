@@ -1,237 +1,328 @@
-German, chapter 23: Being Your Years.
-7 lessons. All 7 can be done entirely by ear.
+German, chapter 23: The Simple Past.
+10 lessons. All 10 can be done entirely by ear.
 
 
-Lesson 1 of 7.
-alt — "old".
+Lesson 1 of 10.
+-te — the one-word past.
 
 Warm-up.
 [pause 2 seconds]
-You can say ich bin müde. Here is a second adjective to put in the same slot, and it opens a sentence you will be asked for constantly.
+German has a second past tense. It needs no helper verb and no participle — just a stem and an ending.
 
-You'll want to know: alt.
-alt — "old."
-One syllable. It behaves exactly as müde did: after sein an adjective takes no ending at all, so ich bin alt needs nothing added.
-It is the same word as English old, and you can nearly hear it — German kept the a where English rounded it.
-
-Sounds you'll need.
-vowel-a — short and clipped, the a of English hat.
-d-t-final — the -lt closes crisply, both consonants sounded.
+Grammar Lens: add -te to the stem.
+Take a regular verb's stem and put -te on it.
+The tense that ending builds is called the Präteritum. Where the Perfekt spends two words and a bracket, this one spends a single word: sag- plus -te and the sentence is done.
+The two tenses report the same events. That is worth saying plainly, because a learner reasonably expects a language with two pasts to be drawing a distinction with them, the way English draws one between I said and I have said. German draws none. What separates its two pasts is something else entirely, and it takes a few more lessons to arrive at.
+The -te itself has a history reaching well beyond German, and that comes first.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "alt"]
+[your turn — say: the recipe — "stem plus te"]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "alt, old"]
+[your turn — say: the name — "das Präteritum"]
 [pause 8 seconds for the answer]
-[your turn — say: with the verb — "ich bin alt", "ich bin müde"]
+[your turn — say: how many words it takes — "one"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"alt, alt — old."
+"stem plus -te."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "old." (Alt.) Does it take an ending after bin? (No.) Which English word is it? (Old.) Next: the noun that goes with it.
+Which ending builds the Präteritum on a regular verb? (-te.) How many words does it need? (One.) How many does the Perfekt need? (Two.) Do the two tenses mean different things? (No.) Next: the first verb through the new ending.
 
 
-Lesson 2 of 7.
-das Jahr — "the year".
+Lesson 2 of 10.
+ich sagte — "I said," in one word.
 
 Warm-up.
 [pause 2 seconds]
-A noun you have already met inside a longer word, now on its own.
+Run the new ending on the verb this chapter started from.
 
-You'll want to know: das Jahr.
-das Jahr — "the year." Plural: die Jahre.
-Capitalised, because it is a noun and German capitalises all of them. The plural adds -e and takes die, as plurals do.
-You have seen it before without being told: die Jahreszeiten, the seasons, is "the year's times." The year was sitting inside that word the whole time.
-The age sentence wants the plural — you are so many Jahre old — so it is Jahre that will do the work from here.
+You'll want to know: ich sagte.
+ich sagte — "I said."
+Stem sag-, ending -te. Two syllables and it is finished, where the Perfekt took three words to say the same thing:
+ich sagte, ich habe gesagt.
+Both are "I said." Neither is more past than the other, neither is more polite, and neither is wrong. Hold that in mind while the differences that do exist arrive.
 
 Sounds you'll need.
-j-as-y — German j is the y of English yes. So Jahr opens like year, not like jar.
-h-silent-lengthening — that h is not pronounced. It is the silent lengthening h you met inside gehen, and Jahr was named there as one of the three words that hide it, beside sehr and Ihnen. Here it is.
-long-a — so the vowel runs long: YAAR. Say it beside English year and the two are almost the same noise.
+long-a — the stem vowel is the same long a as in sagen; the new ending does not shorten it.
+final-te — the -te is a full unstressed syllable, tuh, not a bare t. Hear the difference against the participle: ge-SAHKT has one syllable at the end, SAHK-tuh has two.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "das Jahr" — j as y, h silent, a long]
+[your turn — say: "ich sagte"]
 [pause 8 seconds for the answer]
-[your turn — say: singular and plural — "das Jahr, die Jahre"]
+[your turn — say: the pair back to back — "ich sagte … ich habe gesagt"]
 [pause 8 seconds for the answer]
-[your turn — say: where you had already met it — "die Jahreszeiten"]
+[your turn — say: the two endings apart — "gesagt, sagte"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"das Jahr, die Jahre."
+"ich sagte, ich habe gesagt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the year." (Das Jahr.) And the plural. (Die Jahre.) How is the J sounded? (Like English y.) What is the h doing? (Lengthening the vowel — it is not pronounced.) Which longer word has Jahr inside? (Jahreszeiten.) Next: where Jahr and alt both come from.
+Say "I said" in one word. (Ich sagte.) And in three. (Ich habe gesagt.) Which of them is further in the past? (Neither.) How many syllables does sagte have? (Two.) Next: the same ending on the verb for doing.
 
 
-Lesson 3 of 7.
-Jahr and alt, taken apart — both words are English wearing German spelling, and alt has a Latin cousin hiding in adult.
+Lesson 3 of 10.
+ich machte — "I made," "I did".
 
 Warm-up.
 [pause 2 seconds]
-Two words, both inherited rather than borrowed, and one of them has a Latin cousin you would never guess.
+You have gemacht. Build the other past of the same verb before reading on.
+
+You'll want to know: ich machte.
+ich machte — "I made," "I did."
+Mach- plus -te. Notice what the two pasts of this verb have in common: the stem. Gemacht wrapped it and machte suffixed it, and neither touched a letter inside it.
+That is the whole promise of a weak verb. Whatever German asks of it, the middle stays put — which is why the four participles of the last chapter and the -te forms of this one can be built from any regular verb you meet, on the spot, without a list.
+er machte das, er hat das gemacht.
+Same person, same event, two tenses.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich machte"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "er machte das … er hat das gemacht"]
+[pause 8 seconds for the answer]
+[your turn — say: both new forms — "sagte, machte"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich sagte, ich machte."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I did" in one word. (Ich machte.) What do machte and gemacht share? (The stem mach-.) Does either change the stem? (No.) Say "he did that" both ways. (Er machte das; er hat das gemacht.) Next: where that -te came from, and the English ending that is the same thing.
+
+
+Lesson 4 of 10.
+The dental preterite — a Germanic invention.
+
+Warm-up.
+[pause 2 seconds]
+Say sagte, then say walked. Both endings are made with the tongue against the teeth, and that is not a coincidence.
 
 The word, taken apart.
+The German -te is what linguists call the dental preterite: a past tense made by bolting a t or d sound onto a stem. Dental, because those sounds are made at the teeth.
+[a table of 3 rows, read aloud]
+language: German. present: sag-. past: sagte.
+language: English. present: walk. past: walked.
+language: Dutch. present: werk-. past: werkte.
+Three languages, one device, inherited rather than borrowed — this is a Germanic invention, and it is one of the features that identifies the family. Everything with a -t or -d past in Germanic comes from the same ancestor.
+Latin built nothing of the kind. Its past came from inherited perfect endings and from reduplication, and its descendants carried that on: French parla, Spanish habló. So sagte and walked are one machine, and parla and habló are a different one — which is why an English speaker recognises the German ending on sight and a Spanish speaker does not.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three together — "sagte, walked, werkte"]
+[pause 8 seconds for the answer]
+[your turn — say: the name — "the dental preterite"]
+[pause 8 seconds for the answer]
+[your turn — say: the two machines — "sagte and walked; parla and habló"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"sagte, walked — the same ending."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the -te called? (The dental preterite.) Why dental? (It is made at the teeth.) Which English ending is the same thing? (-ed.) Did Latin have it? (No — Romance builds its past another way.) Next: the one verb whose -te form you will hear constantly.
+
+
+Lesson 5 of 10.
+ich hatte — "I had".
+
+Warm-up.
+[pause 2 seconds]
+The dental ending on the verb you have been leaning on for two chapters.
+
+You'll want to know: ich hatte.
+ich hatte — "I had."
+Haben drops its b — the same b that goes missing in du hast and er hat — and the dental ending lands on what is left, doubling the t in the spelling: hat-te. Two syllables, both short.
+English did the identical thing to the identical verb and then wore the result down further: have lost its consonant and took a -d, giving had. So hatte and had are the same word doing the same job.
+Haben has a Perfekt of its own as well — ich habe gehabt, "I have had" — built by the ordinary recipe, since haben is a perfectly ordinary verb when it is not busy helping another one.
+
+Sounds you'll need.
+d-t-final — the doubled tt is one sharp t, and the vowel in front of it is short and clipped. HAT-tuh, never HAH-tuh.
+final-te — the ending is still a full unstressed syllable.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich hatte"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "ich hatte … ich habe gehabt"]
+[pause 8 seconds for the answer]
+[your turn — say: the English twin — "hatte, had"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich hatte, ich hatte."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I had." (Ich hatte.) Which letter of haben is missing? (The b.) Say the same thing in the Perfekt. (Ich habe gehabt.) Which English word is hatte? (Had.) Next: which of the two pasts a German actually reaches for, and where.
+
+
+Lesson 6 of 10.
+Which past, and where — what separates the two pasts — not meaning, but speech against writing, and north against south.
+
+Warm-up.
+[pause 2 seconds]
+Two tenses, one meaning. Time to answer the question that has been waiting since the -te arrived: when does a German say which?
+
+Grammar Lens: speech takes one, writing takes the other.
+The Perfekt belongs to speech. The Präteritum belongs to narrative writing.
 [a table of 2 rows, read aloud]
-German: Jahr. from: Germanic jēra. English: year.
-German: alt. from: Germanic aldaz. English: old.
-Neither line passes through Latin, which is worth noticing in a chapter about age: German borrowed its month names wholesale from Latin, and kept its own words for the year and for being old.
-Now the cousin. The root behind aldaz also went into Latin, as alere — "to nourish, to grow." From alere English took adult, which is literally "grown up."
-So alt and adult are the same idea taken down two roads: something that has been fed and has grown. Ageing as growth rather than as decay, which is a kinder picture than English usually admits to.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the two twins — "Jahr, year; alt, old"]
-[pause 8 seconds for the answer]
-[your turn — say: the Latin cousin — "alt, alere, adult"]
-[pause 8 seconds for the answer]
-[your turn — say: what the root meant — "to nourish, to grow"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Jahr, year. Alt, old."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which English word is Jahr? (Year.) And alt? (Old.) Which English word comes from alt's Latin cousin? (Adult.) What did that cousin mean? ("To nourish, to grow.") Next: the question you will be asked with these two words.
-
-
-Lesson 4 of 7.
-Wie alt bist du? — how old are you — word for word the English question, built from four words you own.
-
-Warm-up.
-[pause 2 seconds]
-You have wie, you have alt, and you have du bist. That is the whole question.
-
-You'll want to know: Wie alt bist du?
-Wie alt bist du? — "How old are you?"
-Four words, and every one of them is already yours. Read it against the English and nothing has moved: how — old — are — you.
-That is not a coincidence to be grateful for; it is inheritance. Neither language borrowed this question from the other. They have been asking it the same way since before either was called German or English.
-The verb sits second, as it does in every German statement and question with a question word in front — Wie first, bist second, and the rest behind.
-To someone you would address formally, it is Wie alt sind Sie? — the same question with the polite form of the verb.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "Wie alt bist du?"]
-[pause 8 seconds for the answer]
-[your turn — say: it against the English — "how old are you; wie alt bist du"]
-[pause 8 seconds for the answer]
-[your turn — say: the formal one — "Wie alt sind Sie?"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Wie alt bist du?"
-
-Wrap-up Recall.
-[pause 3 seconds]
-Ask how old someone is, informally. (Wie alt bist du?) And formally. (Wie alt sind Sie?) Which word sits second? (Bist.) How many of the four words were new? (None.) Next: how to answer it.
-
-
-Lesson 5 of 7.
-ich bin zwanzig Jahre alt — I am twenty years old — the answer, word for word the English sentence.
-
-Warm-up.
-[pause 2 seconds]
-The answer, and it is as English as the question was.
-
-You'll want to know: ich bin zwanzig Jahre alt.
-Ich bin zwanzig Jahre alt. — "I am twenty years old."
-Word for word, that is the English sentence: I — am — twenty — years — old. Put any number you own in the middle and the sentence is yours.
-And German shortens it the same way English does. Ich bin zwanzig is complete and ordinary, exactly as "I'm twenty" is — the Jahre alt can go, and in speech usually does.
-Notice which verb is doing the work: bin. Not habe. Hold on to that, because it is the whole point of the next lesson.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "Ich bin zwanzig Jahre alt."]
-[pause 8 seconds for the answer]
-[your turn — say: the short form — "Ich bin zwanzig."]
-[pause 8 seconds for the answer]
-[your turn — say: your own age, in both lengths]
-[pause 8 seconds for the answer]
-[your turn — say: the question and the answer together]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Ich bin zwanzig Jahre alt."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I am twenty years old." (Ich bin zwanzig Jahre alt.) Shorten it. (Ich bin zwanzig.) Which verb does it use? (Bin.) Which does it not use? (Habe.) Next: why that choice puts German and English on one side and every Romance language on the other.
-
-
-Lesson 6 of 7.
-sein, not haben — Germanic IS its years where Romance HAS them — the one place German refuses haben.
-
-Warm-up.
-[pause 2 seconds]
-You spent a whole chapter on haben. Here is the everyday sentence where German refuses to let you use it.
-
-Grammar Lens: you ARE your years.
-German states age with sein, never with haben.
-Ich habe zwanzig Jahre is not German. It is not a clumsy way of putting it; it is not a sentence.
-Look what happens when you line the languages up:
-[a table of 6 rows, read aloud]
-language: German. how age works: ich bin … Jahre alt. literally: I am …
-language: English. how age works: I am twenty. literally: I am …
-language: French. how age works: j'ai vingt ans. literally: I have …
-language: Spanish. how age works: tengo veinte años. literally: I have …
-language: Italian. how age works: ho venti anni. literally: I have …
-language: Portuguese. how age works: tenho vinte anos. literally: I have …
-Two on one side, four on the other, and the line falls exactly where the families do.
+tense: Perfekt. where it lives: everyday conversation, and dominant there.
+tense: Präteritum. where it lives: novels, reports, anything told on the page.
+Open a German novel and the story runs in Präteritum from the first page to the last. Stand in a German kitchen and you will barely hear it. Neither audience thinks it is choosing a tense; each is simply doing what that setting does.
+So the practical instruction for a speaker is lopsided and easy: produce the Perfekt, recognise the Präteritum. You will read far more of it than you will ever need to say.
 
 Why it's said this way.
-Romance has its years; Germanic is its years. Age as something you carry against age as something you are — two pictures of the same fact, and each family committed to one of them long ago.
-What makes German's choice worth pointing at is that German did not hold the Latin line out generally. Its month names are Latin borrowings wholesale; Januar, Februar and the rest came in and stayed. But on this sentence, said several times a week for a lifetime, German kept its own logic.
-The words a language uses most are the ones it is least willing to trade — which is the same force that keeps its commonest verbs irregular.
+There is a second axis, and it is geographic. Spoken Präteritum has largely vanished from conversation in southern Germany, Austria and Switzerland; further north it survives noticeably better. A Hamburg speaker will use forms in conversation that a Munich speaker would find bookish.
+That map is not decoration — the next lessons turn out to explain it — and it means the honest answer to "do Germans say ich sagte?" is: some of them, some of the time, and it depends where you are standing.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the rule — "age takes sein, not haben"]
+[your turn — say: the split — "Perfekt for speech, Präteritum for writing"]
 [pause 8 seconds for the answer]
-[your turn — say: the two sides — "ich bin zwanzig; j'ai vingt ans"]
+[your turn — say: your own instruction — "produce the Perfekt, recognise the Präteritum"]
 [pause 8 seconds for the answer]
-[your turn — say: the picture — "Romance has its years, Germanic is its years"]
+[your turn — say: the map — "weaker in the south, stronger in the north"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Ich bin zwanzig Jahre alt — bin, not habe."
+"Perfekt spoken, Präteritum written."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which verb does German use for age? (Sein.) Which does French use? (Avoir — "to have".) Which two languages sit together here? (German and English.) Did German borrow its month names from Latin? (Yes — which is what makes keeping this sentence its own worth noticing.) Next: the chapter said through.
+Which past does a novel use? (The Präteritum.) Which does a conversation use? (The Perfekt.) Which should you produce? (The Perfekt.) Where is spoken Präteritum weakest? (The south.) Next: the forms that ignore all of this and stay spoken everywhere.
 
 
-Lesson 7 of 7.
-Practice — asking and answering an age.
+Lesson 7 of 10.
+ich konnte — "I could".
 
 Warm-up.
 [pause 2 seconds]
-No new words. One question, one answer, and one thing to keep hearing: which verb carries it.
+The last new form of the chapter, and a Präteritum nobody thinks twice about saying out loud.
 
-The exchange.
-[a table of 5 rows, read aloud]
-Wie alt bist du? means How old are you?
-Zwanzig Jahre alt. Und du? means Twenty years old. And you?
-Ich bin achtzehn. means I am eighteen.
-Und du bist müde. means And you are tired.
-Aber nicht alt! means But not old!
-Every line runs on the same verb, and two of them drop it the way speech does — zwanzig Jahre alt answers the question on its own. Nothing here needs haben, and the last two lines put müde and alt side by side in the slot they share.
+You'll want to know: ich konnte.
+ich konnte — "I could," "I was able to."
+The dental ending again, doubled in the spelling as it was in hatte: konn-te. It belongs to a small family of verbs German calls modal — the ones that lean on another verb, the way English can, must and may do.
+Those verbs are the Präteritum's stronghold in ordinary speech. Nobody in Munich says ich habe gekonnt over dinner; they say ich konnte.
+
+The word, taken apart.
+Konnte and English could descend from one Germanic verb, kunnaną, which meant "to know how" rather than "to be physically able." Ability arrived later, out of knowledge.
+That older sense is still visible in the English relatives: know, cunning (originally "knowing"), and uncouth, which began as "unknown." The l that English wrote into could is pure accident — it was copied from would and should centuries after anyone stopped pronouncing it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the question, then your own answer]
+[your turn — say: "ich konnte"]
 [pause 8 seconds for the answer]
-[your turn — say: the answer short, then long]
+[your turn — say: the two doubled forms — "hatte, konnte"]
 [pause 8 seconds for the answer]
-[your turn — say: the two sides — "ich bin zwanzig; j'ai vingt ans"]
-[pause 8 seconds for the answer]
-[your turn — say: the twins — "Jahr, year; alt, old; alt, adult"]
-[pause 8 seconds for the answer]
-[your turn — say: the whole exchange, both voices]
+[your turn — say: the old meaning — "konnte, could — knew how"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Wie alt bist du? Ich bin zwanzig Jahre alt."
+"ich konnte, ich hatte."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask someone's age. (Wie alt bist du?) Answer with your own, both long and short. Which verb does German use, and which does it refuse? (Sein; not haben.) Which English word shares a root with alt? (Adult.) Which four languages say "I have twenty years"? (French, Spanish, Italian, Portuguese.)
+Say "I could." (Ich konnte.) What did the verb behind it originally mean? ("To know how.") Name an English cousin. (Know, cunning, or uncouth.) Is konnte bookish? (No — it is said out loud everywhere.) Next: why a handful of forms get that exemption.
+
+
+Lesson 8 of 10.
+The forms that stayed spoken — the short list of Präteritum forms that stay spoken everywhere, and the reason the list is short.
+
+Warm-up.
+[pause 2 seconds]
+Hatte. Konnte. Both are Präteritum, and both come out of a German mouth without a second thought. So the writing-only rule has holes in it.
+
+Grammar Lens: a short list of survivors.
+A handful of very common verbs keep their one-word past in speech, everywhere in the German-speaking world.
+Three groups make up almost the whole list:
+hatte — the past of haben;
+konnte and its modal siblings — musste, wollte, durfte;
+the past of the verb for "to be," which arrives two chapters from now and is the most-said of them all.
+Everything else in the Präteritum obeys the split you learned last: written, not spoken.
+Why these? Because they are the verbs said most often, and frequency protects a form the way it protects an irregularity. A shape you produce fifty times a day is never up for replacement; a shape you produce once a month quietly gets swapped for the compound version and nobody notices the swap happening.
+So the practical list is genuinely short, and it is worth having by heart rather than by rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the survivors you own — "hatte, konnte"]
+[pause 8 seconds for the answer]
+[your turn — say: the modal siblings — "musste, wollte, durfte"]
+[pause 8 seconds for the answer]
+[your turn — say: the reason — "frequency protects a form"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"hatte, konnte — spoken everywhere."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name two Präteritum forms a German says out loud. (Hatte, konnte.) Which family does konnte belong to? (The modals.) Why did these survive? (They are said most often.) Next: why the rest of the tense retreated, and where the retreat came from.
+
+
+Lesson 9 of 10.
+The same retreat, three times over — an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours.
+
+Warm-up.
+[pause 2 seconds]
+German is not the only language that let a two-word past crowd out a one-word one. Two of its neighbours did the identical thing at the identical time.
+
+The word, taken apart.
+[a table of 3 rows, read aloud]
+language: German. one-word past: Präteritum. what took it over in speech: Perfekt.
+language: French. one-word past: passé simple. what took it over in speech: passé composé.
+language: Italian. one-word past: passato remoto. what took it over in speech: passato prossimo.
+Two Romance languages and one Germanic one, doing the same thing over the same centuries — and not by coincidence. The dental -te and the Romance endings came from completely different ancestors, so nothing inherited can account for three languages arriving at the same answer.
+Geography can. Southern Germany, France and northern Italy are one connected block of territory, and the change spread through it by contact: speakers who live near each other borrow habits, and a habit of speech travels across a language boundary as easily as across a dialect one. Linguists call a change that spreads that way an areal change.
+
+Why it's said this way.
+Two pieces of evidence make the contact story stick rather than merely sound good.
+The first is what did not happen at the western edge. Spanish and Portuguese kept their one-word past far more fully in speech, and they are the two languages furthest from that connected block.
+The second is the map inside German itself, which you already met: the Präteritum is weakest in the south, nearest the centre of the change, and strongest in the north, furthest from it. A change spreading outward from a region should thin as it goes, and that is exactly what German shows.
+Geography did not dictate any single sentence. But it explains why a Germanic language and two Romance ones moved in step, and why one end of Germany sounds older than the other.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three languages — "German, French, Italian: the same retreat"]
+[pause 8 seconds for the answer]
+[your turn — say: the name — "an areal change, spread by contact"]
+[pause 8 seconds for the answer]
+[your turn — say: the inside map — "south more Perfekt, north more Präteritum"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"areal change — it spread by contact."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two neighbours made the same change? (French and Italian.) Did German inherit it from Latin? (No — the two families build their pasts from different material.) What is a change that spreads by contact called? (An areal change.) Which two languages at the western edge kept their one-word past? (Spanish and Portuguese.) Next: the chapter run through end to end.
+
+
+Lesson 10 of 10.
+Practice — the two pasts, side by side.
+
+Warm-up.
+[pause 2 seconds]
+No new words. The point of this one is to hear, in your own voice, that two different-sounding sentences report the same event.
+
+Grammar Lens: one meaning, two shapes.
+[a table of 3 rows, read aloud]
+meaning: I said. Präteritum: ich sagte. Perfekt: ich habe gesagt.
+meaning: I made. Präteritum: ich machte. Perfekt: ich habe gemacht.
+meaning: I had. Präteritum: ich hatte. Perfekt: ich habe gehabt.
+Say each pair back to back — ich sagte … ich habe gesagt — and then er machte das … er hat das gemacht. Nothing about the meaning has moved. All that has changed is which room you are standing in.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "ich sagte … ich habe gesagt"]
+[pause 8 seconds for the answer]
+[your turn — say: the other pair — "er machte das … er hat das gemacht"]
+[pause 8 seconds for the answer]
+[your turn — say: the survivors — "ich hatte, ich konnte"]
+[pause 8 seconds for the answer]
+[your turn — say: your own instruction — "produce the Perfekt, recognise the Präteritum"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich sagte, ich habe gesagt."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I made" both ways. (Ich machte; ich habe gemacht.) Which of the two would a novel use? (The Präteritum.) Which would you say out loud? (The Perfekt — except for the survivors.) What is the -te called? (The dental preterite.) What kind of change pushed the tense out of speech? (An areal one.) Next: the verb every one of these sentences has been waiting for.

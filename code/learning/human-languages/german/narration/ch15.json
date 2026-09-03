@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 15,
-  "title": "Bread, Water, Wine",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:18828e9cbf9eae91",
+  "title": "The Seasons Go Native",
+  "drivablePrefix": 11,
+  "sourceHash": "fnv1a64:70e5c956c4f239e6",
   "lessons": [
     {
-      "id": "GE-C11-brot",
-      "sequence": 275,
-      "title": "das Brot — bread, and the third gender",
-      "headword": "das Brot",
-      "romanization": "das Brot",
-      "gloss": "bread — inherited Germanic, the twin of English bread",
+      "id": "GE-C09-jahr",
+      "sequence": 271,
+      "title": "das Jahr — \"the year\"",
+      "headword": "das Jahr",
+      "romanization": "das Jahr",
+      "gloss": "the year — the span the twelve months add up to, and a word German never borrowed",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f20a84569f3ad8b",
+      "sourceHash": "fnv1a64:103c6d77644ebb81",
       "notice": null,
       "blocks": [
         {
@@ -35,29 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "Where the Romance sisters all say a version of Latin pānis (French pain, Italian pane), German goes its own Germanic way: Brot — the direct twin of English bread. And it brings a new grammatical face: the neuter article, das."
+              "text": "Januar to Dezember. Twelve months. There is a word for the whole of that, and it is not from Latin."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "Taken apart",
+          "type": "input",
+          "title": "You'll want to know: das Jahr",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Brot (\"bread\") from old Germanic braudam — the same word that became English bread. No Latin here: this is a native word, like Vater and Wasser, from the Germanic core the two languages share."
+              "text": "das Jahr — \"the year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Germanic jēra, the twin of English year."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of the twelve names inside it was bought from Rome. The container was not, any more than Monat was. German bought the labels and kept the measurements."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The third gender — das",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "You have met der (masculine, der Vater) and die (feminine, die Mutter). German has a third: das, the neuter — and Brot is one: das Brot. (German nouns are also always capitalized — Brot, Vater, Wasser — a rule no other language here follows.) So the article set is now complete: der / die / das."
+              "text": "j-as-y — the j is English y, as in Januar and Juni: yaar."
+            },
+            {
+              "kind": "speech",
+              "text": "h-silent-lengthening — the h is not pronounced. It stretches the a in front of it, which is the job that h does inside a German word."
+            },
+            {
+              "kind": "speech",
+              "text": "So Jahr is two letters of sound and two letters of instruction. Written, it looks nothing like year; said, it is the same word."
             }
           ]
         },
@@ -75,29 +91,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Brot\" — long o, the neuter das",
+              "instruction": "\"das Jahr\" — yaar, long",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Brot\" — long *o*, the neuter *das*]"
+              "source": "[YOU SAY: \"das Jahr\" — yaar, long]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twin test — \"Brot / bread — both Germanic, no Latin\"",
+              "instruction": "the English twin — \"Jahr, year\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twin test — \"**Brot / bread** — both Germanic, no Latin\"]"
+              "source": "[YOU SAY: the English twin — \"Jahr, year\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three genders — \"der Vater, die Mutter, das Brot\"",
+              "instruction": "what the h is doing — \"stretching the a\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three genders — \"der Vater, die Mutter, das Brot\"]"
+              "source": "[YOU SAY: what the h is doing — \"stretching the a\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"das Jahr.\""
             }
           ]
         },
@@ -114,26 +139,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"bread\" with its article. (das Brot.) Why is it not from Latin pānis like French pain? (It is inherited Germanic — the twin of English bread.) What gender does das mark, and what are the other two? (Neuter — with der masculine and die feminine.) Next: Wasser and Wein — and a split between native and borrowed."
+              "text": "Say \"the year.\" (Das Jahr.) Is the h pronounced? (No — it lengthens the a.) What is its English twin? (Year.) Borrowed or inherited? (Inherited — like Monat, unlike every month name.) Next: the second half of a compound you are about to build."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C11-wasser-wein",
-      "sequence": 280,
-      "title": "das Wasser, der Wein — one word Germans always had, one Rome brought",
-      "headword": "das Wasser, der Wein",
-      "romanization": "das Wasser, der Wein",
-      "gloss": "water and wine — one native Germanic, one ancient Latin loan",
+      "id": "GE-C09-zeit",
+      "sequence": 272,
+      "title": "die Zeit — \"time\"",
+      "headword": "die Zeit",
+      "romanization": "die Zeit",
+      "gloss": "time — a Germanic word with no Latin in it at all, and the second half of the word for season",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e650ffeae351c51",
+      "sourceHash": "fnv1a64:7008121241a249d4",
       "notice": null,
       "blocks": [
         {
@@ -149,33 +174,45 @@
             },
             {
               "kind": "speech",
-              "text": "Two drinks, two very different histories. Wasser is a word Germanic speakers have always had; Wein is one Rome carried north with the grapevine. Side by side, they show the difference between an inherited word and an ancient loan."
+              "text": "You have a clock and you have an hour. This is the thing they measure."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "das Wasser (water) — native Germanic",
+          "type": "input",
+          "title": "You'll want to know: die Zeit",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Wasser (\"water\") — the w is pronounced v (VAH-ser). It is the Grimm's-law twin of English water: same Germanic root watar, same core meaning, both native. Like Brot and Vater, no Latin needed — and neuter, das Wasser."
+              "text": "die Zeit — \"time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Germanic, through and through, and the twin of an English word you would not guess: tide."
+            },
+            {
+              "kind": "speech",
+              "text": "Tide once meant a stretch of time, and it still does in the leftovers — Yuletide, eventide, in good time. Then the sea took the word, and English had to borrow time's job out to a different root. German never had that problem and kept Zeit for the whole idea."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "der Wein (wine) — an ancient Latin loan",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Wein (\"wine\") — the ei is said \"eye\" (vine). Here is the twist: Wein is not a native Germanic word. It was borrowed from Latin vīnum in Roman times, when the legions brought viticulture north of the Alps. The Germanic tribes took the drink and its name — which is exactly why English wine, German Wein, and Latin vīnum all match: they are one loan, not three cousins. (Masculine: der Wein.)"
+              "text": "z-ts — German z is ts, as it was at the front of Dezember."
             },
             {
               "kind": "speech",
-              "text": "The lesson in one line: Wasser is a word Germans always had; Wein is a word Rome gave them — the vine came with a vocabulary."
+              "text": "diphthong-ei — and ei is the vowel of English eye."
+            },
+            {
+              "kind": "speech",
+              "text": "Put them together: tsite, rhyming with English sight."
             }
           ]
         },
@@ -193,29 +230,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Wasser\" (v-), \"der Wein\" (-ein = \"eye\")",
+              "instruction": "\"die Zeit\" — tsite",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Wasser\" (*v-*), \"der Wein\" (*-ein* = \"eye\")]"
+              "source": "[YOU SAY: \"die Zeit\" — tsite]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Wasser / water — native twins\"; \"Wein / wine / vīnum — one Latin loan\"",
+              "instruction": "the English leftover — \"Yuletide\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Wasser / water — native twins\"; \"Wein / wine / vīnum — one Latin loan\"]"
+              "source": "[YOU SAY: the English leftover — \"Yuletide\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the split — \"Wasser native, Wein borrowed with the grapevine\"",
+              "instruction": "the three together — \"die Uhr, die Stunde, die Zeit\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the split — \"Wasser native, Wein borrowed with the grapevine\"]"
+              "source": "[YOU SAY: the three together — \"die Uhr, die Stunde, die Zeit\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"die Zeit.\""
             }
           ]
         },
@@ -232,7 +278,1322 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"water\" and \"wine\" with articles and correct sounds. (das Wasser — v- — der Wein — \"vine\".) Which is inherited Germanic, and which is a Latin loan? (Wasser native — twin of water; Wein borrowed from vīnum, with the vine.) Why do Wein and English wine match so exactly? (Both borrowed the same Latin word, vīnum.) Next chapter: asking for these at the table."
+              "text": "Say \"time.\" (Die Zeit.) How does z sound? (Ts.) What is its English twin? (Tide.) Where does English still use it that way? (Yuletide.) Now hold Jahr and Zeit together — the next word is both of them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-jahreszeit",
+      "sequence": 273,
+      "title": "die Jahreszeit — \"season\"",
+      "headword": "die Jahreszeit",
+      "romanization": "die Jahreszeit",
+      "gloss": "season — literally year-time, a compound you can now read without being told",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02b45472191355ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Year. Time. Put them together and say what you think it means before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Jahreszeit",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Jahreszeit — \"season,\" and literally \"year-time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Jahres- is Jahr with the linking -es- German puts between the halves of a compound, and -zeit is Zeit. Nothing is hidden. The plural is die Jahreszeiten, and it is the title of this chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English does not do this. English has season, from French saison, from Latin satio — \"the sowing.\" A borrowed word, opaque unless somebody explains it, which is what the previous sentence had to do."
+            },
+            {
+              "kind": "speech",
+              "text": "German assembled its word out of two it already owned, and the result explains itself to anyone who has the halves. You had the halves two lessons ago."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the difference between the two halves of this chapter and the last one. The months arrived as labels. The year, the time and the seasons were already here, and German named them out of stock."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Jahreszeit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Jahreszeit\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its two halves — \"Jahr, Zeit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its two halves — \"Jahr, Zeit\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it says — \"year-time\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it says — \"year-time\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plural — \"die Jahreszeiten\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plural — \"die Jahreszeiten\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Jahr, Zeit, Jahreszeit.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"season.\" (Die Jahreszeit.) What are its halves? (Jahr and Zeit.) What does it literally say? (Year-time.) Is English season built the same way? (No — it is borrowed from French.) Next: the first of the four."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-frueh",
+      "sequence": 274,
+      "title": "früh — \"early\"",
+      "headword": "früh",
+      "romanization": "früh",
+      "gloss": "early — the word the first season is built out of, and a cousin of English early",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1dea2373aa9c433",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One small word first, because the first season is built out of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: früh",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "früh — \"early.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Not a noun and not capitalised: an adjective, and one you will meet constantly — früh aufstehen, to get up early."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "umlaut-ue — ü is a sound English does not have. Say ee. Hold it. Now round your lips as if for oo, and do not let your tongue move. That is ü."
+            },
+            {
+              "kind": "speech",
+              "text": "h-silent-lengthening — and the h is silent again, stretching the vowel, as it did in Jahr."
+            },
+            {
+              "kind": "speech",
+              "text": "fr-ü-h: one syllable, the middle held long."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the vowel alone — \"ee, then round the lips\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the vowel alone — \"ee, then round the lips\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"früh\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"früh\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the h is doing — \"stretching, not sounding\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the h is doing — \"stretching, not sounding\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it beside a word with the same trick — \"Jahr, früh\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it beside a word with the same trick — \"Jahr, früh\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"früh.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"early.\" (Früh.) How do you make ü? (Say ee, then round the lips.) Is the h sounded? (No — it lengthens.) Next: what German calls the early season."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-fruehling",
+      "sequence": 275,
+      "title": "der Frühling — \"spring\"",
+      "headword": "der Frühling",
+      "romanization": "der Frühling",
+      "gloss": "spring — früh plus -ling, \"the early one\", a season German named rather than borrowed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:051db97e7834b88e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have früh. Add three letters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Frühling",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Frühling — \"spring,\" and literally \"the early one.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -ling takes a quality and makes a thing that has it. Früh is early; a Frühling is the early one — the year's first Jahreszeit."
+            },
+            {
+              "kind": "speech",
+              "text": "You will meet -ling again elsewhere, and it does the same job every time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "umlaut-ue — the same ü as in früh, unchanged by the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "ng-cluster — and -ling ends on the ng of English sing, with no hard g after it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two syllables, and the weight sits on früh, the half that carries the meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the small word — \"früh\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the small word — \"früh\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the season — \"der Frühling\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the season — \"der Frühling\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it says — \"the early one\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it says — \"the early one\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it with its category — \"der Frühling ist eine Jahreszeit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it with its category — \"der Frühling ist eine Jahreszeit\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"früh, Frühling.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"spring.\" (Der Frühling.) What is it built from? (Früh plus -ling.) What does -ling do? (Makes \"the one that is like that\".) Borrowed or built? (Built.) Next: two seasons that need no explaining at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-sommer",
+      "sequence": 276,
+      "title": "der Sommer — \"summer\"",
+      "headword": "der Sommer",
+      "romanization": "der Sommer",
+      "gloss": "summer — the season whose German and English names are the same word, barely disguised",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80e35b402efe69ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After the built one, an inherited one. This is the easiest word in the chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Sommer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Sommer — \"summer.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One Germanic word, kept whole by both languages: Sommer, summer. The difference between them is the vowel letter and nothing else."
+            },
+            {
+              "kind": "speech",
+              "text": "Words survive like this when nobody ever has a reason to replace them, and a hot season is one of those things every generation needs to talk about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-o-german — a short, rounded o, steadier than the English vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "r-final — and the ending is the soft r you have on Uhr and November."
+            },
+            {
+              "kind": "speech",
+              "text": "SOM-mer, weight on the first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Sommer\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Sommer\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"Sommer, summer\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"Sommer, summer\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two seasons in order — \"der Frühling, der Sommer\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two seasons in order — \"der Frühling, der Sommer\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Frühling, der Sommer.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"summer.\" (Der Sommer.) Is it borrowed? (No — inherited, like English summer.) Say the first two seasons. (Der Frühling, der Sommer.) Next: the one with a surprise in it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-herbst",
+      "sequence": 277,
+      "title": "der Herbst — \"autumn\"",
+      "headword": "der Herbst",
+      "romanization": "der Herbst",
+      "gloss": "autumn — and the word is one English still has, doing a different job",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b19baa04bca6d96c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The third season, and the only one whose name you will not recognise at first hearing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Herbst",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Herbst — \"autumn,\" or \"fall.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is the reaping season: the stretch of the year when the crop comes in. That meaning is the whole of the word, and the next lesson is about where else you already have it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "herz-short-e — a short, open e, the vowel of English bed, with the German r colouring it from behind."
+            },
+            {
+              "kind": "speech",
+              "text": "st-initial-scht — the -st here is at the end, so it stays a plain st, exactly as it did inside August."
+            },
+            {
+              "kind": "speech",
+              "text": "hairpst, one syllable, no vowel between the b and the st."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Herbst\" — one syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Herbst\" — one syllable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it means — \"the reaping season\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it means — \"the reaping season\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three in order — \"der Frühling, der Sommer, der Herbst\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three in order — \"der Frühling, der Sommer, der Herbst\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Herbst.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"autumn.\" (Der Herbst.) How many syllables? (One.) What does the word mean underneath? (The reaping season.) Next: the English word that is the same word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-herbst-harvest",
+      "sequence": 278,
+      "title": "Herbst and harvest",
+      "headword": "Herbst und harvest",
+      "romanization": "Herbst und harvest",
+      "gloss": "one Germanic word that split in two — German kept the season, English kept the work",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1879ae804130461",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Herbst once more and then say the English word harvest. Those are the same word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Germanic harbistaz, \"the reaping season,\" went into both languages and then each did something different with it."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "what it kept",
+                "what it did next"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "language: German. what it kept: Herbst, the season. what it did next: nothing — it was enough.",
+                "language: English. what it kept: harvest, the act. what it did next: borrowed Latin autumn for the season."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English narrowed the inherited word to the gathering itself — you harvest a field — and then found it had no word left for the time of year, so it took one from Latin. German never split the meaning and never needed the loan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the clearest example in the book of something worth knowing: two languages can inherit the same word and end up looking unrelated, without either of them doing anything strange."
+            },
+            {
+              "kind": "speech",
+              "text": "Nobody replaced harvest. Its meaning drifted a little, a gap opened where the season used to be, and a Latin word was standing nearby. That is how most borrowing happens — not because a language lacks a word, but because one of its words moved."
+            },
+            {
+              "kind": "speech",
+              "text": "And it is the last turn of this chapter's argument. The months were bought outright. The seasons were not, and Herbst is the one place you can watch the English side buy what German kept."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"Herbst, harvest\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"Herbst, harvest\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what each language kept — \"the season; the work\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what each language kept — \"the season; the work\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what English had to buy — \"autumn, from Latin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what English had to buy — \"autumn, from Latin\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Herbst, harvest — one word, two jobs.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What English word is Herbst? (Harvest.) What does English use it for now? (The act of gathering.) So what did English borrow, and from where? (Autumn, from Latin.) Did German need a loan? (No.) Next: the coldest one, and then a word most Germans never say."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-winter",
+      "sequence": 279,
+      "title": "der Winter — \"winter\"",
+      "headword": "der Winter",
+      "romanization": "der Winter",
+      "gloss": "winter — spelled exactly as in English, and the fourth of the four",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c499f42f8d6258ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth season, spelled exactly as you would expect, and said exactly as you would not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Winter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Winter — \"winter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Same six letters as English, same inherited Germanic word, and like Sommer it was never worth replacing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "w-as-v — German w is an English v. The season is VIN-ter."
+            },
+            {
+              "kind": "speech",
+              "text": "i-short — and the i is short and bright."
+            },
+            {
+              "kind": "speech",
+              "text": "November had the mirror of this: a v that is said as an f. German's v and w have swapped the jobs an English reader expects of them, and these two words put both halves of the swap on one page."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Winter\" — VIN-ter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Winter\" — VIN-ter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap — \"w is v, v is f\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap — \"w is v, v is f\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"der Frühling, der Sommer, der Herbst, der Winter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"der Frühling, der Sommer, der Herbst, der Winter\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Winter.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"winter.\" (Der Winter — VIN-ter.) How is German w said? (As a v.) And German v? (As an f.) How many Jahreszeiten have you now? (Four.) Next: a fifth name for a season you already have."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-lenz",
+      "sequence": 280,
+      "title": "der Lenz — \"spring,\" the old word",
+      "headword": "der Lenz",
+      "romanization": "der Lenz",
+      "gloss": "spring, the old poetic word — worth recognising, not worth saying",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ae053c03ff7ab6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German has a second word for spring. You will read it far more often than you will hear it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Lenz",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Lenz — \"spring,\" in poetry and in set phrases."
+            },
+            {
+              "kind": "speech",
+              "text": "Frühling is the word you use. Lenz is the word that turns up in songs, in older writing, and in the odd fixed expression. Recognise it; reach for Frühling."
+            },
+            {
+              "kind": "speech",
+              "text": "It is older than Frühling, and it is the twin of English Lent — which was the spring season before the Church attached a fast to it. Both go back to a root about the lengthening of the days, which is the one thing a northern spring reliably does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "z-ts — the z is ts, as in Zeit and Dezember: lents."
+            },
+            {
+              "kind": "speech",
+              "text": "herz-short-e — with the short open e of Herbst."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Lenz\" — lents",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Lenz\" — lents]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday word beside it — \"der Frühling\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday word beside it — \"der Frühling\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English twin — \"Lent\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English twin — \"Lent\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one you use — \"Frühling\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one you use — \"Frühling\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Frühling, Lenz.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Lenz mean? (Spring.) Which word do you use in speech? (Frühling.) What is Lenz's English twin? (Lent.) What did the root mean? (The lengthening of the days.) Next: the whole year, said through."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C09-jahreszeiten",
+      "sequence": 281,
+      "title": "Practice — the four, and the seam",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — the four seasons, and the seam between what German bought and what it kept",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d27be976e4644080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. A year, a time, and the four things they make between them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the four seasons",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "built from",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "German: der Frühling. built from: früh + -ling. English: spring.",
+                "German: der Sommer. built from: inherited whole. English: summer.",
+                "German: der Herbst. built from: inherited whole. English: autumn.",
+                "German: der Winter. built from: inherited whole. English: winter."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the four are the plain twins of their English words. The fourth was built inside German out of a word you learned one lesson earlier."
+            },
+            {
+              "kind": "speech",
+              "text": "Not one of them was borrowed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hold the last three chapters together and the seam is exact."
+            },
+            {
+              "kind": "speech",
+              "text": "The months came from Rome, all twelve, names and calendar together."
+            },
+            {
+              "kind": "speech",
+              "text": "The year, the time, and the seasons did not. Jahr, Zeit, Jahreszeit, and the four seasons are German's own, and Frühling was still being built out of German parts long after the month names had arrived."
+            },
+            {
+              "kind": "speech",
+              "text": "Herbst is the sharpest place to see it, because there English went the other way: it kept the inherited word for the work and bought autumn for the season. Two languages, one starting word, opposite outcomes — and the German one is the one that needed no purchase."
+            },
+            {
+              "kind": "speech",
+              "text": "And German kept a spare. Lenz is still there for spring, older than Frühling, unneeded and unretired."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"der Frühling, der Sommer, der Herbst, der Winter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"der Frühling, der Sommer, der Herbst, der Winter\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the category — \"die Jahreszeiten\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the category — \"die Jahreszeiten\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the built one and its part — \"Frühling, from früh\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the built one and its part — \"Frühling, from früh\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the compound and its halves — \"Jahreszeit: Jahr, Zeit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the compound and its halves — \"Jahreszeit: Jahr, Zeit\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair that split — \"Herbst, harvest\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair that split — \"Herbst, harvest\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Frühling, Sommer, Herbst, Winter.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four seasons. (Der Frühling, der Sommer, der Herbst, der Winter.) Which one was built rather than inherited? (Frühling, from früh.) Which one is English harvest? (Herbst.) How many of the four did German borrow? (None.) And how many of the twelve month names? (All of them.)"
             }
           ]
         }

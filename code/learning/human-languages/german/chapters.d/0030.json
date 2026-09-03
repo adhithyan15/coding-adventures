@@ -1,21 +1,19 @@
 {
   "chapter": 30,
-  "title": "Weather",
-  "label": "ch:ge-weather",
-  "canDo": "I can talk about the weather in German — das Wetter, es ist heiß, es ist kalt, es regnet.",
+  "title": "Please",
+  "label": "ch:ge-please",
+  "canDo": "I can ask politely for something in German by putting bitte after the thing I want — Wasser, bitte.",
   "spineNodes": [
-    "SPINE-TIME-OF-DAY"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C21-das-wetter",
-    "kind": "production",
-    "summary": "Say das Wetter as English weather's own cousin, build hot and cold with sein rather than a Romance 'make', and say es regnet on the same root as English rain. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "lesson": "GE-C19-bitte-requests",
+    "kind": "task",
+    "summary": "Assemble a complete polite request out of two words already learned — Wasser, bitte — and hear the request still living inside bitte via bitten, English bid and bead. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "GE-LEX-WETTER-02",
-      "GE-ETYMON-WETTER-03",
-      "GE-GRAMMAR-WEATHER-SEIN-04",
-      "GE-LEX-REGNET-05",
-      "GE-ETYMON-REGNET-06"
+      "GE-LEX-BITTE-PLEASE-02",
+      "GE-PHRASE-WASSER-BITTE-03",
+      "GE-ETYMON-BITTE-04"
     ]
   }
 }

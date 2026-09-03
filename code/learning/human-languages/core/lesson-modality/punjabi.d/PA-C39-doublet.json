@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C39-doublet",
+    "language": "punjabi",
+    "chapter": 39,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a54c8254a2db082"
+  },
+  "findings": []
+}

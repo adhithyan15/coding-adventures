@@ -1,23 +1,26 @@
 {
   "chapter": 23,
-  "title": "Being Your Years",
-  "label": "ch:ge-alter",
-  "canDo": "I can ask how old somebody is and say my own age in German, using the verb German insists on for it.",
+  "title": "The Simple Past",
+  "label": "ch:ge-praeteritum",
+  "canDo": "I can recognise the one-word past German uses in writing, produce the handful of its forms that people actually say out loud, and explain why the rest of it retreated.",
   "spineNodes": [
-    "SPINE-TIME-OF-DAY"
+    "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C14-alter-practice",
+    "lesson": "GE-C15-praeteritum-practice",
     "kind": "task",
-    "summary": "This material was the second half of the hand-written haben chapter, and it could not stay there: ich bin zwanzig Jahre alt needs ich bin, and Wie alt bist du? needs du bist — both of which the chapter on sein teaches. It sits here instead, immediately after that chapter, where every word it needs is already owned, and it closes the haben chapter's open question by showing the one everyday sentence where German refuses that verb.",
+    "summary": "German's second past means exactly what the first one means, so this chapter separates the two by register rather than by tense: produce the Perfekt, recognise the Präteritum, and learn the short list of forms that ignore the rule. It ends with the reason the tense retreated at all — the same change ran through French and Italian over the same centuries, because their speakers are neighbours.",
     "assesses": [
-      "GE-LEX-ALT-01",
-      "GE-LEX-JAHR-01",
-      "GE-ETYMON-JAHR-ALT-01",
-      "GE-LEX-WIE-ALT-BIST-DU-01",
-      "GE-LEX-ICH-BIN-JAHRE-ALT-01",
-      "GE-GRAMMAR-ALTER-MIT-SEIN-01"
+      "GE-GRAMMAR-PRAETERITUM-TE-01",
+      "GE-LEX-SAGTE-01",
+      "GE-LEX-MACHTE-01",
+      "GE-ETYMON-DENTALES-PRAETERITUM-01",
+      "GE-LEX-HATTE-01",
+      "GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01",
+      "GE-LEX-KONNTE-01",
+      "GE-GRAMMAR-PRAETERITUM-GESPROCHEN-01",
+      "GE-ETYMON-AREALE-VERAENDERUNG-01"
     ],
-    "note": "Chapter 19 is generated from schema-v2 lessons, so the payoff is atom-scored. Lesson ids keep the GE-C14-* prefix because that is the chapter they were written for; the Spanish convention lets ids stay put while chapter numbers move."
+    "note": "Chapter 17 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces; the Präteritum-against-Perfekt table in the practice lesson pairs forms that have each had a lesson, and its first column is a meaning rather than a person, so it is a comparison rather than a paradigm."
   }
 }

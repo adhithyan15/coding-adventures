@@ -8,8 +8,11 @@
 % FUNCTION in the scale (do is always the tonic, wherever the key sits), so the
 % degree number is what a musician means when they say "the fifth is sol" or
 % "resolve ti up to do". This tiny library records that syllable → degree mapping
-% so an ADJ program can ASK where a syllable sits in the scale, and get a cited
-% answer. Recall is a binding query:
+% so an ADJ program can ASK where a syllable sits in the scale, and get an answer
+% with its evidence attached — cited outright for two rows, and DISCLOSED AS
+% COMPOSED for the other five (see Provenance below, and note that the degree
+% NAMES used in this paragraph and the next are ordinary music theory, not
+% something either citation states). Recall is a binding query:
 %
 %     ? solfege_degree(do, $N)       % 1  (do is the tonic, the first degree)
 %     ? solfege_degree(sol, $N)      % 5  (sol is the fifth — the dominant)
@@ -40,34 +43,76 @@
 %     la         6           submediant
 %     ti         7           leading tone
 %
+% The third column is the conventional NAME of each scale degree. It is NOT part
+% of the shipped table — no row carries it, and neither cited span states it. It
+% is here only to explain what a degree number means to a reader.
+%
 % Only the seven diatonic-scale rows are shipped — nothing else. A chromatic
 % syllable (the raised `di`/`ri`, the lowered `te`/`le`) has NO row, and neither
 % does a non-syllable, so a query like `? solfege_degree(di, $N)` ABSTAINS rather
-% than inventing a degree: the table only ever asserts the mapping it can cite.
+% than inventing a degree: the table only ever asserts what it can cite, or what
+% it discloses as composed from what it can cite — see Provenance.
 %
-% Provenance — nothing here is from memory. The seven modern syllables and their
-% ascending major-scale order are recorded in the Wikipedia "Solfège" article,
-% which states verbatim (see `source`) the seven syllables "commonly used in
-% English-speaking countries: do …, re, mi, fa, so(l), la, and ti", and whose
-% movable-do degree table pairs them 1..7 (do = 1st degree … ti = 7th). Each row
-% below assigns a syllable its 1-based degree in that stated ascending order (the
-% canonical `sol` spelling is used for the atom). `trust consensus` — an
-% encyclopedia is a secondary reference. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% Provenance — nothing here is from memory, and the two cited spans do NOT ground
+% the seven rows equally, so this note says exactly which rows each one carries.
+% The `source` is the Wikipedia "Solfège" article's movable-do sentence, which
+% states the mapping outright — "each solfège syllable corresponds not to a
+% pitch, but to a scale degree" — and then names the syllable sung for the first
+% degree and for the second, closing with "etc." That grounds (do, 1) and
+% (re, 2) VERBATIM, and the "etc." licenses the continuation without spelling it
+% out. (The sentence's own quotation marks around the two syllables are why this
+% note does not re-quote it whole: reproducing a value with its inner quotes
+% stripped is the desync defect this package screens for.) The `cites`
+% corroboration states the SET and ORDER of the seven syllables — "commonly used
+% in English-speaking countries: do …, re, mi, fa, so(l), la, and ti" (that quote
+% carries a MARKED elision, `…` standing for "(spelt doh in tonic sol-fa),[2]",
+% and it wraps across two `%` lines — a line-scoped screen cannot check it, which
+% is a second desync axis recorded on #14111).
+%
+% Rows 3..7 are therefore a COMPOSITION of those two — the nth syllable of the
+% cited order takes the nth degree — an INFERENCE, disclosed here and marked on
+% each row below, NOT a verbatim claim of either span. A consumer reading only
+% `citations` for `? solfege_degree(sol, $N)` gets spans that place `sol` in the
+% syllable order but never call it the fifth degree. THE GAP IS THE DEGREE, not
+% the syllable — the corroboration names `so(l)` outright, and the composition
+% depends on it doing so. (`facts_solfege_e2e.rs` pins that exact answer, so the
+% gap is visible in CI rather than only in prose.)
+%
+% The page DOES pair all seven, in a movable-do degree table — but that table's
+% cells extract as separate blocks, which is exactly the cross-block class held
+% open on #14111 ("is a table row a verbatim span?"), so it is deliberately not
+% cited here rather than silently deciding that question. The canonical `sol`
+% spelling is used for the atom. `trust consensus` — an encyclopedia is a
+% secondary reference. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table solfege_degree {
     columns syllable, degree
 
-    row (do, 1)
-    row (re, 2)
+    % STATED, verbatim, by the `source` sentence below:
+    row (do, 1)     % page: The first degree of a major scale is always sung as "do"
+    row (re, 2)     % page: …the second as "re", etc.
+
+    % COMPOSED, not stated: the `source`'s "etc." continued through the syllable
+    % ORDER the `cites` states. The citations these five rows carry place the
+    % syllable in that order but never assign it a degree — see the header's
+    % Provenance note.
     row (mi, 3)
     row (fa, 4)
     row (sol, 5)
     row (la, 6)
     row (ti, 7)
 
-    source "The tonic sol-fa method popularised the seven syllables commonly used in English-speaking countries: do (spelt doh in tonic sol-fa), re, mi, fa, so(l), la, and ti (or si)"
+    source "In the movable do system, each solfège syllable corresponds not to a pitch, but to a scale degree: The first degree of a major scale is always sung as \"do\", the second as \"re\", etc."
     locator "https://en.wikipedia.org/wiki/Solf%C3%A8ge"
     trust consensus
+
+    % The syllable sentence stays as a corroboration rather than the envelope: it
+    % states the SET and ORDER of the seven syllables, which is what it actually
+    % says, while the `source` above states the degree RULE and its first two
+    % terms. Pinning a degree to the list alone made "1" an ordinal INFERENCE
+    % from list position, not a claim the citation makes; composing the two is
+    % what carries the remaining five rows, and the header says so.
+    cites "The tonic sol-fa method popularised the seven syllables commonly used in English-speaking countries: do (spelt doh in tonic sol-fa),[2] re, mi, fa, so(l), la, and ti (or si) (see below)." locator "https://en.wikipedia.org/wiki/Solf%C3%A8ge"
 }

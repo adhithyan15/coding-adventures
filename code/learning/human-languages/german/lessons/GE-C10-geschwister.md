@@ -1,7 +1,7 @@
 ---
 id: GE-C10-geschwister
-sequence: 270
-chapter: 14
+sequence: 290
+chapter: 16
 type: word
 headword: der Bruder, die Schwester
 gloss: brother and sister — again Germanic twins of the English words

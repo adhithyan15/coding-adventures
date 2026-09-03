@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:f1708b37d9e77282",
+  "lessonIds": [
+    "PA-C38-ate",
+    "PA-C38-ate-vaak",
+    "PA-C38-ate-write",
+    "PA-C38-jaan",
+    "PA-C38-na-na"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch38.txt",
+  "json": "punjabi/narration/ch38.json",
+  "textHash": "fnv1a64:158ab874eeb101df",
+  "jsonHash": "fnv1a64:72818ff5370d0d0a",
+  "findings": []
+}

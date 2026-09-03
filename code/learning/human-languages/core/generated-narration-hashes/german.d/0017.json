@@ -1,16 +1,16 @@
 {
   "language": "german",
   "chapter": 17,
-  "sourceHash": "fnv1a64:dd523422211b57e4",
+  "sourceHash": "fnv1a64:7a5945ded38e124d",
   "lessonIds": [
-    "GE-C13-schwarz-weiss",
-    "GE-C13-rot-blau"
+    "GE-C11-brot",
+    "GE-C11-wasser-wein"
   ],
   "voiceLessons": 2,
   "drivablePrefix": 2,
   "text": "german/narration/ch17.txt",
   "json": "german/narration/ch17.json",
-  "textHash": "fnv1a64:6b67d3c23803cca2",
-  "jsonHash": "fnv1a64:6c4cb2e4751ff4fa",
+  "textHash": "fnv1a64:c09365ed1b66092b",
+  "jsonHash": "fnv1a64:f86d4447ae0a0d96",
   "findings": []
 }

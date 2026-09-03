@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C09-maerz",
+    "language": "german",
+    "chapter": 13,
+    "sequence": 258,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4ec340ad99d7be4"
+  },
+  "findings": []
+}

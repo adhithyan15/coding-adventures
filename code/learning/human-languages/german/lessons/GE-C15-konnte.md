@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-konnte
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 430
-chapter: 21
+sequence: 450
+chapter: 23
 type: word
 headword: ich konnte
 gloss: I could — a Präteritum that survives in ordinary speech everywhere, north and south alike

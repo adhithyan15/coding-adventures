@@ -1,0 +1,624 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 37,
+  "title": "The Sentence That Says No",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:fa9134b124439629",
+  "lessons": [
+    {
+      "id": "PA-C37-nahin-vaak",
+      "sequence": 2170,
+      "title": "ਨਹੀਂ (nahī̃) inside a sentence",
+      "headword": "… ਨਹੀਂ …",
+      "romanization": "… nahī̃ …",
+      "gloss": "not, inside a sentence — the pattern the book has never shown",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d70058635a40d339",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the first chapter of this book: the two words that answer a question. And from the third: the word for I."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "hā̃, nahī̃ — then maiṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *hā̃*, *nahī̃* — then *maiṁ*]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have been able to say no since page one. You have never been able to say that something is not so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The pattern, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਹੀਂ (nahī̃) goes directly before the verb, and nothing else in the sentence moves:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ (…) ਨਹੀਂ (nahī̃) (verb) — \"I do not (verb)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole rule. Punjabi does not add a helper the way English adds do — it drops one word in front of the verb and leaves the rest alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Because the position is fixed, every sentence you already own has a negative twin, and you can make it without learning anything else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nahī̃ alone, as the answer you already had.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nahī̃* alone, as the answer you already had.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "a sentence you can already say, then the same sentence with nahī̃ in front of its verb.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: a sentence you can already say, then the same sentence with *nahī̃* in front of its verb.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the positive and the negative, back to back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the positive and the negative, back to back.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does ਨਹੀਂ (nahī̃) stand in a sentence? (Directly before the verb.) What else has to change? (Nothing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C37-samajh-nahin",
+      "sequence": 2180,
+      "title": "ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ (mainū̃ samajh nahī̃ āī) — I did not understand",
+      "headword": "ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ",
+      "romanization": "mainū̃ samajh nahī̃ āī",
+      "gloss": "I did not understand — the sentence a learner needs before any noun",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3468093871d0273",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, where ਨਹੀਂ (nahī̃) stands. From the verb chapter, the verb to understand. And two chapters back, the word for to me."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "nahī̃ before the verb, samajhṇā, mainū̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *nahī̃* before the verb, *samajhṇā*, *mainū̃*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ — mainū̃ samajh nahī̃ āī — \"understanding did not come to me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Punjabi does not make you the subject of understanding. It makes understanding something that arrives, and you are the one it arrives at — which is exactly the shape you already met in ਮੈਨੂੰ … ਪਸੰਦ ਹੈ, \"X is pleasing to me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is not a new grammar. It is the dative frame you own, with a different noun in it and ਨਹੀਂ (nahī̃) in the slot the last lesson gave you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the sentence that buys you a second attempt. Without it a learner whose conversation has run away has only silence or an English apology, and the conversation ends there. It is worth more than any noun in this book, and it should arrive fast enough to be said without assembling it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainū̃ samajh nahī̃ āī, slowly, then at speed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainū̃ samajh nahī̃ āī*, slowly, then at speed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "mainū̃ … pasand hai and mainū̃ samajh nahī̃ āī — one frame.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *mainū̃ … pasand hai* and *mainū̃ samajh nahī̃ āī* — one frame.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "somebody says something too fast; reply with it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: somebody says something too fast; reply with it.]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say that you did not understand. Which earlier frame is it built on, and who is the subject of the sentence? (ਮੈਨੂੰ … ਪਸੰਦ ਹੈ; the understanding is, not you.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C37-nahin-write",
+      "sequence": 2190,
+      "title": "ਨਹੀਂ (nahī̃) reaches the page",
+      "headword": "ਨਹੀਂ",
+      "romanization": "nahī̃",
+      "gloss": "not, on the page — four signs, every one of them old",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:87e897fa55d4f439",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — four pieces, none new"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — four pieces, none new until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say where ਨਹੀਂ (nahī̃) stands in a sentence before anything is uncovered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — four pieces, none new",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover ਨਹੀਂ (nahī̃) and name it in order:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਨ — na, ਹ — ha, the ੀ stroke, the ਂ above."
+            },
+            {
+              "kind": "speech",
+              "text": "The last of those is the bindi, and it is doing real work: it puts the vowel through the nose. A ਨਹੀ without it is not this word."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first of seven chapters, and it is worth saying now what holds for almost all of them: the words this book most needed were already writable. Every sign here was taught long ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy ਨਹੀਂ (nahī̃) once. Check the bindi is there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ਨਹੀਂ (nahī̃) from memory, then uncover and compare. Which mark would change the word if you left it off? (The ਂ above.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C37-nahin-pata",
+      "sequence": 2200,
+      "title": "ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ (mainū̃ nahī̃ patā) — I don't know",
+      "headword": "ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ",
+      "romanization": "mainū̃ nahī̃ patā",
+      "gloss": "I don't know — the other half of being lost",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f43eec53cc34b336",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two lessons back, the sentence that says you did not follow. And one lesson back, that word on the page."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "mainū̃ samajh nahī̃ āī, and ਨਹੀਂ written",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *mainū̃ samajh nahī̃ āī*, and **ਨਹੀਂ** written]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ — mainū̃ nahī̃ patā — \"I don't know\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪਤਾ is the new word, and it is a noun — the knowledge itself, not an act of knowing. So the sentence says, word for word, to me not knowledge. The same dative frame again: the third sentence in three lessons to put ਮੈਨੂੰ at the front and leave you out of the subject slot."
+            },
+            {
+              "kind": "speech",
+              "text": "Punjabi keeps these two admissions apart, and so should you:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ (mainū̃ samajh nahī̃ āī) — I did not follow you."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ (mainū̃ nahī̃ patā) — I do not have the fact."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainū̃ nahī̃ patā, flat, as a whole reply.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainū̃ nahī̃ patā*, flat, as a whole reply.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the two admissions, back to back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the two admissions, back to back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "asked a question you cannot answer, give the right one of the two.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: asked a question you cannot answer, give the right one of the two.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say you do not know. Then say you did not follow. What kind of word is ਪਤਾ? (A noun — the knowledge itself.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C37-nahin-checkpoint",
+      "sequence": 2210,
+      "title": "Saying no to a sentence, all together",
+      "headword": "ਨਹੀਂ — ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ — ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ",
+      "romanization": "nahī̃ — mainū̃ samajh nahī̃ āī — mainū̃ nahī̃ patā",
+      "gloss": "contradiction and repair, scored as one performance",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d5d2b55f4923f2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. One run through what this chapter added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਹੀਂ (nahī̃) directly before the verb, and nothing else moving."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਈ (mainū̃ samajh nahī̃ āī) — I did not follow you."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ (mainū̃ nahī̃ patā) — I do not have the fact."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਹੀਂ (nahī̃) on the page, bindi and all."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਹੀਂ (nahī̃) has been in this book since its first chapter and could only ever be a whole answer. It can now be put inside a sentence, which means every statement you meet can be contradicted and every statement you make can be denied."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "someone states something you disagree with. Contradict it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: someone states something you disagree with. Contradict it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two admissions, in the order you would really need them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two admissions, in the order you would really need them.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ਨਹੀਂ (nahī̃) from memory, then check the bindi.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ਨਹੀਂ** from memory, then check the bindi.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "refuse a yes-or-no question, then say why you cannot answer it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: refuse a yes-or-no question, then say why you cannot answer it.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Contradict a statement, then admit you do not know. Next chapter: the word for and, which this book has never had either."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

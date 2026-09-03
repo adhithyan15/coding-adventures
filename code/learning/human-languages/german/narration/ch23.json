@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 23,
-  "title": "Being Your Years",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5ad848022d580fa5",
+  "title": "The Simple Past",
+  "drivablePrefix": 10,
+  "sourceHash": "fnv1a64:39426c5f77ca0d21",
   "lessons": [
     {
-      "id": "GE-C14-alt",
-      "sequence": 501,
-      "title": "alt — \"old\"",
-      "headword": "alt",
-      "romanization": "alt",
-      "gloss": "old — the adjective the German age sentence is built on",
+      "id": "GE-C15-praeteritum",
+      "sequence": 420,
+      "title": "-te — the one-word past",
+      "headword": "-te",
+      "romanization": "-te",
+      "gloss": "the Präteritum — German's second past tense, made from one word and an ending",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8f40080f1ca6c1f",
+      "sourceHash": "fnv1a64:b7a0bb61eef17cad",
       "notice": null,
       "blocks": [
         {
@@ -35,26 +35,154 @@
             },
             {
               "kind": "speech",
-              "text": "You can say ich bin müde. Here is a second adjective to put in the same slot, and it opens a sentence you will be asked for constantly."
+              "text": "German has a second past tense. It needs no helper verb and no participle — just a stem and an ending."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: add -te to the stem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take a regular verb's stem and put -te on it."
+            },
+            {
+              "kind": "speech",
+              "text": "The tense that ending builds is called the Präteritum. Where the Perfekt spends two words and a bracket, this one spends a single word: sag- plus -te and the sentence is done."
+            },
+            {
+              "kind": "speech",
+              "text": "The two tenses report the same events. That is worth saying plainly, because a learner reasonably expects a language with two pasts to be drawing a distinction with them, the way English draws one between I said and I have said. German draws none. What separates its two pasts is something else entirely, and it takes a few more lessons to arrive at."
+            },
+            {
+              "kind": "speech",
+              "text": "The -te itself has a history reaching well beyond German, and that comes first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the recipe — \"stem plus te\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the recipe — \"stem plus te\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name — \"das Präteritum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name — \"das Präteritum\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many words it takes — \"one\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many words it takes — \"one\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"stem plus -te.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending builds the Präteritum on a regular verb? (-te.) How many words does it need? (One.) How many does the Perfekt need? (Two.) Do the two tenses mean different things? (No.) Next: the first verb through the new ending."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-sagte",
+      "sequence": 425,
+      "title": "ich sagte — \"I said,\" in one word",
+      "headword": "ich sagte",
+      "romanization": "ich sagte",
+      "gloss": "I said, in one word — the Präteritum of sagen, beside the Perfekt that means exactly the same",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10ae5db563429473",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the new ending on the verb this chapter started from."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: alt",
+          "title": "You'll want to know: ich sagte",
           "segments": [
             {
               "kind": "speech",
-              "text": "alt — \"old.\""
+              "text": "ich sagte — \"I said.\""
             },
             {
               "kind": "speech",
-              "text": "One syllable. It behaves exactly as müde did: after sein an adjective takes no ending at all, so ich bin alt needs nothing added."
+              "text": "Stem sag-, ending -te. Two syllables and it is finished, where the Perfekt took three words to say the same thing:"
             },
             {
               "kind": "speech",
-              "text": "It is the same word as English old, and you can nearly hear it — German kept the a where English rounded it."
+              "text": "ich sagte, ich habe gesagt."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are \"I said.\" Neither is more past than the other, neither is more polite, and neither is wrong. Hold that in mind while the differences that do exist arrive."
             }
           ]
         },
@@ -65,11 +193,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-a — short and clipped, the a of English hat."
+              "text": "long-a — the stem vowel is the same long a as in sagen; the new ending does not shorten it."
             },
             {
               "kind": "speech",
-              "text": "d-t-final — the -lt closes crisply, both consonants sounded."
+              "text": "final-te — the -te is a full unstressed syllable, tuh, not a bare t. Hear the difference against the participle: ge-SAHKT has one syllable at the end, SAHK-tuh has two."
             }
           ]
         },
@@ -87,29 +215,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"alt\"",
+              "instruction": "\"ich sagte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"alt\"]"
+              "source": "[YOU SAY: \"ich sagte\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"alt, old\"",
+              "instruction": "the pair back to back — \"ich sagte … ich habe gesagt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"alt, old\"]"
+              "source": "[YOU SAY: the pair back to back — \"ich sagte … ich habe gesagt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "with the verb — \"ich bin alt\", \"ich bin müde\"",
+              "instruction": "the two endings apart — \"gesagt, sagte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: with the verb — \"ich bin alt\", \"ich bin müde\"]"
+              "source": "[YOU SAY: the two endings apart — \"gesagt, sagte\"]"
             },
             {
               "kind": "repeat",
@@ -118,7 +246,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"alt, alt — old.\""
+              "text": "\"ich sagte, ich habe gesagt.\""
             }
           ]
         },
@@ -135,26 +263,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"old.\" (Alt.) Does it take an ending after bin? (No.) Which English word is it? (Old.) Next: the noun that goes with it."
+              "text": "Say \"I said\" in one word. (Ich sagte.) And in three. (Ich habe gesagt.) Which of them is further in the past? (Neither.) How many syllables does sagte have? (Two.) Next: the same ending on the verb for doing."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C14-jahr",
-      "sequence": 502,
-      "title": "das Jahr — \"the year\"",
-      "headword": "das Jahr",
-      "romanization": "das Jahr",
-      "gloss": "the year — and Jahre, its plural, which is the form the age sentence needs",
+      "id": "GE-C15-machte",
+      "sequence": 430,
+      "title": "ich machte — \"I made,\" \"I did\"",
+      "headword": "ich machte",
+      "romanization": "ich machte",
+      "gloss": "I made, I did — the second verb through the -te ending",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e760557bea43acb9",
+      "sourceHash": "fnv1a64:808f4c438300ef01",
       "notice": null,
       "blocks": [
         {
@@ -170,30 +298,293 @@
             },
             {
               "kind": "speech",
-              "text": "A noun you have already met inside a longer word, now on its own."
+              "text": "You have gemacht. Build the other past of the same verb before reading on."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: das Jahr",
+          "title": "You'll want to know: ich machte",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Jahr — \"the year.\" Plural: die Jahre."
+              "text": "ich machte — \"I made,\" \"I did.\""
             },
             {
               "kind": "speech",
-              "text": "Capitalised, because it is a noun and German capitalises all of them. The plural adds -e and takes die, as plurals do."
+              "text": "Mach- plus -te. Notice what the two pasts of this verb have in common: the stem. Gemacht wrapped it and machte suffixed it, and neither touched a letter inside it."
             },
             {
               "kind": "speech",
-              "text": "You have seen it before without being told: die Jahreszeiten, the seasons, is \"the year's times.\" The year was sitting inside that word the whole time."
+              "text": "That is the whole promise of a weak verb. Whatever German asks of it, the middle stays put — which is why the four participles of the last chapter and the -te forms of this one can be built from any regular verb you meet, on the spot, without a list."
             },
             {
               "kind": "speech",
-              "text": "The age sentence wants the plural — you are so many Jahre old — so it is Jahre that will do the work from here."
+              "text": "er machte das, er hat das gemacht."
+            },
+            {
+              "kind": "speech",
+              "text": "Same person, same event, two tenses."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich machte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich machte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"er machte das … er hat das gemacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"er machte das … er hat das gemacht\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both new forms — \"sagte, machte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both new forms — \"sagte, machte\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ich sagte, ich machte.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I did\" in one word. (Ich machte.) What do machte and gemacht share? (The stem mach-.) Does either change the stem? (No.) Say \"he did that\" both ways. (Er machte das; er hat das gemacht.) Next: where that -te came from, and the English ending that is the same thing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-dentales-praeteritum",
+      "sequence": 435,
+      "title": "The dental preterite — a Germanic invention",
+      "headword": "das dentale Präteritum",
+      "romanization": "das dentale Präteritum",
+      "gloss": "the dental preterite — the Germanic invention that gives German -te and English -ed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3460f6a4a1f8a9eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say sagte, then say walked. Both endings are made with the tongue against the teeth, and that is not a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The German -te is what linguists call the dental preterite: a past tense made by bolting a t or d sound onto a stem. Dental, because those sounds are made at the teeth."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "present",
+                "past"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "language: German. present: sag-. past: sagte.",
+                "language: English. present: walk. past: walked.",
+                "language: Dutch. present: werk-. past: werkte."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three languages, one device, inherited rather than borrowed — this is a Germanic invention, and it is one of the features that identifies the family. Everything with a -t or -d past in Germanic comes from the same ancestor."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin built nothing of the kind. Its past came from inherited perfect endings and from reduplication, and its descendants carried that on: French parla, Spanish habló. So sagte and walked are one machine, and parla and habló are a different one — which is why an English speaker recognises the German ending on sight and a Spanish speaker does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three together — \"sagte, walked, werkte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three together — \"sagte, walked, werkte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name — \"the dental preterite\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name — \"the dental preterite\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two machines — \"sagte and walked; parla and habló\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two machines — \"sagte and walked; parla and habló\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"sagte, walked — the same ending.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the -te called? (The dental preterite.) Why dental? (It is made at the teeth.) Which English ending is the same thing? (-ed.) Did Latin have it? (No — Romance builds its past another way.) Next: the one verb whose -te form you will hear constantly."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-hatte",
+      "sequence": 440,
+      "title": "ich hatte — \"I had\"",
+      "headword": "ich hatte",
+      "romanization": "ich hatte",
+      "gloss": "I had — haben's own Präteritum, and one of the handful that everybody says out loud",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c743d5eadb95de18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The dental ending on the verb you have been leaning on for two chapters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ich hatte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ich hatte — \"I had.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Haben drops its b — the same b that goes missing in du hast and er hat — and the dental ending lands on what is left, doubling the t in the spelling: hat-te. Two syllables, both short."
+            },
+            {
+              "kind": "speech",
+              "text": "English did the identical thing to the identical verb and then wore the result down further: have lost its consonant and took a -d, giving had. So hatte and had are the same word doing the same job."
+            },
+            {
+              "kind": "speech",
+              "text": "Haben has a Perfekt of its own as well — ich habe gehabt, \"I have had\" — built by the ordinary recipe, since haben is a perfectly ordinary verb when it is not busy helping another one."
             }
           ]
         },
@@ -204,15 +595,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "j-as-y — German j is the y of English yes. So Jahr opens like year, not like jar."
+              "text": "d-t-final — the doubled tt is one sharp t, and the vowel in front of it is short and clipped. HAT-tuh, never HAH-tuh."
             },
             {
               "kind": "speech",
-              "text": "h-silent-lengthening — that h is not pronounced. It is the silent lengthening h you met inside gehen, and Jahr was named there as one of the three words that hide it, beside sehr and Ihnen. Here it is."
-            },
-            {
-              "kind": "speech",
-              "text": "long-a — so the vowel runs long: YAAR. Say it beside English year and the two are almost the same noise."
+              "text": "final-te — the ending is still a full unstressed syllable."
             }
           ]
         },
@@ -230,29 +617,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Jahr\" — j as y, h silent, a long",
+              "instruction": "\"ich hatte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Jahr\" — *j* as *y*, *h* silent, *a* long]"
+              "source": "[YOU SAY: \"ich hatte\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "singular and plural — \"das Jahr, die Jahre\"",
+              "instruction": "the pair — \"ich hatte … ich habe gehabt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: singular and plural — \"das Jahr, die Jahre\"]"
+              "source": "[YOU SAY: the pair — \"ich hatte … ich habe gehabt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "where you had already met it — \"die Jahreszeiten\"",
+              "instruction": "the English twin — \"hatte, had\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: where you had already met it — \"die Jahreszeiten\"]"
+              "source": "[YOU SAY: the English twin — \"hatte, had\"]"
             },
             {
               "kind": "repeat",
@@ -261,7 +648,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"das Jahr, die Jahre.\""
+              "text": "\"ich hatte, ich hatte.\""
             }
           ]
         },
@@ -278,26 +665,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the year.\" (Das Jahr.) And the plural. (Die Jahre.) How is the J sounded? (Like English y.) What is the h doing? (Lengthening the vowel — it is not pronounced.) Which longer word has Jahr inside? (Jahreszeiten.) Next: where Jahr and alt both come from."
+              "text": "Say \"I had.\" (Ich hatte.) Which letter of haben is missing? (The b.) Say the same thing in the Perfekt. (Ich habe gehabt.) Which English word is hatte? (Had.) Next: which of the two pasts a German actually reaches for, and where."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C14-jahr-alt",
-      "sequence": 503,
-      "title": "Jahr and alt, taken apart",
-      "headword": "Jahr und alt",
-      "romanization": "Jahr und alt",
-      "gloss": "both words are English wearing German spelling, and alt has a Latin cousin hiding in adult",
+      "id": "GE-C15-register",
+      "sequence": 445,
+      "title": "Which past, and where",
+      "headword": "gesprochen oder geschrieben",
+      "romanization": "gesprochen oder geschrieben",
+      "gloss": "what separates the two pasts — not meaning, but speech against writing, and north against south",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:380d6150c4b5dde8",
+      "sourceHash": "fnv1a64:51379f16e8e94ee6",
       "notice": null,
       "blocks": [
         {
@@ -313,7 +700,430 @@
             },
             {
               "kind": "speech",
-              "text": "Two words, both inherited rather than borrowed, and one of them has a Latin cousin you would never guess."
+              "text": "Two tenses, one meaning. Time to answer the question that has been waiting since the -te arrived: when does a German say which?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: speech takes one, writing takes the other",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Perfekt belongs to speech. The Präteritum belongs to narrative writing."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "tense",
+                "where it lives"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "tense: Perfekt. where it lives: everyday conversation, and dominant there.",
+                "tense: Präteritum. where it lives: novels, reports, anything told on the page."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Open a German novel and the story runs in Präteritum from the first page to the last. Stand in a German kitchen and you will barely hear it. Neither audience thinks it is choosing a tense; each is simply doing what that setting does."
+            },
+            {
+              "kind": "speech",
+              "text": "So the practical instruction for a speaker is lopsided and easy: produce the Perfekt, recognise the Präteritum. You will read far more of it than you will ever need to say."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "There is a second axis, and it is geographic. Spoken Präteritum has largely vanished from conversation in southern Germany, Austria and Switzerland; further north it survives noticeably better. A Hamburg speaker will use forms in conversation that a Munich speaker would find bookish."
+            },
+            {
+              "kind": "speech",
+              "text": "That map is not decoration — the next lessons turn out to explain it — and it means the honest answer to \"do Germans say ich sagte?\" is: some of them, some of the time, and it depends where you are standing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the split — \"Perfekt for speech, Präteritum for writing\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the split — \"Perfekt for speech, Präteritum for writing\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own instruction — \"produce the Perfekt, recognise the Präteritum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own instruction — \"produce the Perfekt, recognise the Präteritum\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the map — \"weaker in the south, stronger in the north\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the map — \"weaker in the south, stronger in the north\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Perfekt spoken, Präteritum written.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past does a novel use? (The Präteritum.) Which does a conversation use? (The Perfekt.) Which should you produce? (The Perfekt.) Where is spoken Präteritum weakest? (The south.) Next: the forms that ignore all of this and stay spoken everywhere."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-konnte",
+      "sequence": 450,
+      "title": "ich konnte — \"I could\"",
+      "headword": "ich konnte",
+      "romanization": "ich konnte",
+      "gloss": "I could — a Präteritum that survives in ordinary speech everywhere, north and south alike",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aeea8c8790950ac5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last new form of the chapter, and a Präteritum nobody thinks twice about saying out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ich konnte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ich konnte — \"I could,\" \"I was able to.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The dental ending again, doubled in the spelling as it was in hatte: konn-te. It belongs to a small family of verbs German calls modal — the ones that lean on another verb, the way English can, must and may do."
+            },
+            {
+              "kind": "speech",
+              "text": "Those verbs are the Präteritum's stronghold in ordinary speech. Nobody in Munich says ich habe gekonnt over dinner; they say ich konnte."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Konnte and English could descend from one Germanic verb, kunnaną, which meant \"to know how\" rather than \"to be physically able.\" Ability arrived later, out of knowledge."
+            },
+            {
+              "kind": "speech",
+              "text": "That older sense is still visible in the English relatives: know, cunning (originally \"knowing\"), and uncouth, which began as \"unknown.\" The l that English wrote into could is pure accident — it was copied from would and should centuries after anyone stopped pronouncing it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich konnte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich konnte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two doubled forms — \"hatte, konnte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two doubled forms — \"hatte, konnte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the old meaning — \"konnte, could — knew how\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the old meaning — \"konnte, could — knew how\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ich konnte, ich hatte.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I could.\" (Ich konnte.) What did the verb behind it originally mean? (\"To know how.\") Name an English cousin. (Know, cunning, or uncouth.) Is konnte bookish? (No — it is said out loud everywhere.) Next: why a handful of forms get that exemption."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-hochfrequent",
+      "sequence": 455,
+      "title": "The forms that stayed spoken",
+      "headword": "hatte, konnte",
+      "romanization": "hatte, konnte",
+      "gloss": "the short list of Präteritum forms that stay spoken everywhere, and the reason the list is short",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b9d1b421341d7ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hatte. Konnte. Both are Präteritum, and both come out of a German mouth without a second thought. So the writing-only rule has holes in it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a short list of survivors",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A handful of very common verbs keep their one-word past in speech, everywhere in the German-speaking world."
+            },
+            {
+              "kind": "speech",
+              "text": "Three groups make up almost the whole list:"
+            },
+            {
+              "kind": "speech",
+              "text": "hatte — the past of haben;"
+            },
+            {
+              "kind": "speech",
+              "text": "konnte and its modal siblings — musste, wollte, durfte;"
+            },
+            {
+              "kind": "speech",
+              "text": "the past of the verb for \"to be,\" which arrives two chapters from now and is the most-said of them all."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything else in the Präteritum obeys the split you learned last: written, not spoken."
+            },
+            {
+              "kind": "speech",
+              "text": "Why these? Because they are the verbs said most often, and frequency protects a form the way it protects an irregularity. A shape you produce fifty times a day is never up for replacement; a shape you produce once a month quietly gets swapped for the compound version and nobody notices the swap happening."
+            },
+            {
+              "kind": "speech",
+              "text": "So the practical list is genuinely short, and it is worth having by heart rather than by rule."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the survivors you own — \"hatte, konnte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the survivors you own — \"hatte, konnte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the modal siblings — \"musste, wollte, durfte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the modal siblings — \"musste, wollte, durfte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason — \"frequency protects a form\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason — \"frequency protects a form\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"hatte, konnte — spoken everywhere.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name two Präteritum forms a German says out loud. (Hatte, konnte.) Which family does konnte belong to? (The modals.) Why did these survive? (They are said most often.) Next: why the rest of the tense retreated, and where the retreat came from."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-praeteritum-map",
+      "sequence": 460,
+      "title": "The same retreat, three times over",
+      "headword": "areale Veränderung",
+      "romanization": "areale Veränderung",
+      "gloss": "an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:173fd4877ad03766",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German is not the only language that let a two-word past crowd out a one-word one. Two of its neighbours did the identical thing at the identical time."
             }
           ]
         },
@@ -325,431 +1135,25 @@
             {
               "kind": "table",
               "headers": [
-                "German",
-                "from",
-                "English"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "German: Jahr. from: Germanic jēra. English: year.",
-                "German: alt. from: Germanic aldaz. English: old."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Neither line passes through Latin, which is worth noticing in a chapter about age: German borrowed its month names wholesale from Latin, and kept its own words for the year and for being old."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the cousin. The root behind aldaz also went into Latin, as alere — \"to nourish, to grow.\" From alere English took adult, which is literally \"grown up.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So alt and adult are the same idea taken down two roads: something that has been fed and has grown. Ageing as growth rather than as decay, which is a kinder picture than English usually admits to."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two twins — \"Jahr, year; alt, old\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two twins — \"Jahr, year; alt, old\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the Latin cousin — \"alt, alere, adult\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the Latin cousin — \"alt, alere, adult\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what the root meant — \"to nourish, to grow\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what the root meant — \"to nourish, to grow\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Jahr, year. Alt, old.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which English word is Jahr? (Year.) And alt? (Old.) Which English word comes from alt's Latin cousin? (Adult.) What did that cousin mean? (\"To nourish, to grow.\") Next: the question you will be asked with these two words."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C14-wie-alt-bist-du",
-      "sequence": 504,
-      "title": "Wie alt bist du?",
-      "headword": "Wie alt bist du?",
-      "romanization": "Wie alt bist du?",
-      "gloss": "how old are you — word for word the English question, built from four words you own",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:92640c9eeef2a205",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have wie, you have alt, and you have du bist. That is the whole question."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: Wie alt bist du?",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Wie alt bist du? — \"How old are you?\""
-            },
-            {
-              "kind": "speech",
-              "text": "Four words, and every one of them is already yours. Read it against the English and nothing has moved: how — old — are — you."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a coincidence to be grateful for; it is inheritance. Neither language borrowed this question from the other. They have been asking it the same way since before either was called German or English."
-            },
-            {
-              "kind": "speech",
-              "text": "The verb sits second, as it does in every German statement and question with a question word in front — Wie first, bist second, and the rest behind."
-            },
-            {
-              "kind": "speech",
-              "text": "To someone you would address formally, it is Wie alt sind Sie? — the same question with the polite form of the verb."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Wie alt bist du?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Wie alt bist du?\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "it against the English — \"how old are you; wie alt bist du\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: it against the English — \"how old are you; wie alt bist du\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the formal one — \"Wie alt sind Sie?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the formal one — \"Wie alt sind Sie?\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Wie alt bist du?\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ask how old someone is, informally. (Wie alt bist du?) And formally. (Wie alt sind Sie?) Which word sits second? (Bist.) How many of the four words were new? (None.) Next: how to answer it."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C14-alter",
-      "sequence": 505,
-      "title": "ich bin zwanzig Jahre alt",
-      "headword": "ich bin zwanzig Jahre alt",
-      "romanization": "ich bin zwanzig Jahre alt",
-      "gloss": "I am twenty years old — the answer, word for word the English sentence",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:7978d844461b0c88",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The answer, and it is as English as the question was."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: ich bin zwanzig Jahre alt",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Ich bin zwanzig Jahre alt. — \"I am twenty years old.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Word for word, that is the English sentence: I — am — twenty — years — old. Put any number you own in the middle and the sentence is yours."
-            },
-            {
-              "kind": "speech",
-              "text": "And German shortens it the same way English does. Ich bin zwanzig is complete and ordinary, exactly as \"I'm twenty\" is — the Jahre alt can go, and in speech usually does."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice which verb is doing the work: bin. Not habe. Hold on to that, because it is the whole point of the next lesson."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Ich bin zwanzig Jahre alt.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich bin zwanzig Jahre alt.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the short form — \"Ich bin zwanzig.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the short form — \"Ich bin zwanzig.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "your own age, in both lengths",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: your own age, in both lengths]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the question and the answer together",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the question and the answer together]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Ich bin zwanzig Jahre alt.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I am twenty years old.\" (Ich bin zwanzig Jahre alt.) Shorten it. (Ich bin zwanzig.) Which verb does it use? (Bin.) Which does it not use? (Habe.) Next: why that choice puts German and English on one side and every Romance language on the other."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C14-alter-sein-haben",
-      "sequence": 506,
-      "title": "sein, not haben",
-      "headword": "sein, nicht haben",
-      "romanization": "sein, nicht haben",
-      "gloss": "Germanic IS its years where Romance HAS them — the one place German refuses haben",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:527232675e8f5f81",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You spent a whole chapter on haben. Here is the everyday sentence where German refuses to let you use it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: you ARE your years",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German states age with sein, never with haben."
-            },
-            {
-              "kind": "speech",
-              "text": "Ich habe zwanzig Jahre is not German. It is not a clumsy way of putting it; it is not a sentence."
-            },
-            {
-              "kind": "speech",
-              "text": "Look what happens when you line the languages up:"
-            },
-            {
-              "kind": "table",
-              "headers": [
                 "language",
-                "how age works",
-                "literally"
+                "one-word past",
+                "what took it over in speech"
               ],
               "columns": 3,
-              "rowCount": 6,
+              "rowCount": 3,
               "utterances": [
-                "language: German. how age works: ich bin … Jahre alt. literally: I am …",
-                "language: English. how age works: I am twenty. literally: I am …",
-                "language: French. how age works: j'ai vingt ans. literally: I have …",
-                "language: Spanish. how age works: tengo veinte años. literally: I have …",
-                "language: Italian. how age works: ho venti anni. literally: I have …",
-                "language: Portuguese. how age works: tenho vinte anos. literally: I have …"
+                "language: German. one-word past: Präteritum. what took it over in speech: Perfekt.",
+                "language: French. one-word past: passé simple. what took it over in speech: passé composé.",
+                "language: Italian. one-word past: passato remoto. what took it over in speech: passato prossimo."
               ]
             },
             {
               "kind": "speech",
-              "text": "Two on one side, four on the other, and the line falls exactly where the families do."
+              "text": "Two Romance languages and one Germanic one, doing the same thing over the same centuries — and not by coincidence. The dental -te and the Romance endings came from completely different ancestors, so nothing inherited can account for three languages arriving at the same answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Geography can. Southern Germany, France and northern Italy are one connected block of territory, and the change spread through it by contact: speakers who live near each other borrow habits, and a habit of speech travels across a language boundary as easily as across a dialect one. Linguists call a change that spreads that way an areal change."
             }
           ]
         },
@@ -760,15 +1164,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Romance has its years; Germanic is its years. Age as something you carry against age as something you are — two pictures of the same fact, and each family committed to one of them long ago."
+              "text": "Two pieces of evidence make the contact story stick rather than merely sound good."
             },
             {
               "kind": "speech",
-              "text": "What makes German's choice worth pointing at is that German did not hold the Latin line out generally. Its month names are Latin borrowings wholesale; Januar, Februar and the rest came in and stayed. But on this sentence, said several times a week for a lifetime, German kept its own logic."
+              "text": "The first is what did not happen at the western edge. Spanish and Portuguese kept their one-word past far more fully in speech, and they are the two languages furthest from that connected block."
             },
             {
               "kind": "speech",
-              "text": "The words a language uses most are the ones it is least willing to trade — which is the same force that keeps its commonest verbs irregular."
+              "text": "The second is the map inside German itself, which you already met: the Präteritum is weakest in the south, nearest the centre of the change, and strongest in the north, furthest from it. A change spreading outward from a region should thin as it goes, and that is exactly what German shows."
+            },
+            {
+              "kind": "speech",
+              "text": "Geography did not dictate any single sentence. But it explains why a Germanic language and two Romance ones moved in step, and why one end of Germany sounds older than the other."
             }
           ]
         },
@@ -786,29 +1194,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the rule — \"age takes sein, not haben\"",
+              "instruction": "the three languages — \"German, French, Italian: the same retreat\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the rule — \"age takes sein, not haben\"]"
+              "source": "[YOU SAY: the three languages — \"German, French, Italian: the same retreat\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two sides — \"ich bin zwanzig; j'ai vingt ans\"",
+              "instruction": "the name — \"an areal change, spread by contact\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two sides — \"ich bin zwanzig; j'ai vingt ans\"]"
+              "source": "[YOU SAY: the name — \"an areal change, spread by contact\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the picture — \"Romance has its years, Germanic is its years\"",
+              "instruction": "the inside map — \"south more Perfekt, north more Präteritum\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the picture — \"Romance has its years, Germanic is its years\"]"
+              "source": "[YOU SAY: the inside map — \"south more Perfekt, north more Präteritum\"]"
             },
             {
               "kind": "repeat",
@@ -817,7 +1225,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Ich bin zwanzig Jahre alt — bin, not habe.\""
+              "text": "\"areal change — it spread by contact.\""
             }
           ]
         },
@@ -834,26 +1242,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb does German use for age? (Sein.) Which does French use? (Avoir — \"to have\".) Which two languages sit together here? (German and English.) Did German borrow its month names from Latin? (Yes — which is what makes keeping this sentence its own worth noticing.) Next: the chapter said through."
+              "text": "Which two neighbours made the same change? (French and Italian.) Did German inherit it from Latin? (No — the two families build their pasts from different material.) What is a change that spreads by contact called? (An areal change.) Which two languages at the western edge kept their one-word past? (Spanish and Portuguese.) Next: the chapter run through end to end."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C14-alter-practice",
-      "sequence": 507,
-      "title": "Practice — asking and answering an age",
+      "id": "GE-C15-praeteritum-practice",
+      "sequence": 465,
+      "title": "Practice — the two pasts, side by side",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "chapter payoff — asking and answering an age, and hearing which verb German reaches for",
+      "gloss": "chapter payoff — the two pasts said back to back until it is audible that nothing about the meaning has moved",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb39f716d673ce32",
+      "sourceHash": "fnv1a64:4471d5a208135dd8",
       "notice": null,
       "blocks": [
         {
@@ -869,34 +1277,33 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. One question, one answer, and one thing to keep hearing: which verb carries it."
+              "text": "No new words. The point of this one is to hear, in your own voice, that two different-sounding sentences report the same event."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: one meaning, two shapes",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "German",
-                "English"
+                "meaning",
+                "Präteritum",
+                "Perfekt"
               ],
-              "columns": 2,
-              "rowCount": 5,
+              "columns": 3,
+              "rowCount": 3,
               "utterances": [
-                "Wie alt bist du? means How old are you?",
-                "Zwanzig Jahre alt. Und du? means Twenty years old. And you?",
-                "Ich bin achtzehn. means I am eighteen.",
-                "Und du bist müde. means And you are tired.",
-                "Aber nicht alt! means But not old!"
+                "meaning: I said. Präteritum: ich sagte. Perfekt: ich habe gesagt.",
+                "meaning: I made. Präteritum: ich machte. Perfekt: ich habe gemacht.",
+                "meaning: I had. Präteritum: ich hatte. Perfekt: ich habe gehabt."
               ]
             },
             {
               "kind": "speech",
-              "text": "Every line runs on the same verb, and two of them drop it the way speech does — zwanzig Jahre alt answers the question on its own. Nothing here needs haben, and the last two lines put müde and alt side by side in the slot they share."
+              "text": "Say each pair back to back — ich sagte … ich habe gesagt — and then er machte das … er hat das gemacht. Nothing about the meaning has moved. All that has changed is which room you are standing in."
             }
           ]
         },
@@ -914,47 +1321,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the question, then your own answer",
+              "instruction": "the pair — \"ich sagte … ich habe gesagt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the question, then your own answer]"
+              "source": "[YOU SAY: the pair — \"ich sagte … ich habe gesagt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the answer short, then long",
+              "instruction": "the other pair — \"er machte das … er hat das gemacht\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the answer short, then long]"
+              "source": "[YOU SAY: the other pair — \"er machte das … er hat das gemacht\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two sides — \"ich bin zwanzig; j'ai vingt ans\"",
+              "instruction": "the survivors — \"ich hatte, ich konnte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two sides — \"ich bin zwanzig; j'ai vingt ans\"]"
+              "source": "[YOU SAY: the survivors — \"ich hatte, ich konnte\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twins — \"Jahr, year; alt, old; alt, adult\"",
+              "instruction": "your own instruction — \"produce the Perfekt, recognise the Präteritum\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twins — \"Jahr, year; alt, old; alt, adult\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the whole exchange, both voices",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange, both voices]"
+              "source": "[YOU SAY: your own instruction — \"produce the Perfekt, recognise the Präteritum\"]"
             },
             {
               "kind": "repeat",
@@ -963,7 +1361,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Wie alt bist du? Ich bin zwanzig Jahre alt.\""
+              "text": "\"ich sagte, ich habe gesagt.\""
             }
           ]
         },
@@ -980,7 +1378,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask someone's age. (Wie alt bist du?) Answer with your own, both long and short. Which verb does German use, and which does it refuse? (Sein; not haben.) Which English word shares a root with alt? (Adult.) Which four languages say \"I have twenty years\"? (French, Spanish, Italian, Portuguese.)"
+              "text": "Say \"I made\" both ways. (Ich machte; ich habe gemacht.) Which of the two would a novel use? (The Präteritum.) Which would you say out loud? (The Perfekt — except for the survivors.) What is the -te called? (The dental preterite.) What kind of change pushed the tense out of speech? (An areal one.) Next: the verb every one of these sentences has been waiting for."
             }
           ]
         }

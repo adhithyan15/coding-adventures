@@ -1,23 +1,21 @@
 {
   "language": "german",
   "chapter": 25,
-  "sourceHash": "fnv1a64:fbefee05b0308466",
+  "sourceHash": "fnv1a64:08a79e9d4a65f1e1",
   "lessonIds": [
-    "GE-C16-perfekt-sein",
-    "GE-C16-kommen",
-    "GE-C16-fahren",
-    "GE-C16-werden",
-    "GE-C16-bleiben",
-    "GE-C16-perfekt-sein-ausnahmen",
-    "GE-C16-perfekt-sein-agreement",
-    "GE-C16-partizip-attributiv",
-    "GE-C16-haben-oder-sein"
+    "GE-C14-alt",
+    "GE-C14-jahr",
+    "GE-C14-jahr-alt",
+    "GE-C14-wie-alt-bist-du",
+    "GE-C14-alter",
+    "GE-C14-alter-sein-haben",
+    "GE-C14-alter-practice"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 8,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "german/narration/ch25.txt",
   "json": "german/narration/ch25.json",
-  "textHash": "fnv1a64:6b0754dc3122d902",
-  "jsonHash": "fnv1a64:db24cf694ca64092",
+  "textHash": "fnv1a64:41fee14dadd19c01",
+  "jsonHash": "fnv1a64:25cdd0584a1b60c8",
   "findings": []
 }

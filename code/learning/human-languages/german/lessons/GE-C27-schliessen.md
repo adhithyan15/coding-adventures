@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C27-schliessen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 870
-chapter: 36
+sequence: 890
+chapter: 38
 type: word
 headword: schließen
 gloss: to close — the second verb in these chapters that German kept and English lost, and the one that locked up Schloss, Schlüssel and Schluss

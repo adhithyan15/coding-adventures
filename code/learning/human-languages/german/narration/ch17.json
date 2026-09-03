@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 17,
-  "title": "Colours",
+  "title": "Bread, Water, Wine",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:dd523422211b57e4",
+  "sourceHash": "fnv1a64:7a5945ded38e124d",
   "lessons": [
     {
-      "id": "GE-C13-schwarz-weiss",
+      "id": "GE-C11-brot",
       "sequence": 295,
-      "title": "schwarz, weiß — and the word German lent away",
-      "headword": "schwarz, weiß",
-      "romanization": "schwarz, weiß",
-      "gloss": "black and white — both native Germanic, and one of them German lent to half of Europe",
+      "title": "das Brot — bread, and the third gender",
+      "headword": "das Brot",
+      "romanization": "das Brot",
+      "gloss": "bread — inherited Germanic, the twin of English bread",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f45a3d37f4f76fd7",
+      "sourceHash": "fnv1a64:9a5aa0aa3c615c77",
       "notice": null,
       "blocks": [
         {
@@ -35,68 +35,34 @@
             },
             {
               "kind": "speech",
-              "text": "German's colour words are home-grown — no Latin here. But one of them has a sibling that emigrated: a German word for \"shining\" became the word for white in French, Italian and Portuguese."
+              "text": "Where the Romance sisters all say a version of Latin pānis (French pain, Italian pane), German goes its own Germanic way: Brot — the direct twin of English bread. And it brings a new grammatical face: the neuter article, das."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "schwarz",
+          "type": "etymology",
+          "title": "Taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "schwarz (\"black\") from Proto-Germanic swartaz. Its English cousin survives in swarthy (\"dark-complexioned\"). Further back it's related to Latin sordēs (\"dirt\") — the root of English sordid. Black and grubby, from one idea."
+              "text": "das Brot (\"bread\") from old Germanic braudam — the same word that became English bread. No Latin here: this is a native word, like Vater and Wasser, from the Germanic core the two languages share."
             }
           ]
         },
         {
           "index": 2,
           "type": "unknown",
-          "title": "weiß",
+          "title": "The third gender — das",
           "segments": [
             {
               "kind": "speech",
-              "text": "weiß (\"white\") from Proto-Germanic hwītaz = exactly English white. Same word, different spelling clothes."
-            },
-            {
-              "kind": "speech",
-              "text": "Note the ß (Eszett): it marks a sharp s after a long vowel. Weiß rhymes with English vice, not vice-versa's second half. In Switzerland you'll see it written weiss — the letter is optional there."
+              "text": "You have met der (masculine, der Vater) and die (feminine, die Mutter). German has a third: das, the neuter — and Brot is one: das Brot. (German nouns are also always capitalized — Brot, Vater, Wasser — a rule no other language here follows.) So the article set is now complete: der / die / das."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The word that emigrated",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German also has blank — \"shiny, polished, bare.\" That word, in its Frankish form blank (\"shining\"), was borrowed into Romance, where it pushed Latin's own albus out and became:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "\"white\""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "language: French. \"white\": blanc.",
-                "language: Italian. \"white\": bianco.",
-                "language: Portuguese. \"white\": branco.",
-                "language: German. \"white\": blank — still just \"shiny\"."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from the food lesson). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,43 +75,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"schwarz, weiß\"",
+              "instruction": "\"das Brot\" — long o, the neuter das",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"schwarz, weiß\"]"
+              "source": "[YOU SAY: \"das Brot\" — long *o*, the neuter *das*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Wein ist weiß\" — the same wine, coloured again",
+              "instruction": "the twin test — \"Brot / bread — both Germanic, no Latin\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Wein ist weiß\" — the same wine, coloured again]"
+              "source": "[YOU SAY: the twin test — \"**Brot / bread** — both Germanic, no Latin\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"weiß, white\" — hear the same word",
+              "instruction": "the three genders — \"der Vater, die Mutter, das Brot\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"weiß · white\" — hear the same word]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"blank\" — and remember: French made this one mean white",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"blank\" — and remember: French made this one mean *white*]"
+              "source": "[YOU SAY: the three genders — \"der Vater, die Mutter, das Brot\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,26 +114,26 @@
             },
             {
               "kind": "speech",
-              "text": "Are German's colour words borrowed from Latin? (No — both are native Germanic.) What English word is schwarz's cousin? (Swarthy — and, further off, sordid.) What is weiß in English, letter for letter? (White.) Which German word became French blanc? (Blank, \"shining\" — Germanic lending into Romance for once.) Next: rot and blau, and one more word that travelled."
+              "text": "Give \"bread\" with its article. (das Brot.) Why is it not from Latin pānis like French pain? (It is inherited Germanic — the twin of English bread.) What gender does das mark, and what are the other two? (Neuter — with der masculine and die feminine.) Next: Wasser and Wein — and a split between native and borrowed."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C13-rot-blau",
+      "id": "GE-C11-wasser-wein",
       "sequence": 300,
-      "title": "rot, blau — cousins and emigrants",
-      "headword": "rot, blau",
-      "romanization": "rot, blau",
-      "gloss": "red and blue — an ancient shared root, and a second word German lent to its neighbours",
+      "title": "das Wasser, der Wein — one word Germans always had, one Rome brought",
+      "headword": "das Wasser, der Wein",
+      "romanization": "das Wasser, der Wein",
+      "gloss": "water and wine — one native Germanic, one ancient Latin loan",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ae049e823337592",
+      "sourceHash": "fnv1a64:bfc8a0c07994b706",
       "notice": null,
       "blocks": [
         {
@@ -192,98 +149,38 @@
             },
             {
               "kind": "speech",
-              "text": "Two more native German colours. One is related to the French word for red — genuinely, not by borrowing. The other is a second German word the Romance languages took."
+              "text": "Two drinks, two very different histories. Wasser is a word Germanic speakers have always had; Wein is one Rome carried north with the grapevine. Side by side, they show the difference between an inherited word and an ancient loan."
             }
           ]
         },
         {
           "index": 1,
           "type": "unknown",
-          "title": "rot — an ancient cousin",
+          "title": "das Wasser (water) — native Germanic",
           "segments": [
             {
               "kind": "speech",
-              "text": "rot from Proto-Germanic raudaz from PIE h₁rewdʰ-. That root is one of the oldest colour words we can reconstruct, and it went everywhere:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "word"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "language: German. word: rot.",
-                "language: English. word: red, rust, ruddy.",
-                "language: Latin. word: ruber, rubeus becomes French rouge, ruby, rubric."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So rot and rouge are cousins, not borrowings — they split apart thousands of years before either language existed. Red is the colour humans name first, after black and white."
+              "text": "das Wasser (\"water\") — the w is pronounced v (VAH-ser). It is the Grimm's-law twin of English water: same Germanic root watar, same core meaning, both native. Like Brot and Vater, no Latin needed — and neuter, das Wasser."
             }
           ]
         },
         {
           "index": 2,
           "type": "unknown",
-          "title": "blau — the second emigrant",
+          "title": "der Wein (wine) — an ancient Latin loan",
           "segments": [
             {
               "kind": "speech",
-              "text": "blau from Proto-Germanic blēwaz. Like blank in the last lesson, this word was borrowed into Romance:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "\"blue\""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "language: German. \"blue\": blau.",
-                "language: French. \"blue\": bleu.",
-                "language: Italian. \"blue\": blu.",
-                "language: English. \"blue\": blue — taken from French, not from German."
-              ]
+              "text": "der Wein (\"wine\") — the ei is said \"eye\" (vine). Here is the twist: Wein is not a native Germanic word. It was borrowed from Latin vīnum in Roman times, when the legions brought viticulture north of the Alps. The Germanic tribes took the drink and its name — which is exactly why English wine, German Wein, and Latin vīnum all match: they are one loan, not three cousins. (Masculine: der Wein.)"
             },
             {
               "kind": "speech",
-              "text": "English is the odd one here: it had Germanic blāw available but borrowed the French form instead. The word went Germanic becomes French becomes English, coming home in disguise."
-            },
-            {
-              "kind": "speech",
-              "text": "Portuguese went a different way entirely — its blue is azul, from Arabic — a second, entirely separate road to blue, and the one Spanish took too."
+              "text": "The lesson in one line: Wasser is a word Germans always had; Wein is a word Rome gave them — the vine came with a vocabulary."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The chapter in one table",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "source",
-                "did Romance borrow it?"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "German: schwarz. source: Germanic swartaz. did Romance borrow it?: no.",
-                "German: weiß. source: Germanic hwītaz. did Romance borrow it?: no — but blank went instead.",
-                "German: rot. source: Germanic raudaz. did Romance borrow it?: no — Latin had its own cousin.",
-                "German: blau. source: Germanic blēwaz. did Romance borrow it?: yes — bleu, blu."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -296,43 +193,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"rot, blau\"",
+              "instruction": "\"das Wasser\" (v-), \"der Wein\" (-ein = \"eye\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"rot, blau\"]"
+              "source": "[YOU SAY: \"das Wasser\" (*v-*), \"der Wein\" (*-ein* = \"eye\")]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Wein ist rot\" — the wine you already have, coloured",
+              "instruction": "\"Wasser / water — native twins\"; \"Wein / wine / vīnum — one Latin loan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Wein ist rot\" — the wine you already have, coloured]"
+              "source": "[YOU SAY: \"Wasser / water — native twins\"; \"Wein / wine / vīnum — one Latin loan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins — \"rot, red, rouge\"",
+              "instruction": "the split — \"Wasser native, Wein borrowed with the grapevine\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rot · red · rouge\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four — \"schwarz, weiß, rot, blau\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"schwarz, weiß, rot, blau\"]"
+              "source": "[YOU SAY: the split — \"Wasser native, Wein borrowed with the grapevine\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -344,7 +232,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is rot related to French rouge by borrowing or by descent? (Descent — both from PIE h₁rewdʰ-.) Which two German colour words did Romance borrow? (Blank becomes blanc/bianco/branco, and blau becomes bleu/blu.) Where did English get blue from? (French — the long way round.) Next chapter: putting colours onto the things you already name."
+              "text": "Give \"water\" and \"wine\" with articles and correct sounds. (das Wasser — v- — der Wein — \"vine\".) Which is inherited Germanic, and which is a Latin loan? (Wasser native — twin of water; Wein borrowed from vīnum, with the vine.) Why do Wein and English wine match so exactly? (Both borrowed the same Latin word, vīnum.) Next chapter: asking for these at the table."
             }
           ]
         }

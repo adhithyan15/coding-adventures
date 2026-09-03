@@ -500,8 +500,139 @@ fn element_src(element: &GrammarElement, indent: &str) -> String {
 // Tests
 // ===========================================================================
 
+/// Compile a token grammar and a parser grammar into ONE Rust module.
+///
+/// The three Mosaic language compilers (`mosmodel-compiler`,
+/// `moslayout-compiler`, `mosstyle-compiler`) keep both grammars in a single
+/// `src/_grammar.rs` exposing `token_grammar()` and `parser_grammar()`. They are
+/// `*-compiler` crates rather than the `*-lexer` / `*-parser` pair the rest of
+/// the repository uses, which is why `generate-rust-compiled-grammars` — which
+/// walks only those two suffixes — never covered them. Of 88 `_grammar.rs`
+/// files, those three were the only ones nothing could regenerate (#14067).
+///
+/// This deliberately *reuses* [`compile_token_grammar`] and
+/// [`compile_parser_grammar`] and splices their function bodies under one
+/// header, rather than re-implementing the body emitters. Duplicating them
+/// would let the combined output drift from the split output silently, which is
+/// the exact class of bug this function exists to end.
+pub fn compile_combined_grammar(
+    tokens: &TokenGrammar,
+    parser: &ParserGrammar,
+    tokens_file: &str,
+    grammar_file: &str,
+) -> String {
+    // Same injection guard the split emitters apply: a crafted filename must
+    // not be able to break out of the comment line.
+    let tokens_file = tokens_file.replace(['\n', '\r'], "_");
+    let grammar_file = grammar_file.replace(['\n', '\r'], "_");
+
+    let tokens_src = compile_token_grammar(tokens, &tokens_file);
+    let parser_src = compile_parser_grammar(parser, &grammar_file);
+
+    // Take each generated module from its `pub fn` onward, discarding the
+    // per-file header and imports, which the combined header replaces.
+    let body = |src: &str, marker: &str| -> String {
+        match src.find(marker) {
+            Some(i) => src[i..].trim_end().to_string(),
+            // Unreachable in practice: both emitters always emit their marker.
+            // Falling back to the whole module keeps this total rather than
+            // panicking inside a code generator.
+            None => src.trim_end().to_string(),
+        }
+    };
+    let token_body = body(&tokens_src, "pub fn token_grammar()");
+    let parser_body = body(&parser_src, "pub fn parser_grammar()");
+
+    format!(
+        "\
+// AUTO-GENERATED FILE \u{2014} DO NOT EDIT
+// Source: {tokens_file} + {grammar_file}
+// Regenerate with: grammar-tools compile-combined {tokens_file} {grammar_file}
+//
+// This file embeds both the token grammar and the parser grammar as native
+// Rust data structures.  Call `token_grammar()` or `parser_grammar()` instead
+// of reading and parsing the .tokens / .grammar files at runtime.
+
+#[allow(unused_imports)]
+use grammar_tools::token_grammar::{{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction}};
+#[allow(unused_imports)]
+use grammar_tools::parser_grammar::{{GrammarElement, GrammarRule, ParserGrammar}};
+#[allow(unused_imports)]
+use std::collections::HashMap;
+
+// ===========================================================================
+// Token grammar (from {tokens_file})
+// ===========================================================================
+
+{token_body}
+
+// ===========================================================================
+// Parser grammar (from {grammar_file})
+// ===========================================================================
+
+{parser_body}
+"
+    )
+}
+
 #[cfg(test)]
 mod tests {
+    // --- Combined output (#14067) -------------------------------------------
+
+    /// The combined module exposes BOTH entry points under one header, which is
+    /// the shape the three Mosaic `*-compiler` crates consume.
+    #[test]
+    fn combined_grammar_emits_both_entry_points() {
+        let tokens = crate::token_grammar::parse_token_grammar(
+            "keywords:\n  slot\n\nNAME = /[a-z]+/\n",
+        )
+        .expect("tokens should parse");
+        let parser = crate::parser_grammar::parse_parser_grammar("file = KEYWORD NAME ;\n")
+            .expect("grammar should parse");
+
+        let code = super::compile_combined_grammar(&tokens, &parser, "t.tokens", "g.grammar");
+
+        assert!(code.contains("pub fn token_grammar() -> TokenGrammar"));
+        assert!(code.contains("pub fn parser_grammar() -> ParserGrammar"));
+        assert!(code.contains("use grammar_tools::token_grammar::"));
+        assert!(code.contains("use grammar_tools::parser_grammar::"));
+        // One header for the pair, naming both sources.
+        assert_eq!(code.matches("AUTO-GENERATED FILE").count(), 1);
+        assert!(code.contains("t.tokens + g.grammar"));
+    }
+
+    /// The combined emitter must not re-implement the body emitters: its
+    /// function bodies have to be exactly what the split commands produce, or
+    /// the two paths can drift apart silently.
+    #[test]
+    fn combined_bodies_match_the_split_emitters() {
+        let tokens = crate::token_grammar::parse_token_grammar(
+            "keywords:\n  part\n\nNAME = /[a-z]+/\n",
+        )
+        .expect("tokens should parse");
+        let parser = crate::parser_grammar::parse_parser_grammar("file = KEYWORD ;\n")
+            .expect("grammar should parse");
+
+        let combined = super::compile_combined_grammar(&tokens, &parser, "a.tokens", "b.grammar");
+        let split_t = super::compile_token_grammar(&tokens, "a.tokens");
+        let split_p = super::compile_parser_grammar(&parser, "b.grammar");
+
+        let body = |s: &str, marker: &str| s[s.find(marker).expect("marker")..].trim_end().to_string();
+        assert_eq!(
+            body(&combined, "pub fn token_grammar()")
+                .split("// =")
+                .next()
+                .unwrap()
+                .trim_end(),
+            body(&split_t, "pub fn token_grammar()").trim_end()
+        );
+        assert_eq!(
+            body(&combined, "pub fn parser_grammar()").trim_end(),
+            body(&split_p, "pub fn parser_grammar()").trim_end()
+        );
+    }
+
+
     use super::*;
     use crate::parser_grammar::parse_parser_grammar;
     use crate::token_grammar::parse_token_grammar;

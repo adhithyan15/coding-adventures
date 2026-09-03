@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C41-je",
+    "language": "punjabi",
+    "chapter": 41,
+    "sequence": 2370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96e89021a742c4dc"
+  },
+  "findings": []
+}

@@ -1,24 +1,22 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:5e767f8981a785c4",
+  "sourceHash": "fnv1a64:3c963ec35595d2d0",
   "lessonIds": [
-    "GE-C15-praeteritum",
-    "GE-C15-sagte",
-    "GE-C15-machte",
-    "GE-C15-dentales-praeteritum",
-    "GE-C15-hatte",
-    "GE-C15-register",
-    "GE-C15-konnte",
-    "GE-C15-hochfrequent",
-    "GE-C15-praeteritum-map",
-    "GE-C15-praeteritum-practice"
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix",
+    "GE-C15-partizip-practice"
   ],
-  "voiceLessons": 10,
-  "drivablePrefix": 10,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch21.txt",
   "json": "german/narration/ch21.json",
-  "textHash": "fnv1a64:6f2652243bf5c663",
-  "jsonHash": "fnv1a64:cc83d4de428fe7a4",
+  "textHash": "fnv1a64:0e467c30c4a004e2",
+  "jsonHash": "fnv1a64:234081deab849412",
   "findings": []
 }

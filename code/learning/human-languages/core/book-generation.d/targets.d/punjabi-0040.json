@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 40,
+  "output": "punjabi/book/chapters/ch40-that-and-why.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

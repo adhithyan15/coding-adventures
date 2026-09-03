@@ -1,7 +1,7 @@
 ---
 id: GE-C12-zahlen-13-20
-sequence: 290
-chapter: 16
+sequence: 310
+chapter: 18
 type: word
 headword: dreizehn — zwanzig
 gloss: 13–20 — perfectly regular digit+zehn compounds, step for step with English

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:fa9134b124439629",
+  "lessonIds": [
+    "PA-C37-nahin-vaak",
+    "PA-C37-samajh-nahin",
+    "PA-C37-nahin-write",
+    "PA-C37-nahin-pata",
+    "PA-C37-nahin-checkpoint"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch37.txt",
+  "json": "punjabi/narration/ch37.json",
+  "textHash": "fnv1a64:feac86b36bbc1b7a",
+  "jsonHash": "fnv1a64:8f3b9cbeb21b2efe",
+  "findings": []
+}

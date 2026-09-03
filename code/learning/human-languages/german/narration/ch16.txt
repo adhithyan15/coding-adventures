@@ -1,66 +1,69 @@
-German, chapter 16: Numbers Eleven to Twenty.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+German, chapter 16: Family.
+2 lessons. All 2 can be done entirely by ear.
 
 
 Lesson 1 of 2.
-elf und zwölf — "one left over," "two left over".
+der Vater, die Mutter — the family that proves Grimm's law.
 
 Warm-up.
 [pause 2 seconds]
-Why are English eleven and twelve so strange — why not "oneteen, twoteen"? German has the identical oddity (elf, zwölf), and because the two languages are Germanic twins, learning one explains the other. The answer is one of the best number-stories anywhere.
+Back in the months chapter, German borrowed its calendar from Latin (Januar, März…). Family is the opposite story: Vater and Mutter are not borrowed — they are inherited Germanic words, blood cousins of English father and mother. And the sound-law that links them, Grimm's law, is written right on their faces.
 
-The words, taken apart.
-elf (11) from old Germanic ainlif = ain ("one") + lif.
-zwölf (12) from twalif = twa ("two") + lif.
-And -lif means "to leave, to remain." So:
-elf = "one left over".
-zwölf = "two left over".
-Left over from what? From ten — from your ten fingers. You count to ten, you run out of fingers, and you have one left. Eleven is literally the leftover.
-English says exactly the same thing: eleven from ain-lif, twelve from twa-lif. Not similar words — the same words, inherited side by side. (You met this Germanic-twin pattern with Vater/father and Wasser/water; here it reaches even the counting.)
+Taken apart.
+der Vater ("father") — note the spelling V, but it is pronounced f (FAH-ter). from PIE ph₂tḗr.
+die Mutter ("mother"). from PIE méh₂tēr.
+Articles: der Vater (masculine), die Mutter (feminine).
 
-And then it stops.
-The leftover-trick covers only two numbers. From 13 on, German turns completely regular — and so does English. That's the next lesson.
+Grimm's law, on display.
+Grimm's law is the great sound-shift that split the Germanic languages (English, German, Dutch…) off from the rest. Watch what it did to the same PIE words that Latin kept as pater/māter:
+[a table of 2 rows, read aloud]
+PIE: ph₂tḗr. Latin (French): pater (père). Germanic (English / German): father / Vater (V = f).
+PIE: méh₂tēr. Latin (French): māter (mère). Germanic (English / German): mother / Mutter.
+p becomes f: Latin kept the p (pater); Germanic turned it to f — English father, German Vater (the V is just an old spelling of that f sound).
+t becomes th becomes d: the middle consonant became English th (mother) and then, in German's later shift, d/t (Mutter).
+So German and English agree here (both f-, both m-) precisely because they are both Germanic — while French/Latin sit on the other side of Grimm's line. The month names were Latin tourists; Vater and Mutter are natives.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "elf, zwölf" — zwölf with the rounded ö]
+[your turn — say: "der Vater, die Mutter" — Vater with an f sound]
 [pause 8 seconds for the answer]
-[your turn — say: the meaning — "one left over, two left over — after ten fingers"]
+[your turn — say: the twin test — "Vater / father, Mutter / mother — both Germanic"]
 [pause 8 seconds for the answer]
-[your turn — say: the twins — "elf/eleven, zwölf/twelve — same word, both Germanic"]
+[your turn — say: contrast — "German months = Latin (Januar); German family = Germanic (Vater)"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do elf and zwölf literally mean? ("One left over" and "two left over" — -lif = "remain".) Left over from what? (From ten — the ten fingers you just counted.) Why do English eleven/twelve look equally odd? (They are the same inherited Germanic words.) Next: 13 to 20, where German becomes perfectly regular.
+Give "father" and "mother" with articles, minding the pronunciation. (der Vater — f sound — die Mutter.) Why do German Vater and English father match, while French père differs? (German & English are both Germanic — Grimm's law shifted p becomes f in both; French kept Latin's p.) How does this chapter contrast with the months chapter? (Months were borrowed from Latin; family is inherited Germanic.) Next: Bruder and Schwester.
 
 
 Lesson 2 of 2.
-dreizehn becomes zwanzig — the pattern that never breaks.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The rule: digit + zehn until you have stopped, and I will say so again when we reach it.
+der Bruder, die Schwester — and the word for "siblings".
 
 Warm-up.
 [pause 2 seconds]
-After the two leftovers (elf, zwölf), German settles into a rule so regular you can generate every number without being taught it. And English does the identical thing — because -teen is ten.
+The parent pair proved German and English are Germanic twins. The sibling pair does it again: Bruder ("brother") and Schwester ("sister") are the near-identical cousins of the English words — no translation really needed, just an ear for the German sounds.
 
-The rule: digit + zehn.
-There is a table here I cannot read to you — 4 columns and 8 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, German, English, build. Come back and look at it when you have stopped.
-Every one is your first-ten digit + zehn — and the English column is the same compound with -teen (which is just ten again: thir-teen = "three-ten"). Only two small wearings-down: sech(s)zehn and sieb(en)zehn clip a sound for easier speech, exactly as English thir- and fif- did to three and five.
-zwanzig (20) from twaintig, "two tens" — the -zig is another form of ten, matching English twen-ty (-ty = ten as well).
+Taken apart.
+der Bruder ("brother") from PIE bʰréh₂tēr — the same root as Latin frāter (French frère), but here kept with a b- (Grimm's law changed bʰ becomes b), exactly like English brother.
+die Schwester ("sister") from PIE swésōr. The German sch spells an sh sound; strip it back and Schwester is English sister and Latin soror, all one root.
 
-The contrast worth noticing.
-The Romance sisters all break their pattern partway through the teens (Portuguese at 16, French and Italian at 17, swapping to "ten-and-six" style). German never breaks. Two leftovers, then one clean rule all the way to twenty — and English marches beside it the entire distance.
+The collective — Geschwister.
+German has a tidy word English lacks: die Geschwister = "siblings," brothers-and-sisters together. It is built with the ge- prefix, an old collective marker ("a set of…") on Schwester — the same ge- that bundles mountains into a Gebirge ("range") and lets German gather a family in one word.
+The four family words now stand as a Germanic set beside the Romance ones:
+[a table of 2 rows, read aloud]
+German: Vater / Mutter. English: father / mother. (Romance cousin): père / mère.
+German: Bruder / Schwester. English: brother / sister. (Romance cousin): frère / sœur.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: 13 becomes 20 — "dreizehn, vierzehn, fünfzehn, sechzehn, siebzehn, achtzehn, neunzehn, zwanzig"]
+[your turn — say: "der Bruder, die Schwester" — Schw- = shv]
 [pause 8 seconds for the answer]
-[your turn — say: each beside its English twin — "dreizehn / thirteen, vierzehn / fourteen…"]
+[your turn — say: the twin test — "Bruder / brother, Schwester / sister"]
 [pause 8 seconds for the answer]
-[your turn — say: the whole run, elf to zwanzig]
+[your turn — say: "die Geschwister — the ge- bundles them into 'siblings'"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What's the rule from 13 to 19? (Digit + zehn — no exceptions.) Which two clip a sound, and what's the English parallel? (Sechzehn and siebzehn; English clipped three becomes thir-, five becomes fif-.) What does zwanzig literally mean? ("Two tens" — -zig, like English -ty.) How does this differ from the Romance sisters? (They break their pattern in the teens; German doesn't.) Next chapter: numbers in use.
+Give "brother" and "sister" with articles. (der Bruder, die Schwester.) Why do they match English so closely? (Both Germanic — same PIE roots, no Grimm's-law gap between them.) What does Geschwister mean, and what does the ge- do? ("Siblings"; ge- is a collective prefix, "a set of.") Next chapter: putting the family into sentences.

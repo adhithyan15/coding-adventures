@@ -1,0 +1,17 @@
+{
+  "id": "GE-EXT-016-B-B-ZAHLMONATE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the last six German months and say which four are Latin numbers.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C09-juli",
+    "GE-C09-august",
+    "GE-C09-september",
+    "GE-C09-oktober",
+    "GE-C09-november",
+    "GE-C09-dezember",
+    "GE-C09-zahlmonate"
+  ]
+}

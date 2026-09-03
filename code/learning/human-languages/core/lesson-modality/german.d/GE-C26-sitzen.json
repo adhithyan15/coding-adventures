@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C26-sitzen",
     "language": "german",
-    "chapter": 35,
-    "sequence": 800,
+    "chapter": 37,
+    "sequence": 820,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:13303876b0bead6a"
+    "sourceHash": "fnv1a64:496600e2b56b8942"
   },
   "findings": []
 }

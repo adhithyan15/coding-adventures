@@ -1597,12 +1597,13 @@ describe("the committed Punjabi A1 inventory", () => {
     }
   });
 
-  it("reports an EMPTY joining column, and a script closed over the corpus only", () => {
+  it("reports a joining column that is no longer empty, and a script closed over the corpus only", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(227);
-    expect(coverage.covered).toBe(112);
-    expect(coverage.unmapped).toBe(115);
+    // 112 -> 136. Chapters 37-43 answer this file's own uncovered list.
+    expect(coverage.covered).toBe(136);
+    expect(coverage.unmapped).toBe(91);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE, and it is the starkest of the three tracks measured in this
     // series. ZERO of eleven. Not one of `te`/`ate`, `jaan`, `par`/`lekin`,
@@ -1613,8 +1614,25 @@ describe("the committed Punjabi A1 inventory", () => {
     // in the checked-in A1 task shape asks for a message this corpus cannot
     // produce. Malayalam's column came back 2/11 on the same walk; Punjabi's is
     // empty, and the difference was measured rather than assumed.
+    // THE HEADLINE HAS CHANGED, and this assertion records it. It read
+    // `covered: 0` -- not one of te/ate, jaan, par/lekin, kyunki, je, the
+    // complementiser ki, jadon or jo occurred anywhere in 226 lessons, so the
+    // longest structure the track taught was a four-slot single clause and the
+    // A1 writing paper asked for a message the corpus could not produce.
+    //
+    // The finding under the finding is why it was cheap: ELEVEN of the eleven
+    // devices needed NO NEW SIGN. Every one is spelled in Gurmukhi the track
+    // taught long ago. This was never a script debt -- nobody had written the
+    // words down. The one new letter in seven chapters (tha) was bought for a
+    // question word, not for a joining word.
     const joining = coverage.byCategory["Jorr (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 0 });
+    expect(joining).toEqual({ enumerated: 11, covered: 10 });
+    // Two columns went FULL, and neither was the target: the clause pattern
+    // closed negation, and the par/lekin doublet closed the register rule the
+    // file said one lesson would close.
+    expect(coverage.byCategory["Nanh (negation)"]!).toEqual({ enumerated: 5, covered: 5 });
+    expect(coverage.byCategory["Bolchaal (register: familiar and respectful, Sanskritic and Perso-Arabic)"]!)
+      .toEqual({ enumerated: 5, covered: 5 });
     // Two demonstratives, neither taught — which is why nothing in the track can
     // be pointed at.
     expect(coverage.byCategory["Sanketak (demonstratives and deixis)"]!).toEqual({
@@ -1631,7 +1649,7 @@ describe("the committed Punjabi A1 inventory", () => {
     expect(coverage.byCategory["Faram (filling in a form)"]!).toEqual({ enumerated: 10, covered: 9 });
     expect(coverage.byCategory["Sur (tone and pronunciation)"]!.covered).toBe(6);
     expect(formatExamCoverage(coverage)).toContain(
-      "punjabi A1 (partial inventory): 112/227 points covered (49%)",
+      "punjabi A1 (partial inventory): 136/227 points covered (60%)",
     );
   }, 60_000);
 });
@@ -2197,6 +2215,209 @@ describe("the committed Japanese A1 inventory", () => {
     expect(coverage.byCategory["Karada - the body"]!.covered).toBe(2);
     expect(formatExamCoverage(coverage)).toContain(
       "japanese A1 (partial inventory): 66/179 points covered (37%)",
+    );
+  }, 60_000);
+});
+
+// ---------------------------------------------------------------------------
+// The first inventory for a track with NO ALPHABET, and the first with a TONE
+// column at all.
+//
+// Two decisions in this file are larger than any point in it, so both are
+// asserted here rather than left to a commit message.
+//
+//   1. SPANISH'S "ALPHABET" POINT IS ANSWERED BY THE STROKE, not by the
+//      character. A1-O1-01 asks for the closed set of units a reader learns
+//      once and reuses forever. Translating that as "the characters" would ask
+//      a beginner's track for tens of thousands and report every Mandarin
+//      course that has ever existed as failing; the strokes are the set the
+//      question was really about, and the corpus teaches them, opening on `yi`
+//      — one horizontal that is both a stroke and a whole character.
+//
+//   2. PINYIN IS A PRONUNCIATION CLAIM, NOT A SCRIPT CLAIM. The argument and
+//      its three pieces of internal evidence are written into the file at
+//      ZH-A1-PY-06 so a reader who disagrees can refile those points without
+//      re-deriving it. The mechanical consequence is what this block checks:
+//      the character column counts characters, so the 53 words the reader
+//      knows by ear cannot inflate it.
+//
+// And one column exists because `exam-levels.json` said so. The chinese caveat
+// records that GF0025-2021 defines its levels "across listening, speaking,
+// reading, writing, and translation" — a fifth skill the PCIC inventories are
+// monolingual by construction and cannot enumerate. `Fanyi` is in the file for
+// that reason and comes back 0 of 2, with zero of the 175 lesson files
+// declaring `mediation` in `modes`.
+// ---------------------------------------------------------------------------
+describe("the committed Chinese A1 inventory", () => {
+  const inventory = loadExamInventory("chinese", "A1");
+  const spanish = loadExamInventory("spanish", "A1");
+
+  it("keeps every point's probe key, and never an empty probe", () => {
+    for (const point of inventory.points) {
+      expect(point, `${point.id} has no probe key`).toHaveProperty("probe");
+      expect(Array.isArray(point.probe) ? point.probe.length : 1, point.id).toBeGreaterThan(0);
+    }
+  });
+
+  it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "chinese");
+    const unknown: string[] = [];
+    for (const point of inventory.points) {
+      for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+    }
+    expect(unknown).toEqual([]);
+  }, 60_000);
+
+  it("keeps the derivation total in both directions", () => {
+    const proxy = (inventory as unknown as {
+      proxy: { notTransferred: { spanishPoints: string[]; why: string }[] };
+    }).proxy;
+    const dropped = new Set(proxy.notTransferred.flatMap((entry) => entry.spanishPoints));
+    for (const entry of proxy.notTransferred) expect(entry.why.trim().length).toBeGreaterThan(0);
+    const derived = new Set(
+      inventory.points.flatMap((point) => (point as unknown as { derivedFrom: string[] }).derivedFrom),
+    );
+    const sourceIds = new Set(spanish.points.map((point) => point.id));
+    for (const id of derived) expect(sourceIds.has(id), `derivedFrom names unknown ${id}`).toBe(true);
+    for (const id of dropped) expect(sourceIds.has(id), `notTransferred names unknown ${id}`).toBe(true);
+    expect([...derived].filter((id) => dropped.has(id)), "derived AND dropped").toEqual([]);
+    const unaccounted = [...sourceIds].filter((id) => !derived.has(id) && !dropped.has(id));
+    expect(unaccounted, "Spanish points that went missing from the walk").toEqual([]);
+  });
+
+  it("drops exactly one point, and says why that one and not the neighbours", () => {
+    // The alphabet, the case distinction and the written accent all LOOK
+    // untransferable to a logographic script and all three restate — onto the
+    // stroke, onto pinyin, and onto the tone marks. Only A1-O1-06 returns
+    // nothing on either side of the script question, and the reason has to name
+    // both sides or it is a guess.
+    const proxy = (inventory as unknown as {
+      proxy: { notTransferred: { spanishPoints: string[]; why: string }[]; note: string };
+    }).proxy;
+    expect(proxy.notTransferred).toHaveLength(1);
+    expect(proxy.notTransferred[0]!.spanishPoints).toEqual(["A1-O1-06"]);
+    expect(proxy.notTransferred[0]!.why).toMatch(/unicameral/);
+    expect(proxy.notTransferred[0]!.why).toMatch(/Beida/);
+    // And it names the track that DERIVED the same point, which is what keeps
+    // "nothing to superscript" from reading as "superscripts looked foreign".
+    expect(proxy.notTransferred[0]!.why).toMatch(/RU-A1-L-09/);
+    expect(proxy.note).toMatch(/A1-O1-01, the alphabet, becomes the STROKE/);
+  });
+
+  it("writes down the pinyin decision IN THE FILE, with its consequence", () => {
+    // The instruction this file was written under: decide explicitly whether
+    // pinyin coverage is a script claim or a pronunciation claim, and write
+    // down which you chose. A decision recorded only in a commit message is a
+    // decision the next author re-makes differently.
+    const decision = inventory.points.find((point) => point.id === "ZH-A1-PY-06");
+    expect(decision, "the pinyin decision point must exist").toBeDefined();
+    expect(decision!.probe, "the decision records a choice, not a lesson").toBeNull();
+    expect(decision!.note).toMatch(/THE DECISION: pronunciation/);
+    expect(decision!.note).toMatch(/script-closure\.ts/);
+    expect(decision!.note).toMatch(/ZH-ORTHO/);
+    expect(decision!.note).toMatch(/THE CONSEQUENCE, STATED RATHER THAN HIDDEN/);
+    expect(inventory.about).toMatch(/THIS FILE TREATS PINYIN AS PRONUNCIATION/);
+    // The mechanical half of the decision: no pinyin point may be probed with a
+    // SCRIPT atom, because that would file a pronunciation claim as script.
+    const pinyin = inventory.points.filter((point) => point.category.startsWith("Pinyin"));
+    expect(pinyin.length).toBeGreaterThanOrEqual(6);
+    for (const point of pinyin) {
+      for (const atom of point.probe ?? []) {
+        expect(atom.startsWith("ZH-SCRIPT-"), `${point.id} probes a script atom`).toBe(false);
+      }
+    }
+  });
+
+  it("marks its own points as its own, in both directions", () => {
+    for (const point of inventory.points) {
+      const cast = point as unknown as { derivedFrom: string[]; chineseSpecific?: boolean };
+      expect(cast.chineseSpecific === true, point.id).toBe(cast.derivedFrom.length === 0);
+    }
+    const specific = inventory.points.filter(
+      (point) => (point as unknown as { derivedFrom: string[] }).derivedFrom.length === 0,
+    );
+    // Tone (5), the particles (2 of 4), measure words (2), aspect (2), the
+    // phonetic component, the character census, simplified-against-traditional,
+    // handwriting, dictionary lookup, topic-comment order, the compound, the
+    // pinyin decision, three repair points and the two mediation points.
+    expect(specific.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it("refuses to borrow an authority it does not have", () => {
+    expect(inventory.about).toMatch(/NOT A TRANSCRIPTION OF ANY HSK SYLLABUS/);
+    expect(inventory.about).toMatch(/MAY BE ATTRIBUTED TO HANBAN/);
+    expect(inventory.about).toMatch(/MAY BE ATTRIBUTED TO DELE/);
+    expect(inventory.about).toMatch(/NO SEARCH WAS RUN, BY INSTRUCTION/);
+    // The caveat that DID steer this file, and the column it produced.
+    expect(inventory.about).toMatch(/TRANSLATION AND MEDIATION/);
+    expect(inventory.about).toMatch(/THAT CAVEAT WAS READ BEFORE ANY POINT WAS WRITTEN/);
+    // The number this file must never invent. An HSK character or word count
+    // would be the easiest thing in the world to assert and the hardest to
+    // defend, given that no search was run.
+    expect(inventory.source).toMatch(/NO HSK WORD LIST OR CHARACTER LIST IS CITED ANYWHERE IN THIS FILE/);
+    expect(inventory.source).toMatch(/EXAM ENVELOPE: PARTIAL AND DANGLING/);
+    expect(isExamInventoryComplete(inventory)).toBe(false);
+    for (const dimension of EXAM_CONTENT_DIMENSIONS) {
+      expect(inventory.scope[dimension].status, dimension).toBe("partial");
+    }
+  });
+
+  it("names an anchor for every point, and says what kind of anchor it is", () => {
+    const anchors = (inventory as unknown as {
+      anchors: { id: string; kind: string; title: string; note: string }[];
+    }).anchors;
+    expect(new Set(anchors.map((anchor) => anchor.kind))).toEqual(
+      new Set(["sourced-proxy", "external-framework", "project-owned", "editorial"]),
+    );
+    for (const anchor of anchors) expect(anchor.note.trim().length, anchor.id).toBeGreaterThan(0);
+    const known = new Set(anchors.map((anchor) => anchor.id));
+    for (const point of inventory.points) {
+      const ids = (point as unknown as { anchorIds?: string[] }).anchorIds;
+      expect(ids?.length, `${point.id} names no anchor`).toBeGreaterThan(0);
+      for (const id of ids ?? []) expect(known.has(id), `${point.id} cites unknown anchor ${id}`).toBe(true);
+    }
+  });
+
+  it("reports a PARTICLE-shaped gap, an empty joining column, and a strong tone column", () => {
+    // Pinned so a future tranche has to say which points it moved. It may rise;
+    // a fall means coverage was lost and wants explaining.
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage.enumerated).toBe(191);
+    expect(coverage.covered).toBe(66);
+    expect(coverage.unmapped).toBe(125);
+    expect(coverage.partial).toBe(0);
+    // THE HEADLINE, and it is not a vocabulary gap. Mandarin carries almost all
+    // of its grammar in a handful of toneless particles, and NOT ONE is taught:
+    // de, le, ma, ne, ba, guo and zhe each return zero occurrences across the
+    // 175 lesson files, in characters and in tone-marked pinyin. A Mandarin
+    // course with no particles has taught vocabulary and script and has not yet
+    // taught grammar, which is why the sentence columns read as they do.
+    expect(coverage.byCategory["Zhuci - the particles"]!).toEqual({ enumerated: 4, covered: 0 });
+    // Seventh track running with an empty joining column, and the second
+    // outside South Asia. `he` ("and") is zero — every raw pinyin match is
+    // inside `heng` or `shenme`.
+    expect(coverage.byCategory["Lianjie - joining two clauses"]!).toEqual({ enumerated: 8, covered: 0 });
+    // The column the proxy has NO point for anywhere, and the corpus's best
+    // work: tone is lexical (chapter 1), the five contours, third-tone sandhi
+    // taught on the first word in the book, and bu sandhi taught on the
+    // commonest bu there is. What is missing is tone across a phrase.
+    expect(coverage.byCategory["Shengdiao - tone, for which the proxy has no column at all"]!).toEqual({
+      enumerated: 5,
+      covered: 4,
+    });
+    // The fifth skill this track's own alignment names, measured and empty.
+    expect(coverage.byCategory["Fanyi - translation and mediation"]!).toEqual({ enumerated: 2, covered: 0 });
+    // And the surprise. Education is the strongest specific-notion field
+    // measured in any track in this sitting — three institutions and four kinds
+    // of student built productively out of four characters — while food and
+    // drink is five Spanish points and not one word, in a language whose
+    // learners eat on day one.
+    expect(coverage.byCategory["Jiaoyu - education"]!.covered).toBe(3);
+    expect(coverage.byCategory["Yinshi - food and drink"]!).toEqual({ enumerated: 1, covered: 0 });
+    expect(formatExamCoverage(coverage)).toContain(
+      "chinese A1 (partial inventory): 66/191 points covered (35%)",
     );
   }, 60_000);
 });

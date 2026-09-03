@@ -96,32 +96,56 @@ Spanish and French where a contrast helps. The recurring decoder is the
   than reintroduced — which is the one atom that keeps the chapter at 11 and out
   of a split. Closes on the two frames side by side: a number with *Uhr*
   (*es ist zwei Uhr*), or a pivot standing alone (*es ist Mittag*). **Authored.**
-- **Ch. 13 — Months & seasons**: the **native-vs-Latin split deepens** — the months
-  are **Latin loans** (Januar ← Janus, *März* ← Mars = Dienstag's Tiw; September–
-  Dezember = Latin 7–10), like the clock-word *Uhr*, while the **seasons stay
-  native** (Frühling ← *früh* "early"; *Herbst* = English **harvest**; Sommer/Winter
-  = English twins). **Authored.**
+- **Ch. 13 — The Roman calendar**: ***der Monat*** is ***der Mond*** — the unit
+  is a moon, inherited, exactly as English *month* is *moon*. The twelve names
+  inside it are Latin, taken whole with the calendar that ordered them:
+  *Januar* (**Janus** of doorways), *Februar* (the ***Februa*** purification —
+  the one month named for a ritual rather than a person), *März* (**Mars**),
+  *April* (unknown, and unknown already in Rome), *Mai* (**Maia**), *Juni*
+  (**Juno**). Closes on the god who entered German **twice**: *März* took Mars's
+  *name*, and *Dienstag* took his *job* and gave it to **Tiw**. German had a week
+  to map onto and no twelve-month calendar at all, which is the whole
+  difference. **Authored.**
+- **Ch. 14 — When the calendar stopped naming**: ***Juli*** and ***August*** are
+  the only months in the year named after **men** — Julius Caesar, who rebuilt
+  the calendar, and Augustus, who took the next one — and then the practice
+  stops. ***September*** through ***Dezember*** are *septem*, *octo*, *novem*,
+  *decem*, counted from *März* where the Roman year began, and the arithmetic
+  stopped being true the moment the year moved to January. The chapter costs
+  only six atoms because chapter 9 already taught the loan/native split, the
+  Roman-year claim and the *sieben/acht/neun/zehn* pairing; this one **spends**
+  all three. **Authored.**
+- **Ch. 15 — The seasons go native**: the months were bought, the seasons were
+  not. ***Jahr*** is English **year**; ***Zeit*** is English **tide**, which
+  once meant a stretch of time and still does in *Yuletide* before the sea took
+  the word; ***Jahreszeit*** is the two of them stuck together — **year-time** —
+  where English reached for French *saison*. ***Frühling*** was built inside
+  German out of *früh* plus *-ling*, "the early one." And ***Herbst*** is
+  English **harvest**: one inherited word that English narrowed to the *act* of
+  gathering, leaving a hole where the season was, which Latin *autumn* filled.
+  German never split the meaning and never needed the loan. Closes on
+  ***Lenz***, the older poetic spring, unneeded and unretired. **Authored.**
 
-- **Ch. 14 — Family**: the mirror of the months — **Vater/Mutter** are **inherited
+- **Ch. 16 — Family**: the mirror of the months — **Vater/Mutter** are **inherited
   Germanic** (NOT Latin loans), Grimm's-law twins of English *father/mother* (*V* = *f*)
   → **Bruder/Schwester** (Germanic twins of *brother/sister*; **Geschwister** "siblings"
   via the collective **ge-**). The standout: family is native where the months were
   borrowed. **Authored.**
 
-- **Ch. 15 — Food (bread, water, wine)**: **Brot** (**inherited Germanic** twin of
+- **Ch. 17 — Food (bread, water, wine)**: **Brot** (**inherited Germanic** twin of
   English *bread*, NOT Latin *pānis*; introduces the neuter **das** + capitalized
   nouns) → **Wasser/Wein** — the native-vs-borrowed split: **Wasser** a native
   Germanic twin of *water*, but **Wein** an **ancient Latin loan** (← *vīnum*),
   borrowed with the grapevine, which is why *Wein/wine/vīnum* all match. **Authored.**
 
-- **Ch. 16 — Numbers 11–20**: **elf/zwölf** (← *ainlif/twalif*, *-lif* = "leave" →
+- **Ch. 18 — Numbers 11–20**: **elf/zwölf** (← *ainlif/twalif*, *-lif* = "leave" →
   "**one/two left over**" after ten fingers — the exact inherited twins of English
   *eleven/twelve*) → **dreizehn–zwanzig**, digit + *zehn* with **no exceptions**,
   mirroring English *-teen* (which **is** ten); *zwanzig* ← *twaintig* "two tens."
   The contrast: the Romance sisters all **break** their teens pattern; German
   **never does**. **Authored.**
 
-- **Ch. 17 — Colours**: German as the **lender** for once. **schwarz/weiß** — both
+- **Ch. 19 — Colours**: German as the **lender** for once. **schwarz/weiß** — both
   **native Germanic**: *schwarz* ← *swartaz* (English **swarthy**; kin to Latin
   *sordēs* → *sordid*), *weiß* ← *hwītaz* = **exactly** English *white* (with the
   **ß** rule: sharp *s* after a long vowel, written *weiss* in Switzerland). The
@@ -133,7 +157,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *blu*), and English took *blue* from **French** rather than from Germanic.
   **Authored.**
 
-- **Ch. 18 — *haben***: ***haben*** (`GE-C14-haben`) is the weak ending machine
+- **Ch. 20 — *haben***: ***haben*** (`GE-C14-haben`) is the weak ending machine
   on the stem *hab-*, and the chapter is built around **where that machine
   fails**. It predicts four of the six forms correctly — *ich habe*, *wir
   haben*, *ihr habt*, *sie haben* — so those share **one** lesson
@@ -148,7 +172,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   famous false cognate (`GE-C14-habere`): *haben* ← \**kap-* "to seize" (Latin
   *capere* → **capture**), *habēre* ← \**gʰabʰ-* → English **give**. The two
   words that look most alike come from opposite directions. **Authored.**
-- **Ch. 19 — The wrapped participle**: the weak past participle, met one word
+- **Ch. 21 — The wrapped participle**: the weak past participle, met one word
   at a time. ***sagen*** (`GE-C15-sagen`) first, because the chapter runs on it
   and nothing had taught it; then ***gesagt*** (`GE-C15-gesagt`) as a concrete
   word, and only then the recipe behind it (`GE-C15-partizip`): strip the
@@ -161,7 +185,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   (Old English *genōg*) and archaic *yclept*. The infinitive-to-participle
   table appears only in the practice lesson, as a recap of six lessons rather
   than an introduction to four words. **Authored.**
-- **Ch. 20 — The past built from *have***: the **Perfekt** — *haben*
+- **Ch. 22 — The past built from *have***: the **Perfekt** — *haben*
   conjugated plus the participle (`GE-C15-perfekt`), with the four person slots
   taken **one per lesson**: *ich habe*, *du hast*, *er hat*, *wir haben*, all
   hanging off a participle that never moves. Then the shape English cannot
@@ -172,7 +196,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *morgen* and the same word as English *yesterday*. Closes on the translation
   trap: *ich habe gesagt* is the **plain past**, "I said," not only "I have
   said." **Authored.**
-- **Ch. 21 — The simple past**: the **Präteritum** (`GE-C15-praeteritum`) —
+- **Ch. 23 — The simple past**: the **Präteritum** (`GE-C15-praeteritum`) —
   stem plus **-te**, one word where the *Perfekt* spends two, and **the same
   meaning**. ***ich sagte***, ***ich machte***, ***ich hatte***, ***ich
   konnte***, each beside its *Perfekt* twin. The **-te** is the Germanic
@@ -188,14 +212,14 @@ Spanish and French where a contrast helps. The recurring decoder is the
   and Italian all** let a compound past displace their simple one over the same
   centuries, by **areal contact**, while Spanish and Portuguese at the western
   edge kept theirs. **Authored.**
-- **Ch. 22 — *sein* in the present**: ***sein*** (`GE-C16-sein`) is the one
+- **Ch. 24 — *sein* in the present**: ***sein*** (`GE-C16-sein`) is the one
   German verb whose forms cannot be derived from its infinitive, so it is met
   **one cell per lesson** — *ich bin*, *du bist*, *er ist*, *wir sind*, *ihr
   seid*, *sie/Sie sind* — with the paradigm grid held back to the practice
   lesson, where it is a recap of six lessons rather than an opening info dump.
   Closes on ***müde*** (`GE-C16-muede`) and the fact that an adjective after
   *sein* takes **no ending at all**. **Authored.**
-- **Ch. 23 — Being your years**: ***alt*** (`GE-C14-alt`), ***das Jahr***
+- **Ch. 25 — Being your years**: ***alt*** (`GE-C14-alt`), ***das Jahr***
   (`GE-C14-jahr`, which finally cashes in the silent lengthening *h* that
   `GE-C03-gehen` promised), ***Wie alt bist du?*** and ***Ich bin zwanzig Jahre
   alt***. This was the second half of the hand-written *haben* chapter and
@@ -205,7 +229,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   where **French, Spanish, Italian and Portuguese have them** (*j'ai vingt
   ans*) — and German keeps its own logic here even though it borrowed its month
   names from Latin wholesale. **Authored.**
-- **Ch. 24 — Three verbs under one roof**: the past — *ich war*, *du warst*,
+- **Ch. 26 — Three verbs under one roof**: the past — *ich war*, *du warst*,
   *er war* (**the same word as *ich war***, because the German simple past has
   no third-person ending), *wir waren* — and then the account of the whole verb:
   **three PIE roots** under one infinitive: *ist/sind* ← \**h₁es-* (Latin
@@ -217,7 +241,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   "be" verbs are the messiest words in every language: **the most-used words are
   the most irregular**, because analogy only regularises what you have to guess
   at. **Authored.**
-- **Ch. 25 — The Perfekt built on *sein***: the same
+- **Ch. 27 — The Perfekt built on *sein***: the same
   **motion/change-of-state** split as French, taught one verb at a time —
   ***kommen*** (`GE-C16-kommen`), ***fahren*** (`GE-C16-fahren`, English
   *fare*, still in *farewell*), ***werden*** (`GE-C16-werden`, the *-ward* of
@@ -230,7 +254,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   up **alongside** Romance by areal contact — the same Sprachbund Ch.19 blamed
   for the simple past retreating in three languages at once. Split **parallel**,
   agreement **not shared**. **Authored.**
-- **Ch. 26 — The body: a cup for a head, and a hand with no Latin cousin**:
+- **Ch. 28 — The body: a cup for a head, and a hand with no Latin cousin**:
   ***der Kopf*** (`GE-C17-kopf`) — originally a **cup or bowl**, Germanic
   \**kuppaz*, the same word as English **cup**, which displaced the inherited
   ***das Haupt*** (← \**haubudam*, the true **Grimm's-law** cognate of Latin
@@ -248,7 +272,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   inherited *Haupt*, Grimm's Law, and the French/German container comparison
   follow before *Hand* as a separate support step. **Authored.**
 
-- **Ch. 33 — Verbs of the mind**: ***denken*** (`GE-C24-denken`) — the verb
+- **Ch. 35 — Verbs of the mind**: ***denken*** (`GE-C24-denken`) — the verb
   Chapter 3 promised inside *danke*, Proto-Germanic \**þankijaną*, which **is**
   English *think*; Grimm's law turned PIE \**t* into the *th* English kept and
   German softened to *d*. The false friend ***also*** ("therefore") is taught
@@ -262,8 +286,8 @@ Spanish and French where a contrast helps. The recurring decoder is the
   as no relation at all → ***schreiben*** (`GE-C24-schreiben`, the payoff) —
   the one **borrowing** in the set, Latin *scrībere*, taken in early enough to
   become *sch-* and to join the strong verbs, while English kept native
-  *write*; *Manuskript* closes Chapter 26's *Hand*/*manus* circle. **Authored.**
-- **Ch. 34 — Taking, asking, helping, liking**: ***nehmen*** (`GE-C25-nehmen`)
+  *write*; *Manuskript* closes Chapter 28's *Hand*/*manus* circle. **Authored.**
+- **Ch. 36 — Taking, asking, helping, liking**: ***nehmen*** (`GE-C25-nehmen`)
   — the verb **English threw away** (Norse *take* displaced *niman*), leaving
   *numb* and *nimble*; the vowel break returns and goes further (*du nimmst*).
   The false friend ***bekommen*** ("to receive") is flagged here →
@@ -278,12 +302,12 @@ Spanish and French where a contrast helps. The recurring decoder is the
   lesson says so → ***mögen, lieben*** (`GE-C25-moegen-lieben`, the payoff) —
   *may*, *love*, and **gern** (*yearn*), German's three ways of liking, where
   *Ich lese gern* has no English shape. **Authored.**
-- **Ch. 35 — Sitting, standing, sleeping, hearing**: ***sitzen***
+- **Ch. 37 — Sitting, standing, sleeping, hearing**: ***sitzen***
   (`GE-C26-sitzen`) — **is** *sit*, and the first naming of the second shift's
   **t**-branch (Germanic *t* → German *z*/*ss*), which retro-explains *Wasser*
-  (Ch. 15) and *zehn* (Ch. 6); PIE \**sed-* carries Latin *sedēre* into
+  (Ch. 17) and *zehn* (Ch. 6); PIE \**sed-* carries Latin *sedēre* into
   *session* and Greek *hédra* into *cathedral*. "Strong" is separated from "the
-  vowel breaks" → ***stehen*** (`GE-C26-stehen`) — the verb Ch. 33 found inside
+  vowel breaks" → ***stehen*** (`GE-C26-stehen`) — the verb Ch. 35 found inside
   *verstehen*, now on its own: Germanic ran \**stāną* and \**standaną*,
   English generalized the nasal stem, German the other, and German's **past**
   (*ich stand*, *gestanden*) hands the *n* back. Latin *stāre* descends from
@@ -298,7 +322,7 @@ Spanish and French where a contrast helps. The recurring decoder is the
   law on the *h*, with Greek *akoúein* → *acoustic* keeping the *k*, the same
   swap as *Hund*/*canis*. The "sharp-eared" root analysis is marked cited but
   unsettled; ***gehören*** ("to belong") is the false friend. **Authored.**
-- **Ch. 36 — Going, running, opening, closing**: ***gehen*** (`GE-C27-gehen`)
+- **Ch. 38 — Going, running, opening, closing**: ***gehen*** (`GE-C27-gehen`)
   — the one verb here that **cannot** be traced past Germanic; both languages
   borrowed a past (*went* ← *wend*; *ging*/*gegangen* ← \**ganganą*, still
   English *gangway*), and English's *walk* turns out to be German *walken*,
@@ -308,59 +332,59 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *gehen* unhurried, *rennen* flat out, *laufen* across the line — with the
   Germany/Austria split recorded, not dropped. *Rennen* and *run* each merge
   \**rinnaną* with its causative \**rannijaną*, separately → ***öffnen***
-  (`GE-C27-oeffnen`) — *offen* is the *open* Ch. 34 only listed; neither word is
+  (`GE-C27-oeffnen`) — *offen* is the *open* Ch. 36 only listed; neither word is
   a root, both are built on **up** (German *auf*), so *aufmachen* is the recipe
   spoken aloud. **Separable verbs** are introduced here, on nothing new: *auf*
   (Ch. 4) + *machen* (Ch. 5), split around *die Hand* → ***schließen***
   (`GE-C27-schliessen`, the payoff) — **no English cousin at all**; English
   closes with Latin's *close* and with *shut* (really *shoot*), so this is
-  Ch. 34's *nehmen* story a second time. *Schloss*, *Schlüssel*, *Schluss* are
+  Ch. 36's *nehmen* story a second time. *Schloss*, *Schlüssel*, *Schluss* are
   the household German built on the verb it kept; the proposed link to Latin
   *claudere* is reported as unestablished. **Authored.**
 
-- **Ch. 37 — Coffee, tea, and milk**: the pre-A1 vocabulary tranche's food
+- **Ch. 39 — Coffee, tea, and milk**: the pre-A1 vocabulary tranche's food
   chapter. ***der Kaffee*** (`GE-C28-kaffee`) — a loanword three hops deep,
   Arabic *qahwa* → Ottoman Turkish *kahve* → Italian *caffè* → German
   *Kaffee* → ***der Tee*** (`GE-C28-tee`) — a different loan by a different
   route, Hokkien Chinese *tê* carried by Dutch sea traders, set beside the
   overland *tea*/*chai* isogloss (Hindi, Russian, Turkish) by name → ***die
   Milch*** (`GE-C28-milch`, the payoff) — the one native word of the three,
-  PIE *\*h₂melg-* "to milk," closing the trio the way Ch. 15's *Wasser*
-  closed beside the loanword *Wein*. Extends Ch. 28's *Wasser, bitte* pattern
-  to two more drinks and rescues Ch. 36's two orphaned atoms. **Authored.**
-- **Ch. 38 — Friend and family**: ***der Freund*** (`GE-C29-freund`) — the
+  PIE *\*h₂melg-* "to milk," closing the trio the way Ch. 17's *Wasser*
+  closed beside the loanword *Wein*. Extends Ch. 30's *Wasser, bitte* pattern
+  to two more drinks and rescues Ch. 38's two orphaned atoms. **Authored.**
+- **Ch. 40 — Friend and family**: ***der Freund*** (`GE-C29-freund`) — the
   same inherited word as English *friend*, both frozen Proto-Germanic present
   participles of "to love" (PIE *\*preyH-*), the same root inside Ch. 2's
   *freut mich* → ***die Freundin*** (`GE-C29-freundin`) — the native
   feminine *-in* suffix as a general rule (Lehrer/Lehrerin,
   Student/Studentin), with English's one surviving fossil, **vixen** →
   ***die Familie*** (`GE-C29-familie`, the payoff) — the chapter's one Latin
-  loan, *familia* "household" (← *famulus*, "servant"), the group Ch. 14's
+  loan, *familia* "household" (← *famulus*, "servant"), the group Ch. 16's
   *Eltern* and *Geschwister* already belong to. **Authored.**
-- **Ch. 39 — Eyes, ears, mouth, nose**: extends Ch. 26's *Kopf*/*Hand*
+- **Ch. 41 — Eyes, ears, mouth, nose**: extends Ch. 28's *Kopf*/*Hand*
   body-part material. ***das Auge*** (`GE-C30-auge`) and ***das Ohr***
   (`GE-C30-ohr`) both trace to confirmed PIE roots; ***der Mund***
   (`GE-C30-mund`) is inherited but its root beyond Proto-Germanic is not
   agreed upon, stated honestly rather than guessed; ***die Nase***
   (`GE-C30-nase`, the payoff) is cousin to Latin *nasus* (English *nasal*) by
-  shared descent, the same *rot*/*rouge* shape as Ch. 17. Rescues Ch. 35's
+  shared descent, the same *rot*/*rouge* shape as Ch. 19. Rescues Ch. 37's
   disputed "sharp-eared" *hören*/*Ohr* link. **Authored.**
-- **Ch. 40 — Arm, finger, foot, heart**: completes the five-word
-  Hand/Arm/Finger/Fuß/Herz comparison Ch. 26 printed but only taught a fifth
+- **Ch. 42 — Arm, finger, foot, heart**: completes the five-word
+  Hand/Arm/Finger/Fuß/Herz comparison Ch. 28 printed but only taught a fifth
   of. ***der Arm*** (`GE-C31-arm`) — outside Grimm's law's reach entirely,
   which is *why* it looks nearly identical to English *arm* → ***der
   Finger*** (`GE-C31-finger`) — identical to English, with an explicitly
   unproven proposed link to *fünf* → ***der Fuß*** (`GE-C31-fuss`) — a
   second *p → f* Grimm's-law case beside *Vater*/*father*, its **ß**
-  following Ch. 17's long-vowel rule → ***das Herz*** (`GE-C31-herz`, the
+  following Ch. 19's long-vowel rule → ***das Herz*** (`GE-C31-herz`, the
   payoff) — a third instance of Grimm's law's *k → h* swap, alongside
-  *hören*/*akoúein* (Ch. 35) and *Hund*/*canis* (Ch. 31). **Authored.**
+  *hören*/*akoúein* (Ch. 37) and *Hund*/*canis* (Ch. 33). **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 34+ | Cases (der→den→dem) — owed since Ch. 34 had to route around the accusative article after *mögen* and the dative object of *helfen*, and Ch. 36 had to pick *die Hand* as its object for the same reason; then the rest of the separable verbs now that Ch. 36 has opened them, sprechen & the remaining irregular verbs — following the shared theme order |
+| 34+ | Cases (der→den→dem) — owed since Ch. 36 had to route around the accusative article after *mögen* and the dative object of *helfen*, and Ch. 38 had to pick *die Hand* as its object for the same reason; then the rest of the separable verbs now that Ch. 38 has opened them, sprechen & the remaining irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

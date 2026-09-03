@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C14-b-verlust
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
-sequence: 309
-chapter: 18
+sequence: 329
+chapter: 20
 type: grammar
 headword: der verlorene b
 gloss: why hast and hat lost their b — and the English verb that lost it in the same two places

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:ea3532d7eaa645c1",
+  "lessonIds": [
+    "PA-C41-je",
+    "PA-C41-je-tan",
+    "PA-C41-je-write",
+    "PA-C41-jadon",
+    "PA-C41-lai"
+  ],
+  "tex": "punjabi/book/chapters/ch41-if-and-when.tex"
+}

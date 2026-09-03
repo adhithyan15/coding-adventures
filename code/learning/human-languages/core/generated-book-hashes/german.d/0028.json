@@ -1,9 +1,11 @@
 {
   "language": "german",
   "chapter": 28,
-  "sourceHash": "fnv1a64:fe63aca2301f7cae",
+  "sourceHash": "fnv1a64:41b0c7bb390b731c",
   "lessonIds": [
-    "GE-C19-bitte-requests"
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
   ],
-  "tex": "german/book/chapters/ch28-please.tex"
+  "tex": "german/book/chapters/ch28-head-and-hand.tex"
 }

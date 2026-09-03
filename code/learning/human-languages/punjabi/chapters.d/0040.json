@@ -1,0 +1,22 @@
+{
+  "chapter": 40,
+  "title": "That, and Why",
+  "label": "ch:pa-that-and-why",
+  "canDo": "I can hand a whole sentence to a verb with ki, give an opinion, ask why, and answer it with because.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "PA-C40-kyunki",
+    "kind": "task",
+    "summary": "The complementiser and the reason. ki and ki differ by one stroke -- sihari against bihari, that against what -- and the book has taught the second since chapter 2 and never the first, so sochna had nothing to think. kyon is the one member of the k- question family the chapter-3 mnemonic left out, which is why cause could be neither asked for nor given; kyunki is those two words joined, so the answer is built entirely from what this chapter already gave.",
+    "assesses": [
+      "PA-JOIN-KI-01",
+      "PA-JOIN-SOCHDA-KI-01",
+      "PA-SCRIPT-KI-01",
+      "PA-Q-KYON-01",
+      "PA-JOIN-KYUNKI-01"
+    ],
+    "note": "Realises CONNECTIVE-BECAUSE, which SPINE-SAY-WHY has omitted since the track began."
+  }
+}
