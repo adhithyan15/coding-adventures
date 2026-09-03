@@ -9,7 +9,7 @@ headword: "மட்டும்"
 gloss: "only"
 romanization: "maṭṭum"
 concept_tag: TA-REPLY-ONLY
-prerequisites: [TA-C61-pain]
+prerequisites: [TA-C61-pain, TA-C60-needle, TA-C61-hunger]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C62-JOIN-01]
 practises:
-  knowledge: [TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01]
+  knowledge: [TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01, TA-LEX-C60-MADE-01, TA-LEX-C61-FEEL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Telugu does the same job with మాత్రమే (*mātramē*). The doubled �
 The first of five.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01, TA-LEX-C60-MADE-01, TA-LEX-C61-FEEL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maṭṭum*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maṭṭum*, then *taṇṇīr*, and put them in the Tamil order]
+- [YOU RECALL: say *ūsi*, then read **பசி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01] -->

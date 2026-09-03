@@ -9,7 +9,7 @@ headword: "புல்"
 gloss: "grass"
 romanization: "pul"
 concept_tag: TA-NOUN-GRASS
-prerequisites: [TA-C64-paddy]
+prerequisites: [TA-C64-paddy, TA-C62-still, TA-C63-permission]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C64-HARVEST-02]
 practises:
-  knowledge: [TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02]
+  knowledge: [TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C62-JOIN-02, TA-LEX-C63-MANNERS-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Grass, of the kind cut and carried home. Kannada makes it ಹುಲ್ಲು (*h
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C62-JOIN-02, TA-LEX-C63-MANNERS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pul*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pul*, then *pal*, and hold the two vowels apart]
+- [YOU RECALL: read **இன்னும்**, then say *aṉumati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02] -->

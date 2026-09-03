@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Setting Out",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0727cb8130b2a5a3",
+  "sourceHash": "fnv1a64:82287f2a64399241",
   "lessons": [
     {
       "id": "TA-C48-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2de003261cf5d342",
+      "sourceHash": "fnv1a64:862c1997617f7794",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *appaḍiyē*, then *ippōdu*, and hear the pointer swap ends]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āsiriyar, then read உண்மை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āsiriyar*, then read **உண்மை**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34a846bc8793408d",
+      "sourceHash": "fnv1a64:b7d4ec0ee76794b4",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ippōdu*, then *nēram*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மாணவன், then say pōdum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மாணவன்**, then say *pōdum*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04ea28fe9dc89cff",
+      "sourceHash": "fnv1a64:cc44427ce64a9fd3",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nēram*, then *payaṇam*, and hear both endings agree]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say maruttuvar, then read நிச்சயமாக",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *maruttuvar*, then read **நிச்சயமாக**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea8ead94bdb35572",
+      "sourceHash": "fnv1a64:84c0e63460e2c662",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *payaṇam*, then *piṟaku*, and let the hard *ṟ* land in the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read விவசாயி, then say oruvēḷai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **விவசாயி**, then say *oruvēḷai*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a9c98fa0ea6e4f7",
+      "sourceHash": "fnv1a64:d10f18ad7b87639e",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *ippōdu*, *nēram*, *payaṇam*, *piṟaku*, *puṟappaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say viruntāḷi, then read அப்படியே",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *viruntāḷi*, then read **அப்படியே**]"
             }
           ]
         },

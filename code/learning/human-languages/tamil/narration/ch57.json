@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Wind and Fire",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f4f881474d19f9b2",
+  "sourceHash": "fnv1a64:cdc3a54456aa11c5",
   "lessons": [
     {
       "id": "TA-C57-wind",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12ff3eeb2bc14225",
+      "sourceHash": "fnv1a64:08ce68ecafe119a4",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ākaṭṭum*, then *kāṟṟu*, and let the doubled ற hold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaḻuttu, then read சிறிது",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaḻuttu*, then read **சிறிது**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e53879f031b5d783",
+      "sourceHash": "fnv1a64:7c46d8d8e8a23ad9",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kāṟṟu*, then *maṇal*, the wind and what it carries]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read முதுகு, then say niṟaiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **முதுகு**, then say *niṟaiya*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b6609faf57b1ddf",
+      "sourceHash": "fnv1a64:a02cf7ad35ff9d3d",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *maṇal*, then *sēṟu*, dry ground and wet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say utaṭu, then read குறைவு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *utaṭu*, then read **குறைவு**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:014b8d0f69edb537",
+      "sourceHash": "fnv1a64:df554266221ac623",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sēṟu*, then *pukai*, and let the *-ai* open at the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read நகம், then say tēvaiyillai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **நகம்**, then say *tēvaiyillai*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59b7d9ba67e54bae",
+      "sourceHash": "fnv1a64:760e9724712d5acb",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *kāṟṟu*, *maṇal*, *sēṟu*, *pukai*, *kaṉal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say elumbu, then read ஆகட்டும்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *elumbu*, then read **ஆகட்டும்**]"
             }
           ]
         },

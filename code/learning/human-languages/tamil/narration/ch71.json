@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Through the Day",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0ee9e4a9a812a029",
+  "sourceHash": "fnv1a64:c86ff787e964f73c",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0b27b2aacc6c76e1",
+      "sourceHash": "fnv1a64:622cbcc87f2913e4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -113,6 +113,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *tarai*, then say *kūrai*, then say *eḻu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vaṇḍi, then read மேசை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vaṇḍi*, then read **மேசை**]"
             }
           ]
         },
@@ -148,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3abc511bfcbf33d0",
+      "sourceHash": "fnv1a64:dda318a2af0e758a",
       "notice": null,
       "blocks": [
         {
@@ -248,6 +257,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *kūrai*, then say *eḻu*, then say *tūṅgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read பேருந்து, then say kaṭṭil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **பேருந்து**, then say *kaṭṭil*]"
             }
           ]
         },
@@ -423,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6419fe149069804",
+      "sourceHash": "fnv1a64:c1634452aee6317f",
       "notice": null,
       "blocks": [
         {
@@ -523,6 +541,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *tūṅgu*, then name the letter **ஓ**, then say *ōḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rayil, then read சுவர்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rayil*, then read **சுவர்**]"
             }
           ]
         },
@@ -558,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b885412c3273f1f",
+      "sourceHash": "fnv1a64:2fc0f0f2da4c52ac",
       "notice": null,
       "blocks": [
         {
@@ -654,6 +681,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: name the letter **ஓ**, then say *ōḍu*, then say *kaḻuvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read சாலை, then say tarai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **சாலை**, then say *tarai*]"
             }
           ]
         },
@@ -689,7 +725,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e224bd476224390",
+      "sourceHash": "fnv1a64:e542d43b804d028f",
       "notice": null,
       "blocks": [
         {
@@ -789,6 +825,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *ōḍu*, then say *kaḻuvu*, then say *viḷaiyāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nilaiyam, then read கூரை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nilaiyam*, then read **கூரை**]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: "இங்கே"
 gloss: "here — where I am"
 romanization: "iṅgē"
 concept_tag: TA-DEIXIS-HERE
-prerequisites: [TA-C40-that]
+prerequisites: [TA-C40-that, TA-C38-sugam, TA-C39-evvalavu]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C40-DEIXIS-03]
 practises:
-  knowledge: [TA-LEX-C40-DEIXIS-01, TA-LEX-C40-DEIXIS-02, TA-LEX-C40-DEIXIS-03]
+  knowledge: [TA-LEX-C40-DEIXIS-01, TA-LEX-C40-DEIXIS-02, TA-LEX-C40-DEIXIS-03, TA-LEX-SUGAM-01, TA-ETYMON-SUGAM-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-03, TA-LEX-SUGAM-01, TA-ETYMON-SUGAM-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "இங்கே" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *sugam*, then read **எவ்வளவு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-03] -->

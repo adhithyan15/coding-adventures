@@ -9,7 +9,7 @@ headword: "சிறிய"
 gloss: "small"
 romanization: "siṟiya"
 concept_tag: TA-ADJ-SMALL
-prerequisites: [TA-C41-big]
+prerequisites: [TA-C41-big, TA-C39-evvalavu, TA-C40-here]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C41-ADJ-02]
 practises:
-  knowledge: [TA-LEX-C41-ADJ-01, TA-LEX-C41-ADJ-02]
+  knowledge: [TA-LEX-C41-ADJ-01, TA-LEX-C41-ADJ-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02, TA-LEX-C40-DEIXIS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02, TA-LEX-C40-DEIXIS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "சிறிய" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **எவ்வளவு**, then say *iṅgē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-02] -->

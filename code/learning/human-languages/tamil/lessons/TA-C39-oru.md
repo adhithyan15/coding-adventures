@@ -9,7 +9,7 @@ headword: ஒரு
 gloss: a, one — the form ஒன்று takes when it stands in front of a noun
 romanization: oru
 concept_tag: TA-ONE-ATTRIBUTIVE
-prerequisites: [TA-C39-evvalavu, TA-C07-numbers-1-5, TA-C36-teneer]
+prerequisites: [TA-C39-evvalavu, TA-C07-numbers-1-5, TA-C36-teneer, TA-C37-uur, TA-C37-nanban, TA-C37-ivar]
 sounds: [tamil-inherent-a, matra-u]
 roots: []
 etymology_hook: "ஒரு and ஒன்று are one word wearing two shapes — the counting form and the form that leans on a noun"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02]
 practises:
-  knowledge: [TA-LEX-EVVALAVU-01, TA-LEX-VENDUM-01, TA-GRAMMAR-VENDAAM-NEGATION-02, TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-NUMBERS-1-5-01, TA-LEX-TENEER-01, TA-SCRIPT-CA-ONE-LETTER-01, TA-SCRIPT-U-SIGN-01, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02]
+  knowledge: [TA-LEX-EVVALAVU-01, TA-LEX-VENDUM-01, TA-GRAMMAR-VENDAAM-NEGATION-02, TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-NUMBERS-1-5-01, TA-LEX-TENEER-01, TA-SCRIPT-CA-ONE-LETTER-01, TA-SCRIPT-U-SIGN-01, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-UUR-01, TA-ETYMON-UUR-02, TA-LEX-NANBAN-01, TA-ETYMON-NANBAN-02, TA-LEX-IVAR-01, TA-GRAMMAR-IVAR-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -75,13 +75,14 @@ are the others, and they are still outstanding. **ஒ** goes first because it
 opens both **ஒரு** and **ஒன்று**, and the next lesson pays it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-VENDUM-01, TA-GRAMMAR-VENDAAM-NEGATION-02, TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-EVVALAVU-01, TA-LEX-TENEER-01, TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-VENDUM-01, TA-GRAMMAR-VENDAAM-NEGATION-02, TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-EVVALAVU-01, TA-LEX-TENEER-01, TA-LEX-NUMBERS-1-5-01, TA-LEX-UUR-01, TA-ETYMON-UUR-02, TA-LEX-NANBAN-01, TA-ETYMON-NANBAN-02, TA-LEX-IVAR-01, TA-GRAMMAR-IVAR-02] -->
 
 [PAUSE 1s] Order something, start to finish.
 - [YOU SAY: "tēnīr evvaḷavu?"]
 - [YOU SAY: "oru tēnīr vēṇḍum"]
 - [YOU SAY: decline a second one — "vēṇḍām"]
 - [YOU CONTRAST: "oṉṟu" alone, "oru tēnīr" in front of a noun]
+- [YOU RECALL: say *ūr*, then read **நண்பன்**, then say *ivar*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-NUMBERS-1-5-01, TA-LEX-VENDUM-01, TA-GRAMMAR-VENDAAM-NEGATION-02, TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-EVVALAVU-01, TA-LEX-TENEER-01, TA-SCRIPT-CA-ONE-LETTER-01, TA-SCRIPT-U-SIGN-01] -->

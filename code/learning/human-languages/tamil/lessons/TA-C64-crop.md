@@ -9,7 +9,7 @@ headword: "பயிர்"
 gloss: "a standing crop"
 romanization: "payir"
 concept_tag: TA-NOUN-CROP
-prerequisites: [TA-C64-grass]
+prerequisites: [TA-C64-grass, TA-C62-soon, TA-C63-hesitancy]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C64-HARVEST-03]
 practises:
-  knowledge: [TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03]
+  knowledge: [TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C62-JOIN-03, TA-LEX-C63-MANNERS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ So the run has three separate things now where English leans on one word: the gr
 Three, and the three are carefully apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C62-JOIN-03, TA-LEX-C63-MANNERS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *payir*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vayal*, then *payir*, then *nel*, in that order]
+- [YOU RECALL: say *sīkkiram*, then read **தயக்கம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03] -->

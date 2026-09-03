@@ -9,7 +9,7 @@ headword: "தொப்பி"
 gloss: "a cap, a hat"
 romanization: "toppi"
 concept_tag: TA-NOUN-CAP
-prerequisites: [TA-C67-sandal]
+prerequisites: [TA-C67-sandal, TA-C66-left]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C67-WEAR-05]
 practises:
-  knowledge: [TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02, TA-LEX-C67-WEAR-05]
+  knowledge: [TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02, TA-LEX-C67-WEAR-05, TA-LEX-C66-WHICHWAY-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ With this one the run has both ends: தொப்பி at the top, செரு
 Five things to wear, top to bottom.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02, TA-LEX-C67-WEAR-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02, TA-LEX-C67-WEAR-05, TA-LEX-C66-WHICHWAY-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: *toppi*]
 - [YOU SAY: all five from the head down — *toppi*, *saṭṭai*, *vēṭṭi*, *puḍavai*, *seruppu*]
 - [YOU RECALL: say *puḍavai*, then say *seruppu*, then say *toppi*]
+- [YOU RECALL: say *iḍadu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02, TA-LEX-C67-WEAR-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 60,
-  "sourceHash": "fnv1a64:5a1a98622172715e",
+  "sourceHash": "fnv1a64:00f1e41cdd63c8f4",
   "lessonIds": [
     "TA-C60-needle",
     "TA-C60-rope",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch60.txt",
   "json": "tamil/narration/ch60.json",
-  "textHash": "fnv1a64:b40bb868581a77be",
-  "jsonHash": "fnv1a64:29fa5dfda02ba9c4",
+  "textHash": "fnv1a64:8eceb9a391558d53",
+  "jsonHash": "fnv1a64:a3d47439550d751e",
   "findings": []
 }

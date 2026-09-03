@@ -9,7 +9,7 @@ headword: "ஓடு"
 gloss: "to run"
 romanization: "ōḍu"
 concept_tag: TA-VERB-OODU
-prerequisites: [TA-S126-letter-oo]
+prerequisites: [TA-S126-letter-oo, TA-C69-train, TA-C70-wall]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C71-DAY-03]
 practises:
-  knowledge: [TA-LEX-C71-DAY-02, TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03]
+  knowledge: [TA-LEX-C71-DAY-02, TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03, TA-LEX-C69-GOING-03, TA-LEX-C70-ROOM-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,13 +54,14 @@ Two letters, one sign, and you can read every part of it.
 Three, and something is moving.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-02, TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-02, TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03, TA-LEX-C69-GOING-03, TA-LEX-C70-ROOM-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ōḍu*]
 - [YOU READ: **ஓடு**, and point at the letter you learned last lesson]
 - [YOU SAY: *ōḍu*, then name two things other than a person that can do it]
 - [YOU RECALL: say *tūṅgu*, then name the letter **ஓ**, then say *ōḍu*]
+- [YOU RECALL: say *rayil*, then read **சுவர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-02, TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03] -->

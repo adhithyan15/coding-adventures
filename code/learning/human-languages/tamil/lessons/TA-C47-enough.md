@@ -9,7 +9,7 @@ headword: "போதும்"
 gloss: "that is enough"
 romanization: "pōdum"
 concept_tag: TA-REPLY-ENOUGH
-prerequisites: [TA-C47-true]
+prerequisites: [TA-C47-true, TA-C45-ear, TA-C46-student]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C47-REPLY-02]
 practises:
-  knowledge: [TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02]
+  knowledge: [TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C45-BODY-02, TA-LEX-C46-ROLE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It has nothing to do with *pō*, 'to go', though the two look alike at a glance.
 Two: agreeing, and calling a halt.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C45-BODY-02, TA-LEX-C46-ROLE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pōdum*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uṇmai*, then *pōdum*, and let the second land firmly]
+- [YOU RECALL: read **காது**, then say *māṇavaṉ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02] -->

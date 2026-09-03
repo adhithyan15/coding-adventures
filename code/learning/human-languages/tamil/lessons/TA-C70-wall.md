@@ -9,7 +9,7 @@ headword: "சுவர்"
 gloss: "a wall"
 romanization: "suvar"
 concept_tag: TA-NOUN-WALL
-prerequisites: [TA-W26-read-mesai]
+prerequisites: [TA-W26-read-mesai, TA-C68-money, TA-C69-train]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C70-ROOM-03]
 practises:
-  knowledge: [TA-LEX-C70-ROOM-02, TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03]
+  knowledge: [TA-LEX-C70-ROOM-02, TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03, TA-LEX-C68-SHOP-03, TA-LEX-C69-GOING-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ inside and an outside of.
 Three, and the room has an edge.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-02, TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-02, TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03, TA-LEX-C68-SHOP-03, TA-LEX-C69-GOING-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *suvar*]
 - [YOU SAY: *suvar*, then *uḷḷē* and *veḷiyē* — the wall, and its two sides]
 - [YOU RECALL: say *kaṭṭil*, then read **மேசை**, then say *suvar*]
+- [YOU RECALL: say *paṇam*, then read **ரயில்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-02, TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03] -->

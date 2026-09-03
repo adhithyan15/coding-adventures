@@ -9,7 +9,7 @@ headword: "கோலம்"
 gloss: "the design at a doorway"
 romanization: "kōlam"
 concept_tag: TA-WELCOME-KOLAM
-prerequisites: [TA-C50-threshold]
+prerequisites: [TA-C50-threshold, TA-C48-time, TA-C49-respect]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C50-WELCOME-02]
 practises:
-  knowledge: [TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02]
+  knowledge: [TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C48-LEAVE-02, TA-LEX-C49-COURTESY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The older sense of the word is 'form, appearance, the shape a thing takes'. A *k
 Two: the doorway, and what is drawn in front of it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C48-LEAVE-02, TA-LEX-C49-COURTESY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kōlam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vāsal*, then *kōlam*, and let the long *ō* open the second]
+- [YOU RECALL: read **நேரம்**, then say *mariyādai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02] -->

@@ -9,7 +9,7 @@ headword: "பெட்டி"
 gloss: "a box"
 romanization: "peṭṭi"
 concept_tag: TA-NOUN-BOX
-prerequisites: [TA-C54-bowl]
+prerequisites: [TA-C54-bowl, TA-C52-seed, TA-C53-village]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C54-HOUSE-05]
 practises:
-  knowledge: [TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05]
+  knowledge: [TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05, TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A பெட்டி is a box of any size: the tin trunk clothes live in, a matc
 Five things a house sets out: something to sit on, to carry in, to cut with, to eat from, and to keep it all in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05, TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *peṭṭi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *pāy*, *kūṭai*, *katti*, *kiṇṇam*, *peṭṭi*]
+- [YOU RECALL: say *vitai*, then read **கிராமம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05] -->

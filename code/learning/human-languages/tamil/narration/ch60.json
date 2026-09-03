@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5a1a98622172715e",
+  "sourceHash": "fnv1a64:00f1e41cdd63c8f4",
   "lessons": [
     {
       "id": "TA-C60-needle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7f36b58a7006fef",
+      "sourceHash": "fnv1a64:1c75be0196d29778",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ūsi*, then *tuṇi*, and say which one repairs the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pasu, then read தயிர்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pasu*, then read **தயிர்**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1ea4deb7242fcdd",
+      "sourceHash": "fnv1a64:a56bcee8db75c3ff",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kayiṟu*, then *pasu*, and say which one holds the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ஆடு, then say ney",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ஆடு**, then say *ney*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:315f7ce5fcb90fef",
+      "sourceHash": "fnv1a64:d084b34dd4723fc6",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kuṭai*, then *maḻai*, and say which one you take out for the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kōḻi, then read எண்ணெய்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kōḻi*, then read **எண்ணெய்**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3b8d4c9c804c9c9",
+      "sourceHash": "fnv1a64:8de339c33ac7ebd9",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tuṭaippam*, then *kōlam*, and say which one comes first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read காக்கை, then say vellam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **காக்கை**, then say *vellam*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97bed831db5aaa4b",
+      "sourceHash": "fnv1a64:4f77ef83e0fb41c8",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *ūsi*, *kayiṟu*, *kuṭai*, *tuṭaippam*, *sīppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paṟavai, then read சர்க்கரை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paṟavai*, then read **சர்க்கரை**]"
             }
           ]
         },

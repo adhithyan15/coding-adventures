@@ -9,7 +9,7 @@ headword: "வெற்றிலை"
 gloss: "betel leaf"
 romanization: "veṟṟilai"
 concept_tag: TA-WELCOME-BETEL-LEAF
-prerequisites: [TA-C50-flower]
+prerequisites: [TA-C50-flower, TA-C48-later, TA-C49-good-wish]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C50-WELCOME-04]
 practises:
-  knowledge: [TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04]
+  knowledge: [TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04, TA-LEX-C48-LEAVE-04, TA-LEX-C49-COURTESY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Betel leaf and areca nut, handed over together, are how a Tamil household says t
 Four, and the fourth is the one you are sent home with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04, TA-LEX-C48-LEAVE-04, TA-LEX-C49-COURTESY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *veṟṟilai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *malar*, then *veṟṟilai*, and let the hard *ṟ* double in the second]
+- [YOU RECALL: read **பிறகு**, then say *vāḻttu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04] -->

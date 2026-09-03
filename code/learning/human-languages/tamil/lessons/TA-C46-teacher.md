@@ -9,7 +9,7 @@ headword: "ஆசிரியர்"
 gloss: "a teacher"
 romanization: "āsiriyar"
 concept_tag: TA-ROLE-TEACHER
-prerequisites: [TA-C45-stomach]
+prerequisites: [TA-C45-stomach, TA-C44-fruit, TA-C45-eye]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C46-ROLE-01]
 practises:
-  knowledge: [TA-LEX-C45-BODY-04, TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01]
+  knowledge: [TA-LEX-C45-BODY-04, TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01, TA-LEX-C44-ASK-01, TA-LEX-C45-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil keeps the older and plainer ஆசான் (*āsāṉ*) beside it, and th
 The first of five ways to say who somebody is.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-04, TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-04, TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01, TA-LEX-C44-ASK-01, TA-LEX-C45-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āsiriyar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āsiriyar*, then *naṇbar*, and hear the same ending on both]
+- [YOU RECALL: say *paḻam*, then read **கண்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-04, TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01] -->

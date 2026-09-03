@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3aad2293d4e0698b",
+  "sourceHash": "fnv1a64:ea0fc7e36e2177cc",
   "lessons": [
     {
       "id": "TA-C44-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d37ebae1c36d4caa",
+      "sourceHash": "fnv1a64:0fbbc948f6a860b4",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *paḻam*, then *tayavu seytu paḻam koṭuṅgaḷ* — \"please give a fruit\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vā*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0efeaec7b1b21b80",
+      "sourceHash": "fnv1a64:637231930e8e2269",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *paḻam*, then *tuṇi*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read உட்கார், then say kuḻandai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **உட்கார்**, then say *kuḻandai*]"
             }
           ]
         },
@@ -267,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48c96f721f2deee2",
+      "sourceHash": "fnv1a64:2674bc65d25e8ebf",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +376,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tuṇi*, then *viḷakku*, and hear the doubled letter in the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paṭi, then read மகன்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paṭi*, then read **மகன்**]"
             }
           ]
         },
@@ -393,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10674da6cdaaadb5",
+      "sourceHash": "fnv1a64:e41cffa490ac9562",
       "notice": null,
       "blocks": [
         {
@@ -480,6 +507,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *viḷakku*, then *uppu*, and let the second one stop short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read கொடு, then say makaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **கொடு**, then say *makaḷ*]"
             }
           ]
         },

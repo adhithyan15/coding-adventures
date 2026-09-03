@@ -9,7 +9,7 @@ headword: "மலர்"
 gloss: "a flower"
 romanization: "malar"
 concept_tag: TA-WELCOME-FLOWER
-prerequisites: [TA-C50-kolam]
+prerequisites: [TA-C50-kolam, TA-C48-journey, TA-C49-gladness]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C50-WELCOME-03]
 practises:
-  knowledge: [TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03]
+  knowledge: [TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C48-LEAVE-03, TA-LEX-C49-COURTESY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It also says what a flower does: *malar* means 'to open, to blossom'. One shape 
 Three, and the third one arrives in somebody's hand.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C48-LEAVE-03, TA-LEX-C49-COURTESY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *malar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōlam*, then *malar*, and hear the soft *r* close the second]
+- [YOU RECALL: say *payaṇam*, then read **சந்தோஷம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03] -->

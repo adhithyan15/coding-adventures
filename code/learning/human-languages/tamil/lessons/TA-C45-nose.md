@@ -9,7 +9,7 @@ headword: "மூக்கு"
 gloss: "a nose"
 romanization: "mūkku"
 concept_tag: TA-NOUN-NOSE
-prerequisites: [TA-C45-ear]
+prerequisites: [TA-C45-ear, TA-C43-daughter, TA-C44-lamp]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C45-BODY-03]
 practises:
-  knowledge: [TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03]
+  knowledge: [TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03, TA-LEX-DAUGHTER, TA-LEX-C44-ASK-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Another word the family barely touched: Malayalam മൂക്ക്, Telugu మ
 Three, and all three are on the face.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03, TA-LEX-DAUGHTER, TA-LEX-C44-ASK-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mūkku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kādu*, then *mūkku*, and let the second start long]
+- [YOU RECALL: say *makaḷ*, then read **விளக்கு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03] -->

@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Only and Still",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f7552970c1397df0",
+  "sourceHash": "fnv1a64:c781306360c884c7",
   "lessons": [
     {
       "id": "TA-C62-only",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5754c28e75799ed",
+      "sourceHash": "fnv1a64:3874a5a64e1d878a",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *maṭṭum*, then *taṇṇīr*, and put them in the Tamil order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ūsi, then read பசி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ūsi*, then read **பசி**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1ab042c00b21e99",
+      "sourceHash": "fnv1a64:2746062d5cd63d26",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *iṉṉum*, then *siṟitu*, and say the two together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read கயிறு, then say tākam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **கயிறு**, then say *tākam*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:350c2f93c3f9c11b",
+      "sourceHash": "fnv1a64:26198c060a98244b",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sīkkiram*, then *piṟaku*, and say which of the two commits you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuṭai, then read தூக்கம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuṭai*, then read **தூக்கம்**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71feed456d8fd5a1",
+      "sourceHash": "fnv1a64:b05e8b3741619d87",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sīkkiram*, then *uṭaṉē*, and say which one leaves you no room]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read துடைப்பம், then say kāyccal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **துடைப்பம்**, then say *kāyccal*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e04f07e0e08697df",
+      "sourceHash": "fnv1a64:b7c4cbe669ae7755",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *maṭṭum*, *iṉṉum*, *sīkkiram*, *uṭaṉē*, *mutalil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sīppu, then read வலி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sīppu*, then read **வலி**]"
             }
           ]
         },

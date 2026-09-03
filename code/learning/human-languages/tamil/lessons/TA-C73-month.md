@@ -9,7 +9,7 @@ headword: "மாதம்"
 gloss: "a month"
 romanization: "mādam"
 concept_tag: TA-NOUN-MONTH
-prerequisites: [TA-C73-before]
+prerequisites: [TA-C73-before, TA-C71-wash, TA-C72-laugh]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C73-WHEN-04]
 practises:
-  knowledge: [TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04]
+  knowledge: [TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04, TA-LEX-C71-DAY-04, TA-LEX-C72-FEEL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,12 +55,13 @@ vowel is the long **ா**.
 Above the day: the month.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04, TA-LEX-C71-DAY-04, TA-LEX-C72-FEEL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mādam*]
 - [YOU SAY: *nāḷ*, then *mādam* — smaller, then bigger]
 - [YOU RECALL: read **இன்று**, then say *muṉbu*, then say *mādam*]
+- [YOU RECALL: read **கழுவு**, then say *siri*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04] -->

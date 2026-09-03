@@ -9,7 +9,7 @@ headword: "ஆடு"
 gloss: "a goat"
 romanization: "āṭu"
 concept_tag: TA-NOUN-GOAT
-prerequisites: [TA-C58-cow]
+prerequisites: [TA-C58-cow, TA-C56-a-lot, TA-C57-sand]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C58-ANIMAL-02]
 practises:
-  knowledge: [TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02]
+  knowledge: [TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C56-AMOUNT-02, TA-LEX-C57-FIRE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Start it long — ஆ, held — and put the ட of கூடை in the middle. T
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C56-AMOUNT-02, TA-LEX-C57-FIRE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āṭu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pasu*, then *āṭu*, and say which one a house keeps when it has no land]
+- [YOU RECALL: read **நிறைய**, then say *maṇal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02] -->

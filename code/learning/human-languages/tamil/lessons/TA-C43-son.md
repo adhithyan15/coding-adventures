@@ -9,7 +9,7 @@ headword: "மகன்"
 gloss: "son"
 romanization: "makaṉ"
 concept_tag: TA-NOUN-SON
-prerequisites: [TA-C43-child]
+prerequisites: [TA-C43-child, TA-C41-good]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-SON]
 practises:
-  knowledge: [TA-LEX-CHILD, TA-LEX-SON]
+  knowledge: [TA-LEX-CHILD, TA-LEX-SON, TA-LEX-C41-ADJ-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ The stem is *maka-*, an old Dravidian word for offspring, and *-aṉ* is the end
 A second word for the house, and an ending you had already met elsewhere.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-CHILD, TA-LEX-SON] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-CHILD, TA-LEX-SON, TA-LEX-C41-ADJ-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *makaṉ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *kuḻandai*, so the two sit together]
+- [YOU RECALL: read **நல்ல**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-CHILD, TA-LEX-SON] -->

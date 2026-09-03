@@ -9,7 +9,7 @@ headword: "அறுவடை"
 gloss: "the harvest"
 romanization: "aṟuvaṭai"
 concept_tag: TA-NOUN-HARVEST
-prerequisites: [TA-C64-threshing-floor]
+prerequisites: [TA-C64-threshing-floor, TA-C62-first-of-all, TA-C63-humility]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C64-HARVEST-05]
 practises:
-  knowledge: [TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04, TA-LEX-C64-HARVEST-05]
+  knowledge: [TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04, TA-LEX-C64-HARVEST-05, TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The front of it is the reaping, not the ஆறு you counted with: this one ope
 Five, and the run is closed: paddy, grass, a standing crop, a threshing floor, and the harvest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04, TA-LEX-C64-HARVEST-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04, TA-LEX-C64-HARVEST-05, TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *aṟuvaṭai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *nel*, *pul*, *payir*, *kaḷam*, *aṟuvaṭai*]
+- [YOU RECALL: say *mutalil*, then read **பணிவு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04, TA-LEX-C64-HARVEST-05] -->

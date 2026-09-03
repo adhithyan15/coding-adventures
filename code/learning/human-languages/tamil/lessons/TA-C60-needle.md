@@ -9,7 +9,7 @@ headword: "ஊசி"
 gloss: "a needle"
 romanization: "ūsi"
 concept_tag: TA-NOUN-NEEDLE
-prerequisites: [TA-C59-sugar]
+prerequisites: [TA-C59-sugar, TA-C58-cow, TA-C59-curd]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C60-MADE-01]
 practises:
-  knowledge: [TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01]
+  knowledge: [TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01, TA-LEX-C58-ANIMAL-01, TA-LEX-C59-KITCHEN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada ಸೂಜಿ (*sūji*) and Telugu సూది (*sūdi*) hold on to a so
 The first of five made things.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01, TA-LEX-C58-ANIMAL-01, TA-LEX-C59-KITCHEN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ūsi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ūsi*, then *tuṇi*, and say which one repairs the other]
+- [YOU RECALL: say *pasu*, then read **தயிர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01] -->

@@ -9,7 +9,7 @@ headword: "வருத்தம்"
 gloss: "sorrow, regret"
 romanization: "varuttam"
 concept_tag: TA-NOUN-SORROW
-prerequisites: [TA-W27-read-payam]
+prerequisites: [TA-W27-read-payam, TA-C70-wall, TA-C71-run]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C72-FEEL-03]
 practises:
-  knowledge: [TA-LEX-C72-FEEL-02, TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03]
+  knowledge: [TA-LEX-C72-FEEL-02, TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03, TA-LEX-C70-ROOM-03, TA-LEX-C71-DAY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,13 +55,14 @@ Its middle is a doubled **த்த**, the same closing-and-leaning you read in 
 Three feelings, and one of them is an apology.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-02, TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-02, TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03, TA-LEX-C70-ROOM-03, TA-LEX-C71-DAY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *varuttam*]
 - [YOU SAY: *tavaṟu*, then *varuttam* — the mistake, then the feeling about it]
 - [YOU SAY: *maṉṉikkavum*, then *varuttam*, and say which is the formal one]
 - [YOU RECALL: say *payam*, then read **பயம்**, then say *varuttam*]
+- [YOU RECALL: say *suvar*, then read **ஓடு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-02, TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03] -->

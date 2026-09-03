@@ -9,7 +9,7 @@ headword: "விருந்தாளி"
 gloss: "a guest"
 romanization: "viruntāḷi"
 concept_tag: TA-ROLE-GUEST
-prerequisites: [TA-C46-farmer]
+prerequisites: [TA-C46-farmer, TA-C44-book, TA-C45-stomach]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C46-ROLE-05]
 practises:
-  knowledge: [TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05]
+  knowledge: [TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05, TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ There is an older form too, *viruntiṉar*, carrying the *-ar* you now know well
 That closes the run: a teacher, a student, a doctor, a farmer, a guest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05, TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viruntāḷi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *āsiriyar*, *māṇavaṉ*, *maruttuvar*, *vivasāyi*, *viruntāḷi*]
+- [YOU RECALL: say *puttakam*, then read **வயிறு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05] -->

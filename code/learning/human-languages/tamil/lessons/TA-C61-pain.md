@@ -9,7 +9,7 @@ headword: "வலி"
 gloss: "pain"
 romanization: "vali"
 concept_tag: TA-NOUN-PAIN
-prerequisites: [TA-C61-fever]
+prerequisites: [TA-C61-fever, TA-C59-sugar, TA-C60-comb]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C61-FEEL-05]
 practises:
-  knowledge: [TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05]
+  knowledge: [TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05, TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Keep it away from *vaḻi*, the way or the route, which came up beside பாத
 Five, and the run is closed: hunger, thirst, sleep, a fever, and pain.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05, TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vali*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *pasi*, *tākam*, *tūkkam*, *kāyccal*, *vali*]
+- [YOU RECALL: say *sarkkarai*, then read **சீப்பு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05] -->

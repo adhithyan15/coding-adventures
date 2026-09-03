@@ -9,7 +9,7 @@ headword: "கத்தி"
 gloss: "a knife"
 romanization: "katti"
 concept_tag: TA-NOUN-KNIFE
-prerequisites: [TA-C54-basket]
+prerequisites: [TA-C54-basket, TA-C52-shoot, TA-C53-field]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C54-HOUSE-03]
 practises:
-  knowledge: [TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03]
+  knowledge: [TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C52-TREE-03, TA-LEX-C53-LAND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The doubled த in the middle carries the whole difficulty. Hold it: *ka-t-ti*, 
 Three, and this one is shared right across the family.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C52-TREE-03, TA-LEX-C53-LAND-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *katti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kūṭai*, then *katti*, and hold the doubled த]
+- [YOU RECALL: say *taḷir*, then read **வயல்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03] -->

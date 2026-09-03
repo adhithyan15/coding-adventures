@@ -9,7 +9,7 @@ headword: "மலை"
 gloss: "a hill"
 romanization: "malai"
 concept_tag: TA-NOUN-HILL
-prerequisites: [TA-C53-river]
+prerequisites: [TA-C53-river, TA-C51-sun, TA-C52-branch]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C53-LAND-02]
 practises:
-  knowledge: [TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02]
+  knowledge: [TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C51-SKY-02, TA-LEX-C52-TREE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ You have been reading this word all along without being told. The name *Malayā�
 Two: the water, and what it comes down from.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C51-SKY-02, TA-LEX-C52-TREE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *malai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadi*, then *malai*, the water and the high ground behind it]
+- [YOU RECALL: read **சூரியன்**, then say *kiḷai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02] -->

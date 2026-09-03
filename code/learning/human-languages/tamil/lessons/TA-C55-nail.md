@@ -9,7 +9,7 @@ headword: "நகம்"
 gloss: "a nail"
 romanization: "nakam"
 concept_tag: TA-NOUN-NAIL
-prerequisites: [TA-C55-lip]
+prerequisites: [TA-C55-lip, TA-C53-path, TA-C54-bowl]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C55-BODY-04]
 practises:
-  knowledge: [TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04]
+  knowledge: [TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04, TA-LEX-C53-LAND-04, TA-LEX-C54-HOUSE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Telugu holds on to something else entirely, గోరు (*gōru*).
 Four: neck, back, lip, and the hard thing on the end of a finger.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04, TA-LEX-C53-LAND-04, TA-LEX-C54-HOUSE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nakam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *utaṭu*, then *nakam*, the softest part of you and the hardest]
+- [YOU RECALL: read **பாதை**, then say *kiṇṇam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04] -->

@@ -9,7 +9,7 @@ headword: "திற"
 gloss: "open"
 romanization: "tiṟa"
 concept_tag: TA-VERB-TIRA
-prerequisites: [TA-C65-stop]
+prerequisites: [TA-C65-stop, TA-C63-trust, TA-C64-threshing-floor]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C65-DOING-04]
 practises:
-  knowledge: [TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04]
+  knowledge: [TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04, TA-LEX-C63-MANNERS-04, TA-LEX-C64-HARVEST-04]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -60,13 +60,14 @@ Tamil's keeps the tapped **ற** the others softened away.
 Four doings, and a verb that belongs to a noun you already carry.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04, TA-LEX-C63-MANNERS-04, TA-LEX-C64-HARVEST-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tiṟa*]
 - [YOU SAY: *kadavu*, then *tiṟa* — the thing, then the act]
 - [YOU SAY: *naṉṟi*, then *tiṟa*, and hear the same **ற** twice]
 - [YOU SAY: *niṟuttu*, then *tiṟa*]
+- [YOU RECALL: read **நம்பிக்கை**, then say *kaḷam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04] -->

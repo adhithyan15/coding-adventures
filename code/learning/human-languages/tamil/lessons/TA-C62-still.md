@@ -9,7 +9,7 @@ headword: "இன்னும்"
 gloss: "still, yet"
 romanization: "iṉṉum"
 concept_tag: TA-REPLY-STILL
-prerequisites: [TA-C62-only]
+prerequisites: [TA-C62-only, TA-C60-rope, TA-C61-thirst]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C62-JOIN-02]
 practises:
-  knowledge: [TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02]
+  knowledge: [TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C60-MADE-02, TA-LEX-C61-FEEL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The ன் doubled in the middle is the soft one — the alveolar ன, not the c
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C60-MADE-02, TA-LEX-C61-FEEL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *iṉṉum*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *iṉṉum*, then *siṟitu*, and say the two together]
+- [YOU RECALL: read **கயிறு**, then say *tākam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02] -->

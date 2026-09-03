@@ -9,7 +9,7 @@ headword: "மணல்"
 gloss: "sand"
 romanization: "maṇal"
 concept_tag: TA-NOUN-SAND
-prerequisites: [TA-C57-wind]
+prerequisites: [TA-C57-wind, TA-C55-back, TA-C56-a-lot]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C57-FIRE-02]
 practises:
-  knowledge: [TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02]
+  knowledge: [TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C55-BODY-02, TA-LEX-C56-AMOUNT-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The ண is the one made with the tongue curled back — the same letter you have
 Two: what moves, and one of the things it moves.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C55-BODY-02, TA-LEX-C56-AMOUNT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maṇal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāṟṟu*, then *maṇal*, the wind and what it carries]
+- [YOU RECALL: read **முதுகு**, then say *niṟaiya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02] -->

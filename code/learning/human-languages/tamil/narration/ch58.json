@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Around the Yard",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:76204ac3b7665f74",
+  "sourceHash": "fnv1a64:bbfbad6a01d83a5f",
   "lessons": [
     {
       "id": "TA-C58-cow",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c73907e1022a429c",
+      "sourceHash": "fnv1a64:cd031e266046c1ea",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pasu*, then *kirāmam*, and put the one inside the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say siṟitu, then read காற்று",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *siṟitu*, then read **காற்று**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de8f8201798227b5",
+      "sourceHash": "fnv1a64:2c72323f6c71a00a",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pasu*, then *āṭu*, and say which one a house keeps when it has no land]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read நிறைய, then say maṇal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **நிறைய**, then say *maṇal*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c917ae1b934eabf",
+      "sourceHash": "fnv1a64:1d42bdd5afafdaa8",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kōḻi*, then *maṇi*, and say which one comes first in the morning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuṟaivu, then read சேறு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuṟaivu*, then read **சேறு**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba433f924df7df2a",
+      "sourceHash": "fnv1a64:3c3bb2fcb3c7721f",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kākkai*, then *kōḻi*, and say which one is kept and which one turns up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read தேவையில்லை, then say pukai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **தேவையில்லை**, then say *pukai*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1e1b5d5d133bd7c",
+      "sourceHash": "fnv1a64:a7f2232d0b093bd0",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *pasu*, *āṭu*, *kōḻi*, *kākkai*, *paṟavai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ākaṭṭum, then read கனல்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ākaṭṭum*, then read **கனல்**]"
             }
           ]
         },

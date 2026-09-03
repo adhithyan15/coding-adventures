@@ -9,7 +9,7 @@ headword: "ஒருவேளை"
 gloss: "perhaps"
 romanization: "oruvēḷai"
 concept_tag: TA-REPLY-PERHAPS
-prerequisites: [TA-C47-certainly]
+prerequisites: [TA-C47-certainly, TA-C45-tooth, TA-C46-farmer]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C47-REPLY-04]
 practises:
-  knowledge: [TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04]
+  knowledge: [TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04, TA-LEX-C45-BODY-04, TA-LEX-C46-ROLE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil builds its hedge out of counting. English does the same trick with "maybe"
 Four, and the fourth one steps back from the other three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04, TA-LEX-C45-BODY-04, TA-LEX-C46-ROLE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *oruvēḷai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *niccayamāka*, then *oruvēḷai*, and hear the certainty drain out]
+- [YOU RECALL: read **பல்**, then say *vivasāyi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04] -->
