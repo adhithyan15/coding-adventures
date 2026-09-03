@@ -41,10 +41,10 @@ yet.
 <!-- hl-knowledge: introduces=[]; assesses=[FR-ORTHO-SALUT-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-- **cover** the model;
-- **wait** five seconds;
-- **write** the word once from memory;
-- **uncover** *salut*, compare, and repair only the place that differs.
+1. cover the model;
+2. wait five seconds;
+3. write the word once from memory;
+4. uncover **salut**, compare, and repair only the place that differs.
 
 If one letter differs, circle that place and repair only that letter. A repair
 is part of the exercise, not a failure.

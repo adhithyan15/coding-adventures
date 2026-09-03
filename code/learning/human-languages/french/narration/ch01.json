@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6896df8baa8a75d3",
+  "sourceHash": "fnv1a64:b5fe487fb2f8a858",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -343,7 +343,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6a4321e02e543d7d",
+      "sourceHash": "fnv1a64:78cebc51f1d8202d",
       "notice": {
         "modality": "pen",
         "needs": [
