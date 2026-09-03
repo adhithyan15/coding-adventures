@@ -113,6 +113,6 @@ import "../metrology/si-base-units.adj"
 
 rule { head: measuring_tool_si_unit($Tool, $Unit, $Symbol)
        when: measuring_tool($Tool, $Quantity), si_base_unit($Quantity, $Unit, $Symbol)
-       source "The SI is made up of 7 base units that define the 22 derived units with special names and symbols."
+       source "The SI is made up of 7 base units that define the 22 derived units with special names and symbols, which are illustrated in NIST SP 1247, SI Base Units Relationship Poster."
        locator "https://www.nist.gov/pml/owm/metric-si/si-units"
        trust authoritative }

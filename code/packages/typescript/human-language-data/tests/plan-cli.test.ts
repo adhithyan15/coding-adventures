@@ -130,8 +130,18 @@ describe("the plan CLI", () => {
     // all; the file carries a Register category that says so and a deliberately
     // uncovered point, SA-A1-RG-02, rather than pretending a functional
     // inventory measures a pariksha.
-    // DERIVED, not pinned: every proxy-derived inventory lands partial in all
-    // four dimensions, so the partial count is simply how many are written.
+    // Every proxy-derived inventory lands partial in all four dimensions -- a
+    // proxy lends a level and cannot close a dimension -- so the partial count
+    // is simply how many inventories are written. The last two to land were
+    // Kannada A1 and Malayalam A1; Malayalam's `exam-levels.json` entry carries
+    // NO caveat, so unlike Sanskrit and Tamil it had no external steer to
+    // answer, and it measures the corpus's own register fields and claims a
+    // borrowed-against-inherited lexical split rather than importing Tamil's
+    // diglossia column.
+    //
+    // DERIVED, not pinned. While this branch was open main re-pinned this line
+    // TWICE more (9 -> 10 -> 11) as inventories landed, which is the churn this
+    // change exists to end.
     expect(out).toMatch(
       new RegExp(`0 complete and ${writtenInventoryCount()} partial of 138`),
     );

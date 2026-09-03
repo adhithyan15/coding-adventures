@@ -96,3 +96,33 @@ fn capitalization_rule_abstains_honestly_on_an_untabled_rule() {
         "quotation is a real capitalization rule the source covers but not one of the three tabled here -- honest abstention, never invented: {out}"
     );
 }
+
+const CAPITALIZATION_RULE_PIN: &str = r#""bindings":{"R":"first_word_of_sentence"},"citations":[{"source":"Here’s an easy rule to follow—whenever you start a sentence, capitalize the first letter of the first word.","locator":"https://www.grammarly.com/blog/punctuation-capitalization/capitalization-rules/","trust":"consensus""#;
+
+#[test]
+fn capitalization_rule_citation_is_the_pages_whole_sentence() {
+    let dir = scratch("reground");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"capitalization-rule.adj\"
+? capitalization_rule($R, capitalize_first_letter)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped value was a FRAGMENT PUNCTUATED INTO A SENTENCE: the page's
+    // wording, with one character changed so it would read as standalone. It
+    // therefore appeared on no page. Every quote-keyed screen passed it,
+    // because the quotes were all correct.
+    //
+    // THIS QUERY IS THE REVERSE ONE. The companion's FIRST query asks pronoun_i,
+    // and this envelope -- about capitalizing the first letter of a sentence --
+    // does not ground that row. Reading the bindings beside the source caught it.
+    assert!(
+        out.contains(CAPITALIZATION_RULE_PIN),
+        "the first-word rule citation is the page's own sentence: {out}"
+    );
+}

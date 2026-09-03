@@ -95,3 +95,51 @@ fn a_non_base_quantity_abstains_rather_than_inventing_a_unit() {
         "a non-base quantity abstains: {out}"
     );
 }
+
+const SI_BASE_UNITS_PIN: &str = r#""source":"The SI is made up of 7 base units that define the 22 derived units with special names and symbols, which are illustrated in NIST SP 1247, SI Base Units Relationship Poster.","locator":"https://www.nist.gov/pml/owm/metric-si/si-units","trust":"authoritative""#;
+
+#[test]
+fn si_base_units_citation_is_the_pages_whole_sentence() {
+    let dir = scratch("reground");
+    std::fs::copy(
+        facts_stdlib().join("metrology/si-base-units.adj"),
+        dir.join("si-base-units.adj"),
+    )
+    .expect("copy shipped si-base-units.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"si-base-units.adj\"
+? si_base_unit(mass, $Unit, $Symbol)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped value was a FRAGMENT PUNCTUATED INTO A SENTENCE: the page's
+    // wording, with one character changed so it would read as standalone. It
+    // therefore appeared on no page. Every quote-keyed screen passed it,
+    // because the quotes were all correct.
+    //
+    // THIS PIN BINDS NO ROW, DELIBERATELY -- BUT NOT BECAUSE GROUNDING WAS
+    // UNAVAILABLE. An earlier version of this comment said "the grounding claim
+    // is not mine to make", and that overstated it.
+    //
+    // The envelope states a fact about the SI and about none of this table's
+    // rows (length->meter, mass->kilogram, ...), and the LIBRARY has zero
+    // per-row `cites`. So a row-binding pin today would freeze the #14124
+    // defect into a test, exactly as installment 3d froze a bone-deformity
+    // answer beside a citation about night blindness.
+    //
+    // The PAGE, however, ships the row-level claims verbatim further down:
+    // "Length - meter (m)", "Mass - kilogram (kg)", "Time - second (s)",
+    // "Electric current - ampere (A)", "Temperature - kelvin (K)",
+    // "Amount of substance - mole (mol)", "Luminous intensity - candela (cd)"
+    // -- all seven confirmed present. Per-row `cites` from that list would
+    // ground every row and make a sound row-binding pin available. Deferred to
+    // #14124 with the text recorded, NOT unavailable.
+    assert!(
+        out.contains(SI_BASE_UNITS_PIN),
+        "the SI citation is the page's own sentence: {out}"
+    );
+}
