@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 23,
-  "title": "Three Verbs Under One Roof",
-  "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:ff70d361fc3874ef",
+  "title": "Being Your Years",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:5ad848022d580fa5",
   "lessons": [
     {
-      "id": "GE-C16-ich-war",
-      "sequence": 510,
-      "title": "ich war — \"I was\"",
-      "headword": "ich war",
-      "romanization": "ich war",
-      "gloss": "I was — the past of sein, and a third stem that shares nothing with the other two",
+      "id": "GE-C14-alt",
+      "sequence": 501,
+      "title": "alt — \"old\"",
+      "headword": "alt",
+      "romanization": "alt",
+      "gloss": "old — the adjective the German age sentence is built on",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dee3f92e64e7a8c",
+      "sourceHash": "fnv1a64:f8f40080f1ca6c1f",
       "notice": null,
       "blocks": [
         {
@@ -35,26 +35,26 @@
             },
             {
               "kind": "speech",
-              "text": "You know the simple past is mostly a written tense in German, and that a handful of very common verbs keep it in speech. This is the most common of them."
+              "text": "You can say ich bin müde. Here is a second adjective to put in the same slot, and it opens a sentence you will be asked for constantly."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: ich war",
+          "title": "You'll want to know: alt",
           "segments": [
             {
               "kind": "speech",
-              "text": "ich war — \"I was.\""
+              "text": "alt — \"old.\""
             },
             {
               "kind": "speech",
-              "text": "Nobody says ich bin gewesen in ordinary speech when ich war will do. This is the past-tense form Germans actually use, in every region, out loud."
+              "text": "One syllable. It behaves exactly as müde did: after sein an adjective takes no ending at all, so ich bin alt needs nothing added."
             },
             {
               "kind": "speech",
-              "text": "And hear the shape of it. Bin has a b. Ist has an s and a t. War has a w and an r, and no sound in common with either. That is now three completely unalike stems inside one verb."
+              "text": "It is the same word as English old, and you can nearly hear it — German kept the a where English rounded it."
             }
           ]
         },
@@ -65,19 +65,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "w-as-v — German w is English v, so war begins like var."
+              "text": "vowel-a — short and clipped, the a of English hat."
             },
             {
               "kind": "speech",
-              "text": "vowel-a-long — the a is long and open, the a of English father."
-            },
-            {
-              "kind": "speech",
-              "text": "r-final — the final r softens towards a vowel rather than curling."
-            },
-            {
-              "kind": "speech",
-              "text": "The result sounds close to English var, and nothing like English war."
+              "text": "d-t-final — the -lt closes crisply, both consonants sounded."
             }
           ]
         },
@@ -95,29 +87,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich war\" — var, long open a",
+              "instruction": "\"alt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich war\" — *var*, long open *a*]"
+              "source": "[YOU SAY: \"alt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin … ich war\" — now and then",
+              "instruction": "the pair — \"alt, old\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin … ich war\" — now and then]"
+              "source": "[YOU SAY: the pair — \"alt, old\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich war müde.\"",
+              "instruction": "with the verb — \"ich bin alt\", \"ich bin müde\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich war müde.\"]"
+              "source": "[YOU SAY: with the verb — \"ich bin alt\", \"ich bin müde\"]"
             },
             {
               "kind": "repeat",
@@ -126,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich bin, ich war.\""
+              "text": "\"alt, alt — old.\""
             }
           ]
         },
@@ -143,26 +135,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I was.\" (Ich war.) How does the w sound? (Like English v.) Is this form used in speech or only in writing? (In speech, everywhere — it is one of the survivors.) How many unlike stems does this verb now have? (Three.) Next: the same form for du."
+              "text": "Say \"old.\" (Alt.) Does it take an ending after bin? (No.) Which English word is it? (Old.) Next: the noun that goes with it."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-du-warst",
-      "sequence": 515,
-      "title": "du warst — \"you were\"",
-      "headword": "du warst",
-      "romanization": "du warst",
-      "gloss": "you were — the familiar -st ending again, now on the past stem",
+      "id": "GE-C14-jahr",
+      "sequence": 502,
+      "title": "das Jahr — \"the year\"",
+      "headword": "das Jahr",
+      "romanization": "das Jahr",
+      "gloss": "the year — and Jahre, its plural, which is the form the age sentence needs",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50af7fa2bbdb13ba",
+      "sourceHash": "fnv1a64:e760557bea43acb9",
       "notice": null,
       "blocks": [
         {
@@ -178,26 +170,30 @@
             },
             {
               "kind": "speech",
-              "text": "You have ich war. The familiar \"you\" wants the ending it always wants."
+              "text": "A noun you have already met inside a longer word, now on its own."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: du warst",
+          "title": "You'll want to know: das Jahr",
           "segments": [
             {
               "kind": "speech",
-              "text": "du warst — \"you were.\""
+              "text": "das Jahr — \"the year.\" Plural: die Jahre."
             },
             {
               "kind": "speech",
-              "text": "War plus -st, with nothing else moved. The same ending that made bist out of bin, and gehst out of gehen."
+              "text": "Capitalised, because it is a noun and German capitalises all of them. The plural adds -e and takes die, as plurals do."
             },
             {
               "kind": "speech",
-              "text": "So the past tense of this verb is better behaved than its present: you take one stem, war-, and add ordinary endings to it. Everything difficult about sein happens in the present."
+              "text": "You have seen it before without being told: die Jahreszeiten, the seasons, is \"the year's times.\" The year was sitting inside that word the whole time."
+            },
+            {
+              "kind": "speech",
+              "text": "The age sentence wants the plural — you are so many Jahre old — so it is Jahre that will do the work from here."
             }
           ]
         },
@@ -208,11 +204,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "u-long — du keeps its long rounded oo."
+              "text": "j-as-y — German j is the y of English yes. So Jahr opens like year, not like jar."
             },
             {
               "kind": "speech",
-              "text": "final-t — and warst ends on the fully released t German always gives you, after the s. Say the s and the t both: varst."
+              "text": "h-silent-lengthening — that h is not pronounced. It is the silent lengthening h you met inside gehen, and Jahr was named there as one of the three words that hide it, beside sehr and Ihnen. Here it is."
+            },
+            {
+              "kind": "speech",
+              "text": "long-a — so the vowel runs long: YAAR. Say it beside English year and the two are almost the same noise."
             }
           ]
         },
@@ -230,29 +230,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"du warst\" — varst, both consonants released",
+              "instruction": "\"das Jahr\" — j as y, h silent, a long",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"du warst\" — *varst*, both consonants released]"
+              "source": "[YOU SAY: \"das Jahr\" — *j* as *y*, *h* silent, *a* long]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich war … du warst\"",
+              "instruction": "singular and plural — \"das Jahr, die Jahre\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich war … du warst\"]"
+              "source": "[YOU SAY: singular and plural — \"das Jahr, die Jahre\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"du bist … du warst\" — now and then",
+              "instruction": "where you had already met it — \"die Jahreszeiten\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"du bist … du warst\" — now and then]"
+              "source": "[YOU SAY: where you had already met it — \"die Jahreszeiten\"]"
             },
             {
               "kind": "repeat",
@@ -261,7 +261,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich war, du warst.\""
+              "text": "\"das Jahr, die Jahre.\""
             }
           ]
         },
@@ -278,26 +278,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"you were,\" to a friend. (Du warst.) Which ending is that? (-st.) Which stem is it added to? (War-.) Is the past of this verb regular or irregular in its endings? (Regular — one stem, ordinary endings.) Next: the form for everyone else, and a surprise."
+              "text": "Say \"the year.\" (Das Jahr.) And the plural. (Die Jahre.) How is the J sounded? (Like English y.) What is the h doing? (Lengthening the vowel — it is not pronounced.) Which longer word has Jahr inside? (Jahreszeiten.) Next: where Jahr and alt both come from."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-er-war",
-      "sequence": 520,
-      "title": "er war — \"he was\"",
-      "headword": "er war",
-      "romanization": "er war",
-      "gloss": "he was — the same word as ich war, because the German simple past gives its third person no ending",
+      "id": "GE-C14-jahr-alt",
+      "sequence": 503,
+      "title": "Jahr and alt, taken apart",
+      "headword": "Jahr und alt",
+      "romanization": "Jahr und alt",
+      "gloss": "both words are English wearing German spelling, and alt has a Latin cousin hiding in adult",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30fabac2092a05e8",
+      "sourceHash": "fnv1a64:380d6150c4b5dde8",
       "notice": null,
       "blocks": [
         {
@@ -313,195 +313,45 @@
             },
             {
               "kind": "speech",
-              "text": "In the present, ich and er took different words — bin against ist. In the past they take the same one."
+              "text": "Two words, both inherited rather than borrowed, and one of them has a Latin cousin you would never guess."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: er war",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "er war — \"he was.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Not a new form. It is war, unchanged, the very word you learned for ich. And as with ist, it covers sie war (\"she was\"), es war (\"it was\") and das war (\"that was\") as well."
-            },
-            {
-              "kind": "speech",
-              "text": "This is a habit of the German simple past, not a quirk of this verb: the I-form and the he-form are always identical there. Ich sagte and er sagte. Ich hatte and er hatte. The present tense never does this; the past always does."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "r-final — two softening r sounds in a row now, one closing er and one closing war. Neither curls."
-            },
-            {
-              "kind": "speech",
-              "text": "vowel-a-long — and the long open a between them carries the phrase."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"er war, sie war, es war\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"er war, sie war, es war\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Das war gut.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das war gut.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich war … er war\" — the same word twice",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich war … er war\" — the same word twice]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Das war gut.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"he was.\" (Er war.) How is it different from ich war? (It isn't — same word.) Does the present do that? (No — bin against ist.) Say \"that was good.\" (Das war gut.) Next: the plural."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-wir-waren",
-      "sequence": 525,
-      "title": "wir waren — \"we were\"",
-      "headword": "wir waren",
-      "romanization": "wir waren",
-      "gloss": "we were — the plural past, and the last form of sein you need",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b8bbaebeaf4f3f8b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One more form, and the verb is finished — present and past, all of it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: wir waren",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "wir waren — \"we were.\""
-            },
-            {
-              "kind": "speech",
-              "text": "War plus the plural ending -en, the one wir takes on every verb. And just as sind served three subjects at once, waren covers sie waren (\"they were\") and Sie waren (\"you were,\" politely) with no change."
-            },
-            {
-              "kind": "speech",
-              "text": "The one plural form left over is ihr wart, for a group of friends. It takes the plural-you -t, and it is the rarest form in the whole verb."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "English does the identical thing and nobody notices:"
-            },
-            {
               "kind": "table",
               "headers": [
-                "",
                 "German",
+                "from",
                 "English"
               ],
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "singular. German: war. English: was.",
-                "plural. German: waren. English: were."
+                "German: Jahr. from: Germanic jēra. English: year.",
+                "German: alt. from: Germanic aldaz. English: old."
               ]
             },
             {
               "kind": "speech",
-              "text": "An s in the singular, an r in the plural, in both languages, inherited from the same ancestor. English was/were and German war/waren are the same pair of words."
+              "text": "Neither line passes through Latin, which is worth noticing in a chapter about age: German borrowed its month names wholesale from Latin, and kept its own words for the year and for being old."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the cousin. The root behind aldaz also went into Latin, as alere — \"to nourish, to grow.\" From alere English took adult, which is literally \"grown up.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So alt and adult are the same idea taken down two roads: something that has been fed and has grown. Ageing as growth rather than as decay, which is a kinder picture than English usually admits to."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -514,29 +364,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"wir waren, sie waren, Sie waren\"",
+              "instruction": "the two twins — \"Jahr, year; alt, old\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"wir waren, sie waren, Sie waren\"]"
+              "source": "[YOU SAY: the two twins — \"Jahr, year; alt, old\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich war, du warst, er war, wir waren\"",
+              "instruction": "the Latin cousin — \"alt, alere, adult\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich war, du warst, er war, wir waren\"]"
+              "source": "[YOU SAY: the Latin cousin — \"alt, alere, adult\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"war — was; waren — were\"",
+              "instruction": "what the root meant — \"to nourish, to grow\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"war — was; waren — were\"]"
+              "source": "[YOU SAY: what the root meant — \"to nourish, to grow\"]"
             },
             {
               "kind": "repeat",
@@ -545,12 +395,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich war, wir waren.\""
+              "text": "\"Jahr, year. Alt, old.\""
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -562,26 +412,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"we were.\" (Wir waren.) Which English pair matches war/waren? (Was/were.) What is the plural ending on it? (-en.) Say \"they were.\" (Sie waren.) Next: why one verb needed three different stems."
+              "text": "Which English word is Jahr? (Year.) And alt? (Old.) Which English word comes from alt's Latin cousin? (Adult.) What did that cousin mean? (\"To nourish, to grow.\") Next: the question you will be asked with these two words."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-drei-wurzeln",
-      "sequence": 530,
-      "title": "bin, ist, war — three verbs under one roof",
-      "headword": "bin, ist, war",
-      "romanization": "bin, ist, war",
-      "gloss": "three ancient verbs, one paradigm — why the forms of sein look unrelated",
+      "id": "GE-C14-wie-alt-bist-du",
+      "sequence": 504,
+      "title": "Wie alt bist du?",
+      "headword": "Wie alt bist du?",
+      "romanization": "Wie alt bist du?",
+      "gloss": "how old are you — word for word the English question, built from four words you own",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91300937fd255985",
+      "sourceHash": "fnv1a64:92640c9eeef2a205",
       "notice": null,
       "blocks": [
         {
@@ -597,41 +447,309 @@
             },
             {
               "kind": "speech",
-              "text": "Say bin, ist, war one after another. They do not look like forms of the same word — and they aren't."
+              "text": "You have wie, you have alt, and you have du bist. That is the whole question."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "You'll want to know: Wie alt bist du?",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three separate Proto-Indo-European verbs each handed German a slice of this paradigm, and each of them left cousins in languages you can check:"
+              "text": "Wie alt bist du? — \"How old are you?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, and every one of them is already yours. Read it against the English and nothing has moved: how — old — are — you."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a coincidence to be grateful for; it is inheritance. Neither language borrowed this question from the other. They have been asking it the same way since before either was called German or English."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb sits second, as it does in every German statement and question with a question word in front — Wie first, bist second, and the rest behind."
+            },
+            {
+              "kind": "speech",
+              "text": "To someone you would address formally, it is Wie alt sind Sie? — the same question with the polite form of the verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Wie alt bist du?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Wie alt bist du?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it against the English — \"how old are you; wie alt bist du\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it against the English — \"how old are you; wie alt bist du\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the formal one — \"Wie alt sind Sie?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the formal one — \"Wie alt sind Sie?\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Wie alt bist du?\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask how old someone is, informally. (Wie alt bist du?) And formally. (Wie alt sind Sie?) Which word sits second? (Bist.) How many of the four words were new? (None.) Next: how to answer it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-alter",
+      "sequence": 505,
+      "title": "ich bin zwanzig Jahre alt",
+      "headword": "ich bin zwanzig Jahre alt",
+      "romanization": "ich bin zwanzig Jahre alt",
+      "gloss": "I am twenty years old — the answer, word for word the English sentence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7978d844461b0c88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The answer, and it is as English as the question was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ich bin zwanzig Jahre alt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ich bin zwanzig Jahre alt. — \"I am twenty years old.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, that is the English sentence: I — am — twenty — years — old. Put any number you own in the middle and the sentence is yours."
+            },
+            {
+              "kind": "speech",
+              "text": "And German shortens it the same way English does. Ich bin zwanzig is complete and ordinary, exactly as \"I'm twenty\" is — the Jahre alt can go, and in speech usually does."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice which verb is doing the work: bin. Not habe. Hold on to that, because it is the whole point of the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich bin zwanzig Jahre alt.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich bin zwanzig Jahre alt.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the short form — \"Ich bin zwanzig.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the short form — \"Ich bin zwanzig.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own age, in both lengths",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own age, in both lengths]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question and the answer together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question and the answer together]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ich bin zwanzig Jahre alt.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am twenty years old.\" (Ich bin zwanzig Jahre alt.) Shorten it. (Ich bin zwanzig.) Which verb does it use? (Bin.) Which does it not use? (Habe.) Next: why that choice puts German and English on one side and every Romance language on the other."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-alter-sein-haben",
+      "sequence": 506,
+      "title": "sein, not haben",
+      "headword": "sein, nicht haben",
+      "romanization": "sein, nicht haben",
+      "gloss": "Germanic IS its years where Romance HAS them — the one place German refuses haben",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:527232675e8f5f81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You spent a whole chapter on haben. Here is the everyday sentence where German refuses to let you use it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: you ARE your years",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "German states age with sein, never with haben."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich habe zwanzig Jahre is not German. It is not a clumsy way of putting it; it is not a sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Look what happens when you line the languages up:"
             },
             {
               "kind": "table",
               "headers": [
-                "forms",
-                "from",
-                "which also gave"
+                "language",
+                "how age works",
+                "literally"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 6,
               "utterances": [
-                "forms: ist, sind, seid, sein. from: h₁es- — \"to be\". which also gave: Latin est, sunt; French est, sont.",
-                "forms: bin, bist. from: bʰuH- — \"to grow, become\". which also gave: English be; Latin fuī.",
-                "forms: war, waren. from: wes- — \"to dwell, remain\". which also gave: English was, were."
+                "language: German. how age works: ich bin … Jahre alt. literally: I am …",
+                "language: English. how age works: I am twenty. literally: I am …",
+                "language: French. how age works: j'ai vingt ans. literally: I have …",
+                "language: Spanish. how age works: tengo veinte años. literally: I have …",
+                "language: Italian. how age works: ho venti anni. literally: I have …",
+                "language: Portuguese. how age works: tenho vinte anos. literally: I have …"
               ]
             },
             {
               "kind": "speech",
-              "text": "Read the middle row again. bʰuH- did not mean \"to be\" at all. It meant \"to grow\" — and the reason English says be and German says bin is that a verb about growing got promoted into a verb about existing, in both languages, before either of them existed."
-            },
-            {
-              "kind": "speech",
-              "text": "The bottom row is the same story with a different verb: wes- meant \"to dwell, to remain.\" Staying somewhere became having been."
+              "text": "Two on one side, four on the other, and the line falls exactly where the families do."
             }
           ]
         },
@@ -642,11 +760,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Bin has a cousin further afield than English. Latin fuī, \"I was,\" is from the same bʰuH- — and fuī is the direct source of Spanish fui, \"I was / I went.\""
+              "text": "Romance has its years; Germanic is its years. Age as something you carry against age as something you are — two pictures of the same fact, and each family committed to one of them long ago."
             },
             {
               "kind": "speech",
-              "text": "So German bin and Spanish fui are the same ancient word. One landed in the present tense, the other in the past, and the two languages now use it to mean opposite ends of time."
+              "text": "What makes German's choice worth pointing at is that German did not hold the Latin line out generally. Its month names are Latin borrowings wholesale; Januar, Februar and the rest came in and stayed. But on this sentence, said several times a week for a lifetime, German kept its own logic."
+            },
+            {
+              "kind": "speech",
+              "text": "The words a language uses most are the ones it is least willing to trade — which is the same force that keeps its commonest verbs irregular."
             }
           ]
         },
@@ -664,38 +786,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three roots — \"ist from h₁es-, bin from bʰuH-, war from wes-\"",
+              "instruction": "the rule — \"age takes sein, not haben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three roots — \"ist from \\**h₁es-*, bin from \\**bʰuH-*, war from \\**wes-*\"]"
+              "source": "[YOU SAY: the rule — \"age takes sein, not haben\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ist — est — is\"",
+              "instruction": "the two sides — \"ich bin zwanzig; j'ai vingt ans\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ist — est — is\"]"
+              "source": "[YOU SAY: the two sides — \"ich bin zwanzig; j'ai vingt ans\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"war — was; waren — were\"",
+              "instruction": "the picture — \"Romance has its years, Germanic is its years\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"war — was; waren — were\"]"
+              "source": "[YOU SAY: the picture — \"Romance has its years, Germanic is its years\"]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousin abroad — \"German bin, Spanish fui, one root\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousin abroad — \"German bin, Spanish fui, one root\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ich bin zwanzig Jahre alt — bin, not habe.\""
             }
           ]
         },
@@ -712,301 +834,26 @@
             },
             {
               "kind": "speech",
-              "text": "How many ancient roots is sein built from? (Three.) Which one gives ist — and which Latin word proves it? (h₁es-; Latin est.) What did the root behind bin originally mean? (\"To grow, to become.\") Which Spanish word shares it? (Fui.) Which root gives English was and were? (wes-, the same one as war.) Next: the name for what this verb is doing."
+              "text": "Which verb does German use for age? (Sein.) Which does French use? (Avoir — \"to have\".) Which two languages sit together here? (German and English.) Did German borrow its month names from Latin? (Yes — which is what makes keeping this sentence its own worth noticing.) Next: the chapter said through."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-suppletion",
-      "sequence": 535,
-      "title": "Suppletion — filling a verb in from another verb",
-      "headword": "Suppletion",
-      "romanization": "Suppletion",
-      "gloss": "suppletion — when one verb's missing forms are filled in from a different verb",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:dd79484e80275407",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three roots, one verb. There is a name for that, and once you have it you will find the same thing in English."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: what suppletion is",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "When one verb's forms are filled in from a different verb, that is suppletion."
-            },
-            {
-              "kind": "speech",
-              "text": "Sein has no forms of its own for \"I am\" or \"I was.\" It borrowed them, long ago, from two other verbs, and then all three grew together into a single paradigm that native speakers use without ever noticing the seam."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English does the identical thing with its own commonest verbs, and you have never thought twice about it:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "present",
-                "past",
-                "where the past came from"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "present: go. past: went. where the past came from: wend, a different verb entirely.",
-                "present: am. past: was. where the past came from: the same wes- that gave German war.",
-                "present: good. past: better. where the past came from: a different word again."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Went belonged to wend — \"to make one's way,\" still alive in wend your way. English took it, gave it to go, and left wend with a regular past of its own. That is precisely what German did to build sein."
-            },
-            {
-              "kind": "speech",
-              "text": "Suppletion is not a German oddity, and it is not rare. It is simply what languages do to the words they use most — and every language you have looked at in this book has done it to its verb for \"to be.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the definition — \"one verb's forms, filled in from another verb\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the definition — \"one verb's forms, filled in from another verb\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"go, went\" — English doing it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"go, went\" — English doing it]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bin, war\" — German doing it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bin, war\" — German doing it]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is suppletion? (One verb's forms filled in from another verb.) Name the English example. (Go / went.) Which verb did went actually belong to? (Wend.) How many verbs are hiding inside sein? (Three.) Next: why this always happens to the commonest words."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-haeufig-unregelmaessig",
-      "sequence": 540,
-      "title": "Why \"to be\" is the messiest word in every language",
-      "headword": "warum sein unregelmäßig ist",
-      "romanization": "warum sein unregelmäßig ist",
-      "gloss": "why the most-used words are the most irregular — a rule, not bad luck",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:218a8aedf1f9597b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Every language you have ever met has a broken verb for \"to be.\" That is too consistent to be an accident, and it isn't one."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: frequency protects irregularity",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The most-used words are the most irregular."
-            },
-            {
-              "kind": "speech",
-              "text": "Regularity spreads by analogy. You meet an unfamiliar verb, you do not know its forms, so you guess them from the pattern — the -e, -st, -t, -en machine you learned early. Guess often enough and the guess becomes the form: the odd old shape is sanded down and the verb joins the regular crowd."
-            },
-            {
-              "kind": "speech",
-              "text": "But you never have to guess at \"to be.\" You hear it a hundred times a day, from the day you start speaking. Every one of those hearings reinforces the strange shape faster than analogy can wear it away."
-            },
-            {
-              "kind": "speech",
-              "text": "Rare words get regularised. Common words are protected fossils."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "This also tells you where the irregularity will sit inside a verb, and sein proves it. Its present tense — the part you say constantly — is the wreckage: three roots, five unlike forms. Its past tense, which you say far less often, has quietly become well-behaved: one stem war-, ordinary endings, warst built exactly like bist was not."
-            },
-            {
-              "kind": "speech",
-              "text": "So the mess is not spread evenly. It clusters where the traffic is."
-            },
-            {
-              "kind": "speech",
-              "text": "The practical consequence is a comfort. There is no long list of verbs this strange, because a verb has to be this common to survive being this strange — and there are only a handful of words in any language that common."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the rule — \"the most-used words are the most irregular\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the rule — \"the most-used words are the most irregular\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "why — \"you never have to guess at them\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: why — \"you never have to guess at them\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bin, bist, ist\" against \"war, warst, waren\" — mess, then order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bin, bist, ist\" against \"war, warst, waren\" — mess, then order]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "State the rule. (The most-used words are the most irregular.) What spreads regularity? (Analogy — guessing from the pattern.) Why does analogy never reach \"to be\"? (You never have to guess at it.) Which half of sein is the tidy half? (The past — one stem, ordinary endings.) Next: the chapter together."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-war-practice",
-      "sequence": 545,
-      "title": "Practice — was, were, and why",
+      "id": "GE-C14-alter-practice",
+      "sequence": 507,
+      "title": "Practice — asking and answering an age",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "chapter payoff — the past of sein, and the three roots that explain the whole verb",
+      "gloss": "chapter payoff — asking and answering an age, and hearing which verb German reaches for",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b62671b07b903f2",
+      "sourceHash": "fnv1a64:bb39f716d673ce32",
       "notice": null,
       "blocks": [
         {
@@ -1022,35 +869,12 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. Present and past, side by side, and then the account of how one verb ended up like this."
+              "text": "No new words. One question, one answer, and one thing to keep hearing: which verb carries it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the past, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Six forms, one stem, four endings, no surprises. Said in order:"
-            },
-            {
-              "kind": "speech",
-              "text": "ich war, du warst, er war — and the first and third are the same word, which the present tense would never allow;"
-            },
-            {
-              "kind": "speech",
-              "text": "wir waren, ihr wart, sie waren."
-            },
-            {
-              "kind": "speech",
-              "text": "Compare that with the present, where five different shapes came from three different verbs. The past of sein is the part of the paradigm that behaved."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "input",
           "title": "The exchange",
           "segments": [
@@ -1061,22 +885,23 @@
                 "English"
               ],
               "columns": 2,
-              "rowCount": 4,
+              "rowCount": 5,
               "utterances": [
-                "Wo warst du? means Where were you?",
-                "Ich war in Berlin. means I was in Berlin.",
-                "Wie war es? means How was it?",
-                "Es war gut. Aber ich bin müde. means It was good. But I am tired."
+                "Wie alt bist du? means How old are you?",
+                "Zwanzig Jahre alt. Und du? means Twenty years old. And you?",
+                "Ich bin achtzehn. means I am eighteen.",
+                "Und du bist müde. means And you are tired.",
+                "Aber nicht alt! means But not old!"
               ]
             },
             {
               "kind": "speech",
-              "text": "Wo (\"where\") and in are read straight off the English here; neither is asked of you yet."
+              "text": "Every line runs on the same verb, and two of them drop it the way speech does — zwanzig Jahre alt answers the question on its own. Nothing here needs haben, and the last two lines put müde and alt side by side in the slot they share."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1089,29 +914,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich war, du warst, er war, wir waren, ihr wart, sie waren\"",
+              "instruction": "the question, then your own answer",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich war, du warst, er war, wir waren, ihr wart, sie waren\"]"
+              "source": "[YOU SAY: the question, then your own answer]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pairs — \"ich bin / ich war\", \"wir sind / wir waren\"",
+              "instruction": "the answer short, then long",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pairs — \"ich bin / ich war\", \"wir sind / wir waren\"]"
+              "source": "[YOU SAY: the answer short, then long]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three roots — \"ist, bin, war — three verbs\"",
+              "instruction": "the two sides — \"ich bin zwanzig; j'ai vingt ans\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three roots — \"ist, bin, war — three verbs\"]"
+              "source": "[YOU SAY: the two sides — \"ich bin zwanzig; j'ai vingt ans\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the twins — \"Jahr, year; alt, old; alt, adult\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the twins — \"Jahr, year; alt, old; alt, adult\"]"
             },
             {
               "kind": "prompt",
@@ -1129,12 +963,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"Wie war es? Es war gut.\""
+              "text": "\"Wie alt bist du? Ich bin zwanzig Jahre alt.\""
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1146,7 +980,7 @@
             },
             {
               "kind": "speech",
-              "text": "Run the six past forms. Which two are identical? (Ich war and er war.) Name the three roots this verb is built from, by their German forms. (Ist, bin, war.) What is the technical name for that? (Suppletion.) Why has nothing tidied this verb up? (It is too common — you never guess at it, so analogy never reaches it.) Next: the past tense that is built on this verb rather than out of it."
+              "text": "Ask someone's age. (Wie alt bist du?) Answer with your own, both long and short. Which verb does German use, and which does it refuse? (Sein; not haben.) Which English word shares a root with alt? (Adult.) Which four languages say \"I have twenty years\"? (French, Spanish, Italian, Portuguese.)"
             }
           ]
         }

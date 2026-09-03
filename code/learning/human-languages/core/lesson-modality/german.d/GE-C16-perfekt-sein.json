@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-perfekt-sein",
     "language": "german",
-    "chapter": 24,
-    "sequence": 560,
+    "chapter": 25,
+    "sequence": 570,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b6cdb144bd33ea94"
+    "sourceHash": "fnv1a64:f6d6e4b1835c1f02"
   },
   "findings": []
 }

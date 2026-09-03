@@ -1,16 +1,16 @@
 {
   "language": "german",
   "chapter": 13,
-  "sourceHash": "fnv1a64:41587d61131c5154",
+  "sourceHash": "fnv1a64:884382d71662399d",
   "lessonIds": [
-    "GE-C10-eltern",
-    "GE-C10-geschwister"
+    "GE-C09-monate",
+    "GE-C09-jahreszeiten"
   ],
   "voiceLessons": 2,
   "drivablePrefix": 2,
   "text": "german/narration/ch13.txt",
   "json": "german/narration/ch13.json",
-  "textHash": "fnv1a64:f959569fc4353c1b",
-  "jsonHash": "fnv1a64:c55751a6b0d9729e",
+  "textHash": "fnv1a64:ae3245610d14ae60",
+  "jsonHash": "fnv1a64:2b9e28c660329955",
   "findings": []
 }

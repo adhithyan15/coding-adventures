@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C17-kopf",
     "language": "german",
-    "chapter": 25,
-    "sequence": 610,
+    "chapter": 26,
+    "sequence": 620,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b8afc3653e6c54e6"
+    "sourceHash": "fnv1a64:b42bb6f3adf60df0"
   },
   "findings": []
 }

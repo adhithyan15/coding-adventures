@@ -3,19 +3,19 @@
     "id": "GE-C07-wochentage-1",
     "language": "german",
     "chapter": 10,
-    "sequence": 227,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "sequence": 235,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:841014ed89235dd2"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff7086d42fdd24d6"
   },
   "findings": []
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-partizip-am-ende",
     "language": "german",
-    "chapter": 19,
-    "sequence": 370,
+    "chapter": 20,
+    "sequence": 380,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:24ce0f4db49c32bc"
+    "sourceHash": "fnv1a64:e10d642da2143eb3"
   },
   "findings": []
 }

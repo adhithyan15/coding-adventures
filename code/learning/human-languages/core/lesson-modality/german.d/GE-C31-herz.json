@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C31-herz",
     "language": "german",
-    "chapter": 39,
-    "sequence": 1000,
+    "chapter": 40,
+    "sequence": 1010,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:65c459d658d2d0ea"
+    "sourceHash": "fnv1a64:d85625585c37e8bd"
   },
   "findings": []
 }

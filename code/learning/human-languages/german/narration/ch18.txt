@@ -1,271 +1,270 @@
-German, chapter 18: The Wrapped Participle.
+German, chapter 18: To Have.
 8 lessons. All 8 can be done entirely by ear.
 
 
 Lesson 1 of 8.
-sagen — "to say".
+haben — "to have".
 
 Warm-up.
 [pause 2 seconds]
-One more weak verb before the past tense starts, and it is the verb the whole chapter will be built on.
+German's workhorse verb, and the twin of a word you have said every day of your life.
 
-You'll want to know: sagen.
-sagen — "to say."
-Two syllables, ZAH-gen. It behaves like machen and lernen in every respect: chop the -en and you have the stem sag-, and onto that stem go the endings you already own — ich sage, du sagst.
-Nothing new is happening in those endings. Sagen is here so that when the past tense arrives in the next lesson, the only unfamiliar thing in it is the past.
+You'll want to know: haben.
+haben — "to have."
+Same word as English have, worn differently. Chop the -en the way you did with machen and the stem is hab-, which is where every form in this chapter starts.
+Two syllables, and the first one carries the weight: HAH-ben.
 
 Sounds you'll need.
-long-a — the a of sagen is long and open, the vowel of English father, not the clipped a of hat.
-ge-prefix — the -gen at the end is unstressed and swallowed, a soft gn more than a full syllable. The same mumble will open every participle in this chapter, so it is worth getting comfortable now.
-
-The word, taken apart.
-Sagen and English say are the same word. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:
-[a table of 3 rows, read aloud]
-sagen means say.
-Tag means day.
-Weg means way.
-Three pairs, one habit. Whenever a German g sits between vowels or at the end of a short word, English is likely to have thinned it to a y sound — so a German g you cannot place is often an English y in disguise.
+long-a — the a of haben is long and open, the vowel of English father, not the clipped a of hat.
+d-t-final — that long a does not survive into every form. Two of them coming up are short and clipped, and both end in a crisp, fully released t.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "sagen" — long a, soft ending]
+[your turn — say: "haben" — long a, soft second syllable]
 [pause 8 seconds for the answer]
-[your turn — say: "ich sage, du sagst, wir sagen"]
+[your turn — say: the stem on its own — "hab-"]
 [pause 8 seconds for the answer]
-[your turn — say: the three pairs — "sagen–say, Tag–day, Weg–way"]
+[your turn — say: the twins — "haben, have"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"sagen, sagen — to say."
+"haben, haben — to have."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "to say." (Sagen.) Say "I say." (Ich sage.) Is the a long or short? (Long — as in father.) Which English word is sagen? (Say.) Next: what happens to this verb when the saying is already over.
+Say "to have." (Haben.) What is its stem? (Hab-.) Is the a long or short? (Long — as in father.) Which English verb is it? (Have.) Next: the stem through the ending machine you already own.
 
 
 Lesson 2 of 8.
-gesagt — "said".
+hab- through the machine — four of haben's six forms come out of the ending machine you already own, with nothing new to learn.
 
 Warm-up.
 [pause 2 seconds]
-You have sagen. Now the form German uses when the saying is already finished — and it is longer at both ends than the word it came from.
+You own an ending machine: a stem, and -e, -st, -t, -en. Run hab- through it before reading on, and keep what you get.
 
-You'll want to know: gesagt.
-gesagt — "said."
-Hear where it grew. Sag- is still sitting in the middle, untouched. In front of it a ge- has appeared; behind it the -en has gone and a -t has taken its place:
-sagen — ge-sag-t.
-That is the word English calls a past participle: the form that goes with have in I have said. German's has a hat on as well as boots.
-
-Sounds you'll need.
-ge-prefix — unstressed, almost swallowed: guh, never gay. The stress stays on sagt, exactly where it was in sagen.
-final-t — the closing t is crisp and fully released. The g in front of it hardens to a k on the way out, the same hardening you met when und came out as unt: say guh-ZAHKT.
+Grammar Lens: four forms you already knew.
+On hab-, the machine is right four times out of six.
+Ich takes -e, so ich habe. Wir takes -en, so wir haben — which is the infinitive over again, the way the wir form goes throughout German. Ihr takes -t, so ihr habt. And sie takes -en like wir, so sie haben.
+Nothing there is new. Those four are the rule from your first verbs applied to one more stem — so do not read them off the page. Take each ending, put it on hab-, and hear that you already knew the answer.
+The chapter is about the other two.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "gesagt" — soft opening, hard ending]
+Build each one before you say it — take the ending first, then put it on hab-.
+[your turn — say: the ending ich takes, then the form — "-e … ich habe"]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "sagen, gesagt"]
+[your turn — say: the ending wir takes, then the form — "-en … wir haben"]
 [pause 8 seconds for the answer]
-[your turn — say: the three pieces — "ge, sag, t"]
+[your turn — say: the ending ihr takes, then the form — "-t … ihr habt"]
+[pause 8 seconds for the answer]
+[your turn — say: sie borrows wir's ending — "sie haben"]
+[pause 8 seconds for the answer]
+[your turn — say: now prove the machine is not about this verb — run wohn- through it: "ich wohne, wir wohnen, ihr wohnt"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"sagen, gesagt. Sagen, gesagt."
+"ich habe, wir haben, ihr habt, sie haben."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "said." (Gesagt.) Which part of sagen survives inside it? (Sag-, the stem.) What appeared in front? (Ge-.) What replaced the -en? (-t.) Next: the same two additions, on any weak verb you like.
+Build "we have" without being given it. (Wir haben.) Build "you all have." (Ihr habt.) Which other form does wir haben match? (The infinitive.) Did you have to learn any of those four, or work them out? (Work them out — the endings were already yours.) How many of the six does the rule get right? (Four.) Next: the first one it gets wrong.
 
 
 Lesson 3 of 8.
-ge-…-t — the wrap that makes a participle.
+du hast — "you have".
 
 Warm-up.
 [pause 2 seconds]
-Sagen, gesagt. One verb did that; the recipe behind it works on every regular verb you own.
+The machine says du plus -st on the stem hab-. Say what that would give, and then hear what German actually says.
 
-Grammar Lens: ge- in front, -t behind.
-Take a regular verb. Strip the -en. Put ge- in front of what is left and -t on the end.
-That is the whole operation for the regular verbs — the ones grammarians call weak, because they build their past out of endings rather than by changing the vowel inside.
-The thing worth noticing is that the ending has a beginning. English marks its participle in one place: walk becomes walk-ed, and the front of the word sits untouched. German marks it in two, one piece of grammar arriving at both ends of the stem at once.
-Grammar has a name for a piece that wraps like that: a circumfix. It is not a prefix plus a suffix that happen to co-occur — neither half means anything without the other. Gesag is not a word, and sagt on its own is "he says." Only both together make "said."
+You'll want to know: du hast.
+du hast — "you have," to one person you are on familiar terms with.
+The rule predicts hab-st. German says hast. The b is simply gone, and the long a goes with it: the vowel is short and clipped now, and the -st lands crisply on the end.
+This is not a spelling convenience. It is one of exactly two places in the whole verb where the machine fails, and it is worth meeting on its own so that it is a form you know rather than a form you derive wrongly.
+
+Sounds you'll need.
+vowel-a — short and clipped, the a of English hat, not the long a of haben. The form is one syllable: hast, rhyming with English mast.
+d-t-final — the -st is fully released; German does not soften it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the recipe — "ge in front, t behind"]
+[your turn — say: "du hast"]
 [pause 8 seconds for the answer]
-[your turn — say: the wrap on its own — "ge … t"]
+[your turn — say: the long against the short — "ich habe, du hast"]
 [pause 8 seconds for the answer]
-[your turn — say: "sagen, gesagt" and hear both ends move]
+[your turn — say: what the rule wanted, then what German says — "hab-st … hast"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ge- in front, -t behind."
+"du hast, du hast."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which two pieces make a weak participle? (Ge- in front, -t behind.) What is a piece of grammar that wraps a word called? (A circumfix.) Where does English put its own participle marker? (Only at the end — walked.) Build the participle of sagen. (Gesagt.) Next: the same wrap on a verb you met long before this one.
+Say "you have," informally. (Du hast.) Which letter went missing? (The b.) What happened to the vowel? (It shortened.) What would the rule have predicted? (Hab-st.) Next: the second place the machine fails, and it fails the same way.
 
 
 Lesson 4 of 8.
-gemacht — "made," "done".
+er hat — "he has".
 
 Warm-up.
 [pause 2 seconds]
-You know the recipe. Run it on machen before reading on: strip the -en, wrap what is left.
+One more break, and then the verb behaves for good. The machine says -t on hab-.
 
-You'll want to know: gemacht.
-gemacht — "made," and also "done."
-Machen gives up its -en, leaving mach-. The wrap goes round it and out comes gemacht. No stem was harmed: the a is the same a, and the ch is the same ch.
-German uses this one participle where English chooses between two different words. Ich habe das gemacht is "I made that" and "I did that" alike; German never had to pick.
-
-Sounds you'll need.
-ch-ach — after a, o or u, German ch is the scrape at the back of the throat, the sound in Bach and in Nacht. It sits in the middle of gemacht untouched.
-final-t — and the t on the end is crisp: guh-MAHKHT, three consonants landing together at the finish.
+You'll want to know: er hat.
+er hat — "he has." Also sie hat, "she has," and es hat, "it has."
+The rule predicts hab-t. German says hat: the same b gone, the same vowel shortened. One syllable, rhyming with English hut rather than hat — the German a sits further back than the English one.
+One form covers er, sie and es, exactly as the third-person -t always does. So the two breaks in this verb are neighbours: du hast, er hat, and every other form is the machine.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "machen, gemacht"]
+[your turn — say: "er hat, sie hat, es hat"]
 [pause 8 seconds for the answer]
-[your turn — say: both participles together — "gesagt, gemacht"]
+[your turn — say: the two breaks together — "du hast, er hat"]
 [pause 8 seconds for the answer]
-[your turn — say: one word for two English ones — "made, done — gemacht"]
+[your turn — say: the whole shape — "habe … hast … hat … haben"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"machen, gemacht."
+"du hast, er hat."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Build the participle of machen. (Gemacht.) Which two English words does it cover? (Made and done.) What happened to the ch on the way? (Nothing — the wrap only touches the edges.) Next: the verb you have been doing to German itself.
+Say "he has." (Er hat.) Say "she has." (Sie hat.) Which two forms of this verb break the rule? (Hast and hat.) What do both of them drop? (The b.) Next: why they drop it, and the English verb that does the identical thing.
 
 
 Lesson 5 of 8.
-gelernt — "learned".
+The b that fell out — why hast and hat lost their b — and the English verb that lost it in the same two places.
 
 Warm-up.
 [pause 2 seconds]
-Third time through the recipe, and this one describes what you have been doing since page one.
+Hast and hat both lost a b. That is not two accidents.
 
-You'll want to know: gelernt.
-gelernt — "learned."
-Lernen loses its -en, leaving lern-; the wrap closes round it. The English cousin is doing the very same job with the very same stem — learn, learned — and differs only in where the marking sits. German puts a piece at each end; English puts both pieces at the back.
-
-Sounds you'll need.
-r-uvular-german — the r inside gelernt is made at the back of the mouth and, before a consonant, is barely a consonant at all: it colours the vowel more than it rolls. Guh-LEHRNT, with the r almost swallowed.
-final-t — -nt at the end, both consonants sounded, the t released.
+Grammar Lens: one shortcut, in exactly two cells.
+Haben keeps its b everywhere except before a -st or a -t ending, where the b drops and the vowel shortens with it.
+Say hab-st and hab-t at speed and you can feel why: a b squeezed between a vowel and a hard t is work, and centuries of speakers declined to do it. The consonant wore away and the two shortest forms are what is left.
+Now listen to English, which is the same verb:
+[a table of 3 rows, read aloud]
+person: infinitive. English: have. German: haben.
+person: second person, older. English: thou hast. German: du hast.
+person: third person. English: he has. German: er hat.
+English lost the same consonant, in the same two cells, of the same verb — and kept the archaic hast long enough for us to see it. Two languages, one shortcut, inherited together rather than invented twice.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "lernen, gelernt"]
+[your turn — say: where the b survives — "habe, haben, habt"]
 [pause 8 seconds for the answer]
-[your turn — say: the English twin — "learn, learned; lernen, gelernt"]
+[your turn — say: where it does not — "hast, hat"]
 [pause 8 seconds for the answer]
-[your turn — say: all three so far — "gesagt, gemacht, gelernt"]
+[your turn — say: the English echo — "thou hast, du hast; he has, er hat"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"lernen, gelernt."
+"hast, hat — no b."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Build the participle of lernen. (Gelernt.) Which English verb is its twin? (Learn.) Where does English put its marking? (All of it at the end.) Next: the fourth verb, and the last one before the recipe is yours.
+In which two forms does the b drop? (Hast and hat.) What else changes with it? (The vowel shortens.) Which English form still shows the same loss? (He has — or archaic thou hast.) Next: something to actually have.
 
 
 Lesson 6 of 8.
-gewohnt — "lived".
+einen — "a," when it is the thing you have.
 
 Warm-up.
 [pause 2 seconds]
-Fourth and last of the four. Run the recipe on wohnen yourself first.
+Ich habe … wants something after it. The commonest thing to put there is "a something," and German asks one small question first.
 
-You'll want to know: gewohnt.
-gewohnt — "lived," in the sense of dwelt somewhere.
-Wohn- takes the wrap and nothing else changes. Four verbs, four participles, one recipe: it has not bent once.
-
-Sounds you'll need.
-w-is-v — the w buried in the middle is a German w, which is English v. Guh-VOHNT.
-final-t — -nt to close, exactly as in gelernt.
-
-The word, taken apart.
-Wohnen began by meaning something closer to "to be accustomed" than "to reside," and gewohnt still carries that older sense alongside the newer one: in modern German it is also the ordinary word for used to something.
-English kept the same word and only the old meaning:
-[a table of 2 rows, read aloud]
-German gewohnt means lived; accustomed.
-English wont means accustomed, as in he was wont to sing.
-Two languages split one word between them — Germany took the address and England took the habit.
+You'll want to know: einen.
+einen — "a," for a der-word that is the thing you have.
+Ein is the number one doing a second job, which is exactly what English a is — a worn-down one. German keeps the resemblance visible: ein, eins.
+The -en on the end is the part English threw away. German marks a der-word differently when it is the thing being had rather than the thing doing the having, and einen is that marked form:
+Ich habe einen Bruder. — "I have a brother."
+Der Bruder is a der-word, and he is what you have, so ein becomes einen. Nothing else in the sentence moves.
+Take this one as a word for now, not as a system. The system behind it — German's cases — gets a chapter of its own later; this is the first place the book cannot avoid it, because a sentence with haben in it needs something to have.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "wohnen, gewohnt" — with a v in the middle]
+[your turn — say: "einen"]
 [pause 8 seconds for the answer]
-[your turn — say: the fossil — "gewohnt, wont"]
+[your turn — say: "Ich habe einen Bruder."]
 [pause 8 seconds for the answer]
-[your turn — say: the whole set — "gesagt, gemacht, gelernt, gewohnt"]
+[your turn — say: it with the two broken forms — "du hast einen Bruder; er hat einen Bruder"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"wohnen, gewohnt."
+"Ich habe einen Bruder."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Build the participle of wohnen. (Gewohnt.) How is the w sounded? (Like English v.) Which English word preserves its older sense? (Wont — accustomed.) Next: where that ge- came from, and the English word still hiding it.
+Say "I have a brother." (Ich habe einen Bruder.) Which word did ein become? (Einen.) Why? (Because der Bruder is the thing being had.) Which English word is ein underneath? (One.) Next: the trap this verb is famous for.
 
 
 Lesson 7 of 8.
-The ge- that English lost — the prefix that means "completely" — and the English word that still has one hiding inside it.
+haben is not habēre — the famous false cognate — haben is a cousin of capture, and Latin habēre is a cousin of give.
 
 Warm-up.
 [pause 2 seconds]
-Four participles, four ge-s. That syllable is not decoration, and English used to have it too.
+German haben, Latin habēre. Same consonants, same meaning, and the best false cognate in the business.
 
 The word, taken apart.
-German ge- comes from Germanic ga-, a prefix meaning "together, completely." Its job was to mark an action as finished — what grammarians call perfective — which is exactly the work a past participle does. A finished saying is gesagt.
-English inherited the same prefix and spelled it y-. Chaucer still wrote it. Then English let it go, and two fossils were left behind with the prefix welded on:
+Two verbs that look like one word:
 [a table of 2 rows, read aloud]
-English word: enough. what is hiding inside: Old English genōg — "completely sufficient".
-English word: yclept (archaic, "named"). what is hiding inside: gecleopod — "called," finished and done.
-Say the German wrap out loud — ge-sag-t — and then the English fossil: en-ough, from genōg. It is the same syllable, worn down to a vowel and carried inside a word nobody thinks of as a participle at all.
-So English once wrapped its participles the same way German still does. German simply never stopped.
+language: German. verb: haben. meaning: to have.
+language: Latin. verb: habēre. meaning: to have.
+They are not related. It is a coincidence, and one of the most famous in linguistics. Follow each one back and they go in opposite directions.
+Haben comes from Germanic habjaną, from Proto-Indo-European kap-, "to seize." That root's Latin child is capere — which is where English gets capture, captive, capable and accept.
+Habēre comes from a different root entirely, gʰabʰ-, and its English descendant is … give.
+So German haben is a cousin of capture, and Latin habēre — the source of French avoir and Italian avere — is a cousin of give. Seizing and giving, which is about as far apart as two verbs get.
+
+Why it's said this way.
+This is worth carrying beyond one verb. Resemblance is not evidence. Two words can match in sound and sense and still have nothing to do with each other, and the only way to tell is to follow both back rather than to compare them where they stand.
+Most of this book's cousin pairs are real. This one is the control that proves the others were checked.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: what it meant — "together, completely"]
+[your turn — say: the pair that is not a pair — "haben, habēre"]
 [pause 8 seconds for the answer]
-[your turn — say: the fossil — "enough, from genōg"]
+[your turn — say: where German's goes — "haben, kap-, capture"]
 [pause 8 seconds for the answer]
-[your turn — say: four finished actions — "gesagt, gemacht, gelernt, gewohnt"]
+[your turn — say: where Latin's goes — "habēre, gʰabʰ-, give"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ge- means completely."
+"haben is not habēre."
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did ge- originally mean? ("Completely," marking an action finished.) How did English spell the same prefix? (Y-.) Which everyday English word still carries it? (Enough, from genōg.) And the archaic one? (Yclept.) Next: the four participles side by side, and then the verb that puts them to work.
+Are haben and habēre related? (No — a coincidence.) Which English word is haben's cousin? (Capture, from capere.) And habēre's? (Give.) What did haben's root originally mean? ("To seize.") Next: the whole verb, said through.
 
 
 Lesson 8 of 8.
-Practice — four verbs, one wrap.
+Practice — the whole of haben.
 
 Warm-up.
 [pause 2 seconds]
-No new words. Every participle here has had its own lesson, so this is the first place they are safe to put side by side — as a recap of work already done, not as a list to swallow.
+No new words. Four of the six forms below cost you nothing, and the other two have each had a lesson, so this is the first place it is safe to set them out together.
 
-Grammar Lens: the four, assembled.
-[a table of 4 rows, read aloud]
-infinitive: sagen. participle: gesagt.
-infinitive: machen. participle: gemacht.
-infinitive: lernen. participle: gelernt.
-infinitive: wohnen. participle: gewohnt.
-Cover the right-hand side and rebuild it from the left. Then cover the left and work backwards: given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having.
+Grammar Lens: the six, assembled.
+[a table of 3 rows, read aloud]
+singular: ich habe. plural: wir haben.
+singular: du hast. plural: ihr habt.
+singular: er/sie/es hat. plural: sie/Sie haben.
+Run it aloud and hear where the b goes missing: habe … hast … hat … haben. Four forms carry it, two do not, and the two that do not are the two shortest.
+
+The exchange.
+[a table of 5 rows, read aloud]
+Hast du einen Bruder? means Do you have a brother?
+Und du? means And you?
+Ich habe eine Schwester. means I have a sister.
+Wir haben Brot und Wein. means We have bread and wine.
+Gut! Dann haben wir alles. means Good! Then we have everything.
+Two things slip in without lessons of their own, because the translation carries them: eine, which is what ein becomes for a die-word, and alles ("everything"). And notice Hast du …? — a question puts the verb first, which is the one move German makes that English needs do for.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the four in order — "gesagt, gemacht, gelernt, gewohnt"]
+[your turn — say: the six in order — "habe, hast, hat, haben, habt, haben"]
 [pause 8 seconds for the answer]
-[your turn — say: the four infinitives back — "sagen, machen, lernen, wohnen"]
+[your turn — say: the two breaks alone — "hast, hat"]
 [pause 8 seconds for the answer]
-[your turn — say: the recipe out loud — "ge in front, t behind"]
+[your turn — say: "Ich habe einen Bruder." "Wir haben Brot und Wein."]
 [pause 8 seconds for the answer]
-[your turn — say: the fossil — "enough, from genōg"]
+[your turn — say: the whole exchange, both voices]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"gesagt, gemacht, gelernt, gewohnt."
+"habe, hast, hat, haben, habt, haben."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Run the four participles without prompting. Which infinitive gives gemacht? (Machen.) What are the two pieces of the wrap? (Ge- and -t.) What did the front piece originally mean? ("Completely.") Next: the verb that carries all four of these into a sentence.
+Run the six without looking. Which two drop the b? (Hast and hat.) Say "I have a brother." (Ich habe einen Bruder.) Is haben related to Latin habēre? (No.) Which English word is it related to? (Capture.) Next: the one everyday sentence where German refuses this verb altogether.

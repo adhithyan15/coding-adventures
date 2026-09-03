@@ -1,16 +1,20 @@
 {
   "language": "german",
   "chapter": 11,
-  "sourceHash": "fnv1a64:43df6e6c73720ebe",
+  "sourceHash": "fnv1a64:761e7e109d83b508",
   "lessonIds": [
-    "GE-C08-uhr",
-    "GE-C08-mittag-mitternacht"
+    "GE-C07-sonne",
+    "GE-C07-sonntag",
+    "GE-C07-sabbat",
+    "GE-C07-samstag",
+    "GE-C07-sonnabend",
+    "GE-C07-wochentage-2"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "german/narration/ch11.txt",
   "json": "german/narration/ch11.json",
-  "textHash": "fnv1a64:eeaa95df621e7ce0",
-  "jsonHash": "fnv1a64:adeb5fda1c85c36b",
+  "textHash": "fnv1a64:65caa7a522c72572",
+  "jsonHash": "fnv1a64:499e4eb25545f030",
   "findings": []
 }
