@@ -119,31 +119,39 @@ impl CompositeModelToolDispatcher {
         Self { sources }
     }
 
-    /// Resolve the single source owning `name` for this binding.
+    /// The offered set and its owner index, built in ONE pass.
     ///
-    /// Ambiguity is an error rather than a first-match win. Two sources
-    /// offering the same tool name is a composition mistake, and silently
-    /// picking one would mean the tool a model called and the tool that ran
-    /// could differ by nothing more than construction order.
-    fn owner(
+    /// Both public methods go through this, and that is the point. A first
+    /// version had `definitions` dedup with its own `seen` set while `owner`
+    /// scanned each source independently -- so the two disagreed. With sources
+    /// `[A:{x,y}, B:{x}]`, `definitions` refused the whole surface while
+    /// `execute("y")` still succeeded from A: a composition the offer path had
+    /// declared invalid went on executing tools. Within-source duplicates were
+    /// invisible to `owner` entirely, because `.any()` matches once per source.
+    ///
+    /// Ambiguity is refused rather than resolved by order. Preferring the
+    /// earlier source would mean the tool a model called and the tool that ran
+    /// could differ by nothing but construction order -- a bug that reproduces
+    /// only under a particular build.
+    fn index(
         &self,
         binding: &HostPipelineBinding,
-        name: &str,
-    ) -> Result<&Arc<dyn ModelToolDispatcher>, DataPlaneFailure> {
-        let mut found = None;
-        for source in &self.sources {
-            if source
-                .definitions(binding)?
-                .iter()
-                .any(|definition| definition.name == name)
-            {
-                if found.is_some() {
-                    return Err(DataPlaneFailure::InvalidRequest);
+    ) -> Result<(Vec<ModelToolDefinition>, BTreeMap<String, usize>), DataPlaneFailure> {
+        let mut definitions = Vec::new();
+        let mut owners: BTreeMap<String, usize> = BTreeMap::new();
+        for (position, source) in self.sources.iter().enumerate() {
+            for definition in source.definitions(binding)? {
+                // `Internal`, not `InvalidRequest`: a duplicate name is a host
+                // COMPOSITION fault, and reporting it as a client fault both
+                // mislabels it and hands an authorized child an oracle for
+                // probing cross-source name collisions.
+                if owners.insert(definition.name.clone(), position).is_some() {
+                    return Err(DataPlaneFailure::Internal);
                 }
-                found = Some(source);
+                definitions.push(definition);
             }
         }
-        found.ok_or(DataPlaneFailure::Unauthorized)
+        Ok((definitions, owners))
     }
 }
 
@@ -152,19 +160,7 @@ impl ModelToolDispatcher for CompositeModelToolDispatcher {
         &self,
         binding: &HostPipelineBinding,
     ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
-        let mut definitions = Vec::new();
-        let mut seen = std::collections::BTreeSet::new();
-        for source in &self.sources {
-            for definition in source.definitions(binding)? {
-                // A duplicate name is refused here too, so the offered set a
-                // model sees can never contain two tools it cannot tell apart.
-                if !seen.insert(definition.name.clone()) {
-                    return Err(DataPlaneFailure::InvalidRequest);
-                }
-                definitions.push(definition);
-            }
-        }
-        Ok(definitions)
+        Ok(self.index(binding)?.0)
     }
 
     fn execute(
@@ -172,7 +168,12 @@ impl ModelToolDispatcher for CompositeModelToolDispatcher {
         binding: &HostPipelineBinding,
         call: &ModelToolCall,
     ) -> Result<ModelToolResult, DataPlaneFailure> {
-        self.owner(binding, &call.name)?.execute(binding, call)
+        let (_, owners) = self.index(binding)?;
+        let position = owners
+            .get(&call.name)
+            .copied()
+            .ok_or(DataPlaneFailure::Unauthorized)?;
+        self.sources[position].execute(binding, call)
     }
 }
 
@@ -1265,7 +1266,7 @@ mod tests {
         let binding = composite_binding();
         assert!(matches!(
             composite.definitions(&binding),
-            Err(DataPlaneFailure::InvalidRequest)
+            Err(DataPlaneFailure::Internal)
         ));
         assert!(matches!(
             composite.execute(
@@ -1276,12 +1277,73 @@ mod tests {
                     arguments: serde_json::json!({}),
                 },
             ),
-            Err(DataPlaneFailure::InvalidRequest)
+            Err(DataPlaneFailure::Internal)
         ));
     }
 
     #[test]
-    fn an_empty_composite_offers_nothing_and_authorizes_nothing() {
+    fn an_ambiguous_composition_cannot_execute_its_unambiguous_tools_either() {
+        // The case the symmetric duplicate test cannot reach, and the one that
+        // exposed the two paths disagreeing: with `[A:{x,y}, B:{x}]` an
+        // earlier version refused the whole surface from `definitions` while
+        // `execute("y")` still succeeded from A -- a composition the offer
+        // path had already declared invalid went on executing tools.
+        let composite = CompositeModelToolDispatcher::new(vec![
+            Arc::new(FixedTools {
+                names: vec!["shared.tool", "unique.tool"],
+                answer: "first",
+            }),
+            Arc::new(FixedTools {
+                names: vec!["shared.tool"],
+                answer: "second",
+            }),
+        ]);
+        assert!(matches!(
+            composite.execute(
+                &composite_binding(),
+                &ModelToolCall {
+                    call_id: "call-1".to_string(),
+                    name: "unique.tool".to_string(),
+                    arguments: serde_json::json!({}),
+                },
+            ),
+            Err(DataPlaneFailure::Internal)
+        ));
+    }
+
+    #[test]
+    fn a_duplicate_within_one_source_is_caught_too() {
+        // `.any()` matched once per source, so a source declaring the same
+        // name twice was invisible to the execute path entirely.
+        let composite = CompositeModelToolDispatcher::new(vec![Arc::new(FixedTools {
+            names: vec!["dup.tool", "dup.tool"],
+            answer: "only",
+        })]);
+        let binding = composite_binding();
+        assert!(matches!(
+            composite.definitions(&binding),
+            Err(DataPlaneFailure::Internal)
+        ));
+        assert!(matches!(
+            composite.execute(
+                &binding,
+                &ModelToolCall {
+                    call_id: "call-1".to_string(),
+                    name: "dup.tool".to_string(),
+                    arguments: serde_json::json!({}),
+                },
+            ),
+            Err(DataPlaneFailure::Internal)
+        ));
+    }
+
+    #[test]
+    fn an_empty_composite_offers_nothing_and_routes_nothing() {
+        // Named for what it checks. It asserts the COMPOSITE refuses every
+        // call, not that the service refuses the request: an empty offered
+        // set makes `call.tools != installed` compare `[] != []`, which
+        // passes, and the completion proceeds without tools. The dispatcher
+        // this replaces returned Unavailable and refused outright.
         let composite = CompositeModelToolDispatcher::new(Vec::new());
         assert!(composite
             .definitions(&composite_binding())

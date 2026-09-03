@@ -114,6 +114,7 @@ use std::net::SocketAddr;
 use std::path::{Component, Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::sync::OnceLock;
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use storage_core::{StorageBackend, StorageError};
@@ -920,6 +921,7 @@ fn compose_data_plane_service_with_controller(
     let model_tools: Vec<Arc<dyn ModelToolDispatcher>> = vec![Arc::new(D18dSmartHomeModelTools {
         bridge,
         clock: unix_clock,
+        offered: OnceLock::new(),
     })];
     Ok(Arc::new(
         AuthorityBackedHostDataPlaneService::with_model_tools(
@@ -2698,6 +2700,19 @@ fn provision_smart_home_http_grant<B: StorageBackend>(
 struct D18dSmartHomeModelTools<B> {
     bridge: SmartHomeToolBridge<B>,
     clock: Arc<dyn UnixTimeClock>,
+    /// Memoized offered set.
+    ///
+    /// `definitions` ignores the binding, and every call rebuilt the whole
+    /// 322-entry smart-home catalog once per production tool id --
+    /// `smart_home_tool_definition` builds the catalog and linear-scans it --
+    /// so one call constructed roughly 3,220 definitions plus ten JSON round
+    /// trips. Measured at 17ms.
+    ///
+    /// `ListModelTools` and `CompleteWithTools` already paid that. Routing a
+    /// composite by tool name made `ExecuteTool` pay it too, on a path whose
+    /// rate a child controls and where the previous gate was a ten-element
+    /// `&str` scan. Computed once instead.
+    offered: OnceLock<Vec<ModelToolDefinition>>,
 }
 
 trait UnixTimeClock: Send + Sync {
@@ -2801,7 +2816,10 @@ impl<B: StorageBackend + 'static> ModelToolDispatcher for D18dSmartHomeModelTool
         &self,
         _binding: &chief_of_staff_pipeline_bindings::HostPipelineBinding,
     ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
-        PRODUCTION_SMART_HOME_MODEL_TOOLS
+        if let Some(offered) = self.offered.get() {
+            return Ok(offered.clone());
+        }
+        let offered = PRODUCTION_SMART_HOME_MODEL_TOOLS
             .iter()
             .map(|tool_id| {
                 let definition =
@@ -2815,7 +2833,10 @@ impl<B: StorageBackend + 'static> ModelToolDispatcher for D18dSmartHomeModelTool
                         .map_err(|_| DataPlaneFailure::Internal)?,
                 })
             })
-            .collect()
+            .collect::<Result<Vec<_>, DataPlaneFailure>>()?;
+        // A racing thread may win the init; both computed the same set from
+        // constants, so either is correct.
+        Ok(self.offered.get_or_init(|| offered).clone())
     }
 
     fn execute(
@@ -3623,6 +3644,7 @@ hardware_key_timeout = 60
                 SmartHomeAgentId::trusted("chief-daemon-model-tools"),
             ),
             clock: clock.clone(),
+            offered: OnceLock::new(),
         };
         let binding = test_model_binding();
         let definitions = tools.definitions(&binding).unwrap();
@@ -3680,6 +3702,7 @@ hardware_key_timeout = 60
                 SmartHomeAgentId::trusted("chief-daemon-model-tools"),
             ),
             clock: Arc::new(UnavailableUnixTimeClock),
+            offered: OnceLock::new(),
         };
         let binding = test_model_binding();
         let call = ModelToolCall {
@@ -5303,6 +5326,7 @@ hardware_key_timeout = 60
                 SmartHomeAgentId::trusted("chief-daemon-model-tools"),
             ),
             clock: clock.clone(),
+            offered: OnceLock::new(),
         };
         let call = ModelToolCall {
             call_id: "configured-grant-call".to_string(),
@@ -5367,6 +5391,7 @@ hardware_key_timeout = 60
                 SmartHomeAgentId::trusted("chief-daemon-model-tools"),
             ),
             clock,
+            offered: OnceLock::new(),
         };
         assert!(
             revoked_tools

@@ -6,10 +6,14 @@
   routed by tool name. The service composed exactly one dispatcher, which is
   what made smart home *the* model tool surface rather than one agent among
   several: there was no way to add a second source without replacing the first.
-- Two sources claiming one tool name is an error on both the offer and the
-  execute path, not a first-match win. Silently picking one would mean the tool
-  a model called and the tool that ran could differ by nothing but construction
-  order.
+- Both paths resolve through one index, so they cannot disagree. A first
+  version had `definitions` dedup with its own set while `execute` scanned each
+  source independently: with `[A:{x,y}, B:{x}]` the offer path refused the
+  whole surface while `execute("y")` still succeeded from A, and a duplicate
+  within one source was invisible to `execute` entirely.
+- A duplicate name reports `Internal`, not `InvalidRequest`. It is a host
+  composition fault, and calling it a client fault both mislabels it and hands
+  an authorized child an oracle for probing cross-source name collisions.
 
 - Expose the exact binding-aware installed D18D catalog through a separately
   authorized data-plane operation while preserving exact-catalog enforcement
