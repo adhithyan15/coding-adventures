@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-sieben
 spine_node: SPINE-TIME-OF-DAY
 sequence: 220
-chapter: 6
+chapter: 8
 type: word
 headword: sieben
 gloss: seven — and the s that buzzes at the front of a word

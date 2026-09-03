@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-ein-eine
 spine_node: SPINE-TIME-OF-DAY
 sequence: 218
-chapter: 6
+chapter: 7
 type: grammar
 headword: ein / eine
 gloss: "a" is the number one with its counting -s taken off

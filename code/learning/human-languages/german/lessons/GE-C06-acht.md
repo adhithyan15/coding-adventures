@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-acht
 spine_node: SPINE-TIME-OF-DAY
 sequence: 221
-chapter: 6
+chapter: 8
 type: word
 headword: acht
 gloss: eight — the rasp you already own, on a number you already know

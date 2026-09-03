@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-zehn
 spine_node: SPINE-TIME-OF-DAY
 sequence: 223
-chapter: 6
+chapter: 9
 type: word
 headword: zehn
 gloss: ten — one consonant photographed three times

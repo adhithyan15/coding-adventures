@@ -1,0 +1,16 @@
+{
+  "id": "GE-PATH-015-D",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "GE-C06-neun",
+    "GE-C06-zehn",
+    "GE-C06-zahlen-6-10",
+    "GE-C06-monate-latein",
+    "GE-C06-practice"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-015-D-NEUN-ZEHN"
+  ],
+  "after": []
+}

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 13,
-  "title": "Colours",
+  "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1b366a5219539681",
+  "sourceHash": "fnv1a64:41587d61131c5154",
   "lessons": [
     {
-      "id": "GE-C13-schwarz-weiss",
-      "sequence": 285,
-      "title": "schwarz, weiß — and the word German lent away",
-      "headword": "schwarz, weiß",
-      "romanization": "schwarz, weiß",
-      "gloss": "black and white — both native Germanic, and one of them German lent to half of Europe",
+      "id": "GE-C10-eltern",
+      "sequence": 255,
+      "title": "der Vater, die Mutter — the family that proves Grimm's law",
+      "headword": "der Vater, die Mutter",
+      "romanization": "der Vater, die Mutter",
+      "gloss": "father and mother — Grimm's law makes them twins of English father/mother",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44994a951a66620c",
+      "sourceHash": "fnv1a64:78cddf1439ddddfb",
       "notice": null,
       "blocks": [
         {
@@ -35,68 +35,68 @@
             },
             {
               "kind": "speech",
-              "text": "German's colour words are home-grown — no Latin here. But one of them has a sibling that emigrated: a German word for \"shining\" became the word for white in French, Italian and Portuguese."
+              "text": "Back in the months chapter, German borrowed its calendar from Latin (Januar, März…). Family is the opposite story: Vater and Mutter are not borrowed — they are inherited Germanic words, blood cousins of English father and mother. And the sound-law that links them, Grimm's law, is written right on their faces."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "schwarz",
+          "type": "etymology",
+          "title": "Taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "schwarz (\"black\") from Proto-Germanic swartaz. Its English cousin survives in swarthy (\"dark-complexioned\"). Further back it's related to Latin sordēs (\"dirt\") — the root of English sordid. Black and grubby, from one idea."
+              "text": "der Vater (\"father\") — note the spelling V, but it is pronounced f (FAH-ter). from PIE ph₂tḗr."
+            },
+            {
+              "kind": "speech",
+              "text": "die Mutter (\"mother\"). from PIE méh₂tēr."
+            },
+            {
+              "kind": "speech",
+              "text": "Articles: der Vater (masculine), die Mutter (feminine)."
             }
           ]
         },
         {
           "index": 2,
           "type": "unknown",
-          "title": "weiß",
+          "title": "Grimm's law, on display",
           "segments": [
             {
               "kind": "speech",
-              "text": "weiß (\"white\") from Proto-Germanic hwītaz = exactly English white. Same word, different spelling clothes."
+              "text": "Grimm's law is the great sound-shift that split the Germanic languages (English, German, Dutch…) off from the rest. Watch what it did to the same PIE words that Latin kept as pater/māter:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "PIE",
+                "Latin (French)",
+                "Germanic (English / German)"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "PIE: ph₂tḗr. Latin (French): pater (père). Germanic (English / German): father / Vater (V = f).",
+                "PIE: méh₂tēr. Latin (French): māter (mère). Germanic (English / German): mother / Mutter."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Note the ß (Eszett): it marks a sharp s after a long vowel. Weiß rhymes with English vice, not vice-versa's second half. In Switzerland you'll see it written weiss — the letter is optional there."
+              "text": "p becomes f: Latin kept the p (pater); Germanic turned it to f — English father, German Vater (the V is just an old spelling of that f sound)."
+            },
+            {
+              "kind": "speech",
+              "text": "t becomes th becomes d: the middle consonant became English th (mother) and then, in German's later shift, d/t (Mutter)."
+            },
+            {
+              "kind": "speech",
+              "text": "So German and English agree here (both f-, both m-) precisely because they are both Germanic — while French/Latin sit on the other side of Grimm's line. The month names were Latin tourists; Vater and Mutter are natives."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The word that emigrated",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German also has blank — \"shiny, polished, bare.\" That word, in its Frankish form blank (\"shining\"), was borrowed into Romance, where it pushed Latin's own albus out and became:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "\"white\""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "language: French. \"white\": blanc.",
-                "language: Italian. \"white\": bianco.",
-                "language: Portuguese. \"white\": branco.",
-                "language: German. \"white\": blank — still just \"shiny\"."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from the food lesson). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,43 +109,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"schwarz, weiß\"",
+              "instruction": "\"der Vater, die Mutter\" — Vater with an f sound",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"schwarz, weiß\"]"
+              "source": "[YOU SAY: \"der Vater, die Mutter\" — *Vater* with an **f** sound]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Wein ist weiß\" — the same wine, coloured again",
+              "instruction": "the twin test — \"Vater / father, Mutter / mother — both Germanic\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Wein ist weiß\" — the same wine, coloured again]"
+              "source": "[YOU SAY: the twin test — \"**V**ater / **f**ather, **M**utter / **m**other — both Germanic\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"weiß, white\" — hear the same word",
+              "instruction": "contrast — \"German months = Latin (Januar); German family = Germanic (Vater)\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"weiß · white\" — hear the same word]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"blank\" — and remember: French made this one mean white",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"blank\" — and remember: French made this one mean *white*]"
+              "source": "[YOU SAY: contrast — \"German months = Latin (Januar); German family = Germanic (Vater)\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,26 +148,26 @@
             },
             {
               "kind": "speech",
-              "text": "Are German's colour words borrowed from Latin? (No — both are native Germanic.) What English word is schwarz's cousin? (Swarthy — and, further off, sordid.) What is weiß in English, letter for letter? (White.) Which German word became French blanc? (Blank, \"shining\" — Germanic lending into Romance for once.) Next: rot and blau, and one more word that travelled."
+              "text": "Give \"father\" and \"mother\" with articles, minding the pronunciation. (der Vater — f sound — die Mutter.) Why do German Vater and English father match, while French père differs? (German & English are both Germanic — Grimm's law shifted p becomes f in both; French kept Latin's p.) How does this chapter contrast with the months chapter? (Months were borrowed from Latin; family is inherited Germanic.) Next: Bruder and Schwester."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C13-rot-blau",
-      "sequence": 290,
-      "title": "rot, blau — cousins and emigrants",
-      "headword": "rot, blau",
-      "romanization": "rot, blau",
-      "gloss": "red and blue — an ancient shared root, and a second word German lent to its neighbours",
+      "id": "GE-C10-geschwister",
+      "sequence": 260,
+      "title": "der Bruder, die Schwester — and the word for \"siblings\"",
+      "headword": "der Bruder, die Schwester",
+      "romanization": "der Bruder, die Schwester",
+      "gloss": "brother and sister — again Germanic twins of the English words",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc06dcca9db4665c",
+      "sourceHash": "fnv1a64:fa0e5dbbda811e54",
       "notice": null,
       "blocks": [
         {
@@ -192,98 +183,56 @@
             },
             {
               "kind": "speech",
-              "text": "Two more native German colours. One is related to the French word for red — genuinely, not by borrowing. The other is a second German word the Romance languages took."
+              "text": "The parent pair proved German and English are Germanic twins. The sibling pair does it again: Bruder (\"brother\") and Schwester (\"sister\") are the near-identical cousins of the English words — no translation really needed, just an ear for the German sounds."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "rot — an ancient cousin",
+          "type": "etymology",
+          "title": "Taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "rot from Proto-Germanic raudaz from PIE h₁rewdʰ-. That root is one of the oldest colour words we can reconstruct, and it went everywhere:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "word"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "language: German. word: rot.",
-                "language: English. word: red, rust, ruddy.",
-                "language: Latin. word: ruber, rubeus becomes French rouge, ruby, rubric."
-              ]
+              "text": "der Bruder (\"brother\") from PIE bʰréh₂tēr — the same root as Latin frāter (French frère), but here kept with a b- (Grimm's law changed bʰ becomes b), exactly like English brother."
             },
             {
               "kind": "speech",
-              "text": "So rot and rouge are cousins, not borrowings — they split apart thousands of years before either language existed. Red is the colour humans name first, after black and white."
+              "text": "die Schwester (\"sister\") from PIE swésōr. The German sch spells an sh sound; strip it back and Schwester is English sister and Latin soror, all one root."
             }
           ]
         },
         {
           "index": 2,
           "type": "unknown",
-          "title": "blau — the second emigrant",
+          "title": "The collective — Geschwister",
           "segments": [
             {
               "kind": "speech",
-              "text": "blau from Proto-Germanic blēwaz. Like blank in the last lesson, this word was borrowed into Romance:"
+              "text": "German has a tidy word English lacks: die Geschwister = \"siblings,\" brothers-and-sisters together. It is built with the ge- prefix, an old collective marker (\"a set of…\") on Schwester — the same ge- that bundles mountains into a Gebirge (\"range\") and lets German gather a family in one word."
+            },
+            {
+              "kind": "speech",
+              "text": "The four family words now stand as a Germanic set beside the Romance ones:"
             },
             {
               "kind": "table",
               "headers": [
-                "language",
-                "\"blue\""
+                "German",
+                "English",
+                "(Romance cousin)"
               ],
-              "columns": 2,
-              "rowCount": 4,
+              "columns": 3,
+              "rowCount": 2,
               "utterances": [
-                "language: German. \"blue\": blau.",
-                "language: French. \"blue\": bleu.",
-                "language: Italian. \"blue\": blu.",
-                "language: English. \"blue\": blue — taken from French, not from German."
+                "German: Vater / Mutter. English: father / mother. (Romance cousin): père / mère.",
+                "German: Bruder / Schwester. English: brother / sister. (Romance cousin): frère / sœur."
               ]
-            },
-            {
-              "kind": "speech",
-              "text": "English is the odd one here: it had Germanic blāw available but borrowed the French form instead. The word went Germanic becomes French becomes English, coming home in disguise."
-            },
-            {
-              "kind": "speech",
-              "text": "Portuguese went a different way entirely — its blue is azul, from Arabic — a second, entirely separate road to blue, and the one Spanish took too."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The chapter in one table",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "source",
-                "did Romance borrow it?"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "German: schwarz. source: Germanic swartaz. did Romance borrow it?: no.",
-                "German: weiß. source: Germanic hwītaz. did Romance borrow it?: no — but blank went instead.",
-                "German: rot. source: Germanic raudaz. did Romance borrow it?: no — Latin had its own cousin.",
-                "German: blau. source: Germanic blēwaz. did Romance borrow it?: yes — bleu, blu."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -296,43 +245,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"rot, blau\"",
+              "instruction": "\"der Bruder, die Schwester\" — Schw- = shv",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"rot, blau\"]"
+              "source": "[YOU SAY: \"der Bruder, die Schwester\" — *Schw-* = *shv*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Wein ist rot\" — the wine you already have, coloured",
+              "instruction": "the twin test — \"Bruder / brother, Schwester / sister\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Wein ist rot\" — the wine you already have, coloured]"
+              "source": "[YOU SAY: the twin test — \"**B**ruder / **b**rother, **Schw**ester / **s**ister\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins — \"rot, red, rouge\"",
+              "instruction": "\"die Geschwister — the ge- bundles them into 'siblings'\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rot · red · rouge\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four — \"schwarz, weiß, rot, blau\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"schwarz, weiß, rot, blau\"]"
+              "source": "[YOU SAY: \"die Geschwister — the *ge-* bundles them into 'siblings'\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -344,7 +284,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is rot related to French rouge by borrowing or by descent? (Descent — both from PIE h₁rewdʰ-.) Which two German colour words did Romance borrow? (Blank becomes blanc/bianco/branco, and blau becomes bleu/blu.) Where did English get blue from? (French — the long way round.) Next chapter: putting colours onto the things you already name."
+              "text": "Give \"brother\" and \"sister\" with articles. (der Bruder, die Schwester.) Why do they match English so closely? (Both Germanic — same PIE roots, no Grimm's-law gap between them.) What does Geschwister mean, and what does the ge- do? (\"Siblings\"; ge- is a collective prefix, \"a set of.\") Next chapter: putting the family into sentences."
             }
           ]
         }

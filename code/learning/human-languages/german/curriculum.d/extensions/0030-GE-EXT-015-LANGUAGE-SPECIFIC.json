@@ -3,24 +3,12 @@
   "stage": "A1",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can count from one to ten in German, say why its numbers are English's twins rather than Latin's, and use ein and eine for \"a\".",
+  "canDo": "I can count one, two, three in German and name the sound law that turns an old t into th or d and an old p into f.",
   "prerequisites": [],
   "lessons": [
     "GE-C06-eins",
     "GE-C06-zwei",
     "GE-C06-drei",
-    "GE-C06-grimm",
-    "GE-C06-vier",
-    "GE-C06-fuenf",
-    "GE-C06-zahlen-1-5",
-    "GE-C06-ein-eine",
-    "GE-C06-sechs",
-    "GE-C06-sieben",
-    "GE-C06-acht",
-    "GE-C06-neun",
-    "GE-C06-zehn",
-    "GE-C06-zahlen-6-10",
-    "GE-C06-monate-latein",
-    "GE-C06-practice"
+    "GE-C06-grimm"
   ]
 }

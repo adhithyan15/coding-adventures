@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-fuenf
 spine_node: SPINE-TIME-OF-DAY
 sequence: 216
-chapter: 6
+chapter: 7
 type: word
 headword: fünf
 gloss: five — and the p-to-f law caught in one word

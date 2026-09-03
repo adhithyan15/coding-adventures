@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C06-zahlen-6-10",
     "language": "german",
-    "chapter": 6,
+    "chapter": 9,
     "sequence": 224,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1fc21d7824beef5a"
+    "sourceHash": "fnv1a64:a5870c482be619d5"
   },
   "findings": []
 }

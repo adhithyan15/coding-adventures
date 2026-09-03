@@ -1,271 +1,66 @@
-German, chapter 15: The Wrapped Participle.
-8 lessons. All 8 can be done entirely by ear.
+German, chapter 15: Numbers Eleven to Twenty.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 8.
-sagen — "to say".
-
-Warm-up.
-[pause 2 seconds]
-One more weak verb before the past tense starts, and it is the verb the whole chapter will be built on.
-
-You'll want to know: sagen.
-sagen — "to say."
-Two syllables, ZAH-gen. It behaves like machen and lernen in every respect: chop the -en and you have the stem sag-, and onto that stem go the endings you already own — ich sage, du sagst.
-Nothing new is happening in those endings. Sagen is here so that when the past tense arrives in the next lesson, the only unfamiliar thing in it is the past.
-
-Sounds you'll need.
-long-a — the a of sagen is long and open, the vowel of English father, not the clipped a of hat.
-ge-prefix — the -gen at the end is unstressed and swallowed, a soft gn more than a full syllable. The same mumble will open every participle in this chapter, so it is worth getting comfortable now.
-
-The word, taken apart.
-Sagen and English say are the same word. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:
-[a table of 3 rows, read aloud]
-sagen means say.
-Tag means day.
-Weg means way.
-Three pairs, one habit. Whenever a German g sits between vowels or at the end of a short word, English is likely to have thinned it to a y sound — so a German g you cannot place is often an English y in disguise.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "sagen" — long a, soft ending]
-[pause 8 seconds for the answer]
-[your turn — say: "ich sage, du sagst, wir sagen"]
-[pause 8 seconds for the answer]
-[your turn — say: the three pairs — "sagen–say, Tag–day, Weg–way"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"sagen, sagen — to say."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "to say." (Sagen.) Say "I say." (Ich sage.) Is the a long or short? (Long — as in father.) Which English word is sagen? (Say.) Next: what happens to this verb when the saying is already over.
-
-
-Lesson 2 of 8.
-gesagt — "said".
+Lesson 1 of 2.
+elf und zwölf — "one left over," "two left over".
 
 Warm-up.
 [pause 2 seconds]
-You have sagen. Now the form German uses when the saying is already finished — and it is longer at both ends than the word it came from.
+Why are English eleven and twelve so strange — why not "oneteen, twoteen"? German has the identical oddity (elf, zwölf), and because the two languages are Germanic twins, learning one explains the other. The answer is one of the best number-stories anywhere.
 
-You'll want to know: gesagt.
-gesagt — "said."
-Hear where it grew. Sag- is still sitting in the middle, untouched. In front of it a ge- has appeared; behind it the -en has gone and a -t has taken its place:
-sagen — ge-sag-t.
-That is the word English calls a past participle: the form that goes with have in I have said. German's has a hat on as well as boots.
+The words, taken apart.
+elf (11) from old Germanic ainlif = ain ("one") + lif.
+zwölf (12) from twalif = twa ("two") + lif.
+And -lif means "to leave, to remain." So:
+elf = "one left over".
+zwölf = "two left over".
+Left over from what? From ten — from your ten fingers. You count to ten, you run out of fingers, and you have one left. Eleven is literally the leftover.
+English says exactly the same thing: eleven from ain-lif, twelve from twa-lif. Not similar words — the same words, inherited side by side. (You met this Germanic-twin pattern with Vater/father and Wasser/water; here it reaches even the counting.)
 
-Sounds you'll need.
-ge-prefix — unstressed, almost swallowed: guh, never gay. The stress stays on sagt, exactly where it was in sagen.
-final-t — the closing t is crisp and fully released. The g in front of it hardens to a k on the way out, the same hardening you met when und came out as unt: say guh-ZAHKT.
+And then it stops.
+The leftover-trick covers only two numbers. From 13 on, German turns completely regular — and so does English. That's the next lesson.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "gesagt" — soft opening, hard ending]
+[your turn — say: "elf, zwölf" — zwölf with the rounded ö]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "sagen, gesagt"]
+[your turn — say: the meaning — "one left over, two left over — after ten fingers"]
 [pause 8 seconds for the answer]
-[your turn — say: the three pieces — "ge, sag, t"]
+[your turn — say: the twins — "elf/eleven, zwölf/twelve — same word, both Germanic"]
 [pause 8 seconds for the answer]
-[repeat that twice]
-"sagen, gesagt. Sagen, gesagt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "said." (Gesagt.) Which part of sagen survives inside it? (Sag-, the stem.) What appeared in front? (Ge-.) What replaced the -en? (-t.) Next: the same two additions, on any weak verb you like.
+What do elf and zwölf literally mean? ("One left over" and "two left over" — -lif = "remain".) Left over from what? (From ten — the ten fingers you just counted.) Why do English eleven/twelve look equally odd? (They are the same inherited Germanic words.) Next: 13 to 20, where German becomes perfectly regular.
 
 
-Lesson 3 of 8.
-ge-…-t — the wrap that makes a participle.
+Lesson 2 of 2.
+dreizehn becomes zwanzig — the pattern that never breaks.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The rule: digit + zehn until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Sagen, gesagt. One verb did that; the recipe behind it works on every regular verb you own.
+After the two leftovers (elf, zwölf), German settles into a rule so regular you can generate every number without being taught it. And English does the identical thing — because -teen is ten.
 
-Grammar Lens: ge- in front, -t behind.
-Take a regular verb. Strip the -en. Put ge- in front of what is left and -t on the end.
-That is the whole operation for the regular verbs — the ones grammarians call weak, because they build their past out of endings rather than by changing the vowel inside.
-The thing worth noticing is that the ending has a beginning. English marks its participle in one place: walk becomes walk-ed, and the front of the word sits untouched. German marks it in two, one piece of grammar arriving at both ends of the stem at once.
-Grammar has a name for a piece that wraps like that: a circumfix. It is not a prefix plus a suffix that happen to co-occur — neither half means anything without the other. Gesag is not a word, and sagt on its own is "he says." Only both together make "said."
+The rule: digit + zehn.
+There is a table here I cannot read to you — 4 columns and 8 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, German, English, build. Come back and look at it when you have stopped.
+Every one is your first-ten digit + zehn — and the English column is the same compound with -teen (which is just ten again: thir-teen = "three-ten"). Only two small wearings-down: sech(s)zehn and sieb(en)zehn clip a sound for easier speech, exactly as English thir- and fif- did to three and five.
+zwanzig (20) from twaintig, "two tens" — the -zig is another form of ten, matching English twen-ty (-ty = ten as well).
 
-Guided Practice.
-[pause 1 second]
-[your turn — say: the recipe — "ge in front, t behind"]
-[pause 8 seconds for the answer]
-[your turn — say: the wrap on its own — "ge … t"]
-[pause 8 seconds for the answer]
-[your turn — say: "sagen, gesagt" and hear both ends move]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ge- in front, -t behind."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which two pieces make a weak participle? (Ge- in front, -t behind.) What is a piece of grammar that wraps a word called? (A circumfix.) Where does English put its own participle marker? (Only at the end — walked.) Build the participle of sagen. (Gesagt.) Next: the same wrap on a verb you met long before this one.
-
-
-Lesson 4 of 8.
-gemacht — "made," "done".
-
-Warm-up.
-[pause 2 seconds]
-You know the recipe. Run it on machen before reading on: strip the -en, wrap what is left.
-
-You'll want to know: gemacht.
-gemacht — "made," and also "done."
-Machen gives up its -en, leaving mach-. The wrap goes round it and out comes gemacht. No stem was harmed: the a is the same a, and the ch is the same ch.
-German uses this one participle where English chooses between two different words. Ich habe das gemacht is "I made that" and "I did that" alike; German never had to pick.
-
-Sounds you'll need.
-ch-ach — after a, o or u, German ch is the scrape at the back of the throat, the sound in Bach and in Nacht. It sits in the middle of gemacht untouched.
-final-t — and the t on the end is crisp: guh-MAHKHT, three consonants landing together at the finish.
+The contrast worth noticing.
+The Romance sisters all break their pattern partway through the teens (Portuguese at 16, French and Italian at 17, swapping to "ten-and-six" style). German never breaks. Two leftovers, then one clean rule all the way to twenty — and English marches beside it the entire distance.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "machen, gemacht"]
+[your turn — say: 13 becomes 20 — "dreizehn, vierzehn, fünfzehn, sechzehn, siebzehn, achtzehn, neunzehn, zwanzig"]
 [pause 8 seconds for the answer]
-[your turn — say: both participles together — "gesagt, gemacht"]
+[your turn — say: each beside its English twin — "dreizehn / thirteen, vierzehn / fourteen…"]
 [pause 8 seconds for the answer]
-[your turn — say: one word for two English ones — "made, done — gemacht"]
+[your turn — say: the whole run, elf to zwanzig]
 [pause 8 seconds for the answer]
-[repeat that twice]
-"machen, gemacht."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Build the participle of machen. (Gemacht.) Which two English words does it cover? (Made and done.) What happened to the ch on the way? (Nothing — the wrap only touches the edges.) Next: the verb you have been doing to German itself.
-
-
-Lesson 5 of 8.
-gelernt — "learned".
-
-Warm-up.
-[pause 2 seconds]
-Third time through the recipe, and this one describes what you have been doing since page one.
-
-You'll want to know: gelernt.
-gelernt — "learned."
-Lernen loses its -en, leaving lern-; the wrap closes round it. The English cousin is doing the very same job with the very same stem — learn, learned — and differs only in where the marking sits. German puts a piece at each end; English puts both pieces at the back.
-
-Sounds you'll need.
-r-uvular-german — the r inside gelernt is made at the back of the mouth and, before a consonant, is barely a consonant at all: it colours the vowel more than it rolls. Guh-LEHRNT, with the r almost swallowed.
-final-t — -nt at the end, both consonants sounded, the t released.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "lernen, gelernt"]
-[pause 8 seconds for the answer]
-[your turn — say: the English twin — "learn, learned; lernen, gelernt"]
-[pause 8 seconds for the answer]
-[your turn — say: all three so far — "gesagt, gemacht, gelernt"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"lernen, gelernt."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Build the participle of lernen. (Gelernt.) Which English verb is its twin? (Learn.) Where does English put its marking? (All of it at the end.) Next: the fourth verb, and the last one before the recipe is yours.
-
-
-Lesson 6 of 8.
-gewohnt — "lived".
-
-Warm-up.
-[pause 2 seconds]
-Fourth and last of the four. Run the recipe on wohnen yourself first.
-
-You'll want to know: gewohnt.
-gewohnt — "lived," in the sense of dwelt somewhere.
-Wohn- takes the wrap and nothing else changes. Four verbs, four participles, one recipe: it has not bent once.
-
-Sounds you'll need.
-w-is-v — the w buried in the middle is a German w, which is English v. Guh-VOHNT.
-final-t — -nt to close, exactly as in gelernt.
-
-The word, taken apart.
-Wohnen began by meaning something closer to "to be accustomed" than "to reside," and gewohnt still carries that older sense alongside the newer one: in modern German it is also the ordinary word for used to something.
-English kept the same word and only the old meaning:
-[a table of 2 rows, read aloud]
-German gewohnt means lived; accustomed.
-English wont means accustomed, as in he was wont to sing.
-Two languages split one word between them — Germany took the address and England took the habit.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "wohnen, gewohnt" — with a v in the middle]
-[pause 8 seconds for the answer]
-[your turn — say: the fossil — "gewohnt, wont"]
-[pause 8 seconds for the answer]
-[your turn — say: the whole set — "gesagt, gemacht, gelernt, gewohnt"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"wohnen, gewohnt."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Build the participle of wohnen. (Gewohnt.) How is the w sounded? (Like English v.) Which English word preserves its older sense? (Wont — accustomed.) Next: where that ge- came from, and the English word still hiding it.
-
-
-Lesson 7 of 8.
-The ge- that English lost — the prefix that means "completely" — and the English word that still has one hiding inside it.
-
-Warm-up.
-[pause 2 seconds]
-Four participles, four ge-s. That syllable is not decoration, and English used to have it too.
-
-The word, taken apart.
-German ge- comes from Germanic ga-, a prefix meaning "together, completely." Its job was to mark an action as finished — what grammarians call perfective — which is exactly the work a past participle does. A finished saying is gesagt.
-English inherited the same prefix and spelled it y-. Chaucer still wrote it. Then English let it go, and two fossils were left behind with the prefix welded on:
-[a table of 2 rows, read aloud]
-English word: enough. what is hiding inside: Old English genōg — "completely sufficient".
-English word: yclept (archaic, "named"). what is hiding inside: gecleopod — "called," finished and done.
-Say the German wrap out loud — ge-sag-t — and then the English fossil: en-ough, from genōg. It is the same syllable, worn down to a vowel and carried inside a word nobody thinks of as a participle at all.
-So English once wrapped its participles the same way German still does. German simply never stopped.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: what it meant — "together, completely"]
-[pause 8 seconds for the answer]
-[your turn — say: the fossil — "enough, from genōg"]
-[pause 8 seconds for the answer]
-[your turn — say: four finished actions — "gesagt, gemacht, gelernt, gewohnt"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ge- means completely."
-
-Wrap-up Recall.
-[pause 3 seconds]
-What did ge- originally mean? ("Completely," marking an action finished.) How did English spell the same prefix? (Y-.) Which everyday English word still carries it? (Enough, from genōg.) And the archaic one? (Yclept.) Next: the four participles side by side, and then the verb that puts them to work.
-
-
-Lesson 8 of 8.
-Practice — four verbs, one wrap.
-
-Warm-up.
-[pause 2 seconds]
-No new words. Every participle here has had its own lesson, so this is the first place they are safe to put side by side — as a recap of work already done, not as a list to swallow.
-
-Grammar Lens: the four, assembled.
-[a table of 4 rows, read aloud]
-infinitive: sagen. participle: gesagt.
-infinitive: machen. participle: gemacht.
-infinitive: lernen. participle: gelernt.
-infinitive: wohnen. participle: gewohnt.
-Cover the right-hand side and rebuild it from the left. Then cover the left and work backwards: given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the four in order — "gesagt, gemacht, gelernt, gewohnt"]
-[pause 8 seconds for the answer]
-[your turn — say: the four infinitives back — "sagen, machen, lernen, wohnen"]
-[pause 8 seconds for the answer]
-[your turn — say: the recipe out loud — "ge in front, t behind"]
-[pause 8 seconds for the answer]
-[your turn — say: the fossil — "enough, from genōg"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"gesagt, gemacht, gelernt, gewohnt."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Run the four participles without prompting. Which infinitive gives gemacht? (Machen.) What are the two pieces of the wrap? (Ge- and -t.) What did the front piece originally mean? ("Completely.") Next: the verb that carries all four of these into a sentence.
+What's the rule from 13 to 19? (Digit + zehn — no exceptions.) Which two clip a sound, and what's the English parallel? (Sechzehn and siebzehn; English clipped three becomes thir-, five becomes fif-.) What does zwanzig literally mean? ("Two tens" — -zig, like English -ty.) How does this differ from the Romance sisters? (They break their pattern in the teens; German doesn't.) Next chapter: numbers in use.

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-zahlen-1-5
 spine_node: SPINE-TIME-OF-DAY
 sequence: 217
-chapter: 6
+chapter: 7
 type: practice
 headword: eins bis fünf
 gloss: the first five as one run — counting, not reciting five separate words

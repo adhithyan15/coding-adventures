@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-monate-latein
 spine_node: SPINE-TIME-OF-DAY
 sequence: 225
-chapter: 6
+chapter: 9
 type: grammar
 headword: (homegrown numbers, imported months)
 gloss: German kept its own numbers and borrowed its month names, and the seams show

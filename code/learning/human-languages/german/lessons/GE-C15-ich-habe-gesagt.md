@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-ich-habe-gesagt
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 350
-chapter: 16
+chapter: 19
 type: phrase
 headword: ich habe gesagt
 gloss: I said — the first filled slot of the Perfekt, and a sentence you can use whole

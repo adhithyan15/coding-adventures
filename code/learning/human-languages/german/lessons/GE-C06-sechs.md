@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-sechs
 spine_node: SPINE-TIME-OF-DAY
 sequence: 219
-chapter: 6
+chapter: 8
 type: word
 headword: sechs
 gloss: six — where chs is simply an x

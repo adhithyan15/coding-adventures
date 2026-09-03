@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C06-vier",
     "language": "german",
-    "chapter": 6,
+    "chapter": 7,
     "sequence": 215,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3a35bfdf8d2d6453"
+    "sourceHash": "fnv1a64:5e974e3eacd88e20"
   },
   "findings": []
 }

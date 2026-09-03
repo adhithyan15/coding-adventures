@@ -1,4 +1,4 @@
-# Session Map — German Chapters 1–6 and 14–21
+# Session Map — German Chapters 1–9 and 17–23
 
 How the lessons compose into commute sessions. Mechanics in
 [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md); same
@@ -9,7 +9,7 @@ authoritative order.
 Every chapter listed here is **generated from the lessons** rather than
 hand-written LaTeX, so these tables and the book are the same object seen twice:
 the order below is the `sequence:` order the generator reads. The gap between
-chapter 4 and chapter 16 is the hand-written stretch that has not been retired
+chapter 4 and chapter 19 is the hand-written stretch that has not been retired
 yet.
 
 ## Chapter 1 — Greetings
@@ -133,36 +133,58 @@ now come before the sentences that need them.
 
 Reviews of earlier words fold into each session per the interval schedule.
 
-## Chapter 6 — Numbers One to Ten
+## Chapters 6, 7, 8 and 9 — the numbers one to ten
 
-| # | Session | What it adds |
-|---|---|---|
-| 70 | eins | one; **ei** is the English word *eye*, always |
-| 71 | zwei | two; **z** is *ts*, and the *w* English dropped from *two* |
-| 72 | drei | three; German has no *th* and puts **d** there |
-| 73 | (siblings, not borrowings) | a sound law is predictable; Latin is a cousin |
-| 74 | vier | four; **v** is said as an *f*, and **ie** is *ee* |
-| 75 | fünf | five; **ü**, and the old *p* that became *f* |
-| 76 | eins bis fünf | the first five as one run, forwards and backwards |
-| 77 | ein / eine | "a" is *eins* with its counting *-s* taken off |
-| 78 | sechs | six; **chs** is a plain *ks* |
-| 79 | sieben | seven; a German **s** buzzes before a vowel |
-| 80 | acht | eight; German *-cht-* is the *-ght-* English stopped saying |
-| 81 | neun | nine; the *oy* of *Deutsch* |
-| 82 | zehn | ten; *decem* to *ten* to *zehn*, one consonant walking |
-| 83 | sechs bis zehn | the second five, then all ten |
-| 84 | (homegrown numbers, imported months) | what a language keeps and what it buys |
-| 85 | practice | counting out loud, and the article on two known nouns |
+Ten numbers were sitting in two lessons, five to a sitting, against a rule of
+one. They are sixteen lessons now, and four chapters rather than one: at
+thirty-two atoms a single chapter would have been nearly three times
+`maxNewAtomsPerChapter`, and German's own band is a median of 9.
+
+### Chapter 6 — One, Two, Three
+
+| Session | What it adds |
+|---|---|
+| eins | one; **ei** is the English word *eye*, always |
+| zwei | two; **z** is *ts*, and the *w* English dropped from *two* |
+| drei | three; German has no *th* and puts **d** there |
+| (siblings, not borrowings) | a sound law is predictable; Latin is a cousin |
+
+### Chapter 7 — Four, Five, and the Article Hiding in *Eins*
+
+| Session | What it adds |
+|---|---|
+| vier | four; **v** is said as an *f*, and **ie** is *ee* |
+| fünf | five; **ü**, and the old *p* that became *f* |
+| eins bis fünf | the first five as one run, forwards and backwards |
+| ein / eine | "a" is *eins* with its counting *-s* taken off |
+
+### Chapter 8 — Six, Seven, Eight
+
+| Session | What it adds |
+|---|---|
+| sechs | six; **chs** is a plain *ks* |
+| sieben | seven; a German **s** buzzes before a vowel |
+| acht | eight; German *-cht-* is the *-ght-* English stopped saying |
+
+### Chapter 9 — Nine, Ten, and the Months That Are Numbers
+
+| Session | What it adds |
+|---|---|
+| neun | nine; the *oy* of *Deutsch* |
+| zehn | ten; *decem* to *ten* to *zehn*, one consonant walking |
+| sechs bis zehn | the second five, then all ten |
+| (homegrown numbers, imported months) | what a language keeps and what it buys |
+| practice | counting out loud, and the article on two known nouns |
 
 The two four-column reveal tables are gone: each number now carries its own
 English twin in its own lesson, and the two runs are what the recaps are for.
 The ten Proto-Indo-European reconstructions went with the tables; the rule they
-were evidence for became session 73. *ein Kaffee* and *eine Katze* became
+were evidence for became its own session. *ein Kaffee* and *eine Katze* became
 *ein Tag* and *eine Nacht*, which the reader has owned since the greetings.
 
 Reviews of earlier words fold into each session per the interval schedule.
 
-## Chapter 14 — To Have
+## Chapter 17 — To Have
 
 Chapter 5 taught the ending machine, so *haben* is met as the place that machine
 **fails**. It predicts four of the six forms correctly, so those share one
@@ -183,7 +205,7 @@ each.
 The age half of the hand-written chapter is **not** here — it needs the copula,
 so it waits until after it.
 
-## Chapters 15, 16 and 17 — the participle, the Perfekt, and the Präteritum
+## Chapters 18, 19 and 20 — the participle, the Perfekt, and the Präteritum
 
 Split from one hand-written chapter. The material is a participle recipe, four
 person slots of a compound tense, and a second past tense that means the same
@@ -192,7 +214,7 @@ thing as the first — twenty-four atoms at one per lesson, twice
 this one, then 20 and 21, with the age chapter sitting between the first two so
 the present forms get used before the past arrives.
 
-### Chapter 15 — The Wrapped Participle
+### Chapter 18 — The Wrapped Participle
 
 | Session | What it adds |
 |---|---|
@@ -205,7 +227,7 @@ the present forms get used before the past arrives.
 | ge- | Germanic \**ga-* "completely"; the fossil inside *enough* and *yclept* |
 | practice | the four participles together for the first time, as a recap |
 
-### Chapter 16 — The Past Built From Have
+### Chapter 19 — The Past Built From Have
 
 | Session | What it adds |
 |---|---|
@@ -219,7 +241,7 @@ the present forms get used before the past arrives.
 | ich habe gesagt = I said | the translation trap: it is a plain past, not a perfect |
 | practice | the four slots together for the first time, as a recap |
 
-### Chapter 17 — The Simple Past
+### Chapter 20 — The Simple Past
 
 | Session | What it adds |
 |---|---|
@@ -234,7 +256,7 @@ the present forms get used before the past arrives.
 | areale Veränderung | German, French and Italian retreated together, by contact |
 | practice | both pasts, back to back, until nothing about the meaning moves |
 
-## Chapter 18 — I Am, You Are
+## Chapter 21 — I Am, You Are
 
 Split from one hand-written chapter. `sein` is the only German verb whose forms
 cannot be derived from its infinitive, so it is met one form per lesson and the
@@ -255,7 +277,7 @@ one atom per grammar cell the material is twenty-four atoms, which is twice
 | müde | tired — and an adjective after *sein* takes no ending |
 | practice | the six forms together for the first time, as a recap |
 
-## Chapter 19 — Being Your Years
+## Chapter 22 — Being Your Years
 
 Moved out of the hand-written *haben* chapter, because the sentence it teaches
 needs the copula. It sits directly after the chapter that supplies *ich bin* and
@@ -272,7 +294,7 @@ six forms of a verb should use them for something real before meeting its past.
 | sein, nicht haben | Germanic **is** its years; Romance **has** them |
 | practice | asking and answering, with *haben* never once needed |
 
-## Chapter 20 — Three Verbs Under One Roof
+## Chapter 23 — Three Verbs Under One Roof
 
 | Session | What it adds |
 |---|---|
@@ -285,7 +307,7 @@ six forms of a verb should use them for something real before meeting its past.
 | why sein is a mess | frequency protects irregularity; analogy never reaches "to be" |
 | practice | the past assembled, and the account of the three roots |
 
-## Chapter 21 — The Past That Takes To Be
+## Chapter 24 — The Past That Takes To Be
 
 | Session | What it adds |
 |---|---|
@@ -301,5 +323,5 @@ six forms of a verb should use them for something real before meeting its past.
 
 ## Next
 
-Chapter 6 — the numbers one to ten. Chapters 6–13 are still hand-written LaTeX;
+Chapter 10 — the days of the week. Chapters 10–16 are still hand-written LaTeX;
 see `../BACKLOG.d/` for the retirement queue.

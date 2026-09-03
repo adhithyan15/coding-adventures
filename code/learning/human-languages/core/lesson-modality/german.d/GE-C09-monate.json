@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C09-monate",
     "language": "german",
-    "chapter": 9,
+    "chapter": 12,
     "sequence": 245,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8fae8f2163d11c55"
+    "sourceHash": "fnv1a64:5716b3d196979797"
   },
   "findings": []
 }

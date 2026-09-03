@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C06-practice",
     "language": "german",
-    "chapter": 6,
+    "chapter": 9,
     "sequence": 226,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1f3cbb6642d16298"
+    "sourceHash": "fnv1a64:a4cbb2563e3266a3"
   },
   "findings": []
 }

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C06-acht",
     "language": "german",
-    "chapter": 6,
+    "chapter": 8,
     "sequence": 221,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8ef3cfd7d2548443"
+    "sourceHash": "fnv1a64:a57c366dfe1c903d"
   },
   "findings": []
 }

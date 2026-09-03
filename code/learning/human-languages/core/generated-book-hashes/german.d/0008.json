@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:92aecb01d89fccc8",
+  "lessonIds": [
+    "GE-C06-sechs",
+    "GE-C06-sieben",
+    "GE-C06-acht"
+  ],
+  "tex": "german/book/chapters/ch08-zahlen-6-8.tex"
+}

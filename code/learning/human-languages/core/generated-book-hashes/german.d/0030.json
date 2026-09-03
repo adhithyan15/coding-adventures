@@ -1,12 +1,9 @@
 {
   "language": "german",
   "chapter": 30,
-  "sourceHash": "fnv1a64:c99c8fd9d0e6147b",
+  "sourceHash": "fnv1a64:31e4f081eaf4532a",
   "lessonIds": [
-    "GE-C25-nehmen",
-    "GE-C25-fragen",
-    "GE-C25-helfen",
-    "GE-C25-moegen-lieben"
+    "GE-C22-hund-katze"
   ],
-  "tex": "german/book/chapters/ch30-doing-verbs.tex"
+  "tex": "german/book/chapters/ch30-dog-and-cat.tex"
 }

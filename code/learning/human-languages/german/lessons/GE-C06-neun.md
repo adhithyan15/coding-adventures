@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-neun
 spine_node: SPINE-TIME-OF-DAY
 sequence: 222
-chapter: 6
+chapter: 9
 type: word
 headword: neun
 gloss: nine — the oy vowel from Deutsch, twice in one word

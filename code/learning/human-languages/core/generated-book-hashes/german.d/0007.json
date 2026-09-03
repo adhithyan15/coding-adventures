@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:8364b891a5a1617e",
+  "lessonIds": [
+    "GE-C06-vier",
+    "GE-C06-fuenf",
+    "GE-C06-zahlen-1-5",
+    "GE-C06-ein-eine"
+  ],
+  "tex": "german/book/chapters/ch07-zahlen-4-5.tex"
+}

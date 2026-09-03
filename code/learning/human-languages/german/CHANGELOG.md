@@ -1,9 +1,10 @@
 # Changelog
 
-## German chapter 6 leaves the hand-written set
+## German chapter 6 leaves the hand-written set, as four chapters
 
-Chapter 6 — the numbers one to ten — is now generated from its lessons.
-German's hand-written chapters: **8 -> 7**.
+Chapter 6 — the numbers one to ten — is now generated from its lessons, as
+**chapters 6, 7, 8 and 9**. German's hand-written chapters: **8 -> 7**. Old
+chapters 7-36 renumber to 10-39.
 
 ### Two lessons were holding ten numbers
 
@@ -87,14 +88,14 @@ on is already theirs.
 | atoms taught | 335 | **367** |
 | lessons with measured budgets | 181 | **197** |
 | atom-measurement-blind lessons | 16 | **14** |
-| chapters over the 12-atom budget | 5 | **6** |
+| chapters over the 12-atom budget | 6 | **5** |
 | culture claims | 18 | **19** |
 | forward references | 36 | **33** |
 | atoms never revisited | 78 | **83** |
 | reinforcement window misses | 687 | **800** |
 | `handwritten_parity.py` german | 40 | **39** blocks at risk |
 | corpus narration refusals | 50 | **48** |
-| book pages | 346 | **363** |
+| book pages | 346 | **367** |
 
 RE-MEASURED ON RETRIEVAL. This chapter was authored before German chapters 14,
 15, 16, 17 and 19 landed, so every "before" above was recomputed against the
@@ -102,12 +103,40 @@ merged tree rather than carried over from the original commit. `paradigmTables`
 (95), `lessonsWithFindings` (121), `ruleStatements` (30) and `fullParadigmGrids`
 (21) are all unchanged.
 
-Chapter 6 introduces **32** atoms, and is one chapter rather than two for the
-same reason chapter 5 was: German's opening chapters run 31, 23, 36, 30, 30 and
-now 32, because every word lesson here carries a sound atom and an etymon atom
-beside the word. Splitting the sixth chapter of six would break the pattern of
-the five before it and renumber everything after it. `atomChapterSpikes` moves
-5 -> 6 and records the debt where the opening range already sits.
+### Thirty-two atoms was a cram, and the band that justified it was the wrong band
+
+This chapter first shipped as ONE chapter of **32 atoms**, argued from the five
+chapters beside it: German's opening runs 31, 23, 36, 30, 30. That argument was
+measured against a **sub-population**, not the track.
+
+German's actual band, across all 29 atom-bearing chapters at the time:
+
+| | German | French |
+|---|---|---|
+| median | **9** | 9 |
+| mean | 12.7 | 8.5 |
+| max | 36 | 12 |
+| over the ceiling | 6 of 29 | 0 of 37 |
+
+German's median is the same as French's. The six over-budget chapters are the
+opening band, and **the opening band is debt, not a design** — 23 of 29 chapters
+already sat at or under the ceiling. Against that, 32 is nearly three times
+`maxNewAtomsPerChapter`, and the rule is not ambiguous: if a chapter cannot fit
+its material, split it; never cram, never raise a ceiling.
+
+So it is four chapters, cut at the `.tex`'s own 1–5 / 6–10 seam and then again
+inside each half, because halves of 18 and 14 were both still over:
+
+| chapter | atoms | lessons |
+|---|---|---|
+| 6 One, Two, Three | **9** | 4 |
+| 7 Four, Five, and the Article Hiding in *Eins* | **9** | 4 |
+| 8 Six, Seven, Eight | **8** | 3 |
+| 9 Nine, Ten, and the Months That Are Numbers | **6** | 5 |
+
+`atomChapterSpikes` moves **6 → 5** rather than 5 → 6: chapter 6 leaves the
+over-budget list instead of joining it, and the only German chapters still above
+the ceiling are the five nobody has split yet.
 
 German stays pinned at **zero** cross-chapter prose references. Three drafts
 said "since chapter one"; all three now name the thing instead — "since your

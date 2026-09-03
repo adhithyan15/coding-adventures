@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-vier
 spine_node: SPINE-TIME-OF-DAY
 sequence: 215
-chapter: 6
+chapter: 7
 type: word
 headword: vier
 gloss: four — spelt with a v, said with an f

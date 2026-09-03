@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:95982a1ab19d6c98",
+  "lessonIds": [
+    "GE-C06-neun",
+    "GE-C06-zehn",
+    "GE-C06-zahlen-6-10",
+    "GE-C06-monate-latein",
+    "GE-C06-practice"
+  ],
+  "tex": "german/book/chapters/ch09-zahlen-9-10.tex"
+}

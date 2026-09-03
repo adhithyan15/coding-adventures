@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-practice
 spine_node: SPINE-TIME-OF-DAY
 sequence: 226
-chapter: 6
+chapter: 9
 type: practice
 headword: (dialogue)
 gloss: Chapter 6 payoff — counting out loud, and asking for one of something

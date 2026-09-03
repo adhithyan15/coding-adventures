@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C08-mittag-mitternacht",
     "language": "german",
-    "chapter": 8,
+    "chapter": 11,
     "sequence": 240,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9f3b70fa1b579e8b"
+    "sourceHash": "fnv1a64:c40cc2fc525d4b5f"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C06-zahlen-6-10
 spine_node: SPINE-TIME-OF-DAY
 sequence: 224
-chapter: 6
+chapter: 9
 type: practice
 headword: sechs bis zehn
 gloss: the second five as one run, and then the whole ten
