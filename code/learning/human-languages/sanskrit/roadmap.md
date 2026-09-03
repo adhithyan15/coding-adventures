@@ -146,21 +146,58 @@ contains, so its "you already say these" list is true. Where the anchor word's
 other shapes are not yet taught, the word is printed romanized and the character
 stands alone; the ladder earns the right to print whole words as it climbs.
 
-48 of the 53 characters the track shows are now taught, and 31 lessons still
+49 of the 53 characters the track shows are now taught, and 31 lessons still
 decode an untaught one (from 46). What remains is **cadence-bound, not
 order-bound** — at one segment per lesson the same scheduler reaches 25, at one
-per two it reaches 30 — and is written up in backlog `HL-C241`. `ऋ` and `ङ` are
-blocked on **opposite halves**, and only one of them is still blocked on
-sourcing. `ऋ` now HAS a cited four-stroke ductus in
-`data/scripts/devanagari.json`, so its sourcing refusal is lifted; what blocks it
-is that no Sanskrit headword contains it, and a recognition segment whose "you
-already say these" list is empty teaches a shape for nothing. Schedule `ऋतु`
-("season") — which the A1 inventory also wants for its calendar gap — or `ऋषि`,
-then teach the shape. `ङ` is the mirror image: it already rides a headword,
-`सङ्ख्याशब्दाः` in chapter 19, and it is **absent from `devanagari.json`
-entirely**, so there is no sourced pen path and HL11 §5 binds. That refusal
-stands. `ई ँ घ` carry no Sanskrit headword, which is a **vocabulary** job before
-it is a script job.
+per two it reaches 30 — and is written up in backlog `HL-C241`.
+
+**`ऋ` IS NOW TAUGHT, BY THE ROUTE THIS PARAGRAPH PRESCRIBED.** The joining
+tranche schedules `ऋतुः` ("a season") so the character has a headword to be
+recognised inside, and the recognition segment then draws it from the cited
+four-stroke ductus in `data/scripts/devanagari.json`. Vocabulary first, then the
+shape. Four characters remain: `ई ङ घ ँ`.
+
+**The remaining four split three ways that this paragraph used to describe as
+two.** Measured against `devanagari.json` rather than assumed: `ई` and `घ` are in
+exactly the position `ऋ` was in — each HAS a cited ductus (Saurmandal for `ई`,
+Opiaterein's `Deva-घ-order.gif` for `घ`) and neither appears in any Sanskrit
+headword, so both are blocked on **vocabulary** and both can be unblocked the way
+`ऋ` was. `ङ` and `ँ` are blocked on **sourcing**: neither is in
+`devanagari.json` at all, so there is no sourced pen path and HL11 §5 binds.
+`ङ` already rides a headword — `सङ्ख्याशब्दाः` in the numbers chapter — and that
+does not help it; a stroke order must be sourced and cited, never invented.
+Those two refusals stand.
+
+## Chapters 52-61 - the joining column, the past, and the letter ऋ
+
+- **Authored.** Thirty-one lessons in ten chapters, ranked before design by
+  points-per-item against `core/exam-inventory-sanskrit-a1.json`. A1 exam
+  coverage **126/164 -> 141/164**, measured on the tree.
+
+  | ch. | what it teaches | points |
+  |---|---|---|
+  | 52 | **च · वा · किन्तु · न … न** — four joins, three positions | CO-01..04 |
+  | 53 | **यः … सः** and **यत्र … तत्र** — the correlative | PRON-07, SUB-02 |
+  | 54 | **इति** — the quotative, and a clause as an object | SUB-01 |
+  | 55 | **-त्वा** and **-तुम्** — the two non-finite forms | V-08 |
+  | 56 | **अ- … -त्** — the imperfect, and a use for **ह्यः** | V-06 |
+  | 57 | **शक्नोति · इच्छति** — able, and willing | F-08, F-09 |
+  | 58 | **मह्यं … रोचते** — the dative experiencer | PRON-04 |
+  | 59 | **देशः · भारतम् · भारतीयः · भारतात्** — an answer to **कुतः** | ADJ-02, SP-04 |
+  | 60 | **।** — the daṇḍa | L-06 |
+  | 61 | **ऋतुः**, and the letter **ऋ** it unblocks | — |
+
+  Four columns close outright: **Samuccaya** 1/5 -> 5/5, **Subordination**
+  1/3 -> 3/3, **the verb** 10/12 -> 12/12, **the adjective** 5/6 -> 6/6. Four
+  spine omissions close with them — `VERB-INFINITIVE`, `VERB-PAST`, `VERB-CAN`
+  and `VERB-WANT` — and `SPINE-TALK-ABOUT-PAST` and `SPINE-SAY-WHAT-I-WANT` now
+  omit nothing at all.
+
+  Two things were deliberately NOT done. **`SA-A1-RG-02` stays uncovered**: the
+  traditional pariksha ladder asks for paradigm tables, named sandhi rules,
+  samāsa analysis and a set text, and this file cannot measure any of them.
+  Covering it would be the error the point exists to prevent. And **`ङ` and `ँ`
+  stay refused**, because neither has a sourced stroke order.
 
 ## Planned
 

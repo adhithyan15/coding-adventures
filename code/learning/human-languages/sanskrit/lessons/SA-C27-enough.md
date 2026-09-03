@@ -12,7 +12,7 @@ headword: "अलम्"
 gloss: "enough"
 romanization: "alam"
 concept_tag: SA-REPLY-ENOUGH
-prerequisites: [SA-C27-well-done]
+prerequisites: [SA-C27-well-done, SA-C25-head, SA-C26-king]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C27-REPLY-03]
 practises:
-  knowledge: [SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03]
+  knowledge: [SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C25-BODY-03, SA-LEX-C26-ROLE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Set beside it a small word you have not been given yet and will hear constantly 
 A one-word answer, and a second word with no travel history.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C25-BODY-03, SA-LEX-C26-ROLE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *alam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *alam*, then *keśaḥ*, and name what those two have in common]
+- [YOU RECALL: say *śiraḥ*, then read **राजा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03] -->

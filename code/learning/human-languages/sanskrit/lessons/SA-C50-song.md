@@ -12,7 +12,7 @@ headword: "गीतम्"
 gloss: "a song"
 romanization: "gītam"
 concept_tag: SA-SOUND-GITA
-prerequisites: [SA-C50-voice]
+prerequisites: [SA-C50-voice, SA-C48-monkey, SA-C49-again-and-again]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C50-SOUND-04]
 practises:
-  knowledge: [SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04]
+  knowledge: [SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04, SA-LEX-C48-BEAST-04, SA-LEX-C49-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ No secure western cousin has been agreed for it, but it kept its ground at home:
 What the voice does when it is not talking.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04, SA-LEX-C48-BEAST-04, SA-LEX-C49-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gītam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vāṇī*, then *gītam*]
+- [YOU RECALL: read **वानरः**, then say *muhuḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C64-JOIN-05]
 practises:
-  knowledge: [TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05]
+  knowledge: [TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05, TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Five small words, and not one of them names a thing. కూడా, మాత్�
 Five: కూడా, మాత్రమే, అయితే, తరువాత, ఇంకా. Enough to add to an answer, limit it, order it, or keep it open.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05, TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *iṅkā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then answer *antē?* with *iṅkā undi*]
+- [YOU RECALL: say *addaṁ*, then read **ఆరోగ్యం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05] -->

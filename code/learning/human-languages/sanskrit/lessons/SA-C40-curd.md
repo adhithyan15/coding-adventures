@@ -12,7 +12,7 @@ headword: "दधि"
 gloss: "curd"
 romanization: "dadhi"
 concept_tag: SA-FOOD-DADHI
-prerequisites: [SA-C39-snake]
+prerequisites: [SA-C39-snake, SA-C38-fire, SA-C39-cow]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C40-FOOD-01]
 practises:
-  knowledge: [SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01]
+  knowledge: [SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01, SA-LEX-C38-EARTH-01, SA-LEX-C39-ANIMAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Hindi *dahī*, Marathi *dahī*, Gujarati *dahī* — the word barely moved.
 Milk, set thick.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01, SA-LEX-C38-EARTH-01, SA-LEX-C39-ANIMAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dadhi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sarpaḥ*, then *dadhi*]
+- [YOU RECALL: say *agniḥ*, then read **धेनुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01] -->

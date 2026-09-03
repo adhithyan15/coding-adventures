@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C54-TREE-02]
 practises:
-  knowledge: [TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02]
+  knowledge: [TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C52-WELCOME-02, TE-LEX-C53-SKY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It stands very close to కొమ్ము, the horn of an animal, and the close
 Two: the tree and what it puts out.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C52-WELCOME-02, TE-LEX-C53-SKY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *komma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *komma*, then *ceṭṭu*, and say which is part of which]
+- [YOU RECALL: read **కుర్చీ**, then say *sūryuḍu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02] -->

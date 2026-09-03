@@ -1,0 +1,18 @@
+{
+  "chapter": 54,
+  "title": "Thus It Was Said",
+  "label": "ch:sa-thus-it-was-said",
+  "canDo": "I can close a quoted clause with इति and make a whole Sanskrit sentence the object of a verb of thinking or saying.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "SA-R54-iti",
+    "kind": "production",
+    "summary": "Complete SA-R54-iti and name the two joining mechanisms the track now has, saying which of them subordinates.",
+    "assesses": [
+      "SA-JOIN-ITI-01",
+      "SA-GRAMMAR-ITI-CLAUSE-01"
+    ]
+  }
+}

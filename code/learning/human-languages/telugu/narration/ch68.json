@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Sound and Voice",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7bd5592b97c4660c",
+  "sourceHash": "fnv1a64:22a3d6b9529e3f8f",
   "lessons": [
     {
       "id": "TE-C68-sound",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:610f33346d5e2021",
+      "sourceHash": "fnv1a64:12bd4d89a4b8aa40",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śabdaṁ*, then *kiṭikī*, and say which one comes in through the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say polaṁ, then read గోడ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *polaṁ*, then read **గోడ** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bfaf7019e350eb6",
+      "sourceHash": "fnv1a64:92d2c3a51e9d4b5d",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gontu*, then *śabdaṁ*, and say which one is the wider word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read వరి, then say kappu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **వరి**, then say *kappu*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6793537b3da4ddf",
+      "sourceHash": "fnv1a64:9060644b4bd09116",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pāta*, then *pāṭa*, and hear the one letter between them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gaḍḍi, then read గడప and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gaḍḍi*, then read **గడప** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2c33752b09b825a",
+      "sourceHash": "fnv1a64:8abba4f757d59409",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *arupu*, then *gontu*, and say which one is louder]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read కల్లం, then say meṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **కల్లం**, then say *meṭṭu*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ff59e7edfc9d738",
+      "sourceHash": "fnv1a64:cd2a6c13e5d9b4e5",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then your own name, as the opening line of a కబురు]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paṇṭa, then read కిటికీ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paṇṭa*, then read **కిటికీ** and say what it means]"
             }
           ]
         },

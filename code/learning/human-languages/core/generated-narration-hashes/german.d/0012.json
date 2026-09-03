@@ -1,16 +1,16 @@
 {
   "language": "german",
   "chapter": 12,
-  "sourceHash": "fnv1a64:82662450e5849a9b",
+  "sourceHash": "fnv1a64:ee2b969b08054ad0",
   "lessonIds": [
-    "GE-C12-elf-zwoelf",
-    "GE-C12-zahlen-13-20"
+    "GE-C09-monate",
+    "GE-C09-jahreszeiten"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "german/narration/ch12.txt",
   "json": "german/narration/ch12.json",
-  "textHash": "fnv1a64:0a6c7c2fbfa8239c",
-  "jsonHash": "fnv1a64:066c2bddcbbfc161",
+  "textHash": "fnv1a64:14780533bcd1db7d",
+  "jsonHash": "fnv1a64:081c71e266e9e273",
   "findings": []
 }

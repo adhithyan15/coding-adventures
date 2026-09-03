@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C64-JOIN-03]
 practises:
-  knowledge: [TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03]
+  knowledge: [TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C62-MADE-03, TE-LEX-C63-HEALTH-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ At the head of an answer, on its own, అయితే is one of the most useful 
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C62-MADE-03, TE-LEX-C63-HEALTH-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ayitē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sarē*, then *ayitē*, and put the two together]
+- [YOU RECALL: say *cīpuru*, then read **దగ్గు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03] -->

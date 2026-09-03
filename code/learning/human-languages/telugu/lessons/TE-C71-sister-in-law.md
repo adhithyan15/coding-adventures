@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C71-KIN-04]
 practises:
-  knowledge: [TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04]
+  knowledge: [TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04, TE-LEX-C69-TOOL-04, TE-LEX-C70-CREATURE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is inherited, and it belongs to the same reckoning as the rest of this chapte
 Four. The one who matches బావ.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04, TE-LEX-C69-TOOL-04, TE-LEX-C70-CREATURE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maradalu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāva*, then *maradalu*, and say which of the two is the woman]
+- [YOU RECALL: read **సుత్తి**, then say *uḍuta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04] -->

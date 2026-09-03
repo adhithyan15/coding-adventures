@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "The Market",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1ab1362caf4450a0",
+  "sourceHash": "fnv1a64:fa5befc3774e2665",
   "lessons": [
     {
       "id": "TE-C72-shop",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb51716e62cb83d8",
+      "sourceHash": "fnv1a64:02dc9508ca9639dc",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *aṅgaḍi*, then *grāmaṁ*, and say which one sits inside the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eluka, then read మామ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eluka*, then read **మామ** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ac7c7113ab20cc7",
+      "sourceHash": "fnv1a64:a9f7850f206821c5",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ḍabbu*, then *lēdu*, as the phrase you already knew]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read కప్ప, then say atta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **కప్ప**, then say *atta*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbf4b734da5a0f01",
+      "sourceHash": "fnv1a64:6c77e4a0377f9993",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dhara*, then *ḍabbu*, in the order they come up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dōma, then read బావ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dōma*, then read **బావ** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7491b0e24826e360",
+      "sourceHash": "fnv1a64:bc9fc913bf206d74",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tūkaṁ*, then *dhara*, as one question in a shop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ఉడుత, then say maradalu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ఉడుత**, then say *maradalu*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8da58490eae5f710",
+      "sourceHash": "fnv1a64:8fec672bd7e3808a",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then close with *dhanyavādamulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sālīḍu, then read అల్లుడు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sālīḍu*, then read **అల్లుడు** and say what it means]"
             }
           ]
         },

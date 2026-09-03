@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C57-BODY-03]
 practises:
-  knowledge: [TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03]
+  knowledge: [TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C55-ROAD-03, TE-LEX-C56-HOUSE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is the part that shapes the sounds you have been making all along. Every ప 
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C55-ROAD-03, TE-LEX-C56-HOUSE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pedavi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pedavi*, then say *puvvu* slowly and notice what your పెదవులు do at the start]
+- [YOU RECALL: say *guṭṭa*, then read **కత్తి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03] -->

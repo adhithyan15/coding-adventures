@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C50-LEAVE-04]
 practises:
-  knowledge: [TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04]
+  knowledge: [TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04, TE-LEX-C48-ROLE-04, TE-LEX-C49-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Set it beside ప్రయాణం (*prayāṇaṁ*) and you have two languages
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04, TE-LEX-C48-ROLE-04, TE-LEX-C49-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bayaludēru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bayaludēru*, then *prayāṇaṁ*, and say which of the two is inherited]
+- [YOU RECALL: read **రైతు**, then say *ēmō*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04] -->

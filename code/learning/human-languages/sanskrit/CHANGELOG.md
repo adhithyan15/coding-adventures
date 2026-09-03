@@ -1,5 +1,222 @@
 # Changelog
 
+## Unreleased — the chapter boundary now reaches back far enough to enter R2
+
+Sanskrit is the second track through the HL-C313 fix, after Telugu, and it was
+measured on its own rather than assumed to behave like Telugu — which turned out
+to matter twice.
+
+A one-new-word-per-lesson chapter retrieves each of its words only from the
+lessons that follow it inside the chapter, and the next chapter's opening lesson
+reaches back for the last two. The largest distance the shape can produce is 4.
+`continuity.ts` calls 5-15 lessons **R2, "first real retrieval"**, so the window
+was not merely missed here, it was unreachable.
+
+Chapters 20-51 now each carry, in every word lesson, one `[YOU RECALL: ...]`
+task naming the word at the **matching position two chapters back** (the
+load-bearing arm, landing at distance 8-12) and, where the chapter sizes put it
+strictly inside the window, the word one chapter back as well. Spoken and read
+alternate by position in the chapter:
+
+    - [YOU RECALL: say *kṛpayā*, then read **द्वारम्**]
+    - [YOU RECALL: read **क्षम्यताम्**, then say *āsanam*]
+
+### Two things Sanskrit does not share with Telugu
+
+**Chapter sizes vary here** — 4 words in chapters 21-23, 5 from 24 on — so a
+fixed "same index" pairing does not cover a longer source chapter from a shorter
+target. The mapping distributes source index *i* over the target chapter's
+lessons instead, so every source word is retrieved by exactly one later lesson
+whatever the two lengths are. Where two four-lesson chapters sit next to each
+other the adjacent-chapter arm lands at distance 4 — R1, not R2 — and the
+generator declines to write a line that would not count, rather than writing it
+and reporting a number it did not earn. That happened for chapters 21 and 22;
+both chapters' words are still covered, by the two-chapter arm from 23 and 24.
+
+**`practises` is validated against the transitive prerequisite closure, not
+against reading order** (HL-C316). Telugu's lesson chain is linear, so its
+closure already reached back and the retrieval validated without further
+change. Sanskrit's is not, and the same edit produced 28
+`practice-before-introduction` errors for atoms that are taught eighty lessons
+earlier. Each retrieving lesson now names the lesson it retrieves among its
+`prerequisites`, which is the correct claim anyway and the way the corpus
+already spells a hand-authored reach-back.
+
+### Every number re-measured against the merged tree, not derived
+
+    sanskrit R2 misses (5-15, "first real retrieval")   302 -> 145   (-157)
+    sanskrit R1 misses (1-3)                             81 ->  81   (held)
+    sanskrit R3 misses (20-60)                          374 -> 374   (held)
+    sanskrit R4 misses (80-250)                         313 -> 313   (held)
+    sanskrit reinforcement window misses               1070 -> 913
+    sanskrit atoms taught                               406 -> 406   (held)
+    sanskrit atoms never revisited                       46 ->  44   (improved)
+    sanskrit lessons                                    335 -> 335   (held)
+    forward prerequisites                                 0 ->   0   (held)
+    forward references                                    3 ->   3   (held)
+    corpus R2 misses                                   4666 -> 4509
+    lessons at or over the 300s ceiling (ch18-51)         0 ->   0
+    computed seconds, median of ch18-51                 115 -> 120
+
+Chapters 18-50 were the whole tranche and 157 of their judgeable atoms now enter
+R2. Every one of those figures was re-measured after `git merge origin/main`
+brought in chapters 52-61 (#14170) and Telugu's own fix (#14173) — the first
+draft of this section read `279 -> 122` against a 304-lesson track, and both
+ends of that moved when the track grew to 335. The delta did not, because the
+edited range is untouched by the new chapters.
+
+What is left in Sanskrit is not this shape: 115 misses split between chapters
+1-17, which mix word, writing, phrase, etymology and practice lessons and need
+their own reading, and the new chapters 52-61, whose grammar and review lessons
+are a different shape again. Chapter 51's five atoms are in that remainder for a
+reason worth naming: they were correctly NOT counted while chapter 51 ended the
+track — `continuity.ts` skips a window a track is too short to contain — and
+became judgeable the moment chapter 52 landed. Chapter 52 has three word
+lessons against chapter 51's five, which puts the reach at distances 3 to 5, and
+the generator refuses to write a line that would not count. They close when a
+uniform chapter follows them.
+
+The derivation was falsified before shipping, not merely asserted: reverting the
+single lesson `SA-C20-man` and re-measuring put R2 back one, with the chapter 18
+atom that lesson retrieves reappearing as the extra miss.
+
+### One unrelated red test, fixed rather than filed
+
+Merging `origin/main` brought the banned-word ceiling (HL10 §7.4) to 1081
+against a pinned 1077 — four new occurrences of `just` and `simply` arrived with
+chapters 52-61 and were red on `main` before this branch touched anything. The
+ceiling's own comment says the fix is the sentence and never the number, so five
+sentences in `SA-C52-ca`, `SA-C52-va`, `SA-C59-bharatiyah`, `SA-C60-danda` and
+`SA-R58-likes` were rewritten: 1081 -> 1076 occurrences across 872 lessons, both
+back under the pin. The pin itself was left at 1077 rather than ratcheted to
+1076; it is a contended counter and lowering it from one branch is how two
+branches end up disagreeing about it.
+
+## Unreleased — the joining column, the past tense, and the letter ऋ: 126 -> 141 of 164 A1 points
+
+**Chapters 52-61 close every coordination and subordination point in the file,
+give the track a past tense, and A1 exam coverage moves 126/164 (77%) ->
+141/164 (86%).** Measured with `measureExamCoverage` against
+`core/exam-inventory-sanskrit-a1.json`, before and after, on the tree — never
+composed from deltas.
+
+RANKED BEFORE ANYTHING WAS DESIGNED
+
+The inventory's 38 uncovered points were sorted by **points closed per item
+taught**, and the tranche is the top of that list rather than a topic somebody
+liked:
+
+    yad … tad          2 points / 1 item     the correlative IS the relative clause
+    ca, va, kintu, na  4 points / 4 items    one enclitic each, the cheapest in the file
+    iti                1 point  / 1 item     and it unblocks every reporting verb at once
+    the danda          1 point  / 1 item     one short lesson, as the note predicted
+    saknoti            1 point  / 1 item
+    rocate + mahyam    2 points / 2 items
+    desa/Bharata/-iya  2 points / 3 items
+    -tva and -tum      1 point  / 2 items    but the socket saknoti and icchati need
+    the past           1 point  / 3 items    lowest ratio in the tranche, taken anyway
+
+The past tense scores worst on that ranking and is in the tranche because the
+ratio is not the only argument: it was the largest structural absence in the
+file, and `hyaḥ` had been taught since the time words with no verb form that
+could stand in it. A track can teach a word and leave it unusable.
+
+WHAT CLOSED
+
+    Samuccaya (coordination)          1/5  -> 5/5
+    Subordination                     1/3  -> 3/3
+    Dhatu and kriyapada (the verb)   10/12 -> 12/12
+    Visesana (the adjective)          5/6  -> 6/6
+    Opinions, attitudes, knowledge    4/5  -> 5/5
+    Sarvanama (the pronoun)           4/8  -> 6/8
+    Likes, wishes and feelings        0/2  -> 1/2
+    Spatial notions                   2/4  -> 3/4
+    Lipi (script and orthography)     6/10 -> 7/10
+
+Four spine omissions close with them — `VERB-INFINITIVE`, `VERB-PAST`,
+`VERB-CAN` and `VERB-WANT` — and `SPINE-TALK-ABOUT-PAST` and
+`SPINE-SAY-WHAT-I-WANT` now omit nothing at all.
+
+TAUGHT AGAINST THE SYSTEM THE TRACK ALREADY HAS
+
+The relative pronoun is not introduced as new machinery. The deixis lesson
+taught **अ- · त- · क-** and called it a system; it was three legs of four, and
+**य-** is the fourth. `यत्र` is `तत्र` with the opening swapped, which makes the
+correlative a **slot** rather than a pair of words to memorise.
+
+The past is two changes to a verb the reader already says — the augment on the
+front, the ending cut short — and Greek's **e-** is shown doing the identical
+job, inherited rather than borrowed. Latin's supine **-tum** and Sanskrit
+**-तुम्** are one suffix, and `रुच्` "to shine" is Latin *lūx*, so *the fruit
+shines for me* is what "I like the fruit" literally says.
+
+ऋ IS NOW TAUGHT, BY THE ROUTE THE INVENTORY PRESCRIBED
+
+`SA-C61-rtu` schedules **ऋतुः** so the character has a headword to be recognised
+inside, and `SA-S225-letter-vocalic-r` then draws it from the four-stroke ductus
+cited in `data/scripts/devanagari.json` to Saurmandal's four-panel Commons
+diagram. Vocabulary first, then the shape, which is what HL-C217 requires.
+Never-taught characters **5 -> 4**.
+
+**`ङ` and `ँ` remain refused and that refusal is load-bearing.** Neither is in
+`devanagari.json` at all, so neither has a sourced pen path, and a stroke order
+must be sourced and cited rather than invented. `ङ` sits in a headword already
+and that does not help it.
+
+RE-MEASURED, THE FIVE SPLIT THREE AND TWO RATHER THAN TWO AND TWO. `ई` and `घ`
+are in exactly the position `ऋ` was in — each has a cited ductus in
+`devanagari.json` and neither appears in any Sanskrit headword, so both are
+blocked on **vocabulary** and can be unblocked the same way. Only `ङ` and `ँ`
+are blocked on **sourcing**. The inventory note and the roadmap both described
+this as two refusals on opposite halves; the file says otherwise and both are
+now corrected.
+
+`SA-A1-RG-02` IS DELIBERATELY STILL UNCOVERED
+
+The traditional ladder asks for śabda-rūpa and dhātu-rūpa tables, sandhi rules
+by name, samāsa analysis and a set text. This tranche teaches none of those and
+does not pretend to. Covering that point would be exactly the error it exists to
+prevent.
+
+REINFORCEMENT WENT DOWN WHILE 31 LESSONS WENT IN
+
+Whole-track atoms revisited fewer than twice: **89 -> 80**. Nine pre-existing
+atoms rescued, and **none of the tranche's own 25 atoms is thin**. Three landed
+thin on the first measurement — two of ours and `mātulaḥ`, which 31 new lessons
+made judgeable — and all three were fixed with the cross-boundary retrieval the
+tranche already uses at every other chapter seam, not by reseating a pin.
+`atomsNeverRevisited` 49 -> 46, forward references unchanged at 3.
+
+`reinforcementWindowMisses` rises 1008 -> 1070. The +62 decomposes, by running
+`measureContinuity` with and without these 31 lessons, as **25 the tranche's own
+atoms and 37 pre-existing atoms newly judgeable** — a longer track makes windows
+fit that the end of the book had cut off. **R1 does not move at all (81 -> 81)**,
+which is HL-C313 holding in a second track: a chapter that retrieves at distances
+1-4 never touches R2, and all 25 are R2, R3 and R4.
+
+SCRIPT CLOSURE IS UNCHANGED AT 21 VIOLATIONS
+
+Every headword and every worked example is spelled from the glyphs the track
+already teaches. The first draft of `SA-C59-bharatiyah` cited the gentilic suffix
+as **-ईय** with the independent `ई`, which is one of the never-taught four; it
+was rewritten to point at the **ी** and the **य** inside the word instead, which
+is both closed and the better lesson.
+
+TWENTY-FOUR CHAPTER-NUMBER POINTERS WERE WRITTEN AND THEN REMOVED
+
+The first draft said "in chapter 14", "since chapter 17" and so on twenty-four
+times. `chapter-references.test.ts` caught it: prose that names a chapter number
+rots the moment a chapter splits. All twenty-four now name the thing — "the
+deixis lesson", "the time words", "your first farewell" — and Sanskrit's baseline
+of 20 is unchanged.
+
+PINS MOVED
+
+    tests/corpus/sanskrit.test.ts   lessons 304 -> 335
+
+Book compiles clean with XeLaTeX at 502 pages, with errors, overfull, underfull
+and missing characters all zero, and the changed pages were read as rendered PDF.
+
 ## Unreleased — an A1 exam inventory, and the ऋ refusal is half lifted (HL-C310)
 
 `core/exam-inventory-sanskrit-a1.json` is the ninth exam inventory in the repo

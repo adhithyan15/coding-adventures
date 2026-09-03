@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C75-WHEN-05]
 practises:
-  knowledge: [TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C75-WHEN-05, TE-LEX-C74-LINK-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02]
+  knowledge: [TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C75-WHEN-05, TE-LEX-C74-LINK-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02, TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ You now have the hour (గంట), the day (రోజు), the month (నెల)
 The largest unit of time you can name.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C75-WHEN-05, TE-LEX-C74-LINK-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C75-WHEN-05, TE-LEX-C74-LINK-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02, TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *saṁvatsaraṁ*]
 - [YOU SAY: *saṁvatsaraṁ*, once more]
 - [YOU SAY: say *ganṭa*, then *rōju*, then *saṁvatsaraṁ*, smallest to largest]
 - [YOU RECALL: say *kānī*, then *sāyantram*, then say *saṁvatsaraṁ*]
+- [YOU RECALL: say *vagaru*, then read **ఎందుకంటే** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C75-WHEN-05, TE-LEX-C74-LINK-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02] -->

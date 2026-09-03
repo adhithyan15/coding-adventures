@@ -12,7 +12,7 @@ headword: "सहसा"
 gloss: "suddenly"
 romanization: "sahasā"
 concept_tag: SA-REPLY-SAHASA
-prerequisites: [SA-C42-sometimes]
+prerequisites: [SA-C42-sometimes, SA-C40-sugar, SA-C41-pot]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C42-REPLY-02]
 practises:
-  knowledge: [SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02]
+  knowledge: [SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C40-FOOD-02, SA-LEX-C41-CRAFT-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It carries a shade of judgement with it — a thing done **सहसा** is a t
 One thing happening at a rush, and a mild opinion about it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C40-FOOD-02, SA-LEX-C41-CRAFT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sahasā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kadācit*, then *sahasā*]
+- [YOU RECALL: read **शर्करा**, then say *kalaśaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02] -->

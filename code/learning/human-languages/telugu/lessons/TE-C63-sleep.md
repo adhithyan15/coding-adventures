@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C63-HEALTH-02]
 practises:
-  knowledge: [TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02]
+  knowledge: [TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C61-KITCHEN-02, TE-LEX-C62-MADE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word came from Sanskrit *nidrā* and settled without changing. Beside it Tel
 Two, and both of them come to you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C61-KITCHEN-02, TE-LEX-C62-MADE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nidra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nidra*, then *ākali*, and say which one you have now]
+- [YOU RECALL: read **నెయ్యి**, then say *sūdi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C67-WALL-03]
 practises:
-  knowledge: [TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03]
+  knowledge: [TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C65-MANNERS-03, TE-LEX-C66-FIELD-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Because it marks in from out, గడప also does the work of the word household
 Three. The line you cross to be inside.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C65-MANNERS-03, TE-LEX-C66-FIELD-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gaḍapa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gaḍapa*, then *muggu*, and say which one is drawn beside the other]
+- [YOU RECALL: say *manavi*, then read **గడ్డి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03] -->

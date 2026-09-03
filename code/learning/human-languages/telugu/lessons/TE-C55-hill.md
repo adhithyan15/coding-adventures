@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C55-ROAD-03]
 practises:
-  knowledge: [TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03]
+  knowledge: [TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C53-SKY-03, TE-LEX-C54-TREE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The borrowed పర్వతం is the big mountain, the one in a poem. Nobody c
 Three: water that moves, water that stays, and ground that stands up.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C53-SKY-03, TE-LEX-C54-TREE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *guṭṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guṭṭa*, then *ceruvu*, and say which of the two you would climb]
+- [YOU RECALL: say *candruḍu*, then read **వేరు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03] -->

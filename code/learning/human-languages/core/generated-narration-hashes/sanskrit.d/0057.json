@@ -1,0 +1,16 @@
+{
+  "language": "sanskrit",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:7cade919f51450c9",
+  "lessonIds": [
+    "SA-C57-shaknoti",
+    "SA-C57-icchati"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "sanskrit/narration/ch57.txt",
+  "json": "sanskrit/narration/ch57.json",
+  "textHash": "fnv1a64:15cd9ce100ac91b0",
+  "jsonHash": "fnv1a64:602ecab7e44a0196",
+  "findings": []
+}

@@ -1,17 +1,18 @@
 {
   "language": "german",
   "chapter": 34,
-  "sourceHash": "fnv1a64:1b60e422785f5267",
+  "sourceHash": "fnv1a64:b98fc8fc00916d54",
   "lessonIds": [
-    "GE-C29-freund",
-    "GE-C29-freundin",
-    "GE-C29-familie"
+    "GE-C26-sitzen",
+    "GE-C26-stehen",
+    "GE-C26-schlafen",
+    "GE-C26-hoeren"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "german/narration/ch34.txt",
   "json": "german/narration/ch34.json",
-  "textHash": "fnv1a64:48b1f664c22c03a3",
-  "jsonHash": "fnv1a64:10536ffb95765161",
+  "textHash": "fnv1a64:005401ba34ef6a3f",
+  "jsonHash": "fnv1a64:b81e0f7eed7a3510",
   "findings": []
 }

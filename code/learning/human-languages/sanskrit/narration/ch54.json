@@ -1,0 +1,422 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 54,
+  "title": "Thus It Was Said",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ac39cb4b09bd998e",
+  "lessons": [
+    {
+      "id": "SA-C54-iti",
+      "sequence": 2630,
+      "title": "इति (iti) — thus",
+      "headword": "इति",
+      "romanization": "iti",
+      "gloss": "thus — the particle that closes what was said, and Sanskrit's only quotation mark",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a10b75c5cfdb466",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both correlative sentences — the one who goes, and where the village is. Then say cintayati and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इति (iti) — \"thus, so\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit has no quotation marks. It has this word instead, and it does the job better than a pair of commas in the air: इति (iti) stands after the quoted words and closes them."
+            },
+            {
+              "kind": "speech",
+              "text": "… इति (iti) — \"…\" — that is what was said."
+            },
+            {
+              "kind": "speech",
+              "text": "Whatever comes before इति (iti) is quoted; whatever comes after it is the frame. Everything the frame needs to say — who said it, who thought it, who asked it — comes afterwards, so the reader hears the words first and learns whose they were second."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things follow from that, and both are worth knowing before you build a sentence with it:"
+            },
+            {
+              "kind": "speech",
+              "text": "The quoted words are not changed. English shifts tense and person when it reports — he said he was going. Sanskrit does not. It hands you the words as they were spoken and lets इति (iti) mark where they stop."
+            },
+            {
+              "kind": "speech",
+              "text": "इति (iti) is not a verb and never inflects. It is the same three letters in every sentence you will ever meet it in."
+            },
+            {
+              "kind": "speech",
+              "text": "You have probably met it already without knowing. इत्यादि (ityādi) — \"and so on\" — is इति (iti) plus आदि, \"beginning\": thus, and the rest. And the closing line of every chapter of a classical text begins इति (iti) — thus ends…."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The mark that closes a quotation, in a language with no quotation marks."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "इति (iti), and say which side of it the quoted words sit on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **इति**, and say which side of it the quoted words sit on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "what इत्यादि is made of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: what **इत्यादि** is made of]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where do the quoted words stand relative to इति (iti)? (Before it.) Say इति (iti) once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C54-iti-clause",
+      "sequence": 2640,
+      "title": "… इति चिन्तयति (… iti cintayati) — a clause as the object",
+      "headword": "… इति चिन्तयति",
+      "romanization": "… iti cintayati",
+      "gloss": "a whole clause as the object of a verb — saying that you think that something is so",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c8fd5e010f90307",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say इति (iti), and say which side of it the quoted words sit on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: what a thinking verb thinks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिन्तयति has been in this book since the thinking verb arrived, with nothing to think. Every verb you have used takes a noun as its object — you see a house, you eat food. इति (iti) lets a verb take a whole sentence instead."
+            },
+            {
+              "kind": "speech",
+              "text": "बालः गच्छति इति गुरुः चिन्तयति bālaḥ gacchati iti guruḥ cintayati the teacher thinks that the boy is going."
+            },
+            {
+              "kind": "speech",
+              "text": "Take it apart in the order Sanskrit gives it to you:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "meaning",
+                "job"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "piece: बालः गच्छति. meaning: the boy goes. job: the clause being thought.",
+                "piece: इति (iti). meaning: thus. job: the clause ends here.",
+                "piece: गुरुः चिन्तयति. meaning: the teacher thinks. job: the frame around it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The inner clause is a complete sentence and stays one. Nothing is bent to make it fit inside the outer one — no that, no change of ending, no reordering. इति (iti) does all the joining by standing between them."
+            },
+            {
+              "kind": "speech",
+              "text": "Swap the outer verb and you have every reporting sentence at once: … इति (iti) वदति (says), … इति (iti) पृच्छति (asks), … इति (iti) जानाति (knows). The inner clause never changes."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare this with the chapter before. यः … सः joined two clauses by putting a pronoun in each. इति (iti) joins two clauses by putting one particle at the seam. Two joins, two mechanisms — and neither of them is a conjunction in the English sense."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A sentence that reports another sentence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ gacchati iti guruḥ cintayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ gacchati iti guruḥ cintayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, and name where the inner clause stops",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, and name where the inner clause stops]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बालः गच्छति इति (iti) गुरुः चिन्तयति, then say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बालः गच्छति इति गुरुः चिन्तयति**, then say what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the correlative puts a pronoun in each clause; इति (iti) puts one particle at the seam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the correlative puts a pronoun in each clause; **इति** puts one particle at the seam]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does the inner clause change when it is reported? (No.) Say the teacher-and-boy sentence once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R54-iti",
+      "sequence": 2650,
+      "title": "इति (iti) — reviewed",
+      "headword": "इति",
+      "romanization": "iti",
+      "gloss": "the quotative, reviewed against the correlative",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ec649f09246ca56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say इति (iti), and say what it does to the words in front of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters, two ways of putting two clauses in one sentence, and they work differently on purpose."
+            },
+            {
+              "kind": "speech",
+              "text": "The correlative marks both clauses — a य- word in one, a त- word in the other — and the clauses stay equals. इति (iti) marks one seam, and makes the clause in front of it into the object of the verb behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the difference between which one goes, that one sees and the teacher thinks that the boy goes. In the first, neither clause is inside the other. In the second, the whole first clause is what the second one is about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ gacchati iti guruḥ cintayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ gacchati iti guruḥ cintayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaḥ gacchati saḥ paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaḥ gacchati saḥ paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "which sentence puts one clause INSIDE the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: which sentence puts one clause INSIDE the other]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the two joining mechanisms you now have, and say which one subordinates."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

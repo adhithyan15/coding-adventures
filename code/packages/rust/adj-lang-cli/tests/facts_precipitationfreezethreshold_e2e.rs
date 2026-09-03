@@ -101,3 +101,31 @@ fn precipitation_freeze_threshold_abstains_on_rain() {
         "rain's cited span states no numeric freeze threshold -- honest abstention expected: {out}"
     );
 }
+
+const PRECIPITATION_FREEZE_THRESHOLD_PIN: &str = r#""bindings":{"TemperatureF":"32"},"citations":[{"source":"Freezing rain occurs when snowflakes descend into a warmer layer of air and melt completely. When these liquid water drops fall through another thin layer of freezing air just above the surface, they don't have enough time to refreeze before reaching the ground. Because they are “supercooled,” they instantly refreeze upon contact with anything that that is at or below freezing (32 degrees F), creating a glaze of ice on the ground, trees, power lines, or other objects.","locator":"https://www.weather.gov/iwx/sleetvsfreezingrain","trust":"authoritative""#;
+
+#[test]
+fn precipitation_freeze_threshold_citation_is_the_pages_whole_sentence() {
+    let dir = scratch("reground");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"precipitation-freeze-threshold.adj\"\n? precipitation_freeze_threshold_f(freezing_rain, $TemperatureF)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The value opened with an ellipsis and stopped at "a glaze of ice.",
+    // eliding the sentence's subject clause and truncating its tail. Restored
+    // whole from the page.
+    //
+    // "anything that that is at or below freezing" REPRODUCES A TYPO IN THE
+    // SOURCE. It is kept, doubled word and all: a citation that silently
+    // corrects its page is the same defect class as one that silently tidies
+    // it, and this whole effort exists because of the second kind.
+    assert!(
+        out.contains(PRECIPITATION_FREEZE_THRESHOLD_PIN),
+        "the freezing-rain citation is the page's whole sentence: {out}"
+    );
+}

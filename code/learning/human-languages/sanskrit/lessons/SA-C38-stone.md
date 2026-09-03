@@ -12,7 +12,7 @@ headword: "शिला"
 gloss: "a stone, a slab of rock"
 romanization: "śilā"
 concept_tag: SA-EARTH-SHILA
-prerequisites: [SA-C38-ash]
+prerequisites: [SA-C38-ash, SA-C36-likewise, SA-C37-gracious]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C38-EARTH-03]
 practises:
-  knowledge: [SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03]
+  knowledge: [SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C36-REPLY-03, SA-LEX-C37-COURTESY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Its history outside India is unsettled — nobody has agreed a cousin for it, th
 One piece of the mountain, small enough to touch.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C36-REPLY-03, SA-LEX-C37-COURTESY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śilā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhasma*, then *śilā*]
+- [YOU RECALL: say *tathā*, then read **प्रसन्नः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03] -->

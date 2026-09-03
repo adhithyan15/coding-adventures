@@ -1,0 +1,687 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 52,
+  "title": "Two Things Joined",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:1d27bcd80c5a5050",
+  "lessons": [
+    {
+      "id": "SA-C52-ca",
+      "sequence": 2530,
+      "title": "च (ca) — and",
+      "headword": "च",
+      "romanization": "ca",
+      "gloss": "and — the enclitic that joins two things, and stands after them",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c5d9940b351f851",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words back: what does mātāmahī mean, and who is a mātulaḥ? You can now name a great many things one at a time. You cannot yet name two."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: च",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "च (ca) — \"and\"."
+            },
+            {
+              "kind": "speech",
+              "text": "One syllable, and until this lesson the track had no way to put two things in one sentence. Everything you have learnt to name — a house, a river, a mother, a moon — you have named alone."
+            },
+            {
+              "kind": "speech",
+              "text": "च (ca) does not stand between the two things. It stands after the second one."
+            },
+            {
+              "kind": "speech",
+              "text": "अन्नं पानीयं च — annaṁ pānīyaṁ ca — food and water."
+            },
+            {
+              "kind": "speech",
+              "text": "English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Read the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair."
+            },
+            {
+              "kind": "speech",
+              "text": "च can never begin a sentence. A word that must lean on the word before it is called an enclitic, and this is Sanskrit's commonest one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two things in one sentence, for the first time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mātulaḥ, then read मातामही and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mātulaḥ*, then read **मातामही** and say what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "annaṁ pānīyaṁ ca, said once slowly and once at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *annaṁ pānīyaṁ ca*, said once slowly and once at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annaṁ pānīyaṁ ca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annaṁ pānīyaṁ ca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "च (ca), and say where in the phrase it stands",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **च**, and say where in the phrase it stands]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does च (ca) mean, and where does it stand? (\"And\", and after the second thing.) Say \"food and water\" once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C52-va",
+      "sequence": 2540,
+      "title": "वा (vā) — or",
+      "headword": "वा",
+      "romanization": "vā",
+      "gloss": "or — the same enclitic slot as च, and the other half of the pair",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5174181dd504b8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"food and water\", and then say where च (ca) stood in it. Then say mātulaḥ, from two chapters back, and who it names."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वा (vā) — \"or\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything the last lesson said about च is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "पानीयं क्षीरं वा — pānīyaṁ kṣīraṁ vā — water or milk."
+            },
+            {
+              "kind": "speech",
+              "text": "So the two words share one slot, and swapping them swaps the meaning of the whole phrase without moving anything else:"
+            },
+            {
+              "kind": "speech",
+              "text": "पानीयं क्षीरं च (ca) — water and milk पानीयं क्षीरं वा (vā) — water or milk."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth pausing on. In English and and or are two different words in the same middle position. In Sanskrit they are two different words in the same final position, and the sentence around them does not shift at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both halves of the joining pair: च (ca) for both, वा (vā) for either."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānīyaṁ kṣīraṁ vā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānīyaṁ kṣīraṁ vā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same two nouns with च (ca) instead, and say what changed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same two nouns with **च** instead, and say what changed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पानीयं क्षीरं वा (vā), then say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पानीयं क्षीरं वा**, then say what it means]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of च (ca) and वा (vā) means \"or\"? Say \"water or milk\"."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C52-kintu",
+      "sequence": 2550,
+      "title": "किन्तु (kintu) — but",
+      "headword": "किन्तु",
+      "romanization": "kintu",
+      "gloss": "but — and unlike च and वा it stands first",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:88bdb71c5fe69728",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"water or milk\". Then say what किम् means on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किन्तु",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किन्तु (kintu) — \"but\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at it before you use it. It is किम् — the question word you have held since your first questions — welded to the small particle तु, \"however\". What-however. Sanskrit built its \"but\" out of a question and a shrug."
+            },
+            {
+              "kind": "speech",
+              "text": "And here is the thing that matters for using it: किन्तु (kintu) is not an enclitic. Unlike च (ca) and वा (vā) it does not lean backwards. It stands at the front of the clause it contradicts."
+            },
+            {
+              "kind": "speech",
+              "text": "बालः गच्छति किन्तु गुरुः न गच्छति bālaḥ gacchati kintu guruḥ na gacchati the boy goes, but the teacher does not go."
+            },
+            {
+              "kind": "speech",
+              "text": "Three joining words, two different habits. Say the rule to yourself once: च (ca) and वा (vā) go last, किन्तु (kintu) goes first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three joins: add, offer, contradict."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ gacchati kintu guruḥ na gacchati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ gacchati kintu guruḥ na gacchati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "किन्तु (kintu), and find the किम् inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **किन्तु**, and find the **किम्** inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "वा (vā) at the end of its phrase, किन्तु (kintu) at the front of its clause",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **वा** at the end of its phrase, **किन्तु** at the front of its clause]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किन्तु (kintu) mean, and where does it stand? (\"But\", and first.) Say the boy-and-teacher sentence once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C52-na-na",
+      "sequence": 2560,
+      "title": "न … न (na … na) — neither … nor",
+      "headword": "न … न",
+      "romanization": "na … na",
+      "gloss": "neither … nor — the negative you already own, said twice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d83d3a280e661470",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does किन्तु (kintu) stand in its clause? And what does न mean on its own?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the fourth join needs no new word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have had न since the very first chapter. Said once it denies one thing. Said twice, once before each item, it denies both."
+            },
+            {
+              "kind": "speech",
+              "text": "न अन्नं न पानीयम् na annaṁ na pānīyam neither food nor water."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no new vocabulary here at all. The join is made out of repetition, which is why Sanskrit never needed a word like English neither."
+            },
+            {
+              "kind": "speech",
+              "text": "Set the four joins of this chapter side by side and the pattern in their positions is the whole lesson:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "join",
+                "meaning",
+                "where it stands"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "join: च (ca). meaning: and. where it stands: after the second item.",
+                "join: वा (vā). meaning: or. where it stands: after the second item.",
+                "join: किन्तु (kintu). meaning: but. where it stands: first in its clause.",
+                "join: न … न (na … na). meaning: neither … nor. where it stands: before each item."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three positions, four joins. Nothing else about the sentence moves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every basic join: both, either, contrary, and neither."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "na annaṁ na pānīyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *na annaṁ na pānīyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ na khādati — the boy does not eat — then double the न to deny both nouns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ na khādati* — the boy does not eat — then double the **न** to deny both nouns]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "न अन्नं न पानीयम्, then say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **न अन्नं न पानीयम्**, then say what it means]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Sanskrit say \"neither … nor\"? (न before each item.) Say \"neither food nor water\"."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R52-joins",
+      "sequence": 2570,
+      "title": "च (ca), वा (vā), किन्तु (kintu), न … न (na … na) — the four joins",
+      "headword": "च · वा · किन्तु · न … न",
+      "romanization": "ca · vā · kintu · na … na",
+      "gloss": "the four joins, and the three places they stand",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e66ebf051ca95bc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the two joins that stand after the second item."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Before this chapter every Sanskrit sentence you could build named exactly one thing. Four small words later you can name two, offer a choice between them, set one against the other, and refuse both."
+            },
+            {
+              "kind": "speech",
+              "text": "None of the four changed anything else in the sentence. That is the point worth carrying: Sanskrit joins by placing a particle, not by rearranging what is already there. When you meet the longer joins later — the ones that link whole clauses rather than nouns — they will behave the same way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annaṁ pānīyaṁ ca, then annaṁ pānīyaṁ vā, and say what changed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annaṁ pānīyaṁ ca*, then *annaṁ pānīyaṁ vā*, and say what changed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānīyaṁ kṣīraṁ vā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānīyaṁ kṣīraṁ vā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "na annaṁ na pānīyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *na annaṁ na pānīyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "which of the four stands FIRST in its clause",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: which of the four stands FIRST in its clause]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say all four joins in order, and for each one say where it stands."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

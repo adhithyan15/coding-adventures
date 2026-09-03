@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C17-hand",
     "language": "german",
-    "chapter": 22,
+    "chapter": 25,
     "sequence": 630,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:52c6ef5ce2744a3f"
+    "sourceHash": "fnv1a64:53df7e28b097e200"
   },
   "findings": []
 }

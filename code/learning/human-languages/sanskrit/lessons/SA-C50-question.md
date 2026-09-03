@@ -12,7 +12,7 @@ headword: "प्रश्नः"
 gloss: "a question"
 romanization: "praśnaḥ"
 concept_tag: SA-SOUND-PRASHNA
-prerequisites: [SA-C50-sound]
+prerequisites: [SA-C50-sound, SA-C48-wolf, SA-C49-as]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C50-SOUND-02]
 practises:
-  knowledge: [SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02]
+  knowledge: [SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C48-BEAST-02, SA-LEX-C49-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ The root reaches a long way west: Latin *precārī*, "to beg", behind English *p
 The asking, and the thing asked, from one root.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C48-BEAST-02, SA-LEX-C49-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *praśnaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śabdaḥ*, then *praśnaḥ*]
+- [YOU RECALL: read **वृकः**, then say *yathā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02] -->

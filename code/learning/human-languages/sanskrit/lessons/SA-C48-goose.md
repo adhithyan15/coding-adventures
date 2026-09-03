@@ -12,7 +12,7 @@ headword: "हंसः"
 gloss: "a goose"
 romanization: "haṁsaḥ"
 concept_tag: SA-BEAST-HAMSA
-prerequisites: [SA-C48-monkey]
+prerequisites: [SA-C48-monkey, SA-C46-heat, SA-C47-floor]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C48-BEAST-05]
 practises:
-  knowledge: [SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05]
+  knowledge: [SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05, SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ In Sanskrit poetry it is the bird that can take milk out of water, so the word c
 Five animals: a lion, a wolf, a goat, a monkey, a goose.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05, SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *haṁsaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *siṁhaḥ* and *haṁsaḥ* together]
+- [YOU RECALL: say *tāpaḥ*, then read **तलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05] -->

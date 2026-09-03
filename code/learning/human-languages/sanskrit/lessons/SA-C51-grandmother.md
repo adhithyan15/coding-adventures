@@ -12,7 +12,7 @@ headword: "मातामही"
 gloss: "a grandmother"
 romanization: "mātāmahī"
 concept_tag: SA-KIN-MATAMAHI
-prerequisites: [SA-C51-grandfather]
+prerequisites: [SA-C51-grandfather, SA-C49-again-and-again, SA-C50-song]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C51-KIN-04]
 practises:
-  knowledge: [SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04]
+  knowledge: [SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04, SA-LEX-C49-REPLY-04, SA-LEX-C50-SOUND-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ The pair also shows the line Sanskrit draws down the middle of a family: one wor
 The same joining, worked a second time.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04, SA-LEX-C49-REPLY-04, SA-LEX-C50-SOUND-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mātāmahī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pitāmahaḥ*, then *mātāmahī*]
+- [YOU RECALL: read **मुहुः**, then say *gītam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04] -->

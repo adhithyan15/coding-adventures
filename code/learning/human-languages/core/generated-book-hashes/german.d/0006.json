@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:335927f8607314c2",
+  "lessonIds": [
+    "GE-C06-eins",
+    "GE-C06-zwei",
+    "GE-C06-drei",
+    "GE-C06-grimm"
+  ],
+  "tex": "german/book/chapters/ch06-zahlen-1-3.tex"
+}

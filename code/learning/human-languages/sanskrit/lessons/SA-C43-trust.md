@@ -12,7 +12,7 @@ headword: "विश्वासः"
 gloss: "trust, confidence"
 romanization: "viśvāsaḥ"
 concept_tag: SA-COURTESY-VISHVASA
-prerequisites: [SA-C43-humility]
+prerequisites: [SA-C43-humility, SA-C41-mirror, SA-C42-a-little]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C43-COURTESY-04]
 practises:
-  knowledge: [SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04]
+  knowledge: [SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04, SA-LEX-C41-CRAFT-04, SA-LEX-C42-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Hindi *viśvās* is unchanged, and *viśvāsghāt*, a betrayal, is the same word
 Trust, described as the moment you stop holding your breath.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04, SA-LEX-C41-CRAFT-04, SA-LEX-C42-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viśvāsaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *namratā*, then *viśvāsaḥ*]
+- [YOU RECALL: read **दर्पणः**, then say *kiñcit*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04] -->

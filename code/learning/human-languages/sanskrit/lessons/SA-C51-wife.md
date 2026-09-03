@@ -12,7 +12,7 @@ headword: "पत्नी"
 gloss: "a wife"
 romanization: "patnī"
 concept_tag: SA-KIN-PATNI
-prerequisites: [SA-C51-husband]
+prerequisites: [SA-C51-husband, SA-C49-as, SA-C50-question]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C51-KIN-02]
 practises:
-  knowledge: [SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02]
+  knowledge: [SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C49-REPLY-02, SA-LEX-C50-SOUND-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ So the second word costs almost nothing once the first is yours. Feminine, endin
 The pair that a household is built on.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C49-REPLY-02, SA-LEX-C50-SOUND-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *patnī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *patiḥ*, then *patnī*]
+- [YOU RECALL: read **यथा**, then say *praśnaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02] -->

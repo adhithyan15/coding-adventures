@@ -1,25 +1,16 @@
 {
   "chapter": 16,
-  "title": "The Past Built From Have",
-  "label": "ch:perfekt",
-  "canDo": "I can say what I did in German — haben in second place, the participle waiting at the end of the clause — and read it as a plain past rather than as “have done”.",
+  "title": "Colours",
+  "label": "ch:colours",
+  "canDo": "I can name basic colours in German and use them to describe something.",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-PAST"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C15-perfekt-practice",
+    "lesson": "GE-C13-rot-blau",
     "kind": "task",
-    "summary": "The Perfekt is haben plus a participle, and its cost is the four person slots rather than the recipe: ich habe, du hast, er hat, wir haben each get their own lesson before any of them share a page. The bracket that leaves the participle stranded at the end of the clause gets one of its own too, then gestern to fill the gap it opens, and finally the translation trap — ich habe gesagt is “I said”.",
-    "assesses": [
-      "GE-GRAMMAR-PERFEKT-HABEN-01",
-      "GE-GRAMMAR-PERFEKT-ICH-01",
-      "GE-GRAMMAR-PERFEKT-DU-01",
-      "GE-GRAMMAR-PERFEKT-ER-01",
-      "GE-GRAMMAR-PERFEKT-WIR-01",
-      "GE-GRAMMAR-PARTIZIP-FINAL-01",
-      "GE-LEX-GESTERN-01",
-      "GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01"
-    ],
-    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. The four-slot table in the practice lesson is a recap of four lessons rather than an introduction to four forms, which is what makes printing it permissible."
+    "summary": "Complete GE-C13-rot-blau, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in German and use them to describe something.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }
 }

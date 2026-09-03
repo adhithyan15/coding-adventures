@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C51-COURTESY-05]
 practises:
-  knowledge: [TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05]
+  knowledge: [TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05, TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Hold on to దండ; it comes back in the next chapter carrying flowers.
 Five courtesy words: కృతజ్ఞత, మేలు, గౌరవం, ఆశీర్వాదం, దండం. Thanks, a good turn, respect, a blessing, and the greeting you make with your hands.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05, TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *daṇḍaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *daṇḍaṁ*, then *namaskāraṁ*, and say which one you would give a grandparent]
+- [YOU RECALL: say *alāgē*, then read **వెళ్ళొస్తాను** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05] -->

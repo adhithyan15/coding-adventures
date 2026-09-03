@@ -12,7 +12,7 @@ headword: "अग्निः"
 gloss: "fire"
 romanization: "agniḥ"
 concept_tag: SA-EARTH-AGNI
-prerequisites: [SA-C37-blessing]
+prerequisites: [SA-C37-blessing, SA-C36-also, SA-C37-peace]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C38-EARTH-01]
 practises:
-  knowledge: [SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01]
+  knowledge: [SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01, SA-LEX-C36-REPLY-01, SA-LEX-C37-COURTESY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Latin *ignis* is the very same word, and English carries it in *ignite* and *ign
 Fire, named as a thing rather than as an action.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01, SA-LEX-C36-REPLY-01, SA-LEX-C37-COURTESY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *agniḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āśīrvādaḥ*, then *agniḥ*]
+- [YOU RECALL: say *api*, then read **शान्तिः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01] -->

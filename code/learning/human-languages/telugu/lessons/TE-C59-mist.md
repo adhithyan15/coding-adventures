@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C59-WEATHER-02]
 practises:
-  knowledge: [TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02]
+  knowledge: [TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C57-BODY-02, TE-LEX-C58-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ This is worth sitting with. A language draws its lines where its speakers need t
 Two: what moves, and what settles.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C57-BODY-02, TE-LEX-C58-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mañcu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mañcu*, then *gāli*, and say which of the two you can see]
+- [YOU RECALL: read **వీపు**, then say *ekkuva*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02] -->

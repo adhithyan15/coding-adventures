@@ -1,16 +1,17 @@
 {
   "language": "german",
   "chapter": 8,
-  "sourceHash": "fnv1a64:43f8eec17cde9e22",
+  "sourceHash": "fnv1a64:e8453f6923c376b8",
   "lessonIds": [
-    "GE-C08-uhr",
-    "GE-C08-mittag-mitternacht"
+    "GE-C06-sechs",
+    "GE-C06-sieben",
+    "GE-C06-acht"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "german/narration/ch08.txt",
   "json": "german/narration/ch08.json",
-  "textHash": "fnv1a64:8b2960f7341a3736",
-  "jsonHash": "fnv1a64:ab91a571c8ec019f",
+  "textHash": "fnv1a64:7fd55bfcc6a6dfe7",
+  "jsonHash": "fnv1a64:d5773ef343238482",
   "findings": []
 }

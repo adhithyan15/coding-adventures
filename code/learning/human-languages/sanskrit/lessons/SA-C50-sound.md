@@ -12,7 +12,7 @@ headword: "शब्दः"
 gloss: "a sound"
 romanization: "śabdaḥ"
 concept_tag: SA-SOUND-SHABDA
-prerequisites: [SA-C49-oh]
+prerequisites: [SA-C49-oh, SA-C48-lion, SA-C49-then]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C50-SOUND-01]
 practises:
-  knowledge: [SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01]
+  knowledge: [SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01, SA-LEX-C48-BEAST-01, SA-LEX-C49-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ So you have been reading it since long before this page. Now the piece itself is
 The piece three earlier names were built out of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01, SA-LEX-C48-BEAST-01, SA-LEX-C49-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śabdaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aho*, then *śabdaḥ*]
+- [YOU RECALL: say *siṁhaḥ*, then read **तर्हि**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01] -->

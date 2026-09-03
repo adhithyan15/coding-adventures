@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C53-SKY-04]
 practises:
-  knowledge: [TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04]
+  knowledge: [TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04, TE-LEX-C51-COURTESY-04, TE-LEX-C52-WELCOME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The borrowed word for a star is నక్షత్రం, and it is what an astr
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04, TE-LEX-C51-COURTESY-04, TE-LEX-C52-WELCOME-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cukka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cukka*, then *muggu*, and say how the two are connected on the ground]
+- [YOU RECALL: read **ఆశీర్వాదం**, then say *puvvu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04] -->

@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:b1591585469e79d7",
+  "lessonIds": [
+    "SA-C54-iti",
+    "SA-C54-iti-clause",
+    "SA-R54-iti"
+  ],
+  "tex": "sanskrit/book/chapters/ch54-thus-it-was-said.tex"
+}

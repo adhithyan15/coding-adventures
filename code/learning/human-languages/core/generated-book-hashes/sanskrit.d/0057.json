@@ -1,0 +1,10 @@
+{
+  "language": "sanskrit",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:bb23afa959d2414f",
+  "lessonIds": [
+    "SA-C57-shaknoti",
+    "SA-C57-icchati"
+  ],
+  "tex": "sanskrit/book/chapters/ch57-able-and-willing.tex"
+}

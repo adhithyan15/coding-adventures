@@ -6,7 +6,10 @@
     "SA-PATH-30-WELCOME",
     "SA-PATH-31-SKY",
     "SA-PATH-38-EARTH",
-    "SA-PATH-45-DAYTIME"
+    "SA-PATH-45-DAYTIME",
+    "SA-PATH-59-ORIGIN",
+    "SA-PATH-60-DANDA",
+    "SA-PATH-61-SEASON"
   ],
   "omits": [
     "GREETING-PEACE"

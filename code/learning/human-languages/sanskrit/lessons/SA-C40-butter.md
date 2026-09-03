@@ -12,7 +12,7 @@ headword: "नवनीतम्"
 gloss: "fresh butter"
 romanization: "navanītam"
 concept_tag: SA-FOOD-NAVANITA
-prerequisites: [SA-C40-sugar]
+prerequisites: [SA-C40-sugar, SA-C38-stone, SA-C39-fish]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C40-FOOD-03]
 practises:
-  knowledge: [SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03]
+  knowledge: [SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C38-EARTH-03, SA-LEX-C39-ANIMAL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It is the butter of the Kṛṣṇa stories, stolen by the handful, and Hindi *n
 Butter, named as the new thing brought up out of the curd.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C38-EARTH-03, SA-LEX-C39-ANIMAL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *navanītam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śarkarā*, then *navanītam*]
+- [YOU RECALL: say *śilā*, then read **मत्स्यः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C58-REPLY-02]
 practises:
-  knowledge: [TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02]
+  knowledge: [TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C56-HOUSE-02, TE-LEX-C57-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It doubles as "too much" without changing shape, so tone and face carry the diff
 Two: a little, and a lot.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C56-HOUSE-02, TE-LEX-C57-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ekkuva*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ekkuva*, then *koñcem*, and say them as a pair]
+- [YOU RECALL: read **బుట్ట**, then say *vīpu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02] -->

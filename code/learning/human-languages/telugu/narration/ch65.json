@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "More Good Manners",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e5ff12e7d7d62c5d",
+  "sourceHash": "fnv1a64:6a538c09b320cbb3",
   "lessons": [
     {
       "id": "TE-C65-welcome",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fed2c9bad28164d6",
+      "sourceHash": "fnv1a64:ac73c719213cb07d",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *svāgataṁ*, then *paravālēdu*, and say which one answers a thank-you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ākali, then read కూడా and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ākali*, then read **కూడా** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17254728f23d3ab4",
+      "sourceHash": "fnv1a64:5abd49d6753e41a7",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *maryāda*, then *gauravaṁ*, and say which one somebody can watch you doing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read నిద్ర, then say mātramē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **నిద్ర**, then say *mātramē*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05c47e1f4162b5d9",
+      "sourceHash": "fnv1a64:eb6714d048e3cf8e",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *manavi*, then *dayacēsi*, and say which one is the whole request]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say daggu, then read అయితే and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *daggu*, then read **అయితే** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92740fe8096e093f",
+      "sourceHash": "fnv1a64:1ac600d3835b2f34",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *anumati*, then *veḷḷostānu*, and take your leave properly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read రోగం, then say taruvāta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **రోగం**, then say *taruvāta*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:712e5e6e134c55ab",
+      "sourceHash": "fnv1a64:66603adb847f3a00",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say *dhanyavādamulu* to whoever gave you the last one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ārōgyaṁ, then read ఇంకా and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ārōgyaṁ*, then read **ఇంకా** and say what it means]"
             }
           ]
         },

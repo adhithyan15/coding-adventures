@@ -56,7 +56,7 @@ table landform_extent {
     row (plateau, great_extent)          % USGS Feature Type Thesaurus
     row (plain, considerable_extent)     % USGS Feature Type Thesaurus
 
-    source "Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent ..."
+    source "Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent, have flat or nearly smooth surfaces but are often dissected by deep valleys and surmounted by high hills or mountains, and have a large part of their total surface at or near the summit level."
     locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
     trust authoritative
 

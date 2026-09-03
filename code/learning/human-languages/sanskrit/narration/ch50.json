@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Sound and Song",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8f35852ce9c016d5",
+  "sourceHash": "fnv1a64:e596b1452b7c369f",
   "lessons": [
     {
       "id": "SA-C50-sound",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40282770025b1386",
+      "sourceHash": "fnv1a64:e040cb0fdcac9944",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *aho*, then *śabdaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say siṁhaḥ, then read तर्हि",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *siṁhaḥ*, then read **तर्हि**]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6495d8a65bb56c7c",
+      "sourceHash": "fnv1a64:654a4e050ba26cbd",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śabdaḥ*, then *praśnaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read वृकः, then say yathā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **वृकः**, then say *yathā*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bd98cf49cfdbbc4",
+      "sourceHash": "fnv1a64:9723af0ae9c8326c",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *praśnaḥ*, then *vāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chāgaḥ, then read केवलम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chāgaḥ*, then read **केवलम्**]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cb2d42f741513c3",
+      "sourceHash": "fnv1a64:9a6666ff12c57012",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vāṇī*, then *gītam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read वानरः, then say muhuḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **वानरः**, then say *muhuḥ*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16038809f4117147",
+      "sourceHash": "fnv1a64:5180a95a7cc9f890",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *śabdaḥ* and *ślokaḥ* together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say haṁsaḥ, then read अहो",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *haṁsaḥ*, then read **अहो**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Tools",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e5eed3fa725a3c9",
+  "sourceHash": "fnv1a64:e254af109aea5da8",
   "lessons": [
     {
       "id": "TE-C69-axe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b91f042b56e45f6",
+      "sourceHash": "fnv1a64:56895324a01400b6",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dayacēsi*, then *goḍḍali*, in that order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gōḍa, then read శబ్దం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gōḍa*, then read **శబ్దం** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea0fc73c7a627bc4",
+      "sourceHash": "fnv1a64:496d62b9cbb6d654",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *goḍḍali*, then *rampaṁ*, and say which one leaves a straight edge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read కప్పు, then say gontu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **కప్పు**, then say *gontu*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a68f6613e70c357e",
+      "sourceHash": "fnv1a64:706568b95deadf48",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pāra*, then *rampaṁ*, and say which one you push]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gaḍapa, then read పాట and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gaḍapa*, then read **పాట** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35e0491375fbdcbc",
+      "sourceHash": "fnv1a64:800569fd78d79386",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sutti*, then *goḍḍali*, and say which one has a short handle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read మెట్టు, then say arupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **మెట్టు**, then say *arupu*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9465176812d9dee8",
+      "sourceHash": "fnv1a64:3bf3fd1f4ee7429e",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *dayacēsi* and the one you would borrow first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kiṭikī, then read కబురు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kiṭikī*, then read **కబురు** and say what it means]"
             }
           ]
         },

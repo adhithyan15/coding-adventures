@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C71-KIN-02]
 practises:
-  knowledge: [TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02]
+  knowledge: [TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C69-TOOL-02, TE-LEX-C70-CREATURE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is inherited and it is among the oldest words in the family. The neighbouring
 Two: మామ and అత్త, and they usually arrive as a pair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C69-TOOL-02, TE-LEX-C70-CREATURE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *atta*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *māma*, then *atta*, and say which one is the mother-in-law]
+- [YOU RECALL: read **రంపం**, then say *kappa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02] -->

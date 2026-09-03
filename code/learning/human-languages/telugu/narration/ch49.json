@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:023f8658d4139133",
+  "sourceHash": "fnv1a64:cb3af0f124dab150",
   "lessons": [
     {
       "id": "TE-C49-true",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:480986b33de40f0c",
+      "sourceHash": "fnv1a64:ca674a93856575f1",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nijaṁ*, then *nijamā?*, and say which one asks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kālu, then read గురువు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kālu*, then read **గురువు** and say what it means]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38863b2b35aa9738",
+      "sourceHash": "fnv1a64:b3b6ac461f34c5a9",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *cālu*, then *nijaṁ*, and say which one you would use to stop someone pouring]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read పన్ను, then say vidyārthi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **పన్ను**, then say *vidyārthi*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcf443942ac572b9",
+      "sourceHash": "fnv1a64:42c0ccdae8dc3f94",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tappakuṇḍā*, then *cālu*, and say which one is a promise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say juṭṭu, then read వైద్యుడు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *juṭṭu*, then read **వైద్యుడు** and say what it means]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8317db7c55f9fcf5",
+      "sourceHash": "fnv1a64:f02d13a8cb26bda8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -483,6 +510,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ēmō*, then *tappakuṇḍā*, and say which one commits you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read వేలు, then say raitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **వేలు**, then say *raitu*]"
             }
           ]
         },
@@ -518,7 +554,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a57e7573d3e3c12f",
+      "sourceHash": "fnv1a64:7e52748c247e66ae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -612,6 +648,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say *alāgē* as a reply to *dayacēsi kūrcō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaḍupu, then read అతిథి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaḍupu*, then read **అతిథి** and say what it means]"
             }
           ]
         },

@@ -1,7 +1,7 @@
 ---
 id: GE-C07-wochentage-1
-sequence: 225
-chapter: 7
+sequence: 227
+chapter: 10
 type: word
 headword: Montag, Dienstag, Mittwoch, Donnerstag, Freitag
 gloss: the weekdays (Monday–Friday) — Germanic gods, twins of the English days

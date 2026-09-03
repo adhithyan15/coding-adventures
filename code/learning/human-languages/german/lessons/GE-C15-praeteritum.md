@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-praeteritum
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 390
-chapter: 17
+chapter: 20
 type: grammar
 headword: -te
 gloss: the Präteritum — German's second past tense, made from one word and an ending

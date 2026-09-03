@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-053-CORRELATIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can build a two-clause Sanskrit sentence with the ya- / ta- correlative pair, on a person and on a place.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C53-yah",
+    "SA-C53-sah",
+    "SA-C53-yah-sah",
+    "SA-C53-yatra-tatra",
+    "SA-R53-correlative"
+  ]
+}

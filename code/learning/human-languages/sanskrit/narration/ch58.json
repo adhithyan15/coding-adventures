@@ -1,0 +1,451 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 58,
+  "title": "What Pleases Me",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:dad230a2705b7c98",
+  "lessons": [
+    {
+      "id": "SA-C58-mahyam",
+      "sequence": 2740,
+      "title": "मह्यम् (mahyam) — to me, for me",
+      "headword": "मह्यम्",
+      "romanization": "mahyam",
+      "gloss": "to me, for me — the dative of अहम्, and the case you already met in पुनर्दर्शनाय",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b5b171e1970ac09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say अहम् and what it means. Then recall पुनर्दर्शनाय — what did its -आय ending do?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मह्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मह्यम् (mahyam) — \"to me, for me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You have used the dative case once already, without a pronoun in it. पुनर्दर्शनाय — for seeing again, your first farewell — was a noun in the dative, and the ending said \"this is what it is for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मह्यम् (mahyam) is that same case, on अहम्. I becomes to me."
+            },
+            {
+              "kind": "speech",
+              "text": "अहम् — I, the one doing मह्यम् (mahyam) — to me, the one it is done for."
+            },
+            {
+              "kind": "speech",
+              "text": "The word looks less like अहम् than you might expect, and that is not irregularity for its own sake: अहम् and मह्यम् (mahyam) come from two different ancient stems that the language pressed into one pronoun. English does exactly the same — I and me share no letters either, for the same reason."
+            },
+            {
+              "kind": "speech",
+              "text": "On its own मह्यम् (mahyam) is not much. In the next lesson it becomes the whole point, because Sanskrit's ordinary way of saying that you like something puts you in this case and the thing you like in the subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word for the person something is done to or for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aham, then mahyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aham*, then *mahyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two is the subject, and which is the one receiving",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two is the subject, and which is the one receiving]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the chapter-4 word whose ending was the same case",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the chapter-4 word whose ending was the same case]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मह्यम् (mahyam), then say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मह्यम्**, then say what it means]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मह्यम् (mahyam) mean, and what case is it? (\"To me\", the dative.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C58-rocate",
+      "sequence": 2750,
+      "title": "रोचते (rocate) — is pleasing to",
+      "headword": "रोचते",
+      "romanization": "rocate",
+      "gloss": "is pleasing to — how Sanskrit says that you like something, with you in the dative",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c0cce52bd589b964",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say मह्यम् (mahyam), and say what case it is in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the thing you like is the subject",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sanskrit has no verb that means \"to like\" with the liker as its subject. It says something else, and once you see the shape it is easy:"
+            },
+            {
+              "kind": "speech",
+              "text": "मह्यं फलं रोचते mahyaṁ phalaṁ rocate the fruit is pleasing to me — that is, I like the fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what is doing what:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "case",
+                "job"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "piece: मह्यम् (mahyam). case: dative. job: the person who does the liking.",
+                "piece: फलम्. case: nominative. job: the thing liked — and the SUBJECT.",
+                "piece: रोचते (rocate). case: verb. job: agrees with the fruit, not with me."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The verb agrees with the thing you like. If two things pleased you, the verb would be plural, and मह्यम् (mahyam) would not change at all. The liker is never the subject of this sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "If you have met Spanish, you have met this exact shape: me gusta la fruta — the fruit pleases me. Two unrelated branches of Indo-European settled on the same answer, which is a good sign that the English way round is the odd one."
+            },
+            {
+              "kind": "speech",
+              "text": "And the root is worth a moment. रुच् means \"to shine\". The fruit shines for me is what the sentence originally said. The same root gives Latin lūx, \"light\", and lūcēre, \"to shine\" — and through Latin it gives English lucid and translucent. Liking something, in Sanskrit, is that thing lighting up for you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A way to say what you like, with the grammar the language actually uses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahyaṁ phalaṁ rocate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahyaṁ phalaṁ rocate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word the verb agrees with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word the verb agrees with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मह्यं फलं रोचते (rocate), then say what it means in ordinary English",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मह्यं फलं रोचते**, then say what it means in ordinary English]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "English makes the liker the subject; Sanskrit makes the thing liked the subject",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: English makes the liker the subject; Sanskrit makes the thing liked the subject]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In मह्यं फलं रोचते (rocate), who is the subject? (The fruit.) Say \"I like the fruit\" in Sanskrit."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R58-likes",
+      "sequence": 2760,
+      "title": "मह्यं … रोचते (mahyaṁ … rocate) — the liking frame, reviewed",
+      "headword": "मह्यं … रोचते",
+      "romanization": "mahyaṁ … rocate",
+      "gloss": "the liking frame, reviewed against can and want",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a04fe791b6f9d6a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I like the fruit\" in Sanskrit, and name the subject of the sentence you said."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three sentences about what a person is able to do, wants to do, and likes — and two of the three share a shape while the third breaks it deliberately."
+            },
+            {
+              "kind": "speech",
+              "text": "बालः पठितुम् शक्नोति — the boy can read."
+            },
+            {
+              "kind": "speech",
+              "text": "बालः पठितुम् इच्छति — the boy wants to read."
+            },
+            {
+              "kind": "speech",
+              "text": "मह्यं फलं रोचते (rocate) — I like the fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "The first two put the person in the nominative and an infinitive before the verb. The third puts the person in the dative and makes the liked thing the subject."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not an inconsistency to be smoothed over — it is the fact about Sanskrit worth carrying out of this chapter. Ability and desire belong to the person. Pleasing is something the thing does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ paṭhitum śaknoti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ paṭhitum śaknoti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ paṭhitum icchati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ paṭhitum icchati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahyaṁ phalaṁ rocate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahyaṁ phalaṁ rocate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "name which of the three puts the person in the dative",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: name which of the three puts the person in the dative]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say all three sentences, and for each one name who or what the subject is."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

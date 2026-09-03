@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C65-MANNERS-01]
 practises:
-  knowledge: [TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01]
+  knowledge: [TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01, TE-LEX-C63-HEALTH-01, TE-LEX-C64-JOIN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A house says it with the door open and a *gauravaṁ* behind it. The ముగ�
 The first thing said at a door.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01, TE-LEX-C63-HEALTH-01, TE-LEX-C64-JOIN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *svāgataṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *svāgataṁ*, then *paravālēdu*, and say which one answers a thank-you]
+- [YOU RECALL: say *ākali*, then read **కూడా** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01] -->

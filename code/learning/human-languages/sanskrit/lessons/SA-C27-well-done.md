@@ -12,7 +12,7 @@ headword: "साधु"
 gloss: "well done, good"
 romanization: "sādhu"
 concept_tag: SA-REPLY-WELL-DONE
-prerequisites: [SA-C27-so-be-it]
+prerequisites: [SA-C27-so-be-it, SA-C25-foot, SA-C26-student]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C27-REPLY-02]
 practises:
-  knowledge: [SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02]
+  knowledge: [SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C25-BODY-02, SA-LEX-C26-ROLE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its root means "to accomplish, to reach the goal", so the word praises a thing f
 A second borrowed word restored to its ordinary use.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C25-BODY-02, SA-LEX-C26-ROLE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sādhu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sādhu*, then *guruḥ*, and say what English kept of each]
+- [YOU RECALL: read **पादः**, then say *śiṣyaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02] -->

@@ -1,136 +1,206 @@
-German, chapter 35: Eyes, Ears, Mouth, Nose.
+German, chapter 35: Going, Running, Opening, Closing.
 4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-das Auge — back to the head, one part at a time.
+gehen — go, and the word German never needed for walk.
 
 Warm-up.
 [pause 2 seconds]
-You already have der Kopf and die Hand. The head has more in it than its own name — starting with what you see with.
+Four verbs that stayed put — sitting, standing, sleeping, hearing. Now a chapter that moves, opening on the verb German uses where English has two.
 
-You'll want to know: das Auge.
-das Auge — eye. Neuter.
-Das ist das Auge. — "This/That is the eye."
-The plural is die Augen — both eyes together, the form you will hear far more often than the singular.
+Sounds you'll need.
+h-silent-lengthening — the h is silent and lengthens: gehen = GAY-en, built exactly like stehen, SHTAY-en.
+ge-prefix — ge- at the front is said guh, never jee.
 
-Sounds you'll need: au.
-au is a diphthong said ow, as in English how: Auge = OW-geh.
+You'll want to know: gehen.
+gehen means "to go" — and also "to walk." German does not split those.
+ich gehe, wir gehen.
+du gehst, ihr geht.
+er geht, sie gehen.
+Ich stehe. Ich gehe.
+Two verbs cut to the same short shape, each with a silent h propping the vowel up. Say them together and you hear a matched pair: SHTAY-en, GAY-en.
 
-The word, taken apart: a root three families still share.
-Auge is Proto-Germanic augô, the direct cousin of English eye — both inherited, no loan in either direction, from Proto-Indo-European h₃ekʷ-. That root did not stay hidden in only the Germanic family: Latin turned it into oculus (giving English ocular, binoculars), and Greek into ophthalmós (giving English ophthalmology). Three branches of one family tree, and English ended up borrowing back two Latin and Greek reflexes of the very root it had already inherited natively as eye.
-Kopf was a container word that took over the everyday job. Auge needed no such replacement — it has meant "eye" the whole way down.
+The word, taken apart: two languages, two borrowed pasts.
+gehen is Proto-Germanic gāną and English go is the same inherited word, Old English gān.
+Both languages then hit the same problem: the verb had no usable past, and each went shopping. English took went, really the past of wend, and left wend stranded. German took ging and gegangen from another old verb, ganganą, "to walk" — which English still owns in gangway, gangplank, and Scots gang, "to go."
+Gegangen carries the same ge- you met on gehören: an old prefix German fastens to a past participle.
+Beyond Germanic, be honest — the deeper root of go is disputed, with no agreed list of cousins. It is the one verb here that cannot be followed back.
+
+Why it's said this way: English's walk is about cloth.
+Because walk is not an old word for travelling on foot. Old English wealcan meant "to roll, to toss," and its German cousin walken still means what it always meant: to full cloth, to work wool by trampling it.
+English promoted that trampling verb around 1200. German never did, so gehen covers both jobs.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "das Auge" — OW-geh; "die Augen" — both eyes]
+[your turn — say: "ich gehe, du gehst, er geht"]
 [pause 8 seconds for the answer]
-[your turn — say: "Das ist das Auge."]
+[your turn — say: the matched pair — "Ich stehe. Ich gehe."]
 [pause 8 seconds for the answer]
-[your turn — say: the three-family root — "Auge/eye, Latin oculus, Greek ophthalmós"]
+[your turn — say: the borrowed pasts — "go/went" beside "gehen/ging/gegangen"]
+[pause 8 seconds for the answer]
+[your turn — say: where English kept the other verb — "gangway, gangplank"]
+[pause 8 seconds for the answer]
+[your turn — say: the ge- on both — "gehören, gegangen"]
+[pause 8 seconds for the answer]
+[your turn — say: what walken does — it fulls cloth, it does not travel]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "eye" with its article, and its plural. (Das Auge, die Augen.) Is it native or borrowed? (Native — cousin of English eye.) Name one English word borrowed from the same PIE root by way of Latin or Greek. (Ocular, binoculars, or ophthalmology.)
+Give the du and er forms. (Du gehst, er geht.) Which English verb is gehen? (Go, and walk as well.) Where did went come from? (From wend.) What does German's cousin of walk mean? (To full cloth.) How far back can gehen be traced? (Not past Germanic.)
 
 
 Lesson 2 of 4.
-das Ohr — the part hören was named for.
+laufen — the verb that lies across English's line.
 
 Warm-up.
 [pause 2 seconds]
-You have the eye. You already have the verb for what the next part does — hören, "to hear" — without ever naming the part itself.
+Ich gehe covers going and walking. German has two words for run, and one of them is not only about running.
 
-You'll want to know: das Ohr.
-das Ohr — ear. Neuter.
-Das ist das Ohr. — "This/That is the ear."
-Plural: die Ohren.
+Sounds you'll need.
+diphthong-au — au is the ow of house: laufen = LOW-fen.
+diphthong-eu — äu is the oy of boy: läuft = LOYFT.
 
-Sounds you'll need: a long, plain o.
-Ohr is a single long o, said the way you'd say the letter itself in English: Ohr = OHR, no glide, no second vowel.
+You'll want to know: laufen.
+laufen means "to run" — and often "to walk."
+ich laufe, wir laufen.
+du läufst, ihr lauft.
+er läuft, sie laufen.
+The schlafen break is here too, in the same du and er slot: au brightens to äu.
+Der Hund läuft.
 
-The word, taken apart: the root inside hören.
-Ohr is Proto-Germanic auzô, the direct cousin of English ear — both from Proto-Indo-European h₂ous-. One disputed idea about hören was already flagged: some accounts break its root into "sharp" plus "ear," which would put this very word, Ohr, hiding inside the verb for using it. That analysis was marked cited but unsettled there, and it stays unsettled here — a tidy story is not the same as a confirmed one.
-What is confirmed: Ohr and ear are not two words that happen to sound alike. They are one Germanic word, unbroken since before English and German were different languages.
+Why it's said this way: the line is not where you expect.
+English draws a hard line between walk and run. German draws it elsewhere, and leaves one verb lying across it.
+gehen — on foot, unhurried.
+laufen — on foot at any speed at all.
+rennen — flat out. ich renne, du rennst, er rennt.
+So Wir laufen is "we're walking" or "we're running," and only the situation tells you which. That holds across most of Germany. In Austria it does not: there laufen means run. This book teaches the German usage.
+Der Hund rennt. — no ambiguity left.
+
+The word, taken apart: laufen is leap.
+laufen is Proto-Germanic hlaupaną, and English kept it as leap — Old English hlēapan. One more p against f, the second shift, on the pattern of helfen/help, offen/open and schlafen/sleep.
+English holds three more scraps: lope, and — through Dutch relatives of the same verb — elope and interloper, both people running off. Outside Germanic there are no secure cousins.
+Rennen is a sharper story. Germanic had rinnaną, "to run, to flow," and beside it a causative rannijaną, "to make something run." German fused the two into rennen and kept rinnen, "to trickle," alongside. English fused the same two into run — one merger, carried out separately in each language.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "das Ohr" — a plain long o; "die Ohren"]
+[your turn — say: "ich laufe, du läufst, er läuft" — LOW-fuh, LOYFST, LOYFT]
 [pause 8 seconds for the answer]
-[your turn — say: "Das ist das Ohr."]
+[your turn — say: the three speeds — "Ich gehe. Ich laufe. Ich renne."]
 [pause 8 seconds for the answer]
-[your turn — say: the maybe-link — "hören, Ohr — sharp-eared, unsettled"]
+[your turn — say: "Der Hund läuft. Der Hund rennt."]
+[pause 8 seconds for the answer]
+[your turn — say: the p/f row now four long — "helfen/help, offen/open, schlafen/sleep, laufen/leap"]
+[pause 8 seconds for the answer]
+[your turn — say: the runaways — "lope, elope, interloper"]
+[pause 8 seconds for the answer]
+[your turn — say: the doubled merger — "rinnen, rennen" beside English's one run]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "ear" with its article and plural. (Das Ohr, die Ohren.) Is it native or borrowed? (Native — cousin of English ear.) What disputed idea would put this word inside hören? (The "sharp-eared" root analysis — cited, not settled.)
+Give the du and er forms of laufen. (Du läufst, er läuft — au to äu.) Which English verb is laufen? (Leap — and it means run.) Which German verb means only "run fast"? (Rennen.) Does Wir laufen mean walking or running? (Either — except in Austria, where it is running.) Say "the dog runs." (Der Hund rennt.)
 
 
 Lesson 3 of 4.
-der Mund — where the family tree runs out.
+öffnen — open, which was always the word up.
 
 Warm-up.
 [pause 2 seconds]
-Auge and Ohr both trace cleanly to Proto-Indo-European. This one does not go nearly as far back with any certainty — and saying so honestly is the lesson.
+Ich gehe. Ich laufe. Ich renne. Now something done with the hands, and the German habit that breaks a verb in two.
 
-You'll want to know: der Mund.
-der Mund — mouth. Masculine.
-Das ist der Mund. — "This/That is the mouth."
-Plural: die Münder.
+Sounds you'll need.
+umlaut-oe — ö is the e of bed with rounded lips.
+fn-cluster — -fn- runs straight together: öffnen = UFF-nen.
 
-Sounds you'll need: a short u.
-Mund takes a short, closed u, as in English put: Mund = MOONT (final d devoiced, as in Hand).
+You'll want to know: öffnen.
+öffnen means "to open."
+ich öffne, wir öffnen.
+du öffnest, ihr öffnet.
+er öffnet, sie öffnen.
+An extra e slips in for du, er and ihr, because öffnst cannot be said. Now a noun you already have, whose d is spoken as a t:
+Ich öffne die Hand. — "I open my hand." (dee Hant).
 
-The word, taken apart: inherited, but not traced further.
-Mund is Proto-Germanic munþaz, and English mouth is that same inherited word — no loan in either direction, exactly like Ohr and ear.
-Here the two words part company. Ohr and Auge both trace on to confirmed Proto-Indo-European roots. Munþaz does not: proposed deeper connections exist, but no single one is agreed upon by standard references. Rather than hand you a tidy-sounding root that is not actually settled, this lesson stops at Proto-Germanic. An honest "we don't fully know" is worth more than an invented ancestor.
+Grammar Lens: a verb that comes apart.
+Öffnen is the neutral, slightly formal word. What people say out loud is aufmachen, and both halves are yours already: auf from auf Wiedersehen, machen from your first verbs.
+Here is the German part. In an ordinary sentence, the prefix leaves the verb and waits at the end:
+Ich mache die Hand auf. — literally "I make the hand up."
+Machen takes the slot after ich; auf goes to the back and sits there. German does this to hundreds of verbs, and calls them separable.
+
+The word, taken apart: open was never a root.
+Behind the verb is the adjective offen, "open" — which the doing verbs already put beside open as a p-to-f pair from the second shift.
+The better secret is that neither word is a root. Old English open goes back to Proto-Germanic upana-, "put up," formed on the word that is now English up — it has the shape of a past participle, though no such verb "to up" is attested. German ran the same sum and got offen, which is why offen and auf are relatives and not merely neighbours.
+So aufmachen is not a quaint compound. It is the ancient recipe for "open," rebuilt out loud — and German pulls it apart every time you use it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der Mund" — MOONT; "die Münder"]
+[your turn — say: "ich öffne, du öffnest, er öffnet" — the extra e]
 [pause 8 seconds for the answer]
-[your turn — say: "Das ist der Mund."]
+[your turn — say: "Ich öffne die Hand." — dee Hant]
 [pause 8 seconds for the answer]
-[your turn — say: the honest stop — "Mund and mouth, inherited — but no further-back root is agreed"]
+[your turn — say: the split — "Ich mache die Hand auf."]
+[pause 8 seconds for the answer]
+[your turn — say: the p/f pair — "offen/open"]
+[pause 8 seconds for the answer]
+[your turn — say: what it is made of — "auf, up, offen, open"]
+[pause 8 seconds for the answer]
+[your turn — say: the feet verbs before the hand one — "Ich gehe. Ich laufe. Ich renne."]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "mouth" with its article and plural. (Der Mund, die Münder.) Is it native or borrowed? (Native — cousin of English mouth.) Does its root trace to a confirmed PIE ancestor, the way Auge and Ohr do? (No — the trail goes cold at Proto-Germanic.)
+Give the du and er forms. (Du öffnest, er öffnet.) Which older word is offen built from? (Auf — English up.) Where does auf go in Ich mache die Hand auf? (To the end.) What is such a verb called? (Separable.) How is the d of Hand spoken? (As a t.)
 
 
 Lesson 4 of 4.
-die Nase — the face, complete.
+schließen — the second verb English lost.
 
 Warm-up.
 [pause 2 seconds]
-Auge. Ohr. Mund. One part of the face is left, and it closes what Kopf opened and never finished.
+You can open a hand two ways, ich öffne and ich mache … auf. Closing works the same, and the closing verb has the stranger history.
 
-You'll want to know: die Nase.
-die Nase — nose. Feminine.
-Das ist die Nase. — "This/That is the nose."
-Plural: die Nasen.
+Sounds you'll need.
+ie-long-ee — ie is a long ee: schließen = SHLEE-sen.
+eszett — ß is a sharp s, and it appears here because the ee before it is long.
 
-Sounds you'll need: a long a.
-Nase opens on a long, open a: Nase = NAH-zeh, with the s voiced to z between two vowels — the mirror image of Hand's final d devoicing to t.
+You'll want to know: schließen.
+schließen means "to close," and also "to lock."
+ich schließe, wir schließen.
+du schließt, ihr schließt.
+er schließt, sie schließen.
+Its everyday partner is zumachen — zu plus machen — splitting exactly as aufmachen did:
+Ich schließe die Hand. Ich mache die Hand zu.
+The vowel shortens in the past, and the moment it does the ß becomes ss: schließen, but schloss.
 
-The word, taken apart: cousins that never borrowed from each other.
-Nase is Proto-Germanic nasō, the inherited cousin of English nose — and, further back, of Latin nasus, which gave English nasal and nostril. One Proto-Indo-European root, nas-, split into Germanic and into Latin independently; German Nase and the Latin-derived word are family by descent, exactly like rot and rouge, never by borrowing.
-That gives this small face four parts with four different shapes of story: Auge and Ohr trace cleanly to confirmed PIE roots; Mund is inherited but its root before Proto-Germanic is not agreed upon; Nase traces to a root Latin also inherited, on its own branch. Four native words, four different depths of certainty — which is the honest way etymology actually looks, not four identical tidy stories.
+The word, taken apart: a verb with no English cousin.
+schließen is Proto-Germanic sleutaną, "to shut, to bolt." Dutch kept it as sluiten. English has nothing — no inherited cousin at all.
+So English closes things with borrowed and unrelated words. Close is Latin claudere, by way of French. Shut is native but a different verb entirely: Old English scyttan, to shoot a bolt across a door.
+That makes two verbs here with the same shape of story. The doing verbs gave you nehmen, which English lost to Norse take. This is the second.
+On the verb it kept, German built a household: das Schloss, a lock — and, because a castle is the locked place, a castle; der Schlüssel, a key; der Schluss, the end. English says conclusion for that last one, from claudere — the same idea out of the other family's parts.
+A link between the Germanic verb and Latin claudere has been proposed. It is not established.
+
+What you've built across these two chapters.
+Eight verbs, and a whole small morning:
+Ich schlafe. Ich höre. Ich stehe. Ich gehe. Ich laufe. Ich renne. Ich sitze. Ich mache die Hand auf. Ich mache die Hand zu.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "die Nase" — NAH-zeh; "die Nasen"]
+[your turn — say: "ich schließe, du schließt, er schließt"]
 [pause 8 seconds for the answer]
-[your turn — say: "Das ist die Nase."]
+[your turn — say: the pair — "Ich mache die Hand auf. Ich mache die Hand zu."]
 [pause 8 seconds for the answer]
-[your turn — say: the whole face — "Kopf, Auge, Ohr, Mund, Nase, Hand"]
+[your turn — say: the spelling swap — "schließen, schloss"]
 [pause 8 seconds for the answer]
-[your turn — say: the cousin — "Nase, nose, nasus — one PIE root, two families"]
+[your turn — say: the household — "Schloss, Schlüssel, Schluss"]
+[pause 8 seconds for the answer]
+[your turn — say: the two lost verbs — "nehmen, schließen; English took take and close"]
+[pause 8 seconds for the answer]
+[your turn — say: the four p/f pairs — "helfen/help, offen/open, schlafen/sleep, laufen/leap"]
+[pause 8 seconds for the answer]
+[your turn — say: the whole morning — "Ich schlafe. Ich höre. Ich stehe. Ich gehe. Ich laufe. Ich renne. Ich sitze."]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "nose" with its article and plural. (Die Nase, die Nasen.) Which Latin word is its distant cousin, and what English word does that Latin word give? (Nasus, giving nasal.) Name all five face and head words from Chapters 17 and 30. (Kopf, Auge, Ohr, Mund, Nase.) Which of the four words of this chapter does not trace past Proto-Germanic? (Mund.)
+Give the du and er forms. (Du schließt, er schließt.) Which English verb is the cousin of schließen? (None — English lost it.) Where did close and shut come from? (Latin, and from shoot.) Name three words German hung on the verb. (Schloss, Schlüssel, Schluss.) Close your hand, both ways, then run the eight verbs.

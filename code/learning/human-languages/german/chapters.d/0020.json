@@ -1,24 +1,26 @@
 {
   "chapter": 20,
-  "title": "Three Verbs Under One Roof",
-  "label": "ch:ge-sein-drei-wurzeln",
-  "canDo": "I can put the German verb for “to be” into the past, and say why its forms look like three unrelated words — because they are.",
+  "title": "The Simple Past",
+  "label": "ch:ge-praeteritum",
+  "canDo": "I can recognise the one-word past German uses in writing, produce the handful of its forms that people actually say out loud, and explain why the rest of it retreated.",
   "spineNodes": [
     "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C16-war-practice",
+    "lesson": "GE-C15-praeteritum-practice",
     "kind": "task",
-    "summary": "The past of sein is the tidy half of the verb: one stem war-, ordinary endings, and ich war identical to er war. The chapter teaches those four cells one at a time and then answers the question the present tense raised — bin, ist and war come from three different Proto-Indo-European verbs, which is called suppletion, and it survives because the words you never have to guess at are the words analogy never reaches.",
+    "summary": "German's second past means exactly what the first one means, so this chapter separates the two by register rather than by tense: produce the Perfekt, recognise the Präteritum, and learn the short list of forms that ignore the rule. It ends with the reason the tense retreated at all — the same change ran through French and Italian over the same centuries, because their speakers are neighbours.",
     "assesses": [
-      "GE-GRAMMAR-SEIN-ICH-WAR-01",
-      "GE-GRAMMAR-SEIN-DU-WARST-01",
-      "GE-GRAMMAR-SEIN-ER-WAR-01",
-      "GE-GRAMMAR-SEIN-WIR-WAREN-01",
-      "GE-ETYMON-SEIN-DREI-WURZELN-01",
-      "GE-GRAMMAR-SUPPLETION-01",
-      "GE-GRAMMAR-HAEUFIG-UNREGELMAESSIG-01"
+      "GE-GRAMMAR-PRAETERITUM-TE-01",
+      "GE-LEX-SAGTE-01",
+      "GE-LEX-MACHTE-01",
+      "GE-ETYMON-DENTALES-PRAETERITUM-01",
+      "GE-LEX-HATTE-01",
+      "GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01",
+      "GE-LEX-KONNTE-01",
+      "GE-GRAMMAR-PRAETERITUM-GESPROCHEN-01",
+      "GE-ETYMON-AREALE-VERAENDERUNG-01"
     ],
-    "note": "Split out of the hand-written chapter 16, which carried the present, the past and the sein-perfect in one chapter and could not hold them inside maxNewAtomsPerChapter at one atom per grammar cell. The payoff claims all seven of this chapter's atoms: the practice lesson drills the four past cells and then asks for the three roots, the name suppletion, and the reason the verb was never tidied up."
+    "note": "Chapter 17 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces; the Präteritum-against-Perfekt table in the practice lesson pairs forms that have each had a lesson, and its first column is a meaning rather than a person, so it is a comparison rather than a paradigm."
   }
 }

@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "VERB-PAST"
+  "segments": [
+    "SA-PATH-56-PAST"
   ],
+  "omits": [],
   "relocates": {}
 }

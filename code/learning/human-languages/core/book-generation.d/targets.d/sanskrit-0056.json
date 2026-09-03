@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 56,
+  "output": "sanskrit/book/chapters/ch56-what-happened-yesterday.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

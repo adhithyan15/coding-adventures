@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C06-drei",
+    "language": "german",
+    "chapter": 6,
+    "sequence": 213,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e634533738b62ec"
+  },
+  "findings": []
+}

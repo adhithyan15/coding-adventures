@@ -1,0 +1,15 @@
+{
+  "id": "GE-EXT-015-D-NEUN-ZEHN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can count all the way to ten in German, and say which words a language keeps and which it buys.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C06-neun",
+    "GE-C06-zehn",
+    "GE-C06-zahlen-6-10",
+    "GE-C06-monate-latein",
+    "GE-C06-practice"
+  ]
+}

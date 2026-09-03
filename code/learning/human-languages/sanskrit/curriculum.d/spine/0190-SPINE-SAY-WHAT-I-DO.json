@@ -7,10 +7,11 @@
     "SA-PATH-012",
     "SA-PATH-012-C",
     "SA-PATH-21-VERBS",
-    "SA-PATH-22-VERBS"
+    "SA-PATH-22-VERBS",
+    "SA-PATH-54-ITI",
+    "SA-PATH-55-NON-FINITE"
   ],
   "omits": [
-    "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
     "VERB-SAY",
     "VERB-SPEAK",

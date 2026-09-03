@@ -1,24 +1,22 @@
 {
   "language": "german",
   "chapter": 17,
-  "sourceHash": "fnv1a64:1267f9153c0a7ce8",
+  "sourceHash": "fnv1a64:890a7125ba9de0da",
   "lessonIds": [
-    "GE-C15-praeteritum",
-    "GE-C15-sagte",
-    "GE-C15-machte",
-    "GE-C15-dentales-praeteritum",
-    "GE-C15-hatte",
-    "GE-C15-register",
-    "GE-C15-konnte",
-    "GE-C15-hochfrequent",
-    "GE-C15-praeteritum-map",
-    "GE-C15-praeteritum-practice"
+    "GE-C14-haben",
+    "GE-C14-hab-stamm",
+    "GE-C14-du-hast",
+    "GE-C14-er-hat",
+    "GE-C14-b-verlust",
+    "GE-C14-einen",
+    "GE-C14-habere",
+    "GE-C14-practice"
   ],
-  "voiceLessons": 10,
-  "drivablePrefix": 10,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch17.txt",
   "json": "german/narration/ch17.json",
-  "textHash": "fnv1a64:488441f39ef1489e",
-  "jsonHash": "fnv1a64:a841db56e1eeb44c",
+  "textHash": "fnv1a64:8c5422a626f06806",
+  "jsonHash": "fnv1a64:3053ad85d888ebe2",
   "findings": []
 }

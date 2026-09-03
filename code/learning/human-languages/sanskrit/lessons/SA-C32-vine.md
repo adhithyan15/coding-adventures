@@ -12,7 +12,7 @@ headword: "लता"
 gloss: "a creeper, a climbing plant"
 romanization: "latā"
 concept_tag: SA-TREE-LATA
-prerequisites: [SA-C32-grass]
+prerequisites: [SA-C32-grass, SA-C30-garland, SA-C31-wind]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C32-TREE-04]
 practises:
-  knowledge: [SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04]
+  knowledge: [SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04, SA-LEX-C30-WELCOME-04, SA-LEX-C31-SKY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Sanskrit poetry pairs it with **तरुः** so often that the two almost arri
 A fourth growing thing, and a name half of India answers to.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04, SA-LEX-C30-WELCOME-04, SA-LEX-C31-SKY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *latā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *taruḥ*, then *latā*, in the order they grow]
+- [YOU RECALL: read **माला**, then say *vāyuḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04] -->

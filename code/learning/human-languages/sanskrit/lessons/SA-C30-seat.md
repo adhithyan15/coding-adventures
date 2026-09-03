@@ -12,7 +12,7 @@ headword: "आसनम्"
 gloss: "a seat"
 romanization: "āsanam"
 concept_tag: SA-WELCOME-SEAT
-prerequisites: [SA-C30-door]
+prerequisites: [SA-C30-door, SA-C28-day-after, SA-C29-pardon]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C30-WELCOME-02]
 practises:
-  knowledge: [SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02]
+  knowledge: [SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C28-LEAVE-02, SA-LEX-C29-COURTESY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English borrowed the word without the furniture: an *āsana* in yoga is a postur
 The second step of a welcome, and a third borrowed word restored.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C28-LEAVE-02, SA-LEX-C29-COURTESY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āsanam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dvāram*, then *āsanam*, in the order a guest meets them]
+- [YOU RECALL: read **परश्वः**, then say *kṣamyatām*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02] -->

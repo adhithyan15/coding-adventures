@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Words That Join an Answer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a642c62262ecb3f2",
+  "sourceHash": "fnv1a64:21c1b53c6e447921",
   "lessons": [
     {
       "id": "TE-C64-also",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a8704e84ed82550",
+      "sourceHash": "fnv1a64:f31438f9fc845892",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nēnu kūḍā*, then *perugu kūḍā*, and say what each one adds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dāraṁ, then read ఆకలి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dāraṁ*, then read **ఆకలి** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4d2b22f26414abb",
+      "sourceHash": "fnv1a64:503c03ca0755c925",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *perugu kūḍā*, then *perugu mātramē*, and say which one takes more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read సూది, then say nidra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **సూది**, then say *nidra*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a9790589e8e54b7",
+      "sourceHash": "fnv1a64:196c41222bed9841",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sarē*, then *ayitē*, and put the two together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cīpuru, then read దగ్గు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cīpuru*, then read **దగ్గు** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:559905e942120f28",
+      "sourceHash": "fnv1a64:de21acdfe690e692",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bhōjanaṁ taruvāta*, then just *taruvāta*, and say how the two differ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read గొడుగు, then say rōgaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **గొడుగు**, then say *rōgaṁ*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d0a86327374a7c9",
+      "sourceHash": "fnv1a64:8a1793ae9ff2928f",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then answer *antē?* with *iṅkā undi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say addaṁ, then read ఆరోగ్యం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *addaṁ*, then read **ఆరోగ్యం** and say what it means]"
             }
           ]
         },

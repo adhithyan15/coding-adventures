@@ -12,7 +12,7 @@ headword: "तृणम्"
 gloss: "grass, a blade of grass"
 romanization: "tṛṇam"
 concept_tag: SA-TREE-TRINA
-prerequisites: [SA-C32-leaf]
+prerequisites: [SA-C32-leaf, SA-C30-flower, SA-C31-star]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C32-TREE-03]
 practises:
-  knowledge: [SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03]
+  knowledge: [SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C30-WELCOME-03, SA-LEX-C31-SKY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English *thorn* is the same word: Old English *thorn*, Gothic *thaurnus*, from a
 A third growing thing, and the reason grass and a thorn are the same word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C30-WELCOME-03, SA-LEX-C31-SKY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tṛṇam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *patram*, then *tṛṇam*]
+- [YOU RECALL: say *puṣpam*, then read **तारा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03] -->

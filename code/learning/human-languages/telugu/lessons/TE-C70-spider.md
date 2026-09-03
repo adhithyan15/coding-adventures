@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C70-CREATURE-05]
 practises:
-  knowledge: [TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05]
+  knowledge: [TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05, TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Ask whether one has been swept out and the answer is a plain అవును or 
 Five: ఎలుక, కప్ప, దోమ, ఉడుత, సాలీడు. Everything small enough to share a house with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05, TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sālīḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *avunu* for the ones in your house and *lēdu* for the rest]
+- [YOU RECALL: say *kaburu*, then read **కర్ర** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05] -->

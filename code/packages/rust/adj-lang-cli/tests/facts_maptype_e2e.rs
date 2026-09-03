@@ -95,3 +95,31 @@ fn map_type_abstains_honestly_on_an_untabled_type() {
         "weather maps are a real category the source covers, but its own section never states a single complete defining sentence, not one of the three tabled here -- honest abstention, never invented: {out}"
     );
 }
+
+const MAP_TYPE_PIN: &str = r#""bindings":{"D":"shows_boundaries_between_countries_states_counties_and_other_political_units"},"citations":[{"source":"Political Maps show boundaries between countries, states, counties, and other political units.","locator":"https://geology.com/maps/types-of-maps/","trust":"consensus""#;
+
+#[test]
+fn map_type_political_citation_keeps_the_pages_capital_m() {
+    let dir = scratch("reground");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"map-type.adj\"\n? map_type(political, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The value shipped "Political maps" where the page prints "Political
+    // Maps" -- ONE CHARACTER OF CASE. This is the case I called a PARAPHRASE
+    // for three installments before review fetched the page. No quote-keyed
+    // screen can see it: the quotes are all correct.
+    //
+    // THIS QUERY IS `political`, NOT the companion's first query (`physical`).
+    // The envelope IS the political sentence, so pinning `physical` would bind
+    // an answer about landscape features to a citation about boundaries.
+    assert!(
+        out.contains(MAP_TYPE_PIN),
+        "the political citation matches its page: {out}"
+    );
+}

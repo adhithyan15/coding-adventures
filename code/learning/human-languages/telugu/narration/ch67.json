@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The House Itself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:65df7d9b6d34d095",
+  "sourceHash": "fnv1a64:8d235183a6758786",
   "lessons": [
     {
       "id": "TE-C67-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4bd33f270598663",
+      "sourceHash": "fnv1a64:641f7bd0e22415f4",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gōḍa*, then *namaskāram*, as though greeting somebody at a freshly painted one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say svāgataṁ, then read పొలం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *svāgataṁ*, then read **పొలం** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c470610f67ec1a59",
+      "sourceHash": "fnv1a64:22c41eb7f539fedc",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gōḍa*, then *kappu*, and say which one holds up the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read మర్యాద, then say vari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **మర్యాద**, then say *vari*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0530295990a9ae23",
+      "sourceHash": "fnv1a64:4a5ff76c5fc504c4",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gaḍapa*, then *muggu*, and say which one is drawn beside the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say manavi, then read గడ్డి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *manavi*, then read **గడ్డి** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea2062c887d5f51f",
+      "sourceHash": "fnv1a64:5f71bf02a0ad92be",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *meṭṭu*, then *gaḍapa*, in the order your feet meet them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read అనుమతి, then say kallaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **అనుమతి**, then say *kallaṁ*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27e3c7db1c3a6c31",
+      "sourceHash": "fnv1a64:fa352d74405b0f7c",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *namaskāram* at the last one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nammakaṁ, then read పంట and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nammakaṁ*, then read **పంట** and say what it means]"
             }
           ]
         },

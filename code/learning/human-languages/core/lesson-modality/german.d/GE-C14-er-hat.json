@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C14-er-hat",
     "language": "german",
-    "chapter": 14,
+    "chapter": 17,
     "sequence": 298,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c0c8ac19a96b0f12"
+    "sourceHash": "fnv1a64:f447df90cb405f35"
   },
   "findings": []
 }

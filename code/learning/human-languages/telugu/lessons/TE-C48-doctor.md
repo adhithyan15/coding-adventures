@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C48-ROLE-03]
 practises:
-  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03]
+  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C46-ASK-03, TE-LEX-C47-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The ending **-ుడు** is not Sanskrit's but Telugu's own, marking a masculin
 Three roles, and two of them share a root.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C46-ASK-03, TE-LEX-C47-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vaidyuḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vidyārthi*, then *vaidyuḍu*, and name the syllable they share]
+- [YOU RECALL: say *dīpaṁ*, then read **జుట్టు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03] -->

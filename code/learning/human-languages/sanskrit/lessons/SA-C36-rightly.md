@@ -12,7 +12,7 @@ headword: "सम्यक्"
 gloss: "rightly, properly, exactly so"
 romanization: "samyak"
 concept_tag: SA-REPLY-SAMYAK
-prerequisites: [SA-C36-slowly]
+prerequisites: [SA-C36-slowly, SA-C34-body, SA-C35-bed]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C36-REPLY-05]
 practises:
-  knowledge: [SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05]
+  knowledge: [SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05, SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It is *sam*, "together" — the *sam-* inside **समुद्रः** and **�
 Five short replies, and the difference between praising and confirming.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05, SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *samyak*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *sādhu* and *samyak* one after the other]
+- [YOU RECALL: say *dehaḥ*, then read **शय्या**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05] -->

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-dentales-praeteritum",
     "language": "german",
-    "chapter": 17,
+    "chapter": 20,
     "sequence": 405,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:973de4153c1aa9c5"
+    "sourceHash": "fnv1a64:75ff280dd16c39fb"
   },
   "findings": []
 }

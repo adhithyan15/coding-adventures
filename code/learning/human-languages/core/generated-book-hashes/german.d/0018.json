@@ -1,17 +1,16 @@
 {
   "language": "german",
   "chapter": 18,
-  "sourceHash": "fnv1a64:4c13c32fbf68a80f",
+  "sourceHash": "fnv1a64:8c9967a6f1e97e0f",
   "lessonIds": [
-    "GE-C16-sein",
-    "GE-C16-ich-bin",
-    "GE-C16-du-bist",
-    "GE-C16-er-ist",
-    "GE-C16-wir-sind",
-    "GE-C16-ihr-seid",
-    "GE-C16-sie-sind",
-    "GE-C16-muede",
-    "GE-C16-praesens-practice"
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix",
+    "GE-C15-partizip-practice"
   ],
-  "tex": "german/book/chapters/ch18-sein.tex"
+  "tex": "german/book/chapters/ch18-partizip.tex"
 }

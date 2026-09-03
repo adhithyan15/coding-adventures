@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-ge-praefix",
     "language": "german",
-    "chapter": 15,
+    "chapter": 18,
     "sequence": 335,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f689310224690187"
+    "sourceHash": "fnv1a64:bbd39383d80a6f0c"
   },
   "findings": []
 }

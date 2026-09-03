@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "And, But, Or",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cb855651ef3cd1f7",
+  "sourceHash": "fnv1a64:a0cb2f4e5aba79ad",
   "lessons": [
     {
       "id": "TE-C74-and",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d48e09dbd233f0ba",
+      "sourceHash": "fnv1a64:ea93eff0f8c870a2",
       "notice": null,
       "blocks": [
         {
@@ -115,6 +115,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *dayacēsi*, then say *mariyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṅgaḍi, then read తీపి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṅgaḍi*, then read **తీపి** and say what it means]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cff73761ef58778e",
+      "sourceHash": "fnv1a64:b3764833a570bc12",
       "notice": null,
       "blocks": [
         {
@@ -246,6 +255,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *kṣamin̄caṇḍi*, then say *kānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read డబ్బు, then say pulupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **డబ్బు**, then say *pulupu*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14d7fecc2feb727f",
+      "sourceHash": "fnv1a64:97a8d6e37642c23b",
       "notice": null,
       "blocks": [
         {
@@ -377,6 +395,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *anukō*, then say *lēdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dhara, then read చేదు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dhara*, then read **చేదు** and say what it means]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c13798aba103875",
+      "sourceHash": "fnv1a64:4299543f32739641",
       "notice": null,
       "blocks": [
         {
@@ -508,6 +535,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *aḍugu*, then say *enduku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read తూకం, then say kāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **తూకం**, then say *kāraṁ*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1f992c7ba3a38982",
+      "sourceHash": "fnv1a64:42f0833f7fc14bec",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -657,6 +693,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: say *ganṭa*, then say *endukaṇṭē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bēraṁ, then read వగరు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bēraṁ*, then read **వగరు** and say what it means]"
             }
           ]
         },

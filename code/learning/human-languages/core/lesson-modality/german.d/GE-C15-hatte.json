@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-hatte",
     "language": "german",
-    "chapter": 17,
+    "chapter": 20,
     "sequence": 410,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:887df942e5043258"
+    "sourceHash": "fnv1a64:931b8dab9bf564f2"
   },
   "findings": []
 }

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C74-LINK-01]
 practises:
-  knowledge: [TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C08-DAYACHESI-01, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04, TE-ETYMON-C08-DAYACHESI-02]
+  knowledge: [TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C08-DAYACHESI-01, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04, TE-ETYMON-C08-DAYACHESI-02, TE-LEX-C72-MARKET-01, TE-LEX-C73-TASTE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ Put it between two nouns you already have: **నీళ్ళు మరియు 
 The first way you have had to put two things in one sentence.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C08-DAYACHESI-01, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04, TE-ETYMON-C08-DAYACHESI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C08-DAYACHESI-01, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04, TE-ETYMON-C08-DAYACHESI-02, TE-LEX-C72-MARKET-01, TE-LEX-C73-TASTE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mariyu*]
 - [YOU SAY: *mariyu*, once more]
 - [YOU SAY: join two words you know with *mariyu*]
 - [YOU RECALL: say *dayacēsi*, then say *mariyu*]
+- [YOU RECALL: say *aṅgaḍi*, then read **తీపి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C08-DAYACHESI-01, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04, TE-ETYMON-C08-DAYACHESI-02] -->

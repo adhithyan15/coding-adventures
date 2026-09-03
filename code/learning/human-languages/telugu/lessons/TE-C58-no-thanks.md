@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C58-REPLY-04]
 practises:
-  knowledge: [TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04]
+  knowledge: [TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04, TE-LEX-C56-HOUSE-04, TE-LEX-C57-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It softens the moment you put కొంచెం's cousin in front of it, or the
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04, TE-LEX-C56-HOUSE-04, TE-LEX-C57-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vaddu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vaddu*, then *vaddaṇḍi*, and say which one you would use with a stranger]
+- [YOU RECALL: read **గిన్నె**, then say *gōru*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04] -->

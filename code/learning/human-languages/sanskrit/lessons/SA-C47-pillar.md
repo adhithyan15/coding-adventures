@@ -12,7 +12,7 @@ headword: "स्तम्भः"
 gloss: "a pillar"
 romanization: "stambhaḥ"
 concept_tag: SA-DWELL-STAMBHA
-prerequisites: [SA-C47-stair]
+prerequisites: [SA-C47-stair, SA-C45-month, SA-C46-shade]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C47-DWELL-04]
 practises:
-  knowledge: [SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04]
+  knowledge: [SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04, SA-LEX-C45-DAYTIME-04, SA-LEX-C46-LIGHT-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ English *staff* and *stamp* sit near it, and the picture under all three is one 
 What holds the roof up, beside what closes the room in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04, SA-LEX-C45-DAYTIME-04, SA-LEX-C46-LIGHT-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *stambhaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sopānam*, then *stambhaḥ*]
+- [YOU RECALL: read **मासः**, then say *chāyā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04] -->

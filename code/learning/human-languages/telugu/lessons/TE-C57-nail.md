@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C57-BODY-04]
 practises:
-  knowledge: [TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04]
+  knowledge: [TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04, TE-LEX-C55-ROAD-04, TE-LEX-C56-HOUSE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It goes on the end of వేలు, which you already have. వేలి గో�
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04, TE-LEX-C55-ROAD-04, TE-LEX-C56-HOUSE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gōru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gōru*, then *vēlu*, and say which one grows out of the other]
+- [YOU RECALL: read **గ్రామం**, then say *ginne*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04] -->

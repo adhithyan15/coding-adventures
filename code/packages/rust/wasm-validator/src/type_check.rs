@@ -341,6 +341,21 @@ fn is_assignable(actual: ValueType, expected: ValueType, module: TypeContext) ->
         || matches!((actual, expected), (ValueType::NonNullArrayRef(_), ValueType::Eqref))
         || matches!((actual, expected), (ValueType::ArrayRefAny, ValueType::Eqref))
         || matches!((actual, expected), (ValueType::ArrayRefAny, ValueType::Anyref))
+        // W39 slice 2 (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`):
+        // `I31ref`'s own missing `<: Eqref`/`<: Anyref` edges -- explicitly
+        // flagged as a known, pre-existing gap by this function's own W37
+        // doc comment above ("no table declaration in this spec's corpus
+        // cluster needs it"), left unfixed there since nothing in W37's own
+        // scope exercised it. `i31.wast`'s own `$anyref_global_of_i31ref`
+        // module (`(global $c anyref (ref.i31 (i32.const 1234)))`) does
+        // exercise it directly, and only became REACHABLE once this slice's
+        // own `wasm-wast-parser` fix let `(ref.cast i31ref ...)` parse at
+        // all (that module's two globals are read back via exactly that
+        // instruction) -- so this edge is now a real, corpus-verified
+        // requirement, completing the `i31 <: eq <: any` hop this
+        // function's own comment already documents as the real spec rule.
+        || matches!((actual, expected), (ValueType::I31ref, ValueType::Eqref))
+        || matches!((actual, expected), (ValueType::I31ref, ValueType::Anyref))
 }
 
 /// Require an already-popped [`StackType`] to be assignable to `expected`

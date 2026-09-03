@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 60,
+  "output": "sanskrit/book/chapters/ch60-the-stick-at-the-end.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

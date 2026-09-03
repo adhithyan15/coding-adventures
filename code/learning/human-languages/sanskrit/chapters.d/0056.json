@@ -1,0 +1,18 @@
+{
+  "chapter": 56,
+  "title": "What Happened Yesterday",
+  "label": "ch:sa-what-happened-yesterday",
+  "canDo": "I can put a Sanskrit verb into the past by prefixing the augment and shortening the ending, and finally say what happened yesterday.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "SA-R56-past",
+    "kind": "production",
+    "summary": "Complete SA-R56-past and build the past of a verb nobody has shown you in the past.",
+    "assesses": [
+      "SA-GRAMMAR-PAST-AUGMENT-01",
+      "SA-GRAMMAR-PAST-PATTERN-01"
+    ]
+  }
+}

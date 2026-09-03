@@ -27,7 +27,18 @@ it("pins Sanskrit lesson-content budgets", () =>
     // The three content totals below are again unchanged: the split halves, the
     // migrated lessons and the new recap declare no new idioms, senses or culture
     // claims, so nothing was smuggled in under cover of the migration.
-    lessons: 304,
+    //
+    // 304 -> 335: the clause-joining and past-tense tranche, chapters 52-61.
+    // Thirty-one lessons: four joining particles and a review; the ya- / ta-
+    // correlative; iti and the clause it makes into an object; the -tva gerund
+    // and the -tum infinitive; the imperfect; can and want; the dative-experiencer
+    // liking frame; the origin words; the danda; and rtu with the independent ऋ
+    // it finally gives a headword to. Re-measured against the tree.
+    //
+    // The three content totals below are unchanged, and that is the check worth
+    // making here: a grammar tranche should declare no new idioms, senses or
+    // culture claims, and this one declares none.
+    lessons: 335,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

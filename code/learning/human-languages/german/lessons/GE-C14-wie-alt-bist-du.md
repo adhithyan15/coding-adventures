@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C14-wie-alt-bist-du
 spine_node: SPINE-TIME-OF-DAY
 sequence: 494
-chapter: 19
+chapter: 22
 type: phrase
 headword: Wie alt bist du?
 gloss: how old are you — word for word the English question, built from four words you own

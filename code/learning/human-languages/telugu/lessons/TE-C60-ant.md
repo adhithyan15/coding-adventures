@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C60-ANIMAL-04]
 practises:
-  knowledge: [TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04]
+  knowledge: [TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04, TE-LEX-C58-REPLY-04, TE-LEX-C59-WEATHER-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A line of చీమలు across a floor usually ends at a పండు somebody
 Four: the biggest and the smallest so far.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04, TE-LEX-C58-REPLY-04, TE-LEX-C59-WEATHER-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cīma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cīma*, then *gēde*, and say which one is easier to miss]
+- [YOU RECALL: read **వద్దు**, then say *burada*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04] -->

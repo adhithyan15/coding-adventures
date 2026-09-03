@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C24-schreiben
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 740
-chapter: 29
+chapter: 32
 type: word
 headword: schreiben
 gloss: to write — the one verb in this chapter German did not inherit but borrowed, from Latin scribere

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C65-MANNERS-04]
 practises:
-  knowledge: [TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04]
+  knowledge: [TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04, TE-LEX-C63-HEALTH-04, TE-LEX-C64-JOIN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Asking leave before you go is where it is most used, and it sits naturally in fr
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04, TE-LEX-C63-HEALTH-04, TE-LEX-C64-JOIN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *anumati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anumati*, then *veḷḷostānu*, and take your leave properly]
+- [YOU RECALL: read **రోగం**, then say *taruvāta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04] -->

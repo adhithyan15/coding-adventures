@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C53-SKY-02]
 practises:
-  knowledge: [TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02]
+  knowledge: [TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C51-COURTESY-02, TE-LEX-C52-WELCOME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ So one language keeps two suns: పొద్దు for the light, సూర్�
 Two: the sky, and the brightest thing in it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C51-COURTESY-02, TE-LEX-C52-WELCOME-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūryuḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūryuḍu*, then *poddu*, and say which one of them can be prayed to]
+- [YOU RECALL: read **మేలు**, then say *kurcī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02] -->

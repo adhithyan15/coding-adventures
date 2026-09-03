@@ -1,206 +1,189 @@
-German, chapter 32: Going, Running, Opening, Closing.
+German, chapter 32: Verbs of the Mind.
 4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-gehen — go, and the word German never needed for walk.
+denken — the verb that was inside danke all along.
 
 Warm-up.
 [pause 2 seconds]
-Four verbs that stayed put — sitting, standing, sleeping, hearing. Now a chapter that moves, opening on the verb German uses where English has two.
+You learned early on that danke is built on a verb meaning "to think." Here is that verb, with its own forms at last.
 
 Sounds you'll need.
-h-silent-lengthening — the h is silent and lengthens: gehen = GAY-en, built exactly like stehen, SHTAY-en.
-ge-prefix — ge- at the front is said guh, never jee.
+vowel-e-german — a short, open e.
+ng-cluster — n before k is the ng of sing: denken = DENG-ken.
 
-You'll want to know: gehen.
-gehen means "to go" — and also "to walk." German does not split those.
-ich gehe, wir gehen.
-du gehst, ihr geht.
-er geht, sie gehen.
-Ich stehe. Ich gehe.
-Two verbs cut to the same short shape, each with a silent h propping the vowel up. Say them together and you hear a matched pair: SHTAY-en, GAY-en.
+You'll want to know: denken.
+denken means "to think," with the same audible endings you drilled on wohnen, machen and lernen:
+ich denke — I think, wir denken — we think.
+du denkst — you think, ihr denkt — you all think.
+er denkt — he thinks, sie denken — they think.
+Ich denke, also bin ich. — "I think, therefore I am."
+It also carries the weather straight into a new sentence:
+Ich denke, es ist kalt. — "I think it is cold."
 
-The word, taken apart: two languages, two borrowed pasts.
-gehen is Proto-Germanic gāną and English go is the same inherited word, Old English gān.
-Both languages then hit the same problem: the verb had no usable past, and each went shopping. English took went, really the past of wend, and left wend stranded. German took ging and gegangen from another old verb, ganganą, "to walk" — which English still owns in gangway, gangplank, and Scots gang, "to go."
-Gegangen carries the same ge- you met on gehören: an old prefix German fastens to a past participle.
-Beyond Germanic, be honest — the deeper root of go is disputed, with no agreed list of cousins. It is the one verb here that cannot be followed back.
+The word, taken apart: think, thank, and one shifted consonant.
+denken is Proto-Germanic þankijaną. English think is that same inherited word — a loan in neither direction.
+One consonant separates them, and you have been taught how to read it. With Haupt beside head you met Grimm's law, which turned Proto-Indo-European k into Germanic h. The same law turned PIE t into Germanic þ, the th sound. English kept it and spells it th: think. German later softened it to d.
+Germanic þankō meant both "a thought" and "gratitude" — hence German Dank and Gedanke, and English thank beside think. To thank was to hold someone in thought. German also kept a sibling verb, dünken, "to seem"; English had that one too and let it collapse into think.
 
-Why it's said this way: English's walk is about cloth.
-Because walk is not an old word for travelling on foot. Old English wealcan meant "to roll, to toss," and its German cousin walken still means what it always meant: to full cloth, to work wool by trampling it.
-English promoted that trampling verb around 1200. German never did, so gehen covers both jobs.
+Grammar Lens: also does not mean "also".
+In Ich denke, also bin ich, the word also means "therefore." English also is eall swā, "all so," meaning likewise; German also is al + so, meaning thus. Same bricks, different building. A German saying also is drawing a conclusion, not adding to a list.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich gehe, du gehst, er geht"]
+[your turn — say: "ich denke, du denkst, er denkt"]
 [pause 8 seconds for the answer]
-[your turn — say: the matched pair — "Ich stehe. Ich gehe."]
+[your turn — say: "wir denken, ihr denkt, sie denken"]
 [pause 8 seconds for the answer]
-[your turn — say: the borrowed pasts — "go/went" beside "gehen/ging/gegangen"]
+[your turn — say: "Ich denke, also bin ich."]
 [pause 8 seconds for the answer]
-[your turn — say: where English kept the other verb — "gangway, gangplank"]
+[your turn — say: "Ich denke, es ist kalt. Das Wetter ist gut."]
 [pause 8 seconds for the answer]
-[your turn — say: the ge- on both — "gehören, gegangen"]
+[your turn — say: the family — "denken, danke, Dank, Gedanke"]
 [pause 8 seconds for the answer]
-[your turn — say: what walken does — it fulls cloth, it does not travel]
+[your turn — say: the shift — PIE t, Germanic th, German d: think, denken]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the du and er forms. (Du gehst, er geht.) Which English verb is gehen? (Go, and walk as well.) Where did went come from? (From wend.) What does German's cousin of walk mean? (To full cloth.) How far back can gehen be traced? (Not past Germanic.)
+Which chapter-3 word is built on denken? (Danke.) Is English think a borrowing? (No — both inherited þankijaną.) Which law turned PIE t into the Germanic th German made a d? (Grimm's law, as in Haupt and head.) What does German also mean? (Therefore.)
 
 
 Lesson 2 of 4.
-laufen — the verb that lies across English's line.
+verstehen — standing around a thing until you see it.
 
 Warm-up.
 [pause 2 seconds]
-Ich gehe covers going and walking. German has two words for run, and one of them is not only about running.
+You can say ich denke. Thinking happens in the Kopf; this is the verb for when it lands — and English built its own word from the same picture, separately.
 
 Sounds you'll need.
-diphthong-au — au is the ow of house: laufen = LOW-fen.
-diphthong-eu — äu is the oy of boy: läuft = LOYFT.
+v-as-f — German v is said f, so ver- is fair-.
+h-silent-lengthening — the h is silent; it marks the vowel before it as long. verstehen = fair-SHTAY-en.
 
-You'll want to know: laufen.
-laufen means "to run" — and often "to walk."
-ich laufe, wir laufen.
-du läufst, ihr lauft.
-er läuft, sie laufen.
-The schlafen break is here too, in the same du and er slot: au brightens to äu.
-Der Hund läuft.
+You'll want to know: verstehen.
+verstehen means "to understand," with the ordinary endings:
+ich verstehe, wir verstehen.
+du verstehst, ihr versteht.
+er versteht, sie verstehen.
+Ich verstehe. — said on its own, constantly. Ich verstehe Deutsch. — "I understand German."
 
-Why it's said this way: the line is not where you expect.
-English draws a hard line between walk and run. German draws it elsewhere, and leaves one verb lying across it.
-gehen — on foot, unhurried.
-laufen — on foot at any speed at all.
-rennen — flat out. ich renne, du rennst, er rennt.
-So Wir laufen is "we're walking" or "we're running," and only the situation tells you which. That holds across most of Germany. In Austria it does not: there laufen means run. This book teaches the German usage.
-Der Hund rennt. — no ambiguity left.
-
-The word, taken apart: laufen is leap.
-laufen is Proto-Germanic hlaupaną, and English kept it as leap — Old English hlēapan. One more p against f, the second shift, on the pattern of helfen/help, offen/open and schlafen/sleep.
-English holds three more scraps: lope, and — through Dutch relatives of the same verb — elope and interloper, both people running off. Outside Germanic there are no secure cousins.
-Rennen is a sharper story. Germanic had rinnaną, "to run, to flow," and beside it a causative rannijaną, "to make something run." German fused the two into rennen and kept rinnen, "to trickle," alongside. English fused the same two into run — one merger, carried out separately in each language.
+The word, taken apart: one picture, built twice.
+Break it in two: ver- plus stehen, "to stand." Stehen is English stand, the same inherited word, Proto-Germanic standaną. The prefix ver- is old and worn, and here it carries its ancient sense "around, about." So verstehen is literally "to stand around" a thing.
+Now English. Understand is under + stand — and that under is not "underneath." The usual explanation is that Old English under also carried the sense "among, between," a cousin of Latin inter; so understand is "to stand among" a thing. That reading is standard but not certain, and no honest account will claim otherwise.
+Either way the important fact holds: each language welded a prefix onto its own inherited verb "to stand" and got a word for comprehension. Neither borrowed the compound. The green-and-yellow lesson showed the same move with grün: Germanic and Latin each built "green" from a verb for "grow," independently. This is that coincidence one family closer in.
+The verb underneath is one of the family's biggest roots, PIE steh₂-: German der Verstand ("reason"), English stand, stead, stall, and — from Latin's stāre — state, station, stable, constant.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich laufe, du läufst, er läuft" — LOW-fuh, LOYFST, LOYFT]
+[your turn — say: "ich verstehe, du verstehst, er versteht"]
 [pause 8 seconds for the answer]
-[your turn — say: the three speeds — "Ich gehe. Ich laufe. Ich renne."]
+[your turn — say: "Ich verstehe Deutsch."]
 [pause 8 seconds for the answer]
-[your turn — say: "Der Hund läuft. Der Hund rennt."]
+[your turn — say: both verbs — "Ich denke. Ich verstehe."]
 [pause 8 seconds for the answer]
-[your turn — say: the p/f row now four long — "helfen/help, offen/open, schlafen/sleep, laufen/leap"]
+[your turn — say: the pieces — "ver- + stehen" beside "under + stand"]
 [pause 8 seconds for the answer]
-[your turn — say: the runaways — "lope, elope, interloper"]
+[your turn — say: the parallel — like grün beside viridis, built, not shared]
 [pause 8 seconds for the answer]
-[your turn — say: the doubled merger — "rinnen, rennen" beside English's one run]
+[your turn — say: where it happens — "der Kopf" — and what stands in it, "der Verstand"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the du and er forms of laufen. (Du läufst, er läuft — au to äu.) Which English verb is laufen? (Leap — and it means run.) Which German verb means only "run fast"? (Rennen.) Does Wir laufen mean walking or running? (Either — except in Austria, where it is running.) Say "the dog runs." (Der Hund rennt.)
+What are the two pieces of verstehen? (Ver- + stehen.) Which English verb is stehen? (Stand.) Did English borrow understand from German? (No — each built its own compound.) How solid is the "under = among" account? (Standard, but not certain.) Say "I think" and "I understand." (Ich denke. Ich verstehe.)
 
 
 Lesson 3 of 4.
-öffnen — open, which was always the word up.
+lesen — gathering, and the first verb that changes its vowel.
 
 Warm-up.
 [pause 2 seconds]
-Ich gehe. Ich laufe. Ich renne. Now something done with the hands, and the German habit that breaks a verb in two.
+Every German verb so far has kept its vowel in every form. This one does not — and its older meaning is gathering.
 
 Sounds you'll need.
-umlaut-oe — ö is the e of bed with rounded lips.
-fn-cluster — -fn- runs straight together: öffnen = UFF-nen.
+long-e — a long e, English ay without the glide.
+s-voiced — a single s between vowels buzzes like z: LAY-zen.
 
-You'll want to know: öffnen.
-öffnen means "to open."
-ich öffne, wir öffnen.
-du öffnest, ihr öffnet.
-er öffnet, sie öffnen.
-An extra e slips in for du, er and ihr, because öffnst cannot be said. Now a noun you already have, whose d is spoken as a t:
-Ich öffne die Hand. — "I open my hand." (dee Hant).
+You'll want to know: lesen.
+lesen means "to read."
+ich lese — I read, wir lesen — we read.
+du liest — you read, ihr lest — you all read.
+er liest — he reads, sie lesen — they read.
+Ich lese Deutsch. — "I read German."
 
-Grammar Lens: a verb that comes apart.
-Öffnen is the neutral, slightly formal word. What people say out loud is aufmachen, and both halves are yours already: auf from auf Wiedersehen, machen from your first verbs.
-Here is the German part. In an ordinary sentence, the prefix leaves the verb and waits at the end:
-Ich mache die Hand auf. — literally "I make the hand up."
-Machen takes the slot after ich; auf goes to the back and sits there. German does this to hundreds of verbs, and calls them separable.
+Grammar Lens: the vowel that breaks in the middle.
+Four forms keep the e of lesen. Two swap it for a long ie: du liest, er liest.
+That is the mark of a strong verb: the vowel changes inside the word, in exactly two present-tense forms — du and er/sie/es. Nothing else moves; the endings stay the familiar -e / -st / -t. It is a rule about a whole class of verbs, not about lesen.
 
-The word, taken apart: open was never a root.
-Behind the verb is the adjective offen, "open" — which the doing verbs already put beside open as a p-to-f pair from the second shift.
-The better secret is that neither word is a root. Old English open goes back to Proto-Germanic upana-, "put up," formed on the word that is now English up — it has the shape of a past participle, though no such verb "to up" is attested. German ran the same sum and got offen, which is why offen and auf are relatives and not merely neighbours.
-So aufmachen is not a quaint compound. It is the ancient recipe for "open," rebuilt out loud — and German pulls it apart every time you use it.
+The word, taken apart: reading is picking up.
+lesen is Proto-Germanic lesaną, "to gather." That sense still lives in die Weinlese, the grape harvest — the wine-gathering, built on the Wein you already have. Reading came second: you pick the letters up, one after another.
+Now the trap. Latin legere also meant "to gather," also came to mean "to read," and stands behind legible, lecture, lesson and collect. It looks like one shared word. It probably is not: the sounds do not correspond as they should, and the standard account ties lesen to a separate root, whose clearest cousin is Lithuanian lèsti, "to peck up grain." Treat it as you treated grün beside viridis.
+English read is a third story: Old English rædan, "to advise," which is German raten and das Rätsel ("riddle"). Lesen and read are no relation.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich öffne, du öffnest, er öffnet" — the extra e]
+[your turn — say: "ich lese, du liest, er liest" — hear the vowel break]
 [pause 8 seconds for the answer]
-[your turn — say: "Ich öffne die Hand." — dee Hant]
+[your turn — say: "wir lesen, ihr lest, sie lesen" — and back]
 [pause 8 seconds for the answer]
-[your turn — say: the split — "Ich mache die Hand auf."]
+[your turn — say: "Ich lese Deutsch. Ich verstehe Deutsch."]
 [pause 8 seconds for the answer]
-[your turn — say: the p/f pair — "offen/open"]
+[your turn — say: the old meaning — "die Weinlese"]
 [pause 8 seconds for the answer]
-[your turn — say: what it is made of — "auf, up, offen, open"]
+[your turn — say: the three so far — "denken, verstehen, lesen"]
 [pause 8 seconds for the answer]
-[your turn — say: the feet verbs before the hand one — "Ich gehe. Ich laufe. Ich renne."]
+[your turn — say: why lesen is not legere — the reason grün is not viridis]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the du and er forms. (Du öffnest, er öffnet.) Which older word is offen built from? (Auf — English up.) Where does auf go in Ich mache die Hand auf? (To the end.) What is such a verb called? (Separable.) How is the d of Hand spoken? (As a t.)
+Which two forms of a strong verb break their vowel, and what are they here? (Du and er/sie/es — du liest, er liest.) What did lesen mean first? (To gather — die Weinlese.) Is it Latin legere? (Probably not — the sounds do not correspond.) And English read? (No relation — it meant "to advise," and is German raten.)
 
 
 Lesson 4 of 4.
-schließen — the second verb English lost.
+schreiben — the one borrowed verb.
 
 Warm-up.
 [pause 2 seconds]
-You can open a hand two ways, ich öffne and ich mache … auf. Closing works the same, and the closing verb has the stranger history.
+Three verbs in, all three English's own blood relatives. The fourth breaks the run: German borrowed it; English did not.
 
 Sounds you'll need.
-ie-long-ee — ie is a long ee: schließen = SHLEE-sen.
-eszett — ß is a sharp s, and it appears here because the ee before it is long.
+sch-sh — sch is one sound, English sh.
+diphthong-ei — ei is said eye: schreiben = SHRY-ben.
 
-You'll want to know: schließen.
-schließen means "to close," and also "to lock."
-ich schließe, wir schließen.
-du schließt, ihr schließt.
-er schließt, sie schließen.
-Its everyday partner is zumachen — zu plus machen — splitting exactly as aufmachen did:
-Ich schließe die Hand. Ich mache die Hand zu.
-The vowel shortens in the past, and the moment it does the ß becomes ss: schließen, but schloss.
+You'll want to know: schreiben.
+schreiben means "to write."
+ich schreibe — I write, wir schreiben — we write.
+du schreibst — you write, ihr schreibt — you all write.
+er schreibt — he writes, sie schreiben — they write.
+Ich schreibe Deutsch., Die Hand schreibt.
 
-The word, taken apart: a verb with no English cousin.
-schließen is Proto-Germanic sleutaną, "to shut, to bolt." Dutch kept it as sluiten. English has nothing — no inherited cousin at all.
-So English closes things with borrowed and unrelated words. Close is Latin claudere, by way of French. Shut is native but a different verb entirely: Old English scyttan, to shoot a bolt across a door.
-That makes two verbs here with the same shape of story. The doing verbs gave you nehmen, which English lost to Norse take. This is the second.
-On the verb it kept, German built a household: das Schloss, a lock — and, because a castle is the locked place, a castle; der Schlüssel, a key; der Schluss, the end. English says conclusion for that last one, from claudere — the same idea out of the other family's parts.
-A link between the Germanic verb and Latin claudere has been proposed. It is not established.
+Grammar Lens: strong, but not here.
+Lesen taught you to watch du and er. Here: du schreibst, er schreibt — the vowel does not move. Schreiben is strong (its past is schrieb), but its present is smooth. So the rule is exact: a strong verb may break its vowel there. Hold the pair: du liest, but du schreibst.
 
-What you've built across these two chapters.
-Eight verbs, and a whole small morning:
-Ich schlafe. Ich höre. Ich stehe. Ich gehe. Ich laufe. Ich renne. Ich sitze. Ich mache die Hand auf. Ich mache die Hand zu.
+The word, taken apart: a Latin verb that became German.
+schreiben is Latin scrībere, and before that "to scratch." German took it in with the writing itself, and early: the loan passed through German sound changes — sc- became sch- — and joined the native strong verbs, its past becoming schrieb. A late loan would have done neither.
+English refused it. Write is Old English wrītan, also "to scratch," because runes were cut; German reißen and ritzen are its relatives. Two languages, two writing-words, both meaning scratch. Latin's verb reached English anyway: scribe, script, describe, transcript.
+And one closes a circle back to die Hand. German Hand has no Latin cousin — Latin says manus — yet manus reached German as a loan: Manuskript. Manu- is manus, the hand; -skript is scrīptum, this verb. A Manuskript is written by hand: the Latin hand-word German never inherited, bolted to the Latin writing-verb it did.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich schließe, du schließt, er schließt"]
+[your turn — say: "Die Hand schreibt. Ich schreibe Deutsch."]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "Ich mache die Hand auf. Ich mache die Hand zu."]
+[your turn — say: the four "I" forms — "ich denke, ich verstehe, ich lese, ich schreibe"]
 [pause 8 seconds for the answer]
-[your turn — say: the spelling swap — "schließen, schloss"]
+[your turn — say: the four "he" forms — "er denkt, er versteht, er liest, er schreibt" — only liest broke]
 [pause 8 seconds for the answer]
-[your turn — say: the household — "Schloss, Schlüssel, Schluss"]
+[your turn — say: three inherited, one borrowed — "denken/think, verstehen/stand, lesen/gather", then "schreiben/scrībere"]
 [pause 8 seconds for the answer]
-[your turn — say: the two lost verbs — "nehmen, schließen; English took take and close"]
+[your turn — say: denken's d — PIE t, Germanic th: Grimm's law]
 [pause 8 seconds for the answer]
-[your turn — say: the four p/f pairs — "helfen/help, offen/open, schlafen/sleep, laufen/leap"]
+[your turn — say: "Ich denke, also bin ich." — and what also does]
 [pause 8 seconds for the answer]
-[your turn — say: the whole morning — "Ich schlafe. Ich höre. Ich stehe. Ich gehe. Ich laufe. Ich renne. Ich sitze."]
+[your turn — say: Manuskript — manus plus scrīptum]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the du and er forms. (Du schließt, er schließt.) Which English verb is the cousin of schließen? (None — English lost it.) Where did close and shut come from? (Latin, and from shoot.) Name three words German hung on the verb. (Schloss, Schlüssel, Schluss.) Close your hand, both ways, then run the eight verbs.
+Say all four "I" forms. (Ich denke, ich verstehe, ich lese, ich schreibe.) Which is the loan? (Schreiben, from scrībere, "to scratch" — as English write also meant.) Which "he" form breaks its vowel? (Only liest.) Which half of Manuskript did German never inherit? (Manus, its own Hand.) And German also? (Therefore.)

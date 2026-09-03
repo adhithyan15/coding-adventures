@@ -1,0 +1,18 @@
+{
+  "language": "sanskrit",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:a76f3dd63dd25007",
+  "lessonIds": [
+    "SA-C59-desha",
+    "SA-C59-bharatam",
+    "SA-C59-bharatiyah",
+    "SA-C59-bharatat"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "sanskrit/narration/ch59.txt",
+  "json": "sanskrit/narration/ch59.json",
+  "textHash": "fnv1a64:73436c03e02c5937",
+  "jsonHash": "fnv1a64:f9c05c06dc481269",
+  "findings": []
+}

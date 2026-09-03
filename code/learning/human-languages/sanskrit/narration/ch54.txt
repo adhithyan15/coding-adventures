@@ -1,0 +1,100 @@
+Sanskrit, chapter 54: Thus It Was Said.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+इति (iti) — thus.
+
+Warm-up.
+[pause 2 seconds]
+Say both correlative sentences — the one who goes, and where the village is. Then say cintayati and what it means.
+
+You'll want to know: इति.
+इति (iti) — "thus, so".
+Sanskrit has no quotation marks. It has this word instead, and it does the job better than a pair of commas in the air: इति (iti) stands after the quoted words and closes them.
+… इति (iti) — "…" — that is what was said.
+Whatever comes before इति (iti) is quoted; whatever comes after it is the frame. Everything the frame needs to say — who said it, who thought it, who asked it — comes afterwards, so the reader hears the words first and learns whose they were second.
+Two things follow from that, and both are worth knowing before you build a sentence with it:
+The quoted words are not changed. English shifts tense and person when it reports — he said he was going. Sanskrit does not. It hands you the words as they were spoken and lets इति (iti) mark where they stop.
+इति (iti) is not a verb and never inflects. It is the same three letters in every sentence you will ever meet it in.
+You have probably met it already without knowing. इत्यादि (ityādi) — "and so on" — is इति (iti) plus आदि, "beginning": thus, and the rest. And the closing line of every chapter of a classical text begins इति (iti) — thus ends….
+
+What you've built.
+The mark that closes a quotation, in a language with no quotation marks.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: iti]
+[pause 8 seconds for the answer]
+[your turn — read: इति (iti), and say which side of it the quoted words sit on]
+[pause 8 seconds for the answer]
+[your turn — recall: what इत्यादि is made of]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where do the quoted words stand relative to इति (iti)? (Before it.) Say इति (iti) once more.
+
+
+Lesson 2 of 3.
+… इति चिन्तयति (… iti cintayati) — a clause as the object.
+
+Warm-up.
+[pause 2 seconds]
+Say इति (iti), and say which side of it the quoted words sit on.
+
+Grammar Lens: what a thinking verb thinks.
+चिन्तयति has been in this book since the thinking verb arrived, with nothing to think. Every verb you have used takes a noun as its object — you see a house, you eat food. इति (iti) lets a verb take a whole sentence instead.
+बालः गच्छति इति गुरुः चिन्तयति bālaḥ gacchati iti guruḥ cintayati the teacher thinks that the boy is going.
+Take it apart in the order Sanskrit gives it to you:
+[a table of 3 rows, read aloud]
+piece: बालः गच्छति. meaning: the boy goes. job: the clause being thought.
+piece: इति (iti). meaning: thus. job: the clause ends here.
+piece: गुरुः चिन्तयति. meaning: the teacher thinks. job: the frame around it.
+The inner clause is a complete sentence and stays one. Nothing is bent to make it fit inside the outer one — no that, no change of ending, no reordering. इति (iti) does all the joining by standing between them.
+Swap the outer verb and you have every reporting sentence at once: … इति (iti) वदति (says), … इति (iti) पृच्छति (asks), … इति (iti) जानाति (knows). The inner clause never changes.
+Compare this with the chapter before. यः … सः joined two clauses by putting a pronoun in each. इति (iti) joins two clauses by putting one particle at the seam. Two joins, two mechanisms — and neither of them is a conjunction in the English sense.
+
+What you've built.
+A sentence that reports another sentence.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: bālaḥ gacchati iti guruḥ cintayati]
+[pause 8 seconds for the answer]
+[your turn — say: it again, and name where the inner clause stops]
+[pause 8 seconds for the answer]
+[your turn — read: बालः गच्छति इति (iti) गुरुः चिन्तयति, then say what it means]
+[pause 8 seconds for the answer]
+[your turn — contrast: the correlative puts a pronoun in each clause; इति (iti) puts one particle at the seam]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does the inner clause change when it is reported? (No.) Say the teacher-and-boy sentence once more.
+
+
+Lesson 3 of 3.
+इति (iti) — reviewed.
+
+Warm-up.
+[pause 2 seconds]
+Say इति (iti), and say what it does to the words in front of it.
+
+What you've built.
+Two chapters, two ways of putting two clauses in one sentence, and they work differently on purpose.
+The correlative marks both clauses — a य- word in one, a त- word in the other — and the clauses stay equals. इति (iti) marks one seam, and makes the clause in front of it into the object of the verb behind it.
+That is the difference between which one goes, that one sees and the teacher thinks that the boy goes. In the first, neither clause is inside the other. In the second, the whole first clause is what the second one is about.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: bālaḥ gacchati iti guruḥ cintayati]
+[pause 8 seconds for the answer]
+[your turn — say: yaḥ gacchati saḥ paśyati]
+[pause 8 seconds for the answer]
+[your turn — contrast: which sentence puts one clause INSIDE the other]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name the two joining mechanisms you now have, and say which one subordinates.

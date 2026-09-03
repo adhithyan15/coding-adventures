@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C59-WEATHER-04]
 practises:
-  knowledge: [TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04]
+  knowledge: [TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04, TE-LEX-C57-BODY-04, TE-LEX-C58-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It does the same second job that mud does in English. బురద చల్ల�
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04, TE-LEX-C57-BODY-04, TE-LEX-C58-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *burada*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *burada*, then *isuka*, and say what turns one into the other]
+- [YOU RECALL: read **గోరు**, then say *vaddu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04] -->

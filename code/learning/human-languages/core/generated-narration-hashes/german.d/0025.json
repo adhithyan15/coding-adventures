@@ -1,15 +1,17 @@
 {
   "language": "german",
   "chapter": 25,
-  "sourceHash": "fnv1a64:8f2c6ddb435d7262",
+  "sourceHash": "fnv1a64:6d6386de990fbc4e",
   "lessonIds": [
-    "GE-C20-entschuldigung"
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "german/narration/ch25.txt",
   "json": "german/narration/ch25.json",
-  "textHash": "fnv1a64:935beff9a748db16",
-  "jsonHash": "fnv1a64:7362cef96515cbae",
+  "textHash": "fnv1a64:b8f81f17e067b030",
+  "jsonHash": "fnv1a64:6bfd07071a431077",
   "findings": []
 }

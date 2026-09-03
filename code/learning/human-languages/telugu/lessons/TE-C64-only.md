@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C64-JOIN-02]
 practises:
-  knowledge: [TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02]
+  knowledge: [TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C62-MADE-02, TE-LEX-C63-HEALTH-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ With a small quantity in front it does polite work. కొంచెం మాత
 Two, and they pull opposite ways.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C62-MADE-02, TE-LEX-C63-HEALTH-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mātramē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *perugu kūḍā*, then *perugu mātramē*, and say which one takes more]
+- [YOU RECALL: read **సూది**, then say *nidra*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02] -->

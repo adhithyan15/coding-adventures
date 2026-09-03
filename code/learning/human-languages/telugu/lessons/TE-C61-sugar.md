@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C61-KITCHEN-04]
 practises:
-  knowledge: [TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04]
+  knowledge: [TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04, TE-LEX-C59-WEATHER-04, TE-LEX-C60-ANIMAL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A pinch of చక్కెర goes into dishes an English kitchen would leave sa
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04, TE-LEX-C59-WEATHER-04, TE-LEX-C60-ANIMAL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cakkera*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cakkera*, then *perugu*, and say which one is stirred into the other]
+- [YOU RECALL: read **బురద**, then say *cīma*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04] -->

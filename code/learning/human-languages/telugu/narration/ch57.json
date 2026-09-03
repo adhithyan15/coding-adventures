@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:96a805cc005c3922",
+  "sourceHash": "fnv1a64:e5e1cd4e5d8356f0",
   "lessons": [
     {
       "id": "TE-C57-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2aac65fd99bb9459",
+      "sourceHash": "fnv1a64:0b37363c3fdec6da",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *meḍa*, then *pūladaṇḍa*, and put one on the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nadi, then read చాప and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nadi*, then read **చాప** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:165f0a0a67a20442",
+      "sourceHash": "fnv1a64:45873060cc7ae557",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vīpu*, then *meḍa*, and say which is above the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read చెరువు, then say buṭṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **చెరువు**, then say *buṭṭa*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e26fc938c04ec5c5",
+      "sourceHash": "fnv1a64:24be8b35de22f6f6",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pedavi*, then say *puvvu* slowly and notice what your పెదవులు do at the start]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say guṭṭa, then read కత్తి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *guṭṭa*, then read **కత్తి** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca7906646ed66174",
+      "sourceHash": "fnv1a64:57e7038055f053bd",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gōru*, then *vēlu*, and say which one grows out of the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read గ్రామం, then say ginne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **గ్రామం**, then say *ginne*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb2337a1d762348f",
+      "sourceHash": "fnv1a64:b206fbe546b67ed2",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then point at your మెడ and say *nāku noppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bāṭa, then read పెట్టె and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bāṭa*, then read **పెట్టె** and say what it means]"
             }
           ]
         },

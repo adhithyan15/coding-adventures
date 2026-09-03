@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C48-ROLE-02]
 practises:
-  knowledge: [TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02]
+  knowledge: [TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C46-ASK-02, TE-LEX-C47-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Two Sanskrit pieces welded: *vidyā*, knowledge, and *arthin*, one who seeks. A 
 Two: a teacher and a student.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C46-ASK-02, TE-LEX-C47-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vidyārthi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guruvu*, then *vidyārthi*, and say which one seeks and which one weighs]
+- [YOU RECALL: read **బట్ట**, then say *pannu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02] -->

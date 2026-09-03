@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-perfekt-practice",
     "language": "german",
-    "chapter": 16,
+    "chapter": 19,
     "sequence": 385,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f72bb18ce4a08398"
+    "sourceHash": "fnv1a64:f0cbaa43259a3fd1"
   },
   "findings": []
 }

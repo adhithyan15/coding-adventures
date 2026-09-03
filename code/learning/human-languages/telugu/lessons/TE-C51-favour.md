@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C51-COURTESY-02]
 practises:
-  knowledge: [TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02]
+  knowledge: [TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C49-REPLY-02, TE-LEX-C50-LEAVE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ So *idi mēlu* says "this one is higher" and lets the height do the judging --- 
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C49-REPLY-02, TE-LEX-C50-LEAVE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mēlu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mēlu*, then *manci*, and say which one is a thing done and which is a quality]
+- [YOU RECALL: read **చాలు**, then say *elluṇḍi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02] -->

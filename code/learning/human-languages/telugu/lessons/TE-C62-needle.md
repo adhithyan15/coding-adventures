@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C62-MADE-02]
 practises:
-  knowledge: [TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02]
+  knowledge: [TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C60-ANIMAL-02, TE-LEX-C61-KITCHEN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The same word does the వైద్యుడు's work: an injection is a సూ
 Two, and neither is much use without the other.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C60-ANIMAL-02, TE-LEX-C61-KITCHEN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūdi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūdi*, then *dāraṁ*, and say which one goes through the other]
+- [YOU RECALL: read **మేక**, then say *neyyi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02] -->

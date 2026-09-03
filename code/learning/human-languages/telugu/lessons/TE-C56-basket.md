@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C56-HOUSE-02]
 practises:
-  knowledge: [TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02]
+  knowledge: [TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C54-TREE-02, TE-LEX-C55-ROAD-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Weaving words tend to be old, and they tend to stay put while the trade words mo
 Two: something to sit on, something to carry with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C54-TREE-02, TE-LEX-C55-ROAD-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *buṭṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *buṭṭa*, then *cāpa*, and say what the two are made of]
+- [YOU RECALL: read **కొమ్మ**, then say *ceruvu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02] -->

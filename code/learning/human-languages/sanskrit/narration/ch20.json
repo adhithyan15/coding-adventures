@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "People --- and the Four Noun Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f768c7e6a618437e",
+  "sourceHash": "fnv1a64:d19c47f007b5456a",
   "lessons": [
     {
       "id": "SA-C20-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97dd0d702c7947c7",
+      "sourceHash": "fnv1a64:28ad0e4351617686",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the English word built on its Greek cousin (*android*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kadā, then read षट्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kadā*, then read **षट्**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6e6f155cc31eaec0",
+      "sourceHash": "fnv1a64:45454878b8d2ca0a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -235,6 +244,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the four endings you have now met]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read किमर्थम्, then say sapta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **किमर्थम्**, then say *sapta*]"
             }
           ]
         },
@@ -270,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af021472c9478897",
+      "sourceHash": "fnv1a64:81939d6314580b63",
       "notice": null,
       "blocks": [
         {
@@ -357,6 +375,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the two different feminine endings you have now seen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kati, then read अष्ट",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kati*, then read **अष्ट**]"
             }
           ]
         },
@@ -392,7 +419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2966059227299b25",
+      "sourceHash": "fnv1a64:c04269c928278d84",
       "notice": null,
       "blocks": [
         {
@@ -483,6 +510,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: what √वृध् means (to grow)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read कुतः, then say navan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **कुतः**, then say *navan*]"
             }
           ]
         },
@@ -518,7 +554,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48fcdcc3c2c01c60",
+      "sourceHash": "fnv1a64:3fad5f4e03a7dafd",
       "notice": null,
       "blocks": [
         {
@@ -605,6 +641,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five people, in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say daśa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *daśa*]"
             }
           ]
         },

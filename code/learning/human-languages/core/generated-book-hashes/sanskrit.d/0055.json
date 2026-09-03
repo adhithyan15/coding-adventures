@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:615420d29692b2d1",
+  "lessonIds": [
+    "SA-C55-gatva",
+    "SA-C55-gantum",
+    "SA-R55-non-finite"
+  ],
+  "tex": "sanskrit/book/chapters/ch55-having-gone.tex"
+}

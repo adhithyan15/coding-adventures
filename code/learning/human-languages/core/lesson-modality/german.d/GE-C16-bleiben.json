@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-bleiben",
     "language": "german",
-    "chapter": 21,
+    "chapter": 24,
     "sequence": 580,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c5af4635e4a46931"
+    "sourceHash": "fnv1a64:57fed28efb484ec8"
   },
   "findings": []
 }

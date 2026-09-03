@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C59-desha",
+    "language": "sanskrit",
+    "chapter": 59,
+    "sequence": 2770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3aaef865e7306c23"
+  },
+  "findings": []
+}

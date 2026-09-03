@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C63-HEALTH-05]
 practises:
-  knowledge: [TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05]
+  knowledge: [TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05, TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That is a real difference in outlook and worth a moment. English health is somet
 Five: ఆకలి, నిద్ర, దగ్గు, రోగం, ఆరోగ్యం. Enough to say what is wrong and to ask after somebody else.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05, TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ārōgyaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then ask *mī ārōgyaṁ elā undi?*]
+- [YOU RECALL: say *mirapa*, then read **అద్దం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05] -->

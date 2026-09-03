@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 47,
-  "sourceHash": "fnv1a64:83d188f56c5cb3e2",
+  "sourceHash": "fnv1a64:8152ea6d9378c285",
   "lessonIds": [
     "SA-C47-wall",
     "SA-C47-window",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch47.txt",
   "json": "sanskrit/narration/ch47.json",
-  "textHash": "fnv1a64:845c6fb147bfd9f6",
-  "jsonHash": "fnv1a64:c4a83ff42cf8462e",
+  "textHash": "fnv1a64:6e61ffe29c4bc73c",
+  "jsonHash": "fnv1a64:1cdab47bd0e8e28b",
   "findings": []
 }

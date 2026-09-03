@@ -2,25 +2,34 @@
   "version": 1,
   "language": "german",
   "chapter": 10,
-  "title": "Family",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ec1871a82a4f5293",
+  "title": "The Days of the Week",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:a9e31376a23fe37e",
   "lessons": [
     {
-      "id": "GE-C10-eltern",
-      "sequence": 255,
-      "title": "der Vater, die Mutter — the family that proves Grimm's law",
-      "headword": "der Vater, die Mutter",
-      "romanization": "der Vater, die Mutter",
-      "gloss": "father and mother — Grimm's law makes them twins of English father/mother",
+      "id": "GE-C07-wochentage-1",
+      "sequence": 227,
+      "title": "Montag to Freitag — the gods of the Germanic week",
+      "headword": "Montag, Dienstag, Mittwoch, Donnerstag, Freitag",
+      "romanization": "Montag, Dienstag, Mittwoch, Donnerstag, Freitag",
+      "gloss": "the weekdays (Monday–Friday) — Germanic gods, twins of the English days",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:e330b79dee37ec8a",
-      "notice": null,
+      "sourceHash": "fnv1a64:841014ed89235dd2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The pattern: [Germanic god] + Tag (\"day\")"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The pattern: [Germanic god] + Tag (\"day\") until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,63 +44,58 @@
             },
             {
               "kind": "speech",
-              "text": "Back in the months chapter, German borrowed its calendar from Latin (Januar, März…). Family is the opposite story: Vater and Mutter are not borrowed — they are inherited Germanic words, blood cousins of English father and mother. And the sound-law that links them, Grimm's law, is written right on their faces."
+              "text": "Just as with the numbers, German goes its Germanic way here — and lands right next to English. The Romans named the weekdays for planet-gods (Mars, Mercury, Jupiter, Venus); the Germanic peoples swapped in their own gods, and German and English inherited that same set. Donnerstag and Thursday are the same god."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "Taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Vater (\"father\") — note the spelling V, but it is pronounced f (FAH-ter). from PIE ph₂tḗr."
+              "text": "diphthong-ei — -tag (\"day\") is easy; watch Freitag = FRY-tahk."
             },
             {
               "kind": "speech",
-              "text": "die Mutter (\"mother\"). from PIE méh₂tēr."
-            },
-            {
-              "kind": "speech",
-              "text": "Articles: der Vater (masculine), die Mutter (feminine)."
+              "text": "ch-ach — Mittwoch ends in the raspy ch: MIT-vokh."
             }
           ]
         },
         {
           "index": 2,
           "type": "unknown",
-          "title": "Grimm's law, on display",
+          "title": "The pattern: [Germanic god] + Tag (\"day\")",
           "segments": [
             {
               "kind": "speech",
-              "text": "Grimm's law is the great sound-shift that split the Germanic languages (English, German, Dutch…) off from the rest. Watch what it did to the same PIE words that Latin kept as pater/māter:"
+              "text": "Tag = \"day\" (cousin of English day). Before it, a god — the Germanic counterpart of the Roman planet:"
             },
             {
-              "kind": "table",
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
               "headers": [
-                "PIE",
-                "Latin (French)",
-                "Germanic (English / German)"
+                "German",
+                "god",
+                "= English",
+                "(Roman planet it replaced)"
               ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "PIE: ph₂tḗr. Latin (French): pater (père). Germanic (English / German): father / Vater (V = f).",
-                "PIE: méh₂tēr. Latin (French): māter (mère). Germanic (English / German): mother / Mutter."
-              ]
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: German, god, = English, (Roman planet it replaced). Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "p becomes f: Latin kept the p (pater); Germanic turned it to f — English father, German Vater (the V is just an old spelling of that f sound)."
+              "text": "Two showpieces:"
             },
             {
               "kind": "speech",
-              "text": "t becomes th becomes d: the middle consonant became English th (mother) and then, in German's later shift, d/t (Mutter)."
+              "text": "Donnerstag corresponds to Thursday. Donner is German for \"thunder,\" and Donar was the Germanic thunder-god — the one the Norse called Thor. So Donnerstag = \"Thor's day\" = Thursday, standing in for the Roman Jupiter (the sky-thunder king). Same god-slot, three names."
             },
             {
               "kind": "speech",
-              "text": "So German and English agree here (both f-, both m-) precisely because they are both Germanic — while French/Latin sit on the other side of Grimm's line. The month names were Latin tourists; Vater and Mutter are natives."
+              "text": "Mittwoch is the odd one out. It should be \"Wodan's day\" (as English keeps Wednesday = Woden's day). But the medieval Church disliked naming a day for the chief pagan god, so German replaced it with plain Mittwoch, \"mid-week\" — a religious edit, just like Portuguese numbering its days."
             }
           ]
         },
@@ -109,29 +113,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Vater, die Mutter\" — Vater with an f sound",
+              "instruction": "\"Montag, Dienstag, Mittwoch, Donnerstag, Freitag\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Vater, die Mutter\" — *Vater* with an **f** sound]"
+              "source": "[YOU SAY: \"Montag, Dienstag, Mittwoch, Donnerstag, Freitag\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twin test — \"Vater / father, Mutter / mother — both Germanic\"",
+              "instruction": "\"Donnerstag = Thor's day = Thursday\"; \"Freitag = Frigg = Friday\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twin test — \"**V**ater / **f**ather, **M**utter / **m**other — both Germanic\"]"
+              "source": "[YOU SAY: \"Donnerstag = Thor's day = Thursday\"; \"Freitag = Frigg = Friday\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "contrast — \"German months = Latin (Januar); German family = Germanic (Vater)\"",
+              "instruction": "the exception — \"Mittwoch = mid-week\" (not Woden, unlike English Wednesday)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: contrast — \"German months = Latin (Januar); German family = Germanic (Vater)\"]"
+              "source": "[YOU SAY: the exception — \"Mittwoch = mid-week\" (not Woden, unlike English Wednesday)]"
             }
           ]
         },
@@ -148,27 +152,36 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"father\" and \"mother\" with articles, minding the pronunciation. (der Vater — f sound — die Mutter.) Why do German Vater and English father match, while French père differs? (German & English are both Germanic — Grimm's law shifted p becomes f in both; French kept Latin's p.) How does this chapter contrast with the months chapter? (Months were borrowed from Latin; family is inherited Germanic.) Next: Bruder and Schwester."
+              "text": "Are German days named for planets or gods, and like which language? (Germanic gods — like English.) What does Donnerstag mean, and its English twin? (\"Thor's day\" — Donner \"thunder\"; Thursday.) Why is Mittwoch different? (The Church replaced \"Woden's day\" with \"mid-week.\") Next: the weekend."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C10-geschwister",
-      "sequence": 260,
-      "title": "der Bruder, die Schwester — and the word for \"siblings\"",
-      "headword": "der Bruder, die Schwester",
-      "romanization": "der Bruder, die Schwester",
-      "gloss": "brother and sister — again Germanic twins of the English words",
+      "id": "GE-C07-wochentage-2",
+      "sequence": 230,
+      "title": "Samstag and Sonntag — the German weekend",
+      "headword": "Samstag, Sonntag",
+      "romanization": "Samstag, Sonntag",
+      "gloss": "the weekend (Saturday, Sunday) — the Sabbath and the Sun",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:e80036c2a5807815",
-      "notice": null,
+      "sourceHash": "fnv1a64:1a05e8281c02d7dc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The two days, taken apart"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -183,56 +196,40 @@
             },
             {
               "kind": "speech",
-              "text": "The parent pair proved German and English are Germanic twins. The sibling pair does it again: Bruder (\"brother\") and Schwester (\"sister\") are the near-identical cousins of the English words — no translation really needed, just an ear for the German sounds."
+              "text": "Two weekend days, and one more surprise: German's Saturday is not Saturn's day — it's the Sabbath, sharing its root with the Romance languages, not with English Saturday. Sunday, though, stays the Sun's."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "Taken apart",
+          "title": "The two days, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "der Bruder (\"brother\") from PIE bʰréh₂tēr — the same root as Latin frāter (French frère), but here kept with a b- (Grimm's law changed bʰ becomes b), exactly like English brother."
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 2,
+              "headers": [
+                "German",
+                "from",
+                "meaning",
+                "note"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: German, from, meaning, note. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "die Schwester (\"sister\") from PIE swésōr. The German sch spells an sh sound; strip it back and Schwester is English sister and Latin soror, all one root."
+              "text": "Samstag surprises everyone: where English kept the Roman planet (Saturday = Saturn), German took the Sabbath — Greek sábbaton (from Hebrew shabbāt, \"to rest\") travelled up through the early Church into German as Sabbat becomes Samstag. So German Samstag and Spanish sábado are the same Sabbath, while English alone still points at Saturn. (In northern Germany you also hear Sonnabend, \"Sun-eve,\" the evening before Sunday.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sonntag is simply \"the Sun's day,\" Sonne + Tag — the exact twin of English Sunday. Here Germanic and English agree, and the Church didn't rename it (unlike Romance, which made it \"the Lord's day,\" domingo/dimanche)."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The collective — Geschwister",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German has a tidy word English lacks: die Geschwister = \"siblings,\" brothers-and-sisters together. It is built with the ge- prefix, an old collective marker (\"a set of…\") on Schwester — the same ge- that bundles mountains into a Gebirge (\"range\") and lets German gather a family in one word."
-            },
-            {
-              "kind": "speech",
-              "text": "The four family words now stand as a Germanic set beside the Romance ones:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "English",
-                "(Romance cousin)"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "German: Vater / Mutter. English: father / mother. (Romance cousin): père / mère.",
-                "German: Bruder / Schwester. English: brother / sister. (Romance cousin): frère / sœur."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -245,34 +242,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Bruder, die Schwester\" — Schw- = shv",
+              "instruction": "the full week — \"Montag … Freitag, Samstag, Sonntag\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Bruder, die Schwester\" — *Schw-* = *shv*]"
+              "source": "[YOU SAY: the full week — \"Montag … Freitag, Samstag, Sonntag\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twin test — \"Bruder / brother, Schwester / sister\"",
+              "instruction": "\"Samstag = Sabbath (not Saturn!)\", \"Sonntag = Sun's day = Sunday\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twin test — \"**B**ruder / **b**rother, **Schw**ester / **s**ister\"]"
+              "source": "[YOU SAY: \"Samstag = Sabbath (not Saturn!)\", \"Sonntag = Sun's day = Sunday\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die Geschwister — the ge- bundles them into 'siblings'\"",
+              "instruction": "the contrast — \"German Samstag / Spanish sábado, both the Sabbath; English Saturday keeps Saturn\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Geschwister — the *ge-* bundles them into 'siblings'\"]"
+              "source": "[YOU SAY: the contrast — \"German Samstag / Spanish sábado, both the Sabbath; English Saturday keeps Saturn\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -284,7 +281,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"brother\" and \"sister\" with articles. (der Bruder, die Schwester.) Why do they match English so closely? (Both Germanic — same PIE roots, no Grimm's-law gap between them.) What does Geschwister mean, and what does the ge- do? (\"Siblings\"; ge- is a collective prefix, \"a set of.\") Next chapter: putting the family into sentences."
+              "text": "Give all seven German days. (Montag … Sonntag.) Where does Samstag come from, and how does English differ? (The Sabbath — sábbaton/shabbāt; English Saturday keeps Saturn.) What does Sonntag mean, and its English twin? (\"The Sun's day\"; Sunday.) Next chapter builds on this toward telling the time."
             }
           ]
         }

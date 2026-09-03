@@ -1,16 +1,26 @@
 {
   "chapter": 7,
-  "title": "The Days of the Week",
-  "label": "ch:days",
-  "canDo": "I can name the days of the week in German and use them in simple plans.",
+  "title": "Four, Five, and the Article Hiding in Eins",
+  "label": "ch:ge-zahlen-4-5",
+  "canDo": "I can count to five in German, run the whole five as one motion, and use ein and eine for “a”.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C07-wochentage-2",
+    "lesson": "GE-C06-ein-eine",
     "kind": "task",
-    "summary": "Complete GE-C07-wochentage-2, the canonical closing checkpoint, and demonstrate the chapter promise: name the days of the week in German and use them in simple plans.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Four and five complete the first run, which is then said as one motion rather than five remembered words. The chapter closes on ein / eine: the counting form eins with its -s taken off, exactly as English a and an are one worn down.",
+    "assesses": [
+      "GE-LEX-VIER-01",
+      "GE-SOUND-V-AS-F-01",
+      "GE-ETYMON-VIER-FOUR-02",
+      "GE-LEX-FUENF-01",
+      "GE-SOUND-FUENF-UE-01",
+      "GE-ETYMON-FUENF-FIVE-02",
+      "GE-LEX-ZAEHLEN-1-5-01",
+      "GE-LEX-EIN-EINE-01",
+      "GE-GRAMMAR-COUNTING-S-DROPS-02"
+    ],
+    "note": "Chapter 7 is generated from schema-v2 lessons, so the payoff is atom-scored. It introduces 9 atoms, under the maxNewAtomsPerChapter of 12: the numbers one to ten were split across four chapters rather than crammed into one, because German's own band is a median of 9 and 23 of its 29 atom-bearing chapters sit at or under the ceiling. Lesson ids keep the GE-C06-* prefix."
   }
 }

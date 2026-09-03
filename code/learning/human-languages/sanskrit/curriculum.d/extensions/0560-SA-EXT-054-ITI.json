@@ -1,0 +1,13 @@
+{
+  "id": "SA-EXT-054-ITI",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can close a quoted clause with iti and make a whole clause the object of a verb of thinking or saying.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C54-iti",
+    "SA-C54-iti-clause",
+    "SA-R54-iti"
+  ]
+}

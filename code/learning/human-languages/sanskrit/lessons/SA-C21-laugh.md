@@ -12,7 +12,7 @@ headword: "हसति"
 gloss: "he, she or it laughs"
 romanization: "hasati"
 concept_tag: SA-VERB-LAUGH
-prerequisites: [SA-C21-dance]
+prerequisites: [SA-C21-dance, SA-C19-eight]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-LAUGH]
 practises:
-  knowledge: [SA-LEX-DANCE, SA-LEX-LAUGH]
+  knowledge: [SA-LEX-DANCE, SA-LEX-LAUGH, SA-LEX-C19-NUM-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ From **√हस्** (*has*). It is the word inside *hāsya*, the comic mood in
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DANCE, SA-LEX-LAUGH] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DANCE, SA-LEX-LAUGH, SA-LEX-C19-NUM-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hasati*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *nṛtyati*, so the two sit together]
+- [YOU RECALL: read **अष्ट**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DANCE, SA-LEX-LAUGH] -->

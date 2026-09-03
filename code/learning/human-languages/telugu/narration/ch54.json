@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "The Tree",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bcf0ea5378d1b762",
+  "sourceHash": "fnv1a64:09d0605485974bc7",
   "lessons": [
     {
       "id": "TE-C54-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b15c0a73b0741ab7",
+      "sourceHash": "fnv1a64:500e71ff97abb055",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ceṭṭu*, then *puvvu*, and say which one grows on the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say talupu, then read ఆకాశం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *talupu*, then read **ఆకాశం** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3778f3f348d0e700",
+      "sourceHash": "fnv1a64:28e99562cb15f3d2",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *komma*, then *ceṭṭu*, and say which is part of which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read కుర్చీ, then say sūryuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **కుర్చీ**, then say *sūryuḍu*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1bf39cc6e05449d",
+      "sourceHash": "fnv1a64:c23c7a3343013135",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vēru*, then *komma*, and say which end of the చెట్టు each one is at]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say muggu, then read చంద్రుడు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *muggu*, then read **చంద్రుడు** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbb70884ce8711c8",
+      "sourceHash": "fnv1a64:4e866be2c8497a40",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vittanaṁ*, then *ceṭṭu*, and say which one comes first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read పువ్వు, then say cukka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **పువ్వు**, then say *cukka*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c60fcbc0fb28a80",
+      "sourceHash": "fnv1a64:ce774057fe150ac4",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say them again as a life story, starting with the seed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pūladaṇḍa, then read మబ్బు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pūladaṇḍa*, then read **మబ్బు** and say what it means]"
             }
           ]
         },

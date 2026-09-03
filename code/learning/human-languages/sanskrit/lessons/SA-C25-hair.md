@@ -12,7 +12,7 @@ headword: "केशः"
 gloss: "hair (of the head)"
 romanization: "keśaḥ"
 concept_tag: SA-BODY-HAIR
-prerequisites: [SA-C25-tooth]
+prerequisites: [SA-C25-tooth, SA-C24-lamp]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C25-BODY-05]
 practises:
-  knowledge: [SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05]
+  knowledge: [SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05, SA-LEX-C24-ASK-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ And here the trail stops. No secure cousin has been found for केशः outsi
 Five more parts of the body: hand, foot, head, tooth, hair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05, SA-LEX-C24-ASK-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *keśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, and name the one with no known cousins]
+- [YOU RECALL: say *dīpaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05] -->

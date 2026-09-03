@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e22e97c39f8b3a48",
+  "sourceHash": "fnv1a64:167ed7be524e9eb0",
   "lessons": [
     {
       "id": "TE-C48-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f04076c71a808d1a",
+      "sourceHash": "fnv1a64:259439ba2f80364e",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *guruvu*, then *guruvāraṁ*, and say what the two have in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paṇḍu, then read కాలు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paṇḍu*, then read **కాలు** and say what it means]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:523016310b6bf816",
+      "sourceHash": "fnv1a64:1e30404e07a69006",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *guruvu*, then *vidyārthi*, and say which one seeks and which one weighs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read బట్ట, then say pannu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **బట్ట**, then say *pannu*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cbbbbc851a66a1e5",
+      "sourceHash": "fnv1a64:53faeae1bb6ce9a7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -357,6 +375,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vidyārthi*, then *vaidyuḍu*, and name the syllable they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dīpaṁ, then read జుట్టు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dīpaṁ*, then read **జుట్టు** and say what it means]"
             }
           ]
         },
@@ -392,7 +419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8f002c8510516bb",
+      "sourceHash": "fnv1a64:62cea66a478d98e1",
       "notice": null,
       "blocks": [
         {
@@ -479,6 +506,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *raitu*, then *rōju*, and say what road the two have in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ఉప్పు, then say vēlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ఉప్పు**, then say *vēlu*]"
             }
           ]
         },
@@ -514,7 +550,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d9521567ac9a836",
+      "sourceHash": "fnv1a64:fcd2d9df0528db1c",
       "notice": null,
       "blocks": [
         {
@@ -601,6 +637,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five, then say *nā pēru* and your own name, and ask *mīru evaru?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pustakaṁ, then read కడుపు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pustakaṁ*, then read **కడుపు** and say what it means]"
             }
           ]
         },

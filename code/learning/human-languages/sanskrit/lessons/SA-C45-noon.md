@@ -12,7 +12,7 @@ headword: "मध्याह्नः"
 gloss: "noon"
 romanization: "madhyāhnaḥ"
 concept_tag: SA-DAYTIME-MADHYAHNA
-prerequisites: [SA-C45-morning]
+prerequisites: [SA-C45-morning, SA-C43-conduct, SA-C44-dark]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C45-DAYTIME-02]
 practises:
-  knowledge: [SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02]
+  knowledge: [SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C43-COURTESY-02, SA-LEX-C44-COLOUR-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ So noon is the middle of the day said in one breath, which is what noon is in mo
 The top of the day, between its two ends.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C43-COURTESY-02, SA-LEX-C44-COLOUR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *madhyāhnaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *prātaḥ*, then *madhyāhnaḥ*]
+- [YOU RECALL: read **विनयः**, then say *śyāmaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02] -->

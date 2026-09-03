@@ -12,7 +12,7 @@ headword: "तथा"
 gloss: "so, in that way, likewise"
 romanization: "tathā"
 concept_tag: SA-REPLY-TATHA
-prerequisites: [SA-C36-all]
+prerequisites: [SA-C36-all, SA-C34-bone, SA-C35-salt]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C36-REPLY-03]
 practises:
-  knowledge: [SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03]
+  knowledge: [SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C34-LIMB-03, SA-LEX-C35-HOUSE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The *t-* at the front is the one you met on **तत्** and **तत्र**, 
 The answer that matches a question you have had since early on.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C34-LIMB-03, SA-LEX-C35-HOUSE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tathā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *katham*, then *tathā*, as question and answer]
+- [YOU RECALL: say *asthi*, then read **लवणम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03] -->

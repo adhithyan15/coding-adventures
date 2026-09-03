@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:dd2c76c0f2c9c345",
+  "lessonIds": [
+    "SA-C59-desha",
+    "SA-C59-bharatam",
+    "SA-C59-bharatiyah",
+    "SA-C59-bharatat"
+  ],
+  "tex": "sanskrit/book/chapters/ch59-where-you-come-from.tex"
+}

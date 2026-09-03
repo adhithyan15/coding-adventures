@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C58-REPLY-01]
 practises:
-  knowledge: [TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01]
+  knowledge: [TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01, TE-LEX-C56-HOUSE-01, TE-LEX-C57-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Telugu shares this habit with a good many languages. English does it with "just"
 A word that makes the next one polite.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01, TE-LEX-C56-HOUSE-01, TE-LEX-C57-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *koñcem*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *koñcem*, then *koñcem pālu*, and hear how much softer it is than *pālu* alone]
+- [YOU RECALL: say *cāpa*, then read **మెడ** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01] -->

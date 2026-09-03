@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:a2ff78c1402db6ec",
+  "lessonIds": [
+    "SA-C52-ca",
+    "SA-C52-va",
+    "SA-C52-kintu",
+    "SA-C52-na-na",
+    "SA-R52-joins"
+  ],
+  "tex": "sanskrit/book/chapters/ch52-two-things-joined.tex"
+}

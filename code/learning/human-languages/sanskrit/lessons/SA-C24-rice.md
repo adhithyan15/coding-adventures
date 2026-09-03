@@ -12,7 +12,7 @@ headword: "ओदनः"
 gloss: "cooked rice"
 romanization: "odanaḥ"
 concept_tag: SA-NOUN-RICE
-prerequisites: [SA-C24-water]
+prerequisites: [SA-C24-water, SA-C22-lead, SA-C23-mother]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C24-ASK-02]
 practises:
-  knowledge: [SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02]
+  knowledge: [SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02, SA-LEX-LEAD, SA-LEX-MOTHER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The traditional derivation takes it from a root meaning "to wet", which reads th
 A general word for food, and a particular thing on the plate.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02, SA-LEX-LEAD, SA-LEX-MOTHER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *odanaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *annam*, then *odanaḥ*, and name the ending each one carries]
+- [YOU RECALL: read **नयति**, then say *mātā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02] -->

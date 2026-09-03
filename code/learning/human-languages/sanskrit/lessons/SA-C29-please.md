@@ -12,7 +12,7 @@ headword: "कृपया"
 gloss: "please"
 romanization: "kṛpayā"
 concept_tag: SA-COURTESY-PLEASE
-prerequisites: [SA-C28-svasti]
+prerequisites: [SA-C28-svasti, SA-C27-so-be-it, SA-C28-now]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C29-COURTESY-01]
 practises:
-  knowledge: [SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01]
+  knowledge: [SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01, SA-LEX-C27-REPLY-01, SA-LEX-C28-LEAVE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English does the same thing and hides it just as well: *please* was once *if it 
 A polite word with a whole clause folded inside it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01, SA-LEX-C27-REPLY-01, SA-LEX-C28-LEAVE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kṛpayā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṛpayā*, and say what it literally claims]
+- [YOU RECALL: say *astu*, then read **इदानीम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01] -->

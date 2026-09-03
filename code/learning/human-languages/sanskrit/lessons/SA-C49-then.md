@@ -12,7 +12,7 @@ headword: "तर्हि"
 gloss: "then, in that case"
 romanization: "tarhi"
 concept_tag: SA-REPLY4-TARHI
-prerequisites: [SA-C48-goose]
+prerequisites: [SA-C48-goose, SA-C47-wall, SA-C48-lion]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C49-REPLY-01]
 practises:
-  knowledge: [SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01]
+  knowledge: [SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01, SA-LEX-C47-DWELL-01, SA-LEX-C48-BEAST-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It is built on the same *t-* that points for you in तत् and in तत्�
 A one-word answer to how things stand.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01, SA-LEX-C47-DWELL-01, SA-LEX-C48-BEAST-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tarhi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *haṁsaḥ*, then *tarhi*]
+- [YOU RECALL: say *bhittiḥ*, then read **सिंहः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01] -->
