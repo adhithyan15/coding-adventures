@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Pin the generated deploy workflow's `peaceiris/actions-gh-pages` to a SHA.
+  The template emitted `@v4`, so every scaffolded app re-introduced an unpinned
+  third-party action holding `contents: write` -- pinning the tree without
+  pinning the generator means the problem returns on the next scaffold.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.1.0] - 2026-03-25
