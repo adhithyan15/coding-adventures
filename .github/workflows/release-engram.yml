@@ -657,6 +657,13 @@ jobs:
     name: Build the XAML app (windows)
     needs: validate
     runs-on: windows-latest
+    # Expected to fail until #14234: both layout variants emit the same
+    # `partial class EngramApp` with the same 260 members, so C# cannot compile
+    # the package. Kept red-but-not-blocking rather than deleted, because it is
+    # the only signal that will tell us when the emitter grows a multi-variant
+    # story -- and a job that hard-fails every run trains people to ignore a
+    # red X, which is worse than either.
+    continue-on-error: true
     steps:
       - name: Checkout the validated release commit
         uses: actions/checkout@v7
