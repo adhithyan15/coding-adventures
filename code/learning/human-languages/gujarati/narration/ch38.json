@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Because, and Therefore",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8c9e976a749c776c",
+  "sourceHash": "fnv1a64:2c01623c7aa407c3",
   "lessons": [
     {
       "id": "GU-C34-kemke",
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1449b5d65f7e3a64",
+      "sourceHash": "fnv1a64:8f370c899bcc5b98",
       "notice": null,
       "blocks": [
         {
@@ -187,7 +187,11 @@
             },
             {
               "kind": "speech",
-              "text": "— કેમ? — why? — … કેમકે (kemke) … — … because …"
+              "text": "— કેમ? — why?"
+            },
+            {
+              "kind": "speech",
+              "text": "— … કેમકે (kemke) … — … because …"
             },
             {
               "kind": "speech",

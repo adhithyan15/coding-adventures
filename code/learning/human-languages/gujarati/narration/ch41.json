@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Who, Where, When, How Many",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ecaf12494660b641",
+  "sourceHash": "fnv1a64:5bc3f4edb7c63a58",
   "lessons": [
     {
       "id": "GU-C37-kon",
@@ -272,7 +272,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f86ded49bacc7607",
+      "sourceHash": "fnv1a64:46c96a593e8d31ed",
       "notice": {
         "modality": "pen",
         "needs": [
