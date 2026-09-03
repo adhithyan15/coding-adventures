@@ -43,19 +43,25 @@
 % Phonemic Awareness: In Practice" module — the SAME already-vetted page
 % `syllable-count.adj`, `phoneme-substitution.adj`, `phoneme-deletion.adj`,
 % and `syllable-substitution.adj` already cite (its "Deleting syllables"
-% section, distinct from the "Deleting Sounds" section `phoneme-deletion.adj`
-% already draws from) — WebFetch-verified THREE separate times for
-% consistency before writing, all byte-identical. The exact spans, composed
-% together the same way `phoneme-deletion.adj`'s row already is (two
-% distinct clean-prose fragments from the same cited section, each stating
-% one fact — deliberately NOT drawing from the section's bracketed
-% stage-direction text or its generic closing instruction, "Repeat these
-% steps with as many as 15 two-syllable words," which names no further
-% concrete word and so grounds nothing beyond this one worked example):
+% section, distinct from the "Deleting sounds" section `phoneme-deletion.adj`
+% already draws from).
 %
-%   "The word is: 'pencil'."
+% The `source` is ONE contiguous span of the page, retaining the page's own
+% bracketed stage directions rather than deleting them. Installment 4e replaced
+% an earlier value that STITCHED three fragments together across intervening
+% sentences with every bracket removed — a composition presented as a quotation.
+% The page's lead-in is a contiguous span of its own and names the word, so it is
+% carried as a `cites` beside the envelope: between them they ground all three of
+% this row's columns, which one span alone does not.
+%
+% The section's closing instruction, "Repeat these steps with as many as 15
+% two-syllable words." — quoted here with the page's own full stop, which an
+% earlier draft turned into a comma inside the quotation marks — names no further
+% concrete word and so grounds nothing beyond this one worked example:
+%
+%   "The word is: ‘pencil’."
 %     (states the original word: pencil)
-%   "I take away 'cil' [remove the card]. 'Pen' is left [touch remaining
+%   "I take away ‘cil’ [remove the card]. ‘Pen’ is left [touch remaining
 %    card]."
 %     (states which syllable was removed and what remains: cil -> pen)
 %
@@ -75,7 +81,14 @@ table syllable_deletion {
 
     row (pencil, cil, pen)
 
-    source "The word is: 'pencil'. I take away 'cil'. 'Pen' is left."
+    source "I take away ‘cil’ [remove the card]. ‘Pen’ is left [touch remaining card]."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
+
+    % The envelope states the deletion (cil -> pen) but never names the word.
+    % This row has THREE columns and the first is `pencil`, so without the
+    % page's lead-in the citation grounds two of them and the reverse query
+    % binds `pencil` off a column nothing cited supports. Saying "the column
+    % already carries it" is circular — the column IS the claim.
+    cites "The word is: ‘pencil’." locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
 }
