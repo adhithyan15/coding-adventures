@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "The Wider Family",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d0877f93206c1754",
+  "sourceHash": "fnv1a64:d3e3fa3668623ca5",
   "lessons": [
     {
       "id": "TE-C71-uncle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85f71d8322695bbe",
+      "sourceHash": "fnv1a64:2eee1f703e086a85",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *māma*, then *ārōgyaṁ*, as one question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say goḍḍali, then read ఎలుక and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *goḍḍali*, then read **ఎలుక** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d825e02c27948d5",
+      "sourceHash": "fnv1a64:ba6a1d40ef6ec248",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *māma*, then *atta*, and say which one is the mother-in-law]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read రంపం, then say kappa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **రంపం**, then say *kappa*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7463aa695c0b22c",
+      "sourceHash": "fnv1a64:80bdd0d6332510a9",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bāva*, then *māma*, and say which one is older]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pāra, then read దోమ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pāra*, then read **దోమ** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ced08a7784ed74db",
+      "sourceHash": "fnv1a64:66f7da553c2ff582",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bāva*, then *maradalu*, and say which of the two is the woman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read సుత్తి, then say uḍuta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **సుత్తి**, then say *uḍuta*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b139ca8cce20bab",
+      "sourceHash": "fnv1a64:155bb2a50cd8fc3a",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *ārōgyaṁ*, asking after the last of them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say karra, then read సాలీడు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *karra*, then read **సాలీడు** and say what it means]"
             }
           ]
         },

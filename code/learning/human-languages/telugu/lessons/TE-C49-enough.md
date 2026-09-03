@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C49-REPLY-02]
 practises:
-  knowledge: [TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02]
+  knowledge: [TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C47-BODY-02, TE-LEX-C48-ROLE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ reviews_of: [TE-C49-true]
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C47-BODY-02, TE-LEX-C48-ROLE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cālu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cālu*, then *nijaṁ*, and say which one you would use to stop someone pouring]
+- [YOU RECALL: read **పన్ను**, then say *vidyārthi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02] -->

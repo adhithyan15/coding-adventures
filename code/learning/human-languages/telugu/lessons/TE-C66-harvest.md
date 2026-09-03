@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C66-FIELD-05]
 practises:
-  knowledge: [TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05]
+  knowledge: [TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05, TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ When the పంట is in and the కల్లం is swept, the day and the seaso
 Five: పొలం, వరి, గడ్డి, కల్లం, పంట. A year's work in five words, and a good place to take your leave.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05, TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paṇṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take your leave with *veḷḷostānu*]
+- [YOU RECALL: say *iṅkā*, then read **నమ్మకం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05] -->

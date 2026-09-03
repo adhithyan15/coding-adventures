@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C64-JOIN-04]
 practises:
-  knowledge: [TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04]
+  knowledge: [TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04, TE-LEX-C62-MADE-04, TE-LEX-C63-HEALTH-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word is inherited. Standing alone at the front of a sentence it means "later
 Four, and this one is about order.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04, TE-LEX-C62-MADE-04, TE-LEX-C63-HEALTH-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *taruvāta*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhōjanaṁ taruvāta*, then just *taruvāta*, and say how the two differ]
+- [YOU RECALL: read **గొడుగు**, then say *rōgaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04] -->

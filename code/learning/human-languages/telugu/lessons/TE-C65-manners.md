@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C65-MANNERS-02]
 practises:
-  knowledge: [TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02]
+  knowledge: [TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C63-HEALTH-02, TE-LEX-C64-JOIN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word is Sanskrit and its first sense was a boundary line. Manners as a line 
 Two: what you feel and what you do.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C63-HEALTH-02, TE-LEX-C64-JOIN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maryāda*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maryāda*, then *gauravaṁ*, and say which one somebody can watch you doing]
+- [YOU RECALL: read **నిద్ర**, then say *mātramē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02] -->

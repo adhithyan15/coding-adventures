@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C69-TOOL-03]
 practises:
-  knowledge: [TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03]
+  knowledge: [TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C67-WALL-03, TE-LEX-C68-SOUND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word is inherited and it stays narrow. It does not stretch into anything fig
 Three. The first one here you push rather than swing.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C67-WALL-03, TE-LEX-C68-SOUND-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pāra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāra*, then *rampaṁ*, and say which one you push]
+- [YOU RECALL: say *gaḍapa*, then read **పాట** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03] -->

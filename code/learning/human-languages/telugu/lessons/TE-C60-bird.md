@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C60-ANIMAL-05]
 practises:
-  knowledge: [TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05]
+  knowledge: [TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05, TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Five animals now, from the గేదె at the gate to the చీమ under it, a
 Five: గేదె, మేక, కోడి, చీమ, పక్షి. Enough to greet a house and name what lives in it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05, TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pakṣi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *namaskāram* to whoever keeps them]
+- [YOU RECALL: say *antē*, then read **నిప్పు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 70,
-  "sourceHash": "fnv1a64:0ea9d47aa46c71be",
+  "sourceHash": "fnv1a64:2000993d2d2f7224",
   "lessonIds": [
     "TE-C70-mouse",
     "TE-C70-frog",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch70.txt",
   "json": "telugu/narration/ch70.json",
-  "textHash": "fnv1a64:33648e914ae7646d",
-  "jsonHash": "fnv1a64:3eaae05ebf909a11",
+  "textHash": "fnv1a64:10e4d7a1316d5568",
+  "jsonHash": "fnv1a64:d3360204fd53eb38",
   "findings": []
 }

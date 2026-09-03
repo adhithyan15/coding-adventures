@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:744dc2deafce2451",
+  "sourceHash": "fnv1a64:4f82abb549f70f32",
   "lessons": [
     {
       "id": "TE-C53-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d13f52b69a499d9",
+      "sourceHash": "fnv1a64:6eca1542265008b2",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ākāśaṁ*, then *namaskāraṁ*, as you would greet somebody outdoors]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kṛtajñata, then read తలుపు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kṛtajñata*, then read **తలుపు** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f01e16f346a90cbf",
+      "sourceHash": "fnv1a64:5c94525b8baad1c8",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sūryuḍu*, then *poddu*, and say which one of them can be prayed to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read మేలు, then say kurcī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **మేలు**, then say *kurcī*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dfd0f612632436c",
+      "sourceHash": "fnv1a64:310c1ba949eb2163",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *candruḍu*, then *sūryuḍu*, and say what the two share at the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gauravaṁ, then read ముగ్గు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gauravaṁ*, then read **ముగ్గు** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25ff5095fd0254cf",
+      "sourceHash": "fnv1a64:02be48c79932aa94",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *cukka*, then *muggu*, and say how the two are connected on the ground]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ఆశీర్వాదం, then say puvvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ఆశీర్వాదం**, then say *puvvu*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd3b04447c20a7d1",
+      "sourceHash": "fnv1a64:d56df0ef52c7d0b6",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say which two of them end the same way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say daṇḍaṁ, then read పూలదండ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *daṇḍaṁ*, then read **పూలదండ** and say what it means]"
             }
           ]
         },

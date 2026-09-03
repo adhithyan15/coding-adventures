@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "River and Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:296b851b4f9163b4",
+  "sourceHash": "fnv1a64:1f03f8f594c9d869",
   "lessons": [
     {
       "id": "TE-C55-river",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a50fdc65d519dcc",
+      "sourceHash": "fnv1a64:58b566f07159c178",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nadi*, then *dayacēsi*, and put the two together as a question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ākāśaṁ, then read చెట్టు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ākāśaṁ*, then read **చెట్టు** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66a96fc8f8f1e4cb",
+      "sourceHash": "fnv1a64:7f27c17ca4036daf",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ceruvu*, then *nadi*, and say which one people made]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read సూర్యుడు, then say komma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **సూర్యుడు**, then say *komma*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a61ae2659ac0bb39",
+      "sourceHash": "fnv1a64:7dfb7df6a4ea6481",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *guṭṭa*, then *ceruvu*, and say which of the two you would climb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say candruḍu, then read వేరు and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *candruḍu*, then read **వేరు** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f22ccb1b6d721d0",
+      "sourceHash": "fnv1a64:4dda4e02c663fcd4",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *grāmaṁ*, then *ceruvu*, and say which one a village is built around]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read చుక్క, then say vittanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **చుక్క**, then say *vittanaṁ*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edd62001958c94ca",
+      "sourceHash": "fnv1a64:acef60ffd3d0dd92",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then ask a stranger the way to the నది using *dayacēsi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mabbu, then read మొక్క and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mabbu*, then read **మొక్క** and say what it means]"
             }
           ]
         },

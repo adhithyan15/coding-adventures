@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C56-HOUSE-01]
 practises:
-  knowledge: [TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01]
+  knowledge: [TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01, TE-LEX-C54-TREE-01, TE-LEX-C55-ROAD-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Offering somebody a చాప is an invitation to stay a while. It is a slower g
 The first thing a floor gets.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01, TE-LEX-C54-TREE-01, TE-LEX-C55-ROAD-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cāpa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cāpa*, then *kurcī*, and say which of the two gets rolled up]
+- [YOU RECALL: say *ceṭṭu*, then read **నది** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01] -->

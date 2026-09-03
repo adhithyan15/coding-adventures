@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C70-CREATURE-04]
 practises:
-  knowledge: [TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04]
+  knowledge: [TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04, TE-LEX-C68-SOUND-04, TE-LEX-C69-TOOL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ An ఉడుత's help is a set phrase for a small contribution offered honestly
 Four. The one nobody chases off.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04, TE-LEX-C68-SOUND-04, TE-LEX-C69-TOOL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uḍuta*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uḍuta*, then *eluka*, and say which one is welcome]
+- [YOU RECALL: read **అరుపు**, then say *sutti*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04] -->

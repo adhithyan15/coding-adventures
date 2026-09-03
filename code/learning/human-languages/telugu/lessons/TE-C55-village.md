@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C55-ROAD-04]
 practises:
-  knowledge: [TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04]
+  knowledge: [TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04, TE-LEX-C53-SKY-04, TE-LEX-C54-TREE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ So a Telugu speaker holds two villages, one for the revenue office and one for h
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04, TE-LEX-C53-SKY-04, TE-LEX-C54-TREE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *grāmaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *grāmaṁ*, then *ceruvu*, and say which one a village is built around]
+- [YOU RECALL: read **చుక్క**, then say *vittanaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04] -->

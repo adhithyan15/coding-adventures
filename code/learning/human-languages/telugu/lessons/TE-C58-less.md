@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C58-REPLY-03]
 practises:
-  knowledge: [TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03]
+  knowledge: [TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C56-HOUSE-03, TE-LEX-C57-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A matched pair like this is worth holding on to, because it lets you guess. Once
 Three, and two of them are a pair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C56-HOUSE-03, TE-LEX-C57-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *takkuva*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *takkuva*, then *ekkuva*, and say which one climbs]
+- [YOU RECALL: say *katti*, then read **పెదవి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03] -->

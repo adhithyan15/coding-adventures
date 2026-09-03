@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C49-REPLY-01]
 practises:
-  knowledge: [TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01]
+  knowledge: [TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C47-BODY-01, TE-LEX-C48-ROLE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ Alone it answers a doubt: *nijaṁ*, "true". With a question on the end it becom
 The first of five answers that are neither అవును nor లేదు.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C47-BODY-01, TE-LEX-C48-ROLE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nijaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nijaṁ*, then *nijamā?*, and say which one asks]
+- [YOU RECALL: say *kālu*, then read **గురువు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01] -->

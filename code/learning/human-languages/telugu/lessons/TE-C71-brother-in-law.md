@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C71-KIN-03]
 practises:
-  knowledge: [TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03]
+  knowledge: [TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C69-TOOL-03, TE-LEX-C70-CREATURE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ City Telugu now uses it for a friend, roughly where English says mate. That irri
 Three. The first one standing on level ground with you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C69-TOOL-03, TE-LEX-C70-CREATURE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bāva*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāva*, then *māma*, and say which one is older]
+- [YOU RECALL: say *pāra*, then read **దోమ** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03] -->

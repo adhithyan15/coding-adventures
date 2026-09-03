@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C72-MARKET-01]
 practises:
-  knowledge: [TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01]
+  knowledge: [TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01, TE-LEX-C70-CREATURE-01, TE-LEX-C71-KIN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ You are known in an అంగడి. Nobody there opens with a price; they open 
 One. The place the rest of this chapter happens in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01, TE-LEX-C70-CREATURE-01, TE-LEX-C71-KIN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *aṅgaḍi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aṅgaḍi*, then *grāmaṁ*, and say which one sits inside the other]
+- [YOU RECALL: say *eluka*, then read **మామ** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01] -->

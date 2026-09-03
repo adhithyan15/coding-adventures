@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C49-REPLY-03]
 practises:
-  knowledge: [TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03]
+  knowledge: [TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C47-BODY-03, TE-LEX-C48-ROLE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The ending is worth having on its own, because it attaches to any verb stem: *ce
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C47-BODY-03, TE-LEX-C48-ROLE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tappakuṇḍā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tappakuṇḍā*, then *cālu*, and say which one is a promise]
+- [YOU RECALL: say *juṭṭu*, then read **వైద్యుడు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03] -->

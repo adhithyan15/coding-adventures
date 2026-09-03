@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 60,
-  "sourceHash": "fnv1a64:c81bca627d596923",
+  "sourceHash": "fnv1a64:e258167f1c365c8a",
   "lessonIds": [
     "TE-C60-buffalo",
     "TE-C60-goat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch60.txt",
   "json": "telugu/narration/ch60.json",
-  "textHash": "fnv1a64:3f999173c19c13be",
-  "jsonHash": "fnv1a64:e1ff1b0f34ad8f74",
+  "textHash": "fnv1a64:e0ebde5e519adf25",
+  "jsonHash": "fnv1a64:91b7c5119a3a4cc9",
   "findings": []
 }

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C64-JOIN-01]
 practises:
-  knowledge: [TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01]
+  knowledge: [TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01, TE-LEX-C62-MADE-01, TE-LEX-C63-HEALTH-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is a small word that softens a great deal. Adding కూడా to an answer t
 The first joining word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01, TE-LEX-C62-MADE-01, TE-LEX-C63-HEALTH-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kūḍā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nēnu kūḍā*, then *perugu kūḍā*, and say what each one adds]
+- [YOU RECALL: say *dāraṁ*, then read **ఆకలి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01] -->

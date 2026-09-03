@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C49-REPLY-05]
 practises:
-  knowledge: [TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05]
+  knowledge: [TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Now look at the front of it. అ- points far, and already carries అది, "th
 Five answers, and a three-way grid you can now see running under అది, ఇక్కడ and ఎలా.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *alāgē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *alāgē* as a reply to *dayacēsi kūrcō*]
+- [YOU RECALL: say *kaḍupu*, then read **అతిథి** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05] -->

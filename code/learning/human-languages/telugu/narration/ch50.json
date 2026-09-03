@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d7882d1a74054ce4",
+  "sourceHash": "fnv1a64:ca789d5144388232",
   "lessons": [
     {
       "id": "TE-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f567c8733e06fa9a",
+      "sourceHash": "fnv1a64:aabd338b7cb512a1",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ippuḍu*, then *ippuḍu veḷḷu* — \"go now\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say guruvu, then read నిజం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *guruvu*, then read **నిజం** and say what it means]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cf6ef7f3206f835",
+      "sourceHash": "fnv1a64:bc0c3ae2393c7d2e",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ippuḍu*, then *elluṇḍi*, and say which one is further off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read విద్యార్థి, then say cālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **విద్యార్థి**, then say *cālu*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cc4ded7e7604b7e",
+      "sourceHash": "fnv1a64:9544f002c99c58b9",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *prayāṇaṁ*, then *dīpaṁ*, and name the ending they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vaidyuḍu, then read తప్పకుండా and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vaidyuḍu*, then read **తప్పకుండా** and say what it means]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0f84523cc3f570c",
+      "sourceHash": "fnv1a64:3a2f594e67bf718b",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bayaludēru*, then *prayāṇaṁ*, and say which of the two is inherited]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read రైతు, then say ēmō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **రైతు**, then say *ēmō*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d2e174787320cc1",
+      "sourceHash": "fnv1a64:47a7e7701fae57b4",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *veḷḷostānu*, then the reply *veḷḷi raṇḍi*, and say why neither half stands alone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say atithi, then read అలాగే and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *atithi*, then read **అలాగే** and say what it means]"
             }
           ]
         },

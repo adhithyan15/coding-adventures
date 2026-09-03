@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C54-TREE-01]
 practises:
-  knowledge: [TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01]
+  knowledge: [TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01, TE-LEX-C52-WELCOME-01, TE-LEX-C53-SKY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A meaning that moves up or down the scale like that is the commonest kind of dri
 The thing the rest of this chapter is made of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01, TE-LEX-C52-WELCOME-01, TE-LEX-C53-SKY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ceṭṭu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ceṭṭu*, then *puvvu*, and say which one grows on the other]
+- [YOU RECALL: say *talupu*, then read **ఆకాశం** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01] -->

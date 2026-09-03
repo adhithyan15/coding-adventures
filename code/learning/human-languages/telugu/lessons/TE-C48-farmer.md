@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C48-ROLE-04]
 practises:
-  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04]
+  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C46-ASK-04, TE-LEX-C47-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ That is a second arrival from the north-west, after రోజు (*rōju*) and �
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C46-ASK-04, TE-LEX-C47-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *raitu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *raitu*, then *rōju*, and say what road the two have in common]
+- [YOU RECALL: read **ఉప్పు**, then say *vēlu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04] -->

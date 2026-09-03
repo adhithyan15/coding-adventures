@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C54-TREE-03]
 practises:
-  knowledge: [TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03]
+  knowledge: [TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C52-WELCOME-03, TE-LEX-C53-SKY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Telugu is comfortable letting a word carry a solid thing and an abstract idea at
 Three: what is up, what is out, and what is under.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C52-WELCOME-03, TE-LEX-C53-SKY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vēru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vēru*, then *komma*, and say which end of the చెట్టు each one is at]
+- [YOU RECALL: say *muggu*, then read **చంద్రుడు** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03] -->

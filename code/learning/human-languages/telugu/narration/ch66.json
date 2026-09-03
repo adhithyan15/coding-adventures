@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Field",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e23f6c0c2f7c4565",
+  "sourceHash": "fnv1a64:d77fc54cb29ac22e",
   "lessons": [
     {
       "id": "TE-C66-field",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b01a09e8676510e1",
+      "sourceHash": "fnv1a64:660c37694b0a4810",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *polaṁ*, then *grāmaṁ*, and say which one feeds the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kūḍā, then read స్వాగతం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kūḍā*, then read **స్వాగతం** and say what it means]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:432cb121542c281b",
+      "sourceHash": "fnv1a64:abfa559ce33bc0ec",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vari*, then say which of బియ్యం and అన్నం comes next]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read మాత్రమే, then say maryāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **మాత్రమే**, then say *maryāda*]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f51199bf8cd1faf7",
+      "sourceHash": "fnv1a64:7071c69351731fb6",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gaḍḍi*, then *gēde*, and say which one is carried to the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ayitē, then read మనవి and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ayitē*, then read **మనవి** and say what it means]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed88cf387461732a",
+      "sourceHash": "fnv1a64:662455739123e9df",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kallaṁ*, then *cīpuru*, and say which one is used on the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read తరువాత, then say anumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **తరువాత**, then say *anumati*]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6a2a94db3af3e1a",
+      "sourceHash": "fnv1a64:e7ef81e33d61e4ef",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then take your leave with *veḷḷostānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iṅkā, then read నమ్మకం and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iṅkā*, then read **నమ్మకం** and say what it means]"
             }
           ]
         },

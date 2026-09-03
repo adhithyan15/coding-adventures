@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C72-MARKET-03]
 practises:
-  knowledge: [TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03]
+  knowledge: [TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C70-CREATURE-03, TE-LEX-C71-KIN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Asking is direct and expected. Nobody in an అంగడి minds the question, 
 Three. The question you are allowed to ask first.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C70-CREATURE-03, TE-LEX-C71-KIN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dhara*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dhara*, then *ḍabbu*, in the order they come up]
+- [YOU RECALL: say *dōma*, then read **బావ** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C68-SOUND-01]
 practises:
-  knowledge: [TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05, TE-LEX-C68-SOUND-01]
+  knowledge: [TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05, TE-LEX-C68-SOUND-01, TE-LEX-C66-FIELD-01, TE-LEX-C67-WALL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A room with no శబ్దం in it is not called quiet in Telugu so much as em
 One. The most general thing an ear can take in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05, TE-LEX-C68-SOUND-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05, TE-LEX-C68-SOUND-01, TE-LEX-C66-FIELD-01, TE-LEX-C67-WALL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śabdaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śabdaṁ*, then *kiṭikī*, and say which one comes in through the other]
+- [YOU RECALL: say *polaṁ*, then read **గోడ** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05, TE-LEX-C68-SOUND-01] -->

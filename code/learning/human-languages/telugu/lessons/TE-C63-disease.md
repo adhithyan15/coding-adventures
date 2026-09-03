@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C63-HEALTH-04]
 practises:
-  knowledge: [TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04]
+  knowledge: [TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04, TE-LEX-C61-KITCHEN-04, TE-LEX-C62-MADE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It is Sanskrit, from a root about breaking — an illness is something breaking 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04, TE-LEX-C61-KITCHEN-04, TE-LEX-C62-MADE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *rōgaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *rōgaṁ*, then *daggu*, and say which one is the smaller trouble]
+- [YOU RECALL: read **చక్కెర**, then say *goḍugu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04] -->

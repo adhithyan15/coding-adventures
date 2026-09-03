@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C68-SOUND-03]
 practises:
-  knowledge: [TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03]
+  knowledge: [TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C66-FIELD-03, TE-LEX-C67-WALL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Anything repeated past patience becomes a పాట as an insult, in the way Eng
 Three. And a పాత పాట is an old song, which is a phrase you have now earned.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C66-FIELD-03, TE-LEX-C67-WALL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pāṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāta*, then *pāṭa*, and hear the one letter between them]
+- [YOU RECALL: say *gaḍḍi*, then read **గడప** and say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03] -->

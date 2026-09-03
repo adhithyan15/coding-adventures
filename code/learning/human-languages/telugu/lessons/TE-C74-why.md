@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C74-LINK-04]
 practises:
-  knowledge: [TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-ETYMON-C34-ADUGU-02, TE-ETYMON-C34-ADUGU-03, TE-LEX-C34-ADUGU-01]
+  knowledge: [TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-ETYMON-C34-ADUGU-02, TE-ETYMON-C34-ADUGU-03, TE-LEX-C34-ADUGU-01, TE-LEX-C72-MARKET-04, TE-LEX-C73-TASTE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,13 +50,14 @@ It goes where its answer goes, not at the front: **మీరు ఎందుక�
 The question the next word answers.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-ETYMON-C34-ADUGU-02, TE-ETYMON-C34-ADUGU-03, TE-LEX-C34-ADUGU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-ETYMON-C34-ADUGU-02, TE-ETYMON-C34-ADUGU-03, TE-LEX-C34-ADUGU-01, TE-LEX-C72-MARKET-04, TE-LEX-C73-TASTE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *enduku*]
 - [YOU SAY: *enduku*, once more]
 - [YOU SAY: ask *enduku* about something somebody just told you]
 - [YOU RECALL: say *aḍugu*, then say *enduku*]
+- [YOU RECALL: read **తూకం**, then say *kāraṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-ETYMON-C34-ADUGU-02, TE-ETYMON-C34-ADUGU-03, TE-LEX-C34-ADUGU-01] -->

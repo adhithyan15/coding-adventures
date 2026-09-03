@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C69-TOOL-04]
 practises:
-  knowledge: [TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04]
+  knowledge: [TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04, TE-LEX-C67-WALL-04, TE-LEX-C68-SOUND-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ In a city that second sense is now the commoner one, which is worth knowing befo
 Four. The one whose second meaning you are likelier to hear.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04, TE-LEX-C67-WALL-04, TE-LEX-C68-SOUND-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sutti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sutti*, then *goḍḍali*, and say which one has a short handle]
+- [YOU RECALL: read **మెట్టు**, then say *arupu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C56-HOUSE-04]
 practises:
-  knowledge: [TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04]
+  knowledge: [TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04, TE-LEX-C54-TREE-04, TE-LEX-C55-ROAD-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ When a kitchen has a name for each shape, the names are telling you which shapes
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04, TE-LEX-C54-TREE-04, TE-LEX-C55-ROAD-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ginne*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ginne*, then *katti*, and say which one goes on the fire]
+- [YOU RECALL: read **విత్తనం**, then say *grāmaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04] -->
