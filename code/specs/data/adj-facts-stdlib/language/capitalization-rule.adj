@@ -26,7 +26,7 @@
 %
 %     rule (this table's atom label)   description (this table's atom label)      rule quote (verbatim)
 %     -------------------------------  ------------------------------------------  --------------------------------------------------------------------------------
-%     first_word_of_sentence           capitalize_first_letter                     "Whenever you start a sentence, capitalize the first letter of the first word."
+%     first_word_of_sentence           capitalize_first_letter                     "Here’s an easy rule to follow—whenever you start a sentence, capitalize the first letter of the first word."
 %     pronoun_i                        capitalized_anywhere_in_sentence             "Capitalize I when using it as a pronoun anywhere in a sentence."
 %     proper_noun                      capitalized_regardless_of_position           "Proper nouns are always capitalized in English, no matter where they fall in
 %                                                                                     a sentence."
@@ -51,7 +51,7 @@ table capitalization_rule {
     row (pronoun_i, capitalized_anywhere_in_sentence)
     row (proper_noun, capitalized_regardless_of_position)
 
-    source "Whenever you start a sentence, capitalize the first letter of the first word."
+    source "Here’s an easy rule to follow—whenever you start a sentence, capitalize the first letter of the first word."
     locator "https://www.grammarly.com/blog/punctuation-capitalization/capitalization-rules/"
     trust consensus
 }

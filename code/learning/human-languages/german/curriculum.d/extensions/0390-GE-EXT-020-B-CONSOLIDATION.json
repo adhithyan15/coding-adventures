@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-020-B-CONSOLIDATION",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can run the four Perfekt slots in either direction and use them in a short exchange about yesterday.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C15-perfekt-practice"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C15-register",
+    "language": "german",
+    "chapter": 17,
+    "sequence": 415,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a447e41689e99762"
+  },
+  "findings": []
+}

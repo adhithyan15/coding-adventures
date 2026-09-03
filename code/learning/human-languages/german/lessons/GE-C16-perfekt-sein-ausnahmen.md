@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-perfekt-sein-ausnahmen
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 455
-chapter: 18
+sequence: 585
+chapter: 20
 type: grammar
 headword: ich bin gewesen
 gloss: the short learned list — the verbs on the sein side that the motion rule does not predict

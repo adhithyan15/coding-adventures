@@ -1,22 +1,24 @@
 {
   "language": "german",
   "chapter": 17,
-  "sourceHash": "fnv1a64:2d7a3df157cf84ae",
+  "sourceHash": "fnv1a64:1267f9153c0a7ce8",
   "lessonIds": [
-    "GE-C16-ich-war",
-    "GE-C16-du-warst",
-    "GE-C16-er-war",
-    "GE-C16-wir-waren",
-    "GE-C16-drei-wurzeln",
-    "GE-C16-suppletion",
-    "GE-C16-haeufig-unregelmaessig",
-    "GE-C16-war-practice"
+    "GE-C15-praeteritum",
+    "GE-C15-sagte",
+    "GE-C15-machte",
+    "GE-C15-dentales-praeteritum",
+    "GE-C15-hatte",
+    "GE-C15-register",
+    "GE-C15-konnte",
+    "GE-C15-hochfrequent",
+    "GE-C15-praeteritum-map",
+    "GE-C15-praeteritum-practice"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 8,
+  "voiceLessons": 10,
+  "drivablePrefix": 10,
   "text": "german/narration/ch17.txt",
   "json": "german/narration/ch17.json",
-  "textHash": "fnv1a64:b363d37f2030b4f9",
-  "jsonHash": "fnv1a64:0aa3fd0e52802e99",
+  "textHash": "fnv1a64:488441f39ef1489e",
+  "jsonHash": "fnv1a64:a841db56e1eeb44c",
   "findings": []
 }

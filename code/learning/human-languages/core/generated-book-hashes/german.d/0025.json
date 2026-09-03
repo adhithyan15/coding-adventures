@@ -1,9 +1,9 @@
 {
   "language": "german",
   "chapter": 25,
-  "sourceHash": "fnv1a64:1cedb63b9580d243",
+  "sourceHash": "fnv1a64:07cfc4945df73b11",
   "lessonIds": [
-    "GE-C23-gruen-gelb"
+    "GE-C21-das-wetter"
   ],
-  "tex": "german/book/chapters/ch25-green-and-yellow.tex"
+  "tex": "german/book/chapters/ch25-weather.tex"
 }

@@ -158,12 +158,13 @@ teaching order.
 
 - Hand-written French chapters: **9 -> 8**. Every French chapter that remains is
   in the 9–16 range.
-- Corpus hand-written chapters: **18** on this branch after merging `main`, and
-  the figure is stated rather than differenced on purpose. It was 20 when the
-  branch was cut and 19 after this chapter; German chapter 5 landed from a
-  sibling in the same window and took it to 18 without this branch touching
-  German. A corpus counter is not this change's to compose — it is measured on
-  the tree that exists, or it is wrong.
+- Corpus hand-written chapters: **French 8, German 9, nothing else** — stated as
+  a census rather than a total, and deliberately not differenced. The total was
+  20 when this branch was cut, 19 after this chapter, 18 after German chapter 5
+  landed from a sibling, and 17 after German chapter 15 did, none of which this
+  branch touched. A corpus counter that two other branches are moving is not
+  this change's to compose; the half that IS this change's to claim is French's
+  9 → 8, and the census survives the next merge in a way a total does not.
 - `handwritten_parity.py french`: **45 -> 45** blocks at risk — chapter 2
   contributed none of them.
 - Schema-v2 French lessons: **119 -> 128**.
