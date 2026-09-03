@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 import tempfile
 import unittest
@@ -169,10 +170,14 @@ class ArchiveWebTests(unittest.TestCase):
             self.assertEqual(output.name, "engram-web-v0.3.0.zip")
             with zipfile.ZipFile(output) as archive:
                 names = sorted(archive.namelist())
+                # Directories are stored explicitly. Without an entry of their
+                # own an EMPTY directory is dropped in silence, and a macOS
+                # `.app` bundle can need one to be well-formed.
                 self.assertEqual(
                     names,
                     [
                         "engram-web-v0.3.0/SOURCE_COMMIT",
+                        "engram-web-v0.3.0/assets/",
                         "engram-web-v0.3.0/assets/index-abc.js",
                         "engram-web-v0.3.0/engram_engine.wasm",
                         "engram-web-v0.3.0/index.html",
@@ -674,6 +679,124 @@ class ArchiveComposeTests(unittest.TestCase):
                     "0.4.0", "macos", dist, root / "out", COMMIT
                 )
             self.assertIn("unsafe archive member name", str(caught.exception))
+
+    def test_refuses_a_name_windows_would_strip_to_another_member(self) -> None:
+        # The bypass an allowlist makes unreachable rather than patching. Win32
+        # strips a trailing dot from every path component, so `index.html.` and
+        # `index.html` are two members here and ONE file on a Windows
+        # downloader's machine -- the later one silently wins. No symlink and
+        # no code execution needed: one file committed under a directory that
+        # is copied into the payload verbatim.
+        for name in ["config.json.", "config.json "]:
+            with self.subTest(name=name):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    dist = _write_compose_dist(root)
+                    app = dist / "Engram.app" / "Contents" / "app"
+                    (app / "config.json").write_text("{}\n", encoding="utf-8")
+                    (app / name).write_text("ATTACKER\n", encoding="utf-8")
+                    with self.assertRaises(ValueError) as caught:
+                        engram_release.archive_compose(
+                            "0.4.0", "macos", dist, root / "out", COMMIT
+                        )
+                    self.assertIn("dot or space", str(caught.exception))
+
+    def test_refuses_a_reserved_windows_device_name(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (dist / "Engram.app" / "NUL.txt").write_text("x\n", encoding="utf-8")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("reserved Windows device name", str(caught.exception))
+
+    def test_refuses_a_name_outside_the_publishable_character_set(self) -> None:
+        # A colon is an NTFS alternate-data-stream separator; the allowlist
+        # rejects it without having had to know that.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (dist / "Engram.app" / "a:b.txt").write_text("x\n", encoding="utf-8")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("publishable character set", str(caught.exception))
+
+    def test_the_real_payload_shapes_are_accepted(self) -> None:
+        # The allowlist's cost is false positives, which fail the release. These
+        # are the shapes the actual builds emit -- Vite hashes, a jpackage
+        # bundle, a code-signature directory, spaced names -- measured against
+        # the app tree rather than guessed.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            app = dist / "Engram.app" / "Contents"
+            (app / "_CodeSignature").mkdir()
+            (app / "_CodeSignature" / "CodeResources").write_text("<x/>", encoding="utf-8")
+            (app / "Info.plist").write_text("<x/>", encoding="utf-8")
+            (app / "app" / "index-D4f_9a2b.js").write_text("//", encoding="utf-8")
+            (app / "app" / "NotoSansTamil-Static.ttf").write_bytes(b"\x00\x01\x00\x00")
+            (app / "app" / "ASSEMBLY_EXCEPTION").write_text("x", encoding="utf-8")
+            (app / "app" / "Java Runtime.cfg").write_text("x", encoding="utf-8")
+            (app / "app" / ".jpackage.xml").write_text("<x/>", encoding="utf-8")
+
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            self.assertTrue(output.is_file())
+
+    def test_refuses_a_hard_link(self) -> None:
+        # `_write_symlink` refuses to follow a symlink out of the payload; a
+        # hard link is the same reach with none of the tells.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            secret = root / "secret.txt"
+            secret.write_text("AWS_SECRET=hunter2\n", encoding="utf-8")
+            try:
+                os.link(secret, dist / "Engram.app" / "harmless.txt")
+            except OSError:
+                self.skipTest("filesystem does not support hard links")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("hard link", str(caught.exception))
+
+    def test_an_empty_directory_survives(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (dist / "Engram.app" / "Contents" / "PlugIns").mkdir()
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            with zipfile.ZipFile(output) as archive:
+                self.assertIn(
+                    "engram-compose-macos-v0.4.0/Engram.app/Contents/PlugIns/",
+                    archive.namelist(),
+                )
+
+    def test_setuid_and_world_write_are_not_published(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            planted = dist / "Engram.app" / "planted.sh"
+            planted.write_text("#!/bin/sh\n", encoding="utf-8")
+            planted.chmod(0o6777)
+
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            member = "engram-compose-macos-v0.4.0/Engram.app/planted.sh"
+            with zipfile.ZipFile(output) as archive:
+                mode = archive.getinfo(member).external_attr >> 16
+            self.assertEqual(mode & 0o7000, 0, "setuid/setgid survived")
+            self.assertEqual(mode & 0o022, 0, "group/other write survived")
+            self.assertTrue(mode & 0o100, "the executable bit was lost")
 
     def test_refuses_a_distribution_that_was_never_built(self) -> None:
         # The failure this replaced was the opposite shape -- a packaging step

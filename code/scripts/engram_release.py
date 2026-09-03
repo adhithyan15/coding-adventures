@@ -20,7 +20,9 @@ import argparse
 import os
 import posixpath
 import re
+import shutil
 import sys
+import unicodedata
 import zipfile
 from pathlib import Path
 
@@ -155,19 +157,29 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
     partial = output.with_name(output.name + ".partial")
     try:
         with zipfile.ZipFile(partial, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-            archive.writestr(f"{root_name}/SOURCE_COMMIT", f"{commit}\n")
+            provenance = zipfile.ZipInfo(f"{root_name}/SOURCE_COMMIT")
+            provenance.create_system = 3
+            provenance.external_attr = 0o644 << 16  # else it extracts as 0600
+            provenance.compress_type = zipfile.ZIP_DEFLATED
+            archive.writestr(provenance, f"{commit}\n")
             # Any two members that differ only by case are one file on the
             # reader's macOS or Windows machine, and the second silently
             # overwrites the first. `SOURCE_COMMIT` is the security-relevant
             # instance -- it is seeded here so the general check covers it --
             # but a payload that quietly loses a file on extraction is a bad
             # payload whatever the file was.
-            seen: dict[str, str] = {f"{root_name}/source_commit": "SOURCE_COMMIT"}
+            # Keyed exactly as members are, or the seed silently stops
+            # matching: `SEMVER` permits an uppercase prerelease, so a tag like
+            # `engram-v0.3.0-RC.1` made this entry unreachable.
+            seen: dict[str, str] = {
+                _collision_key(f"{root_name}/SOURCE_COMMIT"): "SOURCE_COMMIT"
+            }
+            total = 0
             for path in sorted(source.rglob("*")):
                 relative = path.relative_to(source).as_posix()
                 _reject_unsafe_member(relative)
                 member = f"{root_name}/{relative}"
-                clash = seen.setdefault(member.lower(), relative)
+                clash = seen.setdefault(_collision_key(member), relative)
                 if clash != relative:
                     raise ValueError(
                         f"two members collide when case is folded, so one would "
@@ -176,68 +188,193 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
                     )
                 if path.is_symlink():
                     _write_symlink(archive, path, root, root_name, member)
-                elif path.is_file():
-                    archive.write(path, member)
+                    continue
+                if path.is_dir():
+                    # Stored explicitly: an empty directory is otherwise
+                    # dropped in silence, and a `.app` bundle can need one.
+                    archive.writestr(_directory_entry(f"{member}/"), b"")
+                    continue
+
+                status = path.stat()
+                if not path.is_file():
+                    # A FIFO, socket, or device node cannot be published, and
+                    # skipping it silently contradicts what this function
+                    # promises. Neither a Vite `dist/` nor a jpackage image
+                    # contains one, so this only ever fires on a surprise.
+                    raise ValueError(
+                        f"payload contains a non-regular file: {relative}"
+                    )
+                if status.st_nlink > 1:
+                    # `_write_symlink` refuses to follow a symlink out of the
+                    # payload; a hard link is the same reach with none of the
+                    # tells -- `is_symlink()` is False and the bytes are simply
+                    # embedded. Git cannot store one and neither build produces
+                    # one, so refusing costs nothing.
+                    raise ValueError(
+                        f"payload contains a hard link, which can reach outside "
+                        f"it without appearing to: {relative}"
+                    )
+
+                total += status.st_size
+                if total > MAX_PAYLOAD_BYTES:
+                    raise ValueError(
+                        f"payload exceeds {MAX_PAYLOAD_BYTES} uncompressed bytes; "
+                        f"refusing to publish an archive that expands without "
+                        f"bound"
+                    )
+                _write_file(archive, path, member, status.st_mode)
     except BaseException:
         partial.unlink(missing_ok=True)
         raise
     os.replace(partial, output)
 
 
-def _unsafe_path_text(text: str) -> str | None:
-    """Why ``text`` cannot be trusted as a path inside an archive, or ``None``.
+# A path component we are willing to publish. An ALLOWLIST, deliberately.
+#
+# The alternative -- enumerating unsafe shapes -- is unwinnable, and this file
+# learned that the expensive way: three review rounds each found one more
+# equivalence rule nobody had modelled. Backslash-as-separator. Case folding.
+# Win32 stripping trailing dots and spaces, so `index.html.` and `index.html`
+# are two members here and one file on the downloader's machine. Still waiting
+# were NTFS `:` alternate data streams, reserved device names, and HFS/APFS
+# Unicode normalisation. That rule set is defined by other people's extractors,
+# so it can only grow, and every miss is silent.
+#
+# What we archive, by contrast, is a *closed* set: Vite emits hashed ASCII
+# names, and jpackage emits ASCII plus the occasional space. So the safe shapes
+# are named instead, and every one of those equivalence rules becomes
+# unreachable rather than individually patched. A payload that falls outside
+# this fails loudly at release time, which is the right direction to fail; the
+# allowlist can then be widened once, with evidence, rather than tightened
+# repeatedly under attack.
+SAFE_COMPONENT = re.compile(r"[A-Za-z0-9_.][A-Za-z0-9._+ -]*")
 
-    Applied to member names *and* to symlink targets, from one definition, so
-    the two halves of the pair cannot drift apart -- they were written
-    separately once and the target half was missing this entirely.
-
-    A backslash is the interesting one. It is a perfectly legal character in a
-    POSIX filename and `posixpath` treats it as ordinary, but several
-    third-party Windows extractors read it as a separator. So a symlink target
-    of ``..\\..\\..\\evil.exe`` normalises to one harmless-looking in-root
-    component under the rules we check with, and splits to ``../evil.exe`` --
-    outside the payload -- under the rules that extract it.
-    """
-
-    if not text:
-        return "is empty"
-    if "\\" in text:
-        return "contains a backslash, which some extractors read as a separator"
-    if any(ord(ch) < 0x20 for ch in text):
-        return "contains a control character"
-    return None
+# Win32 resolves these as devices no matter the directory or extension.
+RESERVED_NAMES = frozenset(
+    {"CON", "PRN", "AUX", "NUL"}
+    | {f"COM{digit}" for digit in range(1, 10)}
+    | {f"LPT{digit}" for digit in range(1, 10)}
+)
 
 
 def _reject_unsafe_member(relative: str) -> None:
-    """Refuse a member name that some extractor would read as a path.
+    """Refuse a member name we are not certain every extractor reads the same.
 
-    ``relative_to`` cannot produce ``..`` or a leading slash, so the classic
-    zip-slip shapes are already impossible. A backslash is the one that gets
-    through: it is a perfectly legal character in a POSIX filename and
-    ``as_posix`` passes it along, but several third-party Windows extractors
-    treat it as a separator, so a file named ``..\\..\\evil.exe`` would land
-    outside the target directory.
+    Checked component by component, because the hazards are per-component:
+    Win32 strips a trailing dot from each one, and a reserved device name is
+    reserved at any depth.
     """
 
-    reason = _unsafe_path_text(relative)
-    if reason is not None:
-        raise ValueError(f"unsafe archive member name: {relative!r} {reason}")
+    for component in relative.split("/"):
+        if component in {"", ".", ".."}:
+            raise ValueError(f"unsafe archive member name: {relative!r}")
+        if SAFE_COMPONENT.fullmatch(component) is None:
+            raise ValueError(
+                f"unsafe archive member name: {relative!r} -- component "
+                f"{component!r} is outside the publishable character set"
+            )
+        # Win32 strips these, so `index.html.` and `index.html` are one file
+        # there and two members here: the later one silently wins.
+        if component.endswith((".", " ")):
+            raise ValueError(
+                f"unsafe archive member name: {relative!r} -- component "
+                f"{component!r} ends with a dot or space, which Windows strips"
+            )
+        if component.split(".")[0].upper() in RESERVED_NAMES:
+            raise ValueError(
+                f"unsafe archive member name: {relative!r} -- component "
+                f"{component!r} is a reserved Windows device name"
+            )
 
-    # `SOURCE_COMMIT` is written first, so a payload carrying its own copy
-    # produces two members with the same name -- and readers take the LAST, so
-    # the planted value wins. That defeats the one thing this member exists to
-    # do. Python only warns, and CI does not fail on warnings. The precondition
-    # is not hypothetical: Vite copies `public/` into `dist/` verbatim.
     # Case-folded, because the collision is. On a case-sensitive build
     # filesystem `source_commit` and `SOURCE_COMMIT` are two distinct members
     # and nothing warns -- the shadowing then happens on the *downloader's*
     # machine, where macOS and Windows collapse them and the planted value
     # wins. Nested `sub/SOURCE_COMMIT` is still fine: it does not collide.
-    if relative.upper() == "SOURCE_COMMIT":
+    if _collision_key(relative) == _collision_key("SOURCE_COMMIT"):
         raise ValueError(
             "payload contains its own SOURCE_COMMIT, which would shadow the "
             "commit recorded here"
         )
+
+
+def _collision_key(relative: str) -> str:
+    """How the reader's filesystem will decide two members are one file.
+
+    Case folding is the familiar half. Normalisation is the other: macOS
+    case-insensitive volumes are normalisation-insensitive too, so a name in
+    NFD and the same name in NFC are one file there and two members in an
+    archive built on Linux. The allowlist above already confines names to
+    ASCII, where both rules are trivial -- this stays explicit so the guarantee
+    does not quietly depend on that.
+    """
+
+    return unicodedata.normalize("NFC", relative).casefold()
+
+
+def _reject_unsafe_target(path: Path, target: str) -> None:
+    """Refuse a symlink target we cannot vouch for on the reader's machine.
+
+    The same shapes as a member name, for the same reasons -- these were
+    written separately once and the target half was missing the checks
+    entirely, which is why they now share ``SAFE_COMPONENT``. A backslash is
+    the sharp one: `posixpath` treats it as an ordinary character, so a target
+    of ``..\\..\\..\\evil.exe`` normalises to a single harmless-looking
+    in-payload component under the rules we validate with, and splits to
+    ``../evil.exe`` under the rules that extract it.
+    """
+
+    if not target:
+        raise ValueError(f"unsafe symlink target: {path} -> empty")
+    for component in target.split("/"):
+        if component in {"", "."}:
+            continue
+        if component == "..":
+            continue  # Where it lands is checked below, not here.
+        if SAFE_COMPONENT.fullmatch(component) is None or component.endswith(
+            (".", " ")
+        ):
+            raise ValueError(
+                f"unsafe symlink target: {path} -> {target!r} -- component "
+                f"{component!r} is outside the publishable character set"
+            )
+
+
+# A ceiling on what one release payload may expand to. The Compose
+# distribution bundles a JDK runtime and is the largest thing here by far, at a
+# few hundred megabytes; this sits well above that so it only ever fires on
+# something absurd. Without it, one planted zero-filled file compresses at
+# ~1000:1 and the published asset is a decompression bomb aimed at downloaders.
+MAX_PAYLOAD_BYTES = 4 * 1024 * 1024 * 1024
+
+
+def _directory_entry(member: str) -> zipfile.ZipInfo:
+    """An explicit directory member, so empty directories survive."""
+
+    info = zipfile.ZipInfo(member)
+    info.create_system = 3
+    info.external_attr = (0o040755 << 16) | 0x10
+    return info
+
+
+def _write_file(
+    archive: zipfile.ZipFile, path: Path, member: str, mode: int
+) -> None:
+    """Copy one regular file in, with its mode narrowed to what we publish.
+
+    The executable bit is carried through -- an app that loses it extracts
+    unlaunchable -- but setuid, setgid, and group/other write are dropped
+    rather than published. Streamed rather than read whole: the JDK runtime in
+    a Compose distribution contains individual files of a hundred megabytes.
+    """
+
+    info = zipfile.ZipInfo.from_file(path, member)
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.create_system = 3
+    permissions = 0o755 if mode & 0o111 else 0o644
+    info.external_attr = permissions << 16
+    with path.open("rb") as source, archive.open(info, "w") as target:
+        shutil.copyfileobj(source, target)
 
 
 def _write_symlink(
@@ -266,13 +403,7 @@ def _write_symlink(
 
     target = os.readlink(path)
 
-    # Checked with the same predicate as member names -- see `_unsafe_path_text`
-    # for why a backslash in a *target* escapes the payload on the extractor's
-    # machine. Doing it here also makes `C:\\Windows\\...` rejected uniformly
-    # rather than only when the archiving runner happens to be Windows.
-    reason = _unsafe_path_text(target)
-    if reason is not None:
-        raise ValueError(f"unsafe symlink target: {path} -> {target!r} {reason}")
+    _reject_unsafe_target(path, target)
 
     # An absolute target cannot be right in a relocatable payload: it either
     # dangles on the reader's machine or points somewhere unrelated, and it
@@ -286,8 +417,12 @@ def _write_symlink(
     # actually gets -- and a link can satisfy the first while violating the
     # second: from `dist/assets/`, `../../dist/evil` lands back inside the
     # build tree, but from `<payload>/assets/` it escapes the payload root.
-    # Lexical normalisation is sound here because every component above the
-    # link is a real directory: `rglob` never descends into a symlink.
+    # This is a NECESSARY but NOT SUFFICIENT filter, and the physical
+    # `resolve()` below is load-bearing -- do not "simplify" by dropping it.
+    # `rglob` never descends into a symlink, so every component *above* the
+    # link is a real directory; the TARGET can still traverse one, and
+    # `normpath` collapses `L/..` to L's parent rather than L's target's
+    # parent. `legit/../../evil` is judged in-payload here and caught there.
     landing = posixpath.normpath(posixpath.join(posixpath.dirname(member), target))
     if landing != root_name and not landing.startswith(f"{root_name}/"):
         raise ValueError(f"symlink escapes the payload: {path} -> {target}")
