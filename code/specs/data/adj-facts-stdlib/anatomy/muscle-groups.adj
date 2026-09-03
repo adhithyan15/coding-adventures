@@ -60,8 +60,9 @@
 %
 %   biceps_brachii → arm
 %     https://en.wikipedia.org/wiki/Biceps
-%     "The biceps or biceps brachii is a large muscle that lies on the front of
-%      the upper arm between the shoulder and the elbow."
+%     "The biceps or biceps brachii (Latin: musculus biceps brachii,
+%      "two-headed muscle of the arm") is a large muscle that lies on the
+%      front of the upper arm between the shoulder and the elbow."
 %
 %   triceps_brachii → arm
 %     https://en.wikipedia.org/wiki/Triceps
@@ -145,7 +146,7 @@ table muscle_region {
     row (sartorius, thigh)
     row (gastrocnemius, leg)
 
-    source "The biceps or biceps brachii is a large muscle that lies on the front of the upper arm between the shoulder and the elbow."
+    source "The biceps or biceps brachii (Latin: musculus biceps brachii, \"two-headed muscle of the arm\") is a large muscle that lies on the front of the upper arm between the shoulder and the elbow."
     locator "https://en.wikipedia.org/wiki/Biceps"
     trust consensus
     cites "The triceps, or triceps brachii (Latin for \"three-headed muscle of the arm\"), is a large muscle on the back of the upper limb of many vertebrates." locator "https://en.wikipedia.org/wiki/Triceps"
