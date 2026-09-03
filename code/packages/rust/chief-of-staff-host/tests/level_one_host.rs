@@ -81,7 +81,7 @@ use tcp_runtime::{ConnectionId, TcpConnectionInfo};
 
 const TEST_KEY_ID: &str = "level-one-host-test";
 const TEST_SEED: [u8; 32] = [73; 32];
-const SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports a forecast for a requested city.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nReport a brief forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n";
+const SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports a forecast for a requested city.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nReport a brief forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n\n## Tool capabilities needed\n- none\n";
 
 fn uuid_v7(last: u8) -> [u8; 16] {
     let mut bytes = [0; 16];
