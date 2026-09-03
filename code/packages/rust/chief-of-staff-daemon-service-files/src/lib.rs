@@ -101,6 +101,11 @@ pub fn render_launchd(
   <string>Background</string>
   <key>Umask</key>
   <integer>63</integer>
+  <key>SoftResourceLimits</key>
+  <dict>
+    <key>NumberOfFiles</key>
+    <integer>{DESCRIPTOR_SOFT_LIMIT}</integer>
+  </dict>
 </dict>
 </plist>
 "#
@@ -117,6 +122,21 @@ pub fn render_launchd(
 /// Render the Linux per-user systemd service definition.
 ///
 /// The service stays in the foreground, is restarted only after abnormal exit,
+/// Descriptor soft limit the daemon is started with.
+///
+/// The supervisor holds three descriptors per agent -- stdin, stdout, and the
+/// fd-2 sink -- so the default soft `RLIMIT_NOFILE` of 1024 that systemd and
+/// launchd still hand out is exhausted at roughly 340 agents. D18S's capacity
+/// analysis puts this ahead of every other limit except memory, and its failure
+/// mode is the reason it is worth raising up front rather than on report: the
+/// spawn fails with a descriptor error that names no agent and no cause, and
+/// looks like a bug in whatever was being launched at the time.
+///
+/// 65536 is the conventional service ceiling and is far above anything the
+/// capacity analysis contemplates; it is a limit, not an allocation, so an
+/// unused headroom costs nothing.
+pub const DESCRIPTOR_SOFT_LIMIT: u32 = 65536;
+
 /// receives SIGTERM for cooperative shutdown, and applies an owner-only umask.
 pub fn render_systemd_user(
     executable: &str,
@@ -140,7 +160,8 @@ RestartSec=5s\n\
 KillSignal=SIGTERM\n\
 TimeoutStopSec=30s\n\
 NoNewPrivileges=true\n\
-UMask=0077\n\n\
+UMask=0077\n\
+LimitNOFILE={DESCRIPTOR_SOFT_LIMIT}\n\n\
 [Install]\n\
 WantedBy=default.target\n"
     );
@@ -336,6 +357,48 @@ fn quote_windows_argument(value: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn both_unit_files_raise_the_descriptor_limit() {
+        // Three descriptors per agent against a default soft limit of 1024
+        // exhausts at ~340 agents, and the failure names neither the agent nor
+        // the cause -- it looks like a bug in whatever was being spawned.
+        let systemd = render_systemd_user("/usr/local/bin/chief", "/etc/chief.toml").unwrap();
+        assert!(
+            systemd
+                .contents
+                .contains(&format!("LimitNOFILE={DESCRIPTOR_SOFT_LIMIT}")),
+            "systemd unit must raise LimitNOFILE"
+        );
+
+        let launchd = render_launchd("/usr/local/bin/chief", "/etc/chief.toml").unwrap();
+        assert!(
+            launchd.contents.contains("<key>SoftResourceLimits</key>"),
+            "launchd plist must carry SoftResourceLimits"
+        );
+        assert!(
+            launchd
+                .contents
+                .contains(&format!("<integer>{DESCRIPTOR_SOFT_LIMIT}</integer>")),
+            "launchd plist must raise NumberOfFiles"
+        );
+
+        // The headroom has to clear the capacity analysis with room to spare:
+        // 3 descriptors x 1000 agents is the point past which the supervisor's
+        // thread-per-child model needs revisiting anyway.
+        const { assert!(DESCRIPTOR_SOFT_LIMIT > 3 * 1000) };
+    }
+
+    #[test]
+    fn the_launchd_plist_is_still_well_formed_xml() {
+        // SoftResourceLimits is a nested dict inside the top-level dict, which
+        // is the easiest place to unbalance the plist.
+        let launchd = render_launchd("/usr/local/bin/chief", "/etc/chief.toml").unwrap();
+        let opens = launchd.contents.matches("<dict>").count();
+        let closes = launchd.contents.matches("</dict>").count();
+        assert_eq!(opens, closes, "plist dict tags must balance");
+        assert!(launchd.contents.trim_end().ends_with("</plist>"));
+    }
     use super::*;
 
     #[test]

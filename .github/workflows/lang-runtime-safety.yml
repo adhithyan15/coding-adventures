@@ -172,7 +172,12 @@ jobs:
         # `--locked` pins versions for reproducibility.  cargo-geiger
         # itself has a non-trivial compile time; runtime cache (via
         # actions/cache) is a follow-up if this becomes slow.
-        run: cargo install --locked cargo-geiger
+        # `--locked` WITHOUT `--version` is not a pin: it locks the dependency
+        # tree of whatever version happens to resolve, so the tool itself still
+        # drifts. That is the same class of failure that silently broke
+        # coverage in ci.yml, and it matters more here because this is the
+        # security-scanning job.
+        run: cargo install --locked --version 0.13.0 cargo-geiger
 
       - name: Geiger report — lang-runtime-core
         working-directory: code/packages/rust
