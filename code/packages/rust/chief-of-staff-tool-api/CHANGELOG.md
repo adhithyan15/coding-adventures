@@ -4,6 +4,53 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add `JsonSchema::validate_supplied_value`, which validates shape and
+  additionally refuses an agent identity smuggled through a position no schema
+  describes. Tool invocation now validates arguments with it.
+- This **narrows** S-I7's second clause -- *the agent cannot supply one* -- for
+  the eleven built-ins `tools_with_unverifiable_schema` reports. It does not
+  close it, and `tools_with_unverifiable_schema` remains the authoritative
+  statement of where the clause does not hold. `job.install`'s `spec: Any`
+  accepted `{"run_as_agent_id": "peer-7"}` and reported clean; it no longer
+  does.
+- The check reads KEY NAMES, never values, so an identity carried as a value
+  still passes: `{"spec": {"args": ["--to", "peer-7"]}}`, an identity used as a
+  map key under an innocuous parent, or one base64-encoded inside a string.
+  That is inherent -- an `Any` position is uninterpreted by definition, and
+  only the handler knows which string is an id. Real closure needs the identity
+  to come from supervisor-side wiring rather than from a blob the agent
+  authors.
+- The peer vocabulary is derived from stems plus plural and id/name suffixes
+  rather than hand-kept. The hand-kept version had `from_agent`, `for_agent`
+  and `target_agent` but not `to_agent`; the gaps were systematic.
+- Normalization strips every non-alphanumeric, not just `_` and `-`. Value keys
+  are arbitrary JSON strings, so `"agent id"`, `"agent.id"` and a zero-width
+  space inside `"agent\u200b_id"` all reached the handler. A non-ASCII key in
+  an undescribed position is refused outright rather than folded, because
+  chasing homoglyphs is a losing game.
+- A separate, narrower vocabulary applies to values than to schema properties.
+  A schema property named `agent` is a tool asking the caller to name one; a
+  key named `agent` inside an opaque blob is usually the blob's own identity --
+  `agent` is a first-class frontmatter key in this repo's SKILL.md manifest
+  format, so treating them alike would have made `skill.install` unable to
+  accept any real manifest. `host_id`/`hostname` are excluded for the same
+  reason: in a job spec they name a machine.
+- Fully schematizing those positions was rejected: a job `spec` and a
+  `metadata` bag are open by design, and a schema enumerating their keys would
+  be wrong the first time someone added one. The check moves from the declared
+  shape to the actual value, so structure stays open and identity names do not.
+- Deliberately NOT applied to outputs, because doing so broke the smart-home
+  audit and access-review readers, which exist to report on principals.
+- **This leaves a real residual on the output side.** The registration gate
+  refuses tools that DECLARE a peer identity, which is precisely not the hole
+  case: `tools_naming_another_agent` uses only the named half and discards the
+  holes, so all eleven hole-carrying tools remain in `v1_agent_tool_catalog`
+  and an `Any` output can return `{"entries": [{"agent_id": "peer-7"}]}`
+  unchallenged. S-I7's first clause is unenforced wherever an output has an
+  `Any` position. Tracked separately; the fix is either to exclude
+  hole-carrying tools from the V1 catalog or to scope the
+  principals-are-legitimate exemption per tool instead of globally.
+
 - Add `tools_naming_another_agent`, `tools_with_unverifiable_schema` and
   `v1_agent_tool_catalog`, making D18S S-I7 checkable: in V1 an agent's view
   contains no agent identity and the agent cannot supply one. These are

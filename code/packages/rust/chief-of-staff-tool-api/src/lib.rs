@@ -399,6 +399,76 @@ impl JsonSchema {
     }
 
     /// Validate a value against this schema.
+    /// Validate a value the CALLER supplied, additionally refusing an agent
+    /// identity smuggled through a position no schema describes.
+    ///
+    /// Separate from [`JsonSchema::validate_value`] on purpose. S-I7's second
+    /// clause is *the agent cannot supply one*, which is about arguments. The
+    /// first clause -- the view contains no agent identity -- is enforced by
+    /// refusing peer-naming tools at registration, not by rejecting values.
+    ///
+    /// Applying this to outputs breaks tools that legitimately return
+    /// principal ids: the smart-home audit and access-review readers exist to
+    /// report on principals, and they are kept away from V1 agents by the
+    /// registration gate rather than by mangling their results.
+    pub fn validate_supplied_value(&self, value: &JsonValue) -> ToolValidationReport {
+        let mut report = self.validate_value(value);
+        let mut errors = Vec::new();
+        self.reject_supplied_identities(value, "$", &mut errors);
+        if !errors.is_empty() {
+            report.errors.extend(errors);
+            report.ok = false;
+        }
+        report
+    }
+
+    /// Walk only the positions the schema does not describe.
+    fn reject_supplied_identities(
+        &self,
+        value: &JsonValue,
+        path: &str,
+        errors: &mut Vec<ToolValidationIssue>,
+    ) {
+        match (self, value) {
+            (Self::Any, _) => reject_agent_identity_keys(value, path, errors),
+            (
+                Self::Object {
+                    properties,
+                    allow_unknown_fields,
+                    ..
+                },
+                JsonValue::Object(fields),
+            ) => {
+                for (name, child) in fields {
+                    let child_path = format!("{path}.{name}");
+                    match properties.iter().find(|property| property.name == *name) {
+                        Some(property) => {
+                            property
+                                .schema
+                                .reject_supplied_identities(child, &child_path, errors);
+                        }
+                        None if *allow_unknown_fields => {
+                            if value_key_names_a_peer(name) {
+                                errors.push(issue(
+                                    child_path.clone(),
+                                    "field names an agent other than the caller",
+                                ));
+                            }
+                            reject_agent_identity_keys(child, &child_path, errors);
+                        }
+                        None => {}
+                    }
+                }
+            }
+            (Self::Array { items }, JsonValue::Array(values)) => {
+                for (index, item) in values.iter().enumerate() {
+                    items.reject_supplied_identities(item, &format!("{path}[{index}]"), errors);
+                }
+            }
+            _ => {}
+        }
+    }
+
     pub fn validate_value(&self, value: &JsonValue) -> ToolValidationReport {
         let mut report = ToolValidationReport::ok(value.clone());
         self.validate_value_at(value, "$", &mut report.errors);
@@ -959,26 +1029,162 @@ const AGENT_IDENTITY_PROPERTY_NAMES: &[&str] = &[
 /// `validate_schema_key` permits it though, and `to_json_schema_value` exists
 /// to project these into provider formats where camelCase is idiomatic, so the
 /// convention is not enforced anywhere and should not be relied on.
+/// Reject an agent identity appearing anywhere inside an unverified value.
+///
+/// Walks the actual JSON rather than a schema, because this runs where a
+/// schema stopped describing things. Recurses through objects and arrays so a
+/// peer buried at `spec.deliver_to.agent_id` is caught as surely as one at the
+/// top.
+fn reject_agent_identity_keys(
+    value: &JsonValue,
+    path: &str,
+    errors: &mut Vec<ToolValidationIssue>,
+) {
+    match value {
+        JsonValue::Object(fields) => {
+            for (name, child) in fields {
+                let child_path = format!("{path}.{name}");
+                if key_is_confusable(name) {
+                    errors.push(issue(
+                        child_path.clone(),
+                        "field name is not ASCII and cannot be checked in an undescribed position",
+                    ));
+                } else if value_key_names_a_peer(name) {
+                    errors.push(issue(
+                        child_path.clone(),
+                        "field names an agent other than the caller",
+                    ));
+                }
+                reject_agent_identity_keys(child, &child_path, errors);
+            }
+        }
+        JsonValue::Array(items) => {
+            for (index, item) in items.iter().enumerate() {
+                reject_agent_identity_keys(item, &format!("{path}[{index}]"), errors);
+            }
+        }
+        _ => {}
+    }
+}
+
 fn normalize_property_name(property: &str) -> String {
+    // Strips EVERY non-alphanumeric, not just `_` and `-`. Value-object keys
+    // are arbitrary JSON strings -- `validate_schema_key` constrains schema
+    // keys, not these -- so `"agent id"`, `"agent.id"` and a zero-width space
+    // inside `"agent\u200b_id"` are all writable and all reached the handler.
+    //
+    // Non-ASCII alphanumerics are kept as-is rather than folded, so a Cyrillic
+    // homoglyph does NOT become its Latin lookalike. That is deliberate: it
+    // means `\u0430gent_id` fails to match a Latin name, which is why
+    // `key_is_confusable` refuses non-ASCII keys in undescribed positions
+    // outright instead of trying to normalize them.
     property
         .chars()
-        .filter(|character| *character != '_' && *character != '-')
+        .filter(|character| character.is_alphanumeric())
         .flat_map(char::to_lowercase)
         .collect()
 }
 
+/// A key in an undescribed position that cannot be compared safely.
+///
+/// Homoglyph folding is a losing game, so a non-ASCII key where no schema says
+/// what belongs is refused rather than normalized. Described properties are
+/// unaffected -- their names come from the schema, not the caller.
+fn key_is_confusable(key: &str) -> bool {
+    !key.is_ascii()
+}
+
+/// Peer-naming stems, closed over the plural and id/name suffixes.
+///
+/// Built as stem-plus-suffix rather than a hand-kept list, because the
+/// hand-kept version had `fromagent`, `foragent` and `targetagent` but not
+/// `toagent` -- the gaps were systematic, not exotic.
+const PEER_STEMS: &[&str] = &[
+    "agent",
+    "peer",
+    "principal",
+    "recipient",
+    "consumer",
+    "receiver",
+    "originator",
+    "sender",
+    "delegate",
+    "assignee",
+    "impersonate",
+];
+
+/// Prefixes that turn a stem into a reference to somebody else.
+const PEER_PREFIXES: &[&str] = &[
+    "to",
+    "from",
+    "for",
+    "target",
+    "peer",
+    "other",
+    "runas",
+    "as",
+    "actingas",
+    "onbehalfof",
+];
+
+fn matches_peer_vocabulary(normalized: &str) -> bool {
+    let suffixes = ["", "s", "id", "ids", "name", "names"];
+    for stem in PEER_STEMS {
+        for suffix in suffixes {
+            let bare = format!("{stem}{suffix}");
+            if normalized == bare {
+                return true;
+            }
+            for prefix in PEER_PREFIXES {
+                if normalized == format!("{prefix}{bare}") {
+                    return true;
+                }
+            }
+            if normalized.ends_with(&bare) && normalized.len() > bare.len() {
+                // `consumer_agent_id`, `run_as_agent_id`, `delivery_peer_id`.
+                return true;
+            }
+        }
+    }
+    false
+}
+
+/// Names that are NOT peers despite matching the vocabulary.
+///
+/// Each is a real collision found in this repo, not a hypothetical:
+/// `user_agent` is an HTTP header; `useragentstring` likewise.
+const NOT_A_PEER: &[&str] = &["useragent", "useragentstring"];
+
 fn names_an_agent(property: &str) -> bool {
-    // Deliberately NOT a substring match on "agent". `user_agent` is an HTTP
-    // header, not a peer, and a check that fires on it is a check that gets
-    // relaxed after its first false positive rather than fixed. Names that do
-    // mean a peer are listed explicitly.
     let normalized = normalize_property_name(property);
-    if normalized == "useragent" {
+    if NOT_A_PEER.contains(&normalized.as_str()) {
         return false;
     }
     AGENT_IDENTITY_PROPERTY_NAMES.contains(&normalized.as_str())
-        || normalized.ends_with("agentid")
-        || normalized.starts_with("agentid")
+        || matches_peer_vocabulary(&normalized)
+}
+
+/// Whether a key in an *undescribed* position names a peer.
+///
+/// Narrower than [`names_an_agent`], and the difference is load-bearing. A
+/// schema property called `agent` is a tool asking the caller to name one. A
+/// key called `agent` inside an opaque blob is usually the blob's OWN
+/// identity -- `agent` is a first-class frontmatter key in this repo's skill
+/// manifest format, so rejecting it would make `skill.install` unable to
+/// accept any real manifest.
+///
+/// Likewise `host_id` and `hostname`: they ARE the agent id on a
+/// `HostProfile`, and they are also just machine names in a job spec. In a
+/// described position the schema settles which; in an opaque one nothing does,
+/// and refusing every job spec that names a machine buys nothing.
+fn value_key_names_a_peer(key: &str) -> bool {
+    const SELF_OR_MACHINE: &[&str] =
+        &["agent", "agents", "hostid", "hostname", "host", "principal"];
+    let normalized = normalize_property_name(key);
+    if SELF_OR_MACHINE.contains(&normalized.as_str()) {
+        return false;
+    }
+    names_an_agent(key)
 }
 
 /// Every position in a schema that names -- or could carry -- an agent identity.
@@ -3512,7 +3718,9 @@ impl InMemoryToolRegistry {
             return report;
         };
 
-        let argument_report = definition.input_schema.validate_value(&request.arguments);
+        let argument_report = definition
+            .input_schema
+            .validate_supplied_value(&request.arguments);
         report.errors.extend(argument_report.errors);
         report.warnings.extend(argument_report.warnings);
         report.ok = report.errors.is_empty();
@@ -5550,6 +5758,194 @@ fn json_schema_type(type_name: &str) -> JsonValue {
 
 #[cfg(test)]
 mod tests {
+
+    fn obj(fields: Vec<(&str, JsonValue)>) -> JsonValue {
+        JsonValue::Object(
+            fields
+                .into_iter()
+                .map(|(name, value)| (name.to_string(), value))
+                .collect(),
+        )
+    }
+
+    fn text(value: &str) -> JsonValue {
+        JsonValue::String(value.to_string())
+    }
+
+    #[test]
+    fn an_any_position_still_takes_arbitrary_structure() {
+        // The point of the value-level check is that it closes S-I7's second
+        // clause WITHOUT closing the open-by-design positions. A job spec and
+        // a metadata bag must keep working.
+        let schema = JsonSchema::Any;
+        let cases = vec![
+            obj(vec![
+                ("command", text("build")),
+                ("args", JsonValue::Array(vec![text("--release")])),
+            ]),
+            obj(vec![(
+                "nested",
+                obj(vec![("deeply", JsonValue::Bool(true))]),
+            )]),
+            JsonValue::Array(vec![
+                JsonValue::Bool(false),
+                obj(vec![("still", text("fine"))]),
+            ]),
+            text("a bare string"),
+            JsonValue::Null,
+        ];
+        for value in cases {
+            assert!(
+                schema.validate_supplied_value(&value).ok,
+                "an Any position must still accept {value:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_any_position_rejects_a_smuggled_agent_identity() {
+        // `job.install` takes `spec: Any`, and the first case is the exact
+        // payload `tools_with_unverifiable_schema`'s doc cites as validating
+        // clean before this change.
+        let schema = JsonSchema::Any;
+        let cases = vec![
+            obj(vec![("run_as_agent_id", text("peer-7"))]),
+            obj(vec![(
+                "deliver_to",
+                obj(vec![("agent_id", text("peer-7"))]),
+            )]),
+            obj(vec![("recipients", JsonValue::Array(vec![text("peer-7")]))]),
+            JsonValue::Array(vec![obj(vec![("consumer_agent_id", text("peer-7"))])]),
+            obj(vec![(
+                "a",
+                obj(vec![(
+                    "b",
+                    JsonValue::Array(vec![obj(vec![("principal_id", text("peer-7"))])]),
+                )]),
+            )]),
+            // Variants the first hand-kept list missed. The gaps were
+            // systematic: it had from/for/target-agent but not `to_agent`.
+            obj(vec![("to_agent", text("peer-7"))]),
+            obj(vec![("recipient_id", text("peer-7"))]),
+            obj(vec![("peers", JsonValue::Array(vec![text("peer-7")]))]),
+            obj(vec![("sender_id", text("peer-7"))]),
+            obj(vec![("run_as_agent", text("peer-7"))]),
+            obj(vec![("assignee", text("peer-7"))]),
+            // Normalization now strips every non-alphanumeric, so a space, a
+            // period and a zero-width space no longer smuggle a name past.
+            obj(vec![("agent id", text("peer-7"))]),
+            obj(vec![("agent.id", text("peer-7"))]),
+            obj(vec![("agent\u{200b}_id", text("peer-7"))]),
+            // A Cyrillic homoglyph is refused rather than folded: chasing
+            // lookalikes is a losing game, so a non-ASCII key in a position no
+            // schema describes is rejected outright.
+            obj(vec![("\u{430}gent_id", text("peer-7"))]),
+        ];
+        for value in cases {
+            let report = schema.validate_supplied_value(&value);
+            assert!(!report.ok, "an Any position must reject {value:?}");
+            // Either refusal is correct and says why: the name matched the
+            // peer vocabulary, or it was non-ASCII in a position no schema
+            // describes and so could not be compared safely.
+            assert!(
+                report.errors.iter().any(|error| {
+                    error.message.contains("names an agent") || error.message.contains("not ASCII")
+                }),
+                "the error must say why, got {:?}",
+                report.errors
+            );
+        }
+    }
+
+    #[test]
+    fn an_opaque_blobs_own_identity_is_not_a_peer() {
+        // `agent` is a first-class frontmatter key in this repo's SKILL.md
+        // manifest format, so `skill.install`'s `manifest: Any` must still
+        // accept one -- rejecting it would make the tool unable to install any
+        // real skill. Likewise `host_id`/`hostname` in a job spec are usually
+        // a machine, and refusing every spec that names one buys nothing.
+        //
+        // The distinction is position, not spelling: as a SCHEMA property
+        // `agent` is a tool asking the caller to name one, and
+        // `names_an_agent` still says so.
+        let schema = JsonSchema::Any;
+        for allowed in [
+            obj(vec![("agent", text("weather-reporter"))]),
+            obj(vec![("host_id", text("laptop"))]),
+            obj(vec![("hostname", text("example.com"))]),
+        ] {
+            assert!(
+                schema.validate_supplied_value(&allowed).ok,
+                "an opaque blob's own identity must not be refused: {allowed:?}"
+            );
+        }
+        assert!(
+            names_an_agent("agent"),
+            "as a schema property it still counts"
+        );
+        assert!(!value_key_names_a_peer("agent"));
+    }
+
+    #[test]
+    fn unknown_fields_are_open_but_may_not_name_an_agent() {
+        // `allow_unknown_fields` is an unverified position for the same reason
+        // `Any` is: nothing describes what may appear there.
+        let schema = JsonSchema::Object {
+            properties: vec![SchemaProperty::new("known", JsonSchema::String)],
+            required: vec!["known".to_string()],
+            allow_unknown_fields: true,
+        };
+        let fine = obj(vec![
+            ("known", text("x")),
+            ("extra", obj(vec![("anything", JsonValue::Bool(true))])),
+        ]);
+        assert!(schema.validate_supplied_value(&fine).ok);
+
+        let smuggled = obj(vec![
+            ("known", text("x")),
+            ("consumer_agent_id", text("peer-7")),
+        ]);
+        assert!(!schema.validate_supplied_value(&smuggled).ok);
+
+        let nested = obj(vec![
+            ("known", text("x")),
+            ("extra", obj(vec![("agent_id", text("peer-7"))])),
+        ]);
+        assert!(!schema.validate_supplied_value(&nested).ok);
+    }
+
+    #[test]
+    fn the_check_runs_on_the_invocation_path_for_a_real_builtin() {
+        // Not a synthetic schema: `job.install` is a real Tier1 built-in whose
+        // `spec` is `Any`, and this is the path an agent's arguments take.
+        let definition = builtin_tool_definition("job.install").expect("job.install is a built-in");
+
+        let smuggled = obj(vec![
+            ("spec", obj(vec![("run_as_agent_id", text("peer-7"))])),
+            ("idempotency_key", text("k")),
+        ]);
+        assert!(
+            !definition
+                .input_schema
+                .validate_supplied_value(&smuggled)
+                .ok
+        );
+
+        let ordinary = obj(vec![(
+            "spec",
+            obj(vec![
+                ("schedule", text("0 * * * *")),
+                ("command", text("sync")),
+            ]),
+        )]);
+        assert!(
+            definition
+                .input_schema
+                .validate_supplied_value(&ordinary)
+                .ok,
+            "an ordinary job spec must still install"
+        );
+    }
 
     #[test]
     fn the_builtin_catalog_names_another_agent_in_exactly_one_place() {
