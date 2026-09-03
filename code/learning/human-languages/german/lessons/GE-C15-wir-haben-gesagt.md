@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-wir-haben-gesagt
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 395
-chapter: 22
+sequence: 415
+chapter: 23
 type: phrase
 headword: wir haben gesagt
 gloss: we said — the fourth slot, where the helper is the infinitive itself

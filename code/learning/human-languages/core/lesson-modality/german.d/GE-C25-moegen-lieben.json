@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C25-moegen-lieben",
     "language": "german",
-    "chapter": 36,
-    "sequence": 810,
+    "chapter": 37,
+    "sequence": 830,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a7f60b1efa55efa8"
+    "sourceHash": "fnv1a64:063bb0c79bde9207"
   },
   "findings": []
 }

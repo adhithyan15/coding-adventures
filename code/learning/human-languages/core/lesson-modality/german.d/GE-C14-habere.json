@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C14-habere",
     "language": "german",
-    "chapter": 20,
-    "sequence": 331,
+    "chapter": 21,
+    "sequence": 351,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3c5c5c7e1076b6b7"
+    "sourceHash": "fnv1a64:442762393b972b18"
   },
   "findings": []
 }

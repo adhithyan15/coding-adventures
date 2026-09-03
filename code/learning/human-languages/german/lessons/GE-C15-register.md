@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-register
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 445
-chapter: 23
+sequence: 465
+chapter: 24
 type: grammar
 headword: gesprochen oder geschrieben
 gloss: what separates the two pasts — not meaning, but speech against writing, and north against south

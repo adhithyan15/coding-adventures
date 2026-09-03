@@ -1,16 +1,28 @@
 {
   "chapter": 19,
-  "title": "Colours",
-  "label": "ch:colours",
-  "canDo": "I can name basic colours in German and use them to describe something.",
+  "title": "The Pattern That Never Breaks",
+  "label": "ch:zahlen-13-20",
+  "canDo": "I can count from thirteen to twenty in German and build every one of those numbers from a digit I already know.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C13-rot-blau",
+    "lesson": "GE-C12-zahlen-13-20",
     "kind": "task",
-    "summary": "Complete GE-C13-rot-blau, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in German and use them to describe something.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "One rule run eight times: a digit you already own with zehn welded on the end, which is what English -teen is too, because -teen IS ten. Two digits are trimmed at the join -- sechs loses its s and sieben loses its -en -- and that is the mouth economising, not the rule breaking, exactly as English wore three down to thir- and five to fif-. Twenty stops using zehn and uses -zig, which is the same word worn further, and so is English -ty. The Romance sisters all break partway through the teens; German does not break at all.",
+    "assesses": [
+      "GE-GRAMMAR-ZIFFER-PLUS-ZEHN-01",
+      "GE-LEX-DREIZEHN-01",
+      "GE-LEX-VIERZEHN-01",
+      "GE-LEX-FUENFZEHN-01",
+      "GE-GRAMMAR-ZAHL-KLIPPUNG-01",
+      "GE-LEX-SECHZEHN-01",
+      "GE-LEX-SIEBZEHN-01",
+      "GE-LEX-ACHTZEHN-01",
+      "GE-LEX-NEUNZEHN-01",
+      "GE-LEX-ZWANZIG-01",
+      "GE-ETYMON-ZWANZIG-ZWEI-ZEHN-01"
+    ],
+    "note": "Chapter 19 is generated from schema-v2 lessons and introduces eleven atoms, one under the ceiling. A three-way split of the old chapter (3/6/5) was considered and rejected: eleven fits, and splitting below the ceiling for its own sake is not the rule. Every teen is ASSEMBLED from a digit the reader already owns plus zehn, so the chapter is a machine being run rather than eight words being memorised."
   }
 }

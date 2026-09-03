@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 27,
-  "title": "The Past That Takes To Be",
+  "title": "Three Verbs Under One Roof",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:8a99fda54770e62c",
+  "sourceHash": "fnv1a64:9531b9a145d4a14c",
   "lessons": [
     {
-      "id": "GE-C16-perfekt-sein",
-      "sequence": 590,
-      "title": "ich bin gegangen — the perfect built on sein",
-      "headword": "ich bin gegangen",
-      "romanization": "ich bin gegangen",
-      "gloss": "the perfect built on sein — the family of verbs that refuses haben",
+      "id": "GE-C16-ich-war",
+      "sequence": 560,
+      "title": "ich war — \"I was\"",
+      "headword": "ich war",
+      "romanization": "ich war",
+      "gloss": "I was — the past of sein, and a third stem that shares nothing with the other two",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aae97e21d5c10392",
+      "sourceHash": "fnv1a64:cc6bd66b7ac9252b",
       "notice": null,
       "blocks": [
         {
@@ -35,223 +35,54 @@
             },
             {
               "kind": "speech",
-              "text": "You built the everyday past with haben — ich habe gelernt. A particular family of verbs refuses haben and takes this chapter's verb instead."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: which verbs take sein",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Verbs of motion and change of state build their perfect with sein, not haben."
-            },
-            {
-              "kind": "speech",
-              "text": "An action that leaves you somewhere else, or leaves you something else, takes sein. An ordinary activity that leaves you where you were keeps haben: ich habe gearbeitet, ich habe getanzt."
-            },
-            {
-              "kind": "speech",
-              "text": "Gehen is the model, and because every present form of sein now belongs to you, the whole thing reads off without a single new word:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "English"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "ich bin gegangen means I went / I have gone.",
-                "du bist gegangen means you went.",
-                "er ist gegangen means he went.",
-                "wir sind gegangen means we went."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The recipe is the one you already know, with the helper swapped:"
-            },
-            {
-              "kind": "speech",
-              "text": "present form of sein + past participle, and the participle goes last."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ge-prefix — gegangen opens with the same unstressed ge- that wrapped gelernt and gesagt. It is never stressed; the weight falls on -gang-."
-            },
-            {
-              "kind": "speech",
-              "text": "ich-laut — and ich keeps its soft ending right before it, so the phrase runs ich bin ge-GANG-en without a break."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the contrast — \"ich habe gelernt … ich bin gegangen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"ich habe gelernt … ich bin gegangen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the rule — \"motion and change take sein\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the rule — \"motion and change take sein\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ich bin gegangen.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which family of verbs takes sein? (Motion and change of state.) Say \"I went.\" (Ich bin gegangen.) Where does the participle sit? (At the end.) Which helper does arbeiten take? (Haben — it is an activity, not a change.) Next: the first of the family, and it is the one you say most."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-kommen",
-      "sequence": 595,
-      "title": "kommen — \"to come\"",
-      "headword": "kommen",
-      "romanization": "kommen",
-      "gloss": "to come — English come with one consonant shifted, and the second verb of the sein family",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:37b565b405a5347d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Motion takes sein. Here is the motion verb you will use as often as gehen, and it is an English word you already own."
+              "text": "You know the simple past is mostly a written tense in German, and that a handful of very common verbs keep it in speech. This is the most common of them."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: kommen",
+          "title": "You'll want to know: ich war",
           "segments": [
             {
               "kind": "speech",
-              "text": "kommen — \"to come.\""
+              "text": "ich war — \"I was.\""
             },
             {
               "kind": "speech",
-              "text": "ich bin gekommen — \"I came.\""
+              "text": "Nobody says ich bin gewesen in ordinary speech when ich war will do. This is the past-tense form Germans actually use, in every region, out loud."
             },
             {
               "kind": "speech",
-              "text": "The infinitive wears the -en you know. The participle is gekommen: the ge- wrap in front, and -en rather than -t at the back, because this is one of the old strong verbs rather than a regular one."
-            },
-            {
-              "kind": "speech",
-              "text": "Coming is arriving somewhere you were not. That is motion with a result, so it takes sein, exactly as gehen does."
+              "text": "And hear the shape of it. Bin has a b. Ist has an s and a t. War has a w and an r, and no sound in common with either. That is now three completely unalike stems inside one verb."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "kommen and English come are the same word, both from Germanic kwemaną. No Latin anywhere in the line — French venir and Spanish venir come from Latin venīre instead, which is where English gets advent, convene and venue."
-            },
-            {
-              "kind": "speech",
-              "text": "So English, as usual, owns both halves: the everyday come from the Germanic side, the formal convene from the Latin."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-o — the o is short and open, the vowel of English cot, not the uh English puts in come."
+              "text": "w-as-v — German w is English v, so war begins like var."
             },
             {
               "kind": "speech",
-              "text": "ge-prefix — gekommen keeps the unstressed ge-; the stress is on -KOMM-."
+              "text": "vowel-a-long — the a is long and open, the a of English father."
+            },
+            {
+              "kind": "speech",
+              "text": "r-final — the final r softens towards a vowel rather than curling."
+            },
+            {
+              "kind": "speech",
+              "text": "The result sounds close to English var, and nothing like English war."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -264,29 +95,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"kommen\" — short open o",
+              "instruction": "\"ich war\" — var, long open a",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"kommen\" — short open *o*]"
+              "source": "[YOU SAY: \"ich war\" — *var*, long open *a*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin gekommen\"",
+              "instruction": "\"ich bin … ich war\" — now and then",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gekommen\"]"
+              "source": "[YOU SAY: \"ich bin … ich war\" — now and then]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin gegangen … ich bin gekommen\"",
+              "instruction": "\"Ich war müde.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gegangen … ich bin gekommen\"]"
+              "source": "[YOU SAY: \"Ich war müde.\"]"
             },
             {
               "kind": "repeat",
@@ -295,12 +126,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich bin gekommen.\""
+              "text": "\"ich bin, ich war.\""
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -312,26 +143,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does kommen mean? (\"To come.\") Say \"I came.\" (Ich bin gekommen.) Which helper, and why? (Sein — it is motion.) Which English word is it? (Come.) Next: the verb that covers everything with a vehicle under it."
+              "text": "Say \"I was.\" (Ich war.) How does the w sound? (Like English v.) Is this form used in speech or only in writing? (In speech, everywhere — it is one of the survivors.) How many unlike stems does this verb now have? (Three.) Next: the same form for du."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-fahren",
-      "sequence": 600,
-      "title": "fahren — \"to travel, to drive\"",
-      "headword": "fahren",
-      "romanization": "fahren",
-      "gloss": "to travel, to drive — motion with a vehicle under it, and English fare hiding inside",
+      "id": "GE-C16-du-warst",
+      "sequence": 565,
+      "title": "du warst — \"you were\"",
+      "headword": "du warst",
+      "romanization": "du warst",
+      "gloss": "you were — the familiar -st ending again, now on the past stem",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57e6fa9cf3690771",
+      "sourceHash": "fnv1a64:040bc2c2f642ecdf",
       "notice": null,
       "blocks": [
         {
@@ -347,30 +178,26 @@
             },
             {
               "kind": "speech",
-              "text": "Gehen is going on your feet. When there is a vehicle under you, German changes the verb."
+              "text": "You have ich war. The familiar \"you\" wants the ending it always wants."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: fahren",
+          "title": "You'll want to know: du warst",
           "segments": [
             {
               "kind": "speech",
-              "text": "fahren — \"to travel, to go by vehicle, to drive.\""
+              "text": "du warst — \"you were.\""
             },
             {
               "kind": "speech",
-              "text": "ich bin gefahren — \"I travelled, I drove.\""
+              "text": "War plus -st, with nothing else moved. The same ending that made bist out of bin, and gehst out of gehen."
             },
             {
               "kind": "speech",
-              "text": "German keeps two verbs where English makes do with go. You gehen on foot and you fahren in anything with wheels — a car, a bus, a train, a bicycle. Getting that pair right is one of the first things that makes a learner sound German rather than translated."
-            },
-            {
-              "kind": "speech",
-              "text": "It is motion, so the helper is sein."
+              "text": "So the past tense of this verb is better behaved than its present: you take one stem, war-, and add ordinary endings to it. Everything difficult about sein happens in the present."
             }
           ]
         },
@@ -381,46 +208,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-a-long — the a is long and open, as in war."
+              "text": "u-long — du keeps its long rounded oo."
             },
             {
               "kind": "speech",
-              "text": "h-silent-lengthening — and the h after it is the silent stretcher you met in gehen and sehen: it is not breathed, it only holds the vowel. FAH-ren rhymes with the way gehen and sehen are built."
+              "text": "final-t — and warst ends on the fully released t German always gives you, after the s. Say the s and the t both: varst."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "fahren is English fare — the old verb meaning \"to travel,\" which English demoted to a noun and then almost forgot. It is still there in:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English word",
-                "what it is really saying"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "English word: farewell. what it is really saying: travel well.",
-                "English word: thoroughfare. what it is really saying: a way you can travel through.",
-                "English word: seafaring. what it is really saying: sea-travelling.",
-                "English word: the fare you pay. what it is really saying: what the travelling costs."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So auf Wiedersehen and farewell are built the same way: both are a wish handed over at the door, one about seeing again, one about travelling well."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -433,38 +230,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"fahren\" — long a, silent h",
+              "instruction": "\"du warst\" — varst, both consonants released",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"fahren\" — long *a*, silent *h*]"
+              "source": "[YOU SAY: \"du warst\" — *varst*, both consonants released]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin gefahren\"",
+              "instruction": "\"ich war … du warst\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gefahren\"]"
+              "source": "[YOU SAY: \"ich war … du warst\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"gehen on foot, fahren with wheels\"",
+              "instruction": "\"du bist … du warst\" — now and then",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"gehen on foot, fahren with wheels\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"fahren — fare — farewell\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"fahren — fare — farewell\"]"
+              "source": "[YOU SAY: \"du bist … du warst\" — now and then]"
             },
             {
               "kind": "repeat",
@@ -473,12 +261,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"Ich bin gefahren.\""
+              "text": "\"ich war, du warst.\""
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -490,26 +278,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does fahren mean? (\"To travel, to go by vehicle.\") Which verb would you use walking to the shop? (Gehen.) Say \"I drove.\" (Ich bin gefahren.) Which English word is fahren? (Fare — as in farewell.) Next: the verb for becoming something else."
+              "text": "Say \"you were,\" to a friend. (Du warst.) Which ending is that? (-st.) Which stem is it added to? (War-.) Is the past of this verb regular or irregular in its endings? (Regular — one stem, ordinary endings.) Next: the form for everyone else, and a surprise."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-werden",
-      "sequence": 605,
-      "title": "werden — \"to become\"",
-      "headword": "werden",
-      "romanization": "werden",
-      "gloss": "to become — the change-of-state half of the rule, in one word",
+      "id": "GE-C16-er-war",
+      "sequence": 570,
+      "title": "er war — \"he was\"",
+      "headword": "er war",
+      "romanization": "er war",
+      "gloss": "he was — the same word as ich war, because the German simple past gives its third person no ending",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f20e3608aa9f335a",
+      "sourceHash": "fnv1a64:1039e0f4897fc4f5",
       "notice": null,
       "blocks": [
         {
@@ -525,34 +313,26 @@
             },
             {
               "kind": "speech",
-              "text": "The rule has two halves. Gehen, kommen and fahren are the motion half. This one word is the whole of the other half."
+              "text": "In the present, ich and er took different words — bin against ist. In the past they take the same one."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: werden",
+          "title": "You'll want to know: er war",
           "segments": [
             {
               "kind": "speech",
-              "text": "werden — \"to become.\""
+              "text": "er war — \"he was.\""
             },
             {
               "kind": "speech",
-              "text": "ich bin geworden — \"I became.\""
+              "text": "Not a new form. It is war, unchanged, the very word you learned for ich. And as with ist, it covers sie war (\"she was\"), es war (\"it was\") and das war (\"that was\") as well."
             },
             {
               "kind": "speech",
-              "text": "Sein says what you are. Werden says what you turn into. Where sein sits still, werden moves — and that is exactly why it takes sein as its helper: becoming is change of state in its purest form."
-            },
-            {
-              "kind": "speech",
-              "text": "Ich bin müde geworden. — \"I got tired.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Notice what that sentence does. The adjective you learned with sein now describes an arrival rather than a condition. German makes the difference with the verb; English does it with be against get."
+              "text": "This is a habit of the German simple past, not a quirk of this verb: the I-form and the he-form are always identical there. Ich sagte and er sagte. Ich hatte and er hatte. The present tense never does this; the past always does."
             }
           ]
         },
@@ -563,45 +343,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "w-as-v — the w is English v, as in war and wir."
+              "text": "r-final — two softening r sounds in a row now, one closing er and one closing war. Neither curls."
             },
             {
               "kind": "speech",
-              "text": "d-t-final — and in wird (\"he becomes\") the final d devoices to a t, the same rule that turned sind into zint."
+              "text": "vowel-a-long — and the long open a between them carries the phrase."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "werden is a lost English verb — weorthan, \"to turn, to come to be\" — and its bones are still in the language:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English",
-                "the buried meaning"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "English: toward. the buried meaning: turning to.",
-                "English: backward. the buried meaning: turning back.",
-                "English: worth. the buried meaning: what a thing turns out to be."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So werden means \"to turn into,\" and every time you say toward you are using the same root without knowing it."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -614,38 +365,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"werden\" — VAIR-den",
+              "instruction": "\"er war, sie war, es war\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"werden\" — *VAIR-den*]"
+              "source": "[YOU SAY: \"er war, sie war, es war\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin geworden\"",
+              "instruction": "\"Das war gut.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin geworden\"]"
+              "source": "[YOU SAY: \"Das war gut.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich bin müde geworden.\" — \"I got tired\"",
+              "instruction": "\"ich war … er war\" — the same word twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich bin müde geworden.\" — \"I got tired\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"werden — toward — worth\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"werden — toward — worth\"]"
+              "source": "[YOU SAY: \"ich war … er war\" — the same word twice]"
             },
             {
               "kind": "repeat",
@@ -654,12 +396,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"Ich bin müde geworden.\""
+              "text": "\"Das war gut.\""
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -671,26 +413,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does werden mean? (\"To become.\") Why does it take sein? (It is change of state — the other half of the rule.) Say \"I became.\" (Ich bin geworden.) Which English words hide the same root? (Toward, backward, worth.) Next: the two verbs that break the rule by standing still."
+              "text": "Say \"he was.\" (Er war.) How is it different from ich war? (It isn't — same word.) Does the present do that? (No — bin against ist.) Say \"that was good.\" (Das war gut.) Next: the plural."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-bleiben",
-      "sequence": 610,
-      "title": "bleiben — \"to stay\"",
-      "headword": "bleiben",
-      "romanization": "bleiben",
-      "gloss": "to stay — a verb that takes sein while meaning the exact opposite of change",
+      "id": "GE-C16-wir-waren",
+      "sequence": 575,
+      "title": "wir waren — \"we were\"",
+      "headword": "wir waren",
+      "romanization": "wir waren",
+      "gloss": "we were — the plural past, and the last form of sein you need",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e89d848008045e8f",
+      "sourceHash": "fnv1a64:518f6337a056676a",
       "notice": null,
       "blocks": [
         {
@@ -706,190 +448,26 @@
             },
             {
               "kind": "speech",
-              "text": "Werden takes sein because it is pure change. This verb takes sein too — and it means staying exactly where you are."
+              "text": "One more form, and the verb is finished — present and past, all of it."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: bleiben",
+          "title": "You'll want to know: wir waren",
           "segments": [
             {
               "kind": "speech",
-              "text": "bleiben — \"to stay, to remain.\""
+              "text": "wir waren — \"we were.\""
             },
             {
               "kind": "speech",
-              "text": "ich bin geblieben — \"I stayed.\""
+              "text": "War plus the plural ending -en, the one wir takes on every verb. And just as sind served three subjects at once, waren covers sie waren (\"they were\") and Sie waren (\"you were,\" politely) with no change."
             },
             {
               "kind": "speech",
-              "text": "By the rule as stated, this verb should take haben. Staying is not motion and it is not change; it is the absence of both. It takes sein anyway, and every German learner meets it as a fact rather than a consequence."
-            },
-            {
-              "kind": "speech",
-              "text": "The honest way to hold it: bleiben is on the sein list because it is about where you are rather than what you do, and that is the deeper thing the motion rule was pointing at all along."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "diphthong-ei — ei is the eye vowel again, exactly as in sein. So bleiben is BLY-ben, never blee-ben. The two verbs of this chapter that break the rule both carry that vowel."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bleiben is be- plus an old Germanic verb lība-, \"to remain.\" English lost the verb and kept its leavings — literally: what remains after everything else has gone is what English calls the leftovers, and leave in the sense of what is left belongs to the same family."
-            },
-            {
-              "kind": "speech",
-              "text": "German still uses the verb every day; English kept only the residue of it, which is a fitting fate for a word meaning \"to be left over.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bleiben\" — BLY-ben, the eye vowel",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bleiben\" — *BLY-ben*, the *eye* vowel]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin geblieben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin geblieben\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the odd pair — \"ich bin geworden … ich bin geblieben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the odd pair — \"ich bin geworden … ich bin geblieben\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Ich bin geblieben.\""
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does bleiben mean? (\"To stay.\") Say \"I stayed.\" (Ich bin geblieben.) Does the motion rule predict its helper? (No — it has to be learned.) How is ei pronounced? (Like English eye.) Next: the rest of the verbs that have to be learned, including this chapter's own verb."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-perfekt-sein-ausnahmen",
-      "sequence": 615,
-      "title": "ich bin gewesen — and the rest of the learned list",
-      "headword": "ich bin gewesen",
-      "romanization": "ich bin gewesen",
-      "gloss": "the short learned list — the verbs on the sein side that the motion rule does not predict",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:aa60fb56bf79b4a4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Bleiben was the first verb the rule failed to predict. Here is the whole of the rest of that list, and it is short."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the verbs you simply learn",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Besides motion and change, a small fixed set of verbs takes sein and has to be learned."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "perfect",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "verb: sein. perfect: ich bin gewesen. meaning: I have been.",
-                "verb: bleiben. perfect: ich bin geblieben. meaning: I stayed.",
-                "verb: gelingen. perfect: es ist gelungen. meaning: it succeeded.",
-                "verb: geschehen. perfect: es ist geschehen. meaning: it happened.",
-                "verb: passieren. perfect: es ist passiert. meaning: it happened.",
-                "verb: begegnen. perfect: ich bin begegnet. meaning: I met."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Sein and bleiben head the list because they are the two that most clearly contradict the rule: one says a thing simply is, the other says it stays. The rest are events that arrive of their own accord — succeeding, happening, running into somebody — and German treats an arrival as a change."
+              "text": "The one plural form left over is ihr wart, for a group of friends. It takes the plural-you -t, and it is the rarest form in the whole verb."
             }
           ]
         },
@@ -900,146 +478,160 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look closely at gewesen. Strip the ge- wrap and the -en ending and what is left is wes- — the third of the three roots inside this verb, the one that gave war and English was."
-            },
-            {
-              "kind": "speech",
-              "text": "So sein reaches for that root twice: once for its past tense, once for its participle. The infinitive comes from one root, the present from two, the past and participle from a third. There is no part of this verb that belongs to all of it."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin gewesen; ich bin geblieben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin gewesen; ich bin geblieben\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"es ist passiert\" — \"it happened\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"es ist passiert\" — \"it happened\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"war … gewesen\" — the same root twice",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"war … gewesen\" — the same root twice]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ich bin gewesen.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name the two verbs at the head of the learned list. (Sein and bleiben.) Say \"I have been.\" (Ich bin gewesen.) Say \"it happened.\" (Es ist passiert — or es ist geschehen.) Which root is hiding inside gewesen? (wes-, the one behind war.) Next: the ending German does not put on any of these."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-perfekt-sein-agreement",
-      "sequence": 620,
-      "title": "gegangen — the participle that never changes",
-      "headword": "gegangen",
-      "romanization": "gegangen",
-      "gloss": "no agreement in the perfect — one participle for every subject, where French has four",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e1bb657e8915050b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "French draws the same have-against-be line German does. Here is the place the two languages part company, and German comes out easier."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: German agrees with nothing here",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Inside the perfect, the German participle takes no ending at all. Gegangen is gegangen for every person, number and gender."
+              "text": "English does the identical thing and nobody notices:"
             },
             {
               "kind": "table",
               "headers": [
                 "",
-                "French",
-                "German"
+                "German",
+                "English"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 2,
               "utterances": [
-                "he went. French: il est allé. German: er ist gegangen.",
-                "she went. French: elle est allée. German: sie ist gegangen.",
-                "they went. French: ils sont allés. German: sie sind gegangen."
+                "singular. German: war. English: was.",
+                "plural. German: waren. English: were."
               ]
             },
             {
               "kind": "speech",
-              "text": "French makes the participle agree with its subject and spells the agreement out three different ways. German changes the helper — ist, sind — and leaves the participle exactly where it found it."
+              "text": "An s in the singular, an r in the plural, in both languages, inherited from the same ancestor. English was/were and German war/waren are the same pair of words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"wir waren, sie waren, Sie waren\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"wir waren, sie waren, Sie waren\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich war, du warst, er war, wir waren\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich war, du warst, er war, wir waren\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"war — was; waren — were\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"war — was; waren — were\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "speech",
-              "text": "Old High German did inflect it here, at least some of the time. Modern German lost that, along with most of its other adjective-like endings in this position. So the simplicity is not a design; it is an erosion, and German happens to have come out ahead."
+              "text": "\"ich war, wir waren.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"we were.\" (Wir waren.) Which English pair matches war/waren? (Was/were.) What is the plural ending on it? (-en.) Say \"they were.\" (Sie waren.) Next: why one verb needed three different stems."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-drei-wurzeln",
+      "sequence": 580,
+      "title": "bin, ist, war — three verbs under one roof",
+      "headword": "bin, ist, war",
+      "romanization": "bin, ist, war",
+      "gloss": "three ancient verbs, one paradigm — why the forms of sein look unrelated",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fea113a1bbed2c60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bin, ist, war one after another. They do not look like forms of the same word — and they aren't."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three separate Proto-Indo-European verbs each handed German a slice of this paradigm, and each of them left cousins in languages you can check:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "forms",
+                "from",
+                "which also gave"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "forms: ist, sind, seid, sein. from: h₁es- — \"to be\". which also gave: Latin est, sunt; French est, sont.",
+                "forms: bin, bist. from: bʰuH- — \"to grow, become\". which also gave: English be; Latin fuī.",
+                "forms: war, waren. from: wes- — \"to dwell, remain\". which also gave: English was, were."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the middle row again. bʰuH- did not mean \"to be\" at all. It meant \"to grow\" — and the reason English says be and German says bin is that a verb about growing got promoted into a verb about existing, in both languages, before either of them existed."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom row is the same story with a different verb: wes- meant \"to dwell, to remain.\" Staying somewhere became having been."
             }
           ]
         },
@@ -1050,23 +642,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "It would be easy to assume German copied this split from Latin, the way it borrowed so much else. It did not."
+              "text": "Bin has a cousin further afield than English. Latin fuī, \"I was,\" is from the same bʰuH- — and fuī is the direct source of Spanish fui, \"I was / I went.\""
             },
             {
               "kind": "speech",
-              "text": "The haben-perfect and the sein-perfect are native Germanic developments. They grew up alongside the Romance ones rather than out of them: neighbouring languages drifting the same way over centuries of contact, the same areal spread that pushed the simple past out of everyday speech in French, German and Italian together."
-            },
-            {
-              "kind": "speech",
-              "text": "Two things to carry forward, and they point in opposite directions:"
-            },
-            {
-              "kind": "speech",
-              "text": "the split between the two helpers is shared with French;"
-            },
-            {
-              "kind": "speech",
-              "text": "the agreement is not."
+              "text": "So German bin and Spanish fui are the same ancient word. One landed in the present tense, the other in the past, and the two languages now use it to mean opposite ends of time."
             }
           ]
         },
@@ -1084,38 +664,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"er ist gegangen; sie ist gegangen; sie sind gegangen\"",
+              "instruction": "the three roots — \"ist from h₁es-, bin from bʰuH-, war from wes-\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"er ist gegangen; sie ist gegangen; sie sind gegangen\"]"
+              "source": "[YOU SAY: the three roots — \"ist from \\**h₁es-*, bin from \\**bʰuH-*, war from \\**wes-*\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the participle, unchanged, three times — \"gegangen, gegangen, gegangen\"",
+              "instruction": "\"ist — est — is\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the participle, unchanged, three times — \"gegangen, gegangen, gegangen\"]"
+              "source": "[YOU SAY: \"ist — est — is\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the comparison — \"elle est allée … sie ist gegangen\"",
+              "instruction": "\"war — was; waren — were\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the comparison — \"elle est allée … sie ist gegangen\"]"
+              "source": "[YOU SAY: \"war — was; waren — were\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"sie ist gegangen; sie sind gegangen.\""
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousin abroad — \"German bin, Spanish fui, one root\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousin abroad — \"German bin, Spanish fui, one root\"]"
             }
           ]
         },
@@ -1132,26 +712,26 @@
             },
             {
               "kind": "speech",
-              "text": "Does the German participle agree with its subject in the perfect? (No — never.) What changes instead? (The helper — ist, sind.) Does French agree? (Yes.) Did German take this split from Latin? (No — it grew in parallel.) Next: the one place a German participle does take an ending."
+              "text": "How many ancient roots is sein built from? (Three.) Which one gives ist — and which Latin word proves it? (h₁es-; Latin est.) What did the root behind bin originally mean? (\"To grow, to become.\") Which Spanish word shares it? (Fui.) Which root gives English was and were? (wes-, the same one as war.) Next: the name for what this verb is doing."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-partizip-attributiv",
-      "sequence": 625,
-      "title": "der angekommene Zug — where the ending comes back",
-      "headword": "der angekommene Zug",
-      "romanization": "der angekommene Zug",
-      "gloss": "the one place a German participle does take an ending — standing in front of a noun",
+      "id": "GE-C16-suppletion",
+      "sequence": 585,
+      "title": "Suppletion — filling a verb in from another verb",
+      "headword": "Suppletion",
+      "romanization": "Suppletion",
+      "gloss": "suppletion — when one verb's missing forms are filled in from a different verb",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e939e3863284e42",
+      "sourceHash": "fnv1a64:1808d1e6670743be",
       "notice": null,
       "blocks": [
         {
@@ -1167,51 +747,56 @@
             },
             {
               "kind": "speech",
-              "text": "The participle takes no ending in the perfect. That is a fact about the perfect, not about participles — and the difference matters."
+              "text": "Three roots, one verb. There is a name for that, and once you have it you will find the same thing in English."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: in front of a noun, it inflects",
+          "title": "Grammar Lens: what suppletion is",
           "segments": [
             {
               "kind": "speech",
-              "text": "A German participle standing in front of a noun is working as an adjective, and it takes the endings adjectives take there."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "English"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "ein geschriebener Brief means a written letter.",
-                "der angekommene Zug means the arrived train.",
-                "die eingeschlafene Katze means the fallen-asleep cat."
-              ]
+              "text": "When one verb's forms are filled in from a different verb, that is suppletion."
             },
             {
               "kind": "speech",
-              "text": "Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle. (Katze, \"cat\", gets a lesson of its own later; here it is only carrying the ending.)"
-            },
-            {
-              "kind": "speech",
-              "text": "So German did not lose participle endings everywhere. It lost them in exactly one construction: the perfect."
+              "text": "Sein has no forms of its own for \"I am\" or \"I was.\" It borrowed them, long ago, from two other verbs, and then all three grew together into a single paradigm that native speakers use without ever noticing the seam."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "ge-prefix — all three participles above still carry their ge- wrap, and it is still unstressed. In angekommen it has slid into the middle of the word, behind an-, which is where German puts it when a prefix comes first."
+              "text": "English does the identical thing with its own commonest verbs, and you have never thought twice about it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "present",
+                "past",
+                "where the past came from"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "present: go. past: went. where the past came from: wend, a different verb entirely.",
+                "present: am. past: was. where the past came from: the same wes- that gave German war.",
+                "present: good. past: better. where the past came from: a different word again."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Went belonged to wend — \"to make one's way,\" still alive in wend your way. English took it, gave it to go, and left wend with a regular past of its own. That is precisely what German did to build sein."
+            },
+            {
+              "kind": "speech",
+              "text": "Suppletion is not a German oddity, and it is not rare. It is simply what languages do to the words they use most — and every language you have looked at in this book has done it to its verb for \"to be.\""
             }
           ]
         },
@@ -1229,38 +814,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der angekommene Zug\"",
+              "instruction": "the definition — \"one verb's forms, filled in from another verb\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der angekommene Zug\"]"
+              "source": "[YOU SAY: the definition — \"one verb's forms, filled in from another verb\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die eingeschlafene Katze\"",
+              "instruction": "\"go, went\" — English doing it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die eingeschlafene Katze\"]"
+              "source": "[YOU SAY: \"go, went\" — English doing it]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Katze\" (ending)",
+              "instruction": "\"bin, war\" — German doing it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Katze\" (ending)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"die müde Mutter\" — an ordinary adjective doing the same thing",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"die müde Mutter\" — an ordinary adjective doing the same thing]"
+              "source": "[YOU SAY: \"bin, war\" — German doing it]"
             }
           ]
         },
@@ -1277,34 +853,27 @@
             },
             {
               "kind": "speech",
-              "text": "Where does a German participle still take an ending? (In front of a noun, as an adjective.) Where does it never take one? (In the perfect.) Say \"the arrived train.\" (Der angekommene Zug.) What is the participle behaving as, in that phrase? (An adjective.) Next: choosing between the two helpers, on the spot."
+              "text": "What is suppletion? (One verb's forms filled in from another verb.) Name the English example. (Go / went.) Which verb did went actually belong to? (Wend.) How many verbs are hiding inside sein? (Three.) Next: why this always happens to the commonest words."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-haben-oder-sein",
-      "sequence": 630,
-      "title": "Practice — haben or sein?",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "chapter payoff — choosing between haben and sein until the choice is a reflex",
+      "id": "GE-C16-haeufig-unregelmaessig",
+      "sequence": 590,
+      "title": "Why \"to be\" is the messiest word in every language",
+      "headword": "warum sein unregelmäßig ist",
+      "romanization": "warum sein unregelmäßig ist",
+      "gloss": "why the most-used words are the most irregular — a rule, not bad luck",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff21fadbb3bcc273",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:bc54624f968d7be6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1319,38 +888,164 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. The only skill left in this chapter is picking the right helper without stopping to think, and that is drill."
+              "text": "Every language you have ever met has a broken verb for \"to be.\" That is too consistent to be an accident, and it isn't one."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the whole family in one place",
+          "title": "Grammar Lens: frequency protects irregularity",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "perfect",
-                "why"
-              ],
-              "columns": 3,
-              "rowCount": 8,
-              "utterances": [
-                "verb: gehen. perfect: ich bin gegangen. why: motion.",
-                "verb: kommen. perfect: ich bin gekommen. why: motion.",
-                "verb: fahren. perfect: ich bin gefahren. why: motion.",
-                "verb: werden. perfect: ich bin geworden. why: change of state.",
-                "verb: bleiben. perfect: ich bin geblieben. why: learned.",
-                "verb: sein. perfect: ich bin gewesen. why: learned.",
-                "verb: lernen. perfect: ich habe gelernt. why: ordinary activity.",
-                "verb: machen. perfect: ich habe gemacht. why: ordinary activity."
-              ]
+              "kind": "speech",
+              "text": "The most-used words are the most irregular."
             },
             {
               "kind": "speech",
-              "text": "Read the right-hand column and you can see how much of the work the motion rule does on its own: only two rows have to be memorised outright."
+              "text": "Regularity spreads by analogy. You meet an unfamiliar verb, you do not know its forms, so you guess them from the pattern — the -e, -st, -t, -en machine you learned early. Guess often enough and the guess becomes the form: the odd old shape is sanded down and the verb joins the regular crowd."
+            },
+            {
+              "kind": "speech",
+              "text": "But you never have to guess at \"to be.\" You hear it a hundred times a day, from the day you start speaking. Every one of those hearings reinforces the strange shape faster than analogy can wear it away."
+            },
+            {
+              "kind": "speech",
+              "text": "Rare words get regularised. Common words are protected fossils."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This also tells you where the irregularity will sit inside a verb, and sein proves it. Its present tense — the part you say constantly — is the wreckage: three roots, five unlike forms. Its past tense, which you say far less often, has quietly become well-behaved: one stem war-, ordinary endings, warst built exactly like bist was not."
+            },
+            {
+              "kind": "speech",
+              "text": "So the mess is not spread evenly. It clusters where the traffic is."
+            },
+            {
+              "kind": "speech",
+              "text": "The practical consequence is a comfort. There is no long list of verbs this strange, because a verb has to be this common to survive being this strange — and there are only a handful of words in any language that common."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rule — \"the most-used words are the most irregular\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rule — \"the most-used words are the most irregular\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why — \"you never have to guess at them\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why — \"you never have to guess at them\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bin, bist, ist\" against \"war, warst, waren\" — mess, then order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bin, bist, ist\" against \"war, warst, waren\" — mess, then order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "State the rule. (The most-used words are the most irregular.) What spreads regularity? (Analogy — guessing from the pattern.) Why does analogy never reach \"to be\"? (You never have to guess at it.) Which half of sein is the tidy half? (The past — one stem, ordinary endings.) Next: the chapter together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-war-practice",
+      "sequence": 595,
+      "title": "Practice — was, were, and why",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — the past of sein, and the three roots that explain the whole verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8148506129826495",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Present and past, side by side, and then the account of how one verb ended up like this."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the past, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Six forms, one stem, four endings, no surprises. Said in order:"
+            },
+            {
+              "kind": "speech",
+              "text": "ich war, du warst, er war — and the first and third are the same word, which the present tense would never allow;"
+            },
+            {
+              "kind": "speech",
+              "text": "wir waren, ihr wart, sie waren."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare that with the present, where five different shapes came from three different verbs. The past of sein is the part of the paradigm that behaved."
             }
           ]
         },
@@ -1366,18 +1061,17 @@
                 "English"
               ],
               "columns": 2,
-              "rowCount": 5,
+              "rowCount": 4,
               "utterances": [
-                "Wo bist du gewesen? means Where have you been?",
-                "Ich bin nach Berlin gefahren. means I travelled to Berlin.",
-                "Und Anna? Ist sie gekommen? means And Anna? Did she come?",
-                "Anna ist zu Hause geblieben. means Anna stayed at home.",
-                "Ich habe viel gelernt. Jetzt bin ich müde. means I learned a lot. Now I am tired."
+                "Wo warst du? means Where were you?",
+                "Ich war in Berlin. means I was in Berlin.",
+                "Wie war es? means How was it?",
+                "Es war gut. Aber ich bin müde. means It was good. But I am tired."
               ]
             },
             {
               "kind": "speech",
-              "text": "Note the third and fourth lines: ist sie gekommen, Anna ist geblieben — a feminine subject both times, and not one letter added to either participle."
+              "text": "Wo (\"where\") and in are read straight off the English here; neither is asked of you yet."
             }
           ]
         },
@@ -1395,38 +1089,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast pair — \"ich habe gelernt … ich bin gegangen\"",
+              "instruction": "\"ich war, du warst, er war, wir waren, ihr wart, sie waren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast pair — \"ich habe gelernt … ich bin gegangen\"]"
+              "source": "[YOU SAY: \"ich war, du warst, er war, wir waren, ihr wart, sie waren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"bin gekommen, bin gefahren, bin geworden, bin geblieben, bin gewesen\"",
+              "instruction": "the pairs — \"ich bin / ich war\", \"wir sind / wir waren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"bin gekommen, bin gefahren, bin geworden, bin geblieben, bin gewesen\"]"
+              "source": "[YOU SAY: the pairs — \"ich bin / ich war\", \"wir sind / wir waren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the French comparison — \"elle est allée … sie ist gegangen\", no ending at all",
+              "instruction": "the three roots — \"ist, bin, war — three verbs\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the French comparison — \"elle est allée … sie ist gegangen\", no ending at all]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the one place the ending returns — \"der angekommene Zug\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the one place the ending returns — \"der angekommene Zug\"]"
+              "source": "[YOU SAY: the three roots — \"ist, bin, war — three verbs\"]"
             },
             {
               "kind": "prompt",
@@ -1444,27 +1129,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich habe gelernt … ich bin gegangen.\""
+              "text": "\"Wie war es? Es war gut.\""
             }
           ]
         },
         {
           "index": 4,
-          "type": "notice",
-          "title": "What you've built — where this volume pauses",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You have gone from guten Tag to two working past tenses, and the method has not changed once: take the word apart, find the English cousin sleeping inside it, and let the family tree do the memorising for you."
-            },
-            {
-              "kind": "speech",
-              "text": "The next volume picks the thread back up with describing what you see."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1476,7 +1146,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which helper for tanzen, \"to dance\"? (Haben — an activity.) Which for fahren? (Sein — motion.) Which two verbs on the sein list mean the opposite of change? (Sein and bleiben.) Say \"she stayed.\" (Sie ist geblieben — no ending on the participle.)"
+              "text": "Run the six past forms. Which two are identical? (Ich war and er war.) Name the three roots this verb is built from, by their German forms. (Ist, bin, war.) What is the technical name for that? (Suppletion.) Why has nothing tidied this verb up? (It is too common — you never guess at it, so analogy never reaches it.) Next: the past tense that is built on this verb rather than out of it."
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C18-nein
 spine_node: SPINE-RESPOND-BASIC
-sequence: 680
-chapter: 29
+sequence: 700
+chapter: 30
 type: word
 headword: nein
 gloss: no

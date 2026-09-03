@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C14-hab-stamm",
     "language": "german",
-    "chapter": 20,
-    "sequence": 326,
+    "chapter": 21,
+    "sequence": 346,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:454d06f9e76a63a9"
+    "sourceHash": "fnv1a64:cbd77fb6beb50d88"
   },
   "findings": []
 }

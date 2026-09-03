@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:a952b4f4ba377f05",
+  "lessonIds": [
+    "GE-C12-ziffer-plus-zehn",
+    "GE-C12-dreizehn",
+    "GE-C12-vierzehn",
+    "GE-C12-fuenfzehn",
+    "GE-C12-klippung",
+    "GE-C12-sechzehn",
+    "GE-C12-siebzehn",
+    "GE-C12-achtzehn",
+    "GE-C12-neunzehn",
+    "GE-C12-zwanzig",
+    "GE-C12-zwanzig-zwei-zehn",
+    "GE-C12-zahlen-13-20"
+  ],
+  "tex": "german/book/chapters/ch19-zahlen-13-20.tex"
+}

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 37,
-  "title": "Sitting, Standing, Sleeping, Hearing",
+  "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2aca066f052b7b5f",
+  "sourceHash": "fnv1a64:f166b143898cf542",
   "lessons": [
     {
-      "id": "GE-C26-sitzen",
-      "sequence": 820,
-      "title": "sitzen — the same word as sit, respelt by one law",
-      "headword": "sitzen",
-      "romanization": "sitzen",
-      "gloss": "to sit — the same inherited word as English sit, respelt by the other branch of the shift that separated helfen from help",
+      "id": "GE-C25-nehmen",
+      "sequence": 800,
+      "title": "nehmen — the verb English threw away",
+      "headword": "nehmen",
+      "romanization": "nehmen",
+      "gloss": "to take — the verb English lost, though it left numb and nimble behind as fossils",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:496600e2b56b8942",
+      "sourceHash": "fnv1a64:80d1f241ef263e8f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Helfen is help, split by the second sound shift: Germanic p became German f. That law has other branches. This verb rides one."
+              "text": "Four verbs about doing rather than thinking. Schreiben was a Latin word German took and English refused; this one is the reverse — a Germanic word English threw away and German kept."
             }
           ]
         },
@@ -46,696 +46,83 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tz-affricate — tz is one squeezed sound, ts, as in English cats."
+              "text": "long-e — a long e: nehmen = NAY-men."
             },
             {
               "kind": "speech",
-              "text": "i-short — a short, tight i: sitzen = ZIT-sen, buzzed at the front because German s before a vowel is voiced."
+              "text": "h-silent-lengthening — the h is silent, marking the long vowel."
             }
           ]
         },
         {
           "index": 2,
           "type": "input",
-          "title": "You'll want to know: sitzen",
+          "title": "You'll want to know: nehmen",
           "segments": [
             {
               "kind": "speech",
-              "text": "sitzen means \"to sit.\""
+              "text": "nehmen means \"to take.\" It is what a Hand does."
             },
             {
               "kind": "speech",
-              "text": "ich sitze — I sit, wir sitzen — we sit."
+              "text": "ich nehme — I take, wir nehmen — we take."
             },
             {
               "kind": "speech",
-              "text": "du sitzt — you sit, ihr sitzt — you all sit."
+              "text": "du nimmst — you take, ihr nehmt — you all take."
             },
             {
               "kind": "speech",
-              "text": "er sitzt — he sits, sie sitzen — they sit."
-            },
-            {
-              "kind": "speech",
-              "text": "Ich sitze. — a whole sentence, two words."
+              "text": "er nimmt — he takes, sie nehmen — they take."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: strong does not mean it breaks",
+          "title": "Grammar Lens: the rule again, and harder",
           "segments": [
             {
               "kind": "speech",
-              "text": "Sitzen is a strong verb — its past is saß, not sitzte. But its present never breaks its vowel: du sitzt, er sitzt. Beside it, helfen breaks to du hilfst."
+              "text": "You know where to look: du and er. Long e becomes short i — du nimmst, er nimmt — while wir, ihr and sie keep the e."
             },
             {
               "kind": "speech",
-              "text": "So \"strong\" is a fact about a verb's past; the du/er break is a separate habit only some strong verbs have."
+              "text": "This goes further than lesen did: once the vowel shortens the silent h has no job, so it drops and the m doubles: nehmen but nimmt. Say them back to back — NAY-men, NIMT."
             },
             {
               "kind": "speech",
-              "text": "The doing verbs gave two ways to say you like something: ich mag with a thing, gern hung on a verb. This verb takes the second."
-            },
-            {
-              "kind": "speech",
-              "text": "Ich sitze gern. — \"I like sitting.\""
+              "text": "Three shapes now: du liest breaks its vowel; du nimmst breaks it and respells the word; du schreibst does not break at all."
             }
           ]
         },
         {
           "index": 4,
           "type": "etymology",
-          "title": "The word, taken apart: the shift's other branch",
+          "title": "The word, taken apart: the word English lost",
           "segments": [
             {
               "kind": "speech",
-              "text": "sitzen is Proto-Germanic sitjaną, and English sit is the same inherited word — Old English sittan, Old High German sizzen."
+              "text": "nehmen is Proto-Germanic nemaną, \"to take.\" English had it — Old English niman — and then lost it, because Norse settlers brought taka and English took take instead."
             },
             {
               "kind": "speech",
-              "text": "The second, High German shift moved Germanic p to f in helfen. It moved Germanic t just as hard, to z (said ts) or ss: sittan becomes sitzen, water becomes Wasser, eat becomes essen, ten becomes zehn, bite becomes beißen. The food lesson handed you Wasser and the first numbers handed you zehn long before there was a name for what had happened to them."
+              "text": "A lost word leaves fossils, and English carries two. Numb is the old past participle of nim: a hand taken by the cold. Nimble is \"quick to take hold.\""
             },
             {
               "kind": "speech",
-              "text": "Under both lies PIE sed-, \"to sit,\" one of the family's great providers. Latin sedēre gives session, sedentary and preside; Latin sedēs, \"a seat,\" gives the bishop's see. Greek hédra, also \"a seat,\" gives cathedral — the church with the bishop's chair — and polyhedron."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich sitze, du sitzt, er sitzt\" — the i never moves",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich sitze, du sitzt, er sitzt\" — the *i* never moves]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the contrast — \"du sitzt\" beside \"du hilfst\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"du sitzt\" beside \"du hilfst\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Ich sitze gern.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich sitze gern.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the t branch four times — \"sitzen/sit, Wasser/water, essen/eat, zehn/ten\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the *t* branch four times — \"sitzen/sit, Wasser/water, essen/eat, zehn/ten\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the p branch beside it — \"helfen/help\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the *p* branch beside it — \"helfen/help\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the seat words — \"sitzen, sedēre, hédra, cathedral\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the seat words — \"sitzen, sedēre, hédra, cathedral\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the du and er forms of sitzen. (Du sitzt, er sitzt — no break.) Which of the doing verbs does break, and how? (Helfen — du hilfst.) Which sound did the second shift turn German's z and ss out of? (An old t.) Name two pairs from that branch. (Wasser/water, essen/eat, zehn/ten.) Say you like sitting. (Ich sitze gern.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C26-stehen",
-      "sequence": 830,
-      "title": "stehen — the verb that was hiding inside verstehen",
-      "headword": "stehen",
-      "romanization": "stehen",
-      "gloss": "to stand — the verb hiding inside verstehen, and the one place German keeps a letter English put in the wrong tense",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:2cea10ec9333fae9",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Verstehen was broken into ver- plus stehen, and named stehen as English stand. Here is that verb alone, and the letter the two languages disagree about."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "st-initial-scht — st at the start of a German word is said sht."
-            },
-            {
-              "kind": "speech",
-              "text": "h-silent-lengthening — the h is silent and marks the long vowel: stehen = SHTAY-en."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "You'll want to know: stehen",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "stehen means \"to stand.\""
-            },
-            {
-              "kind": "speech",
-              "text": "ich stehe — I stand, wir stehen — we stand."
-            },
-            {
-              "kind": "speech",
-              "text": "du stehst — you stand, ihr steht — you all stand."
-            },
-            {
-              "kind": "speech",
-              "text": "er steht — he stands, sie stehen — they stand."
-            },
-            {
-              "kind": "speech",
-              "text": "Like sitzen, it keeps its vowel all the way through. Two postures, two sentences:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich sitze. Ich stehe."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: the missing n",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Germanic ran two stems off one root here: a short stāną and a longer standaną with an n wedged inside. English generalised the long one and got stand; German took the short one and got stehen, Old High German stān."
-            },
-            {
-              "kind": "speech",
-              "text": "German did not lose the n. It kept it in the past: ich stand, and the participle gestanden. German's past tense is spelt the way English's present is, out of the same drawer of stems."
-            },
-            {
-              "kind": "speech",
-              "text": "The root is PIE steh₂-, the one verstehen named, and it is everywhere. Latin stāre gave state, station, stable, constant. Greek hístēmi, \"I set up,\" gave static, system and ecstasy — standing outside yourself. German built die Stadt, a city: a standing-place. English built stead, steady and instead."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: two postures, two Latin cousins",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Notice the shape of what has happened. Sitzen goes back to sed-, and so does Latin's sedēre. Stehen goes back to steh₂-, and so does Latin's stāre."
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing was borrowed in either direction. Two families inherited the same two roots and held them to the same two meanings for thousands of years, because sitting and standing are things everybody does."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich stehe, du stehst, er steht\" — SHTAY, not STAY",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich stehe, du stehst, er steht\" — *SHTAY*, not *STAY*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "both postures — \"Ich sitze. Ich stehe.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: both postures — \"Ich sitze. Ich stehe.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the verb inside the verb — \"stehen, verstehen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the verb inside the verb — \"stehen, verstehen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "where the n went — \"ich stehe, ich stand, gestanden\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: where the *n* went — \"ich stehe, ich stand, gestanden\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the Latin pair — \"sitzen/sedēre, stehen/stāre\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the Latin pair — \"sitzen/sedēre, stehen/stāre\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what stands in English — \"state, station, stable, stead\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what stands in English — \"state, station, stable, stead\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the du and er forms. (Du stehst, er steht.) Which letter does English's stand carry that German's stehen does not? (An n.) Where does German still keep it? (In the past — ich stand, gestanden.) Which longer verb already taught has stehen inside it? (Verstehen.) Say \"I sit. I stand.\" (Ich sitze. Ich stehe.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C26-schlafen",
-      "sequence": 840,
-      "title": "schlafen — sleep, under two coats of paint",
-      "headword": "schlafen",
-      "romanization": "schlafen",
-      "gloss": "to sleep — the same word as English sleep under two coats of German paint, and a second way for a strong verb to break",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:17460c2603b0cf13",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Sitzen and stehen held their vowels still. This one does not — and it does not break the way the mind verbs broke either."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sch-sh — sch is English sh: schlafen = SHLAH-fen."
-            },
-            {
-              "kind": "speech",
-              "text": "vowel-ae — ä is a flat eh: schläft = SHLEFT."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "You'll want to know: schlafen",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "schlafen means \"to sleep.\""
-            },
-            {
-              "kind": "speech",
-              "text": "ich schlafe, wir schlafen."
-            },
-            {
-              "kind": "speech",
-              "text": "du schläfst, ihr schlaft."
-            },
-            {
-              "kind": "speech",
-              "text": "er schläft, sie schlafen."
-            },
-            {
-              "kind": "speech",
-              "text": "Die Katze schläft. — \"The cat is sleeping.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the second kind of break",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Lesen gave you one break: long e goes to i for du and er — du liest, er hilft. Here is the other: a takes two dots and becomes ä — du schläfst, er schläft."
-            },
-            {
-              "kind": "speech",
-              "text": "Those two dots are the umlaut, the mark that turns Buch into Bücher. The break lands in the same slot as before, du and er and nobody else, so only its raw material is new: e verbs brighten to i, a verbs to ä."
-            },
-            {
-              "kind": "speech",
-              "text": "Es regnet. Die Katze schläft."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart: two coats of paint",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "schlafen is Proto-Germanic slēpaną, and English sleep is the same inherited word — Old English slæpan, Old High German slāfan."
-            },
-            {
-              "kind": "speech",
-              "text": "Two German changes sit between them. The first you know: the second shift, Germanic p to German f, as in helfen. The second is new — German turned s into sh before l, m, n and w, and wrote it down: sleep becomes schlafen, swim becomes schwimmen, snow becomes Schnee, smith becomes Schmied. It did the same before p and t and never spelt it, which is why stehen is said SHTAY-en."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the honest part. The old Indo-European verb for sleeping was swep-, still in plain view: Latin somnus gives insomnia and somnolent, Latin sopor gives soporific, Greek hýpnos gives hypnosis, and Old Norse sofa is Swedish sova today. German and English both threw that verb away and built a new one on sleb-, \"to be slack\" — German still has schlaff, \"limp.\" They made that swap together, before they were two languages."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich schlafe, du schläfst, er schläft\" — the a brightens to ä",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich schlafe, du schläfst, er schläft\" — the *a* brightens to *ä*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three verbs — \"Ich sitze. Ich stehe. Ich schlafe.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three verbs — \"Ich sitze. Ich stehe. Ich schlafe.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Es regnet. Die Katze schläft.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es regnet. Die Katze schläft.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "both breaks in the same slot — \"du hilfst\" beside \"du schläfst\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: both breaks in the same slot — \"du hilfst\" beside \"du schläfst\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the sch row — \"schlafen, schwimmen, Schnee, Schmied\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the *sch* row — \"schlafen, schwimmen, Schnee, Schmied\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the verb they both threw away — \"somnus, hypnos, sova\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the verb they both threw away — \"somnus, hypnos, sova\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the du and er forms. (Du schläfst, er schläft — two dots on the a.) Which two people does a German verb break for? (Du and er, always.) Name the two changes between sleep and schlafen. (p to f, and s to sch.) Why is stehen said SHTAY-en? (Same change, never spelt.) Say \"the cat is sleeping.\" (Die Katze schläft.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C26-hoeren",
-      "sequence": 850,
-      "title": "hören — hear, and the end of a chapter that never moved",
-      "headword": "hören",
-      "romanization": "hören",
-      "gloss": "to hear — the same verb as English hear, and the closing of a chapter of four things you do without going anywhere",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d7d094043299be72",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich sitze. Ich stehe. Ich schlafe. Three verbs that stay put. Here is the fourth — the sense that works with your eyes shut."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "umlaut-oe — ö is the e of bed said with rounded lips."
-            },
-            {
-              "kind": "speech",
-              "text": "r-uvular — the r is a soft scrape at the back: hören = HUR-en."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "You'll want to know: hören",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hören means \"to hear.\""
-            },
-            {
-              "kind": "speech",
-              "text": "ich höre, wir hören."
-            },
-            {
-              "kind": "speech",
-              "text": "du hörst, ihr hört."
-            },
-            {
-              "kind": "speech",
-              "text": "er hört, sie hören."
-            },
-            {
-              "kind": "speech",
-              "text": "The ö never moves. Schlafen grew its dots for du and er; hören was born with them, so nothing is left to break."
-            },
-            {
-              "kind": "speech",
-              "text": "Der Hund hört. Die Katze hört."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: liking it, the mögen way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "gern hangs on this verb like any other:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich höre gern. — \"I like listening.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Gern is English yearn: underneath, \"I hear yearningly.\" Beside it is the other way of liking, ich mag — English may, with the power drained out."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart: the s that became an r",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hören is Proto-Germanic hauzijaną, and English hear is the same inherited word."
-            },
-            {
-              "kind": "speech",
-              "text": "This time the change is one they share. Gothic still says hausjan, with an s; Old English hīeran and Old High German hōren had both turned it to r. Sitzen shows where German left English; hören shows a road they walked together."
-            },
-            {
-              "kind": "speech",
-              "text": "The h is Grimm's law, the first shift: an old k became Germanic h. Greek kept the k — akoúein, \"to hear,\" which English borrowed back as acoustic. Same swap that made kwon- into Hund while Latin kept canis."
-            },
-            {
-              "kind": "speech",
-              "text": "Some break the root up further, into \"sharp\" plus \"ear\" — which would make hören \"sharp-eared\" and put das Ohr inside it. Cited often, not settled."
+              "text": "Beyond Germanic the root nem- meant \"to assign, to allot,\" and Greek's version is unexpectedly familiar: némein, \"to distribute,\" gives nomad, economy and nemesis."
             }
           ]
         },
         {
           "index": 5,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: gehören is not \"hear\"",
+          "title": "Why it's said this way: bekommen does not mean \"become\"",
           "segments": [
             {
               "kind": "speech",
-              "text": "gehören means \"to belong.\" It is ge- welded onto hören, and began as \"to hearken to\": what belongs to you answers when called."
+              "text": "German bekommen means \"to receive, to get\" — not \"to become.\" Both are built from the same prefix and the same verb of motion, and then the meanings walked off in opposite directions. A German saying Ich bekomme... in a café is being served, not transformed. Recognise bekommen; say nehmen."
             }
           ]
         },
@@ -753,65 +140,65 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four — \"Ich sitze. Ich stehe. Ich schlafe. Ich höre.\"",
+              "instruction": "\"ich nehme, du nimmst, er nimmt\" — NAY-me, NIMST, NIMT",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"Ich sitze. Ich stehe. Ich schlafe. Ich höre.\"]"
+              "source": "[YOU SAY: \"ich nehme, du nimmst, er nimmt\" — *NAY-me, NIMST, NIMT*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four er forms — \"er sitzt, er steht, er schläft, er hört\"",
+              "instruction": "\"wir nehmen, ihr nehmt, sie nehmen\" — the long e is back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four *er* forms — \"er sitzt, er steht, er schläft, er hört\"]"
+              "source": "[YOU SAY: \"wir nehmen, ihr nehmt, sie nehmen\" — the long *e* is back]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Der Hund hört. Die Katze schläft.\"",
+              "instruction": "\"Die Hand nimmt. Die Hand schreibt.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Der Hund hört. Die Katze schläft.\"]"
+              "source": "[YOU SAY: \"Die Hand nimmt. Die Hand schreibt.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich höre gern.\"",
+              "instruction": "the three shapes — \"du liest, du nimmst, du schreibst\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich höre gern.\"]"
+              "source": "[YOU SAY: the three shapes — \"du liest, du nimmst, du schreibst\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the shared change — \"hausjan, hīeran, hōren\"",
+              "instruction": "the fossils — \"nehmen, numb, nimble\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the shared change — \"hausjan, hīeran, hōren\"]"
+              "source": "[YOU SAY: the fossils — \"nehmen, numb, nimble\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the h row — \"hören/akoúein, Hund/canis\"",
+              "instruction": "borrowed against lost — \"schreiben came in from Latin; niman went out\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the *h* row — \"hören/akoúein, Hund/canis\"]"
+              "source": "[YOU SAY: borrowed against lost — \"schreiben came in from Latin; niman went out\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"gehören is belong\"",
+              "instruction": "the trap — \"bekommen is receive\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"gehören is *belong*\"]"
+              "source": "[YOU SAY: the trap — \"bekommen is *receive*\"]"
             }
           ]
         },
@@ -828,7 +215,642 @@
             },
             {
               "kind": "speech",
-              "text": "Give all four ich forms of this chapter. (Ich sitze, ich stehe, ich schlafe, ich höre.) Which breaks its vowel? (Schlafen — a to ä.) Which letter did Gothic keep where German and English have r? (An s.) Which law put the h on hören and Hund? (Grimm's law.)"
+              "text": "Give the du and er forms. (Du nimmst, er nimmt — the h drops, the m doubles.) Which verb replaced the English cousin of nehmen? (Take, from Norse.) Name the two fossils it left. (Numb and nimble.) What does bekommen mean? (To receive.) And say \"the hand takes.\" (Die Hand nimmt.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C25-fragen",
+      "sequence": 810,
+      "title": "fragen — asking, and the three answers German gives back",
+      "headword": "fragen",
+      "romanization": "fragen",
+      "gloss": "to ask — a weak verb whose vowel stays put, and whose closest English relatives came in from Latin as pray and precarious",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7421fbea2c432957",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After two vowel-breaking verbs, a rest: this one keeps its vowel everywhere. And you already own its answers — all three of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-a-german — a pure open ah: fragen = FRAH-gen."
+            },
+            {
+              "kind": "speech",
+              "text": "r-uvular-german — the soft guttural r you first met in lernen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: fragen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fragen means \"to ask.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich frage, wir fragen."
+            },
+            {
+              "kind": "speech",
+              "text": "du fragst, ihr fragt."
+            },
+            {
+              "kind": "speech",
+              "text": "er fragt, sie fragen."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun sits beside it: die Frage, \"the question.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the vowel that stays",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the two forms that break in a strong verb. Du fragst. Er fragt. The a has not moved."
+            },
+            {
+              "kind": "speech",
+              "text": "fragen is a weak verb — the ordinary kind, built like lernen and machen: endings only, stem untouched. That matters, because after lesen and nehmen it is easy to start breaking vowels everywhere. Most German verbs are weak; the strong ones are a closed club, learned one at a time. Hold the pair: du nimmst, but du fragst."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: three answers, not two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An asked question wants an answer, and you have the whole German set already. English has two. German has three:"
+            },
+            {
+              "kind": "speech",
+              "text": "ja — yes."
+            },
+            {
+              "kind": "speech",
+              "text": "nein — no."
+            },
+            {
+              "kind": "speech",
+              "text": "doch — the one English has no word for: yes, against what you just said. It exists to contradict a negative."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "etymology",
+          "title": "The word, taken apart: the asking English gave away",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fragen goes back to Proto-Indo-European preḱ-, \"to ask.\" Germanic turned that opening p into an f — the Grimm's-law step that puts father beside Latin pater."
+            },
+            {
+              "kind": "speech",
+              "text": "English once had the cousin, Old English frignan, and dropped it, just as it dropped the cousin of nehmen. The word it uses instead, ask, is a different Germanic word and no relation."
+            },
+            {
+              "kind": "speech",
+              "text": "So English gets the root back only the long way round. Latin precārī, \"to beg, to pray,\" is the same verb, and gives pray, prayer and precarious — literally \"held only by asking for it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One caution: Latin rogāre, \"to ask,\" behind interrogate, looks like a candidate and is not related — it belongs with rēx and right, a root about straightening and ruling."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich frage, du fragst, er fragt\" — the a never moves",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich frage, du fragst, er fragt\" — the *a* never moves]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Frage\" — the question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Frage\" — the question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"du liest, du nimmst\", then \"du fragst\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"du liest, du nimmst\", then \"du fragst\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three answers — \"ja, nein, doch\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three answers — \"ja, nein, doch\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin cousins — \"pray, prayer, precarious\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin cousins — \"pray, prayer, precarious\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two verbs English dropped — \"nehmen, fragen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two verbs English dropped — \"nehmen, fragen\"]"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is fragen strong or weak, and how do you know? (Weak — du fragst, the vowel never breaks.) Name German's three answers. (Ja, nein, doch — the last contradicts a negative.) Is English ask a relative? (No.) Which English words carry the root instead? (Pray, precarious, through Latin precārī.) Say \"I ask\" and \"I take.\" (Ich frage. Ich nehme.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C25-helfen",
+      "sequence": 820,
+      "title": "helfen — one word, one sound law, two languages",
+      "headword": "helfen",
+      "romanization": "helfen",
+      "gloss": "to help — the same word as English help, separated by one sound law, and still strong in German the way English's help once was",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f2cffc3ffc9b5d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Almost nothing sits between the two words: helfen is help. The lesson is the single sound that separates them — and it is not the law you already know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "h-pronounced — a real, breathed h, unlike the silent one in nehmen."
+            },
+            {
+              "kind": "speech",
+              "text": "f-final — a clean f: helfen = HEL-fen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: helfen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "helfen means \"to help,\" and it is strong, so you know where to look:"
+            },
+            {
+              "kind": "speech",
+              "text": "ich helfe, wir helfen."
+            },
+            {
+              "kind": "speech",
+              "text": "du hilfst, ihr helft."
+            },
+            {
+              "kind": "speech",
+              "text": "er hilft, sie helfen."
+            },
+            {
+              "kind": "speech",
+              "text": "The e becomes i in du and er, exactly as in nehmen — the third verb to do it, so by now you can predict it."
+            },
+            {
+              "kind": "speech",
+              "text": "One honest limit: when German names the person helped, that person's word takes a noun form this book has not taught. Keep to Ich helfe on its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: asking for it politely",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The noun is die Hilfe, \"help\" — the same e to i change, frozen. And bitte gave you the shape for asking politely: name the thing, then say bitte."
+            },
+            {
+              "kind": "speech",
+              "text": "Hilfe, bitte. — \"Help, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A whole request, from one new noun and one old word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart: the second shift",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "helfen is Proto-Germanic helpaną, and English help is the same inherited word."
+            },
+            {
+              "kind": "speech",
+              "text": "The only difference is p against f, from a different law than the one behind Haupt. That was Grimm's law, the first shift, PIE sounds into Germanic ones — seen again in fragen's p becoming f. This is the second, High German shift, much later, and the event that split German from English. After a vowel, Germanic p became German f: helpan becomes helfen; ship becomes Schiff; open becomes offen; sharp becomes scharf; deep becomes tief."
+            },
+            {
+              "kind": "speech",
+              "text": "Outside Germanic, be honest: helfen has no secure cousins — a proposed link to Lithuanian šelpti is disputed."
+            },
+            {
+              "kind": "speech",
+              "text": "English keeps a fossil, though. Helfen is still strong — helfen, half, geholfen — and help was too: its old holp and holpen survive in old Bibles and dialect. English let the shape go within recorded memory."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich helfe, du hilfst, er hilft\" — the e breaks to i",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich helfe, du hilfst, er hilft\" — the *e* breaks to *i*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Hilfe, bitte.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Hilfe, bitte.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the strong pair — \"du nimmst, du hilfst\" — then the weak \"du fragst\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the strong pair — \"du nimmst, du hilfst\" — then the weak \"du fragst\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the second shift five times — \"helfen/help, Schiff/ship, offen/open, scharf/sharp, tief/deep\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the second shift five times — \"helfen/help, Schiff/ship, offen/open, scharf/sharp, tief/deep\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which law was which — Grimm's law gave Haupt; the second shift gave helfen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which law was which — Grimm's law gave *Haupt*; the second shift gave *helfen*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the du and er forms. (Du hilfst, er hilft.) Which shift separates helfen from help, and is it the one behind Haupt and head? (The second, High German shift — no, Haupt was Grimm's law.) Name two more pairs from it. (Schiff/ship, offen/open, scharf/sharp.) Cousins outside Germanic? (None secure.) Ask for help politely. (Hilfe, bitte.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C25-moegen-lieben",
+      "sequence": 830,
+      "title": "mögen, lieben, gern — German's three ways of liking",
+      "headword": "mögen, lieben",
+      "romanization": "mögen, lieben",
+      "gloss": "to like and to love — plus gern, the adverb that lets any verb say \"I like doing this\" and has no English shape at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:063bb0c79bde9207",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English says \"I like.\" German has three ways, and the commonest is not a verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mögen and lieben",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mögen (\"to like\", MER-gen — ö is ay with rounded lips) is a third pattern, an old verb whose ich and er forms take no ending:"
+            },
+            {
+              "kind": "speech",
+              "text": "ich mag, wir mögen."
+            },
+            {
+              "kind": "speech",
+              "text": "du magst, ihr mögt."
+            },
+            {
+              "kind": "speech",
+              "text": "er mag, sie mögen."
+            },
+            {
+              "kind": "speech",
+              "text": "lieben (\"to love\", LEE-ben — ie is a long ee) is weak: ich liebe, du liebst, er liebt."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich mag die Katze., Der Hund mag Wasser., Ich mag das Wetter., Ich liebe Deutsch."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine der noun changes its article after mögen — untaught here, so these use die and das words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: gern hangs on any verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gern is an adverb, \"gladly,\" dropped in after a verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich lese gern. — \"I read gladly\": I like reading. Ich schreibe gern., Ich helfe gern."
+            },
+            {
+              "kind": "speech",
+              "text": "English must rebuild the sentence, with like plus a verb in -ing; German changes nothing. So: mögen for a thing, gern for an activity, lieben for love."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: may, love, and yearn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All three are English words you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "mögen is maganą, \"to have power\" — English may. The meaning slid from being able, to being inclined, to liking; the power sense survives in might and die Macht."
+            },
+            {
+              "kind": "speech",
+              "text": "lieben is leubaz, \"dear\" — English love exactly, with lief and believe (to hold dear). gern is gernaz, \"eager\" — English yearn. So Ich lese gern is \"I read yearningly.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built across these two chapters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel stays: denken, verstehen, fragen, schreiben (strong only in its past)."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel breaks: du liest, du nimmst, du hilfst."
+            },
+            {
+              "kind": "speech",
+              "text": "third pattern: ich mag, du magst, er mag."
+            },
+            {
+              "kind": "speech",
+              "text": "the traps: bekommen is \"receive,\" never \"become\"; also is \"therefore,\" never \"also.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich mag, du magst, er mag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich mag, du magst, er mag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich mag die Katze. Der Hund mag Wasser. Ich mag das Wetter.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich mag die Katze. Der Hund mag Wasser. Ich mag das Wetter.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gern on four — \"Ich lese gern. Ich schreibe gern. Ich helfe gern. Ich frage gern.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gern* on four — \"Ich lese gern. Ich schreibe gern. Ich helfe gern. Ich frage gern.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the breakers, then not — \"du liest, du nimmst, du hilfst\", \"du fragst\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the breakers, then not — \"du liest, du nimmst, du hilfst\", \"du fragst\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all eight \"I\" forms — \"ich denke, ich verstehe, ich lese, ich schreibe, ich nehme, ich frage, ich helfe, ich mag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all eight \"I\" forms — \"ich denke, ich verstehe, ich lese, ich schreibe, ich nehme, ich frage, ich helfe, ich mag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the roll-call — \"denken/think, verstehen/stand, lesen/gather, schreiben/scrībere, nehmen/numb, fragen/pray, helfen/help, mögen/may, lieben/love, gern/yearn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the roll-call — \"denken/think, verstehen/stand, lesen/gather, schreiben/scrībere, nehmen/numb, fragen/pray, helfen/help, mögen/may, lieben/love, gern/yearn\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does German say \"I like reading,\" literally? (Ich lese gern — \"I read gladly.\") Say: you like the cat; the dog likes water. (Ich mag die Katze. Der Hund mag Wasser.) Which three of the eight break their vowel? (Lesen, nehmen, helfen.) And the two traps — bekommen, also? (Receive; therefore.)"
             }
           ]
         }

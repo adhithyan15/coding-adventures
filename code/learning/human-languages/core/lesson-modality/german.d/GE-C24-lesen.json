@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C24-lesen",
     "language": "german",
-    "chapter": 35,
-    "sequence": 760,
+    "chapter": 36,
+    "sequence": 780,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c4c55adc744aae14"
+    "sourceHash": "fnv1a64:ab756ae36749df19"
   },
   "findings": []
 }

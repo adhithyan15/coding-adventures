@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C27-schliessen",
     "language": "german",
-    "chapter": 38,
-    "sequence": 890,
+    "chapter": 39,
+    "sequence": 910,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:da7bace96737ef02"
+    "sourceHash": "fnv1a64:7d52d4a5429fd080"
   },
   "findings": []
 }

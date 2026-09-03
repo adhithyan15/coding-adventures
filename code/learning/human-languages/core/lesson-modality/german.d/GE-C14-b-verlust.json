@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C14-b-verlust",
     "language": "german",
-    "chapter": 20,
-    "sequence": 329,
+    "chapter": 21,
+    "sequence": 349,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6ffa205017bd2325"
+    "sourceHash": "fnv1a64:dace70f90d5fc21c"
   },
   "findings": []
 }

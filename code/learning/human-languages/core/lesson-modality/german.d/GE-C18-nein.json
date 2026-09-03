@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C18-nein",
     "language": "german",
-    "chapter": 29,
-    "sequence": 680,
+    "chapter": 30,
+    "sequence": 700,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:574c3e8396308173"
+    "sourceHash": "fnv1a64:34a6def35f4b05a2"
   },
   "findings": []
 }

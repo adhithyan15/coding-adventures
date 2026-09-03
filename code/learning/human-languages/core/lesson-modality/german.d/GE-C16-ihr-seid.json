@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-ihr-seid",
     "language": "german",
-    "chapter": 24,
-    "sequence": 505,
+    "chapter": 25,
+    "sequence": 525,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:314a226169d81d28"
+    "sourceHash": "fnv1a64:f0d0f94af108b5b5"
   },
   "findings": []
 }

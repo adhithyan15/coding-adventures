@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C26-stehen",
     "language": "german",
-    "chapter": 37,
-    "sequence": 830,
+    "chapter": 38,
+    "sequence": 850,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2cea10ec9333fae9"
+    "sourceHash": "fnv1a64:9ff040220db0f8a6"
   },
   "findings": []
 }

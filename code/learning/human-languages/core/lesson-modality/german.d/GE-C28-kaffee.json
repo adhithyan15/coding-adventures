@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C28-kaffee",
     "language": "german",
-    "chapter": 39,
-    "sequence": 900,
+    "chapter": 40,
+    "sequence": 920,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e9ee70c9326300ad"
+    "sourceHash": "fnv1a64:281b06b83e5ede17"
   },
   "findings": []
 }

@@ -1,12 +1,12 @@
 {
   "language": "german",
   "chapter": 37,
-  "sourceHash": "fnv1a64:0cd28aed5d6264da",
+  "sourceHash": "fnv1a64:e55ce0d0934610a3",
   "lessonIds": [
-    "GE-C26-sitzen",
-    "GE-C26-stehen",
-    "GE-C26-schlafen",
-    "GE-C26-hoeren"
+    "GE-C25-nehmen",
+    "GE-C25-fragen",
+    "GE-C25-helfen",
+    "GE-C25-moegen-lieben"
   ],
-  "tex": "german/book/chapters/ch37-still-verbs.tex"
+  "tex": "german/book/chapters/ch37-doing-verbs.tex"
 }

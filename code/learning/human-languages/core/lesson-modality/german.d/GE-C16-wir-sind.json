@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-wir-sind",
     "language": "german",
-    "chapter": 24,
-    "sequence": 500,
+    "chapter": 25,
+    "sequence": 520,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:20470fe0fd180160"
+    "sourceHash": "fnv1a64:c5011058d2527aa9"
   },
   "findings": []
 }

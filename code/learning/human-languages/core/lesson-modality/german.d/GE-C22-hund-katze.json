@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C22-hund-katze",
     "language": "german",
-    "chapter": 33,
-    "sequence": 720,
+    "chapter": 34,
+    "sequence": 740,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0fd55016fb99e756"
+    "sourceHash": "fnv1a64:b15ffb2afead0c7b"
   },
   "findings": []
 }

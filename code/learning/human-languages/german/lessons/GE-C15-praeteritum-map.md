@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-praeteritum-map
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 460
-chapter: 23
+sequence: 480
+chapter: 24
 type: etymology
 headword: areale Veränderung
 gloss: an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours

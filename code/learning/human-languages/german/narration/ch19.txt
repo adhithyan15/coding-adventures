@@ -1,89 +1,420 @@
-German, chapter 19: Colours.
-2 lessons. All 2 can be done entirely by ear.
+German, chapter 19: The Pattern That Never Breaks.
+12 lessons. All 12 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-schwarz, weiß — and the word German lent away.
-
-Warm-up.
-[pause 2 seconds]
-German's colour words are home-grown — no Latin here. But one of them has a sibling that emigrated: a German word for "shining" became the word for white in French, Italian and Portuguese.
-
-schwarz.
-schwarz ("black") from Proto-Germanic swartaz. Its English cousin survives in swarthy ("dark-complexioned"). Further back it's related to Latin sordēs ("dirt") — the root of English sordid. Black and grubby, from one idea.
-
-weiß.
-weiß ("white") from Proto-Germanic hwītaz = exactly English white. Same word, different spelling clothes.
-Note the ß (Eszett): it marks a sharp s after a long vowel. Weiß rhymes with English vice, not vice-versa's second half. In Switzerland you'll see it written weiss — the letter is optional there.
-
-The word that emigrated.
-German also has blank — "shiny, polished, bare." That word, in its Frankish form blank ("shining"), was borrowed into Romance, where it pushed Latin's own albus out and became:
-[a table of 4 rows, read aloud]
-language: French. "white": blanc.
-language: Italian. "white": bianco.
-language: Portuguese. "white": branco.
-language: German. "white": blank — still just "shiny".
-This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from the food lesson). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "schwarz, weiß"]
-[pause 8 seconds for the answer]
-[your turn — say: "der Wein ist weiß" — the same wine, coloured again]
-[pause 8 seconds for the answer]
-[your turn — say: "weiß, white" — hear the same word]
-[pause 8 seconds for the answer]
-[your turn — say: "blank" — and remember: French made this one mean white]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Are German's colour words borrowed from Latin? (No — both are native Germanic.) What English word is schwarz's cousin? (Swarthy — and, further off, sordid.) What is weiß in English, letter for letter? (White.) Which German word became French blanc? (Blank, "shining" — Germanic lending into Romance for once.) Next: rot and blau, and one more word that travelled.
-
-
-Lesson 2 of 2.
-rot, blau — cousins and emigrants.
+Lesson 1 of 12.
+Ziffer plus zehn — the rule.
 
 Warm-up.
 [pause 2 seconds]
-Two more native German colours. One is related to the French word for red — genuinely, not by borrowing. The other is a second German word the Romance languages took.
+The leftover trick covered two numbers and stopped. From here German uses one rule, and it does not break once.
 
-rot — an ancient cousin.
-rot from Proto-Germanic raudaz from PIE h₁rewdʰ-. That root is one of the oldest colour words we can reconstruct, and it went everywhere:
-[a table of 3 rows, read aloud]
-language: German. word: rot.
-language: English. word: red, rust, ruddy.
-language: Latin. word: ruber, rubeus becomes French rouge, ruby, rubric.
-So rot and rouge are cousins, not borrowings — they split apart thousands of years before either language existed. Red is the colour humans name first, after black and white.
+Grammar Lens: a digit, then zehn.
+Take a digit you already own. Put zehn on the end. That is the number.
+[a table of 1 row, read aloud]
+take a digit: drei. weld on: zehn. and say it: —.
+No space, no linking piece, no change to either half. Say that row out loud and you have made the number yourself; the next lesson only confirms it.
+You are not learning eight new words in this chapter — you are running one machine eight times.
+English does the identical thing and hides it slightly: -teen is ten. Thir-teen is "three-ten," which is why it rhymes with nothing and means exactly what German means.
 
-blau — the second emigrant.
-blau from Proto-Germanic blēwaz. Like blank in the last lesson, this word was borrowed into Romance:
-[a table of 4 rows, read aloud]
-language: German. "blue": blau.
-language: French. "blue": bleu.
-language: Italian. "blue": blu.
-language: English. "blue": blue — taken from French, not from German.
-English is the odd one here: it had Germanic blāw available but borrowed the French form instead. The word went Germanic becomes French becomes English, coming home in disguise.
-Portuguese went a different way entirely — its blue is azul, from Arabic — a second, entirely separate road to blue, and the one Spanish took too.
-
-The chapter in one table.
-[a table of 4 rows, read aloud]
-German: schwarz. source: Germanic swartaz. did Romance borrow it?: no.
-German: weiß. source: Germanic hwītaz. did Romance borrow it?: no — but blank went instead.
-German: rot. source: Germanic raudaz. did Romance borrow it?: no — Latin had its own cousin.
-German: blau. source: Germanic blēwaz. did Romance borrow it?: yes — bleu, blu.
+Sounds you'll need.
+z-ts — every one of these ends in zehn, and German z is ts, so every one ends -TSAYN.
+Say zehn on its own until the ts is automatic. It is about to appear eight times in a row.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "rot, blau"]
+[your turn — say: the ending alone — "zehn"]
 [pause 8 seconds for the answer]
-[your turn — say: "der Wein ist rot" — the wine you already have, coloured]
+[your turn — say: the rule — "a digit, then zehn"]
 [pause 8 seconds for the answer]
-[your turn — say: the cousins — "rot, red, rouge"]
+[your turn — say: run it once — "drei", then "zehn", then the two joined]
 [pause 8 seconds for the answer]
-[your turn — say: all four — "schwarz, weiß, rot, blau"]
+[your turn — say: what English hides — "-teen is ten"]
 [pause 8 seconds for the answer]
+[repeat that twice]
+"Ziffer plus zehn."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is rot related to French rouge by borrowing or by descent? (Descent — both from PIE h₁rewdʰ-.) Which two German colour words did Romance borrow? (Blank becomes blanc/bianco/branco, and blau becomes bleu/blu.) Where did English get blue from? (French — the long way round.) Next chapter: putting colours onto the things you already name.
+What is the rule? (A digit, then zehn.) Does anything go between them? (No.) Run it on drei and say what comes out. How does every one of them end? (-tsayn.) And what is English -teen? (Ten.) Next: the rule's first run.
+
+
+Lesson 2 of 12.
+dreizehn — "thirteen".
+
+Warm-up.
+[pause 2 seconds]
+You have the rule and you have the digit. Say the number before you read it.
+
+You'll want to know: dreizehn.
+dreizehn — "thirteen." drei + zehn.
+Nothing added, nothing changed. If you predicted it, that is the point of the chapter working.
+English wore its digit down — three became thir- — and German did not touch its own.
+
+Sounds you'll need.
+diphthong-ei — ei is the vowel of English eye, unchanged from drei.
+z-ts — and the second half is -TSAYN.
+DREI-tsayn, with the weight on the digit, not the ending. That stress pattern holds for every number in this chapter.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the parts — "drei, zehn"]
+[pause 8 seconds for the answer]
+[your turn — say: joined — "dreizehn"]
+[pause 8 seconds for the answer]
+[your turn — say: the English one and its worn-down digit — "thirteen, from three"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"drei, zehn, dreizehn."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "thirteen." (Dreizehn.) What are its halves? (Drei and zehn.) Did either change? (No.) Which syllable is stressed? (The first — the digit.) Next: fourteen, the same way.
+
+
+Lesson 3 of 12.
+vierzehn — "fourteen".
+
+Warm-up.
+[pause 2 seconds]
+Same rule, next digit — and its first letter is one you have been warned about twice.
+
+You'll want to know: vierzehn.
+vierzehn — "fourteen." vier + zehn.
+
+Sounds you'll need.
+v-as-f — the V is an f, exactly as in vier and Vater.
+z-ts — and -TSAYN again.
+FEER-tsayn. Third time for that v: a number, a father, and now a teen.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the parts — "vier, zehn"]
+[pause 8 seconds for the answer]
+[your turn — say: joined — "vierzehn"]
+[pause 8 seconds for the answer]
+[your turn — say: the two so far — "dreizehn, vierzehn"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"dreizehn, vierzehn."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "fourteen." (Vierzehn.) How is the V said? (As an f.) What are its halves? (Vier and zehn.) Next: fifteen.
+
+
+Lesson 4 of 12.
+fünfzehn — "fifteen".
+
+Warm-up.
+[pause 2 seconds]
+Third run of the rule, and the first place English is the messier of the two languages.
+
+You'll want to know: fünfzehn.
+fünfzehn — "fifteen." fünf + zehn.
+The digit is whole. English is not: five became fif-, so fifteen no longer shows its own number. German keeps fünf visible and audible.
+
+Sounds you'll need.
+umlaut-ue — the ü from fünf, unchanged: say ee, then round the lips.
+z-ts — and -TSAYN.
+Two syllables, the weight on fünf and the ending unstressed.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the parts — "fünf, zehn"]
+[pause 8 seconds for the answer]
+[your turn — say: joined — "fünfzehn"]
+[pause 8 seconds for the answer]
+[your turn — say: three in a row — "dreizehn, vierzehn, fünfzehn"]
+[pause 8 seconds for the answer]
+[your turn — say: what English lost — "five became fif-"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"dreizehn, vierzehn, fünfzehn."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "fifteen." (Fünfzehn.) Is the digit whole? (Yes.) Is English's? (No — five became fif-.) Say the three you have. (Dreizehn, vierzehn, fünfzehn.) Next: where German clips too.
+
+
+Lesson 5 of 12.
+The two clipped digits — the two places German shortens a digit before zehn, and it is for the mouth, not for the grammar.
+
+Warm-up.
+[pause 2 seconds]
+The rule holds for every number in this chapter. Two of them shorten the digit first, and it is worth knowing which before you meet them.
+
+Grammar Lens: two digits get shortened.
+[a table of 2 rows, read aloud]
+the digit: sechs. before zehn it becomes: sech-. why: the s would collide with the ts of zehn.
+the digit: sieben. before zehn it becomes: sieb-. why: the -en is an unstressed syllable too many.
+Both are the mouth economising, not the grammar changing. It is still a digit with zehn on the end; the digit has been worn smooth at the join and nothing more.
+
+Why it's said this way.
+English did the same thing and did more of it. Three became thir- and five became fif-, and nobody thinks of thirteen as irregular — it is a worn compound, exactly like these two.
+So the honest scoreboard is: English clips two digits, German clips two digits, and they are not the same two. German keeps fünf whole where English does not; English keeps six and seven whole where German does not. Neither language is tidier. Both are old, and old words get worn.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the full digits — "sechs, sieben"]
+[pause 8 seconds for the answer]
+[your turn — say: their clipped forms — "sech-, sieb-"]
+[pause 8 seconds for the answer]
+[your turn — say: what English clipped instead — "three to thir-, five to fif-"]
+[pause 8 seconds for the answer]
+[your turn — say: what has not changed — "still a digit, then zehn"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"sechs to sech-, sieben to sieb-."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two German digits shorten? (Sechs and sieben.) What do they become? (Sech- and sieb-.) Is the rule broken? (No — the digit is worn, the rule holds.) Which two did English clip? (Three and five.) Next: the first of the two.
+
+
+Lesson 6 of 12.
+sechzehn — "sixteen".
+
+Warm-up.
+[pause 2 seconds]
+First of the two clipped ones. You already know what it drops.
+
+You'll want to know: sechzehn.
+sechzehn — "sixteen." sech- + zehn, with the s of sechs gone.
+Try it with the s left in and you will hear the problem: sechs-zehn puts an s immediately before a ts, and the two will not sit next to each other.
+
+Sounds you'll need.
+ch-ach — the ch is the raspy one from acht and Nacht, made at the back.
+z-ts — and then straight into -TSAYN.
+ZECH-tsayn, where the first sound is the buzzed German s.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the whole digit — "sechs"]
+[pause 8 seconds for the answer]
+[your turn — say: the clipped one — "sech-"]
+[pause 8 seconds for the answer]
+[your turn — say: the number — "sechzehn"]
+[pause 8 seconds for the answer]
+[your turn — say: four in a row — "dreizehn, vierzehn, fünfzehn, sechzehn"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"sechs, sechzehn."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "sixteen." (Sechzehn.) What did the digit lose? (Its s.) Why? (It would collide with the ts.) Is the rule still digit + zehn? (Yes.) Next: the other clipped one.
+
+
+Lesson 7 of 12.
+siebzehn — "seventeen".
+
+Warm-up.
+[pause 2 seconds]
+Second and last of the clipped ones. After this the rule runs clean to twenty.
+
+You'll want to know: siebzehn.
+siebzehn — "seventeen." sieb- + zehn, with the -en of sieben gone.
+Sieben-zehn would be four syllables for one number, three of them unstressed. German trimmed the middle and kept the meaning.
+
+Sounds you'll need.
+ie-long-ee — ie is a long ee, as in sieben.
+consonant-b-final — the b stays a b here, because it is not really at the end of a word: zehn is welded on behind it.
+z-ts — and -TSAYN.
+ZEEB-tsayn.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the whole digit — "sieben"]
+[pause 8 seconds for the answer]
+[your turn — say: the clipped one — "sieb-"]
+[pause 8 seconds for the answer]
+[your turn — say: the number — "siebzehn"]
+[pause 8 seconds for the answer]
+[your turn — say: the two clipped ones together — "sechzehn, siebzehn"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"sieben, siebzehn."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "seventeen." (Siebzehn.) What did the digit lose? (Its -en.) Name both clipped numbers. (Sechzehn, siebzehn.) How many are left to clip? (None.) Next: eighteen, whole again.
+
+
+Lesson 8 of 12.
+achtzehn — "eighteen".
+
+Warm-up.
+[pause 2 seconds]
+The clipping is over. From here the digits go in whole.
+
+You'll want to know: achtzehn.
+achtzehn — "eighteen." acht + zehn, both whole.
+
+Sounds you'll need.
+ch-ach — the raspy ch of acht, unchanged.
+z-ts — and -TSAYN.
+That -cht is the one you were given twice: acht against English eight, Nacht against night. Where German rasps, English writes -ght and says nothing at all.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the parts — "acht, zehn"]
+[pause 8 seconds for the answer]
+[your turn — say: joined — "achtzehn"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair that shares the rasp — "acht, Nacht"]
+[pause 8 seconds for the answer]
+[your turn — say: their silent English twins — "eight, night"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"acht, achtzehn."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "eighteen." (Achtzehn.) Was the digit clipped? (No — whole.) What does English write where German rasps? (-ght.) Next: nineteen.
+
+
+Lesson 9 of 12.
+neunzehn — "nineteen".
+
+Warm-up.
+[pause 2 seconds]
+Eighth and last run of the rule. You should be able to say it before reading on.
+
+You'll want to know: neunzehn.
+neunzehn — "nineteen." neun + zehn, both whole.
+Seven numbers built from one rule and not one of them broke it. Two shortened a digit at the join and kept the rule intact.
+
+Sounds you'll need.
+diphthong-eu — eu is the oy of English boy, unchanged from neun.
+z-ts — and -TSAYN for the last time.
+NOYN-tsayn.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the parts — "neun, zehn"]
+[pause 8 seconds for the answer]
+[your turn — say: joined — "neunzehn"]
+[pause 8 seconds for the answer]
+[your turn — say: the last four — "sechzehn, siebzehn, achtzehn, neunzehn"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"achtzehn, neunzehn."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "nineteen." (Neunzehn.) Its halves? (Neun and zehn.) How many numbers has the rule built? (Seven.) How many times did it break? (None.) Next: twenty, which stops using zehn.
+
+
+Lesson 10 of 12.
+zwanzig — "twenty".
+
+Warm-up.
+[pause 2 seconds]
+Eight numbers ended in zehn. This one does not, and the ending it takes instead is worth a lesson of its own.
+
+You'll want to know: zwanzig.
+zwanzig — "twenty."
+It opens like zwei and zwölf — tsv- — and then closes on -zig where every number before it closed on -zehn.
+
+Sounds you'll need.
+z-ts — twice: tsv- at the front, -ts- in the middle.
+w-as-v — the w is a v, as always.
+ich-laut — and the final -ig is said as the soft ich-sound from the very first chapters: -ikh, not -ig.
+TSVAHN-tsikh. That final -ig rule holds for every German word ending the same way, so it is worth more than this one number.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the ending alone — "-ikh"]
+[pause 8 seconds for the answer]
+[your turn — say: "zwanzig" — TSVAHN-tsikh]
+[pause 8 seconds for the answer]
+[your turn — say: the last two — "neunzehn, zwanzig"]
+[pause 8 seconds for the answer]
+[your turn — say: the three that open the same way — "zwei, zwölf, zwanzig"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"neunzehn, zwanzig."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "twenty." (Zwanzig.) How does the ending sound? (-ikh — the soft ich-sound.) Does it end in zehn? (No — -zig.) Which number is at the front? (Zwei.) Next: what -zig actually is.
+
+
+Lesson 11 of 12.
+-zig and -ty — twenty is two tens — and the -zig of German and the -ty of English are both ten, worn down.
+
+Warm-up.
+[pause 2 seconds]
+The ending changed at twenty. It did not change subject.
+
+The word, taken apart.
+Older Germanic twaintig, which is twain — "two" — plus tig, and tig is ten.
+[a table of 2 rows, read aloud]
+word: zwanzig. is: zwei + -zig. and means: two tens.
+word: twenty. is: twain + -ty. and means: two tens.
+So -zig and -ty are the same ending, both of them ten worn down by being said a great many times. German's zehn stayed whole because it kept being used on its own; the version welded onto twenty wore out instead.
+
+Why it's said this way.
+Stand back and the whole span from eleven to twenty is three ideas, and you have all three.
+Eleven and twelve count what is left over after ten fingers.
+Thirteen to nineteen are a digit with ten on the end.
+Twenty is two tens, with the same ten worn to -zig.
+Every one of those is a compound. Not one number in this chapter is a word you had to be given — they are all built, and the parts were yours before the chapter started.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: what twenty is — "two tens"]
+[pause 8 seconds for the answer]
+[your turn — say: the German pair — "zwei, zwanzig"]
+[pause 8 seconds for the answer]
+[your turn — say: the English pair — "twain, twenty"]
+[pause 8 seconds for the answer]
+[your turn — say: the two endings that are one word — "-zig, -ty, both ten"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"zwanzig — two tens."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does zwanzig mean underneath? (Two tens.) What is -zig? (Ten, worn down.) And English -ty? (The same word.) So how many of this chapter's numbers are compounds? (All of them.)
+
+
+Lesson 12 of 12.
+Practice — thirteen to twenty.
+
+Warm-up.
+[pause 2 seconds]
+No new words. One rule, run eight times, and two small wearings-down along the way.
+
+Grammar Lens: the rule and its two exceptions that are not exceptions.
+[a table of 7 rows, read aloud]
+number: 13. digit: drei. joined: dreizehn.
+number: 14. digit: vier. joined: vierzehn.
+number: 15. digit: fünf. joined: fünfzehn.
+number: 16. digit: sech-. joined: sechzehn.
+number: 17. digit: sieb-. joined: siebzehn.
+number: 18. digit: acht. joined: achtzehn.
+number: 19. digit: neun. joined: neunzehn.
+Six digits go in whole and two are trimmed at the join. The rule never changes.
+
+Why it's said this way.
+Eleven to twenty is three ideas and you now hold all three: two leftovers, seven digit-plus-ten compounds, and one two-tens.
+Here is the contrast worth carrying. The Romance sisters all break partway through the teens and switch to a different construction — Portuguese at sixteen, French and Italian at seventeen. German does not break at all. Two leftovers, then one clean rule to twenty, and English marches beside it the whole distance because it is doing the same thing with the same worn-down words.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: count from thirteen — "dreizehn, vierzehn, fünfzehn, sechzehn, siebzehn, achtzehn, neunzehn, zwanzig"]
+[pause 8 seconds for the answer]
+[your turn — say: the two trimmed digits — "sech-, sieb-"]
+[pause 8 seconds for the answer]
+[your turn — say: the one that stops using zehn — "zwanzig"]
+[pause 8 seconds for the answer]
+[your turn — say: count the whole span — "elf, zwölf, dreizehn … zwanzig"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"dreizehn, vierzehn, fünfzehn, sechzehn."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the rule from thirteen up? (A digit, then zehn.) Which two digits are trimmed? (Sechs and sieben.) Does the rule ever break? (No.) What is zwanzig underneath? (Two tens.) And where do the Romance languages break? (Partway through the teens — sixteen or seventeen.)

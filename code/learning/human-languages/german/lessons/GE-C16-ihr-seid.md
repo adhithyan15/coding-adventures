@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-ihr-seid
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 505
-chapter: 24
+sequence: 525
+chapter: 25
 type: phrase
 headword: ihr seid
 gloss: you are, to more than one person — the form English lost when it dropped its plural you

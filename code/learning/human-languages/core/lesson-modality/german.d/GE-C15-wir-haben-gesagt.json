@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-wir-haben-gesagt",
     "language": "german",
-    "chapter": 22,
-    "sequence": 395,
+    "chapter": 23,
+    "sequence": 415,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:12956000e78499cd"
+    "sourceHash": "fnv1a64:531f92f55dac0491"
   },
   "findings": []
 }
