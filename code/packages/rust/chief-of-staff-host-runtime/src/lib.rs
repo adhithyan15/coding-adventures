@@ -10,6 +10,7 @@ pub use package::{
     VerifiedAgentPackage,
 };
 
+use chief_of_staff_agent_manifest::AgentManifest;
 use chief_of_staff_tool_api::{
     builtin_tool_definition, validate_tool_id, InMemoryToolRuntime, PrivilegeTier, RequestedBy,
     ToolApiError, ToolApprovalGrant, ToolDefinition, ToolExecutionTrace, ToolHandler,
@@ -43,6 +44,56 @@ pub struct HostProfile {
 }
 
 impl HostProfile {
+    /// Derive a host profile from a verified agent manifest.
+    ///
+    /// This is the point of the signed manifest: the surface a supervisor
+    /// enforces comes from bytes inside the integrity boundary, not from
+    /// operator config that can disagree with the code it governs.
+    ///
+    /// Three of the five fields map straight across, and the mapping that is
+    /// *not* made is the one worth stating. `HostProfile::capabilities` holds
+    /// D18D **tool-capability** names, matched against a `ToolDefinition`'s
+    /// `required_capabilities` (colon-delimited, `smart_home:read`). It is fed
+    /// from `manifest.tool_capabilities`, **never** from `manifest
+    /// .capabilities`, which holds spec-13 operating-system triples like
+    /// `fs:read:/x`. They are different namespaces that happen to share a
+    /// word, and crossing them would grant an agent tool access on the
+    /// strength of an unrelated OS declaration.
+    ///
+    /// `profile_id` is an orchestrator-level identity the manifest does not
+    /// describe, so the caller supplies it.
+    pub fn from_manifest(
+        profile_id: impl Into<String>,
+        manifest: &AgentManifest,
+    ) -> Result<Self, HostRuntimeError> {
+        // Validate the INPUT, not only the output. `HostProfile::validate` has
+        // no notion of manifest `version`, so on its own it drops the one
+        // invariant that matters most here: `allowed_tools` is v3/v4-only and
+        // `tool_capabilities` is v4-only. Without this a hand-built v1
+        // manifest -- a version that by contract declares no tool surface at
+        // all -- yields a fully working profile. `AgentManifest`'s fields are
+        // all `pub` and `parse_skill` already builds one struct-literally, so
+        // "it came from the parser" is not an assumption this can make.
+        manifest
+            .validate()
+            .map_err(|error| HostRuntimeError::InvalidField {
+                field: "manifest".to_string(),
+                message: error.to_string(),
+            })?;
+        let profile = Self {
+            profile_id: profile_id.into(),
+            host_id: manifest.agent.clone(),
+            max_tier: tier_from_declared(manifest.privilege_tier)?,
+            allowed_tools: manifest.allowed_tools.clone(),
+            capabilities: manifest.tool_capabilities.clone(),
+        };
+        // Validate the profile's own bounds too. The manifest check above
+        // covers the version-to-field binding this type knows nothing about;
+        // this covers label shapes, the empty-catalog rule, and duplicates.
+        profile.validate()?;
+        Ok(profile)
+    }
+
     pub fn from_json(text: &str) -> Result<Self, HostRuntimeError> {
         let value = parse_json(text)
             .map_err(|error| HostRuntimeError::InvalidJson(error.message.to_string()))?;
@@ -1193,6 +1244,24 @@ fn required_string_array(
         .collect()
 }
 
+/// Map a manifest's numeric `privilege_tier` onto the runtime tier enum.
+///
+/// The manifest validates the 0..=3 range itself, but this is a trust boundary
+/// crossing and the numbers are not the enum, so the mapping is explicit and
+/// the out-of-range case is an error rather than a saturating cast.
+fn tier_from_declared(tier: u8) -> Result<PrivilegeTier, HostRuntimeError> {
+    match tier {
+        0 => Ok(PrivilegeTier::Tier0),
+        1 => Ok(PrivilegeTier::Tier1),
+        2 => Ok(PrivilegeTier::Tier2),
+        3 => Ok(PrivilegeTier::Tier3),
+        _ => Err(HostRuntimeError::InvalidField {
+            field: "privilege_tier".to_string(),
+            message: "expected 0, 1, 2, or 3".to_string(),
+        }),
+    }
+}
+
 fn parse_tier(value: &str) -> Result<PrivilegeTier, HostRuntimeError> {
     match value {
         "tier0" => Ok(PrivilegeTier::Tier0),
@@ -1239,6 +1308,155 @@ fn validate_capability(value: &str) -> Result<(), HostRuntimeError> {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn host_profile_derives_from_a_signed_manifest() {
+        // The whole point of P1.0a/P1.0b: the surface a supervisor enforces
+        // comes from bytes inside the integrity boundary.
+        let manifest = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 4,
+              "agent": "weather-agent",
+              "description": "Reports a concise local weather forecast.",
+              "privilege_tier": 2,
+              "channels": {"reads": {"weather-requests": 1}, "writes": {"weather-reports": 2}},
+              "capabilities": [{"category": "net", "action": "connect", "target": "api.weather.gov:443", "justification": "Fetches the requested forecast."}],
+              "allowed_tools": ["artifact.write", "smart_home.discover"],
+              "tool_capabilities": ["smart_home:read", "smart_home:write"],
+              "justification": "Uses only encrypted channels and the declared forecast endpoint."
+            }"#,
+        )
+        .expect("manifest parses");
+
+        let profile = HostProfile::from_manifest("orchestrator-1", &manifest).unwrap();
+        assert_eq!(profile.profile_id, "orchestrator-1");
+        assert_eq!(profile.host_id, "weather-agent");
+        assert_eq!(profile.max_tier, PrivilegeTier::Tier2);
+        assert_eq!(
+            profile.allowed_tools,
+            vec!["artifact.write", "smart_home.discover"]
+        );
+        assert_eq!(
+            profile.capabilities,
+            vec!["smart_home:read", "smart_home:write"]
+        );
+
+        // The mapping deliberately NOT made: the manifest declares the OS
+        // capability net:connect:api.weather.gov:443, and it must not appear
+        // as a tool capability. Crossing those namespaces would grant tool
+        // access on the strength of an unrelated OS declaration.
+        assert!(!profile
+            .capabilities
+            .iter()
+            .any(|value| value.contains("weather.gov")));
+        assert!(profile.has_capability("smart_home:read"));
+        assert!(!profile.has_capability("net:connect:api.weather.gov:443"));
+    }
+
+    #[test]
+    fn a_derived_profile_gates_tools_by_both_list_and_capability() {
+        let manifest = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 4,
+              "agent": "narrow-agent",
+              "description": "Declares one tool and no tool capabilities at all.",
+              "privilege_tier": 0,
+              "channels": {"reads": {"in-channel": 1}, "writes": {"out-channel": 1}},
+              "capabilities": [],
+              "allowed_tools": ["smart_home.discover"],
+              "tool_capabilities": [],
+              "justification": "Exercises the two-level gate with an empty capability grant."
+            }"#,
+        )
+        .expect("manifest parses");
+        let profile = HostProfile::from_manifest("orchestrator-1", &manifest).unwrap();
+
+        // Allowed by name, but every capability check fails -- which is the
+        // property that keeps a tool from silently widening what it does to an
+        // already-approved agent.
+        assert!(profile
+            .allowed_tools
+            .contains(&"smart_home.discover".to_string()));
+        assert!(!profile.has_capability("smart_home:read"));
+        assert_eq!(profile.max_tier, PrivilegeTier::Tier0);
+    }
+
+    #[test]
+    fn a_hand_built_manifest_cannot_smuggle_a_tool_surface_past_its_version() {
+        // The legacy test above goes through parse_manifest, so it pins the
+        // PARSER's guarantee, not the derivation's -- it cannot fail if this
+        // regresses. AgentManifest's fields are all pub, so a caller can set
+        // version back to 1 while keeping a v4 tool surface. HostProfile
+        // ::validate has no notion of version and would happily accept it.
+        let mut manifest = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 4,
+              "agent": "weather-agent",
+              "description": "Reports a concise local weather forecast.",
+              "privilege_tier": 0,
+              "channels": {"reads": {"in-channel": 1}, "writes": {"out-channel": 1}},
+              "capabilities": [],
+              "allowed_tools": ["artifact.write"],
+              "tool_capabilities": ["smart_home:read"],
+              "justification": "Exercises the version-binding check in from_manifest."
+            }"#,
+        )
+        .expect("manifest parses");
+
+        manifest.version = 1;
+        assert!(matches!(
+            HostProfile::from_manifest("orchestrator-1", &manifest),
+            Err(HostRuntimeError::InvalidField { .. })
+        ));
+
+        // Unsorted and over-length scopes are likewise the manifest's rules,
+        // not this type's, and must still be refused here.
+        let mut unsorted = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 4,
+              "agent": "weather-agent",
+              "description": "Reports a concise local weather forecast.",
+              "privilege_tier": 0,
+              "channels": {"reads": {"in-channel": 1}, "writes": {"out-channel": 1}},
+              "capabilities": [],
+              "allowed_tools": ["artifact.write"],
+              "tool_capabilities": ["a:x", "b:y"],
+              "justification": "Exercises the version-binding check in from_manifest."
+            }"#,
+        )
+        .expect("manifest parses");
+        unsorted.tool_capabilities = vec!["b:y".to_string(), "a:x".to_string()];
+        assert!(matches!(
+            HostProfile::from_manifest("orchestrator-1", &unsorted),
+            Err(HostRuntimeError::InvalidField { .. })
+        ));
+    }
+
+    #[test]
+    fn a_legacy_manifest_cannot_back_a_profile_at_all() {
+        // v1 and v2 declare no tools, so the derived catalog is empty and
+        // `HostProfile::validate` refuses it. That is the correct answer, and
+        // the one worth pinning: the failure mode to avoid is a legacy
+        // manifest quietly producing a profile that allows everything, and the
+        // second-worst is one that silently allows nothing while looking
+        // healthy. This errors instead.
+        let manifest = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 1,
+              "agent": "legacy-agent",
+              "description": "A legacy schema-v1 agent with no declared tool surface.",
+              "privilege_tier": 0,
+              "channels": {"reads": ["in-channel"], "writes": ["out-channel"]},
+              "capabilities": [],
+              "justification": "Exercises the fail-closed path for pre-v3 manifests."
+            }"#,
+        )
+        .expect("manifest parses");
+        assert!(matches!(
+            HostProfile::from_manifest("orchestrator-1", &manifest),
+            Err(HostRuntimeError::EmptyToolCatalog)
+        ));
+    }
     use super::*;
     use chief_of_staff_tool_api::{
         ApprovalAssurance, ApprovalState, JsonSchema, RequestedBy, ToolApprovalChallenge,
@@ -1428,7 +1646,7 @@ while (true) {
         std::fs::write(path.join("manifest.json"), b"{}").unwrap();
         std::fs::write(
             path.join("SKILL.md"),
-            b"# Weather\n\nReport forecasts.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n",
+            b"# Weather\n\nReport forecasts.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n\n## Tool capabilities needed\n- none\n",
         )
         .unwrap();
         let (public_key, secret_key) = generate_keypair(&[29; 32]);

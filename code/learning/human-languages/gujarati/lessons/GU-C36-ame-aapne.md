@@ -48,8 +48,8 @@ at the top of its chapter: the word that joins two things.
 English has one *we* and it is ambiguous. Gujarati has two, and they are not
 interchangeable:
 
-> **અમે** — *we*, **not including you**
-> **આપણે** — *we*, **including you**
+- **અમે** — *we*, **not including you**
+- **આપણે** — *we*, **including you**
 
 If you say **અમે** to someone, you have told them they are outside the group.
 If you say **આપણે**, you have invited them in. Neither is more polite; they mean

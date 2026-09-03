@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:cc4cbf70d090c8fe",
+  "lessonIds": [
+    "PA-C38-ate",
+    "PA-C38-ate-vaak",
+    "PA-C38-ate-write",
+    "PA-C38-jaan",
+    "PA-C38-na-na"
+  ],
+  "tex": "punjabi/book/chapters/ch38-and-or-neither.tex"
+}

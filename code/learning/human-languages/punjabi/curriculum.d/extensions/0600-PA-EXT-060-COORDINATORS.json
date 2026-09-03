@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-060-COORDINATORS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can join nouns and clauses with ate, write ate, offer a choice with jaan, and refuse both with na ... na.",
+  "prerequisites": [
+    "PA-EXT-059-NEGATED-CLAUSE"
+  ],
+  "lessons": [
+    "PA-C38-ate",
+    "PA-C38-ate-vaak",
+    "PA-C38-ate-write",
+    "PA-C38-jaan",
+    "PA-C38-na-na"
+  ]
+}

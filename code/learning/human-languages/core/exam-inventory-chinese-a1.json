@@ -1,0 +1,3362 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL POINT SET, NOT A TRANSCRIPTION OF ANY HSK SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO HANBAN, to the Chinese Ministry of Education, to the Center for Language Education and Cooperation, or to the authors of GF0025-2021. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT CHINESE: they published a Spanish syllabus and have said nothing whatever about this language. Three claims are stacked here with very different strengths, so read them apart. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, which restates the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing in this file and all it establishes is a LEVEL: what an A1 candidate must be able to HANDLE. (2) THE MANDARIN EXPONENTS are editorial throughout. Deciding that Spanish's fourteen verb points collapse onto one invariant verb form plus an aspect column; that its four article points, three demonstrative points and three possessive points collapse onto absences and one missing particle; and that its 'alphabet' point is answered by the STROKE rather than by the character - every one of those is chosen here. TWO COLUMNS EXIST THAT THE SPANISH SET COULD NOT HAVE PRODUCED, and both were opened deliberately. TONE: Spanish spends pitch on mood and Mandarin spends it on the lexicon, so there is no proxy point anywhere that asks about it, and five points here are wholly project-defined. TRANSLATION AND MEDIATION: core/exam-levels.json's chinese caveat records that GF0025-2021 defines its levels 'across listening, speaking, reading, writing, and translation', which is a fifth skill the PCIC inventories are monolingual by construction and cannot enumerate. THAT CAVEAT WAS READ BEFORE ANY POINT WAS WRITTEN and it is what put the Fanyi category in the file; the category comes back empty, which is the finding. THE SCRIPT QUESTION AND THE DECISION TAKEN. Mandarin has no alphabet, and the corpus teaches many words in pinyin before it teaches their characters, so an inventory has to say whether pinyin coverage is a SCRIPT claim or a PRONUNCIATION claim. THIS FILE TREATS PINYIN AS PRONUNCIATION. The reasoning, the three pieces of internal evidence behind it, and the consequence for the character column are written out in full at point ZH-A1-PY-06 rather than left in a commit message, so that a reader who disagrees can refile those points without re-deriving the argument. The short form: the corpus itself already splits the two claims, teaching a word by ear as a LEX atom with a pinyin headword and later as a separate ORTHO atom when it becomes readable and writable, and script-closure.ts treats a declared romanization as the promise that the reader need NOT decode. So the character column counts characters, and pinyin's own orthography - which is untaught - is recorded as four uncovered points in a column of its own rather than being quietly folded into either side. NO SEARCH WAS RUN, BY INSTRUCTION - BACKLOG.d HL-C287 and HL-C290 record the sourcing question as settled. THE EVIDENCE BASE IS THIN. The chinese track is 175 lessons in 18 chapters introducing 134 atoms, of which 53 are lexical, so this file's coverage number should be read as a statement about a STARTER track rather than about a course that aimed at HSK Level 1 and fell short.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Chinese is attributed to DELE, the Instituto Cervantes or the Plan Curricular. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.chinese - exam 'HSK 3.0 / GF0025-2021 plus Coding Adventures four-skill companion', basis EDITORIAL, A1 mapped to an 'HSK 3.0 Level 1-aligned project target'. Its caveat is load-bearing twice: the CEFR correspondence is NOT published by the awarding body, and the standard scores translation as a skill. Both are quoted in `about`. EXAM ENVELOPE: PARTIAL AND DANGLING. chinese/assessment.json declares an A1 level with four skills at a 0.6 pass threshold and chinese/assessment-spec.md carries a prose A1 envelope naming the HSK 3.0 Level 1 construct plus independently scored speaking and productive writing. But chinese/task-shapes/ contains only pre-a1.json and chinese/mocks/ does not exist, so the A1 task inventory and both A1 mocks the contract names are absent - the HL20 6b debt, pinned under core/assessment-artifact-ceiling/. The pre-A1 envelope IS real and was read. No point below is bound to an A1 paper item, because none exists. NO HSK WORD LIST OR CHARACTER LIST IS CITED ANYWHERE IN THIS FILE, and no point claims a count against one. The character column reports what the corpus teaches (42) and what it shows without teaching (15) and does not divide either by a number it has not read. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 175 lesson files in code/learning/human-languages/chinese/lessons/, which introduce 134 distinct atoms between them - 53 LEX, 45 SCRIPT, 11 ORTHO, 10 DIALOGUE, 7 PERFORMANCE, 4 TONE, 2 METHOD and 2 GRAMMAR. The character claims were taken by walking every CJK character any lesson puts on a page and comparing it with the set the writing lessons teach. The absence claims - no de, le, ma, ne, ba, guo, zhe; no he, gen, huozhe, haishi, keshi, danshi, yinwei, suoyi; no you, xihuan, zhidao, xiang; no zhe or na; no men; no ge; no duibuqi; no dong; no numeral above five - were each checked across all 175 files IN CHARACTERS AND IN TONE-MARKED PINYIN, and every raw pinyin match was inspected in context (the six hits for `he` are all inside `heng` and `shenme`). NOT SEARCHED, BY INSTRUCTION: no external search for the GF0025-2021 content standard was performed. See `about`.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding - an unmapped point is uncovered, never skipped. EVERY ATOM NAMED IN EVERY PROBE WAS CHECKED MECHANICALLY against the 134 atoms the chinese track actually introduces, and the check is re-runnable: a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so no id was invented to fill a point and no probe points at a lesson somebody intends to write. Because no id was guessed, every point here is either fully probed or null and the coverage report's `partial` count is zero by construction. FOUR HABITS ARE NAMED SO THEY ARE NOT HIDDEN GENEROSITIES. (1) This track files a great deal under atom kinds other than LEX: the tone facts carry TONE atoms, the chapter dialogues carry DIALOGUE atoms, the four-skill checkpoints carry PERFORMANCE atoms, the stroke and component method carries METHOD atoms, and a word that has become readable-and-writable carries a separate ORTHO atom from the LEX atom that first taught it by ear. Probing those points names a tone, dialogue, method or ortho atom rather than a lexis one; the note on each such point says so. (2) THE LEX/ORTHO SPLIT IS LOAD-BEARING AND IS NEVER USED TWICE. A word known by ear is probed with its LEX atom and a word the reader can also write is probed with both, so no point is counted covered on a spoken word where the demand is a written one. This is the mechanical form of the pinyin decision recorded at ZH-A1-PY-06. (3) SEVERAL POINTS ARE COUNTED COVERED ON ONE EXPONENT WHERE THE PROXY ASKS FOR A FIELD, and each such note says so in as many words - ZH-A1-NE01-01 rests on kou alone where the proxy asks for the body, ZH-A1-NG4-01 on zaoshang alone where it asks for the day, ZH-A1-PRON-06 on shenme alone where it asks for five asking words. (4) A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT, and this is where most of the uncovered points come from: one to five are taught and six to ten are not, so the numeral point is null; qing is taught as a frame with nothing to put in it, so the request point is null; hao is taught and hen is not, so the adjectival predicate is null. A candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance - the proxy point ids whose demand it answers, or an empty list with `chineseSpecific: true`. `anchorIds` records which anchor each point leans on and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The project's restatement of the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language. Its weakest places for Chinese are the verb, where fourteen points assume inflection and Mandarin has none, and the orthography column, where seven points assume an alphabet."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral. It can anchor a FUNCTION and never a Mandarin form. Used only where a point is a can-do rather than a structure, and it is the reason the three repair points ZH-A1-F6-03, -04 and -05 exist at all: the PCIC A1 function column has no repair entry and the CEFR descriptors do."
+    },
+    {
+      "id": "ZH-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/chinese/ - 175 lessons, 18 chapters, curriculum.d and chapters.d",
+      "note": "Our own work, and what every probe resolves against. It is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory, in characters and in tone-marked pinyin."
+    },
+    {
+      "id": "ZH-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.chinese",
+      "note": "Records Chinese as exam 'HSK 3.0 / GF0025-2021 plus Coding Adventures four-skill companion', basis EDITORIAL - the mapping is this project's assessment design and not an awarding-body equivalence. Its caveat names translation as one of GF0025's five skills, which is the column the Spanish proxy cannot supply and which this file adds as Fanyi."
+    },
+    {
+      "id": "ZH-ASSESSMENT",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/chinese/assessment.json and assessment-spec.md",
+      "note": "A real project-internal contract naming an HSK 3.0 Level 1-aligned A1 with four skills at 0.6, and adding independently scored speaking and productive writing because the 2026 trial notice does not pair Level 1 with a speaking paper. Its A1 task inventory and both A1 mocks do not exist on disk."
+    },
+    {
+      "id": "ZH-SCRIPT-DATA",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/data/scripts/chinese.json",
+      "note": "The Chinese script file: 43 characters and components with source-verified PRC stroke order, plus the `tones` and `toneSandhi` tables that are the machine-readable half of the tone column. It is what ZH-A1-H-02 and ZH-A1-T-02 rest on."
+    },
+    {
+      "id": "ED-CHINESE",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Mandarin",
+      "note": "Every Mandarin exponent below, and two decisions larger than any single point: that PINYIN IS A PRONUNCIATION CLAIM AND NOT A SCRIPT CLAIM (argued at ZH-A1-PY-06), and that Spanish's 'alphabet' point is answered by the STROKE rather than by the character, because asking a track for an alphabet-sized character set would report every Mandarin course that has ever existed as failing. Also chosen here: that tone earns five points of its own, that the particles earn a category although not one is taught, and that the empty food-and-drink field is worth naming as surprising."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-O1-06"
+        ],
+        "why": "Superscript letters in frequent abbreviations. This is the one Spanish point with no Chinese answer on either side of the script question. The characters are unicameral and have no superscript convention; Chinese abbreviation works by keeping one character from each word (Beida for Beijing Daxue), which is a different demand and is derived at ZH-A1-AB-01; and the Chinese ordinal is the prefix character di rather than a written ending that could be raised, so there is nothing to superscript. Note that the SAME Spanish point was DERIVED for Russian, at RU-A1-L-09, because Russian answers it with the hyphenated ordinal 1-y. It is dropped here because Chinese returns nothing at all, not because superscripts looked foreign."
+      }
+    ],
+    "note": "One point dropped out of 273. Everything else restates, including the six places it first looked impossible: the four article points and the three possessive points collapse onto absences and one missing particle; the fourteen verb points collapse onto one invariant verb plus an aspect column; the two accentuation points become the pinyin tone marks; the two case points survive only in pinyin and are stated as having no character analogue at ZH-A1-H-06; and A1-O1-01, the alphabet, becomes the STROKE. Restating a point around the target language's machinery is deriving it, and a collapse is a derivation."
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's 54 A1 function points), the CEFR Companion Volume A1 descriptors, and chinese/assessment-spec.md's pre-A1 and A1 envelopes",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension - for Spanish. It does not close this one, because the exponent that realises each function in Mandarin is our choice every time, because the PCIC list has no repair entry while the CEFR descriptors do (three points here exist only for that reason), and because this track's alignment names a FIFTH skill - translation - that a monolingual function inventory cannot enumerate at all. The Fanyi category is the visible edge of that gap and it is empty."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS LEAST WITH, because the two languages disagree about where grammar lives. Spanish carries it in endings and asks fourteen questions about the verb; Mandarin carries it in word order and in a handful of toneless particles, and answers all fourteen with one invariant form. Walking the column is still worth doing - it surfaces the demonstrative, the possessive and the polar question, all of which are real and all of which are missing - but the columns that decide whether a Mandarin sentence is grammatical (measure words, particles, topic-comment order, aspect) have no Spanish point to hang on and were added here by hand. Thirteen points across those four categories are marked chineseSpecific."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's orthography and accentuation columns), data/scripts/chinese.json, chinese/pronunciation-reference.md, and the corpus's own writing lessons",
+      "note": "THE DIMENSION WHERE THE PROXY BREAKS MOST VISIBLY, and where this file's two largest decisions live. Spanish's seven letter points and two accentuation points assume an alphabet: a closed unit set, a case distinction and a diacritic. Mandarin has an open character set, no case at all, and a diacritic that belongs to a romanization rather than to the writing. So the column is split three ways - Hanzi, Pinyin and Tone - the alphabet point is answered by the STROKE, the two case points are stated as having no character analogue and are re-landed in pinyin, and pinyin is declared a pronunciation claim with its reasoning written into ZH-A1-PY-06. What keeps the dimension partial beyond that: the character column cannot be given a denominator without a sourced character list, which this file does not have and will not invent; and the corpus's own pronunciation reference is explicitly 'reference material, never a gate', so the segment inventory is documented and untaught."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's general and specific notion columns)",
+      "note": "The proxy's specific-notion column is twenty fields of ordinary modern life. Chinese answers education unusually well - three institutions and four kinds of student, all built productively out of four characters, which is the strongest specific-notion field measured in any track in this sitting - answers family and the language-identity field adequately, and returns nothing for fifteen others. The empty one worth naming is FOOD AND DRINK: five Spanish points and not one word, no chi, no he, no fan, no shui, no cha, in a language whose learners eat on day one. The 53 lexical atoms are also weighted oddly against any exam: numerals to five, no verb of eating, drinking, wanting, knowing or having, and no adjective that can stand in a predicate."
+    }
+  },
+  "points": [
+    {
+      "id": "ZH-A1-N-01",
+      "category": "Mingci - the noun",
+      "label": "proper nouns: a personal name and a country name",
+      "probe": [
+        "ZH-LEX-MINGZI",
+        "ZH-LEX-ZHONGGUO-01",
+        "ZH-ORTHO-ZHONGGUO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "mingzi ('name') is chapter 8 and Zhongguo ('China') is chapter 17, taught by ear first and then as two characters the reader can write. What is NOT here is the frame that uses them: the track can say the word 'name' and cannot ask for one - see ZH-A1-F1-02."
+    },
+    {
+      "id": "ZH-A1-N-02",
+      "category": "Mingci - the noun",
+      "label": "common nouns naming periods of time: morning, day, month, year",
+      "probe": [
+        "ZH-LEX-ZAOSHANG",
+        "ZH-LEX-RI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "zaoshang ('morning', chapter 7) and ri ('sun, and also day', chapter 4). Two of the field, and the rest - wanshang, tian, yue, nian, xingqi - are absent, so no date and no time of day can be given."
+    },
+    {
+      "id": "ZH-A1-N-03",
+      "category": "Mingci - the noun",
+      "label": "grammatical gender: Mandarin has none, so a noun carries no agreement at all",
+      "probe": [
+        "ZH-LEX-NU-01",
+        "ZH-LEX-REN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-N-03",
+        "A1-ADJ-03"
+      ],
+      "note": "The Spanish demand is answered by an absence, and the corpus makes the absence visible in the right place: nu ('female') and ren ('person') are taught as separate LEXICAL items in chapter 12, which is exactly how Mandarin marks sex when it marks it at all - with a word, not with an ending. Two Spanish points collapse here."
+    },
+    {
+      "id": "ZH-A1-N-04",
+      "category": "Mingci - the noun",
+      "label": "sex by a different word: son against daughter, father against mother",
+      "probe": [
+        "ZH-LEX-ERZI-01",
+        "ZH-LEX-NUER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "erzi and nu'er, chapter 12, and the pair is built from the same nu and ren the chapter opens with. Baba and mama are absent, so the field is half a generation deep."
+    },
+    {
+      "id": "ZH-A1-N-05",
+      "category": "Mingci - the noun",
+      "label": "number: Mandarin marks no plural on a noun, and men is not a plural ending",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "Not taught. The Spanish demand restates cleanly - what does the reader do when there is more than one? - and Mandarin's answer has two halves, that a bare noun is number-neutral and that men attaches only to human pronouns and a few human nouns. Neither half is stated, and men does not occur anywhere in the 175 lesson files, so the reader cannot form women ('we')."
+    },
+    {
+      "id": "ZH-A1-N-06",
+      "category": "Mingci - the noun",
+      "label": "the compound: two characters whose meanings add up, and the ones that do not",
+      "probe": [
+        "ZH-GRAMMAR-COMPOUND-WORD",
+        "ZH-LEX-NIHAO",
+        "ZH-LEX-HAOKAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, and the organising idea of this whole track. Spanish word-formation is not on the PCIC A1 grammar list at all; in Mandarin it is the first thing a reader needs, because nihao is 'you good' and zaijian is 'again see' and haokan is 'good look'. Chapters 12 to 18 are built on it: teach two characters, then the compound they make."
+    },
+    {
+      "id": "ZH-A1-LIANG-01",
+      "category": "Liangci - measure words, which every counted noun needs",
+      "label": "the measure word: a number cannot touch a noun without one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and ABSENT. Spanish has no classifier column, so the proxy could not have asked for this, and it is one of the two or three things that most obviously mark a beginner's Mandarin as wrong: san ren is not how you say three people, san ge ren is. ge, the general-purpose measure word, occurs zero times in the 175 lesson files."
+    },
+    {
+      "id": "ZH-A1-LIANG-02",
+      "category": "Liangci - measure words, which every counted noun needs",
+      "label": "the specific measure words a beginner needs: ben for books, kou for people at home",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and absent, and the second one is a near miss worth naming: kou ('mouth') IS taught, in chapter 4, as a character and a word, and its life as the measure word for members of a household is not mentioned. The reader owns the character and not the use."
+    },
+    {
+      "id": "ZH-A1-ADJ-01",
+      "category": "Xingrongci - the adjective",
+      "label": "the stative verb: an adjective in Mandarin is a verb and needs no copula",
+      "probe": [
+        "ZH-LEX-HAO",
+        "ZH-LEX-HAOKAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-ADJ-05"
+      ],
+      "note": "COVERED AS VOCABULARY, NOT AS SYNTAX, and the distinction matters. hao and haokan are taught; the fact that hen hao is a complete sentence with no shi in it is never stated, and hen is absent. So the reader has the word for good and cannot say 'it is good'. Two Spanish points collapse here because Mandarin's answer to both - what an adjective is, and where it stands - is the same fact."
+    },
+    {
+      "id": "ZH-A1-ADJ-02",
+      "category": "Xingrongci - the adjective",
+      "label": "adjectives of nationality and origin",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "note": "Absent as a form, and closer than it looks: Zhongguo ('China') is taught in chapter 17, and Zhongguo ren ('a Chinese person') is one taught character away, because ren is chapter 12. Two known pieces and no lesson that joins them."
+    },
+    {
+      "id": "ZH-A1-ADJ-03",
+      "category": "Xingrongci - the adjective",
+      "label": "the pair da and xiao, and the compounds they build",
+      "probe": [
+        "ZH-LEX-DA-01",
+        "ZH-LEX-XIAO-01",
+        "ZH-LEX-DAXUE-01",
+        "ZH-LEX-XIAOXUE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-04"
+      ],
+      "note": "Chapters 13 and 14, and this is the track at its best: big and small are taught not as a vocabulary pair but as the productive halves of daxue ('university') and xiaoxue ('primary school'), so four words arrive for the price of two. Restated from Spanish's adjective-agreement point because agreement is what Mandarin does NOT have, and the productive compounding is what it has instead."
+    },
+    {
+      "id": "ZH-A1-ADJ-04",
+      "category": "Xingrongci - the adjective",
+      "label": "degree: hen, tai, feichang",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01"
+      ],
+      "note": "Absent, and hen is the expensive one: it is not really 'very' but the default filler an adjectival predicate needs, so without it the reader cannot make an adjective into a sentence at all. Two Spanish points collapse here."
+    },
+    {
+      "id": "ZH-A1-ART-01",
+      "category": "Guanci - the article",
+      "label": "the article: Mandarin has none, and a bare noun is definite or indefinite by context",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-02",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "note": "All four Spanish article points collapse into one Mandarin fact, and unlike the Russian file this one is NOT counted: no lesson says it. The reader is never told that shu means 'a book', 'the book' or 'books' according to context, which is a thing an English or Spanish speaker will otherwise supply wrongly from their own language."
+    },
+    {
+      "id": "ZH-A1-DEM-01",
+      "category": "Zhishici - demonstratives",
+      "label": "the demonstratives zhe and na, which are also how Mandarin says 'this is'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02",
+        "A1-DEM-03"
+      ],
+      "note": "ABSENT, and it is the most expensive single gap in the file. zhe and na occur zero times in the 175 lesson files. Mandarin's two-way near/far split answers Spanish's three-way este/ese/aquel cleanly, and zhe shi ... ('this is ...') is the commonest sentence on a beginner's paper - the track already teaches shi, so one character opens it. Three Spanish points collapse here and none is answered."
+    },
+    {
+      "id": "ZH-A1-POSS-01",
+      "category": "Lingshu - possession",
+      "label": "possession with de: wo de shu",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-02",
+        "A1-POS-03",
+        "A1-SN-01"
+      ],
+      "note": "ABSENT. de occurs zero times in the 175 files. Four Spanish points collapse onto this one particle, because Mandarin does not inflect a possessive, does not agree it, and does not distinguish one possessor from several - it puts de between the owner and the owned and stops. The track teaches wo ('I') in chapter 8 and gives it nothing to own."
+    },
+    {
+      "id": "ZH-A1-NUM-01",
+      "category": "Shuci - numerals and quantity",
+      "label": "the cardinal numerals: at least one to ten",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "note": "HALF, AND NOT COUNTED. yi, er, san, si and wu are taught in chapter 3, each with its own character and its own writing lesson - and liu, qi, ba, jiu and shi are absent. shi ('ten') appears in four lesson bodies, as the lower component of zao, where the text says in as many words that on its own it is the character for ten and then does not teach it. A candidate cannot count past five, cannot give a telephone number, an age or a price. This is a partial paradigm, and a partial paradigm scores nothing."
+    },
+    {
+      "id": "ZH-A1-NUM-02",
+      "category": "Shuci - numerals and quantity",
+      "label": "the decimal structure: how Mandarin builds eleven, twenty and ninety-nine out of ten",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "note": "Absent, and it is Mandarin's best gift to a beginner - shi yi is 'ten one', er shi is 'two ten', and the whole of 11 to 99 falls out of ten words. Restated from Spanish's ordinals because the ordinal in Mandarin is di plus the same numeral, so both demands stand on the same missing decade."
+    },
+    {
+      "id": "ZH-A1-NUM-03",
+      "category": "Shuci - numerals and quantity",
+      "label": "quantity words: duo, shao, yidian",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NUM-04",
+      "category": "Shuci - numerals and quantity",
+      "label": "degree and approximation words",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-04",
+        "A1-NG2-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NUM-05",
+      "category": "Shuci - numerals and quantity",
+      "label": "measures of size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent as measurement. da and xiao are taught (ZH-A1-ADJ-03) and there is no unit, no number above five and no measure word to put between them."
+    },
+    {
+      "id": "ZH-A1-PRON-01",
+      "category": "Daici - pronouns",
+      "label": "the personal pronouns: wo, ni, ta, and the fact that one form does subject and object",
+      "probe": [
+        "ZH-LEX-WO",
+        "ZH-LEX-NI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01",
+        "A1-PRON-02",
+        "A1-PRON-08"
+      ],
+      "note": "Two of the three persons, chapters 1 and 8, and the wo lesson makes the point the Spanish column needs three separate points for: 'I, me - one word for both, and no change for either'. Mandarin has no case, so the subject, object and prepositional pronoun columns collapse into this one. ta ('he/she/it') and every plural are absent."
+    },
+    {
+      "id": "ZH-A1-PRON-02",
+      "category": "Daici - pronouns",
+      "label": "the plural pronouns: women, nimen, tamen",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "Absent. men occurs zero times in the corpus, so the reader cannot say 'we' - and dajia ('everyone') IS taught in chapter 13, which is the polite substitute and not the pronoun."
+    },
+    {
+      "id": "ZH-A1-PRON-03",
+      "category": "Daici - pronouns",
+      "label": "the liking frame: xihuan, which takes an ordinary object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01",
+        "A1-F3-01",
+        "A1-NG6-08"
+      ],
+      "note": "Absent. Mandarin's answer to gustar is the easiest of any language in this corpus - xihuan is a plain transitive verb with the liker as subject - and the word is not taught. hao as 'to be fond of' IS taught, in chapter 1, as a tone-change curiosity on the same character, which is not the same frame and is not counted here."
+    },
+    {
+      "id": "ZH-A1-PRON-04",
+      "category": "Daici - pronouns",
+      "label": "the reflexive ziji",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-PRON-05",
+      "category": "Daici - pronouns",
+      "label": "the relative clause, which in Mandarin is built with de and stands before its noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "Absent, and blocked on the same missing de as ZH-A1-POSS-01. Worth stating as a shape rather than a gap: Mandarin puts the whole relative clause BEFORE the noun, which is the reverse of Spanish and English, so this is a point the track will have to teach as a reorientation rather than as a word."
+    },
+    {
+      "id": "ZH-A1-PRON-06",
+      "category": "Daici - pronouns",
+      "label": "the question words: shenme, shei, na, ji, duoshao",
+      "probe": [
+        "ZH-LEX-SHENME"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06",
+        "A1-ADV-07"
+      ],
+      "note": "COUNTED ON shenme ALONE, and the corpus is honest about it in the lesson itself: chapter 9 calls shenme 'the first question word in this book' and then says the question it belongs in cannot be finished, because the other half needs a character the book's font cannot print. shei, na, ji, duoshao, nali and weishenme are all absent. Two Spanish points collapse here and one asking word answers them."
+    },
+    {
+      "id": "ZH-A1-PRON-07",
+      "category": "Daici - pronouns",
+      "label": "the exclamative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-ADV-01",
+      "category": "Fuci - adverbs",
+      "label": "place words: zheli, nali, and the fact that they are nouns rather than adverbs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "note": "Absent, and downstream of the missing zhe and na."
+    },
+    {
+      "id": "ZH-A1-ADV-02",
+      "category": "Fuci - adverbs",
+      "label": "time words: xianzai, jintian, mingtian, zuotian",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "note": "Absent. zaoshang ('morning') is taught and there is no day to put it in."
+    },
+    {
+      "id": "ZH-A1-ADV-03",
+      "category": "Fuci - adverbs",
+      "label": "manner and evaluation adverbs: hao and bu hao as answers",
+      "probe": [
+        "ZH-LEX-HAO",
+        "ZH-LEX-BU",
+        "ZH-GRAMMAR-NEGATE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04",
+        "A1-NG6-07"
+      ],
+      "note": "hao is chapter 1 and bu is chapter 4, and chapter 4's practice lesson puts them together as bu hao - 'the first thing you can refuse'. That is a real evaluative answer built from two taught pieces."
+    },
+    {
+      "id": "ZH-A1-ADV-04",
+      "category": "Fuci - adverbs",
+      "label": "polarity: how Mandarin says yes and no when it has no word for either",
+      "probe": [
+        "ZH-LEX-SHI",
+        "ZH-LEX-BUSHI",
+        "ZH-DIALOGUE-IDENTIFY",
+        "ZH-TONE-SANDHI-BU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "note": "THE BEST-ANSWERED POINT IN THE FILE. Spanish asks for si and no. Mandarin has neither, and the corpus teaches the real answer instead: you echo the verb. Chapter 5 gives shi and bu shi together, notes that this IS how Mandarin says yes, and teaches the tone sandhi that bu undergoes before a fourth tone in the same breath. A restatement that is more useful than the point it came from."
+    },
+    {
+      "id": "ZH-A1-ADV-05",
+      "category": "Fuci - adverbs",
+      "label": "negation: bu before the verb, and the mei that negates you and the past",
+      "probe": [
+        "ZH-LEX-BU",
+        "ZH-GRAMMAR-NEGATE",
+        "ZH-DIALOGUE-NEGATE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "Half, and counted: bu is taught properly in chapter 4 with a practice lesson. mei is absent, and it is not an alternative but a requirement - bu you is ungrammatical - so the reader who meets you will negate it wrongly."
+    },
+    {
+      "id": "ZH-A1-ADV-06",
+      "category": "Fuci - adverbs",
+      "label": "the connective adverbs: ye and dou",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "Absent, and ye is one of the highest-frequency words in beginner Mandarin because wo ye shi ('me too') is a whole turn."
+    },
+    {
+      "id": "ZH-A1-ADV-07",
+      "category": "Fuci - adverbs",
+      "label": "asking why, and answering because",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "note": "Absent in both halves."
+    },
+    {
+      "id": "ZH-A1-V-01",
+      "category": "Dongci - the verb, which does not inflect",
+      "label": "the verb does not change: one form for every person, number and tense",
+      "probe": [
+        "ZH-LEX-SHI",
+        "ZH-LEX-KAN-01",
+        "ZH-LEX-XUE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-02",
+        "A1-V-12",
+        "A1-V-13",
+        "A1-V-14"
+      ],
+      "note": "FIVE SPANISH POINTS COLLAPSE INTO ONE MANDARIN FACT, and this is the clearest case in the file of the proxy asking a question the target language dissolves. Spanish needs a regular paradigm, four irregular verbs, an infinitive, a gerund and a participle; Mandarin has one invariant form and no non-finite forms at all. Counted on the verbs the track teaches - shi, kan, xue - although no lesson states the invariance as a rule, which is why ZH-A1-V-02 is separate."
+    },
+    {
+      "id": "ZH-A1-V-02",
+      "category": "Dongci - the verb, which does not inflect",
+      "label": "the invariance stated as a rule, so the reader stops looking for endings",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "Not stated. A Spanish or English speaker arrives expecting to conjugate, and nothing in 175 lessons tells them there is nothing to conjugate. It is the cheapest sentence in the whole Mandarin queue and it is not written."
+    },
+    {
+      "id": "ZH-A1-V-03",
+      "category": "Dongci - the verb, which does not inflect",
+      "label": "shi, the copula, and what it may and may not join",
+      "probe": [
+        "ZH-LEX-SHI",
+        "ZH-LEX-BUSHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-OS-05"
+      ],
+      "note": "Chapter 5, and taught with the restriction that matters: shi joins two nouns and is NOT used before an adjective. Three Spanish points collapse here - Spanish spends ser, estar and the copular sentence on what Mandarin does with one word."
+    },
+    {
+      "id": "ZH-A1-V-04",
+      "category": "Dongci - the verb, which does not inflect",
+      "label": "you, which is 'to have' and also 'there is'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "note": "ABSENT. you occurs zero times in the 175 files. Three Spanish points - existence, presence, and the impersonal haber - all land on this one verb in Mandarin, so a single character closes three points, which makes it the highest-value verb in the queue after xihuan."
+    },
+    {
+      "id": "ZH-A1-V-05",
+      "category": "Dongci - the verb, which does not inflect",
+      "label": "the verbs of perception and study the track does teach",
+      "probe": [
+        "ZH-LEX-KAN-01",
+        "ZH-LEX-KANJIAN-01",
+        "ZH-LEX-XUE-01",
+        "ZH-LEX-KANSHU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-V-03"
+      ],
+      "note": "kan ('look at'), kanjian ('see'), xue ('study') and kanshu ('read a book'), chapters 13 and 18 - and the kan/kanjian pair is taught as the difference between looking and succeeding in looking, which is the resultative complement in disguise and is genuinely a B-level idea introduced gently."
+    },
+    {
+      "id": "ZH-A1-V-06",
+      "category": "Dongci - the verb, which does not inflect",
+      "label": "the past: le and guo, which are aspect markers and not tenses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09",
+        "A1-V-10"
+      ],
+      "note": "SEVEN SPANISH POINTS COLLAPSE HERE AND NONE IS ANSWERED. Spanish spends an imperfect, a preterite with two irregular sets, a present perfect and two participles on locating an event in the past. Mandarin does it with le and guo and a time word, and le occurs zero times in the 175 lesson files. Everything in this track happens in an unmarked present."
+    },
+    {
+      "id": "ZH-A1-V-07",
+      "category": "Dongci - the verb, which does not inflect",
+      "label": "the imperative, which in Mandarin is the bare verb, softened by qing or ba",
+      "probe": [
+        "ZH-LEX-QING",
+        "ZH-DIALOGUE-POLITE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ],
+      "note": "Counted on qing, chapter 11, and the lesson is better than a gloss: it explains that qing is not 'please' softening a demand but 'I invite you to', that it stands before the action, and that it works alone. What is missing is a verb to put after it, which the lesson says out loud."
+    },
+    {
+      "id": "ZH-A1-ASP-01",
+      "category": "Ti - aspect, which is what Mandarin has instead of tense",
+      "label": "aspect: Mandarin marks whether an event is complete, not when it happened",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and absent. The Spanish grammar column has no aspect entry that survives translation - its aspectual work is done inside the tense paradigms - so this had to be added by hand and it comes back empty."
+    },
+    {
+      "id": "ZH-A1-ASP-02",
+      "category": "Ti - aspect, which is what Mandarin has instead of tense",
+      "label": "the neutral tone as a grammatical signal, not only a phonetic one",
+      "probe": [
+        "ZH-TONE-NEUTRAL",
+        "ZH-LEX-XIEXIE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific. Taught in chapter 7 on zaoshang and in chapter 10 on xiexie, where the second syllable goes light. It is filed under aspect rather than tone because in Mandarin the neutral tone is what marks a suffix, a particle and a reduplicated verb - it is morphology carried by pitch, and no Spanish column has anywhere to put that."
+    },
+    {
+      "id": "ZH-A1-PART-01",
+      "category": "Zhuci - the particles",
+      "label": "the question particle ma, which turns any statement into a yes/no question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-02",
+        "A1-F1-04"
+      ],
+      "note": "ABSENT, and it is the single cheapest sentence-level gain available to this track. ma occurs zero times in the 175 files. One character at the end of a sentence the reader can already say - ni hao ma - turns every statement in the book into a question, and it also answers the Spanish tag-question point."
+    },
+    {
+      "id": "ZH-A1-PART-02",
+      "category": "Zhuci - the particles",
+      "label": "the particle ne, for follow-up questions and for 'and you?'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-PART-03",
+      "category": "Zhuci - the particles",
+      "label": "the particle le at the end of a sentence, marking a changed state",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-V-09"
+      ],
+      "note": "Absent - see ZH-A1-V-06."
+    },
+    {
+      "id": "ZH-A1-PART-04",
+      "category": "Zhuci - the particles",
+      "label": "the particles as a class: Mandarin's grammar is carried by them",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, and it exists to record a corpus-level finding rather than a single form. NOT ONE PARTICLE IS TAUGHT IN THIS TRACK: de, le, ma, ne, ba, guo, zhe all return zero occurrences across the 175 lesson files. Spanish carries its grammar in endings and Mandarin carries almost all of its grammar in this handful of toneless syllables, so a Mandarin course with no particles has taught vocabulary and script and not yet grammar. That is a fair summary of chapters 1 to 18 and it is why the sentence columns below read as they do."
+    },
+    {
+      "id": "ZH-A1-NP-01",
+      "category": "Mingci duanyu - the noun phrase",
+      "label": "the noun phrase: modifier before head, always",
+      "probe": [
+        "ZH-LEX-DAXUESHENG-01",
+        "ZH-LEX-ZHONGXUESHENG-01",
+        "ZH-GRAMMAR-COMPOUND-WORD"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-01",
+        "A1-SN-02"
+      ],
+      "note": "Counted on the compound rather than the phrase, and the note says why that is defensible: daxuesheng is da + xue + sheng read strictly left-modifies-right, which IS the noun-phrase rule, and chapters 13 to 15 drill it across a dozen words. Two Spanish points collapse here because Mandarin has no agreement to check."
+    },
+    {
+      "id": "ZH-A1-NP-02",
+      "category": "Mingci duanyu - the noun phrase",
+      "label": "the vocative and how a Mandarin speaker addresses somebody",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "note": "Absent. laoshi, xiansheng and the surname-plus-title pattern are all missing, and the track has no way to address anybody by anything."
+    },
+    {
+      "id": "ZH-A1-NP-03",
+      "category": "Mingci duanyu - the noun phrase",
+      "label": "subject-verb agreement: there is none, and that is the point",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-03"
+      ],
+      "note": "Not stated - the same omission as ZH-A1-V-02, from the other end."
+    },
+    {
+      "id": "ZH-A1-VP-01",
+      "category": "Dongci duanyu - the verb phrase",
+      "label": "the object follows the verb: subject-verb-object, with no marking on either",
+      "probe": [
+        "ZH-LEX-KANSHU-01",
+        "ZH-ORTHO-KANSHU-01",
+        "ZH-LEX-SHANGXUE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-04",
+        "A1-SV-06",
+        "A1-OS-06"
+      ],
+      "note": "Counted on the verb-object compounds the track teaches - kanshu is literally 'look-book' and shangxue 'ascend-study' - which are the SVO pattern frozen into single words. Three Spanish points collapse here, because Mandarin marks neither the direct object nor the human object and its word order is fixed rather than flexible. What is missing is a free object: the reader can say kanshu and cannot say kan shu with a different book."
+    },
+    {
+      "id": "ZH-A1-VP-02",
+      "category": "Dongci duanyu - the verb phrase",
+      "label": "the indirect object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-05"
+      ],
+      "note": "Absent - needs gei, which is not taught."
+    },
+    {
+      "id": "ZH-A1-VP-03",
+      "category": "Dongci duanyu - the verb phrase",
+      "label": "the predicate complement and its agreement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-03"
+      ],
+      "note": "Restated as an absence: Mandarin agrees nothing, so what a Spanish learner must get right here a Mandarin learner must simply not do. Not stated anywhere in the track."
+    },
+    {
+      "id": "ZH-A1-S-01",
+      "category": "Danju - the simple sentence",
+      "label": "the declarative statement, affirmative and negative",
+      "probe": [
+        "ZH-DIALOGUE-INTRODUCE",
+        "ZH-DIALOGUE-NEGATE",
+        "ZH-LEX-WO",
+        "ZH-LEX-SHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "wo shi ... and bu hao, chapters 8 and 4, both with a practice lesson. Two complete sentence patterns."
+    },
+    {
+      "id": "ZH-A1-S-02",
+      "category": "Danju - the simple sentence",
+      "label": "the yes/no question with ma, and the verb-not-verb question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "note": "Absent in both forms. Mandarin has TWO ways to ask a polar question and the track teaches neither, although shi bu shi - the A-not-A form - is two taught pieces away."
+    },
+    {
+      "id": "ZH-A1-S-03",
+      "category": "Danju - the simple sentence",
+      "label": "the question with an asking word, which stays where the answer would go",
+      "probe": [
+        "ZH-LEX-SHENME",
+        "ZH-DIALOGUE-ASK"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "COUNTED, THINLY, and the interesting half is the word order: Mandarin does NOT front its question word, so ni shi shenme keeps shenme exactly where the answer belongs. That is the fact a Spanish or English speaker most needs and the chapter-9 lesson does not state it - it teaches shenme as a one-word turn."
+    },
+    {
+      "id": "ZH-A1-S-04",
+      "category": "Danju - the simple sentence",
+      "label": "the topic-comment sentence, which is the shape Mandarin actually prefers",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and absent. Spanish is subject-prominent and has no column for this; Mandarin puts the thing being talked about first and comments on it, which is why so much beginner Mandarin sounds odd when built on a Spanish or English template. Nothing in the track names it."
+    },
+    {
+      "id": "ZH-A1-J-01",
+      "category": "Lianjie - joining two clauses",
+      "label": "joining two nouns with he",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "ABSENT. he occurs zero times in the 175 lesson files - checked in characters and in pinyin. Mandarin also does not use he to join two clauses, which is the fact a learner most needs and which cannot be taught before he itself is."
+    },
+    {
+      "id": "ZH-A1-J-02",
+      "category": "Lianjie - joining two clauses",
+      "label": "the alternative: haishi in a question, huozhe in a statement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ],
+      "note": "Absent, both of them, and the split is the point - Mandarin uses different words for 'or' in a question and in a statement, where Spanish uses o for both."
+    },
+    {
+      "id": "ZH-A1-J-03",
+      "category": "Lianjie - joining two clauses",
+      "label": "the contrast: keshi, danshi",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-J-04",
+      "category": "Lianjie - joining two clauses",
+      "label": "negative and distributive coordination",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-02",
+        "A1-CO-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-J-05",
+      "category": "Lianjie - joining two clauses",
+      "label": "the object clause: wo zhidao ... , wo xiang ...",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01",
+        "A1-SUB-02",
+        "A1-SUB-03"
+      ],
+      "note": "Absent, and Mandarin makes it cheaper than any language in this corpus: there is no complementiser at all, so the clause is simply placed after the verb. Three Spanish points collapse here, and what blocks them is not a joining word but the missing verbs zhidao and xiang."
+    },
+    {
+      "id": "ZH-A1-J-06",
+      "category": "Lianjie - joining two clauses",
+      "label": "the causal and purpose clauses: yinwei, suoyi",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-J-07",
+      "category": "Lianjie - joining two clauses",
+      "label": "the time clause: ... de shihou",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "Absent, and blocked on de again."
+    },
+    {
+      "id": "ZH-A1-J-08",
+      "category": "Lianjie - joining two clauses",
+      "label": "joining anything at all: the whole column, measured together",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, and it carries a corpus-level measurement. NO CONJUNCTION AND NO SUBORDINATOR IS TAUGHT: he, gen, huozhe, haishi, keshi, danshi, yinwei, suoyi and suiran all return zero occurrences across the 175 lesson files, in characters and in pinyin. That makes Chinese the seventh track in a row to report an empty joining column and the second outside South Asia, which puts the finding well past the point where it could be a fact about Indo-Aryan or Dravidian grammar. It is a fact about how this corpus is authored: chapters are built around a word family, and a conjunction belongs to no family."
+    },
+    {
+      "id": "ZH-A1-F1-01",
+      "category": "Gei he qiu xinxi - giving and asking for information",
+      "label": "identify yourself by name",
+      "probe": [
+        "ZH-DIALOGUE-INTRODUCE",
+        "ZH-LEX-WO",
+        "ZH-LEX-SHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-01"
+      ],
+      "note": "wo shi ... , chapter 8, with a practice lesson that puts a real name in the gap. Complete end to end."
+    },
+    {
+      "id": "ZH-A1-F1-02",
+      "category": "Gei he qiu xinxi - giving and asking for information",
+      "label": "ask somebody's name",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-03"
+      ],
+      "note": "ABSENT, AND THE TRACK SAYS SO ITSELF. mingzi ('name') is taught in chapter 8 and shenme ('what') in chapter 9, and the chapter-9 lesson states in as many words that the question cannot be finished because the missing half needs a character the book's font cannot print. That is a font-coverage blocker recorded inside a lesson, which is the right place for it, and it means the single most-asked question of any A1 speaking paper is unavailable for a typographic reason."
+    },
+    {
+      "id": "ZH-A1-F1-03",
+      "category": "Gei he qiu xinxi - giving and asking for information",
+      "label": "give personal information: name, age, nationality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE03-01"
+      ],
+      "note": "One of the three at best. Age needs numerals past five and a measure word; nationality needs Zhongguo ren, which is two taught characters that no lesson joins."
+    },
+    {
+      "id": "ZH-A1-F1-04",
+      "category": "Gei he qiu xinxi - giving and asking for information",
+      "label": "ask for confirmation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "note": "Absent - needs ma or the A-not-A question (ZH-A1-S-02)."
+    },
+    {
+      "id": "ZH-A1-F1-05",
+      "category": "Gei he qiu xinxi - giving and asking for information",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "ZH-LEX-SHI",
+        "ZH-LEX-BUSHI",
+        "ZH-DIALOGUE-IDENTIFY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ],
+      "note": "shi and bu shi, chapter 5, with the practice lesson that frames them as 'yes and no, at last'. See ZH-A1-ADV-04."
+    },
+    {
+      "id": "ZH-A1-F2-01",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "ask for an opinion, and hand the turn back",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-01"
+      ],
+      "note": "Absent - needs ne."
+    },
+    {
+      "id": "ZH-A1-F2-02",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "give an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-10",
+        "A1-F2-11"
+      ],
+      "note": "Absent - needs wo xiang or wo juede, neither taught. Three Spanish points collapse here because Mandarin needs no complementiser, so one verb would open all three."
+    },
+    {
+      "id": "ZH-A1-F2-03",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "ask how something is, or how somebody is",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-03"
+      ],
+      "note": "Absent, and one character away: ni hao ma is ni hao - the first thing in the book - plus ma. The reader can greet and cannot ask."
+    },
+    {
+      "id": "ZH-A1-F2-04",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "evaluate something as good or not good",
+      "probe": [
+        "ZH-LEX-HAO",
+        "ZH-LEX-BU",
+        "ZH-DIALOGUE-NEGATE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-F2-05",
+        "A1-NG6-01"
+      ],
+      "note": "hao and bu hao, chapters 1 and 4, with a practice lesson. Three Spanish points collapse here because Mandarin's approval, disapproval and general evaluation are all this one pair."
+    },
+    {
+      "id": "ZH-A1-F2-05",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "agree",
+      "probe": [
+        "ZH-LEX-SHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-NG6-06"
+      ],
+      "note": "Counted on shi, which is how Mandarin agrees with a statement - there is no separate word for yes to agree with."
+    },
+    {
+      "id": "ZH-A1-F2-06",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "disagree",
+      "probe": [
+        "ZH-LEX-BUSHI",
+        "ZH-TONE-SANDHI-BU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "note": "bu shi, chapter 5, taught with the pitch change bu makes before a fourth tone - which is a pronunciation fact the learner will otherwise get wrong on the commonest disagreement in the language."
+    },
+    {
+      "id": "ZH-A1-F2-07",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "hedge, or show you are not certain",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-12",
+        "A1-NG1-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-F2-08",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "say you know or do not know something",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-F2-15",
+        "A1-NG7-01"
+      ],
+      "note": "ABSENT, AND IT IS THE OTHER HALF OF THE REPAIR HOLE. zhidao ('to know') is not taught, so wo bu zhidao - the sentence every beginner needs most - cannot be said, although wo and bu both are. Four Spanish points collapse onto one missing verb."
+    },
+    {
+      "id": "ZH-A1-F2-09",
+      "category": "Biaoda yijian - opinions, attitudes and knowledge",
+      "label": "ask about, and state, an ability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "note": "Absent: no hui, no neng, no keyi. Wo hui shuo Zhongwen is out of reach although Zhongwen is taught in chapter 17."
+    },
+    {
+      "id": "ZH-A1-F3-01",
+      "category": "Xihao he yuanwang - likes, wishes and feelings",
+      "label": "say what you like",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-F3-03"
+      ],
+      "note": "Absent - see ZH-A1-PRON-03."
+    },
+    {
+      "id": "ZH-A1-F3-02",
+      "category": "Xihao he yuanwang - likes, wishes and feelings",
+      "label": "ask about a preference by offering alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-02"
+      ],
+      "note": "Absent - needs haishi (ZH-A1-J-02)."
+    },
+    {
+      "id": "ZH-A1-F3-03",
+      "category": "Xihao he yuanwang - likes, wishes and feelings",
+      "label": "say what you want",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ],
+      "note": "Absent - no yao, no xiang."
+    },
+    {
+      "id": "ZH-A1-F3-04",
+      "category": "Xihao he yuanwang - likes, wishes and feelings",
+      "label": "state a plan or an intention",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "note": "Absent. shangxue ('to go to school') is taught in chapter 15 and there is no way to say you are going to do it."
+    },
+    {
+      "id": "ZH-A1-F3-05",
+      "category": "Xihao he yuanwang - likes, wishes and feelings",
+      "label": "say how you feel",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-F4-01",
+      "category": "Yingxiang duifang - influencing the other person",
+      "label": "invite, and hand the action over",
+      "probe": [
+        "ZH-LEX-QING",
+        "ZH-DIALOGUE-POLITE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-01",
+        "A1-F4-07"
+      ],
+      "note": "COVERED, AND UNUSUALLY WELL. Chapter 11 refuses the easy gloss - it says qing is not 'please' but 'I invite you to', shows that holding a door and saying qing alone is a complete polite act, and warns that qing never goes at the end of a sentence the way please does. Two Spanish points collapse here because in Mandarin an instruction and an invitation are the same move."
+    },
+    {
+      "id": "ZH-A1-F4-02",
+      "category": "Yingxiang duifang - influencing the other person",
+      "label": "ask for something",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "Not counted, and this is the sharpest near miss in the file: qing is taught as a frame 'waiting to be filled' - the lesson's own words - and there is no verb and no noun to fill it with. A frame with nothing to put in it is not a request."
+    },
+    {
+      "id": "ZH-A1-F4-03",
+      "category": "Yingxiang duifang - influencing the other person",
+      "label": "ask for help",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-F4-04",
+      "category": "Yingxiang duifang - influencing the other person",
+      "label": "respond to a request, and grant or refuse permission",
+      "probe": [
+        "ZH-LEX-HAO",
+        "ZH-LEX-BU",
+        "ZH-LEX-QING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-04",
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "note": "Counted: hao is how Mandarin says 'all right', bu refuses, and qing grants. Three Spanish points collapse here."
+    },
+    {
+      "id": "ZH-A1-F4-05",
+      "category": "Yingxiang duifang - influencing the other person",
+      "label": "accept or decline an offer",
+      "probe": [
+        "ZH-LEX-XIEXIE",
+        "ZH-LEX-BU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "note": "xiexie accepts and bu declines - and the polite refusal bu yong xiexie is out of reach, so the reader's refusal is blunter than a speaker's would be."
+    },
+    {
+      "id": "ZH-A1-F5-01",
+      "category": "Shejiao - social contact",
+      "label": "greet, and greet by the hour",
+      "probe": [
+        "ZH-LEX-NIHAO",
+        "ZH-DIALOGUE-GREET",
+        "ZH-LEX-ZAOSHANGHAO",
+        "ZH-DIALOGUE-MORNING",
+        "ZH-TONE-SANDHI-THIRD"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F5-02"
+      ],
+      "note": "THE STRONGEST FUNCTION IN THE FILE. ni hao in chapter 1 with its third-tone sandhi taught in the same breath - because ni hao is pronounced ni hao with a rising first syllable and a learner who does not know that says it wrong forever - and zaoshang hao in chapter 7 with its own dialogue. Greeting and responding are one point because the response is the same words."
+    },
+    {
+      "id": "ZH-A1-F5-02",
+      "category": "Shejiao - social contact",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "note": "Absent - see ZH-A1-NP-02."
+    },
+    {
+      "id": "ZH-A1-F5-03",
+      "category": "Shejiao - social contact",
+      "label": "introduce yourself, and respond to an introduction",
+      "probe": [
+        "ZH-DIALOGUE-INTRODUCE",
+        "ZH-LEX-WO",
+        "ZH-LEX-SHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F5-05"
+      ],
+      "note": "Counted on the first half. There is no response formula - no ni hao as a reply to an introduction is drilled, and no equivalent of 'pleased to meet you'."
+    },
+    {
+      "id": "ZH-A1-F5-04",
+      "category": "Shejiao - social contact",
+      "label": "apologise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "ABSENT, AND THIS IS THE FUNCTIONAL HOLE NO PERCENTAGE SHOWS. duibuqi and bu hao yisi each return ZERO occurrences across the 175 lesson files, in characters and in pinyin. There is no way to say sorry in this track and no way to open an approach to a stranger, which in Mandarin is the same word. Gujarati reported the identical hole; this is the third track to report it and the first outside South Asia."
+    },
+    {
+      "id": "ZH-A1-F5-05",
+      "category": "Shejiao - social contact",
+      "label": "thank, and answer thanks",
+      "probe": [
+        "ZH-LEX-XIEXIE",
+        "ZH-LEX-BUXIE",
+        "ZH-DIALOGUE-THANK"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "xiexie and bu xie, chapter 10, with a dialogue that runs both. The bu xie lesson is honest in a way worth copying: it says out loud that bu xie is real and understood everywhere but is NOT the commonest reply, and that the commonest one needs a character the book cannot yet print."
+    },
+    {
+      "id": "ZH-A1-F5-06",
+      "category": "Shejiao - social contact",
+      "label": "congratulate, toast, offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-08",
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "note": "None of the three."
+    },
+    {
+      "id": "ZH-A1-F5-07",
+      "category": "Shejiao - social contact",
+      "label": "take leave",
+      "probe": [
+        "ZH-LEX-ZAIJIAN",
+        "ZH-DIALOGUE-PART"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "zaijian, chapter 6, taught as 'again see' so the two characters carry their own meaning - and with a practice dialogue that runs an exchange with a beginning, a middle and an end."
+    },
+    {
+      "id": "ZH-A1-F6-01",
+      "category": "Huihua guanli - managing the conversation, and repairing it",
+      "label": "open a conversation and react",
+      "probe": [
+        "ZH-DIALOGUE-GREET",
+        "ZH-DIALOGUE-MORNING",
+        "ZH-DIALOGUE-PART"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-02"
+      ],
+      "note": "Three chapter-level dialogue atoms, each running a complete short exchange. This is the shape of the track: the exchanges are real and short and everything inside them is taught."
+    },
+    {
+      "id": "ZH-A1-F6-02",
+      "category": "Huihua guanli - managing the conversation, and repairing it",
+      "label": "show that you are following",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "Absent - the Mandarin backchannel is dui, en or hao de, and none is taught as one."
+    },
+    {
+      "id": "ZH-A1-F6-03",
+      "category": "Huihua guanli - managing the conversation, and repairing it",
+      "label": "signal that you did not catch it",
+      "probe": [
+        "ZH-DIALOGUE-ASK",
+        "ZH-LEX-SHENME"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "COVERED, ON ONE MOVE, AND THE TRACK BUILT A WHOLE CHAPTER AROUND IT. Chapter 9's practice lesson stages an exchange that goes wrong and gets repaired, and says why: 'until now every exchange in this book has gone perfectly, which is not what conversations do'. That is exactly the right instinct. Chinese-specific as a point because the PCIC A1 function column has no repair entry while the CEFR A1 descriptors do."
+    },
+    {
+      "id": "ZH-A1-F6-04",
+      "category": "Huihua guanli - managing the conversation, and repairing it",
+      "label": "say you have not understood",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "ABSENT. ting bu dong, wo bu dong and dong itself return zero occurrences across the 175 files. So the track has the interjection - shenme? - and not the sentence, which is a different and weaker move: shenme? asks for a repeat of a word, and wo ting bu dong tells the speaker to change what they are doing. Chinese-specific for the same reason as ZH-A1-F6-03."
+    },
+    {
+      "id": "ZH-A1-F6-05",
+      "category": "Huihua guanli - managing the conversation, and repairing it",
+      "label": "ask for a repeat, or for slower speech",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "ABSENT. qing zai shuo yi bian and qing shuo man yi dian - and their pieces zai (as 'again' rather than inside zaijian), shuo, man and bian - return zero occurrences. MEASURED AND WORTH THE CONTRAST: Japanese, measured in the same sitting, teaches a whole chapter of exactly these moves. Chinese-specific: no PCIC A1 point, a CEFR A1 descriptor."
+    },
+    {
+      "id": "ZH-A1-F6-06",
+      "category": "Huihua guanli - managing the conversation, and repairing it",
+      "label": "propose closing the conversation",
+      "probe": [
+        "ZH-LEX-ZAIJIAN",
+        "ZH-DIALOGUE-PART"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-06"
+      ],
+      "note": "Covered."
+    },
+    {
+      "id": "ZH-A1-F6-07",
+      "category": "Huihua guanli - managing the conversation, and repairing it",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NG1-01",
+      "category": "Cunzai - existence",
+      "label": "existence and possession, both of which are you",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "note": "Absent - see ZH-A1-V-04. Two Spanish points on one missing verb."
+    },
+    {
+      "id": "ZH-A1-NG1-02",
+      "category": "Cunzai - existence",
+      "label": "stating what something is",
+      "probe": [
+        "ZH-LEX-SHI",
+        "ZH-DIALOGUE-IDENTIFY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-03"
+      ],
+      "note": "shi joins two nouns, chapter 5, and that is Mandarin's whole answer to 'X is a Y'."
+    },
+    {
+      "id": "ZH-A1-NG1-03",
+      "category": "Cunzai - existence",
+      "label": "locating an event in time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "note": "Absent - no clock, no date, no aspect marker."
+    },
+    {
+      "id": "ZH-A1-NG1-04",
+      "category": "Cunzai - existence",
+      "label": "certainty and uncertainty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NG2-01",
+      "category": "Shuliang - quantity",
+      "label": "counting things, which needs a number, a measure word and a noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "note": "Not counted, although one to five ARE taught. The Spanish point is about counting THINGS and Mandarin cannot count a thing without a measure word (ZH-A1-LIANG-01), so five numerals with nothing to attach them to do not close it. Chapter 3's practice lesson has the reader read a floor number off a wall, which is a number used as a label rather than as a count - a good exercise and a different demand."
+    },
+    {
+      "id": "ZH-A1-NG2-02",
+      "category": "Shuliang - quantity",
+      "label": "relative quantity and degree",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG2-02",
+        "A1-NG2-03"
+      ],
+      "note": "Absent - see ZH-A1-NUM-03 and ZH-A1-ADJ-04."
+    },
+    {
+      "id": "ZH-A1-NG2-03",
+      "category": "Shuliang - quantity",
+      "label": "measures of size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent - see ZH-A1-NUM-05."
+    },
+    {
+      "id": "ZH-A1-NG3-01",
+      "category": "Kongjian - space",
+      "label": "saying where something is",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "note": "Absent. Mandarin needs zai plus a place word, and zai as a preposition is not taught - the zai the track DOES teach, inside zaijian, is a HOMOPHONE written with a different character and meaning 'again', which is a confusion worth pre-empting when zai finally arrives."
+    },
+    {
+      "id": "ZH-A1-NG3-02",
+      "category": "Kongjian - space",
+      "label": "up and down, which Mandarin also uses for going to a place",
+      "probe": [
+        "ZH-LEX-SHANGXUE-01",
+        "ZH-ORTHO-SHANGXUE-01",
+        "ZH-SCRIPT-SHANG"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04",
+        "A1-NG3-05"
+      ],
+      "note": "Counted narrowly on shang. Chapter 7 teaches the character as 'up' and chapter 15 uses it in shangxue ('to attend school'), which is the Mandarin habit of building motion out of direction words. xia, the other half of the pair, is absent."
+    },
+    {
+      "id": "ZH-A1-NG3-03",
+      "category": "Kongjian - space",
+      "label": "order: first, next, after",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NG3-04",
+      "category": "Kongjian - space",
+      "label": "origin: where you are from",
+      "probe": [
+        "ZH-LEX-ZHONGGUO-01",
+        "ZH-ORTHO-ZHONGGUO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "note": "COUNTED ON THE COUNTRY NAME ONLY, and marked thin. Zhongguo is taught in chapter 17 by ear and by hand, which is more than any other track in this sitting manages - Russian has no Rossiya at all. What is missing is the frame: no cong, no shi ... ren, so the reader owns China and cannot say they are from anywhere."
+    },
+    {
+      "id": "ZH-A1-NG4-01",
+      "category": "Shijian - time",
+      "label": "the parts of the day, and the clock",
+      "probe": [
+        "ZH-LEX-ZAOSHANG"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "Counted on zaoshang alone and thin: morning is taught in chapter 7 because zaoshang hao needs it, and there is no afternoon, no evening, no night and no hour."
+    },
+    {
+      "id": "ZH-A1-NG4-02",
+      "category": "Shijian - time",
+      "label": "locating in time: today, tomorrow, the weekdays, the months",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "Absent, and Mandarin makes the calendar unusually cheap - the months are numbered and the weekdays are numbered - so this is one of the highest-return tranches available once the numerals reach ten."
+    },
+    {
+      "id": "ZH-A1-NG4-03",
+      "category": "Shijian - time",
+      "label": "before and after",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NG5-01",
+      "category": "Xingzhi - quality",
+      "label": "seeing, and looking",
+      "probe": [
+        "ZH-LEX-KAN-01",
+        "ZH-LEX-KANJIAN-01",
+        "ZH-ORTHO-KANJIAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01"
+      ],
+      "note": "Chapter 18, and the kan/kanjian contrast is the best-taught semantic pair in the track: looking against succeeding in looking, which is what a resultative complement does and which Spanish needs two verbs for."
+    },
+    {
+      "id": "ZH-A1-NG5-02",
+      "category": "Xingzhi - quality",
+      "label": "hearing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-02"
+      ],
+      "note": "Absent. ting is missing, and it is also what blocks the repair sentence at ZH-A1-F6-04."
+    },
+    {
+      "id": "ZH-A1-NG5-03",
+      "category": "Xingzhi - quality",
+      "label": "colour",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NG5-04",
+      "category": "Xingzhi - quality",
+      "label": "age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "note": "Absent - blocked on the numerals."
+    },
+    {
+      "id": "ZH-A1-NG5-05",
+      "category": "Xingzhi - quality",
+      "label": "open and closed, in and out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NG6-01",
+      "category": "Pingjia - evaluation",
+      "label": "general evaluation",
+      "probe": [
+        "ZH-LEX-HAO",
+        "ZH-LEX-HAOKAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-01",
+        "A1-NG6-03",
+        "A1-NG6-04"
+      ],
+      "note": "hao and haokan ('good-looking'), chapters 1 and 18. Three Spanish points collapse here because Mandarin builds its evaluations out of hao plus a verb, and the track teaches the pattern as well as the words."
+    },
+    {
+      "id": "ZH-A1-NG6-02",
+      "category": "Pingjia - evaluation",
+      "label": "value and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02",
+        "A1-NE12-03",
+        "A1-NE15-01"
+      ],
+      "note": "Absent - blocked on the numerals."
+    },
+    {
+      "id": "ZH-A1-NG6-03",
+      "category": "Pingjia - evaluation",
+      "label": "acceptability and conformity",
+      "probe": [
+        "ZH-LEX-HAO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-05",
+        "A1-NG6-06"
+      ],
+      "note": "Counted on hao, which is how a Mandarin speaker says 'all right, agreed'."
+    },
+    {
+      "id": "ZH-A1-NG6-04",
+      "category": "Pingjia - evaluation",
+      "label": "interest and pleasure",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-08"
+      ],
+      "note": "Absent - see ZH-A1-PRON-03."
+    },
+    {
+      "id": "ZH-A1-NG6-05",
+      "category": "Pingjia - evaluation",
+      "label": "ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-10"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NG6-06",
+      "category": "Pingjia - evaluation",
+      "label": "ability and competence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-09"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NG6-07",
+      "category": "Pingjia - evaluation",
+      "label": "correctness: right and wrong",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-07"
+      ],
+      "note": "Absent, and dui is the missing word - which is also the commonest way to agree, so it would close ZH-A1-F6-02 as well."
+    },
+    {
+      "id": "ZH-A1-NG7-01",
+      "category": "Sikao yu yanshuo - thinking and speaking",
+      "label": "studying, learning and reading",
+      "probe": [
+        "ZH-LEX-XUE-01",
+        "ZH-LEX-XUESHENG-01",
+        "ZH-LEX-KANSHU-01",
+        "ZH-LEX-SHU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "note": "xue, xuesheng, shu and kanshu, chapters 13 and 18. The best-served notion in this track by a distance, and it is not an accident - chapters 12 to 18 are a school-and-language word family."
+    },
+    {
+      "id": "ZH-A1-NG7-02",
+      "category": "Sikao yu yanshuo - thinking and speaking",
+      "label": "speaking and writing, and the language itself",
+      "probe": [
+        "ZH-LEX-HANYU-01",
+        "ZH-LEX-ZHONGWEN-01",
+        "ZH-LEX-HANZI-01",
+        "ZH-LEX-ZI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "note": "Counted on the nouns rather than the verbs, which is a real distinction: Hanyu, Zhongwen, Hanzi and zi are all taught in chapters 16 and 17, so the reader can NAME the language and the script and cannot say shuo ('speak') or xie ('write'). A track that teaches the word for 'Chinese character' and not the word for 'to write' is worth noticing."
+    },
+    {
+      "id": "ZH-A1-NE01-01",
+      "category": "Shenti - the body",
+      "label": "parts of the body",
+      "probe": [
+        "ZH-LEX-KOU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "COUNTED ON ONE WORD, and marked thin because it barely qualifies: kou ('mouth') is taught in chapter 4 as a CHARACTER a reader needs - three strokes the hand already knows, and the component inside ming, zi and shenme - rather than as a body part in a body-part chapter. It is the whole field."
+    },
+    {
+      "id": "ZH-A1-NE01-02",
+      "category": "Shenti - the body",
+      "label": "physical characteristics and bodily actions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NE01-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE02-01",
+      "category": "Shenfen - identity and character",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE02-02",
+      "category": "Shenfen - identity and character",
+      "label": "personal data: name, address, telephone, age, documents",
+      "probe": [
+        "ZH-LEX-MINGZI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01",
+        "A1-NE03-02",
+        "A1-NE03-03"
+      ],
+      "note": "One box of six, and it is the word 'name' rather than a name. Three Spanish points collapse here because an HSK registration form asks for them together, and the track can fill in almost none of it."
+    },
+    {
+      "id": "ZH-A1-NE03-01",
+      "category": "Jiating - family and people",
+      "label": "family relationships",
+      "probe": [
+        "ZH-LEX-JIA-01",
+        "ZH-LEX-JIAREN-01",
+        "ZH-LEX-ERZI-01",
+        "ZH-LEX-NUER-01",
+        "ZH-LEX-REN-01",
+        "ZH-LEX-NU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "Chapter 12, and it is built the way this track builds everything: ren and nu first as characters, then erzi and nu'er as the compounds they make, then jia and jiaren. Six atoms and a four-skill checkpoint. What is missing is the generation above - no baba, no mama - so the reader can name their children and not their parents."
+    },
+    {
+      "id": "ZH-A1-NE03-02",
+      "category": "Jiating - family and people",
+      "label": "social relationships: classmate, friend, everybody",
+      "probe": [
+        "ZH-LEX-TONGXUE-01",
+        "ZH-ORTHO-TONGXUE-01",
+        "ZH-LEX-DAJIA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "tongxue ('classmate', literally 'same-study') and dajia ('everyone', literally 'big family'), chapters 13 and 15, both built out of characters the reader already owns. pengyou ('friend') is absent, which is the odd gap in an otherwise strong field."
+    },
+    {
+      "id": "ZH-A1-NE03-03",
+      "category": "Jiating - family and people",
+      "label": "celebrations and occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE04-01",
+      "category": "Yinshi - food and drink",
+      "label": "food, drink, meals and the restaurant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01",
+        "A1-NE05-02",
+        "A1-NE05-03",
+        "A1-NE05-04",
+        "A1-NE05-05"
+      ],
+      "note": "ENTIRELY ABSENT - five Spanish points and not one word. No chi, no he, no fan, no shui, no cha. For a Mandarin course this is the most surprising empty field in the file: chi fan is usually in the first three chapters of any beginner's book, and eating is the first thing a traveller needs. Compare Russian, which has eight food words and can order in a restaurant while being unable to say almost anything else."
+    },
+    {
+      "id": "ZH-A1-NE05-01",
+      "category": "Jiaoyu - education",
+      "label": "educational institutions: the university, the middle school, the primary school",
+      "probe": [
+        "ZH-LEX-DAXUE-01",
+        "ZH-LEX-ZHONGXUE-01",
+        "ZH-LEX-XIAOXUE-01",
+        "ZH-ORTHO-ZHONGXUE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01"
+      ],
+      "note": "COVERED, AND IT IS THE STRONGEST SPECIFIC-NOTION FIELD MEASURED IN ANY TRACK IN THIS SITTING. Chapters 13 to 15 teach da, xiao, zhong and xue and then let the reader build daxue, xiaoxue and zhongxue themselves. Three institutions from four characters."
+    },
+    {
+      "id": "ZH-A1-NE05-02",
+      "category": "Jiaoyu - education",
+      "label": "students and the people in a school",
+      "probe": [
+        "ZH-LEX-XUESHENG-01",
+        "ZH-LEX-DAXUESHENG-01",
+        "ZH-LEX-XIAOXUESHENG-01",
+        "ZH-LEX-ZHONGXUESHENG-01",
+        "ZH-ORTHO-ZHONGXUESHENG-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE06-02"
+      ],
+      "note": "Five atoms, all compounds of the same four characters. laoshi ('teacher') is missing, which is the one hole in the field and also blocks the vocative at ZH-A1-NP-02."
+    },
+    {
+      "id": "ZH-A1-NE05-03",
+      "category": "Jiaoyu - education",
+      "label": "going to school, and studying",
+      "probe": [
+        "ZH-LEX-SHANGXUE-01",
+        "ZH-ORTHO-SHANGXUE-01",
+        "ZH-LEX-XUE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ],
+      "note": "shangxue and xue, chapters 13 and 15."
+    },
+    {
+      "id": "ZH-A1-NE05-04",
+      "category": "Jiaoyu - education",
+      "label": "the timetable, examinations, marks and classroom language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE06-03",
+        "A1-NE06-05",
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "note": "Absent - four Spanish points. The track can name every kind of school and nothing that happens inside one."
+    },
+    {
+      "id": "ZH-A1-NE06-01",
+      "category": "Gongzuo - work",
+      "label": "professions, workplaces and working",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-02",
+        "A1-NE07-03",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "note": "Absent - six Spanish points, no word. 'What do you do' is unanswerable."
+    },
+    {
+      "id": "ZH-A1-NE07-01",
+      "category": "Yule - leisure",
+      "label": "free time, sport, games and shows",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE08-01",
+      "category": "Meiti - media and communication",
+      "label": "books and the printed word",
+      "probe": [
+        "ZH-LEX-SHU-01",
+        "ZH-ORTHO-KANSHU-01",
+        "ZH-LEX-HANZI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE09-04",
+        "A1-NE18-04"
+      ],
+      "note": "shu, kanshu and Hanzi, chapters 16 and 18. Two Spanish points - the printed press and literature - are answered thinly by 'book' and 'read a book', which is what a beginner actually has."
+    },
+    {
+      "id": "ZH-A1-NE08-02",
+      "category": "Meiti - media and communication",
+      "label": "the telephone, letters, television, the internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-03",
+        "A1-NE09-05",
+        "A1-NE09-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE09-01",
+      "category": "Zhufang - housing",
+      "label": "the home",
+      "probe": [
+        "ZH-LEX-JIA-01",
+        "ZH-SCRIPT-JIA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-02"
+      ],
+      "note": "COUNTED ON jia, and the note matters because jia does double duty: chapter 12 teaches it as 'home; family' and its character as a roof over an old livestock sign, so the reader owns the word for home and no word for any room, door or piece of furniture in it. Two Spanish points collapse and one word answers them thinly."
+    },
+    {
+      "id": "ZH-A1-NE09-02",
+      "category": "Zhufang - housing",
+      "label": "domestic activities and household objects",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE10-01",
+      "category": "Fuwu he gouwu - services and shopping",
+      "label": "shops, shopping, paying and the public services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04",
+        "A1-NE12-01",
+        "A1-NE12-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE11-01",
+      "category": "Jiankang - health",
+      "label": "health, illness, medicine and hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE12-01",
+      "category": "Lvxing - travel and transport",
+      "label": "travel, accommodation and transport",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE13-01",
+      "category": "Jingji - money and the economy",
+      "label": "money, commerce, business and industry",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02",
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE14-01",
+      "category": "Keji - science and technology",
+      "label": "computing and technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE15-01",
+      "category": "Zhengfu - state and society",
+      "label": "government, politics and law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "Absent as vocabulary. guo ('country') is taught in chapter 17 as a character, which is the piece every one of these words is built on and is not one of them."
+    },
+    {
+      "id": "ZH-A1-NE16-01",
+      "category": "Yishu - the arts",
+      "label": "the arts: music, painting, cinema, architecture, photography",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE17-01",
+      "category": "Zongjiao - religion",
+      "label": "religion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-NE18-01",
+      "category": "Dili yu ziran - geography and nature",
+      "label": "the country and its name",
+      "probe": [
+        "ZH-LEX-ZHONGGUO-01",
+        "ZH-LEX-ZHONGWEN-01",
+        "ZH-ORTHO-ZHONGWEN-01",
+        "ZH-SCRIPT-GUO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "note": "Zhongguo and Zhongwen, chapter 17, taught as the payoff of a five-word identity cluster with its own four-skill checkpoint. This is the one geography point any track in this sitting covers."
+    },
+    {
+      "id": "ZH-A1-NE18-02",
+      "category": "Dili yu ziran - geography and nature",
+      "label": "the universe, the town, the countryside, the weather, plants and animals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01",
+        "A1-NE20-03",
+        "A1-NE20-04",
+        "A1-NE20-05",
+        "A1-NE20-06"
+      ],
+      "note": "Absent - five Spanish points. ri ('sun') is taught in chapter 4 and is a character rather than a piece of a sky."
+    },
+    {
+      "id": "ZH-A1-T-01",
+      "category": "Shengdiao - tone, for which the proxy has no column at all",
+      "label": "tone is part of the word: changing the pitch changes which word it is",
+      "probe": [
+        "ZH-TONE-LEXICAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, and the reason this category exists. THE SPANISH INVENTORY HAS NO COLUMN FOR TONE and could not have produced this point: Spanish uses pitch for mood and emphasis, so every one of its 273 points assumes pitch is free. Mandarin spends it on the lexicon. The corpus teaches this in its FIRST chapter, on ma ma ma ma, which is the right place - a learner who meets it in chapter ten has already built the wrong habit."
+    },
+    {
+      "id": "ZH-A1-T-02",
+      "category": "Shengdiao - tone, for which the proxy has no column at all",
+      "label": "the four tones and the neutral one, each with its contour",
+      "probe": [
+        "ZH-TONE-LEXICAL",
+        "ZH-TONE-NEUTRAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific. Taught in chapter 1 and chapter 7, and the machine-readable form is in data/scripts/chinese.json under `tones`, which lists all five with contour numbers. Every lesson in the track carries its syllables' tones in the `sounds` frontmatter - 74 lessons tagged tone-4, 68 tone-2, 62 tone-3, 48 tone-1, 33 tone-neutral - so tone is tracked per lesson rather than taught once and forgotten."
+    },
+    {
+      "id": "ZH-A1-T-03",
+      "category": "Shengdiao - tone, for which the proxy has no column at all",
+      "label": "third-tone sandhi: two third tones in a row, and the first one changes",
+      "probe": [
+        "ZH-TONE-SANDHI-THIRD",
+        "ZH-LEX-NIHAO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, and taught in chapter 1 ON THE FIRST WORD IN THE BOOK, which is the only place it can honestly go: ni hao is written with two third tones and said with a rising one, so a reader who is not told this in lesson one learns the commonest word in the language wrong. Five lessons carry the tone-sandhi-third tag."
+    },
+    {
+      "id": "ZH-A1-T-04",
+      "category": "Shengdiao - tone, for which the proxy has no column at all",
+      "label": "bu sandhi: the negator changes its own tone before a fourth tone",
+      "probe": [
+        "ZH-TONE-SANDHI-BU",
+        "ZH-LEX-BUSHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, chapter 5, taught on bu shi - which is exactly where a learner meets it, because bu shi is the commonest bu-plus-fourth-tone in the language. Six lessons carry the tag."
+    },
+    {
+      "id": "ZH-A1-T-05",
+      "category": "Shengdiao - tone, for which the proxy has no column at all",
+      "label": "tone in connected speech: what happens to tones across a whole phrase",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and absent. The track teaches three sandhi rules on isolated pairs and never runs a tonal contour across a sentence, which is what a listening paper actually presents. This is the tone column's real gap and it is invisible from the coverage figure, because four of five points here are covered."
+    },
+    {
+      "id": "ZH-A1-H-01",
+      "category": "Hanzi - the characters",
+      "label": "the stroke: the finite set of marks every character is built from",
+      "probe": [
+        "ZH-METHOD-STROKE-COUNT",
+        "ZH-SCRIPT-NUM-YI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "RESTATED, NOT DROPPED, AND THE RESTATEMENT IS THE WHOLE ARGUMENT OF THIS COLUMN. Spanish's first orthography point asks for the alphabet: the closed set of units a reader learns once and then reuses forever. Mandarin has no alphabet and it does have such a set - the strokes - and the corpus teaches it deliberately, opening on yi, a single horizontal that is both a stroke and a whole character. A points set that translated 'alphabet' as 'characters' would ask for a set of eighty thousand and report every track as failing; asking for the strokes asks the question the Spanish point was really asking."
+    },
+    {
+      "id": "ZH-A1-H-02",
+      "category": "Hanzi - the characters",
+      "label": "stroke order: the rules that decide which stroke goes first",
+      "probe": [
+        "ZH-SCRIPT-NUM-SAN",
+        "ZH-SCRIPT-KOU",
+        "ZH-SCRIPT-SHANG",
+        "ZH-SCRIPT-ZAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "Taught rule by rule as the characters need them: top-to-bottom on san, the box rule on kou and si, the 'close the box last' rule on si and zai, and on shang the exception that a bar meeting a vertical is written after it rather than before. Nineteen writing lessons in all, each with its own stroke sequence, and data/scripts/chinese.json carries a source-verified PRC stroke order for 43 characters."
+    },
+    {
+      "id": "ZH-A1-H-03",
+      "category": "Hanzi - the characters",
+      "label": "components: characters are assembled from reusable pieces, not memorised as pictures",
+      "probe": [
+        "ZH-METHOD-COMPONENT-HOOK",
+        "ZH-SCRIPT-REN-RADICAL-01",
+        "ZH-SCRIPT-YAN",
+        "ZH-SCRIPT-NI-BUILD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Restated from Spanish's 'consonant letters and digraphs' point - the demand that a reader knows which units combine into which. The track's answer is unusually strong: chapter 2 is entirely about assembling ni out of the person radical and the sound piece er, and the speech radical arrives in chapter 10 attached to xie. The method atom is introduced in chapter 1, before any character is decomposed."
+    },
+    {
+      "id": "ZH-A1-H-04",
+      "category": "Hanzi - the characters",
+      "label": "the phonetic component: the half of a character that tells you how to say it",
+      "probe": [
+        "ZH-SCRIPT-PHONETIC",
+        "ZH-SCRIPT-QING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific: no alphabetic script has a column for this, because in an alphabet every letter is phonetic. Taught in chapter 11 on qing, where the right half is the sound clue and the left half the meaning clue. This is the single idea that makes several thousand characters learnable rather than memorable, and the track introduces it at character thirty-odd, which is early enough to be useful and late enough to have examples."
+    },
+    {
+      "id": "ZH-A1-H-05",
+      "category": "Hanzi - the characters",
+      "label": "how many characters the reader can actually read: 42 taught, 15 more shown",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, and the point carries a MEASUREMENT rather than a demand, so it is deliberately null. Walking every CJK character any of the 175 lesson files prints, against the set the writing lessons teach: 42 characters and components have their own script atom, and 15 more appear only inside an explanation - shi ('ten') under zao, qing under the phonetic lesson, shi ('pig') under jia, and the bare radicals mian, chuo, ge, cun, pie and the small-grass form. Those 15 are exposure, not debt. The debt is the size of the taught set against what any reading task needs: 42 characters will not read a sign, a menu or a form, and no arrangement of them will. THIS IS THE COLUMN THE PROXY IS LEAST ABLE TO SCORE, because Spanish closes its letter inventory at 27 and Mandarin's is open, so a percentage here would be meaningless and the raw number is the honest report."
+    },
+    {
+      "id": "ZH-A1-H-06",
+      "category": "Hanzi - the characters",
+      "label": "case: hanzi has none, and the proxy's two case points have no character analogue",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "note": "STATED RATHER THAN DROPPED, AND THIS IS ONE OF THE TWO PLACES THE SPANISH ORTHOGRAPHY COLUMN GENUINELY DOES NOT REACH THE CHARACTERS. The Chinese script is unicameral: there is no capital form of any character, no sentence-initial marking and no proper-noun marking, so a Spanish learner's instinct to capitalise has nothing to attach to. The demand survives only in pinyin, where it is real and is measured at ZH-A1-PY-04. Uncovered because no lesson says any of this, and an English or Spanish speaker will otherwise wonder where the capitals went."
+    },
+    {
+      "id": "ZH-A1-H-07",
+      "category": "Hanzi - the characters",
+      "label": "one character is one syllable and usually one morpheme",
+      "probe": [
+        "ZH-LEX-ZI-02",
+        "ZH-ORTHO-HANZI-01",
+        "ZH-GRAMMAR-COMPOUND-WORD"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Restated from Spanish's syllable-division point, which asks how a reader knows where one syllable ends. In Mandarin the writing answers it: the character boundary IS the syllable boundary. Chapters 8 and 16 teach zi and Hanzi as the words for this unit, and the compound atom teaches that a word is usually two of them."
+    },
+    {
+      "id": "ZH-A1-H-08",
+      "category": "Hanzi - the characters",
+      "label": "simplified against traditional: which set this is, and that another exists",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and absent. The track declares `variety: standard-mandarin-simplified` in every lesson's frontmatter, so the machine knows; no lesson tells the reader. Several characters the track teaches - jian, yu, guo, shu, han - are simplifications whose traditional forms a learner will meet on the first Taiwanese or Hong Kong page they open."
+    },
+    {
+      "id": "ZH-A1-H-09",
+      "category": "Hanzi - the characters",
+      "label": "the handwritten form against the printed one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and absent. The writing lessons teach a printed-form stroke path, and everyday Chinese handwriting joins and abbreviates strokes in ways a reader of print cannot predict. Lower priority than for Russian, because printed and handwritten Chinese diverge less than printed and cursive Russian, and still a real reading demand."
+    },
+    {
+      "id": "ZH-A1-H-10",
+      "category": "Hanzi - the characters",
+      "label": "looking a character up: by radical, by stroke count, or by pinyin",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and absent, and it is the skill that makes the other 79,958 characters reachable. The track teaches stroke counting (chapter 3) and radicals (chapters 2 and 10) - both halves of a radical index - and never puts them together into a lookup."
+    },
+    {
+      "id": "ZH-A1-PY-01",
+      "category": "Pinyin - the sound spelling, which this file treats as PRONUNCIATION and not as script",
+      "label": "the initials: the consonant sounds pinyin spells, including the ones English has no letter for",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Restated from Spanish's consonant-letters point onto pinyin rather than onto the characters, and NOT COVERED. Four lessons carry a pinyin-segment sound tag (pinyin-n, pinyin-h, pinyin-ao, pinyin-i) and no lesson teaches the initial series as a system - so the reader is never shown that q, x, j and zh, ch, sh are two contrasting sets, which is the single hardest thing about Mandarin pronunciation for an English speaker. chinese/pronunciation-reference.md carries the segments and is explicitly 'reference material, never a gate'."
+    },
+    {
+      "id": "ZH-A1-PY-02",
+      "category": "Pinyin - the sound spelling, which this file treats as PRONUNCIATION and not as script",
+      "label": "the finals: the vowel and vowel-plus-nasal endings pinyin spells",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "Restated from Spanish's vowel-letters point, and not covered for the same reason as ZH-A1-PY-01. The u-with-umlaut of nu and nu'er is the case that will bite first, and the nu lesson teaches the word rather than the letter."
+    },
+    {
+      "id": "ZH-A1-PY-03",
+      "category": "Pinyin - the sound spelling, which this file treats as PRONUNCIATION and not as script",
+      "label": "the tone marks: what they mean, and which vowel they sit on",
+      "probe": [
+        "ZH-TONE-LEXICAL",
+        "ZH-TONE-NEUTRAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "note": "COUNTED, AND THE COUNT IS FOR THE MEANING RATHER THAN THE SPELLING RULE. Spanish's two accentuation points ask what a written diacritic tells the reader; the corpus answers that in chapter 1 - the mark is the tone, and the neutral tone gets no mark - and every romanization in every lesson writes them. What is NOT taught is the placement rule, which vowel of a final carries the mark, and that is what a candidate writing pinyin needs."
+    },
+    {
+      "id": "ZH-A1-PY-04",
+      "category": "Pinyin - the sound spelling, which this file treats as PRONUNCIATION and not as script",
+      "label": "capitals and word division in pinyin, where the proxy's case points DO land",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "note": "Not taught. Pinyin is the one part of written Chinese with a case distinction and a word boundary - Zhongguo is capitalised and written as one word, ni hao as two - and the corpus writes both conventions correctly on every page without ever stating them. See ZH-A1-H-06 for the other half of this pair."
+    },
+    {
+      "id": "ZH-A1-PY-05",
+      "category": "Pinyin - the sound spelling, which this file treats as PRONUNCIATION and not as script",
+      "label": "the apostrophe, which keeps a syllable boundary visible",
+      "probe": [
+        "ZH-LEX-NUER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Covered, and precisely: the chapter-12 hearing lesson for nu'er introduces the atom and, in the same block, says the apostrophe 'only keeps the vowel boundary visible in pinyin. It is not a pause and not part of the Chinese writing.' That sentence is also the corpus's own statement of the decision recorded at ZH-A1-PY-06."
+    },
+    {
+      "id": "ZH-A1-PY-06",
+      "category": "Pinyin - the sound spelling, which this file treats as PRONUNCIATION and not as script",
+      "label": "what pinyin is, and what claim its coverage supports",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ZH-SCRIPT-DATA",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, and it exists to write down a decision this file had to make rather than to demand a lesson - which is why it is deliberately null and why it is here rather than in a commit message. THE QUESTION: when the corpus teaches a word in pinyin, is that a SCRIPT claim or a PRONUNCIATION claim? THE DECISION: pronunciation. Three pieces of evidence, all internal and all checkable. (1) The corpus files pinyin in the `romanization` frontmatter field, and script-closure.ts treats a declared romanization as the promise that the reader can use a word WITHOUT reading it - so within this repository's own machinery pinyin is by construction the thing that removes a decoding demand rather than meeting one. (2) Every one of the 45 ZH-SCRIPT atoms names a character, a component or a stroke method. Not one names a pinyin letter, an initial, a final or a tone mark; the tone marks are TONE atoms and the segments are sound tags. The corpus's own script column contains no pinyin. (3) The track already splits the two claims itself: a word arrives by ear as a ZH-LEX atom introduced by a `listening-speaking` lesson with a pinyin headword, and becomes readable and writable LATER as a separate ZH-ORTHO atom - eleven of which exist for exactly this purpose. THE CONSEQUENCE, STATED RATHER THAN HIDDEN: the character column below is measured in characters only, so the 53 words the reader knows by ear do not inflate it; and pinyin as an ORTHOGRAPHY - writing it, its initials and finals, its tone-mark placement, its capitals and its word division - is untaught, which is what ZH-A1-PY-01, -02, -03 and -04 record. A reader who disagrees with this decision should re-read those four points as script debt rather than as pronunciation debt; the points do not move, only the column they are filed under."
+    },
+    {
+      "id": "ZH-A1-B-01",
+      "category": "Biaodian - punctuation",
+      "label": "the full stop, which in Chinese is a small hollow circle",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-01"
+      ],
+      "note": "NO PUNCTUATION MARK IS TAUGHT ANYWHERE IN THIS TRACK, and unlike Russian's the marks are not even shown: the Chinese full stop occurs ZERO times in the 175 lesson files. Every dialogue in the book is set as lines of characters with the punctuation left out, so a reader who has finished chapter 18 has never seen a written Chinese sentence."
+    },
+    {
+      "id": "ZH-A1-B-02",
+      "category": "Biaodian - punctuation",
+      "label": "the two commas: the ordinary one and the enumeration comma between list items",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-02"
+      ],
+      "note": "Absent, and Chinese has a distinction Spanish does not - a separate mark for items in a list - so this is a restatement rather than a transfer and it measures nothing."
+    },
+    {
+      "id": "ZH-A1-B-03",
+      "category": "Biaodian - punctuation",
+      "label": "the colon",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-B-04",
+      "category": "Biaodian - punctuation",
+      "label": "the question and exclamation marks, and the fact that ma makes the first one optional",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-04"
+      ],
+      "note": "Absent, and it is the one punctuation point that carries grammar: a Mandarin question is marked by ma or by the A-not-A form, so the question mark is redundant in a way it is not in Spanish. Blocked twice, on the missing particle and on the missing punctuation."
+    },
+    {
+      "id": "ZH-A1-B-05",
+      "category": "Biaodian - punctuation",
+      "label": "brackets, and the corner quotation marks Chinese uses for speech",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-05",
+        "A1-O3-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-B-06",
+      "category": "Biaodian - punctuation",
+      "label": "the dash and the ellipsis, both of which are written double-width in Chinese",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-07",
+        "A1-O3-08"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-B-07",
+      "category": "Biaodian - punctuation",
+      "label": "the slash",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-09"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "ZH-A1-AB-01",
+      "category": "Suoxie - abbreviations and symbols",
+      "label": "abbreviations and initialisms",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02"
+      ],
+      "note": "Absent. Chinese abbreviates by keeping one character from each word - Beida for Beijing Daxue - which is a real reading demand and one the track is closer to than it looks, since it teaches da and xue."
+    },
+    {
+      "id": "ZH-A1-AB-02",
+      "category": "Suoxie - abbreviations and symbols",
+      "label": "symbols and the digits",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [
+        "A1-O4-03"
+      ],
+      "note": "Absent, and the digits are the notable half: Chinese writes prices, dates and telephone numbers in Arabic numerals, so a reader who has the character wu and not the digit 5 cannot read a price tag. The chapter-3 practice lesson has the reader read a floor number, which is the closest the track comes."
+    },
+    {
+      "id": "ZH-A1-MED-01",
+      "category": "Fanyi - translation and mediation",
+      "label": "relaying what was said, in the other language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-EXAM-LEVELS",
+        "ZH-ASSESSMENT",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific, and it is here because core/exam-levels.json's chinese caveat names it: GF0025-2021 'officially defines three stages and nine levels across listening, speaking, reading, writing, and TRANSLATION'. Translation is a fifth skill in the standard this track is aligned against, and the Spanish proxy has no column for it - the PCIC inventories are monolingual by construction. MEASURED AND EMPTY: not one of the 175 lesson files declares `mediation` in its `modes` list, against 67 declaring interpretive/interpersonal/presentational. So the corpus does not currently produce any evidence for the fifth skill its own exam alignment names."
+    },
+    {
+      "id": "ZH-A1-MED-02",
+      "category": "Fanyi - translation and mediation",
+      "label": "explaining a Chinese word to somebody who does not speak Chinese",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ZH-EXAM-LEVELS",
+        "ZH-ASSESSMENT",
+        "ZH-CORPUS",
+        "ED-CHINESE"
+      ],
+      "derivedFrom": [],
+      "chineseSpecific": true,
+      "note": "Chinese-specific and absent, and it is the A1-sized version of ZH-A1-MED-01 - the mediation a beginner can actually do. Recorded so the fifth skill is a named gap rather than an unasked question."
+    }
+  ]
+}

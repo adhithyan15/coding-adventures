@@ -42,7 +42,8 @@ One lesson back: the pronoun for someone absent. Four chapters back, at the top 
 
 The words, taken apart.
 English has one we and it is ambiguous. Gujarati has two, and they are not interchangeable:
-અમે — we, not including you આપણે — we, including you.
+અમે — we, not including you.
+આપણે — we, including you.
 If you say અમે to someone, you have told them they are outside the group. If you say આપણે, you have invited them in. Neither is more polite; they mean different things, and the mistake is audible.
 This distinction has a name — linguists call it exclusive and inclusive we — and a great many languages make it. English speakers have to learn to hear a choice they have never had to make.
 

@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-064-PRONOUNS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use oh for anyone absent, say asi, write oh, and describe someone with jo ... oh ... instead of naming them.",
+  "prerequisites": [
+    "PA-EXT-063-CONDITION"
+  ],
+  "lessons": [
+    "PA-C42-oh",
+    "PA-C42-asi",
+    "PA-C42-oh-write",
+    "PA-C42-jo",
+    "PA-C42-jo-oh"
+  ]
+}

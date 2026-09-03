@@ -1,0 +1,22 @@
+{
+  "chapter": 38,
+  "title": "And, Or, and Neither",
+  "label": "ch:pa-and-or-neither",
+  "canDo": "I can join two things or two whole sentences with ate, offer a choice with jaan, and refuse both halves at once with na ... na.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C38-na-na",
+    "kind": "task",
+    "summary": "The coordinators, and the first two-clause sentence this book can make -- until now the longest structure the track taught was a single clause of four slots. ate has a shorter twin, te, which is also a syllable the script lessons drill, which is exactly why a search of the corpus for and kept finding the drill and never the conjunction. na ... na is the first joining pattern in the book that stands in FRONT of both halves rather than between them.",
+    "assesses": [
+      "PA-JOIN-ATE-01",
+      "PA-JOIN-ATE-CLAUSE-01",
+      "PA-SCRIPT-ATE-01",
+      "PA-JOIN-JAAN-01",
+      "PA-JOIN-NA-NA-01"
+    ],
+    "note": "Carried on SPINE-DESCRIBE-QUALITIES, an A1 node with no concepts of its own: coordination has no canonical spine concept, and the corpus ladder stages CONNECTIVE-IF and CONNECTIVE-SO at B1 while the A1 inventory enumerates all eleven joining devices. Track-local concepts rather than claiming a canonical one the ladder places higher."
+  }
+}

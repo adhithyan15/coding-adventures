@@ -1,0 +1,16 @@
+{
+  "id": "PA-PATH-043",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "PA-C41-je",
+    "PA-C41-je-tan",
+    "PA-C41-je-write",
+    "PA-C41-jadon",
+    "PA-C41-lai"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-063-CONDITION"
+  ],
+  "after": []
+}

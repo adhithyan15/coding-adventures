@@ -31,7 +31,7 @@
     },
     {
       "if": {
-        "properties": {"version": {"const": 3}},
+        "properties": {"version": {"enum": [3, 4]}},
         "required": ["version"]
       },
       "then": {
@@ -43,6 +43,18 @@
       "else": {
         "not": {"required": ["allowed_tools"]}
       }
+    },
+    {
+      "if": {
+        "properties": {"version": {"const": 4}},
+        "required": ["version"]
+      },
+      "then": {
+        "required": ["tool_capabilities"]
+      },
+      "else": {
+        "not": {"required": ["tool_capabilities"]}
+      }
     }
   ],
   "properties": {
@@ -52,7 +64,7 @@
     },
     "version": {
       "type": "integer",
-      "enum": [1, 2, 3],
+      "enum": [1, 2, 3, 4],
       "description": "Schema version. Version 1 is accepted for installed legacy packages. Version 2 requires an explicit payload-schema version for every declared channel."
     },
     "agent": {
@@ -114,6 +126,18 @@
         "minLength": 3,
         "maxLength": 128,
         "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+      }
+    },
+    "tool_capabilities": {
+      "description": "D18D tool-capability scopes granted to this agent, matched against a ToolDefinition's required_capabilities. Schema v4 only. Colon-delimited (`smart_home:read`) -- note the separator differs from a tool identifier's dot, and from the operating-system capability triples in `capabilities`.",
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 256,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128,
+        "pattern": "^[A-Za-z0-9_-]+(:[A-Za-z0-9_-]+)*$"
       }
     },
     "capabilities": {
