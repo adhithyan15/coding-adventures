@@ -25,7 +25,7 @@ lines carry trailing prose after the close bracket and **not one** has a `[`
 inside the cue content. The whole-line form keeps its end-anchored greedy match,
 because there the copy legitimately may contain brackets.
 
-## What remains — 35 leaks, one shape
+### What remains — 35 leaks, one shape
 
 The cue is **wrapped across source lines**: `[YOU SAY: *…*` on one line with its
 closing `]` on the next. `bookVoice` walks line by line and cannot see it.
