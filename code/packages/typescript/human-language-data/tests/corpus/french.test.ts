@@ -56,12 +56,22 @@ it("pins French modality", () => expectLanguageModality("french"));
 // salut is strictly informal, bonjour is near-obligatory on entering anywhere, and bonne
 // nuit is a bedtime farewell rather than an evening greeting -- were prose in the lessons
 // and typed by nobody. Each is now owned and assessed.
+// 119 -> 128 lessons: retiring handwritten chapter 2. Like chapter 1 before it, its
+// nine schema-v1 lessons already mirrored the .tex section for section, so nothing had
+// to be written and the count moves by exactly the nine that were typed. Twelve atoms
+// again -- five words and phrases, four grammar rules, one etymon, one pronoun pair --
+// and two of the twelve carry a disambiguating suffix rather than re-pointing a
+// generated chapter: FR-LEX-COMMENT-HOW-10 sits beside chapter 32's FR-LEX-COMMENT-05
+// and FR-GRAM-INVERSION-NAME-11 beside its FR-GRAMMAR-INVERSION-08.
+// 20 -> 21 culture claims: French PREFERS the verb-based je m'appelle to the literal
+// mon nom est, which exists, is understood, and sounds like a passport desk. It was the
+// hand-written chapter's only `culture` block and no lesson owned it.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 119,
+    lessons: 128,
     idioms: 3,
     senses: 7,
-    cultureClaims: 20,
+    cultureClaims: 21,
     unitPrefix: "FR",
   }));
 
